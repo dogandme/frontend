@@ -8,6 +8,7 @@
     "plugin:react-hooks/recommended",
     "prettier"
   ],
+  "plugins": ["import"],
   "parser": "@typescript-eslint/parser",
   "settings": {
     "import/resolver": {
@@ -15,5 +16,8 @@
         "alwaysTryTypes": true
       }
     }
+  },
+  "rules": {
+    "import/no-unresolved": "error"
   }
 }
