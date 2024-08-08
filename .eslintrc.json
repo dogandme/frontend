@@ -3,6 +3,7 @@
     "next/core-web-vitals",
     "next",
     "@feature-sliced",
+    "eslint:recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended"
   ],
