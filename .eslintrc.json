@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals", "@feature-sliced"],
+  "extends": ["next/core-web-vitals", "next","@feature-sliced"],
   "parser": "@typescript-eslint/parser",
   "settings": {
     "import/resolver": {
