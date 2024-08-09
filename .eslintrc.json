@@ -8,6 +8,7 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:boundaries/recommended",
+    "plugin:prettier/recommended",
     "prettier"
   ],
   "plugins": ["import", "boundaries"],
