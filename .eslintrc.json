@@ -9,9 +9,13 @@
     "plugin:react-hooks/recommended",
     "plugin:boundaries/recommended",
     "plugin:prettier/recommended",
-    "prettier"
+    "prettier",
+    "plugin:storybook/recommended"
   ],
-  "plugins": ["import", "boundaries"],
+  "plugins": [
+    "import",
+    "boundaries"
+  ],
   "parser": "@typescript-eslint/parser",
   "settings": {
     "import/resolver": {
