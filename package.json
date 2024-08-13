@@ -9,7 +9,8 @@
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test-storybook": "test-storybook -- --coverage"
+    "test-storybook": "test-storybook -- --coverage",
+    "chromatic": "dotenv -e .env cross-env CHROMATIC_PROJECT_TOKEN=$CHROMATIC_PROJECT_TOKEN npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"
   },
   "dependencies": {
     "next": "14.2.5",
@@ -36,6 +37,9 @@
     "@types/react-dom": "^18",
     "@typescript-eslint/eslint-plugin": "^8.0.1",
     "@typescript-eslint/parser": "^8.0.1",
+    "chromatic": "^11.7.0",
+    "cross-env": "^7.0.3",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "eslint-config-prettier": "^9.1.0",
