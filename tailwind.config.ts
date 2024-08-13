@@ -102,7 +102,11 @@ const config: Config = {
         900: "#4600E0",
       },
     },
+    extend: {
+      fontFamily: {
+        pretendard: ["var(--font-pretendard)"],
+      },
+    },
   },
-  plugins: [],
 };
 export default config;
