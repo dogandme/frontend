@@ -23,6 +23,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^1.6.1",
     "@eslint/js": "^9.9.0",
+    "@feature-sliced/eslint-config": "^0.1.1",
     "@storybook/addon-essentials": "^8.2.9",
     "@storybook/addon-interactions": "^8.2.9",
     "@storybook/addon-links": "^8.2.9",
@@ -34,6 +35,8 @@
     "@storybook/test-runner": "^0.19.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.1.0",
+    "@typescript-eslint/parser": "^8.1.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.0",
