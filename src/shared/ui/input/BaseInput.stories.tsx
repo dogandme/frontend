@@ -3,6 +3,7 @@ import CommonInput, { InputProps } from "./BaseInput";
 
 const meta: Meta<typeof CommonInput> = {
   component: CommonInput,
+  title: "shared/Input",
   argTypes: {
     componentType: {
       control: {
