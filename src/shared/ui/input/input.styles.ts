@@ -81,6 +81,30 @@ const designSystem = {
       supportingTextColor: "text-pink-500",
     },
   },
+  timerTextInput: {
+    default: {
+      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2",
+      enabled: "border-grey-300 bg-grey-0 text-grey-700",
+      hover: "hover:border-grey-500 hover:bg-grey-100 hover:text-grey-700",
+      focus:
+        "focus-within:border-tangerine-500 focus-within:bg-grey-0 focus-within:text-grey-700",
+      focusHover:
+        "hover:focus-within:border-tangerine-500 hover:focus-within:bg-grey-0 hover:focus-within:text-grey-700",
+      disabled:
+        "disabled:border-grey-0 disabled:bg-grey-0 disabled:text-grey-300",
+      supportingTextColor: "text-grey-500",
+    },
+    error: {
+      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2",
+      enabled: "border-pink-500 bg-grey-0",
+      hover: "hover:border-pink-700 hover:bg-grey-50",
+      focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
+      focusHover:
+        "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
+      disabled: "",
+      supportingTextColor: "text-pink-500",
+    },
+  },
 };
 
 export default designSystem;

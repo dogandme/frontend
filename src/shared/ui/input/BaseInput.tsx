@@ -7,7 +7,8 @@ type ComponentType =
   | "textfieldFilled"
   | "searchTextInput"
   | "outLinedTextInput"
-  | "plainTextInput";
+  | "plainTextInput"
+  | "timerTextInput";
 
 type Condition = "default" | "error";
 
