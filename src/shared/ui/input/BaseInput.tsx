@@ -1,7 +1,11 @@
 import React from "react";
 import designSystem from "./input.styles";
 
-type ComponentType = "textfieldOutlined" | "textfieldFilled";
+// TODO 타입선언 제너럴하게 변경하기
+type ComponentType =
+  | "textfieldOutlined"
+  | "textfieldFilled"
+  | "searchTextInput";
 type Condition = "default" | "error";
 
 /**
