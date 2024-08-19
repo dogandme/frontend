@@ -32,13 +32,13 @@ body {
   }
 
   .btn-1 {
-    @apply text-[1rem] font-medium leading-[1.2] tracking-[.0138rem];
+    @apply text-[1rem] font-semibold leading-[1.2] tracking-[.0138rem];
   }
   .btn-2 {
-    @apply text-[0.875rem] font-medium leading-[1.2] tracking-[.01rem];
+    @apply text-[0.875rem] font-semibold leading-[1.2] tracking-[.01rem];
   }
   .btn-3 {
-    @apply text-[0.75rem] font-medium leading-[1.2] tracking-[.0175rem];
+    @apply text-[0.75rem] font-semibold leading-[1.2] tracking-[.0175rem];
   }
 
   .body-1 {
