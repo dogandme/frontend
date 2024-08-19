@@ -62,7 +62,7 @@ const designSystem = {
   },
   plainTextInput: {
     default: {
-      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2",
+      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2 border-none",
       enabled: "bg-grey-0 text-grey-700",
       hover: "hover:bg-grey-100 hover:text-grey-700",
       focus: "focus-within:bg-grey-0 focus-within:text-grey-700 ",
