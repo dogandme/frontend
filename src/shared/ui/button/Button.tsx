@@ -1,9 +1,9 @@
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, Children, isValidElement } from "react";
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   colorType: "primary" | "secondary" | "tertiary";
   variant: "filled" | "outlined" | "text";
-  size: "xSmall" | "small" | "medium" | "large" | "xLarge";
+  size: "xSmall" | "small" | "medium" | "large";
 };
 
 const colors = {
@@ -84,17 +84,79 @@ const colors = {
   },
 } as const;
 
-const Button = ({ colorType, variant, ...props }: Props) => {
+const sizes = {
+  xSmall: {
+    base: "btn-3 h-8",
+    onlyIcon: "px-1",
+    onlyText: "px-4",
+    iconFirst: "pl-2 pr-4",
+    textFirst: "pl-4 pr-2",
+  },
+  small: {
+    base: "btn-2 h-10",
+    onlyIcon: "px-2",
+    onlyText: "px-6",
+    iconFirst: "pl-4 pr-6",
+    textFirst: "pl-6 pr-4",
+  },
+  medium: {
+    base: "btn-2 h-12",
+    onlyIcon: "px-3",
+    onlyText: "px-6",
+    iconFirst: "pl-4 pr-6",
+    textFirst: "pl-6 pr-4",
+  },
+  large: {
+    base: "btn-1 h-14",
+    onlyIcon: "px-4",
+    onlyText: "px-6",
+    iconFirst: "pl-4 pr-6",
+    textFirst: "pl-6 pr-4",
+  },
+} as const;
+
+const Button = ({ colorType, variant, size, children, ...props }: Props) => {
   const baseStyles =
     "inline-flex flex-shrink-0 items-center justify-center gap-[.625rem] rounded-[1rem]";
   const colorStyles = colors[colorType][variant];
 
+  const childrenArray = Children.toArray(children);
+
+  // children 하위의 하나의 자식만을 가지고 있는지 확인
+  const hasOneChild = childrenArray.length === 1;
+  const firstChildElement = childrenArray[0];
+
+  // 아이콘만 있는 경우
+  const hasOnlyIcon =
+    hasOneChild &&
+    isValidElement(firstChildElement) &&
+    firstChildElement.type === "svg";
+  // 텍스트만 있는 경우
+  const hasOnlyText = hasOneChild && typeof firstChildElement === "string";
+
+  // children 하위의 두개의 자식을 가지고 있는지 확인
+  const hasTwoChild = childrenArray.length === 2;
+  const lastChildElement = childrenArray[childrenArray.length - 1];
+
+  // 아이콘 + 텍스트
+  const hasIconFirst =
+    hasTwoChild &&
+    isValidElement(firstChildElement) &&
+    firstChildElement.type === "svg";
+  // 텍스트 + 아이콘
+  const hasTextFirst =
+    hasTwoChild &&
+    isValidElement(lastChildElement) &&
+    lastChildElement.type === "svg";
+
+  const sizeStyles = `${sizes[size].base} ${hasOnlyIcon && sizes[size].onlyIcon} ${hasOnlyText && sizes[size].onlyText} ${hasIconFirst && sizes[size].iconFirst} ${hasTextFirst && sizes[size].textFirst}`;
+
   return (
     <button
-      className={`${baseStyles} ${colorStyles.enabled} ${colorStyles.focus} ${colorStyles.hover} ${colorStyles.active} ${colorStyles.disabled}`}
+      className={`${baseStyles} ${colorStyles.enabled} ${colorStyles.focus} ${colorStyles.hover} ${colorStyles.active} ${colorStyles.disabled} ${sizeStyles}`}
       {...props}
     >
-      Button
+      {children}
     </button>
   );
 };
