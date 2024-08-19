@@ -32,22 +32,22 @@ body {
   }
 
   .btn-1 {
-    @apply text-[1rem] font-medium leading-[1.2];
+    @apply text-[1rem] font-medium leading-[1.2] tracking-[.0138rem];
   }
   .btn-2 {
-    @apply text-[0.875rem] font-medium leading-[1.2];
+    @apply text-[0.875rem] font-medium leading-[1.2] tracking-[.01rem];
   }
   .btn-3 {
-    @apply text-[0.75rem] font-medium leading-[1.2];
+    @apply text-[0.75rem] font-medium leading-[1.2] tracking-[.0175rem];
   }
 
   .body-1 {
-    @apply text-[1rem] font-normal leading-[1.6];
+    @apply text-[1rem] font-normal leading-[1.6] tracking-[-0.01rem];
   }
   .body-2 {
-    @apply text-[0.875rem] font-normal leading-[1.6];
+    @apply text-[0.875rem] font-normal leading-[1.6] tracking-[-0.0088rem];
   }
   .body-3 {
-    @apply text-[0.75rem] font-normal leading-[1.6];
+    @apply text-[0.75rem] font-normal leading-[1.6] tracking-[-0.015rem];
   }
 }
