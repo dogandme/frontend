@@ -5,7 +5,8 @@ import designSystem from "./input.styles";
 type ComponentType =
   | "textfieldOutlined"
   | "textfieldFilled"
-  | "searchTextInput";
+  | "searchTextInput"
+  | "outLinedTextInput";
 type Condition = "default" | "error";
 
 /**
