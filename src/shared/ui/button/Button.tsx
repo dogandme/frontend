@@ -28,7 +28,7 @@ const colors = {
         "disabled:bg-grey-0 disabled:text-grey-500 disabled:border-grey-300",
     },
     text: {
-      enabled: "bg-grey-0 text-tangerine-500",
+      enabled: "text-tangerine-500",
       hover: "hover:bg-tangerine-50 hover:text-tangerine-500",
       focus: "focus:bg-tangerine-50 focus:text-tangerine-500",
       active: "active:bg-tangerine-100 active:text-tangerine-500",
@@ -52,7 +52,7 @@ const colors = {
         "disabled:bg-grey-0 disabled:text-grey-300 disabled:border-grey-300",
     },
     text: {
-      enabled: "bg-grey-0 text-grey-900",
+      enabled: "text-grey-900",
       hover: "hover:bg-grey-50 hover:text-grey-900",
       focus: "focus:bg-grey-50 focus:text-grey-900",
       active: "active:bg-grey-100 active:text-grey-900",
@@ -75,7 +75,7 @@ const colors = {
       disabled: "disabled:text-grey-100 disabled:border-grey-100",
     },
     text: {
-      enabled: "bg-grey-0 text-grey-500",
+      enabled: "text-grey-500",
       hover: "hover:bg-grey-50 hover:text-grey-500",
       focus: "focus:bg-grey-50 focus:text-grey-500",
       active: "active:bg-grey-100 active:text-grey-500",
