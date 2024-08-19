@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import TimerTextInput from "./ui/input/TimerTextInput";
+import TimerTextInput from "./TimerTextInput";
 
 const meta: Meta<typeof TimerTextInput> = {
   component: TimerTextInput,
