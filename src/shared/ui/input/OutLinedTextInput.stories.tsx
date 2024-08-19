@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import OutLinedTextInput from "./OutlinedTextInput";
+import OutLinedTextInput from "./OutLinedTextInput";
 
 const meta: Meta<typeof OutLinedTextInput> = {
   component: OutLinedTextInput,
