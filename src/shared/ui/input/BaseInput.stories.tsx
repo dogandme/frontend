@@ -29,10 +29,10 @@ export const Default: Story = {
   args: {
     title: "Title",
     id: "sample-id",
-    componentType: "textfieldOutlined",
+    componentType: "outLinedTextInput",
     condition: "default",
     isSupporingNeeded: true,
-    supporingText: "Supporting text",
+    supportingText: "Supporting text",
     additionalOutterStyle: {
       width: "328px",
     },
