@@ -60,7 +60,7 @@ const designSystem = {
       supportingTextColor: "text-pink-500",
     },
   },
-  textfieldFilled: {
+  plainTextInput: {
     default: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2",
       enabled: "bg-grey-0 text-grey-700",
@@ -72,13 +72,13 @@ const designSystem = {
       supportingTextColor: "text-grey-700",
     },
     error: {
-      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2",
-      enabled: "",
-      hover: "",
-      focus: "",
-      focusHover: "",
+      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2 border-none",
+      enabled: "bg-pink-50",
+      hover: "hover:bg-pink-100",
+      focus: "focus-within:bg-pink-50",
+      focusHover: "hover:focus-within:bg-pink-50",
       disabled: "",
-      supportingTextColor: "",
+      supportingTextColor: "text-pink-500",
     },
   },
 };

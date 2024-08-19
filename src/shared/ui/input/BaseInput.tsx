@@ -6,7 +6,9 @@ type ComponentType =
   | "textfieldOutlined"
   | "textfieldFilled"
   | "searchTextInput"
-  | "outLinedTextInput";
+  | "outLinedTextInput"
+  | "plainTextInput";
+
 type Condition = "default" | "error";
 
 /**
@@ -76,6 +78,7 @@ const BaseInput = ({
     focusHover,
     disabled,
     supportingTextColor,
+    // TODO 해당 타입 에러 고치기
   } = designSystem[componentType][condition];
 
   return (
