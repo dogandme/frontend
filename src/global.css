@@ -22,13 +22,13 @@ body {
   }
 
   .title-1 {
-    @apply text-[1.375rem] font-medium leading-[1.2];
+    @apply text-[1.375rem] font-semibold leading-[1.2];
   }
   .title-2 {
-    @apply text-[1rem] font-medium leading-[1.2];
+    @apply text-[1rem] font-semibold leading-[1.2];
   }
   .title-3 {
-    @apply text-[0.875rem] font-medium leading-[1.2];
+    @apply text-[0.875rem] font-semibold leading-[1.2];
   }
 
   .btn-1 {
