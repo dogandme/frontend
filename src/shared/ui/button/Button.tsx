@@ -9,7 +9,7 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const Button = ({ colorType, variant, size, children, ...props }: Props) => {
   const baseStyles =
-    "inline-flex flex-shrink-0 items-center justify-center gap-[.625rem] rounded-[1rem]";
+    "inline-flex flex-shrink-0 items-center justify-center gap-[.625rem] rounded-[1rem] outline-none";
   const colorStyles = colors[colorType][variant];
 
   const childrenArray = Children.toArray(children);
