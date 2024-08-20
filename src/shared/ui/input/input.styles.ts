@@ -1,4 +1,20 @@
-const designSystem = {
+import type { DesignType, Condition } from "./BaseInput";
+
+type DesignSystem = {
+  [key in DesignType]: {
+    [key in Condition]: {
+      base: string;
+      enabled: string;
+      hover: string;
+      focus: string;
+      focusHover: string;
+      disabled: string;
+      supportingTextColor: string;
+    };
+  };
+};
+
+const designSystem: DesignSystem = {
   calanderInput: {
     default: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-[4px] border px-3 py-3 gap-1",

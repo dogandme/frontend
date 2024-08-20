@@ -3,8 +3,6 @@ import designSystem from "./input.styles";
 
 // TODO 타입선언 제너럴하게 변경하기
 export type DesignType =
-  | "textfieldOutlined"
-  | "textfieldFilled"
   | "searchTextInput"
   | "outLinedTextInput"
   | "plainTextInput"
@@ -80,7 +78,6 @@ const BaseInput = ({
     focusHover,
     disabled,
     supportingTextColor,
-    // TODO 해당 타입 에러 고치기
   } = designSystem[designType][condition];
 
   return (
