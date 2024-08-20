@@ -58,7 +58,7 @@ const designSystem: DesignSystem = {
       supportingTextColor: "text-pink-500",
     },
   },
-  plainTextInput: {
+  textInput: {
     default: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2 border-none",
       enabled: "bg-grey-0 text-grey-700",

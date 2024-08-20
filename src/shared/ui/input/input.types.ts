@@ -3,7 +3,7 @@ type Condition = "default" | "error";
 export interface DesignConditionMap {
   searchTextInput: "default";
   outLinedTextInput: Condition;
-  plainTextInput: Condition;
+  textInput: Condition;
   timerTextInput: Condition;
   calanderInput: Condition;
 }

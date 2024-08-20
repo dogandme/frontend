@@ -5,7 +5,7 @@ import type { InputProps } from "./input.types";
  * condition에 따른 supportingText를 주입받습니다.
  * @figma Input fields/TextField 디자인 시스템 참고
  */
-const PlainTextInput = ({
+const TextInput = ({
   title,
   id,
   value,
@@ -13,8 +13,8 @@ const PlainTextInput = ({
   condition,
   supportingText,
   ...props
-}: InputProps<"plainTextInput">) => {
-  const { designType = "plainTextInput", ...rest } = props;
+}: InputProps<"textInput">) => {
+  const { designType = "textInput", ...rest } = props;
   return (
     <BaseInput
       title={title}
@@ -30,4 +30,4 @@ const PlainTextInput = ({
   );
 };
 
-export default PlainTextInput;
+export default TextInput;
