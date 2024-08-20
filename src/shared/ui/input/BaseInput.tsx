@@ -8,7 +8,8 @@ type ComponentType =
   | "searchTextInput"
   | "outLinedTextInput"
   | "plainTextInput"
-  | "timerTextInput";
+  | "timerTextInput"
+  | "calanderInput";
 
 type Condition = "default" | "error";
 
@@ -97,7 +98,7 @@ const BaseInput = ({
         <input
           id={id}
           name={id}
-          className="placeholder-grey-500 disable:placeholder-grey-300 h-[1.375rem] flex-1 overflow-hidden text-ellipsis whitespace-nowrap focus:outline-none"
+          className="disable:placeholder-grey-300 h-[1.375rem] flex-1 overflow-hidden text-ellipsis whitespace-nowrap placeholder-grey-500 focus:outline-none"
           style={{
             backgroundColor: "transparent",
           }}
