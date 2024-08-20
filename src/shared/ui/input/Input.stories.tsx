@@ -212,7 +212,12 @@ export const Default: Story = {
         </div>
         <div className="flex w-[328px] flex-col gap-3">
           <h1>default</h1>
-          <Input {...args} label="textField" componentType="textField" />
+          <Input
+            {...args}
+            label="textField"
+            componentType="textField"
+            statusText="올바른 입력값을 입력해주세요"
+          />
           <Input
             {...args}
             label="calanderInput"
