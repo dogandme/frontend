@@ -20,7 +20,7 @@ export const Default: Story = {
   args: {
     title: "Title",
     id: "sample-id",
-    componentType: "calanderInput",
+    designType: "calanderInput",
     condition: "default",
     placeholder: "Placeholder",
     supportingText: "Supporting text",

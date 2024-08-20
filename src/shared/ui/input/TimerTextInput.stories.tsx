@@ -21,13 +21,13 @@ export const Default: Story = {
   args: {
     title: "Title",
     id: "sample-id",
-    componentType: "timerTextInput",
+    designType: "timerTextInput",
     condition: "default",
     supportingText: "Supporting text",
     additionalOutterStyle: {
       width: "328px",
     },
-    countArea: <span className="text-grey-700 body-2">00:00</span>,
+    countArea: <span className="body-2 text-grey-700">00:00</span>,
     trailingIcon: (
       <svg
         width="24 "

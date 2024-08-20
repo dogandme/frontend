@@ -21,7 +21,7 @@ export const Default: Story = {
   args: {
     title: "Title",
     id: "sample-id",
-    componentType: "plainTextInput",
+    designType: "plainTextInput",
     condition: "default",
     supportingText: "Supporting text",
     additionalOutterStyle: {

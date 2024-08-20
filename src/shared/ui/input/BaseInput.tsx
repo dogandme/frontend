@@ -2,7 +2,7 @@ import React from "react";
 import designSystem from "./input.styles";
 
 // TODO 타입선언 제너럴하게 변경하기
-type ComponentType =
+export type DesignType =
   | "textfieldOutlined"
   | "textfieldFilled"
   | "searchTextInput"
@@ -11,7 +11,7 @@ type ComponentType =
   | "timerTextInput"
   | "calanderInput";
 
-type Condition = "default" | "error";
+export type Condition = "default" | "error";
 
 /**
  * 해당 컴포넌트는 Input 필드의 디자인 시스템의 근간이 되는 컴포넌트입니다.
@@ -23,7 +23,7 @@ type Condition = "default" | "error";
  * 해당 타입은 디자인 시스템에 정의된 스타일을 사용하거나 컴포넌트의 스타일을 추가할 때 사용합니다.
  */
 interface InputStyles {
-  componentType: ComponentType;
+  designType: DesignType;
   condition: Condition;
 }
 
@@ -66,7 +66,7 @@ const BaseInput = ({
   trailingIcon,
   isSupportingNeeded = true,
   supportingText,
-  componentType,
+  designType,
   condition,
   additionalOutterStyle,
   additionalSupportingTextStyle,
@@ -81,7 +81,7 @@ const BaseInput = ({
     disabled,
     supportingTextColor,
     // TODO 해당 타입 에러 고치기
-  } = designSystem[componentType][condition];
+  } = designSystem[designType][condition];
 
   return (
     <div className="flex flex-col">

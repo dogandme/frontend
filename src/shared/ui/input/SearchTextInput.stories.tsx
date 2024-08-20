@@ -20,7 +20,7 @@ export const Default: Story = {
   args: {
     id: "sample-id",
     defaultValue: "",
-    componentType: "searchTextInput",
+    designType: "searchTextInput",
     condition: "default",
     additionalOutterStyle: {
       width: "328px",

@@ -8,13 +8,13 @@ import type { InputProps } from "./BaseInput";
  */
 const SearchTextInput = (props: InputProps) => {
   const {
-    componentType = "searchTextInput",
+    designType = "searchTextInput",
     condition = "default",
     ...rest
   } = props;
   return (
     <BaseInput
-      componentType={componentType}
+      designType={designType}
       condition={condition}
       leadingIcon={
         <svg

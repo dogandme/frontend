@@ -1,20 +1,3 @@
-// interface EventStyle {
-//   base: string;
-//   enabled: string;
-//   hover: string;
-//   focus: string;
-//   focusHover: string;
-//   disabled: string;
-// }
-
-// interface ExtraStyle {
-//   supportingTextColor: string;
-// }
-
-// interface SearchTextInputDeisgn {
-//   default: Omit<EventStyle, "disabled">;
-// }
-
 const designSystem = {
   calanderInput: {
     default: {
