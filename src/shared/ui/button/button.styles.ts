@@ -5,7 +5,8 @@ export const colors = {
       hover: "hover:bg-tangerine-700 hover:text-grey-0",
       focus: "focus:bg-tangerine-700 focus:text-grey-0",
       active: "active:bg-tangerine-900 active:text-grey-0",
-      disabled: "disabled:bg-tangerine-50 disabled:text-grey-0",
+      disabled:
+        "disabled:pointer-events-none disabled:bg-tangerine-50 disabled:text-grey-0",
     },
     outlined: {
       enabled:
@@ -17,14 +18,14 @@ export const colors = {
       active:
         "active:bg-grey-100 active:text-tangerine-500 active:border-tangerine-500",
       disabled:
-        "disabled:bg-grey-0 disabled:text-grey-500 disabled:border-grey-300",
+        "disabled:pointer-events-none disabled:bg-grey-0 disabled:text-grey-500 disabled:border-grey-300",
     },
     text: {
       enabled: "text-tangerine-500",
       hover: "hover:bg-tangerine-50 hover:text-tangerine-500",
       focus: "focus:bg-tangerine-50 focus:text-tangerine-500",
       active: "active:bg-tangerine-100 active:text-tangerine-500",
-      disabled: "disabled:text-tangerine-100",
+      disabled: "disabled:pointer-events-none disabled:text-tangerine-100",
     },
   },
   secondary: {
@@ -33,7 +34,8 @@ export const colors = {
       hover: "hover:bg-grey-700 hover:text-grey-0",
       focus: "focus:bg-grey-700 focus:text-grey-0",
       active: "active:bg-grey-500 active:text-grey-0",
-      disabled: "disabled:bg-grey-300 disabled:text-grey-0",
+      disabled:
+        "disabled:pointer-events-none disabled:bg-grey-300 disabled:text-grey-0",
     },
     outlined: {
       enabled: "bg-grey-0 text-grey-900 border-grey-900 border-[.0625rem]",
@@ -41,14 +43,14 @@ export const colors = {
       focus: "focus:bg-grey-50 focus:text-grey-900 focus:border-grey-900",
       active: "active:bg-grey-100 active:text-grey-900 active:border-grey-900",
       disabled:
-        "disabled:bg-grey-0 disabled:text-grey-300 disabled:border-grey-300",
+        "disabled:pointer-events-none disabled:bg-grey-0 disabled:text-grey-300 disabled:border-grey-300",
     },
     text: {
       enabled: "text-grey-900",
       hover: "hover:bg-grey-50 hover:text-grey-900",
       focus: "focus:bg-grey-50 focus:text-grey-900",
       active: "active:bg-grey-100 active:text-grey-900",
-      disabled: "disabled:text-grey-300",
+      disabled: "disabled:pointer-events-none disabled:text-grey-300",
     },
   },
   tertiary: {
@@ -57,21 +59,23 @@ export const colors = {
       hover: "hover:bg-grey-700 hover:text-grey-0",
       focus: "focus:bg-grey-700 focus:text-grey-0",
       active: "active:bg-grey-900 active:text-grey-0",
-      disabled: "disabled:bg-grey-100 disabled:text-grey-0",
+      disabled:
+        "disabled:pointer-events-none disabled:bg-grey-100 disabled:text-grey-0",
     },
     outlined: {
       enabled: "bg-grey-0 text-grey-500 border-grey-500 border-[.0625rem]",
       hover: "hover:bg-grey-50 hover:text-grey-700 hover:border-grey-700",
       focus: "focus:bg-grey-50 focus:text-grey-700 focus:border-grey-700",
       active: "active:bg-grey-100 active:text-grey-500 active:border-grey-500",
-      disabled: "disabled:text-grey-100 disabled:border-grey-100",
+      disabled:
+        "disabled:pointer-events-none disabled:text-grey-100 disabled:border-grey-100",
     },
     text: {
       enabled: "text-grey-500",
       hover: "hover:bg-grey-50 hover:text-grey-500",
       focus: "focus:bg-grey-50 focus:text-grey-500",
       active: "active:bg-grey-100 active:text-grey-500",
-      disabled: "disabled:text-grey-100",
+      disabled: "disabled:pointer-events-none disabled:text-grey-100",
     },
   },
 } as const;
