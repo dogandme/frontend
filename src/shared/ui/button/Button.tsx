@@ -16,8 +16,14 @@ const Button = ({ colorType, variant, size, children, ...props }: Props) => {
 
   // children 하위의 하나의 자식만을 가지고 있는지 확인
   const hasOneChild = childrenArray.length === 1;
+
+  // 첫 번째 child가 텍스트인지 확인
   const firstChild = childrenArray[0];
-  const isFirstChildText = typeof firstChild === "string";
+  const isFirstChildText =
+    typeof firstChild === "string" ||
+    (isValidElement(firstChild) && firstChild.type === "div") ||
+    (isValidElement(firstChild) && firstChild.type === "span") ||
+    (isValidElement(firstChild) && firstChild.type === "p");
 
   // 아이콘만 있는 경우
   const hasOnlyIcon = hasOneChild && !isFirstChildText;
@@ -26,14 +32,19 @@ const Button = ({ colorType, variant, size, children, ...props }: Props) => {
 
   // children 하위의 두개의 자식을 가지고 있는지 확인
   const hasTwoChild = childrenArray.length === 2;
+
+  // 마지막 child가 텍스트인지 확인
   const lastChild = childrenArray[childrenArray.length - 1];
+  const isLastChildText =
+    typeof lastChild === "string" ||
+    (isValidElement(lastChild) && lastChild.type === "div") ||
+    (isValidElement(lastChild) && lastChild.type === "span") ||
+    (isValidElement(lastChild) && lastChild.type === "p");
 
   // 아이콘 + 텍스트
-  const hasIconFirst =
-    hasTwoChild && isValidElement(firstChild) && firstChild.type === "svg";
+  const hasIconFirst = hasTwoChild && isLastChildText;
   // 텍스트 + 아이콘
-  const hasTextFirst =
-    hasTwoChild && isValidElement(lastChild) && lastChild.type === "svg";
+  const hasTextFirst = hasTwoChild && isFirstChildText;
 
   const sizeStyles = getSizeStyles({
     size,
