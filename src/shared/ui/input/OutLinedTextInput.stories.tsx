@@ -9,24 +9,6 @@ const meta: Meta<typeof OutLinedTextInput> = {
       control: {
         type: "object",
       },
-      showLeadingIcon: {
-        control: {
-          type: "boolean",
-        },
-        defaultValue: true,
-      },
-      showCountArea: {
-        control: {
-          type: "boolean",
-        },
-        defaultValue: true,
-      },
-      showTrailingIcon: {
-        control: {
-          type: "boolean",
-        },
-        defaultValue: true,
-      },
     },
   },
 };
@@ -75,19 +57,7 @@ export const Default: Story = {
         />
       </svg>
     ),
-    // ! 스토리북에서 보여주는 아이콘을 보여주기 위해 추가한 코드
-    showLeadingIcon: true,
-    showCountArea: true,
-    showTrailingIcon: true,
   },
-  render: (args) => (
-    <OutLinedTextInput
-      {...args}
-      leadingIcon={args.showLeadingIcon ? args.leadingIcon : null}
-      countArea={args.showCountArea ? args.countArea : null}
-      trailingIcon={args.showTrailingIcon ? args.trailingIcon : null}
-    />
-  ),
 };
 
 export const OutLinedTextInputWithError: Story = {

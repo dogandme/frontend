@@ -32,6 +32,6 @@ export const Default: Story = {
 export const SearchTextWithValue: Story = {
   args: {
     ...Default.args,
-    value: "input",
+    defaultValue: "input",
   },
 };

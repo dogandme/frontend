@@ -36,7 +36,7 @@ export const Default: Story = {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <g clip-path="url(#clip0_352_12263)">
+        <g clipPath="url(#clip0_352_12263)">
           <path
             d="M2 20.3281C2 21.4327 2.89543 22.3281 4 22.3281H20C21.1046 22.3281 22 21.4327 22 20.3281V4.32813C22 3.22356 21.1046 2.32812 20 2.32812H4C2.89543 2.32812 2 3.22356 2 4.32812V20.3281Z"
             fill="#9E9E9E"
