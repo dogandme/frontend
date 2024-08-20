@@ -1,26 +1,24 @@
-import type { DesignSystem } from "./input.types";
-
-const designSystem: DesignSystem = {
+export const inputStyles = {
   textField: {
     default: {
-      base: "flex flex-col items-start gap-1 self-stretch rounded-2xl border px-3 py-[13px]",
+      base: "body-2 flex  h-12 items-start gap-1 self-stretch rounded-2xl border px-3 py-[13px]",
       enabled: "border-grey-500 bg-grey-0",
       hover: "hover:border-grey-700 hover: bg-grey-100",
       focus: "focus-within:border-tangerine-500 focus-within:bg-grey-0",
       focusHover:
         "hover:focus-within:border-tangerine-500 hover:focus-within:bg-grey-0",
       disabled: "disabled:border-grey-100 diabled:bg-grey-0",
-      supportingTextColor: "text-grey-700",
+      statusTextclass: "text-grey-700",
     },
     error: {
-      base: "flex flex-col items-start gap-1 self-stretch rounded-2xl border px-3 py-[13px]",
+      base: "body-2 flex  h-12 items-start gap-1 self-stretch rounded-2xl border px-3 py-[13px]",
       enabled: "border-pink-500 bg-grey-0",
       hover: "hover:border-pink-700 hover:bg-grey-100",
       focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
       focusHover:
         "hover:focus-within:border-pink-500 hover:foc us-within:bg-grey-0",
       disabled: "",
-      supportingTextColor: "text-pink-500",
+      statusTextclass: "text-pink-500",
     },
   },
   calanderInput: {
@@ -32,7 +30,7 @@ const designSystem: DesignSystem = {
       focusHover:
         "hover:focus-within:border-green-500 hover:focus-within:bg-grey-0",
       disabled: "disabled:bg-grey-0 disabled:border-grey-100",
-      supportingTextColor: "text-grey-700",
+      statusTextclass: "text-grey-700",
     },
     error: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-[4px] border px-3 py-3 gap-1",
@@ -42,7 +40,7 @@ const designSystem: DesignSystem = {
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
       disabled: "",
-      supportingTextColor: "text-pink-500",
+      statusTextclass: "text-pink-500",
     },
   },
   searchTextInput: {
@@ -53,7 +51,16 @@ const designSystem: DesignSystem = {
       focus: "focus-within:bg-grey-100",
       focusHover: "hover:focus-within:bg-grey-100",
       disabled: "disabled:bg-grey-0 disabled:text-grey-300",
-      supportingTextColor: "",
+      statusTextclass: "",
+    },
+    error: {
+      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl px-3 py-3 gap-1 ",
+      enabled: "bg-grey-100 text-grey-700",
+      hover: "hover:bg-grey-300",
+      focus: "focus-within:bg-grey-100",
+      focusHover: "hover:focus-within:bg-grey-100",
+      disabled: "disabled:bg-grey-0 disabled:text-grey-300",
+      statusTextclass: "",
     },
   },
   outLinedTextInput: {
@@ -67,7 +74,7 @@ const designSystem: DesignSystem = {
         "hover:focus-within:border-tangerine-500 hover:focus-within:bg-grey-0 hover:focus-within:text-grey-700",
       disabled:
         "disabled:border-grey-0 disabled:bg-grey-0 disabled:text-grey-300",
-      supportingTextColor: "text-grey-500",
+      statusTextclass: "text-grey-500",
     },
     error: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2",
@@ -77,7 +84,7 @@ const designSystem: DesignSystem = {
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
       disabled: "",
-      supportingTextColor: "text-pink-500",
+      statusTextclass: "text-pink-500",
     },
   },
   textInput: {
@@ -89,7 +96,7 @@ const designSystem: DesignSystem = {
       focusHover:
         "hover:focus-within:bg-grey-0 hover:focus-within:text-grey-700",
       disabled: "disabled:bg-grey-0 disabled:text-grey-300",
-      supportingTextColor: "text-grey-700",
+      statusTextclass: "text-grey-700",
     },
     error: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2 border-none",
@@ -98,7 +105,7 @@ const designSystem: DesignSystem = {
       focus: "focus-within:bg-pink-50",
       focusHover: "hover:focus-within:bg-pink-50",
       disabled: "",
-      supportingTextColor: "text-pink-500",
+      statusTextclass: "text-pink-500",
     },
   },
   timerTextInput: {
@@ -112,7 +119,7 @@ const designSystem: DesignSystem = {
         "hover:focus-within:border-tangerine-500 hover:focus-within:bg-grey-0 hover:focus-within:text-grey-700",
       disabled:
         "disabled:border-grey-0 disabled:bg-grey-0 disabled:text-grey-300",
-      supportingTextColor: "text-grey-500",
+      statusTextclass: "text-grey-500",
     },
     error: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2",
@@ -122,9 +129,13 @@ const designSystem: DesignSystem = {
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
       disabled: "",
-      supportingTextColor: "text-pink-500",
+      statusTextclass: "text-pink-500",
     },
   },
-};
+} as const;
 
-export default designSystem;
+export const baseStyles = {
+  input:
+    "disable:placeholder-grey-300 h-[1.375rem] flex-1 overflow-hidden text-ellipsis whitespace-nowrap placeholder-grey-500 focus:outline-none",
+  statusText: "body-3 flex gap-[0.625rem] self-stretch px-3 pb-3 pt-1",
+};

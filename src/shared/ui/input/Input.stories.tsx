@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import BaseInput from "./BaseInput";
-import { InputProps } from "./input.types";
+import Input from "./Input";
 
 /*----------leadingIcon, trailingIcon 등에 들어갈 svg 컴포넌트 ---------- */
 const CalenderIcon = () => (
@@ -60,255 +59,388 @@ const MockUpIcon = () => (
 /*----------countArea 에 들어갈 React.ReactNode 컴포넌트 ---------- */
 const CountArea = () => <span className="body-2 text-grey-700">00:00</span>;
 
-const meta: Meta<typeof BaseInput> = {
+const meta: Meta<typeof Input> = {
   title: "shared/Input",
-  component: BaseInput,
+  component: Input,
   tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
-        component:
-          "현재 보여지는 컴포넌트는 BaseInput 입니다. designType을 이용해 다양한 디자인 시스템의 Input 태그들을 생성합니다. 생성된 Input 태그들은 다양한 props를 외부에서 주입받아 사용됩니다. 해당 BaseInput 컴포넌트는 shared 외부로 export 되지 않으며 BaseInput 으로 생성된 디자인 시스템 컴포넌트들만이 외부로 export 됩니다.",
+        component: "",
       },
     },
   },
   argTypes: {
-    title: {
-      description:
-        "`<label>{title}</label>`로 렌더링됩니다. 인풋 태그 상단에 존재합니다.",
-      control: {
-        type: "text",
-      },
-    },
     id: {
       description:
-        "label태그의 htmlFor, input 태그의 name, id 속성에 사용됩니다.",
+        "Input 태그에서 label의 htmlFor , input 태그의 id,name으로 사용됩니다.",
+    },
+    label: {
       control: {
         type: "text",
       },
+      description: "해당 Input의 label로 사용됩니다.",
     },
-    designType: {
-      description:
-        "디자인 타입을 지정합니다. 해당 타입에 따라 디자인이 변경됩니다. 모든 디자인들은 enabled, focus , hover , disabled 에 대한 가상 선택자 스타일을 이용해 디자인 되었습니다.",
-      options: [
-        "searchTextInput",
-        "outLinedTextInput",
-        "textInput",
-        "timerTextInput",
-        "calanderInput",
-        "textField",
-      ],
+    componentType: {
       control: {
         type: "select",
+        options: [
+          "searchTextInput",
+          "outLinedTextInput",
+          "textInput",
+          "timerTextInput",
+          "calanderInput",
+          "textField",
+        ],
       },
-    },
-    condition: {
       description:
-        "해당 컴포넌트의 상태를 지정합니다. 해당 props를 통해 디자인의 모습을 변경합니다.",
-      options: ["default", "error"],
+        "Input 컴포넌트의 디자인 타입을 결정합니다. 모든 디자인 타입은 사전에 정의된 디자인 시스템을 따릅니다.",
+    },
+    isError: {
       control: {
-        type: "select",
+        type: "boolean",
       },
-    },
-    supportingText: {
       description:
-        "인풋 태그 하단에 존재하는 보조 텍스트입니다. 외부로부터 문자를 주입 받아 사용되며 빈 문자열이더라도 문자가 존재해야 하는 영역이 렌더링 됩니다. 만약 빈 문자열이 아닌 undefined를 주입하거나 설정하지 않으면 해당 공간은 렌더링되지 않습니다.",
+        "Input 컴포넌트에서 에러 상태를 나타냅니다. 에러 상태일 때는 error 디자인이 전체 영역과 statusText에 적용됩니다.",
+    },
+    statusText: {
       control: {
         type: "text",
       },
-    },
-    additionalOutterStyle: {
       description:
-        "인풋 태그를 감싸는 div 태그에 추가적인 스타일을 적용합니다. 외부로부터 CSSProperties를 주입받습니다.",
-      control: {
-        type: "object",
-      },
+        "Input 컴포넌트에서 다양한 상황을 나타내는 텍스트입니다. 만약 statusText를 props로 전달하지 않을 시 statusText가 존재하는 영역은 렌더링 되지 않습니다.",
     },
-    additionalSupportingTextStyle: {
+    leadingNode: {
       description:
-        "supportingText에 대한 추가적인 스타일을 적용합니다. 외부로부터 CSSProperties를 주입받습니다.",
-      control: {
-        type: "object",
-      },
+        "input 엘리먼트 좌측에 존재 할 수 있는 ReactNode입니다. leadingNode는 최대 하나의 노드만 가질 수 있습니다.",
     },
-    leadingIcon: {
+    trailingNode: {
       description:
-        "input 태그 이전에 존재 할 아이콘입니다. React.ReactNode을 주입받습니다.",
-      control: {
-        type: "select",
-      },
-      options: ["None", "SearchIcon"],
-      mapping: {
-        None: undefined,
-        SearchIcon: <SearchIcon />,
-      },
-    },
-    countArea: {
-      description:
-        "input 태그 이후에 존재 할 카운트 영역입니다. React.ReactNode을 주입받습니다.",
-      control: {
-        type: "select",
-      },
-      options: ["None", "CountArea"],
-      mapping: {
-        None: undefined,
-        CountArea: <CountArea />,
-      },
-    },
-    trailingIcon: {
-      description:
-        "input 태그 이후에 존재 할 아이콘입니다. React.ReactNode을 주입받습니다.",
-      control: {
-        type: "select",
-      },
-      options: ["None", "CalenderIcon"],
-      mapping: {
-        None: undefined,
-        CalenderIcon: <CalenderIcon />,
-      },
+        "input 엘리먼트 우측에 존재 할 수 있는 ReactNode입니다. trailingNode는 최대 두개의 노드만 가질 수 있습니다.",
     },
   },
 };
 
 export default meta;
 
-type Story = StoryObj<typeof BaseInput>;
+type Story = StoryObj<typeof Input>;
 
 export const Default: Story = {
   args: {
-    title: "Title",
-    id: "id",
-    designType: "searchTextInput",
-    condition: "default",
-    placeholder: "placeholder",
-    supportingText: "Supporting Text",
-    additionalOutterStyle: {
-      width: "328px",
+    id: "input",
+    label: "Title",
+    isError: false,
+    statusText: null,
+    placeholder: "PlaceHolder",
+  },
+  parameters: {
+    backgrond: {
+      default: "twitter",
+    },
+    docs: {
+      description: {
+        story: "컴포넌트 타입에 따른 Input 컴포넌트들의 예시입니다.",
+      },
     },
   },
   render: (args) => {
-    return <BaseInput {...args} />;
-  },
-};
-
-export const SearchTextInput = {
-  args: {
-    ...Default.args,
-    designType: "searchTextInput",
-    leadingIcon: <SearchIcon />,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Search Text Input 입니다. 해당 태그는 supportingText와 에러 상태를 가지지 않습니다. 아이콘으론 leadingIcon 만 갖습니다.",
-      },
-    },
-  },
-};
-
-export const TimerTextInput = {
-  args: {
-    ...Default.args,
-    designType: "timerTextInput",
-    countArea: <CountArea />,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Timer Text Input 입니다. 해당 태그는 condition으로 error를 가질 수 있으며 에러 상태일 때 보이는 모습이 다릅니다. 카운트 기능이 있는 컴포넌트를 `countArea` props로 받습니다.",
-      },
-    },
-  },
-  render: (args: InputProps<"timerTextInput">) => {
     return (
-      <div className="flex flex-col gap-4">
-        <h1>Default</h1>
-        <BaseInput {...args} />
-        <h1>Error</h1>
-        <BaseInput {...args} condition="error" />
+      <div className="flex gap-20">
+        <div className="flex w-[328px] flex-col gap-3">
+          <h1>default</h1>
+          <Input {...args} label="textField" componentType="textField" />
+          <Input
+            {...args}
+            label="calanderInput"
+            componentType="calanderInput"
+          />
+          <Input
+            {...args}
+            componentType="searchTextInput"
+            label="searchTextInput"
+          />
+          <Input
+            {...args}
+            componentType="outLinedTextInput"
+            label="outLinedTextInput"
+          />
+          <Input {...args} componentType="textInput" label="textInput" />
+          <Input
+            {...args}
+            componentType="timerTextInput"
+            label="timerTextInput"
+          />
+        </div>
+        <div className="flex w-[328px] flex-col gap-3">
+          <h1>error</h1>
+          <Input
+            {...args}
+            componentType="textField"
+            label="textField"
+            isError
+          />
+          <Input
+            {...args}
+            componentType="calanderInput"
+            label="calanderInput"
+            isError
+          />
+          <Input
+            {...args}
+            componentType="searchTextInput"
+            label="searchTextInput"
+            isError
+          />
+          <Input
+            {...args}
+            componentType="outLinedTextInput"
+            label="outLinedTextInput"
+            isError
+          />
+          <Input
+            {...args}
+            componentType="textInput"
+            label="textInput"
+            isError
+          />
+          <Input
+            {...args}
+            componentType="timerTextInput"
+            label="timerTextInput"
+            isError
+          />
+        </div>
+        <div className="flex w-[328px] flex-col gap-3">
+          <h1>default</h1>
+          <Input {...args} label="textField" componentType="textField" />
+          <Input
+            {...args}
+            label="calanderInput"
+            componentType="calanderInput"
+            statusText="올바른 입력값을 입력해주세요"
+          />
+          <Input
+            {...args}
+            componentType="searchTextInput"
+            label="searchTextInput"
+            statusText="올바른 입력값을 입력해주세요"
+          />
+          <Input
+            {...args}
+            componentType="outLinedTextInput"
+            label="outLinedTextInput"
+            statusText="올바른 입력값을 입력해주세요"
+          />
+          <Input
+            {...args}
+            componentType="textInput"
+            label="textInput"
+            statusText="올바른 입력값을 입력해주세요"
+          />
+          <Input
+            {...args}
+            componentType="timerTextInput"
+            label="timerTextInput"
+            statusText="올바른 입력값을 입력해주세요"
+          />
+        </div>
+        <div className="flex w-[328px] flex-col gap-3">
+          <h1>error</h1>
+          <Input
+            {...args}
+            componentType="textField"
+            label="textField"
+            isError
+            statusText="올바른 입력값을 입력해주세요"
+          />
+          <Input
+            {...args}
+            componentType="calanderInput"
+            label="calanderInput"
+            isError
+            statusText="올바른 입력값을 입력해주세요"
+          />
+          <Input
+            {...args}
+            componentType="searchTextInput"
+            label="searchTextInput"
+            isError
+            statusText="올바른 입력값을 입력해주세요"
+          />
+          <Input
+            {...args}
+            componentType="outLinedTextInput"
+            label="outLinedTextInput"
+            isError
+            statusText="올바른 입력값을 입력해주세요"
+          />
+          <Input
+            {...args}
+            componentType="textInput"
+            label="textInput"
+            isError
+            statusText="올바른 입력값을 입력해주세요"
+          />
+          <Input
+            {...args}
+            componentType="timerTextInput"
+            label="timerTextInput"
+            isError
+            statusText="올바른 입력값을 입력해주세요"
+          />
+        </div>
       </div>
     );
   },
 };
 
-export const CalendarInput = {
-  args: {
-    ...Default.args,
-    designType: "calanderInput",
-    trailingIcon: <CalenderIcon />,
-    type: "date",
-  },
+export const InputWithIcons: Story = {
+  args: Default.args,
   parameters: {
+    ...Default.parameters,
     docs: {
       description: {
         story:
-          "Calender Input 입니다. 해당 태그는 supportingText와 에러 상태를 가질 수 있습니다. 아이콘으론 trailingIcon 만 갖습니다.",
+          "모든 Input 아이콘들은 trailingNode, leadingNode을 포함하여 생성 될 수 있습니다.",
       },
     },
   },
-  render: (args: InputProps<"calanderInput">) => {
-    return (
-      <div className="flex flex-col gap-4">
-        <h1>Default</h1>
-        <BaseInput {...args} />
-        <h1>Error</h1>
-        <BaseInput {...args} condition="error" />
-      </div>
-    );
-  },
-};
 
-export const TextInput = {
-  args: {
-    ...Default.args,
-    designType: "textInput",
-    leadingIcon: <MockUpIcon />,
-    CountArea: <CountArea />,
-    trailingIcon: <MockUpIcon />,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Text Field 입니다. 해당 태그는 supportingText와 에러 상태를 가질 수 있습니다. 다양한 ReactNode를 props로 Icon으로 받아 사용 할 수 있습니다.",
-      },
-    },
-  },
-  render: (args: InputProps<"textInput">) => {
+  render: (args) => {
     return (
-      <div className="flex flex-col gap-4">
-        <h1>Default</h1>
-        <BaseInput {...args} />
-        <h1>Error</h1>
-        <BaseInput {...args} condition="error" />
-      </div>
-    );
-  },
-};
-
-export const OutLinedTextInput = {
-  args: {
-    ...Default.args,
-    designType: "outLinedTextInput",
-    leadingIcon: <MockUpIcon />,
-    CountArea: <CountArea />,
-    trailingIcon: <MockUpIcon />,
-  },
-  parameters: {
-    docs: {
-      story:
-        "OutLined Text Input 입니다.supportingText와 에러 상태를 가질 수 있습니다. 다양한 ReactNode를 props로 Icon으로 받아 사용 할 수 있습니다.",
-    },
-  },
-  render: (args: InputProps<"outLinedTextInput">) => {
-    return (
-      <div className="flex flex-col gap-4">
-        <h1>Default</h1>
-        <BaseInput {...args} />
-        <h1>Error</h1>
-        <BaseInput {...args} condition="error" />
+      <div className="flex flex-col gap-10">
+        <div className="flex gap-5">
+          <Input
+            {...args}
+            label="calanderInput"
+            componentType="calanderInput"
+            leadingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="calanderInput"
+            componentType="calanderInput"
+            leadingNode={<MockUpIcon />}
+            trailingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="calanderInput"
+            componentType="calanderInput"
+            leadingNode={<MockUpIcon />}
+            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+          />
+        </div>
+        <div className="flex gap-5">
+          <Input
+            {...args}
+            label="textField"
+            componentType="textField"
+            leadingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="textField"
+            componentType="textField"
+            leadingNode={<MockUpIcon />}
+            trailingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="textField"
+            componentType="textField"
+            leadingNode={<MockUpIcon />}
+            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+          />
+        </div>
+        <div className="flex gap-5">
+          <Input
+            {...args}
+            label="searchTextInput"
+            componentType="searchTextInput"
+            leadingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="searchTextInput"
+            componentType="searchTextInput"
+            leadingNode={<MockUpIcon />}
+            trailingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="searchTextInput"
+            componentType="searchTextInput"
+            leadingNode={<MockUpIcon />}
+            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+          />
+        </div>
+        <div className="flex gap-5">
+          <Input
+            {...args}
+            label="outLinedTextInput"
+            componentType="outLinedTextInput"
+            leadingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="outLinedTextInput"
+            componentType="outLinedTextInput"
+            leadingNode={<MockUpIcon />}
+            trailingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="outLinedTextInput"
+            componentType="outLinedTextInput"
+            leadingNode={<MockUpIcon />}
+            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+          />
+        </div>
+        <div className="flex gap-5">
+          <Input
+            {...args}
+            label="textInput"
+            componentType="textInput"
+            leadingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="textInput"
+            componentType="textInput"
+            leadingNode={<MockUpIcon />}
+            trailingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="textInput"
+            componentType="textInput"
+            leadingNode={<MockUpIcon />}
+            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+          />
+        </div>
+        <div className="flex gap-5">
+          <Input
+            {...args}
+            label="timerTextInput"
+            componentType="timerTextInput"
+            leadingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="timerTextInput"
+            componentType="timerTextInput"
+            leadingNode={<MockUpIcon />}
+            trailingNode={<MockUpIcon />}
+          />
+          <Input
+            {...args}
+            label="timerTextInput"
+            componentType="timerTextInput"
+            leadingNode={<MockUpIcon />}
+            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+          />
+        </div>
       </div>
     );
   },
