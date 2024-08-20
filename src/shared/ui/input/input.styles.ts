@@ -1,18 +1,4 @@
-import type { DesignType, Condition } from "./BaseInput";
-
-type DesignSystem = {
-  [key in DesignType]: {
-    [key in Condition]: {
-      base: string;
-      enabled: string;
-      hover: string;
-      focus: string;
-      focusHover: string;
-      disabled: string;
-      supportingTextColor: string;
-    };
-  };
-};
+import type { DesignSystem } from "./input.types";
 
 const designSystem: DesignSystem = {
   calanderInput: {
@@ -44,15 +30,6 @@ const designSystem: DesignSystem = {
       hover: "hover:bg-grey-300",
       focus: "focus-within:bg-grey-100",
       focusHover: "hover:focus-within:bg-grey-100",
-      disabled: "disabled:bg-grey-0 disabled:text-grey-300",
-      supportingTextColor: "",
-    },
-    error: {
-      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl px-3 gap-1 ",
-      enabled: "bg-grey-100 text-grey-700",
-      hover: "hover:bg-grey-300",
-      focus: "focus-within:bg-grey-100",
-      focusHover: "hover:focus:bg-grey-100",
       disabled: "disabled:bg-grey-0 disabled:text-grey-300",
       supportingTextColor: "",
     },

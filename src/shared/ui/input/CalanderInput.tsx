@@ -1,7 +1,7 @@
 import BaseInput from "./BaseInput";
-import type { InputProps } from "./BaseInput";
+import type { InputProps } from "./input.types";
 
-const CalanderInput = (props: InputProps) => {
+const CalanderInput = (props: InputProps<"calanderInput">) => {
   const { designType = "calanderInput", type = "date", ...rest } = props;
   return (
     <BaseInput

@@ -1,12 +1,12 @@
 import BaseInput from "./BaseInput";
-import type { InputProps } from "./BaseInput";
+import type { InputProps } from "./input.types";
 
 /**
  * searchTextInput 의 경우에는 에러에 대한 핸들링 처리가 필요없기 때문에 단순히 label,input 을 연결 할 id와
  * label 의 title, input 의 value, onChange 를 받아서 BaseInput 컴포넌트에 전달해주는 역할을 합니다.
  * @figma Input fields/Search의 디자인 시스템 참고
  */
-const SearchTextInput = (props: InputProps) => {
+const SearchTextInput = (props: InputProps<"searchTextInput">) => {
   const {
     designType = "searchTextInput",
     condition = "default",
