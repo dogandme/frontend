@@ -1,7 +1,7 @@
 import BaseInput from "./BaseInput";
 import type { InputProps } from "./input.types";
 
-const CalanderInput = (props: InputProps<"calanderInput">) => {
+const CalenderInput = (props: InputProps<"calanderInput">) => {
   const { designType = "calanderInput", type = "date", ...rest } = props;
   return (
     <BaseInput
@@ -33,4 +33,4 @@ const CalanderInput = (props: InputProps<"calanderInput">) => {
   );
 };
 
-export default CalanderInput;
+export default CalenderInput;

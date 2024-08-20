@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import CalanderInput from "./CalanderInput";
+import CalenderInput from "./CalendarInput";
 
-const meta: Meta<typeof CalanderInput> = {
-  component: CalanderInput,
+const meta: Meta<typeof CalenderInput> = {
+  component: CalenderInput,
   title: "shared/Input/CaledarInput",
   argTypes: {
     additionalOutterStyle: {
@@ -15,7 +15,7 @@ const meta: Meta<typeof CalanderInput> = {
 
 export default meta;
 
-type Story = StoryObj<typeof CalanderInput>;
+type Story = StoryObj<typeof CalenderInput>;
 export const Default: Story = {
   args: {
     title: "Title",
