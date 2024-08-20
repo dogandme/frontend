@@ -18,7 +18,6 @@ type Story = StoryObj<typeof SearchTextInput>;
 
 export const Default: Story = {
   args: {
-    title: "Title",
     id: "sample-id",
     defaultValue: "",
     componentType: "searchTextInput",

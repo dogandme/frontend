@@ -33,7 +33,7 @@ interface InputStyles {
  * additionalOutterStyle , additionalSupportingTextStyle 은 컴포넌트 외부에서 추가적인 스타일을 적용할 때 사용합니다.
  */
 interface InputOutterProps {
-  title: string;
+  title?: string;
   isSupportingNeeded?: boolean;
   supportingText?: string;
   additionalOutterStyle?: React.CSSProperties;
