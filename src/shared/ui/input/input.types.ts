@@ -6,6 +6,7 @@ export interface DesignConditionMap {
   textInput: Condition;
   timerTextInput: Condition;
   calanderInput: Condition;
+  textField: Condition;
 }
 
 interface InputStyles {
