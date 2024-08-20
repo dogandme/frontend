@@ -28,10 +28,3 @@ export const Default: Story = {
     placeholder: "Placeholder",
   },
 };
-
-export const SearchTextWithValue: Story = {
-  args: {
-    ...Default.args,
-    defaultValue: "input",
-  },
-};

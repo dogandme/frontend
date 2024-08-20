@@ -30,7 +30,7 @@ export const Default: Story = {
   },
 };
 
-export const CalanderInputWithError: Story = {
+export const CalenderInputWithError: Story = {
   args: {
     ...Default.args,
     condition: "error",
