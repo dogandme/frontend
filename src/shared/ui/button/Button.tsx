@@ -17,12 +17,12 @@ const Button = ({ colorType, variant, size, children, ...props }: Props) => {
   // children 하위의 하나의 자식만을 가지고 있는지 확인
   const hasOneChild = childrenArray.length === 1;
   const firstChild = childrenArray[0];
+  const isFirstChildText = typeof firstChild === "string";
 
   // 아이콘만 있는 경우
-  const hasOnlyIcon =
-    hasOneChild && isValidElement(firstChild) && firstChild.type === "svg";
+  const hasOnlyIcon = hasOneChild && !isFirstChildText;
   // 텍스트만 있는 경우
-  const hasOnlyText = hasOneChild && typeof firstChild === "string";
+  const hasOnlyText = hasOneChild && isFirstChildText;
 
   // children 하위의 두개의 자식을 가지고 있는지 확인
   const hasTwoChild = childrenArray.length === 2;
