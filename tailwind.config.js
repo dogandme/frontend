@@ -6,9 +6,6 @@ export default {
     "./.storybook/**/*.{ts,tsx,js,jsx}",
     "./stories/**/*.{ts,tsx,js,jsx}",
   ],
-  theme: {
-    extend: {},
-  },
   plugins: [],
   theme: {
     colors: {
