@@ -5,7 +5,7 @@ const TextField = ({
   title,
   id,
   condition,
-  supportingText,
+  supportingText = "",
   additionalOutterStyle,
 }: InputProps<"textField">) => {
   const { base, enabled, hover, focus, focusHover, supportingTextColor } =

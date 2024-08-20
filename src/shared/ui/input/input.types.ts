@@ -36,7 +36,6 @@ interface InputDesignType<T extends keyof DesignConditionMap> {
  */
 interface InputOutterProps {
   title?: string;
-  isSupportingNeeded?: boolean;
   supportingText?: string;
   additionalOutterStyle?: React.CSSProperties;
   additionalSupportingTextStyle?: React.CSSProperties;

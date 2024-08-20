@@ -7,7 +7,6 @@ const BaseInput = <T extends keyof DesignConditionMap>({
   leadingIcon,
   countArea,
   trailingIcon,
-  isSupportingNeeded = true,
   supportingText,
   designType,
   condition,
@@ -50,7 +49,7 @@ const BaseInput = <T extends keyof DesignConditionMap>({
         {countArea}
         {trailingIcon}
       </div>
-      {isSupportingNeeded && (
+      {supportingText !== undefined && (
         <p
           className={`${supportingTextColor} body-3 flex gap-[0.625rem] self-stretch px-3 pb-3 pt-1`}
           style={additionalSupportingTextStyle}

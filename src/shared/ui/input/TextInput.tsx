@@ -6,7 +6,14 @@ import type { InputProps } from "./input.types";
  * @figma Input fields/TextField 디자인 시스템 참고
  */
 const TextInput = (props: InputProps<"textInput">) => {
-  return <BaseInput {...props} designType="textInput" isSupportingNeeded />;
+  const { supportingText = "", ...rest } = props;
+  return (
+    <BaseInput
+      {...rest}
+      designType="textInput"
+      supportingText={supportingText}
+    />
+  );
 };
 
 export default TextInput;
