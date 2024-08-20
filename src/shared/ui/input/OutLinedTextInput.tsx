@@ -5,28 +5,10 @@ import BaseInput, { InputProps } from "./BaseInput";
  * condition에 따른 supportingText를 주입받습니다.
  * @figma Input fields/TextField 디자인 시스템 참고
  */
-const OutLinedTextInput = ({
-  title,
-  id,
-  value,
-  onChange,
-  condition,
-  supportingText,
-  ...props
-}: InputProps) => {
+const OutLinedTextInput = (props: InputProps) => {
   const { componentType = "outLinedTextInput", ...rest } = props;
   return (
-    <BaseInput
-      title={title}
-      id={id}
-      value={value}
-      onChange={onChange}
-      condition={condition}
-      componentType={componentType}
-      isSupportingNeeded
-      supportingText={supportingText}
-      {...rest}
-    />
+    <BaseInput componentType={componentType} isSupportingNeeded {...rest} />
   );
 };
 

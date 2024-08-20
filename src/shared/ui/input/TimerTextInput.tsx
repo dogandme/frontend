@@ -7,31 +7,9 @@ import type { InputProps } from "./BaseInput";
  * @figma Input fields/Timer 디자인 시스템 참고
  */
 
-const TimerTextInput = ({
-  title,
-  id,
-  value,
-  onChange,
-  condition,
-  supportingText,
-  trailingIcon,
-  ...props
-}: InputProps) => {
+const TimerTextInput = (props: InputProps) => {
   const { componentType = "timerTextInput", ...rest } = props;
-  return (
-    <BaseInput
-      title={title}
-      id={id}
-      value={value}
-      onChange={onChange}
-      condition={condition}
-      componentType={componentType}
-      isSupportingNeeded
-      supportingText={supportingText}
-      trailingIcon={trailingIcon}
-      {...rest}
-    />
-  );
+  return <BaseInput componentType={componentType} {...rest} />;
 };
 
 export default TimerTextInput;

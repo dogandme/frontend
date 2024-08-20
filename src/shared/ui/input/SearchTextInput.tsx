@@ -6,13 +6,7 @@ import type { InputProps } from "./BaseInput";
  * label 의 title, input 의 value, onChange 를 받아서 BaseInput 컴포넌트에 전달해주는 역할을 합니다.
  * @figma Input fields/Search의 디자인 시스템 참고
  */
-const SearchTextInput = ({
-  title,
-  id,
-  value,
-  onChange,
-  ...props
-}: InputProps) => {
+const SearchTextInput = (props: InputProps) => {
   const {
     componentType = "searchTextInput",
     condition = "default",
@@ -20,13 +14,8 @@ const SearchTextInput = ({
   } = props;
   return (
     <BaseInput
-      title={title}
-      id={id}
-      value={value}
-      onChange={onChange}
       componentType={componentType}
       condition={condition}
-      isSupportingNeeded={false}
       leadingIcon={
         <svg
           width="1.5rem"
