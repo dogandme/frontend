@@ -3,7 +3,7 @@ import TextInput from "./TextInput";
 
 const meta: Meta<typeof TextInput> = {
   component: TextInput,
-  title: "shared/Input/PlainTextInput",
+  title: "shared/Input/TextInput",
   argTypes: {
     additionalOutterStyle: {
       control: {
@@ -31,7 +31,7 @@ export const Default: Story = {
   },
 };
 
-export const PlainTextInputWithError: Story = {
+export const TextInputWithError: Story = {
   args: {
     ...Default.args,
     condition: "error",
