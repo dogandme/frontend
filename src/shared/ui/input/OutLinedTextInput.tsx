@@ -7,8 +7,9 @@ import type { InputProps } from "./input.types";
  * @figma Input fields/TextField 디자인 시스템 참고
  */
 const OutLinedTextInput = (props: InputProps<"outLinedTextInput">) => {
-  const { designType = "outLinedTextInput", ...rest } = props;
-  return <BaseInput designType={designType} isSupportingNeeded {...rest} />;
+  return (
+    <BaseInput {...props} designType="outLinedTextInput" isSupportingNeeded />
+  );
 };
 
 export default OutLinedTextInput;

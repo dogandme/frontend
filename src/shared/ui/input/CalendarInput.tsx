@@ -2,11 +2,11 @@ import BaseInput from "./BaseInput";
 import type { InputProps } from "./input.types";
 
 const CalenderInput = (props: InputProps<"calanderInput">) => {
-  const { designType = "calanderInput", type = "date", ...rest } = props;
   return (
     <BaseInput
-      designType={designType}
-      type={type}
+      {...props}
+      designType="calanderInput"
+      type="date"
       trailingIcon={
         <svg
           width="1.5rem"
@@ -28,7 +28,6 @@ const CalenderInput = (props: InputProps<"calanderInput">) => {
           </defs>
         </svg>
       }
-      {...rest}
     />
   );
 };

@@ -8,8 +8,9 @@ import type { InputProps } from "./input.types";
  */
 
 const TimerTextInput = (props: InputProps<"timerTextInput">) => {
-  const { designType = "timerTextInput", ...rest } = props;
-  return <BaseInput designType={designType} {...rest} />;
+  return (
+    <BaseInput {...props} designType="timerTextInput" isSupportingNeeded />
+  );
 };
 
 export default TimerTextInput;

@@ -7,15 +7,10 @@ import type { InputProps } from "./input.types";
  * @figma Input fields/Search의 디자인 시스템 참고
  */
 const SearchTextInput = (props: InputProps<"searchTextInput">) => {
-  const {
-    designType = "searchTextInput",
-    condition = "default",
-    ...rest
-  } = props;
   return (
     <BaseInput
-      designType={designType}
-      condition={condition}
+      {...props}
+      designType="searchTextInput"
       leadingIcon={
         <svg
           width="1.5rem"
@@ -32,7 +27,6 @@ const SearchTextInput = (props: InputProps<"searchTextInput">) => {
           />
         </svg>
       }
-      {...rest}
     />
   );
 };
