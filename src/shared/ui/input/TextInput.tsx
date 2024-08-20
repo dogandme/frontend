@@ -5,29 +5,9 @@ import type { InputProps } from "./input.types";
  * condition에 따른 supportingText를 주입받습니다.
  * @figma Input fields/TextField 디자인 시스템 참고
  */
-const TextInput = ({
-  title,
-  id,
-  value,
-  onChange,
-  condition,
-  supportingText,
-  ...props
-}: InputProps<"textInput">) => {
+const TextInput = (props: InputProps<"textInput">) => {
   const { designType = "textInput", ...rest } = props;
-  return (
-    <BaseInput
-      title={title}
-      id={id}
-      value={value}
-      onChange={onChange}
-      condition={condition}
-      designType={designType}
-      isSupportingNeeded
-      supportingText={supportingText}
-      {...rest}
-    />
-  );
+  return <BaseInput designType={designType} isSupportingNeeded {...rest} />;
 };
 
 export default TextInput;
