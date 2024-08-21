@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test-storybook": "test-storybook"
+    "test-storybook": "test-storybook --url https://66bae48876a5167719ee1778-jqrdxsprac.chromatic.com"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.51.23",
