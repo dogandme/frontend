@@ -6,14 +6,20 @@ import {
 } from "react";
 import { colors, getSizeStyles } from "./button.styles";
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   colorType: "primary" | "secondary" | "tertiary";
   variant: "filled" | "outlined" | "text";
   size: "xSmall" | "small" | "medium" | "large";
   children: ReactNode;
 };
 
-const Button = ({ colorType, variant, size, children, ...props }: Props) => {
+const Button = ({
+  colorType,
+  variant,
+  size,
+  children,
+  ...props
+}: ButtonProps) => {
   const baseStyles =
     "inline-flex flex-shrink-0 items-center justify-center gap-[.625rem] rounded-[1rem] outline-none";
   const colorStyles = colors[colorType][variant];
