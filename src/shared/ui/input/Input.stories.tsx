@@ -147,29 +147,29 @@ export const Default: Story = {
       <div className="flex gap-20">
         <div className="flex flex-col gap-3">
           <h1>default</h1>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input {...args} label="calander" componentType="calander" />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input {...args} componentType="searchText" label="searchText" />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="outlinedText"
               label="outlinedText"
             />
           </div>
-          <div className="border border-grey-200 p-4">
+          <div className="w-[328px] border border-grey-200 p-4">
             <Input {...args} componentType="text" label="text" />
           </div>
-          <div className="border border-grey-200 p-4">
+          <div className="w-[328px] border border-grey-200 p-4">
             <Input {...args} componentType="timerText" label="timerText" />
           </div>
         </div>
         <div className="flex flex-col gap-3">
           <h1>error</h1>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="calander"
@@ -177,7 +177,7 @@ export const Default: Story = {
               isError
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="searchText"
@@ -185,7 +185,7 @@ export const Default: Story = {
               isError
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="outlinedText"
@@ -193,10 +193,10 @@ export const Default: Story = {
               isError
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input {...args} componentType="text" label="text" isError />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="timerText"
@@ -207,7 +207,7 @@ export const Default: Story = {
         </div>
         <div className="flex flex-col gap-3">
           <h1>default when disabled</h1>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="calander"
@@ -216,7 +216,7 @@ export const Default: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="searchText"
@@ -225,7 +225,7 @@ export const Default: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="outlinedText"
@@ -234,7 +234,7 @@ export const Default: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="text"
@@ -243,7 +243,7 @@ export const Default: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="timerText"
@@ -255,7 +255,7 @@ export const Default: Story = {
         </div>
         <div className="flex flex-col gap-3">
           <h1>error when disabled</h1>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="calander"
@@ -265,7 +265,7 @@ export const Default: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="searchText"
@@ -275,7 +275,7 @@ export const Default: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="outlinedText"
@@ -285,7 +285,7 @@ export const Default: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="text"
@@ -295,7 +295,7 @@ export const Default: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="timerText"
@@ -308,7 +308,7 @@ export const Default: Story = {
         </div>
         <div className="flex flex-col gap-3">
           <h1>default with statusText</h1>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="calander"
@@ -316,7 +316,7 @@ export const Default: Story = {
               statusText="올바른 입력값을 입력해주세요"
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="searchText"
@@ -324,7 +324,7 @@ export const Default: Story = {
               statusText="올바른 입력값을 입력해주세요"
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="outlinedText"
@@ -332,7 +332,7 @@ export const Default: Story = {
               statusText="올바른 입력값을 입력해주세요"
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="text"
@@ -340,7 +340,7 @@ export const Default: Story = {
               statusText="올바른 입력값을 입력해주세요"
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="timerText"
@@ -351,7 +351,7 @@ export const Default: Story = {
         </div>
         <div className="flex flex-col gap-3">
           <h1>error with statusText</h1>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="calander"
@@ -360,7 +360,7 @@ export const Default: Story = {
               statusText="올바른 입력값을 입력해주세요"
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="searchText"
@@ -369,7 +369,7 @@ export const Default: Story = {
               statusText="올바른 입력값을 입력해주세요"
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="outlinedText"
@@ -378,7 +378,7 @@ export const Default: Story = {
               statusText="올바른 입력값을 입력해주세요"
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="text"
@@ -387,7 +387,7 @@ export const Default: Story = {
               statusText="올바른 입력값을 입력해주세요"
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="timerText"
@@ -418,114 +418,146 @@ export const InputWithIcons: Story = {
     return (
       <div className="flex flex-col gap-10">
         <div className="flex gap-5">
-          <Input
-            {...args}
-            label="calander"
-            componentType="calander"
-            leadingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="calander"
-            componentType="calander"
-            leadingNode={<MockUpIcon />}
-            trailingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="calander"
-            componentType="calander"
-            leadingNode={<MockUpIcon />}
-            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-          />
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="calander"
+              componentType="calander"
+              leadingNode={<MockUpIcon />}
+            />
+          </div>
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="calander"
+              componentType="calander"
+              leadingNode={<MockUpIcon />}
+              trailingNode={<MockUpIcon />}
+            />
+          </div>
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="calander"
+              componentType="calander"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-5">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="searchText"
+              componentType="searchText"
+              leadingNode={<MockUpIcon />}
+            />
+          </div>
+
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="searchText"
+              componentType="searchText"
+              leadingNode={<MockUpIcon />}
+              trailingNode={<MockUpIcon />}
+            />
+          </div>
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="searchText"
+              componentType="searchText"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+            />
+          </div>
         </div>
         <div className="flex gap-5">
-          <Input
-            {...args}
-            label="searchText"
-            componentType="searchText"
-            leadingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="searchText"
-            componentType="searchText"
-            leadingNode={<MockUpIcon />}
-            trailingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="searchText"
-            componentType="searchText"
-            leadingNode={<MockUpIcon />}
-            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-          />
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="outlinedText"
+              componentType="outlinedText"
+              leadingNode={<MockUpIcon />}
+            />
+          </div>
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="outlinedText"
+              componentType="outlinedText"
+              leadingNode={<MockUpIcon />}
+              trailingNode={<MockUpIcon />}
+            />
+          </div>
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="outlinedText"
+              componentType="outlinedText"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+            />
+          </div>
         </div>
         <div className="flex gap-5">
-          <Input
-            {...args}
-            label="outlinedText"
-            componentType="outlinedText"
-            leadingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="outlinedText"
-            componentType="outlinedText"
-            leadingNode={<MockUpIcon />}
-            trailingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="outlinedText"
-            componentType="outlinedText"
-            leadingNode={<MockUpIcon />}
-            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-          />
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="text"
+              componentType="text"
+              leadingNode={<MockUpIcon />}
+            />
+          </div>
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="text"
+              componentType="text"
+              leadingNode={<MockUpIcon />}
+              trailingNode={<MockUpIcon />}
+            />
+          </div>
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="text"
+              componentType="text"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+            />
+          </div>
         </div>
         <div className="flex gap-5">
-          <Input
-            {...args}
-            label="text"
-            componentType="text"
-            leadingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="text"
-            componentType="text"
-            leadingNode={<MockUpIcon />}
-            trailingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="text"
-            componentType="text"
-            leadingNode={<MockUpIcon />}
-            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-          />
-        </div>
-        <div className="flex gap-5">
-          <Input
-            {...args}
-            label="timerText"
-            componentType="timerText"
-            leadingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="timerText"
-            componentType="timerText"
-            leadingNode={<MockUpIcon />}
-            trailingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="timerText"
-            componentType="timerText"
-            leadingNode={<MockUpIcon />}
-            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-          />
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="timerText"
+              componentType="timerText"
+              leadingNode={<MockUpIcon />}
+            />
+          </div>
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="timerText"
+              componentType="timerText"
+              leadingNode={<MockUpIcon />}
+              trailingNode={<MockUpIcon />}
+            />
+          </div>
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="timerText"
+              componentType="timerText"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+            />
+          </div>
         </div>
       </div>
     );
@@ -551,7 +583,7 @@ export const InputExample: Story = {
     return (
       <div className="flex flex-col gap-10">
         <div className="flex gap-10">
-          <div className="border border-grey-200 p-4">
+          <div className="w-[328px] border border-grey-200 p-4">
             <Input
               {...args}
               label="default searchText"
@@ -559,7 +591,7 @@ export const InputExample: Story = {
               leadingNode={<SearchIcon />}
             />
           </div>
-          <div className="border border-grey-200 p-4">
+          <div className="w-[328px] border border-grey-200 p-4">
             <Input
               {...args}
               label="disabled searchText "
@@ -568,7 +600,7 @@ export const InputExample: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4">
+          <div className="w-[328px] border border-grey-200 p-4">
             <Input
               {...args}
               label="searchText on error"
@@ -580,7 +612,7 @@ export const InputExample: Story = {
         </div>
 
         <div className="flex gap-10">
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="default outlinedText"
@@ -589,7 +621,7 @@ export const InputExample: Story = {
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="disabled outlinedText"
@@ -599,7 +631,7 @@ export const InputExample: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="outlinedText on error"
@@ -612,7 +644,7 @@ export const InputExample: Story = {
         </div>
 
         <div className="flex gap-10">
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="default text"
@@ -621,7 +653,7 @@ export const InputExample: Story = {
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="disabled text"
@@ -631,7 +663,7 @@ export const InputExample: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="text on error"
@@ -644,7 +676,7 @@ export const InputExample: Story = {
         </div>
 
         <div className="flex gap-10">
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="default timerText"
@@ -652,7 +684,7 @@ export const InputExample: Story = {
               trailingNode={[<CountArea />, <MockUpIcon />]}
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="disabled timerText"
@@ -661,7 +693,7 @@ export const InputExample: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="timerText on error"
@@ -673,7 +705,7 @@ export const InputExample: Story = {
         </div>
 
         <div className="flex gap-10">
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="default calander"
@@ -681,7 +713,7 @@ export const InputExample: Story = {
               trailingNode={<CalenderIcon />}
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="disabled calander"
@@ -690,7 +722,7 @@ export const InputExample: Story = {
               disabled
             />
           </div>
-          <div className="border border-grey-200 p-4 px-2">
+          <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               label="calander on error"
