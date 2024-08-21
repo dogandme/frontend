@@ -1,5 +1,5 @@
 export const inputStyles = {
-  calander: {
+  calender: {
     default: {
       base: "body-2 flex  h-12 items-center gap-1 self-stretch rounded-[4px] border px-3 py-3 gap-1",
       enabled: "border-grey-0 bg-grey-0",
@@ -7,7 +7,7 @@ export const inputStyles = {
       focus: "focus-within:border-green-500 focus-within:bg-grey-0",
       focusHover:
         "hover:focus-within:border-green-500 hover:focus-within:bg-grey-0",
-      disabled: "disabled:bg-grey-0 disabled:border-grey-100",
+      disabled: "bg-grey-0 border-grey-100 pointer-events-none",
       statusTextClass: "text-grey-700",
     },
     error: {
@@ -17,7 +17,7 @@ export const inputStyles = {
       focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
-      disabled: "",
+      disabled: "pointer-events-none",
       statusTextClass: "text-pink-500",
     },
   },
@@ -25,10 +25,10 @@ export const inputStyles = {
     default: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl px-3 py-3 gap-1 ",
       enabled: "bg-grey-100 text-grey-700",
-      hover: "hover:bg-grey-300",
+      hover: "hover:bg-grey-300 ",
       focus: "focus-within:bg-grey-100",
       focusHover: "hover:focus-within:bg-grey-100",
-      disabled: "disabled:bg-grey-0 disabled:text-grey-300",
+      disabled: "bg-grey-0 text-grey-300 pointer-events-none",
       statusTextClass: "",
     },
     error: {
@@ -37,7 +37,7 @@ export const inputStyles = {
       hover: "hover:bg-grey-300",
       focus: "focus-within:bg-grey-100",
       focusHover: "hover:focus-within:bg-grey-100",
-      disabled: "disabled:bg-grey-0 disabled:text-grey-300",
+      disabled: "bg-grey-0 text-grey-300 pointer-events-none",
       statusTextClass: "",
     },
   },
@@ -50,8 +50,7 @@ export const inputStyles = {
         "focus-within:border-tangerine-500 focus-within:bg-grey-0 focus-within:text-grey-700",
       focusHover:
         "hover:focus-within:border-tangerine-500 hover:focus-within:bg-grey-0 hover:focus-within:text-grey-700",
-      disabled:
-        "disabled:border-grey-0 disabled:bg-grey-0 disabled:text-grey-300",
+      disabled: "border-grey-0 bg-grey-0 text-grey-300 pointer-events-none",
       statusTextClass: "text-grey-500",
     },
     error: {
@@ -61,7 +60,7 @@ export const inputStyles = {
       focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
-      disabled: "",
+      disabled: "pointer-events-none",
       statusTextClass: "text-pink-500",
     },
   },
@@ -73,7 +72,7 @@ export const inputStyles = {
       focus: "focus-within:bg-grey-0 focus-within:text-grey-700 ",
       focusHover:
         "hover:focus-within:bg-grey-0 hover:focus-within:text-grey-700",
-      disabled: "disabled:bg-grey-0 disabled:text-grey-300",
+      disabled: "bg-grey-0 text-grey-300 pointer-events-none",
       statusTextClass: "text-grey-700",
     },
     error: {
@@ -82,7 +81,7 @@ export const inputStyles = {
       hover: "hover:bg-pink-100",
       focus: "focus-within:bg-pink-50",
       focusHover: "hover:focus-within:bg-pink-50",
-      disabled: "",
+      disabled: "pointer-events-none",
       statusTextClass: "text-pink-500",
     },
   },
@@ -95,8 +94,7 @@ export const inputStyles = {
         "focus-within:border-tangerine-500 focus-within:bg-grey-0 focus-within:text-grey-700",
       focusHover:
         "hover:focus-within:border-tangerine-500 hover:focus-within:bg-grey-0 hover:focus-within:text-grey-700",
-      disabled:
-        "disabled:border-grey-0 disabled:bg-grey-0 disabled:text-grey-300",
+      disabled: "border-grey-0 bg-grey-0 text-grey-300 pointer-events-none",
       statusTextClass: "text-grey-500",
     },
     error: {
@@ -106,7 +104,7 @@ export const inputStyles = {
       focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
-      disabled: "",
+      disabled: "pointer-events-none",
       statusTextClass: "text-pink-500",
     },
   },

@@ -89,7 +89,7 @@ const meta: Meta<typeof Input> = {
           "outlinedText",
           "text",
           "timerText",
-          "calander",
+          "calender",
         ],
       },
       description:
@@ -116,6 +116,13 @@ const meta: Meta<typeof Input> = {
     trailingNode: {
       description:
         "input 엘리먼트 우측에 존재 할 수 있는 ReactNode입니다. trailingNode는 최대 두개의 노드만 가질 수 있습니다.",
+    },
+    disabled: {
+      control: {
+        type: "boolean",
+      },
+      description:
+        "input 태그의 disabled와 input 엘리먼트를 감싸고 있는 wrapper태그에서 disabled 스타일을 적용하기 위해 사용되는 값입니다.",
     },
   },
 };
@@ -148,7 +155,12 @@ export const Default: Story = {
         <div className="flex flex-col gap-3">
           <h1>default</h1>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input {...args} label="calander" componentType="calander" />
+            <Input
+              {...args}
+              label="calender"
+              componentType="calender"
+              type="date"
+            />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input {...args} componentType="searchText" label="searchText" />
@@ -172,8 +184,9 @@ export const Default: Story = {
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              componentType="calander"
-              label="calander"
+              componentType="calender"
+              label="calender"
+              type="date"
               isError
             />
           </div>
@@ -210,8 +223,9 @@ export const Default: Story = {
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              label="calander"
-              componentType="calander"
+              label="calender"
+              componentType="calender"
+              type="date"
               statusText="올바른 입력값을 입력해주세요"
               disabled
             />
@@ -258,8 +272,9 @@ export const Default: Story = {
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              componentType="calander"
-              label="calander"
+              componentType="calender"
+              label="calender"
+              type="date"
               isError
               statusText="올바른 입력값을 입력해주세요"
               disabled
@@ -311,8 +326,9 @@ export const Default: Story = {
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              label="calander"
-              componentType="calander"
+              label="calender"
+              componentType="calender"
+              type="date"
               statusText="올바른 입력값을 입력해주세요"
             />
           </div>
@@ -354,8 +370,9 @@ export const Default: Story = {
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              componentType="calander"
-              label="calander"
+              componentType="calender"
+              label="calender"
+              type="date"
               isError
               statusText="올바른 입력값을 입력해주세요"
             />
@@ -421,16 +438,18 @@ export const InputWithIcons: Story = {
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              label="calander"
-              componentType="calander"
+              label="calender"
+              componentType="calender"
+              type="date"
               leadingNode={<MockUpIcon />}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              label="calander"
-              componentType="calander"
+              label="calender"
+              componentType="calender"
+              type="date"
               leadingNode={<MockUpIcon />}
               trailingNode={<MockUpIcon />}
             />
@@ -438,8 +457,9 @@ export const InputWithIcons: Story = {
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              label="calander"
-              componentType="calander"
+              label="calender"
+              componentType="calender"
+              type="date"
               leadingNode={<MockUpIcon />}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
@@ -708,26 +728,26 @@ export const InputExample: Story = {
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              label="default calander"
-              componentType="calander"
-              trailingNode={<CalenderIcon />}
+              label="default calender"
+              componentType="calender"
+              type="date"
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              label="disabled calander"
-              componentType="calander"
-              trailingNode={<CalenderIcon />}
+              label="disabled calender"
+              componentType="calender"
+              type="date"
               disabled
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
-              label="calander on error"
-              componentType="calander"
-              trailingNode={<CalenderIcon />}
+              label="calender on error"
+              componentType="calender"
+              type="date"
               isError
             />
           </div>

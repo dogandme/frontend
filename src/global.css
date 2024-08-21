@@ -55,9 +55,12 @@ body {
 /* input[type=date]의 기존 indicator를 제거하기 위한 스타일
   TODO 가은님에게 input[type=date] 어떤 식으로 스타일 사용 하실지 물어보고 수정하기
 */
+
 input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none;
-  appearance: none;
+  background: url(./shared/assets/calender.svg) no-repeat center;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 /* WebKit 기반 브라우저 (Chrome, Safari) */
