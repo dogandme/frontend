@@ -16,7 +16,7 @@ export const inputStyles = {
       hover: "hover:border-pink-700 hover:bg-grey-100",
       focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
       focusHover:
-        "hover:focus-within:border-pink-500 hover:foc us-within:bg-grey-0",
+        "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
       disabled: "",
       statusTextClass: "text-pink-500",
     },
