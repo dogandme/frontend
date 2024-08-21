@@ -48,10 +48,6 @@ const Input = ({
     ...restStylesObject
   } = wrapperClassesObject;
   const restClasses = Object.values(restStylesObject).join(" ");
-  const wrapperClasses = [
-    restClasses,
-    disabled ? disableClass : enabledClass,
-  ].join(" ");
 
   return (
     <div className="flex flex-col items-start">
@@ -60,7 +56,9 @@ const Input = ({
           {label}
         </label>
       </div>
-      <div className={wrapperClasses}>
+      <div
+        className={`${restClasses} ${disabled ? disableClass : enabledClass}`}
+      >
         {leadingNode}
         <input
           id={id}

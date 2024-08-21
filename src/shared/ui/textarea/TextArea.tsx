@@ -36,8 +36,8 @@ const TextArea = ({
 
     // removeEventListener를 위한 이벤트 핸들러 함수로 기명 함수를 사용하여 removeEventListener를 사용할 수 있도록 합니다.
     const handleInput = (e: Event) => {
-      const target = e.target as HTMLTextAreaElement;
-      setCurrentLength(target.value.length);
+      const { value } = e.target as HTMLTextAreaElement;
+      setCurrentLength(value.length);
     };
 
     $textArea.addEventListener("input", handleInput);
@@ -55,17 +55,15 @@ const TextArea = ({
   } = textAreaStyles[status];
 
   const resetClasses = Object.values(restStyleObject).join(" ");
-  const wrapperClasses = [
-    resetClasses,
-    disabled ? disableClass : enabledClass,
-  ].join(" ");
 
   return (
     <div className="flex flex-col items-start">
       <label htmlFor={id} className="title-3 flex items-start gap-1 pb-2">
         {label}
       </label>
-      <div className={wrapperClasses}>
+      <div
+        className={`${resetClasses} ${disabled ? disableClass : enabledClass}`}
+      >
         <textarea
           name={id}
           id={id}
