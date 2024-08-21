@@ -49,8 +49,8 @@ const TextArea = ({
 
   const status = isError ? "error" : "default";
   const { disabled: disableClass, ...restStyleObject } = textAreaStyles[status];
-  const restClasess = Object.values(restStyleObject).join(" ");
-  const wrapperClasses = [restClasess, disabled ? disableClass : ""].join(" ");
+  const resetClasses = Object.values(restStyleObject).join(" ");
+  const wrapperClasses = [resetClasses, disabled ? disableClass : ""].join(" ");
 
   return (
     <div className="flex flex-col items-start">
@@ -67,8 +67,8 @@ const TextArea = ({
           disabled={disabled}
           {...props}
         />
-        <p className="flex items-end justify-end gap-[2px] self-stretch">
-          {`${currentLength}/${maxLength}`}
+        <p className="body-3 flex items-end justify-end gap-[2px] self-stretch">
+          {`${currentLength} / ${maxLength}`}
         </p>
       </div>
     </div>

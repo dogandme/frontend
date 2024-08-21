@@ -57,6 +57,7 @@ export const Default: Story = {
     label: "TextArea",
     isError: false,
     maxLength: 150,
+    placeholder: "Placeholder",
   },
   render: (args) => (
     <div className="flex gap-10 px-2 py-4">

@@ -26,7 +26,7 @@ const Input = ({
   disabled = false,
   ...props
 }: InputProps) => {
-  // 휴먼에러를 방지하기 위해 leadingNode,trailign 유효성 확인
+  // 휴먼에러를 방지하기 위해 leadingNode,trailingNode 유효성 확인
   if (React.Children.count(leadingNode) > 1) {
     throw new Error("leadingNode 하나의 노드만 가질 수 있습니다.");
   }
@@ -43,8 +43,8 @@ const Input = ({
   // disabled에 대한 가상 선택자 스타일은 적용되지 않습니다.
   // 그렇기 때문에 disabled에 대한 스타일을 따로 분리하여 적용합니다.
   const { disabled: disableClass, ...restStylesObject } = wrapperClassesObject;
-  const restClasess = Object.values(restStylesObject).join(" ");
-  const wrapperClasses = [restClasess, disabled ? disableClass : ""].join(" ");
+  const restClasses = Object.values(restStylesObject).join(" ");
+  const wrapperClasses = [restClasses, disabled ? disableClass : ""].join(" ");
 
   return (
     <div className="flex flex-col items-start">
