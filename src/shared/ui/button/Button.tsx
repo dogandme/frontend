@@ -1,10 +1,16 @@
-import { ButtonHTMLAttributes, Children, isValidElement } from "react";
+import {
+  ButtonHTMLAttributes,
+  Children,
+  isValidElement,
+  ReactNode,
+} from "react";
 import { colors, getSizeStyles } from "./button.styles";
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   colorType: "primary" | "secondary" | "tertiary";
   variant: "filled" | "outlined" | "text";
   size: "xSmall" | "small" | "medium" | "large";
+  children: ReactNode;
 };
 
 const Button = ({ colorType, variant, size, children, ...props }: Props) => {
