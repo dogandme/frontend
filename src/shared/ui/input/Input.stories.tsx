@@ -145,108 +145,257 @@ export const Default: Story = {
   render: (args) => {
     return (
       <div className="flex gap-20">
-        <div className="flex w-[328px] flex-col gap-3">
+        <div className="flex flex-col gap-3">
           <h1>default</h1>
-          <Input {...args} label="calander" componentType="calander" />
-          <Input {...args} componentType="searchText" label="searchText" />
-          <Input {...args} componentType="outlinedText" label="outlinedText" />
-          <Input {...args} componentType="text" label="text" />
-          <Input {...args} componentType="timerText" label="timerText" />
+          <div className="border border-grey-200 p-4 px-2">
+            <Input {...args} label="calander" componentType="calander" />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input {...args} componentType="searchText" label="searchText" />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="outlinedText"
+              label="outlinedText"
+            />
+          </div>
+          <div className="border border-grey-200 p-4">
+            <Input {...args} componentType="text" label="text" />
+          </div>
+          <div className="border border-grey-200 p-4">
+            <Input {...args} componentType="timerText" label="timerText" />
+          </div>
         </div>
-        <div className="flex w-[328px] flex-col gap-3">
+        <div className="flex flex-col gap-3">
           <h1>error</h1>
-
-          <Input {...args} componentType="calander" label="calander" isError />
-          <Input
-            {...args}
-            componentType="searchText"
-            label="searchText"
-            isError
-          />
-          <Input
-            {...args}
-            componentType="outlinedText"
-            label="outlinedText"
-            isError
-          />
-          <Input {...args} componentType="text" label="text" isError />
-          <Input
-            {...args}
-            componentType="timerText"
-            label="timerText"
-            isError
-          />
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="calander"
+              label="calander"
+              isError
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="searchText"
+              label="searchText"
+              isError
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="outlinedText"
+              label="outlinedText"
+              isError
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input {...args} componentType="text" label="text" isError />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="timerText"
+              label="timerText"
+              isError
+            />
+          </div>
         </div>
-        <div className="flex w-[328px] flex-col gap-3">
-          <h1>default</h1>
-          <Input
-            {...args}
-            label="calander"
-            componentType="calander"
-            statusText="올바른 입력값을 입력해주세요"
-          />
-          <Input
-            {...args}
-            componentType="searchText"
-            label="searchText"
-            statusText="올바른 입력값을 입력해주세요"
-          />
-          <Input
-            {...args}
-            componentType="outlinedText"
-            label="outlinedText"
-            statusText="올바른 입력값을 입력해주세요"
-          />
-          <Input
-            {...args}
-            componentType="text"
-            label="text"
-            statusText="올바른 입력값을 입력해주세요"
-          />
-          <Input
-            {...args}
-            componentType="timerText"
-            label="timerText"
-            statusText="올바른 입력값을 입력해주세요"
-          />
+        <div className="flex flex-col gap-3">
+          <h1>default when disabled</h1>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="calander"
+              componentType="calander"
+              statusText="올바른 입력값을 입력해주세요"
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="searchText"
+              label="searchText"
+              statusText="올바른 입력값을 입력해주세요"
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="outlinedText"
+              label="outlinedText"
+              statusText="올바른 입력값을 입력해주세요"
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="text"
+              label="text"
+              statusText="올바른 입력값을 입력해주세요"
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="timerText"
+              label="timerText"
+              statusText="올바른 입력값을 입력해주세요"
+              disabled
+            />
+          </div>
         </div>
-        <div className="flex w-[328px] flex-col gap-3">
-          <h1>error</h1>
-          <Input
-            {...args}
-            componentType="calander"
-            label="calander"
-            isError
-            statusText="올바른 입력값을 입력해주세요"
-          />
-          <Input
-            {...args}
-            componentType="searchText"
-            label="searchText"
-            isError
-            statusText="올바른 입력값을 입력해주세요"
-          />
-          <Input
-            {...args}
-            componentType="outlinedText"
-            label="outlinedText"
-            isError
-            statusText="올바른 입력값을 입력해주세요"
-          />
-          <Input
-            {...args}
-            componentType="text"
-            label="text"
-            isError
-            statusText="올바른 입력값을 입력해주세요"
-          />
-          <Input
-            {...args}
-            componentType="timerText"
-            label="timerText"
-            isError
-            statusText="올바른 입력값을 입력해주세요"
-          />
+        <div className="flex flex-col gap-3">
+          <h1>error when disabled</h1>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="calander"
+              label="calander"
+              isError
+              statusText="올바른 입력값을 입력해주세요"
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="searchText"
+              label="searchText"
+              isError
+              statusText="올바른 입력값을 입력해주세요"
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="outlinedText"
+              label="outlinedText"
+              isError
+              statusText="올바른 입력값을 입력해주세요"
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="text"
+              label="text"
+              isError
+              statusText="올바른 입력값을 입력해주세요"
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="timerText"
+              label="timerText"
+              isError
+              statusText="올바른 입력값을 입력해주세요"
+              disabled
+            />
+          </div>
+        </div>
+        <div className="flex flex-col gap-3">
+          <h1>default with statusText</h1>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="calander"
+              componentType="calander"
+              statusText="올바른 입력값을 입력해주세요"
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="searchText"
+              label="searchText"
+              statusText="올바른 입력값을 입력해주세요"
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="outlinedText"
+              label="outlinedText"
+              statusText="올바른 입력값을 입력해주세요"
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="text"
+              label="text"
+              statusText="올바른 입력값을 입력해주세요"
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="timerText"
+              label="timerText"
+              statusText="올바른 입력값을 입력해주세요"
+            />
+          </div>
+        </div>
+        <div className="flex flex-col gap-3">
+          <h1>error with statusText</h1>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="calander"
+              label="calander"
+              isError
+              statusText="올바른 입력값을 입력해주세요"
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="searchText"
+              label="searchText"
+              isError
+              statusText="올바른 입력값을 입력해주세요"
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="outlinedText"
+              label="outlinedText"
+              isError
+              statusText="올바른 입력값을 입력해주세요"
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="text"
+              label="text"
+              isError
+              statusText="올바른 입력값을 입력해주세요"
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              componentType="timerText"
+              label="timerText"
+              isError
+              statusText="올바른 입력값을 입력해주세요"
+            />
+          </div>
         </div>
       </div>
     );
@@ -377,6 +526,179 @@ export const InputWithIcons: Story = {
             leadingNode={<MockUpIcon />}
             trailingNode={[<MockUpIcon />, <MockUpIcon />]}
           />
+        </div>
+      </div>
+    );
+  },
+};
+
+export const InputExample: Story = {
+  args: {
+    ...Default.args,
+    statusText: "올바른 입력값을 입력해주세요",
+  },
+  parameters: {
+    ...Default.parameters,
+    docs: {
+      description: {
+        story:
+          "Input 컴포넌트로 생성된 다양한 디자인 시스템의 예시를 살펴 볼 수 있습니다.",
+      },
+    },
+  },
+
+  render: (args) => {
+    return (
+      <div className="flex flex-col gap-10">
+        <div className="flex gap-10">
+          <div className="border border-grey-200 p-4">
+            <Input
+              {...args}
+              label="default searchText"
+              componentType="searchText"
+              leadingNode={<SearchIcon />}
+            />
+          </div>
+          <div className="border border-grey-200 p-4">
+            <Input
+              {...args}
+              label="disabled searchText "
+              componentType="searchText"
+              leadingNode={<SearchIcon />}
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4">
+            <Input
+              {...args}
+              label="searchText on error"
+              componentType="searchText"
+              leadingNode={<SearchIcon />}
+              isError
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-10">
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="default outlinedText"
+              componentType="outlinedText"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="disabled outlinedText"
+              componentType="outlinedText"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="outlinedText on error"
+              componentType="outlinedText"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+              isError
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-10">
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="default text"
+              componentType="text"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="disabled text"
+              componentType="text"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="text on error"
+              componentType="text"
+              leadingNode={<MockUpIcon />}
+              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
+              isError
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-10">
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="default timerText"
+              componentType="timerText"
+              trailingNode={[<CountArea />, <MockUpIcon />]}
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="disabled timerText"
+              componentType="timerText"
+              trailingNode={[<CountArea />, <MockUpIcon />]}
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="timerText on error"
+              componentType="timerText"
+              trailingNode={[<CountArea />, <MockUpIcon />]}
+              isError
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-10">
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="default calander"
+              componentType="calander"
+              trailingNode={<CalenderIcon />}
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="disabled calander"
+              componentType="calander"
+              trailingNode={<CalenderIcon />}
+              disabled
+            />
+          </div>
+          <div className="border border-grey-200 p-4 px-2">
+            <Input
+              {...args}
+              label="calander on error"
+              componentType="calander"
+              trailingNode={<CalenderIcon />}
+              isError
+            />
+          </div>
         </div>
       </div>
     );
