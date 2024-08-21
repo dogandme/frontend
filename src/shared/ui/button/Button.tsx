@@ -25,17 +25,18 @@ const Button = ({
   const colorStyles = colors[colorType][variant];
 
   const childrenArray = Children.toArray(children);
+  const isText = (child: ReactNode) =>
+    typeof child === "string" ||
+    (isValidElement(child) && child.type === "div") ||
+    (isValidElement(child) && child.type === "span") ||
+    (isValidElement(child) && child.type === "p");
 
   // children 하위의 하나의 자식만을 가지고 있는지 확인
   const hasOneChild = childrenArray.length === 1;
 
   // 첫 번째 child가 텍스트인지 확인
   const firstChild = childrenArray[0];
-  const isFirstChildText =
-    typeof firstChild === "string" ||
-    (isValidElement(firstChild) && firstChild.type === "div") ||
-    (isValidElement(firstChild) && firstChild.type === "span") ||
-    (isValidElement(firstChild) && firstChild.type === "p");
+  const isFirstChildText = isText(firstChild);
 
   // 아이콘만 있는 경우
   const hasOnlyIcon = hasOneChild && !isFirstChildText;
@@ -47,11 +48,15 @@ const Button = ({
 
   // 마지막 child가 텍스트인지 확인
   const lastChild = childrenArray[childrenArray.length - 1];
-  const isLastChildText =
-    typeof lastChild === "string" ||
-    (isValidElement(lastChild) && lastChild.type === "div") ||
-    (isValidElement(lastChild) && lastChild.type === "span") ||
-    (isValidElement(lastChild) && lastChild.type === "p");
+  const isLastChildText = isText(lastChild);
+
+  const areAllChildrenText = childrenArray.every(isText);
+
+  if (hasMultipleChildren && areAllChildrenText) {
+    throw new Error(
+      "Button 컴포넌트에는 여러 개의 텍스트 요소를 포함할 수 없습니다. 하나의 텍스트만 포함하거나 아이콘과 함께 사용해주세요.",
+    );
+  }
 
   const hasIconFirst = hasMultipleChildren && isLastChildText;
   const hasTextFirst = hasMultipleChildren && isFirstChildText;
