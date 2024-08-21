@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Input from "./Input";
+import Input from ".";
 
 /*----------leadingIcon, trailingIcon 등에 들어갈 svg 컴포넌트 ---------- */
 const SearchIcon = () => (
