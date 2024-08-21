@@ -85,12 +85,11 @@ const meta: Meta<typeof Input> = {
       control: {
         type: "select",
         options: [
-          "searchTextInput",
-          "outLinedTextInput",
-          "textInput",
-          "timerTextInput",
-          "calanderInput",
-          "textField",
+          "searchText",
+          "outlinedText",
+          "text",
+          "timerText",
+          "calander",
         ],
       },
       description:
@@ -148,65 +147,33 @@ export const Default: Story = {
       <div className="flex gap-20">
         <div className="flex w-[328px] flex-col gap-3">
           <h1>default</h1>
-          <Input {...args} label="textField" componentType="textField" />
-          <Input
-            {...args}
-            label="calanderInput"
-            componentType="calanderInput"
-          />
-          <Input
-            {...args}
-            componentType="searchTextInput"
-            label="searchTextInput"
-          />
-          <Input
-            {...args}
-            componentType="outLinedTextInput"
-            label="outLinedTextInput"
-          />
-          <Input {...args} componentType="textInput" label="textInput" />
-          <Input
-            {...args}
-            componentType="timerTextInput"
-            label="timerTextInput"
-          />
+          <Input {...args} label="calander" componentType="calander" />
+          <Input {...args} componentType="searchText" label="searchText" />
+          <Input {...args} componentType="outlinedText" label="outlinedText" />
+          <Input {...args} componentType="text" label="text" />
+          <Input {...args} componentType="timerText" label="timerText" />
         </div>
         <div className="flex w-[328px] flex-col gap-3">
           <h1>error</h1>
+
+          <Input {...args} componentType="calander" label="calander" isError />
           <Input
             {...args}
-            componentType="textField"
-            label="textField"
+            componentType="searchText"
+            label="searchText"
             isError
           />
           <Input
             {...args}
-            componentType="calanderInput"
-            label="calanderInput"
+            componentType="outlinedText"
+            label="outlinedText"
             isError
           />
+          <Input {...args} componentType="text" label="text" isError />
           <Input
             {...args}
-            componentType="searchTextInput"
-            label="searchTextInput"
-            isError
-          />
-          <Input
-            {...args}
-            componentType="outLinedTextInput"
-            label="outLinedTextInput"
-            isError
-          />
-          <Input
-            {...args}
-            componentType="textInput"
-            label="textInput"
-            isError
-          />
-          <Input
-            {...args}
-            componentType="timerTextInput"
-            label="timerTextInput"
+            componentType="timerText"
+            label="timerText"
             isError
           />
         </div>
@@ -214,38 +181,32 @@ export const Default: Story = {
           <h1>default</h1>
           <Input
             {...args}
-            label="textField"
-            componentType="textField"
+            label="calander"
+            componentType="calander"
             statusText="올바른 입력값을 입력해주세요"
           />
           <Input
             {...args}
-            label="calanderInput"
-            componentType="calanderInput"
+            componentType="searchText"
+            label="searchText"
             statusText="올바른 입력값을 입력해주세요"
           />
           <Input
             {...args}
-            componentType="searchTextInput"
-            label="searchTextInput"
+            componentType="outlinedText"
+            label="outlinedText"
             statusText="올바른 입력값을 입력해주세요"
           />
           <Input
             {...args}
-            componentType="outLinedTextInput"
-            label="outLinedTextInput"
+            componentType="text"
+            label="text"
             statusText="올바른 입력값을 입력해주세요"
           />
           <Input
             {...args}
-            componentType="textInput"
-            label="textInput"
-            statusText="올바른 입력값을 입력해주세요"
-          />
-          <Input
-            {...args}
-            componentType="timerTextInput"
-            label="timerTextInput"
+            componentType="timerText"
+            label="timerText"
             statusText="올바른 입력값을 입력해주세요"
           />
         </div>
@@ -253,43 +214,36 @@ export const Default: Story = {
           <h1>error</h1>
           <Input
             {...args}
-            componentType="textField"
-            label="textField"
+            componentType="calander"
+            label="calander"
             isError
             statusText="올바른 입력값을 입력해주세요"
           />
           <Input
             {...args}
-            componentType="calanderInput"
-            label="calanderInput"
+            componentType="searchText"
+            label="searchText"
             isError
             statusText="올바른 입력값을 입력해주세요"
           />
           <Input
             {...args}
-            componentType="searchTextInput"
-            label="searchTextInput"
+            componentType="outlinedText"
+            label="outlinedText"
             isError
             statusText="올바른 입력값을 입력해주세요"
           />
           <Input
             {...args}
-            componentType="outLinedTextInput"
-            label="outLinedTextInput"
+            componentType="text"
+            label="text"
             isError
             statusText="올바른 입력값을 입력해주세요"
           />
           <Input
             {...args}
-            componentType="textInput"
-            label="textInput"
-            isError
-            statusText="올바른 입력값을 입력해주세요"
-          />
-          <Input
-            {...args}
-            componentType="timerTextInput"
-            label="timerTextInput"
+            componentType="timerText"
+            label="timerText"
             isError
             statusText="올바른 입력값을 입력해주세요"
           />
@@ -317,21 +271,21 @@ export const InputWithIcons: Story = {
         <div className="flex gap-5">
           <Input
             {...args}
-            label="calanderInput"
-            componentType="calanderInput"
+            label="calander"
+            componentType="calander"
             leadingNode={<MockUpIcon />}
           />
           <Input
             {...args}
-            label="calanderInput"
-            componentType="calanderInput"
+            label="calander"
+            componentType="calander"
             leadingNode={<MockUpIcon />}
             trailingNode={<MockUpIcon />}
           />
           <Input
             {...args}
-            label="calanderInput"
-            componentType="calanderInput"
+            label="calander"
+            componentType="calander"
             leadingNode={<MockUpIcon />}
             trailingNode={[<MockUpIcon />, <MockUpIcon />]}
           />
@@ -339,21 +293,21 @@ export const InputWithIcons: Story = {
         <div className="flex gap-5">
           <Input
             {...args}
-            label="textField"
-            componentType="textField"
+            label="searchText"
+            componentType="searchText"
             leadingNode={<MockUpIcon />}
           />
           <Input
             {...args}
-            label="textField"
-            componentType="textField"
+            label="searchText"
+            componentType="searchText"
             leadingNode={<MockUpIcon />}
             trailingNode={<MockUpIcon />}
           />
           <Input
             {...args}
-            label="textField"
-            componentType="textField"
+            label="searchText"
+            componentType="searchText"
             leadingNode={<MockUpIcon />}
             trailingNode={[<MockUpIcon />, <MockUpIcon />]}
           />
@@ -361,21 +315,21 @@ export const InputWithIcons: Story = {
         <div className="flex gap-5">
           <Input
             {...args}
-            label="searchTextInput"
-            componentType="searchTextInput"
+            label="outlinedText"
+            componentType="outlinedText"
             leadingNode={<MockUpIcon />}
           />
           <Input
             {...args}
-            label="searchTextInput"
-            componentType="searchTextInput"
+            label="outlinedText"
+            componentType="outlinedText"
             leadingNode={<MockUpIcon />}
             trailingNode={<MockUpIcon />}
           />
           <Input
             {...args}
-            label="searchTextInput"
-            componentType="searchTextInput"
+            label="outlinedText"
+            componentType="outlinedText"
             leadingNode={<MockUpIcon />}
             trailingNode={[<MockUpIcon />, <MockUpIcon />]}
           />
@@ -383,21 +337,21 @@ export const InputWithIcons: Story = {
         <div className="flex gap-5">
           <Input
             {...args}
-            label="outLinedTextInput"
-            componentType="outLinedTextInput"
+            label="text"
+            componentType="text"
             leadingNode={<MockUpIcon />}
           />
           <Input
             {...args}
-            label="outLinedTextInput"
-            componentType="outLinedTextInput"
+            label="text"
+            componentType="text"
             leadingNode={<MockUpIcon />}
             trailingNode={<MockUpIcon />}
           />
           <Input
             {...args}
-            label="outLinedTextInput"
-            componentType="outLinedTextInput"
+            label="text"
+            componentType="text"
             leadingNode={<MockUpIcon />}
             trailingNode={[<MockUpIcon />, <MockUpIcon />]}
           />
@@ -405,43 +359,21 @@ export const InputWithIcons: Story = {
         <div className="flex gap-5">
           <Input
             {...args}
-            label="textInput"
-            componentType="textInput"
+            label="timerText"
+            componentType="timerText"
             leadingNode={<MockUpIcon />}
           />
           <Input
             {...args}
-            label="textInput"
-            componentType="textInput"
-            leadingNode={<MockUpIcon />}
-            trailingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="textInput"
-            componentType="textInput"
-            leadingNode={<MockUpIcon />}
-            trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-          />
-        </div>
-        <div className="flex gap-5">
-          <Input
-            {...args}
-            label="timerTextInput"
-            componentType="timerTextInput"
-            leadingNode={<MockUpIcon />}
-          />
-          <Input
-            {...args}
-            label="timerTextInput"
-            componentType="timerTextInput"
+            label="timerText"
+            componentType="timerText"
             leadingNode={<MockUpIcon />}
             trailingNode={<MockUpIcon />}
           />
           <Input
             {...args}
-            label="timerTextInput"
-            componentType="timerTextInput"
+            label="timerText"
+            componentType="timerText"
             leadingNode={<MockUpIcon />}
             trailingNode={[<MockUpIcon />, <MockUpIcon />]}
           />

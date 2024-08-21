@@ -8,7 +8,7 @@ export const inputStyles = {
       focusHover:
         "hover:focus-within:border-tangerine-500 hover:focus-within:bg-grey-0",
       disabled: "disabled:border-grey-100 diabled:bg-grey-0",
-      statusTextclass: "text-grey-700",
+      statusTextClass: "text-grey-700",
     },
     error: {
       base: "body-2 flex  h-12 items-start gap-1 self-stretch rounded-2xl border px-3 py-[13px]",
@@ -18,10 +18,10 @@ export const inputStyles = {
       focusHover:
         "hover:focus-within:border-pink-500 hover:foc us-within:bg-grey-0",
       disabled: "",
-      statusTextclass: "text-pink-500",
+      statusTextClass: "text-pink-500",
     },
   },
-  calanderInput: {
+  calander: {
     default: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-[4px] border px-3 py-3 gap-1",
       enabled: "border-grey-0 bg-grey-0",
@@ -30,7 +30,7 @@ export const inputStyles = {
       focusHover:
         "hover:focus-within:border-green-500 hover:focus-within:bg-grey-0",
       disabled: "disabled:bg-grey-0 disabled:border-grey-100",
-      statusTextclass: "text-grey-700",
+      statusTextClass: "text-grey-700",
     },
     error: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-[4px] border px-3 py-3 gap-1",
@@ -40,10 +40,10 @@ export const inputStyles = {
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
       disabled: "",
-      statusTextclass: "text-pink-500",
+      statusTextClass: "text-pink-500",
     },
   },
-  searchTextInput: {
+  searchText: {
     default: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl px-3 py-3 gap-1 ",
       enabled: "bg-grey-100 text-grey-700",
@@ -51,7 +51,7 @@ export const inputStyles = {
       focus: "focus-within:bg-grey-100",
       focusHover: "hover:focus-within:bg-grey-100",
       disabled: "disabled:bg-grey-0 disabled:text-grey-300",
-      statusTextclass: "",
+      statusTextClass: "",
     },
     error: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl px-3 py-3 gap-1 ",
@@ -60,10 +60,10 @@ export const inputStyles = {
       focus: "focus-within:bg-grey-100",
       focusHover: "hover:focus-within:bg-grey-100",
       disabled: "disabled:bg-grey-0 disabled:text-grey-300",
-      statusTextclass: "",
+      statusTextClass: "",
     },
   },
-  outLinedTextInput: {
+  outlinedText: {
     default: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2 ",
       enabled: "border-grey-300 bg-grey-0 text-grey-700",
@@ -74,7 +74,7 @@ export const inputStyles = {
         "hover:focus-within:border-tangerine-500 hover:focus-within:bg-grey-0 hover:focus-within:text-grey-700",
       disabled:
         "disabled:border-grey-0 disabled:bg-grey-0 disabled:text-grey-300",
-      statusTextclass: "text-grey-500",
+      statusTextClass: "text-grey-500",
     },
     error: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2",
@@ -84,10 +84,10 @@ export const inputStyles = {
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
       disabled: "",
-      statusTextclass: "text-pink-500",
+      statusTextClass: "text-pink-500",
     },
   },
-  textInput: {
+  text: {
     default: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2 border-none",
       enabled: "bg-grey-0 text-grey-700",
@@ -96,7 +96,7 @@ export const inputStyles = {
       focusHover:
         "hover:focus-within:bg-grey-0 hover:focus-within:text-grey-700",
       disabled: "disabled:bg-grey-0 disabled:text-grey-300",
-      statusTextclass: "text-grey-700",
+      statusTextClass: "text-grey-700",
     },
     error: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2 border-none",
@@ -105,10 +105,10 @@ export const inputStyles = {
       focus: "focus-within:bg-pink-50",
       focusHover: "hover:focus-within:bg-pink-50",
       disabled: "",
-      statusTextclass: "text-pink-500",
+      statusTextClass: "text-pink-500",
     },
   },
-  timerTextInput: {
+  timerText: {
     default: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2",
       enabled: "border-grey-300 bg-grey-0 text-grey-700",
@@ -119,7 +119,7 @@ export const inputStyles = {
         "hover:focus-within:border-tangerine-500 hover:focus-within:bg-grey-0 hover:focus-within:text-grey-700",
       disabled:
         "disabled:border-grey-0 disabled:bg-grey-0 disabled:text-grey-300",
-      statusTextclass: "text-grey-500",
+      statusTextClass: "text-grey-500",
     },
     error: {
       base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-2",
@@ -129,7 +129,7 @@ export const inputStyles = {
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
       disabled: "",
-      statusTextclass: "text-pink-500",
+      statusTextClass: "text-pink-500",
     },
   },
 } as const;

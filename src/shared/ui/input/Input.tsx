@@ -24,7 +24,7 @@ const Input = ({
   leadingNode,
   ...props
 }: InputProps) => {
-  // 휴먼에러를 방지하기 위해 leadingNode,trailign,leadingNode의 유효성 확인
+  // 휴먼에러를 방지하기 위해 leadingNode,trailign 유효성 확인
   if (React.Children.count(leadingNode) > 1) {
     throw new Error("leadingNode 하나의 노드만 가질 수 있습니다.");
   }
@@ -35,7 +35,7 @@ const Input = ({
   // input 컴포넌트의 상태에 따라 적용되는 스타일
   const status: StatusType = isError ? "error" : "default";
   const statusStyles = inputStyles[componentType][status];
-  const { statusTextclass, ...wrapperClasses } = statusStyles;
+  const { statusTextClass, ...wrapperClasses } = statusStyles;
 
   return (
     <div className="flex flex-col">
@@ -59,7 +59,7 @@ const Input = ({
         {trailingNode}
       </div>
       {statusText !== null && (
-        <p className={`${statusTextclass} ${baseStyles.statusText}`}>
+        <p className={`${statusTextClass} ${baseStyles.statusText}`}>
           {statusText}
         </p>
       )}
