@@ -21,7 +21,7 @@ jobs:
         run: npm ci
       - name: Run interaction tests and save output
         id: test-storybook
-        run: npx test-storybook > test-storybook-output.txt
+        run: npm run test-storybook > test-storybook-output.txt
         continue-on-error: true
       - name: Post test results as PR comment
         uses: actions/github-script@v6
