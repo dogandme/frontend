@@ -56,9 +56,6 @@ const Button = ({
   const lastChild = childrenArray[childrenArray.length - 1];
   const isLastChildText = isText(lastChild);
 
-  const hasIconFirst = haveTwoChildren && !isFirstChildText && isLastChildText;
-  const hasTextFirst = haveTwoChildren && isFirstChildText && !isLastChildText;
-
   const isSameType =
     (isFirstChildText && isLastChildText) ||
     (!isFirstChildText && !isLastChildText);
@@ -68,6 +65,9 @@ const Button = ({
       "Button 컴포넌트에는 같은 타입의 요소를 여러개 포함할 수 없습니다.",
     );
   }
+
+  const hasIconFirst = haveTwoChildren && !isFirstChildText && isLastChildText;
+  const hasTextFirst = haveTwoChildren && isFirstChildText && !isLastChildText;
 
   const sizeStyles = getSizeStyles({
     size,
