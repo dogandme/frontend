@@ -1,7 +1,7 @@
 export const textAreaStyles = {
   default: {
     base: "body-2 bg-grey-0 flex flex-col items-start gap-1 self-stretch rounded-2xl border px-3 py-[13px]",
-    enabled: " ",
+    enabled: "border-grey-500",
     hover: "hover:border-grey-700 hover:bg-grey-100",
     focus: "focus-within:border-tangerine-500 focus-within:bg-grey-0",
     focusHover:
