@@ -59,6 +59,16 @@ const Button = ({
   const hasIconFirst = haveTwoChildren && !isFirstChildText && isLastChildText;
   const hasTextFirst = haveTwoChildren && isFirstChildText && !isLastChildText;
 
+  const isSameType =
+    (isFirstChildText && isLastChildText) ||
+    (!isFirstChildText && !isLastChildText);
+
+  if (haveTwoChildren && isSameType) {
+    throw new Error(
+      "Button 컴포넌트에는 같은 타입의 요소를 여러개 포함할 수 없습니다.",
+    );
+  }
+
   const sizeStyles = getSizeStyles({
     size,
     hasOnlyIcon,
