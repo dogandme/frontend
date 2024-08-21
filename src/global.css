@@ -74,3 +74,10 @@ textarea {
 textarea {
   -ms-overflow-style: none; /* IE and Edge */
 }
+
+/* input , textarea 태그들의 background inherit */
+
+input,
+textarea {
+  background-color: inherit;
+}

@@ -50,9 +50,6 @@ const Input = ({
           id={id}
           name={id}
           className={baseStyles.input}
-          style={{
-            backgroundColor: "transparent",
-          }}
           autoComplete="off"
           {...props}
         />

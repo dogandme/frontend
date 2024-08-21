@@ -46,9 +46,6 @@ const TextArea = ({
           value={value}
           onChange={handleOnChange}
           maxLength={maxLength}
-          style={{
-            backgroundColor: "transparent",
-          }}
           {...props}
         />
         <p className="flex items-end justify-end gap-[2px] self-stretch">
