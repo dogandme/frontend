@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { textAreaStyles, baseStyles } from "./TextArea.styles";
 
 // 현재 디자인 시스템상에서 TextArea 컴포넌트에선 statusText가 존재하지 않습니다.
@@ -19,19 +19,34 @@ const TextArea = ({
   maxLength = 150,
   ...props
 }: TextAreaProps) => {
-  const [value, setValue] = useState<string>("");
-  const status = isError ? "error" : "default";
-  const wrapperClasses = textAreaStyles[status];
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [currentLength, setCurrentLength] = useState<number>(0);
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // virtual DOM 상의 value.length 는 항상 Actual DOM 상의 value.length 보다 1 작습니다.
-    // 그러므로 value.length - 1 을 해줘야 합니다.
-    const currentLength = e.target.value.length;
-    if (currentLength - 1 >= maxLength) {
+  // textarea의 최대 글자수를 제한하고 현재 글자수를 표시하기 위한 Effect
+  // 직접 actual dom에 접근하여 addEventListener를 사용하는 이유는 컴포넌트 상위에서 props로
+  // 이벤트 핸들러를 등록해주는 경우가 존재 할 수 있기 때문입니다.
+  // addEventListener로 이벤트 핸들러를 부착해두게 되면 상단에서 등록한 이벤트 핸들러와 충돌이 발생하지 않습니다.
+  useEffect(() => {
+    const $textArea = textAreaRef.current;
+    if (!$textArea) {
       return;
     }
-    setValue(e.target.value);
-  };
+
+    // removeEventListener를 위한 이벤트 핸들러 함수로 기명 함수를 사용하여 removeEventListener를 사용할 수 있도록 합니다.
+    const handleInput = (e: Event) => {
+      const target = e.target as HTMLTextAreaElement;
+      setCurrentLength(target.value.length);
+    };
+
+    $textArea.addEventListener("input", handleInput);
+
+    return () => {
+      $textArea.removeEventListener("input", handleInput);
+    };
+  }, [maxLength]);
+
+  const status = isError ? "error" : "default";
+  const wrapperClasses = textAreaStyles[status];
 
   return (
     <div className="flex flex-col items-start">
@@ -43,13 +58,12 @@ const TextArea = ({
           name={id}
           id={id}
           className={baseStyles.textArea}
-          value={value}
-          onChange={handleOnChange}
           maxLength={maxLength}
+          ref={textAreaRef}
           {...props}
         />
         <p className="flex items-end justify-end gap-[2px] self-stretch">
-          {`${value.length}/${maxLength}`}
+          {`${currentLength}/${maxLength}`}
         </p>
       </div>
     </div>
