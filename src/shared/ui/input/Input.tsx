@@ -38,7 +38,7 @@ const Input = ({
   const { statusTextClass, ...wrapperClasses } = statusStyles;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-start">
       <div className="flex gap-1 pb-2">
         <label htmlFor={id} className="title-3">
           {label}
