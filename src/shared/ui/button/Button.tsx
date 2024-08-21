@@ -36,8 +36,8 @@ const Button = ({ colorType, variant, size, children, ...props }: Props) => {
   // 텍스트만 있는 경우
   const hasOnlyText = hasOneChild && isFirstChildText;
 
-  // children 하위의 두개의 자식을 가지고 있는지 확인
-  const hasTwoChild = childrenArray.length === 2;
+  // children에 있는 요소가 여러개인지 확인
+  const hasMultipleChildren = childrenArray.length >= 2;
 
   // 마지막 child가 텍스트인지 확인
   const lastChild = childrenArray[childrenArray.length - 1];
@@ -47,10 +47,8 @@ const Button = ({ colorType, variant, size, children, ...props }: Props) => {
     (isValidElement(lastChild) && lastChild.type === "span") ||
     (isValidElement(lastChild) && lastChild.type === "p");
 
-  // 아이콘 + 텍스트
-  const hasIconFirst = hasTwoChild && isLastChildText;
-  // 텍스트 + 아이콘
-  const hasTextFirst = hasTwoChild && isFirstChildText;
+  const hasIconFirst = hasMultipleChildren && isLastChildText;
+  const hasTextFirst = hasMultipleChildren && isFirstChildText;
 
   const sizeStyles = getSizeStyles({
     size,
