@@ -21,7 +21,7 @@ jobs:
         run: npm ci
       - name: Run interaction tests and save output
         id: test-storybook
-        run: npm run test-storybook > test-storybook-output.txt
+        run: npx test-storybook > test-storybook-output.txt
         continue-on-error: true
       - name: Post test results as PR comment
         uses: actions/github-script@v6
@@ -40,7 +40,7 @@ jobs:
               body: comment
             });
       - name: Run Chromatic
-        if: success() # Only run if the previous step was successful
+        if: success()
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
