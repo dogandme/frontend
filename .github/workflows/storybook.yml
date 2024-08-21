@@ -50,4 +50,5 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           buildScriptName: "chromatic"
-          buildScriptArgs: "--exit-zero-on-changes --only-changed"
+          exitZeroOnChanges: true
+          onlyChanged: true
