@@ -136,6 +136,6 @@ export const inputStyles = {
 
 export const baseStyles = {
   input:
-    "disable:placeholder-grey-300 h-[1.375rem] flex-1 overflow-hidden text-ellipsis whitespace-nowrap placeholder-grey-500 focus:outline-none",
+    "h-[1.375rem] flex-1 overflow-hidden text-ellipsis whitespace-nowrap placeholder-grey-500 focus:outline-none disabled:placeholder:text-grey-300",
   statusText: "body-3 flex gap-[0.625rem] self-stretch px-3 pb-3 pt-1",
 };
