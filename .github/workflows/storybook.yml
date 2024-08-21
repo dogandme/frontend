@@ -27,6 +27,7 @@ jobs:
         continue-on-error: true
       - name: Post test results as PR comment
         uses: actions/github-script@v6
+        if: always()
         with:
           script: |
             const fs = require('fs');
