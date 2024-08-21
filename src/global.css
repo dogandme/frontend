@@ -59,3 +59,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;
   appearance: none;
 }
+
+/* WebKit 기반 브라우저 (Chrome, Safari) */
+textarea::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+textarea {
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Edge, Internet Explorer */
+textarea {
+  -ms-overflow-style: none; /* IE and Edge */
+}
