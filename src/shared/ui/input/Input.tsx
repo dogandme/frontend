@@ -42,9 +42,16 @@ const Input = ({
   // wrapper 에 해당하는 div에선 hover,focus에 대한 가상 선택자 스타일이 적용되지만
   // disabled에 대한 가상 선택자 스타일은 적용되지 않습니다.
   // 그렇기 때문에 disabled에 대한 스타일을 따로 분리하여 적용합니다.
-  const { disabled: disableClass, ...restStylesObject } = wrapperClassesObject;
+  const {
+    disabled: disableClass,
+    enabled: enabledClass,
+    ...restStylesObject
+  } = wrapperClassesObject;
   const restClasses = Object.values(restStylesObject).join(" ");
-  const wrapperClasses = [restClasses, disabled ? disableClass : ""].join(" ");
+  const wrapperClasses = [
+    restClasses,
+    disabled ? disableClass : enabledClass,
+  ].join(" ");
 
   return (
     <div className="flex flex-col items-start">

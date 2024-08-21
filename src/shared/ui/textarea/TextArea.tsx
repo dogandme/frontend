@@ -48,9 +48,17 @@ const TextArea = ({
   }, [maxLength]);
 
   const status = isError ? "error" : "default";
-  const { disabled: disableClass, ...restStyleObject } = textAreaStyles[status];
+  const {
+    disabled: disableClass,
+    enabled: enabledClass,
+    ...restStyleObject
+  } = textAreaStyles[status];
+
   const resetClasses = Object.values(restStyleObject).join(" ");
-  const wrapperClasses = [resetClasses, disabled ? disableClass : ""].join(" ");
+  const wrapperClasses = [
+    resetClasses,
+    disabled ? disableClass : enabledClass,
+  ].join(" ");
 
   return (
     <div className="flex flex-col items-start">
