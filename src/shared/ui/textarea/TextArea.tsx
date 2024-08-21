@@ -10,6 +10,7 @@ interface TextAreaProps
   label: string;
   isError: boolean;
   maxLength: number;
+  disabled: boolean;
 }
 
 const TextArea = ({
@@ -17,6 +18,7 @@ const TextArea = ({
   label,
   isError,
   maxLength = 150,
+  disabled = false,
   ...props
 }: TextAreaProps) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -46,20 +48,23 @@ const TextArea = ({
   }, [maxLength]);
 
   const status = isError ? "error" : "default";
-  const wrapperClasses = textAreaStyles[status];
+  const { disabled: disableClass, ...restStyleObject } = textAreaStyles[status];
+  const restClasess = Object.values(restStyleObject).join(" ");
+  const wrapperClasses = [restClasess, disabled ? disableClass : ""].join(" ");
 
   return (
     <div className="flex flex-col items-start">
       <label htmlFor={id} className="title-3 flex items-start gap-1 pb-2">
         {label}
       </label>
-      <div className={`${Object.values(wrapperClasses).join(" ")}`}>
+      <div className={wrapperClasses}>
         <textarea
           name={id}
           id={id}
           className={baseStyles.textArea}
           maxLength={maxLength}
           ref={textAreaRef}
+          disabled={disabled}
           {...props}
         />
         <p className="flex items-end justify-end gap-[2px] self-stretch">

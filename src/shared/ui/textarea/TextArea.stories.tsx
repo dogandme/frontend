@@ -38,6 +38,13 @@ const meta: Meta<typeof TextArea> = {
       description:
         "TextArea 컴포넌트에서 입력 가능한 최대 글자수를 나타냅니다. 기본 값은 150입니다.",
     },
+    disabled: {
+      control: {
+        type: "boolean",
+      },
+      description:
+        "textArea 태그의 disabled와 textArea 엘리먼트를 감싸고 있는 wrapper태그에서 disabled 스타일을 적용하기 위해 사용되는 값입니다.",
+    },
   },
 };
 
@@ -52,8 +59,19 @@ export const Default: Story = {
     maxLength: 150,
   },
   render: (args) => (
-    <div className="w-[328px]">
-      <TextArea {...args} />
+    <div className="flex gap-10 px-2 py-4">
+      <div className="w-[328px] border border-grey-300 px-4 py-2">
+        <h1>Default TextArea</h1>
+        <TextArea {...args} />
+      </div>
+      <div className="w-[328px] border border-grey-300 px-4 py-2">
+        <h1>Disabled TextArea</h1>
+        <TextArea {...args} disabled />
+      </div>
+      <div className="w-[328px] border border-grey-300 px-4 py-2">
+        <h1>error TextArea</h1>
+        <TextArea {...args} isError />
+      </div>
     </div>
   ),
 };
