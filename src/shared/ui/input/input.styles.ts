@@ -1,29 +1,7 @@
 export const inputStyles = {
-  textField: {
-    default: {
-      base: "body-2 flex  h-12 items-start gap-1 self-stretch rounded-2xl border px-3 py-[13px]",
-      enabled: "border-grey-500 bg-grey-0",
-      hover: "hover:border-grey-700 hover: bg-grey-100",
-      focus: "focus-within:border-tangerine-500 focus-within:bg-grey-0",
-      focusHover:
-        "hover:focus-within:border-tangerine-500 hover:focus-within:bg-grey-0",
-      disabled: "disabled:border-grey-100 diabled:bg-grey-0",
-      statusTextClass: "text-grey-700",
-    },
-    error: {
-      base: "body-2 flex  h-12 items-start gap-1 self-stretch rounded-2xl border px-3 py-[13px]",
-      enabled: "border-pink-500 bg-grey-0",
-      hover: "hover:border-pink-700 hover:bg-grey-100",
-      focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
-      focusHover:
-        "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
-      disabled: "",
-      statusTextClass: "text-pink-500",
-    },
-  },
   calander: {
     default: {
-      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-[4px] border px-3 py-3 gap-1",
+      base: "body-2 flex  h-12 items-center gap-1 self-stretch rounded-[4px] border px-3 py-3 gap-1",
       enabled: "border-grey-0 bg-grey-0",
       hover: "hover:bg-grey-100 hover:border-grey-500",
       focus: "focus-within:border-green-500 focus-within:bg-grey-0",
