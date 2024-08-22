@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import IconSvg from "../../assets/email.svg";
 import Button from "./Button";
-import withIcon from "../icon/Icon";
+import { withIcon } from "../icon";
 
 const IconExample = withIcon(IconSvg);
 
