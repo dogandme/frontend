@@ -17,7 +17,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ colorType, variant, size, children, ...props }, ref) => {
     const baseStyles =
-      "inline-flex flex-shrink-0 items-center justify-center gap-[.625rem] rounded-[1rem] outline-none";
+      "inline-flex flex-shrink-0 items-center justify-center gap-[.625rem] rounded-[1rem] outline-none icon-in-button";
     const colorStyles = colors[colorType][variant];
 
     const childrenArray = Children.toArray(children);
