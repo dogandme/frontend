@@ -8,15 +8,15 @@ interface TextAreaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   id: string;
   label: string;
-  isError: boolean;
-  maxLength: number;
-  disabled: boolean;
+  isError?: boolean;
+  maxLength?: number;
+  disabled?: boolean;
 }
 
 const TextArea = ({
   id,
   label,
-  isError,
+  isError = false,
   maxLength = 150,
   disabled = false,
   ...props

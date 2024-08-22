@@ -1,7 +1,7 @@
 export const inputStyles = {
   calender: {
     default: {
-      base: "body-2 flex  h-12 items-center gap-1 self-stretch rounded-[4px] border px-3 py-3 gap-1",
+      base: "body-2 flex  h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-3 gap-1",
       enabled: "border-grey-0 bg-grey-0",
       hover: "hover:bg-grey-100 hover:border-grey-500",
       focus: "focus-within:border-green-500 focus-within:bg-grey-0",
@@ -11,7 +11,7 @@ export const inputStyles = {
       statusTextClass: "text-grey-700",
     },
     error: {
-      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-[4px] border px-3 py-3 gap-1",
+      base: "body-2 flex h-12 items-center gap-1 self-stretch rounded-2xl border px-3 py-3 gap-1",
       enabled: "border-pink-500 bg-grey-0",
       hover: "hover:bg-grey-50 hover:border-pink-700",
       focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
