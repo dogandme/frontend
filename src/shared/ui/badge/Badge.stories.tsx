@@ -7,23 +7,14 @@ const meta: Meta<typeof Badge> = {
   component: Badge,
   tags: ["autodocs"],
   argTypes: {
-    variant: {
-      description: "배지의 종류를 결정합니다.",
-      options: ["dot", "num", "text"],
-      control: { type: "radio" },
-    },
     colorType: {
       description: "배지의 색상을 결정합니다.",
       options: ["primary", "secondary"],
       control: { type: "radio" },
     },
-    text: {
-      description: "variant가 text일 때, 배지의 텍스트입니다.",
+    children: {
+      description: "배지에 표시할 내용입니다.",
       control: { type: "text" },
-    },
-    number: {
-      description: "variant가 num일 때, 배지의 숫자입니다.",
-      control: { type: "number" },
     },
   },
 };
@@ -39,32 +30,20 @@ export const Default: Story = {
   render: ({ colorType }) => {
     return (
       <div className="flex items-center gap-1">
-        <Badge variant="dot" colorType={colorType} />
-        <Badge variant="num" colorType={colorType} number={3} />
-        <Badge variant="text" colorType={colorType} text="text" />
+        <Badge colorType={colorType} />
+        <Badge colorType={colorType}>3</Badge>
+        <Badge colorType={colorType}>text</Badge>
       </div>
     );
   },
 };
 
 export const Badges: Story = {
+  args: {
+    colorType: "primary",
+  },
   argTypes: {
-    variant: {
-      table: {
-        disable: true,
-      },
-    },
     colorType: {
-      table: {
-        disable: true,
-      },
-    },
-    text: {
-      table: {
-        disable: true,
-      },
-    },
-    number: {
       table: {
         disable: true,
       },
@@ -74,14 +53,14 @@ export const Badges: Story = {
     return (
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-1">
-          <Badge variant="dot" colorType="primary" />
-          <Badge variant="num" colorType="primary" number={3} />
-          <Badge variant="text" colorType="primary" text="text" />
+          <Badge colorType="primary" />
+          <Badge colorType="primary">3</Badge>
+          <Badge colorType="primary">text</Badge>
         </div>
         <div className="flex items-center gap-1">
-          <Badge variant="dot" colorType="secondary" />
-          <Badge variant="num" colorType="secondary" number={3} />
-          <Badge variant="text" colorType="secondary" text="text" />
+          <Badge colorType="secondary" />
+          <Badge colorType="secondary">3</Badge>
+          <Badge colorType="secondary">text</Badge>
         </div>
       </div>
     );
@@ -90,61 +69,25 @@ export const Badges: Story = {
 
 export const DotBadge: Story = {
   args: {
-    variant: "dot",
+    colorType: "primary",
   },
   argTypes: {
-    variant: {
+    children: {
       table: {
         disable: true,
       },
     },
-    text: {
-      table: {
-        disable: true,
-      },
-    },
-    number: {
-      table: {
-        disable: true,
-      },
-    },
+  },
+  render: ({ colorType }) => {
+    return <Badge colorType={colorType} />;
   },
 };
 
-export const NumBadge: Story = {
+export const BadgeWithContent: Story = {
   args: {
-    variant: "num",
-    number: 3,
+    colorType: "primary",
   },
-  argTypes: {
-    variant: {
-      table: {
-        disable: true,
-      },
-    },
-    text: {
-      table: {
-        disable: true,
-      },
-    },
-  },
-};
-
-export const TextBadge: Story = {
-  args: {
-    variant: "text",
-    text: "text",
-  },
-  argTypes: {
-    variant: {
-      table: {
-        disable: true,
-      },
-    },
-    number: {
-      table: {
-        disable: true,
-      },
-    },
+  render: ({ colorType, children }) => {
+    return <Badge colorType={colorType}>{children}</Badge>;
   },
 };
