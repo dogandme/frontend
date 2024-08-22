@@ -8,11 +8,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
   componentType: keyof typeof inputStyles;
-  isError: boolean;
-  statusText: null | string;
+  isError?: boolean;
+  statusText?: null | string;
+  disabled?: boolean;
   trailingNode?: React.ReactNode;
   leadingNode?: React.ReactNode;
-  disabled: boolean;
 }
 
 const Input = ({
@@ -21,9 +21,9 @@ const Input = ({
   componentType,
   isError = false,
   statusText = null,
+  disabled = false,
   trailingNode,
   leadingNode,
-  disabled = false,
   ...props
 }: InputProps) => {
   // 휴먼에러를 방지하기 위해 leadingNode,trailingNode 유효성 확인
