@@ -1,3 +1,4 @@
+import { withRouter } from "storybook-addon-remix-react-router";
 import "../src/global.css";
 import type { Preview } from "@storybook/react";
 
@@ -10,6 +11,8 @@ const preview: Preview = {
       },
     },
   },
+  // 모든 스토리에 전역적으로 react-router-dom을 적용
+  decorators: [withRouter],
 };
 
 export default preview;
