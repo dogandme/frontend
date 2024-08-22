@@ -84,3 +84,8 @@ input,
 textarea {
   background-color: inherit;
 }
+
+/* 버튼의 텍스트 색상과 아이콘 색상을 맞추기 위한 스타일 */
+.icon-in-button svg {
+  fill: currentColor;
+}
