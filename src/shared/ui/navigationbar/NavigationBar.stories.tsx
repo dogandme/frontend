@@ -79,13 +79,13 @@ const meta: Meta<typeof NavigationBar> = {
   argTypes: {
     componentType: {
       description:
-        "NavigationBar의 스타일을 결정합니다. type으로는 default, buttonWithLabel , labelWithButton이 있습니다.",
-      trailingNode: {
-        description: "오른쪽에 위치할 노드를 설정합니다.",
-      },
-      leadingNode: {
-        description: "왼쪽에 위치할 노드를 설정합니다.",
-      },
+        "NavigationBar의 스타일을 결정합니다. type으로는 default, buttonLeft , buttonRight가 있습니다.",
+    },
+    button: {
+      description: "NavigationBar에 들어갈 버튼입니다.",
+    },
+    label: {
+      description: "선택적인 요소로 NavigationBar에 들어갈 라벨입니다.",
     },
   },
   parameters: {
@@ -115,39 +115,80 @@ export const Default: Story = {
       <div>
         <h1>default</h1>
         <div className="w-90 border border-grey-200">
-          <NavigationBar componentType="default">
-            <MockupLogo />
-            <div className="flex items-center justify-end">
-              <Button>
-                <MessageIcon />
-              </Button>
-              <Button>
-                <MessageIcon />
-              </Button>
-            </div>
-          </NavigationBar>
+          <NavigationBar
+            componentType="default"
+            button={
+              <div className="flex items-center justify-end">
+                <Button>
+                  <MessageIcon />
+                </Button>
+                <Button>
+                  <MessageIcon />
+                </Button>
+              </div>
+            }
+            label={<MockupLogo />}
+          />
         </div>
       </div>
-      <div>
-        <h1>Button With Label</h1>
-        <div className="w-90 border border-grey-200">
-          <NavigationBar componentType="buttonWithLabel">
-            <Button>
-              <BackwardIcon />
-            </Button>
-            <MockUpLabel />
-          </NavigationBar>
+
+      <div className="flex gap-10">
+        <div>
+          <h1>buttonLeft with Label</h1>
+          <div className="w-90 border border-grey-200">
+            <NavigationBar
+              componentType="buttonLeft"
+              button={
+                <Button>
+                  <BackwardIcon />
+                </Button>
+              }
+              label={<MockUpLabel />}
+            />
+          </div>
+        </div>
+        <div>
+          <h1>buttonLeft without Label</h1>
+          <div className="w-90 border border-grey-200">
+            <NavigationBar
+              componentType="buttonLeft"
+              button={
+                <Button>
+                  <BackwardIcon />
+                </Button>
+              }
+            />
+          </div>
         </div>
       </div>
-      <div>
-        <h1>Label With Button</h1>
-        <div className="w-90 border border-grey-200">
-          <NavigationBar componentType="labelWithButton">
-            <MockUpLabel />
-            <Button>
-              <MockupCloseIcon />
-            </Button>
-          </NavigationBar>
+
+      <div className="flex gap-10">
+        <div>
+          <h1>buttonRight with Label</h1>
+          <div className="w-90 border border-grey-200">
+            <NavigationBar
+              componentType="buttonRight"
+              button={
+                <Button>
+                  <MockupCloseIcon />
+                </Button>
+              }
+              label={<MockUpLabel />}
+            />
+          </div>
+        </div>
+        <div>
+          <h1>buttonRight without Label</h1>
+          <div className="w-90 border border-grey-200">
+            <NavigationBar
+              componentType="buttonRight"
+              button={
+                <Button>
+                  <MockupCloseIcon />
+                </Button>
+              }
+            />
+          </div>
         </div>
       </div>
     </div>
