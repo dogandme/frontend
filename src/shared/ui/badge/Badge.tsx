@@ -17,8 +17,7 @@ const Badge = ({ colorType, children }: BadgeProps) => {
 
   const textStyles = "text-grey-0 body-3";
 
-  const hasChildren = children !== undefined;
-  const isNum = hasChildren && /^[0-9]+$/.test(children);
+  const isNum = /^[0-9]+$/.test(children);
 
   return (
     <div
