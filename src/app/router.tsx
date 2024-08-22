@@ -1,17 +1,14 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
+import { MainLayout, MainPage } from "../pages";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <>
-        <Outlet />
-      </>
-    ),
+    element: <MainLayout />,
     children: [
       {
         index: true,
-        element: <div>home</div>,
+        element: <MainPage />,
       },
 
       {
