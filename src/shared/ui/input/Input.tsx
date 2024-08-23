@@ -1,4 +1,5 @@
 import React from "react";
+import { Badge } from "../badge";
 import { inputStyles, baseStyles } from "./input.styles";
 
 type ComponentType = keyof typeof inputStyles;
@@ -8,6 +9,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
   componentType: keyof typeof inputStyles;
+  essential?: boolean;
   isError?: boolean;
   statusText?: null | string;
   disabled?: boolean;
@@ -19,6 +21,7 @@ const Input = ({
   id,
   label,
   componentType,
+  essential = false,
   isError = false,
   statusText = null,
   disabled = false,
@@ -55,6 +58,7 @@ const Input = ({
         <label htmlFor={id} className="title-3">
           {label}
         </label>
+        {essential && <Badge colorType="primary" />}
       </div>
       <div
         className={`${restClasses} ${disabled ? disableClass : enabledClass}`}

@@ -74,6 +74,13 @@ const meta: Meta<typeof Input> = {
       description:
         "Input 컴포넌트의 디자인 타입을 결정합니다. 모든 디자인 타입은 사전에 정의된 디자인 시스템을 따릅니다.",
     },
+    essential: {
+      control: {
+        type: "boolean",
+      },
+      description:
+        "Input 컴포넌트에서 필수 입력값을 나타냅니다. 필수 입력값일 때는 label 옆에 dot이 표시됩니다.",
+    },
     isError: {
       control: {
         type: "boolean",
@@ -117,6 +124,7 @@ export const Default: Story = {
     isError: false,
     statusText: null,
     placeholder: "PlaceHolder",
+    essential: true,
   },
   parameters: {
     backgrond: {
@@ -782,6 +790,33 @@ export const StatusText: Story = {
           <div className="h-fit w-96 border border-grey-300 px-2 py-2">
             <Input {...args} statusText={null} isError />
           </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const Essential: Story = {
+  args: {
+    ...Default.args,
+    componentType: "outlinedText",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Input 컴포넌트는 필수 입력값을 나타내기 위해 essential props를 사용할 수 있습니다.",
+      },
+    },
+  },
+  render: (args) => {
+    return (
+      <div className="flex gap-10">
+        <div className="border border-grey-300 px-2 py-2">
+          <Input {...args} />
+        </div>
+        <div className="border border-grey-300 px-2 py-2">
+          <Input {...args} essential={false} />
         </div>
       </div>
     );
