@@ -71,6 +71,7 @@ const Input = ({
           autoComplete="off"
           disabled={disabled}
           {...props}
+          aria-label={label}
         />
         {trailingNode}
       </div>

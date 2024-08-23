@@ -71,6 +71,7 @@ const TextArea = ({
           maxLength={maxLength}
           ref={textAreaRef}
           disabled={disabled}
+          aria-label={label}
           {...props}
         />
         <p className="body-3 flex items-end justify-end gap-[2px] self-stretch">
