@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { textAreaStyles, baseStyles } from "./TextArea.styles";
+import { Badge } from "../badge";
 
 // 현재 디자인 시스템상에서 TextArea 컴포넌트에선 statusText가 존재하지 않습니다.
 // 만약 statusText 를 추가할 일이 생긴다면 해당 디자인 시스템에 맞게 추가해주세요.
@@ -12,6 +13,7 @@ interface TextAreaProps
   isError?: boolean;
   maxLength?: number;
   disabled?: boolean;
+  essential?: boolean;
 }
 
 const TextArea = ({
@@ -21,6 +23,7 @@ const TextArea = ({
   isError = false,
   maxLength = 150,
   disabled = false,
+  essential = false,
   ...props
 }: TextAreaProps) => {
   const [currentLength, setCurrentLength] = useState<number>(0);
@@ -60,9 +63,12 @@ const TextArea = ({
   return (
     <div className="flex w-full flex-col items-start">
       {label && (
-        <label htmlFor={id} className="title-3 flex items-start gap-1 pb-2">
-          {label}
-        </label>
+        <div className="flex gap-1 pb-2">
+          <label htmlFor={id} className="title-3">
+            {label}
+          </label>
+          {essential && <Badge colorType="primary" />}
+        </div>
       )}
       <div
         className={`${resetClasses} ${disabled ? disableClass : enabledClass}`}

@@ -104,7 +104,23 @@ export const Default: Story = {
   ),
 };
 
-export const WhenInputFocused: Story = {
+export const TextAreaWithoutLabel: Story = {
+  args: {
+    ...Default.args,
+  },
+  render: (args) => (
+    <div className="flex gap-10">
+      <div className="w-[300px] border border-grey-300 px-2 py-2">
+        <TextArea {...args} />
+      </div>
+      <div className="w-[300px] border border-grey-300 px-2 py-2">
+        <TextArea {...args} label="Title" essential />
+      </div>
+    </div>
+  ),
+};
+
+export const WhenTextAreaFocused: Story = {
   args: {
     ...Default.args,
     statusText: "올바른 이메일을 입력해주세요",
@@ -116,6 +132,8 @@ export const WhenInputFocused: Story = {
         <div className="w-[300px] border border-grey-300 px-2 py-2">
           <TextArea
             {...args}
+            label="Title"
+            essential
             // 더 극적인 상황을 위해 onFocus , onBlur 이벤트를 추가합니다.
             onFocus={() => console.log("onFocus")}
             onBlur={() => console.log("onBlur")}
