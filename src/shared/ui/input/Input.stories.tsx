@@ -121,14 +121,10 @@ export const Default: Story = {
     id: "input",
     label: "Title",
     isError: false,
-    statusText: null,
     placeholder: "PlaceHolder",
     essential: true,
   },
   parameters: {
-    backgrond: {
-      default: "twitter",
-    },
     docs: {
       description: {
         story: "컴포넌트 타입에 따른 Input 컴포넌트들의 예시입니다.",
@@ -752,7 +748,7 @@ export const StatusText: Story = {
     docs: {
       description: {
         story:
-          "Input 컴포넌트는 statusText가 null이 아닐 경우엔 statusText 상태와 상관 없이 항상 같은 높이를 유지합니다.",
+          "Input 컴포넌트는 statusText가 문자열일 경우엔 layout shift 현상을 방지하기 위해 항상 같은 높이를 유지합니다.",
       },
     },
   },
@@ -770,24 +766,15 @@ export const StatusText: Story = {
             <Input {...args} statusText="올바른 이메일을 입력해주세요" />
           </div>
           <div className="h-fit w-96 border border-grey-300 px-2 py-2">
-            <p>status text = undefineded (null)</p>
+            <p>status text = undefined</p>
             <Input {...args} />
           </div>
-        </div>
-
-        <div className="flex gap-10 px-2 py-2">
           <div className="h-fit w-96 border border-grey-300 px-2 py-2">
-            <Input {...args} statusText="" isError />
-          </div>
-          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <p>status text = width보다 긴 경우</p>
             <Input
               {...args}
-              statusText="올바른 이메일을 입력해주세요"
-              isError
+              statusText="width 보다 긴 텍스트의 경우에는 불가피하게 layout shift를 발생 시킵니다.UX 향상을 위해 statusText에 사용될 문자열의 길이를 주의해주세요"
             />
-          </div>
-          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
-            <Input {...args} statusText={null} isError />
           </div>
         </div>
       </div>
