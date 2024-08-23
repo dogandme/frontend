@@ -71,7 +71,10 @@ const Input = ({
         {trailingNode}
       </div>
       {statusText !== null && (
-        <p className={`${statusTextClass} ${baseStyles.statusText}`}>
+        <p
+          className={`${statusTextClass} ${baseStyles.statusText} `}
+          data-text-id="status-text"
+        >
           {statusText}
         </p>
       )}

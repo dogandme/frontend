@@ -1,3 +1,4 @@
+import { userEvent, within } from "@storybook/testing-library";
 import type { Meta, StoryObj } from "@storybook/react";
 import Input from "./Input";
 
@@ -728,6 +729,58 @@ export const InputExample: Story = {
               type="date"
               isError
             />
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const StatusText: Story = {
+  args: {
+    ...Default.args,
+    componentType: "outlinedText",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Input 컴포넌트는 statusText가 null이 아닐 경우엔 statusText 상태와 상관 없이 항상 같은 높이를 유지합니다.",
+      },
+    },
+  },
+
+  render: (args) => {
+    return (
+      <div>
+        <div className="flex gap-10 px-2 py-2">
+          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <p>status text = ""</p>
+            <Input {...args} statusText="" />
+          </div>
+          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <p>status text = "올바른 이메일을 입력해주세요"</p>
+            <Input {...args} statusText="올바른 이메일을 입력해주세요" />
+          </div>
+          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <p>status text = undefineded (null)</p>
+            <Input {...args} />
+          </div>
+        </div>
+
+        <div className="flex gap-10 px-2 py-2">
+          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <Input {...args} statusText="" isError />
+          </div>
+          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <Input
+              {...args}
+              statusText="올바른 이메일을 입력해주세요"
+              isError
+            />
+          </div>
+          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <Input {...args} statusText={null} isError />
           </div>
         </div>
       </div>
