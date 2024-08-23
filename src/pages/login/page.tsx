@@ -18,6 +18,7 @@ const LoginPage = () => (
       <p className="body-2 flex flex-col self-stretch text-center text-grey-700">
         <span>반려동물과 함께한 특별한 장소를</span>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <span>마킹하고 공유하세요</span>
       </p>
     </header>
@@ -25,6 +26,9 @@ const LoginPage = () => (
       <OAuthLoginHyperLinks />
 =======
         <span>마킹하고 공유하세요🐾</span>
+=======
+        <span>마킹하고 공유하세요</span>
+>>>>>>> ff9d8aa (fix[#52] : 발바닥 이모지 제거)
       </p>
     </header>
     <div className="flex flex-col items-start gap-4 self-stretch">
