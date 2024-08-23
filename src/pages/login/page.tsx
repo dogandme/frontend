@@ -1,5 +1,13 @@
 import { Link } from "react-router-dom";
+<<<<<<< HEAD
 import { OAuthLoginHyperLinks, EmailLoginHyperLink } from "@/features/auth/ui";
+=======
+import {
+  EmailLoginHyperLink,
+  GoogleLoginHyperLink,
+  NaverLoginHyperLink,
+} from "@/entities/auth/ui/login";
+>>>>>>> cc91675 (feat[#52] : /login 경로 페이지 생성)
 
 const LoginPage = () => (
   <>
@@ -9,11 +17,20 @@ const LoginPage = () => (
       </h1>
       <p className="body-2 flex flex-col self-stretch text-center text-grey-700">
         <span>반려동물과 함께한 특별한 장소를</span>
+<<<<<<< HEAD
         <span>마킹하고 공유하세요</span>
       </p>
     </header>
     <div className="flex flex-col items-start gap-4 self-stretch">
       <OAuthLoginHyperLinks />
+=======
+        <span>마킹하고 공유하세요🐾</span>
+      </p>
+    </header>
+    <div className="flex flex-col items-start gap-4 self-stretch">
+      <NaverLoginHyperLink />
+      <GoogleLoginHyperLink />
+>>>>>>> cc91675 (feat[#52] : /login 경로 페이지 생성)
       <EmailLoginHyperLink />
     </div>
     <p className="flex items-center justify-center self-stretch">

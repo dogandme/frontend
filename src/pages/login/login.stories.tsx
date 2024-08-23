@@ -1,11 +1,19 @@
 import { Meta, StoryObj } from "@storybook/react";
+<<<<<<< HEAD
 import LoginLayout from "./layout";
 import LoginPage from "./page";
+=======
+import { LoginLayout, LoginPage } from ".";
+>>>>>>> cc91675 (feat[#52] : /login 경로 페이지 생성)
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "../layout";
 
 const meta: Meta = {
   title: "Pages/login",
+<<<<<<< HEAD
+=======
+  tags: ["pages"],
+>>>>>>> cc91675 (feat[#52] : /login 경로 페이지 생성)
   parameters: {
     docs: {
       description: {
@@ -13,6 +21,7 @@ const meta: Meta = {
       },
     },
   },
+<<<<<<< HEAD
   decorators: [
     (Story) => (
       <div className="w-96 border border-grey-300">
@@ -20,6 +29,8 @@ const meta: Meta = {
       </div>
     ),
   ],
+=======
+>>>>>>> cc91675 (feat[#52] : /login 경로 페이지 생성)
 };
 
 export default meta;
