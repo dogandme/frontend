@@ -119,7 +119,7 @@ type Story = StoryObj<typeof Input>;
 export const Default: Story = {
   args: {
     id: "input",
-    label: "Title",
+    // label: "Title",
     isError: false,
     placeholder: "PlaceHolder",
     essential: true,
@@ -803,6 +803,25 @@ export const Essential: Story = {
         </div>
         <div className="border border-grey-300 px-2 py-2">
           <Input {...args} essential={false} />
+        </div>
+      </div>
+    );
+  },
+};
+
+export const WithOutLabel: Story = {
+  args: {
+    ...Default.args,
+    componentType: "outlinedText",
+  },
+  render: (args) => {
+    return (
+      <div className="flex gap-10">
+        <div className="h-fit border border-grey-300 px-2 py-2">
+          <Input {...args} label="label" />
+        </div>
+        <div className="h-fit border border-grey-300 px-2 py-2">
+          <Input {...args} />
         </div>
       </div>
     );
