@@ -23,31 +23,29 @@ const TextArea = ({
   disabled = false,
   ...props
 }: TextAreaProps) => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [currentLength, setCurrentLength] = useState<number>(0);
+  const [isFocus, setIsFocus] = useState<boolean>(false);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  // textarea의 최대 글자수를 제한하고 현재 글자수를 표시하기 위한 Effect
-  // 직접 actual dom에 접근하여 addEventListener를 사용하는 이유는 컴포넌트 상위에서 props로
-  // 이벤트 핸들러를 등록해주는 경우가 존재 할 수 있기 때문입니다.
-  // addEventListener로 이벤트 핸들러를 부착해두게 되면 상단에서 등록한 이벤트 핸들러와 충돌이 발생하지 않습니다.
-  useEffect(() => {
-    const $textArea = textAreaRef.current;
-    if (!$textArea) {
-      return;
+  const { onInput, onFocus, onBlur, ...rest } = props;
+  const handleInput = (event: React.FormEvent<HTMLTextAreaElement>) => {
+    if (onInput) {
+      onInput(event);
     }
-
-    // removeEventListener를 위한 이벤트 핸들러 함수로 기명 함수를 사용하여 removeEventListener를 사용할 수 있도록 합니다.
-    const handleInput = (e: Event) => {
-      const { value } = e.target as HTMLTextAreaElement;
-      setCurrentLength(value.length);
-    };
-
-    $textArea.addEventListener("input", handleInput);
-
-    return () => {
-      $textArea.removeEventListener("input", handleInput);
-    };
-  }, [maxLength]);
+    setCurrentLength(event.currentTarget.value.length);
+  };
+  const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
+    if (onFocus) {
+      onFocus(event);
+    }
+    setIsFocus(true);
+  };
+  const handleBlur = (event: React.FocusEvent<HTMLTextAreaElement>) => {
+    if (onBlur) {
+      onBlur(event);
+    }
+    setIsFocus(false);
+  };
 
   const status = isError ? "error" : "default";
   const {
@@ -77,15 +75,21 @@ const TextArea = ({
           ref={textAreaRef}
           disabled={disabled}
           aria-label={label || "textarea"}
-          {...props}
+          onInput={handleInput}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          {...rest}
         />
         <p className="body-3 flex items-end justify-end gap-[2px] self-stretch">
           {`${currentLength} / ${maxLength}`}
         </p>
       </div>
       {statusText !== undefined && (
-        <p className={`${statusTextClass} ${baseStyles.statusText}`}>
-          {statusText}
+        <p
+          className={`${statusTextClass} ${baseStyles.statusText}`}
+          data-testid="status-text"
+        >
+          {isFocus && statusText}
         </p>
       )}
     </div>
