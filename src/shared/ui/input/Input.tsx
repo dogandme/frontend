@@ -1,6 +1,7 @@
 import React from "react";
-import { Badge } from "../badge";
+import { useState } from "react";
 import { inputStyles, baseStyles } from "./input.styles";
+import { Badge } from "../badge";
 
 type ComponentType = keyof typeof inputStyles;
 type StatusType = keyof (typeof inputStyles)[ComponentType];
@@ -29,6 +30,8 @@ const Input = ({
   leadingNode,
   ...props
 }: InputProps) => {
+  // focus 상태에만 글자가 보이게 하기 위한 state
+  const [isFocus, setIsFocus] = useState<boolean>(false);
   // 휴먼에러를 방지하기 위해 leadingNode,trailingNode 유효성 확인
   if (React.Children.count(leadingNode) > 1) {
     throw new Error("leadingNode 하나의 노드만 가질 수 있습니다.");
@@ -74,12 +77,15 @@ const Input = ({
           disabled={disabled}
           {...props}
           aria-label={label || "input"}
+          // focus 상태일 때만 statusText를 보여주기 위한 이벤트 핸들러
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
         />
         {trailingNode}
       </div>
       {statusText !== undefined && (
         <p className={`${statusTextClass} ${baseStyles.statusText}`}>
-          {statusText}
+          {isFocus && statusText}
         </p>
       )}
     </div>
