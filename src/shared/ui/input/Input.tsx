@@ -1,4 +1,5 @@
 import React from "react";
+import { Badge } from "../badge";
 import { inputStyles, baseStyles } from "./input.styles";
 
 type ComponentType = keyof typeof inputStyles;
@@ -8,8 +9,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
   componentType: keyof typeof inputStyles;
+  statusText?: string;
+  essential?: boolean;
   isError?: boolean;
-  statusText?: null | string;
   disabled?: boolean;
   trailingNode?: React.ReactNode;
   leadingNode?: React.ReactNode;
@@ -19,8 +21,9 @@ const Input = ({
   id,
   label,
   componentType,
+  statusText,
+  essential = false,
   isError = false,
-  statusText = null,
   disabled = false,
   trailingNode,
   leadingNode,
@@ -50,11 +53,12 @@ const Input = ({
   const restClasses = Object.values(restStylesObject).join(" ");
 
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex w-full flex-col items-start">
       <div className="flex gap-1 pb-2">
         <label htmlFor={id} className="title-3">
           {label}
         </label>
+        {essential && <Badge colorType="primary" />}
       </div>
       <div
         className={`${restClasses} ${disabled ? disableClass : enabledClass}`}
@@ -67,10 +71,11 @@ const Input = ({
           autoComplete="off"
           disabled={disabled}
           {...props}
+          aria-label={label}
         />
         {trailingNode}
       </div>
-      {statusText !== null && (
+      {statusText !== undefined && (
         <p className={`${statusTextClass} ${baseStyles.statusText}`}>
           {statusText}
         </p>

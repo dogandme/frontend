@@ -73,6 +73,13 @@ const meta: Meta<typeof Input> = {
       description:
         "Input 컴포넌트의 디자인 타입을 결정합니다. 모든 디자인 타입은 사전에 정의된 디자인 시스템을 따릅니다.",
     },
+    essential: {
+      control: {
+        type: "boolean",
+      },
+      description:
+        "Input 컴포넌트에서 필수 입력값을 나타냅니다. 필수 입력값일 때는 label 옆에 dot이 표시됩니다.",
+    },
     isError: {
       control: {
         type: "boolean",
@@ -114,13 +121,10 @@ export const Default: Story = {
     id: "input",
     label: "Title",
     isError: false,
-    statusText: null,
     placeholder: "PlaceHolder",
+    essential: true,
   },
   parameters: {
-    backgrond: {
-      default: "twitter",
-    },
     docs: {
       description: {
         story: "컴포넌트 타입에 따른 Input 컴포넌트들의 예시입니다.",
@@ -729,6 +733,76 @@ export const InputExample: Story = {
               isError
             />
           </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const StatusText: Story = {
+  args: {
+    ...Default.args,
+    componentType: "outlinedText",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Input 컴포넌트는 statusText가 문자열일 경우엔 layout shift 현상을 방지하기 위해 항상 같은 높이를 유지합니다.",
+      },
+    },
+  },
+
+  render: (args) => {
+    return (
+      <div>
+        <div className="flex gap-10 px-2 py-2">
+          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <p>status text = ""</p>
+            <Input {...args} statusText="" />
+          </div>
+          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <p>status text = "올바른 이메일을 입력해주세요"</p>
+            <Input {...args} statusText="올바른 이메일을 입력해주세요" />
+          </div>
+          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <p>status text = undefined</p>
+            <Input {...args} />
+          </div>
+          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
+            <p>status text = width보다 긴 경우</p>
+            <Input
+              {...args}
+              statusText="width 보다 긴 텍스트의 경우에는 불가피하게 layout shift를 발생 시킵니다.UX 향상을 위해 statusText에 사용될 문자열의 길이를 주의해주세요"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const Essential: Story = {
+  args: {
+    ...Default.args,
+    componentType: "outlinedText",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Input 컴포넌트는 필수 입력값을 나타내기 위해 essential props를 사용할 수 있습니다.",
+      },
+    },
+  },
+  render: (args) => {
+    return (
+      <div className="flex gap-10">
+        <div className="border border-grey-300 px-2 py-2">
+          <Input {...args} />
+        </div>
+        <div className="border border-grey-300 px-2 py-2">
+          <Input {...args} essential={false} />
         </div>
       </div>
     );
