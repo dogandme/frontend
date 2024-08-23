@@ -7,8 +7,8 @@ type StatusType = keyof (typeof inputStyles)[ComponentType];
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
-  label: string;
   componentType: keyof typeof inputStyles;
+  label?: string;
   statusText?: string;
   essential?: boolean;
   isError?: boolean;
@@ -19,8 +19,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const Input = ({
   id,
-  label,
   componentType,
+  label,
   statusText,
   essential = false,
   isError = false,
@@ -54,12 +54,14 @@ const Input = ({
 
   return (
     <div className="flex w-full flex-col items-start">
-      <div className="flex gap-1 pb-2">
-        <label htmlFor={id} className="title-3">
-          {label}
-        </label>
-        {essential && <Badge colorType="primary" />}
-      </div>
+      {label && (
+        <div className="flex gap-1 pb-2">
+          <label htmlFor={id} className="title-3">
+            {label}
+          </label>
+          {essential && <Badge colorType="primary" />}
+        </div>
+      )}
       <div
         className={`${restClasses} ${disabled ? disableClass : enabledClass}`}
       >
@@ -71,7 +73,7 @@ const Input = ({
           autoComplete="off"
           disabled={disabled}
           {...props}
-          aria-label={label}
+          aria-label={label || "input"}
         />
         {trailingNode}
       </div>
