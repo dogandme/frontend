@@ -8,6 +8,7 @@ interface TextAreaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   id: string;
   label: string;
+  statusText?: string;
   isError?: boolean;
   maxLength?: number;
   disabled?: boolean;
@@ -16,6 +17,7 @@ interface TextAreaProps
 const TextArea = ({
   id,
   label,
+  statusText,
   isError = false,
   maxLength = 150,
   disabled = false,
@@ -49,6 +51,7 @@ const TextArea = ({
 
   const status = isError ? "error" : "default";
   const {
+    statusTextClass,
     disabled: disableClass,
     enabled: enabledClass,
     ...restStyleObject
@@ -57,10 +60,12 @@ const TextArea = ({
   const resetClasses = Object.values(restStyleObject).join(" ");
 
   return (
-    <div className="flex flex-col items-start">
-      <label htmlFor={id} className="title-3 flex items-start gap-1 pb-2">
-        {label}
-      </label>
+    <div className="flex w-full flex-col items-start">
+      {label && (
+        <label htmlFor={id} className="title-3 flex items-start gap-1 pb-2">
+          {label}
+        </label>
+      )}
       <div
         className={`${resetClasses} ${disabled ? disableClass : enabledClass}`}
       >
@@ -71,13 +76,18 @@ const TextArea = ({
           maxLength={maxLength}
           ref={textAreaRef}
           disabled={disabled}
-          aria-label={label}
+          aria-label={label || "textarea"}
           {...props}
         />
         <p className="body-3 flex items-end justify-end gap-[2px] self-stretch">
           {`${currentLength} / ${maxLength}`}
         </p>
       </div>
+      {statusText !== undefined && (
+        <p className={`${statusTextClass} ${baseStyles.statusText}`}>
+          {statusText}
+        </p>
+      )}
     </div>
   );
 };

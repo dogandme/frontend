@@ -54,24 +54,50 @@ type Story = StoryObj<typeof TextArea>;
 export const Default: Story = {
   args: {
     id: "textArea",
-    label: "TextArea",
     isError: false,
     maxLength: 150,
     placeholder: "Placeholder",
   },
   render: (args) => (
-    <div className="flex gap-10 px-2 py-4">
-      <div className="w-[328px] border border-grey-300 px-4 py-2">
+    <div className="flex flex-col gap-10 px-2 py-4">
+      <div className="border border-grey-300 px-4 py-2">
         <h1>Default TextArea</h1>
-        <TextArea {...args} />
+        <div className="flex gap-10">
+          <TextArea {...args} />
+          <TextArea {...args} label="Title" />
+
+          <TextArea
+            {...args}
+            label="Title"
+            statusText="올바른 이메일을 입력해주세요"
+          />
+        </div>
       </div>
-      <div className="w-[328px] border border-grey-300 px-4 py-2">
+      <div className="border border-grey-300 px-4 py-2">
         <h1>Disabled TextArea</h1>
-        <TextArea {...args} disabled />
+        <div className="flex gap-10">
+          <TextArea {...args} disabled />
+          <TextArea {...args} disabled label="Title" />
+          <TextArea
+            {...args}
+            disabled
+            label="Title"
+            statusText="올바른 이메일을 입력해주세요"
+          />
+        </div>
       </div>
-      <div className="w-[328px] border border-grey-300 px-4 py-2">
+      <div className="border border-grey-300 px-4 py-2">
         <h1>error TextArea</h1>
-        <TextArea {...args} isError />
+        <div className="flex gap-10">
+          <TextArea {...args} isError />
+          <TextArea {...args} isError label="Title" />
+          <TextArea
+            {...args}
+            statusText="올바른 이메일을 입력해주세요"
+            label="Title"
+            isError
+          />
+        </div>
       </div>
     </div>
   ),
