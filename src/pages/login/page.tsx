@@ -13,7 +13,7 @@ const LoginPage = () => (
       </h1>
       <p className="body-2 flex flex-col self-stretch text-center text-grey-700">
         <span>반려동물과 함께한 특별한 장소를</span>
-        <span>마킹하고 공유하세요🐾</span>
+        <span>마킹하고 공유하세요</span>
       </p>
     </header>
     <div className="flex flex-col items-start gap-4 self-stretch">
