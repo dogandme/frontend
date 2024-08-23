@@ -55,6 +55,22 @@ const Input = ({
   } = wrapperClassesObject;
   const restClasses = Object.values(restStylesObject).join(" ");
 
+  // 외부에서  onFocus , onBlur 이벤트가 존재할 수 있기 때문에 이벤트 핸들러를 추가합니다.
+  const { onFocus, onBlur, ...rest } = props;
+
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    if (onFocus) {
+      onFocus(event);
+    }
+    setIsFocus(true);
+  };
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    if (onBlur) {
+      onBlur(event);
+    }
+    setIsFocus(false);
+  };
+
   return (
     <div className="flex w-full flex-col items-start">
       {label && (
@@ -75,11 +91,11 @@ const Input = ({
           className={baseStyles.input}
           autoComplete="off"
           disabled={disabled}
-          {...props}
           aria-label={label || "input"}
           // focus 상태일 때만 statusText를 보여주기 위한 이벤트 핸들러
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          {...rest}
         />
         {trailingNode}
       </div>

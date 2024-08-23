@@ -842,7 +842,12 @@ export const WhenInputFocused: Story = {
     return (
       <div className="flex gap-10">
         <div className="border border-grey-300 px-2 py-2">
-          <Input {...args} />
+          <Input
+            {...args}
+            // 더 극적인 상황을 위해 onFocus , onBlur 이벤트를 추가합니다.
+            onFocus={() => console.log("onFocus")}
+            onBlur={() => console.log("onBlur")}
+          />
         </div>
       </div>
     );
@@ -855,12 +860,13 @@ export const WhenInputFocused: Story = {
     const $p = canvasElement.querySelector("p");
     const p_originalHeight = $p?.clientHeight;
     const p_originalTextContent = $p?.textContent;
+
+    const statusText = "올바른 이메일을 입력해주세요";
+
     // 아무런 이벤트가 발생하지 않더라도 p 태그는 존재해야 한다.
     expect($p).toBeInTheDocument();
 
-    // input에 focus 이벤트가 발생하면
     await userEvent.click($input);
-    const statusText = "올바른 이메일을 입력해주세요";
     expect($p?.textContent).toBe(statusText);
     expect($p?.clientHeight).toBe(p_originalHeight);
 
