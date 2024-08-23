@@ -6,14 +6,14 @@ export const iconButtonSize = {
 } as const;
 
 export const colors = {
-  primary: {
+  selected: {
     enabled: "text-tangerine-500",
     hover: "hover:text-tangerine-700",
     focus: "focus-visible:text-tangerine-700",
     active: "active:text-tangerine-900",
     disabled: "disabled:pointer-events-none disabled:text-tangerine-100",
   },
-  secondary: {
+  unSelected: {
     enabled: "text-grey-500",
     hover: "hover:text-grey-700",
     focus: "focus-visible:text-grey-700",

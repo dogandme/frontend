@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes } from "react";
-import { colors, iconButtonSize } from "./iconButton.style";
+import { colors, iconButtonSize } from "./selectedIconButton.style";
 
 type IconComponentType = React.ComponentType<{
   width?: number;
@@ -7,22 +7,22 @@ type IconComponentType = React.ComponentType<{
   fill?: string;
 }>;
 
-type IconButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+type SelectedIconButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   iconComponent: IconComponentType;
-  colorType: "primary" | "secondary";
   size: "xSmall" | "small" | "medium" | "large";
+  isSelected?: boolean;
 };
 
-const IconButton = ({
+const SelectedIconButton = ({
   iconComponent: IconComponent,
-  colorType,
   size,
+  isSelected,
   ...props
-}: IconButtonProps) => {
+}: SelectedIconButtonProps) => {
   const baseStyles =
     "flex flex-shrink-0 items-center justify-center icon-in-button";
   const sizeStyles = iconButtonSize[size];
-  const colorStyles = colors[colorType];
+  const colorStyles = isSelected ? colors.selected : colors.unSelected;
 
   return (
     <button
@@ -34,4 +34,4 @@ const IconButton = ({
   );
 };
 
-export default IconButton;
+export default SelectedIconButton;
