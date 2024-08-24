@@ -1,1 +1,1 @@
-export * as TextArea from "./TextArea";
+export * from "./TextArea";
