@@ -104,7 +104,7 @@ export const TextArea = ({
           role="status"
           aria-label="status-text"
         >
-          {isFocus && statusText}
+          {isError ? statusText : isFocus ? statusText : ""}
         </p>
       )}
     </div>
