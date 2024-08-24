@@ -6,7 +6,8 @@ import { Badge } from "../badge";
 type ComponentType = keyof typeof inputStyles;
 type StatusType = keyof (typeof inputStyles)[ComponentType];
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   componentType: keyof typeof inputStyles;
   label?: string;
@@ -18,7 +19,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   leadingNode?: React.ReactNode;
 }
 
-const Input = ({
+export const Input = ({
   id,
   componentType,
   label,
@@ -115,5 +116,3 @@ const Input = ({
     </div>
   );
 };
-
-export default Input;

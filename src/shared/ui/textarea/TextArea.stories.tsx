@@ -1,6 +1,6 @@
 import { within, userEvent, expect } from "@storybook/test";
 import type { Meta, StoryObj } from "@storybook/react";
-import TextArea from "./TextArea";
+import { TextArea } from "./TextArea";
 
 const meta: Meta<typeof TextArea> = {
   title: "shared/TextArea",
