@@ -17,6 +17,7 @@ export interface InputProps
   disabled?: boolean;
   trailingNode?: React.ReactNode;
   leadingNode?: React.ReactNode;
+  fullWidth?: boolean;
 }
 
 export const Input = ({
@@ -27,6 +28,7 @@ export const Input = ({
   essential = false,
   isError = false,
   disabled = false,
+  fullWidth = true,
   trailingNode,
   leadingNode,
   ...props
@@ -81,7 +83,7 @@ export const Input = ({
   const restClasses = Object.values(restStylesObject).join(" ");
 
   return (
-    <div className="flex w-full flex-col items-start">
+    <div className={`flex ${fullWidth && "w-full"} flex-col items-start`}>
       {label && (
         <div className="flex gap-1 pb-2">
           <label htmlFor={id} className="title-3">

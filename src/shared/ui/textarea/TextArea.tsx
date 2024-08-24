@@ -14,6 +14,7 @@ export interface TextAreaProps
   maxLength?: number;
   disabled?: boolean;
   essential?: boolean;
+  fullWidth: boolean;
 }
 
 export const TextArea = ({
@@ -24,6 +25,7 @@ export const TextArea = ({
   maxLength = 150,
   disabled = false,
   essential = false,
+  fullWidth = true,
   ...props
 }: TextAreaProps) => {
   const [currentLength, setCurrentLength] = useState<number>(0);
@@ -67,7 +69,7 @@ export const TextArea = ({
   const resetClasses = Object.values(restStyleObject).join(" ");
 
   return (
-    <div className="flex w-full flex-col items-start">
+    <div className={`flex ${fullWidth && "w-full"} flex-col items-start`}>
       {label && (
         <div className="flex gap-1 pb-2">
           <label htmlFor={id} className="title-3">
