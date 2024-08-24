@@ -31,7 +31,31 @@ const Input = ({
   ...props
 }: InputProps) => {
   // focus 상태에만 글자가 보이게 하기 위한 state
-  const [isFocus, setIsFocus] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const shouldShowStatusText = statusText !== undefined;
+
+  // 외부에서  onFocus , onBlur 이벤트가 존재할 수 있기 때문에 이벤트 핸들러를 추가합니다.
+  const { onFocus, onBlur, ...rest } = props;
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    if (onFocus) {
+      onFocus(event);
+    }
+
+    if (shouldShowStatusText) {
+      setIsFocused(true);
+    }
+  };
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    if (onBlur) {
+      onBlur(event);
+    }
+
+    if (shouldShowStatusText) {
+      setIsFocused(false);
+    }
+  };
+
   // 휴먼에러를 방지하기 위해 leadingNode,trailingNode 유효성 확인
   if (React.Children.count(leadingNode) > 1) {
     throw new Error("leadingNode 하나의 노드만 가질 수 있습니다.");
@@ -54,22 +78,6 @@ const Input = ({
     ...restStylesObject
   } = wrapperClassesObject;
   const restClasses = Object.values(restStylesObject).join(" ");
-
-  // 외부에서  onFocus , onBlur 이벤트가 존재할 수 있기 때문에 이벤트 핸들러를 추가합니다.
-  const { onFocus, onBlur, ...rest } = props;
-
-  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-    if (onFocus) {
-      onFocus(event);
-    }
-    setIsFocus(true);
-  };
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    if (onBlur) {
-      onBlur(event);
-    }
-    setIsFocus(false);
-  };
 
   return (
     <div className="flex w-full flex-col items-start">
@@ -99,9 +107,9 @@ const Input = ({
         />
         {trailingNode}
       </div>
-      {statusText !== undefined && (
+      {shouldShowStatusText && (
         <p className={`${statusTextClass} ${baseStyles.statusText}`}>
-          {isFocus && statusText}
+          {isFocused && statusText}
         </p>
       )}
     </div>

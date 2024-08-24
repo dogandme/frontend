@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { textAreaStyles, baseStyles } from "./TextArea.styles";
 import { Badge } from "../badge";
 
@@ -28,9 +28,10 @@ const TextArea = ({
 }: TextAreaProps) => {
   const [currentLength, setCurrentLength] = useState<number>(0);
   const [isFocus, setIsFocus] = useState<boolean>(false);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const shouldShowStatusText = statusText !== undefined;
 
   const { onInput, onFocus, onBlur, ...rest } = props;
+
   const handleInput = (event: React.FormEvent<HTMLTextAreaElement>) => {
     if (onInput) {
       onInput(event);
@@ -41,13 +42,18 @@ const TextArea = ({
     if (onFocus) {
       onFocus(event);
     }
-    setIsFocus(true);
+
+    if (shouldShowStatusText) {
+      setIsFocus(true);
+    }
   };
   const handleBlur = (event: React.FocusEvent<HTMLTextAreaElement>) => {
     if (onBlur) {
       onBlur(event);
     }
-    setIsFocus(false);
+    if (shouldShowStatusText) {
+      setIsFocus(false);
+    }
   };
 
   const status = isError ? "error" : "default";
@@ -78,7 +84,6 @@ const TextArea = ({
           id={id}
           className={baseStyles.textArea}
           maxLength={maxLength}
-          ref={textAreaRef}
           disabled={disabled}
           aria-label={label || "textarea"}
           onInput={handleInput}
@@ -90,7 +95,7 @@ const TextArea = ({
           {`${currentLength} / ${maxLength}`}
         </p>
       </div>
-      {statusText !== undefined && (
+      {shouldShowStatusText && (
         <p
           className={`${statusTextClass} ${baseStyles.statusText}`}
           data-testid="status-text"
