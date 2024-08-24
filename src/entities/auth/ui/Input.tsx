@@ -27,7 +27,6 @@ export const PasswordInput = (props: Omit<InputProps, FixedInputProps>) => {
       trailingNode={
         <button
           onClick={handleVisibility}
-          tabIndex={-1}
           aria-label="visibility-control-button"
           type="button"
         >
