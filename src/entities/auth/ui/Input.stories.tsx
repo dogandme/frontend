@@ -52,12 +52,35 @@ export const Password: Story = {
     id: "password",
     placeholder: "비밀번호를 입력해주세요",
   },
+  argTypes: {
+    statusText: {
+      control: {
+        type: "text",
+      },
+    },
+    isError: {
+      control: {
+        type: "boolean",
+      },
+    },
+  },
 
-  render: (args) => (
-    <div className="w-[300px] border border-grey-300 px-2 py-2">
-      <PasswordInput {...args} />
-    </div>
-  ),
+  render: (args) => {
+    const { isError } = args;
+
+    return (
+      <div className="w-[300px] border border-grey-300 px-2 py-2">
+        <PasswordInput
+          {...args}
+          statusText={
+            isError
+              ? "비밀번호는 6자 이상이어야 합니다"
+              : "비밀번호를 입력해주세요"
+          }
+        />
+      </div>
+    );
+  },
 
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
