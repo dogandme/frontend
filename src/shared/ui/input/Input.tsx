@@ -116,7 +116,10 @@ export const Input = ({
           role="status"
           aria-label="status-text"
         >
-          {isFocused && statusText}
+          {
+            // 에러 상태일 경우엔 focus 유무와 상관없이 statusText를 띄우고 에러가 아닐 경우엔 focus 시에만 나타나게 하자
+            isError ? statusText : isFocused ? statusText : ""
+          }
         </p>
       )}
     </div>
