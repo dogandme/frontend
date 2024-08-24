@@ -1,16 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 import { Meta, StoryObj } from "@storybook/react";
-import MainLayout from "../layout";
-import LoginPage from "./page";
-import LoginLayout from "./layout";
+import EmailLoginPage from "./page";
+import MainLayout from "@/pages/layout";
+import LoginLayout from "../layout";
 
-const meta: Meta = {
-  title: "Pages/login",
+const meta: Meta<typeof EmailLoginPage> = {
+  title: "Pages/login/email",
   tags: ["autodocs", "pages"],
   parameters: {
     docs: {
       description: {
-        component: "/login 경로에 대한 페이지입니다.",
+        component: "/login/email 경로에 대한 페이지입니다.",
       },
     },
   },
@@ -18,12 +18,12 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: StoryObj = {
+export const Default: StoryObj<typeof EmailLoginPage> = {
   render: () => (
     <Routes>
       <Route element={<MainLayout />}>
         <Route element={<LoginLayout />}>
-          <Route index element={<LoginPage />} />
+          <Route index element={<EmailLoginPage />} />
         </Route>
       </Route>
     </Routes>
