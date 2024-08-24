@@ -1,34 +1,64 @@
 import React from "react";
-import { Badge } from "../badge";
+import { useState } from "react";
 import { inputStyles, baseStyles } from "./input.styles";
+import { Badge } from "../badge";
 
 type ComponentType = keyof typeof inputStyles;
 type StatusType = keyof (typeof inputStyles)[ComponentType];
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
-  label: string;
   componentType: keyof typeof inputStyles;
+  label?: string;
   statusText?: string;
   essential?: boolean;
   isError?: boolean;
   disabled?: boolean;
   trailingNode?: React.ReactNode;
   leadingNode?: React.ReactNode;
+  fullWidth?: boolean;
 }
 
-const Input = ({
+export const Input = ({
   id,
-  label,
   componentType,
+  label,
   statusText,
   essential = false,
   isError = false,
   disabled = false,
+  fullWidth = true,
   trailingNode,
   leadingNode,
   ...props
 }: InputProps) => {
+  // focus 상태에만 글자가 보이게 하기 위한 state
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const shouldShowStatusText = statusText !== undefined;
+
+  // 외부에서  onFocus , onBlur 이벤트가 존재할 수 있기 때문에 이벤트 핸들러를 추가합니다.
+  const { onFocus, onBlur, ...rest } = props;
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    if (onFocus) {
+      onFocus(event);
+    }
+
+    if (shouldShowStatusText) {
+      setIsFocused(true);
+    }
+  };
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    if (onBlur) {
+      onBlur(event);
+    }
+
+    if (shouldShowStatusText) {
+      setIsFocused(false);
+    }
+  };
+
   // 휴먼에러를 방지하기 위해 leadingNode,trailingNode 유효성 확인
   if (React.Children.count(leadingNode) > 1) {
     throw new Error("leadingNode 하나의 노드만 가질 수 있습니다.");
@@ -53,13 +83,15 @@ const Input = ({
   const restClasses = Object.values(restStylesObject).join(" ");
 
   return (
-    <div className="flex w-full flex-col items-start">
-      <div className="flex gap-1 pb-2">
-        <label htmlFor={id} className="title-3">
-          {label}
-        </label>
-        {essential && <Badge colorType="primary" />}
-      </div>
+    <div className={`flex ${fullWidth && "w-full"} flex-col items-start`}>
+      {label && (
+        <div className="flex gap-1 pb-2">
+          <label htmlFor={id} className="title-3">
+            {label}
+          </label>
+          {essential && <Badge colorType="primary" />}
+        </div>
+      )}
       <div
         className={`${restClasses} ${disabled ? disableClass : enabledClass}`}
       >
@@ -70,18 +102,23 @@ const Input = ({
           className={baseStyles.input}
           autoComplete="off"
           disabled={disabled}
-          {...props}
-          aria-label={label}
+          aria-label={`${label ?? id}-input`}
+          // focus 상태일 때만 statusText를 보여주기 위한 이벤트 핸들러
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          {...rest}
         />
         {trailingNode}
       </div>
-      {statusText !== undefined && (
-        <p className={`${statusTextClass} ${baseStyles.statusText}`}>
-          {statusText}
+      {shouldShowStatusText && (
+        <p
+          className={`${statusTextClass} ${baseStyles.statusText}`}
+          role="status"
+          aria-label="status-text"
+        >
+          {isFocused && statusText}
         </p>
       )}
     </div>
   );
 };
-
-export default Input;
