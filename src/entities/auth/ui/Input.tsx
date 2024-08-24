@@ -31,7 +31,7 @@ export const PasswordInput = (props: Omit<InputProps, FixedInputProps>) => {
           aria-label="visibility-control-button"
           type="button"
         >
-          {isVisibilityOn ? <VisibilityOffIcon /> : <VisibilityOnIcon />}
+          {isVisibilityOn ? <VisibilityOnIcon /> : <VisibilityOffIcon />}
         </button>
       }
       placeholder="비밀번호를 입력해 주세요"
