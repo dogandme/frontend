@@ -14,7 +14,7 @@ export interface TextAreaProps
   maxLength?: number;
   disabled?: boolean;
   essential?: boolean;
-  fullWidth: boolean;
+  fullWidth?: boolean;
 }
 
 export const TextArea = ({
