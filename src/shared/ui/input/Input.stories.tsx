@@ -810,7 +810,7 @@ export const Essential: Story = {
   },
 };
 
-export const WithOutLabel: Story = {
+export const WithoutLabel: Story = {
   args: {
     ...Default.args,
     componentType: "outlinedText",
