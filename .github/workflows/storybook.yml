@@ -24,23 +24,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - if: steps.npm-cache.outputs.cache-hit == 'true'
+      - name: Check cache hit
+        if: steps.npm-cache.outputs.cache-hit == 'true'
         run: echo 'npm cache hit!'
-      - if: steps.npm-cache.outputs.cache-hit != 'true'
+
+      - name: Check cache miss
+        if: steps.npm-cache.outputs.cache-hit != 'true'
         run: echo 'npm cache missed!'
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Install dependencies
         run: npm ci
+
       - name: Install playwright browsers
         run: npx playwright install
+
       - name: Run interaction tests and save output
         id: test-storybook
         run: npm run test-storybook 2> >(sed 's/\x1b\[[0-9;]*m//g' > test-storybook-output.txt)
         continue-on-error: true
+
       - name: Post test results as PR comment
         uses: actions/github-script@v6
         if: always()
