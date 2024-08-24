@@ -85,6 +85,7 @@ export const TextArea = ({
           name={id}
           id={id}
           className={baseStyles.textArea}
+          autoComplete="off"
           maxLength={maxLength}
           disabled={disabled}
           aria-label={`${label ?? id}-textarea`}
@@ -97,7 +98,7 @@ export const TextArea = ({
           {`${currentLength} / ${maxLength}`}
         </p>
       </div>
-      {statusText !== undefined && (
+      {shouldShowStatusText && (
         <p
           className={`${statusTextClass} ${baseStyles.statusText}`}
           role="status"
