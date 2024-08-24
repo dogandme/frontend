@@ -100,7 +100,8 @@ export const TextArea = ({
       {statusText !== undefined && (
         <p
           className={`${statusTextClass} ${baseStyles.statusText}`}
-          data-testid="status-text"
+          role="status"
+          aria-label="status-text"
         >
           {isFocus && statusText}
         </p>

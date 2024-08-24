@@ -857,7 +857,7 @@ export const WhenInputFocused: Story = {
     const canvas = within(canvasElement);
     // 테스트에 필요한 엘리먼트들을 가져옵니다
     const $input = canvas.getByRole("textbox");
-    const $p = canvasElement.querySelector("p");
+    const $p = canvas.getByRole("status", { name: "status-text" });
     const p_originalHeight = $p?.clientHeight;
     const p_originalTextContent = $p?.textContent;
 

@@ -111,7 +111,11 @@ export const Input = ({
         {trailingNode}
       </div>
       {shouldShowStatusText && (
-        <p className={`${statusTextClass} ${baseStyles.statusText}`}>
+        <p
+          className={`${statusTextClass} ${baseStyles.statusText}`}
+          role="status"
+          aria-label="status-text"
+        >
           {isFocused && statusText}
         </p>
       )}
