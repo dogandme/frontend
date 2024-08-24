@@ -3,14 +3,18 @@ import { WardLeftIcon } from "@/shared/ui/icon";
 import { Button } from "@/shared/ui/button";
 import { NavigationBar } from "@/shared/ui/navigationbar";
 
-const BackWardButton = () => {
+const BackWardButton = (props: React.HTMLAttributes<HTMLButtonElement>) => {
   const navigate = useNavigate();
+  const { onClick, ...rest } = props;
+
   return (
     <Button
       size="large"
       variant="text"
       colorType="tertiary"
-      onClick={() => navigate(-1)}
+      onClick={onClick || (() => navigate(-1))}
+      fullWidth={false}
+      {...rest}
     >
       <WardLeftIcon fill="#616161" />
     </Button>
