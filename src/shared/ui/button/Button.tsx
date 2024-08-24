@@ -11,11 +11,12 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   colorType: "primary" | "secondary" | "tertiary";
   variant: "filled" | "outlined" | "text";
   size: "xSmall" | "small" | "medium" | "large";
+  fullWidth?: boolean;
   children: ReactNode;
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ colorType, variant, size, children, ...props }, ref) => {
+  ({ colorType, variant, size, children, fullWidth = true, ...props }, ref) => {
     const baseStyles =
       "inline-flex flex-shrink-0 items-center justify-center gap-[.625rem] rounded-[1rem] outline-none icon-in-button";
     const colorStyles = colors[colorType][variant];
@@ -78,7 +79,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={`${baseStyles} ${colorStyles.enabled} ${colorStyles.focus} ${colorStyles.hover} ${colorStyles.active} ${colorStyles.disabled} ${sizeStyles}`}
+        className={`${fullWidth && "w-full"} ${baseStyles} ${colorStyles.enabled} ${colorStyles.focus} ${colorStyles.hover} ${colorStyles.active} ${colorStyles.disabled} ${sizeStyles}`}
         {...props}
       >
         {children}
