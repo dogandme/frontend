@@ -85,7 +85,7 @@ const TextArea = ({
           className={baseStyles.textArea}
           maxLength={maxLength}
           disabled={disabled}
-          aria-label={label || "textarea"}
+          aria-label={`${label ?? id}-textarea`}
           onInput={handleInput}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -95,7 +95,7 @@ const TextArea = ({
           {`${currentLength} / ${maxLength}`}
         </p>
       </div>
-      {shouldShowStatusText && (
+      {statusText !== undefined && (
         <p
           className={`${statusTextClass} ${baseStyles.statusText}`}
           data-testid="status-text"

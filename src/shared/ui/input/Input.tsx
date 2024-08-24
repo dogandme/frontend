@@ -99,7 +99,7 @@ const Input = ({
           className={baseStyles.input}
           autoComplete="off"
           disabled={disabled}
-          aria-label={label || "input"}
+          aria-label={`${label ?? id}-input`}
           // focus 상태일 때만 statusText를 보여주기 위한 이벤트 핸들러
           onFocus={handleFocus}
           onBlur={handleBlur}
