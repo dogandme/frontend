@@ -3,24 +3,47 @@ import { Meta, StoryObj } from "@storybook/react";
 import { EmailInput, PasswordInput } from "./Input";
 
 const meta: Meta = {
-  title: "Auth/entities/Input",
+  title: "entities/auth/Input",
 };
 
 export default meta;
 
 type Story = StoryObj<typeof PasswordInput>;
 
-export const Id: Story = {
+export const Email: Story = {
   args: {
     label: "이메일",
     id: "email",
-    statusText: "이메일 형식으로 입력해주세요",
+    statusText: "",
   },
-  render: (args) => (
-    <div className="w-[300px] border border-grey-300 px-2 py-2">
-      <EmailInput {...args} />
-    </div>
-  ),
+  argTypes: {
+    statusText: {
+      control: {
+        type: "text",
+      },
+    },
+    isError: {
+      control: {
+        type: "boolean",
+      },
+    },
+  },
+  render: (args) => {
+    const { isError } = args;
+
+    return (
+      <div className="w-[300px] border border-grey-300 px-2 py-2">
+        <EmailInput
+          {...args}
+          statusText={
+            isError
+              ? "올바른 이메일 형식으로 입력해 주세요"
+              : "이메일 형식으로 입력해 주세요"
+          }
+        />
+      </div>
+    );
+  },
 };
 
 export const Password: Story = {
