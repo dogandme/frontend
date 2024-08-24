@@ -32,6 +32,10 @@ const meta: Meta<typeof Button> = {
       description: "버튼의 비활성화 여부를 결정합니다.",
       control: { type: "boolean" },
     },
+    fullWidth: {
+      description: "버튼의 너비를 최대로 설정합니다.",
+      control: { type: "boolean" },
+    },
   },
 };
 
@@ -47,8 +51,9 @@ export const Default: Story = {
     variant: "filled",
     size: "xSmall",
     disabled: false,
+    fullWidth: false,
   },
-  render: ({ colorType, variant, size, disabled }) => {
+  render: ({ colorType, variant, size, disabled, fullWidth }) => {
     return (
       <div className="flex items-center gap-4">
         <Button
@@ -56,6 +61,7 @@ export const Default: Story = {
           variant={variant}
           size={size}
           disabled={disabled}
+          fullWidth={fullWidth}
         >
           <IconExample />
         </Button>
@@ -64,6 +70,7 @@ export const Default: Story = {
           variant={variant}
           size={size}
           disabled={disabled}
+          fullWidth={fullWidth}
         >
           button
         </Button>
@@ -72,6 +79,7 @@ export const Default: Story = {
           variant={variant}
           size={size}
           disabled={disabled}
+          fullWidth={fullWidth}
         >
           <IconExample />
           button
@@ -81,6 +89,7 @@ export const Default: Story = {
           variant={variant}
           size={size}
           disabled={disabled}
+          fullWidth={fullWidth}
         >
           button
           <IconExample />
@@ -91,6 +100,9 @@ export const Default: Story = {
 };
 
 export const OnlyIcon: Story = {
+  args: {
+    fullWidth: false,
+  },
   parameters: {
     docs: {
       description: {
@@ -98,13 +110,14 @@ export const OnlyIcon: Story = {
       },
     },
   },
-  render: ({ colorType, variant, size, disabled }) => {
+  render: ({ colorType, variant, size, disabled, fullWidth }) => {
     return (
       <Button
         colorType={colorType}
         variant={variant}
         size={size}
         disabled={disabled}
+        fullWidth={fullWidth}
       >
         <IconExample />
       </Button>
@@ -113,6 +126,9 @@ export const OnlyIcon: Story = {
 };
 
 export const OnlyText: Story = {
+  args: {
+    fullWidth: false,
+  },
   parameters: {
     docs: {
       description: {
@@ -120,13 +136,14 @@ export const OnlyText: Story = {
       },
     },
   },
-  render: ({ colorType, variant, size, disabled }) => {
+  render: ({ colorType, variant, size, disabled, fullWidth }) => {
     return (
       <Button
         colorType={colorType}
         variant={variant}
         size={size}
         disabled={disabled}
+        fullWidth={fullWidth}
       >
         button
       </Button>
@@ -135,6 +152,9 @@ export const OnlyText: Story = {
 };
 
 export const IconFirst: Story = {
+  args: {
+    fullWidth: false,
+  },
   parameters: {
     docs: {
       description: {
@@ -142,13 +162,14 @@ export const IconFirst: Story = {
       },
     },
   },
-  render: ({ colorType, variant, size, disabled }) => {
+  render: ({ colorType, variant, size, disabled, fullWidth }) => {
     return (
       <Button
         colorType={colorType}
         variant={variant}
         size={size}
         disabled={disabled}
+        fullWidth={fullWidth}
       >
         <IconExample />
         button
@@ -158,6 +179,9 @@ export const IconFirst: Story = {
 };
 
 export const TextFirst: Story = {
+  args: {
+    fullWidth: false,
+  },
   parameters: {
     docs: {
       description: {
@@ -165,13 +189,14 @@ export const TextFirst: Story = {
       },
     },
   },
-  render: ({ colorType, variant, size, disabled }) => {
+  render: ({ colorType, variant, size, disabled, fullWidth }) => {
     return (
       <Button
         colorType={colorType}
         variant={variant}
         size={size}
         disabled={disabled}
+        fullWidth={fullWidth}
       >
         button
         <IconExample />
@@ -181,6 +206,9 @@ export const TextFirst: Story = {
 };
 
 export const Sizes: Story = {
+  args: {
+    fullWidth: false,
+  },
   argTypes: {
     size: {
       control: { disable: true },
@@ -189,56 +217,116 @@ export const Sizes: Story = {
       control: { disable: true },
     },
   },
-  render: ({ colorType, variant }) => {
+  render: ({ colorType, variant, fullWidth }) => {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex gap-1">
           <h1 className="title-1 mr-4">only icon</h1>
-          <Button colorType={colorType} variant={variant} size="xSmall">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="xSmall"
+            fullWidth={fullWidth}
+          >
             <IconExample />
           </Button>
-          <Button colorType={colorType} variant={variant} size="small">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="small"
+            fullWidth={fullWidth}
+          >
             <IconExample />
           </Button>
-          <Button colorType={colorType} variant={variant} size="medium">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="medium"
+            fullWidth={fullWidth}
+          >
             <IconExample />
           </Button>
-          <Button colorType={colorType} variant={variant} size="large">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="large"
+            fullWidth={fullWidth}
+          >
             <IconExample />
           </Button>
         </div>
 
         <div className="flex gap-1">
           <h1 className="title-1 mr-4">only text</h1>
-          <Button colorType={colorType} variant={variant} size="xSmall">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="xSmall"
+            fullWidth={fullWidth}
+          >
             xSmall
           </Button>
-          <Button colorType={colorType} variant={variant} size="small">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="small"
+            fullWidth={fullWidth}
+          >
             small
           </Button>
-          <Button colorType={colorType} variant={variant} size="medium">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="medium"
+            fullWidth={fullWidth}
+          >
             medium
           </Button>
-          <Button colorType={colorType} variant={variant} size="large">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="large"
+            fullWidth={fullWidth}
+          >
             large
           </Button>
         </div>
 
         <div className="flex gap-1">
           <h1 className="title-1 mr-4">icon first</h1>
-          <Button colorType={colorType} variant={variant} size="xSmall">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="xSmall"
+            fullWidth={fullWidth}
+          >
             <IconExample />
             xSmall
           </Button>
-          <Button colorType={colorType} variant={variant} size="small">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="small"
+            fullWidth={fullWidth}
+          >
             <IconExample />
             small
           </Button>
-          <Button colorType={colorType} variant={variant} size="medium">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="medium"
+            fullWidth={fullWidth}
+          >
             <IconExample />
             medium
           </Button>
-          <Button colorType={colorType} variant={variant} size="large">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="large"
+            fullWidth={fullWidth}
+          >
             <IconExample />
             large
           </Button>
@@ -246,19 +334,39 @@ export const Sizes: Story = {
 
         <div className="flex gap-1">
           <h1 className="title-1 mr-4">text first</h1>
-          <Button colorType={colorType} variant={variant} size="xSmall">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="xSmall"
+            fullWidth={fullWidth}
+          >
             xSmall
             <IconExample />
           </Button>
-          <Button colorType={colorType} variant={variant} size="small">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="small"
+            fullWidth={fullWidth}
+          >
             small
             <IconExample />
           </Button>
-          <Button colorType={colorType} variant={variant} size="medium">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="medium"
+            fullWidth={fullWidth}
+          >
             medium
             <IconExample />
           </Button>
-          <Button colorType={colorType} variant={variant} size="large">
+          <Button
+            colorType={colorType}
+            variant={variant}
+            size="large"
+            fullWidth={fullWidth}
+          >
             large
             <IconExample />
           </Button>
@@ -278,6 +386,7 @@ export const Disabled: Story = {
   },
   args: {
     disabled: true,
+    fullWidth: false,
   },
   argTypes: {
     colorType: {
@@ -287,7 +396,7 @@ export const Disabled: Story = {
       control: { disable: true },
     },
   },
-  render: ({ size, disabled }) => {
+  render: ({ size, disabled, fullWidth }) => {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex gap-1">
@@ -296,6 +405,7 @@ export const Disabled: Story = {
             variant="filled"
             size={size}
             disabled={disabled}
+            fullWidth={fullWidth}
           >
             button
           </Button>
@@ -304,6 +414,7 @@ export const Disabled: Story = {
             variant="outlined"
             size={size}
             disabled={disabled}
+            fullWidth={fullWidth}
           >
             button
           </Button>
@@ -312,6 +423,7 @@ export const Disabled: Story = {
             variant="text"
             size={size}
             disabled={disabled}
+            fullWidth={fullWidth}
           >
             button
           </Button>
@@ -323,6 +435,7 @@ export const Disabled: Story = {
             variant="filled"
             size={size}
             disabled={disabled}
+            fullWidth={fullWidth}
           >
             button
           </Button>
@@ -331,6 +444,7 @@ export const Disabled: Story = {
             variant="outlined"
             size={size}
             disabled={disabled}
+            fullWidth={fullWidth}
           >
             button
           </Button>
@@ -339,6 +453,7 @@ export const Disabled: Story = {
             variant="text"
             size={size}
             disabled={disabled}
+            fullWidth={fullWidth}
           >
             button
           </Button>
@@ -350,6 +465,7 @@ export const Disabled: Story = {
             variant="filled"
             size={size}
             disabled={disabled}
+            fullWidth={fullWidth}
           >
             button
           </Button>
@@ -358,6 +474,7 @@ export const Disabled: Story = {
             variant="outlined"
             size={size}
             disabled={disabled}
+            fullWidth={fullWidth}
           >
             button
           </Button>
@@ -366,6 +483,7 @@ export const Disabled: Story = {
             variant="text"
             size={size}
             disabled={disabled}
+            fullWidth={fullWidth}
           >
             button
           </Button>
