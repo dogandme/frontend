@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Input from "./Input";
+import { within, userEvent, expect } from "@storybook/test";
+import { Input } from "./Input";
 
 /*----------leadingIcon, trailingIcon 등에 들어갈 svg 컴포넌트 ---------- */
 const SearchIcon = () => (
@@ -119,7 +120,7 @@ type Story = StoryObj<typeof Input>;
 export const Default: Story = {
   args: {
     id: "input",
-    label: "Title",
+    // label: "Title",
     isError: false,
     placeholder: "PlaceHolder",
     essential: true,
@@ -806,5 +807,70 @@ export const Essential: Story = {
         </div>
       </div>
     );
+  },
+};
+
+export const WithoutLabel: Story = {
+  args: {
+    ...Default.args,
+    componentType: "outlinedText",
+  },
+  render: (args) => {
+    return (
+      <div className="flex gap-10">
+        <div className="h-fit border border-grey-300 px-2 py-2">
+          <Input {...args} label="label" />
+        </div>
+        <div className="h-fit border border-grey-300 px-2 py-2">
+          <Input {...args} />
+        </div>
+      </div>
+    );
+  },
+};
+
+export const WhenInputFocused: Story = {
+  args: {
+    ...Default.args,
+    componentType: "outlinedText",
+    label: "Title",
+    trailingNode: <MockUpIcon />,
+    statusText: "올바른 이메일을 입력해주세요",
+  },
+
+  render: (args) => {
+    return (
+      <div className="flex gap-10">
+        <div className="border border-grey-300 px-2 py-2">
+          <Input
+            {...args}
+            // 더 극적인 상황을 위해 onFocus , onBlur 이벤트를 추가합니다.
+            onFocus={() => console.log("onFocus")}
+            onBlur={() => console.log("onBlur")}
+          />
+        </div>
+      </div>
+    );
+  },
+
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // 테스트에 필요한 엘리먼트들을 가져옵니다
+    const $input = canvas.getByRole("textbox");
+    const $p = canvas.getByRole("status", { name: "status-text" });
+    const p_originalHeight = $p?.clientHeight;
+    const p_originalTextContent = $p?.textContent;
+
+    const statusText = "올바른 이메일을 입력해주세요";
+
+    // 아무런 이벤트가 발생하지 않더라도 p 태그는 존재해야 한다.
+    expect($p).toBeInTheDocument();
+
+    await userEvent.click($input);
+    expect($p?.textContent).toBe(statusText);
+    expect($p?.clientHeight).toBe(p_originalHeight);
+
+    await userEvent.click(document.body);
+    expect($p?.textContent).toBe(p_originalTextContent);
   },
 };
