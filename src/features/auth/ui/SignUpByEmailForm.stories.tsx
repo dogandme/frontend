@@ -47,6 +47,8 @@ export const Default: Story = {
 
         await userEvent.type($emailInput, "invalid-email");
         await new Promise((resolve) => setTimeout(resolve, DELAY + DELTA));
+        // outfocus되도 statusText를 pink-500 색상으로 표시
+        await userEvent.tab();
 
         const $statusText = canvas.getByText("이메일 형식으로 입력해 주세요");
         expect($statusText).toHaveClass("text-pink-500");
