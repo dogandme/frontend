@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { NaverIcon, GoogleIcon } from "../assets";
+import { NaverIcon, GoogleIcon } from "@/entities/auth/assets";
 import { EmailIcon } from "@/shared/ui/icon";
 
 const hyperLinkColorMap = {
