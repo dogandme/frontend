@@ -3,7 +3,7 @@ import {
   NaverLoginHyperLink,
   GoogleLoginHyperLink,
   EmailLoginHyperLink,
-} from "./login";
+} from "./login-hyperlink";
 
 const HyperLinkWidget = () => (
   <div className="flex w-[360px] flex-col items-start gap-4 self-stretch px-4">
