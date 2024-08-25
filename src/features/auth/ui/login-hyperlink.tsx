@@ -1,7 +1,12 @@
+import { HTMLAttributes, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NaverIcon, GoogleIcon } from "@/entities/auth/assets";
 import { EmailIcon } from "@/shared/ui/icon";
+import { useOauthLogin } from "../api";
+import type { OAuthServerName } from "../api";
+import { useAuthStore } from "@/shared/store/auth";
 
+/* ----------------------------------컴포넌트 내부에서만 사용되는 컴포넌트------------------------------- */
 const hyperLinkColorMap = {
   naver: "bg-[#00BF18]",
   google: "bg-grey-0 border border-grey-900",
@@ -11,26 +16,27 @@ const hyperLinkColorMap = {
 const LoginHyperLinkClass =
   "flex h-12 items-center justify-center gap-[10px] self-stretch rounded-2xl pl-4 pr-6";
 
-// TODO API 요청 로직 추가하기
-export const NaverLoginHyperLink = () => (
+const NaverLoginHyperLink = (props: HTMLAttributes<HTMLButtonElement>) => (
   <button
     className={`${LoginHyperLinkClass} ${hyperLinkColorMap.naver} `}
-    onClick={() => fetch("/oauth2/authorization/naver")}
+    {...props}
   >
     <NaverIcon />
     <p className="button-2 text-center text-grey-0">Naver로 계속하기</p>
   </button>
 );
 
-export const GoogleLoginHyperLink = () => (
+const GoogleLoginHyperLink = (props: HTMLAttributes<HTMLButtonElement>) => (
   <button
     className={`${LoginHyperLinkClass} ${hyperLinkColorMap.google}`}
-    onClick={() => fetch("/oauth2/authorization/google")}
+    {...props}
   >
     <GoogleIcon />
     <p className="button-2 text-center text-grey-900">Google로 계속하기</p>
   </button>
 );
+
+/* ----------------------------------컴포넌트 외부로 export 되어 사용되는 컴포넌트------------------------------- */
 
 export const EmailLoginHyperLink = () => (
   <Link
@@ -41,3 +47,29 @@ export const EmailLoginHyperLink = () => (
     <p className="button-2 text-center text-grey-0">이메일로 계속하기</p>
   </Link>
 );
+
+export const OAuthLoginHyperLinks = () => {
+  const [OAuthServerName, setOAuthServerName] =
+    useState<OAuthServerName | null>(null);
+
+  const setToken = useAuthStore((state) => state.setToken);
+  const setRole = useAuthStore((state) => state.setRole);
+
+  const { data: authResponse } = useOauthLogin(OAuthServerName);
+
+  useEffect(() => {
+    if (authResponse) {
+      const { token, role } = authResponse.content;
+
+      setToken(token);
+      setRole(role);
+    }
+  }, [authResponse, setToken, setRole]);
+
+  return (
+    <>
+      <NaverLoginHyperLink onClick={() => setOAuthServerName("NAVER")} />
+      <GoogleLoginHyperLink onClick={() => setOAuthServerName("GOOGLE")} />
+    </>
+  );
+};
