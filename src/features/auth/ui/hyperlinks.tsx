@@ -50,13 +50,13 @@ export const EmailLoginHyperLink = () => (
 );
 
 export const OAuthLoginHyperLinks = () => {
-  const [oAuthServerName, setOauthServerName] =
+  const [OAuthServerName, setOAuthServerName] =
     useState<OAuthServerName | null>(null);
 
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
 
-  const { data: authResponse } = useOauthLogin(oAuthServerName);
+  const { data: authResponse } = useOauthLogin(OAuthServerName);
 
   useEffect(() => {
     if (authResponse) {
@@ -69,8 +69,8 @@ export const OAuthLoginHyperLinks = () => {
 
   return (
     <>
-      <NaverLoginHyperLink onClick={() => setOauthServerName("NAVER")} />
-      <GoogleLoginHyperLink onClick={() => setOauthServerName("GOOGLE")} />
+      <NaverLoginHyperLink onClick={() => setOAuthServerName("NAVER")} />
+      <GoogleLoginHyperLink onClick={() => setOAuthServerName("GOOGLE")} />
     </>
   );
 };
