@@ -1,5 +1,6 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import { MainLayout, MainPage } from "../pages";
+import { LoginPage, LoginLayout } from "@/pages/login";
 import { ROUTER_PATH } from "@/shared/constants";
 
 export const router = createBrowserRouter([
@@ -14,11 +15,11 @@ export const router = createBrowserRouter([
 
       {
         path: ROUTER_PATH.LOGIN,
-        element: <Outlet />,
+        element: <LoginLayout />,
         children: [
           {
             index: true,
-            element: <div>login</div>,
+            element: <LoginPage />,
           },
           {
             path: "email",
