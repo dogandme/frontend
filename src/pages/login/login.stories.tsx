@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { LoginLayout, LoginPage } from ".";
+import LoginLayout from "./layout";
+import LoginPage from "./page";
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "../layout";
 
@@ -13,6 +14,13 @@ const meta: Meta = {
       },
     },
   },
+  decorators: [
+    (Story) => (
+      <div className="w-96 border border-grey-300">
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export default meta;
