@@ -1,3 +1,4 @@
+import { useDebounce } from "@/shared/lib";
 import { useState } from "react";
 
 interface SignUpByEmailFormType {
@@ -20,5 +21,22 @@ export const useSignUpByEmailForm = () => {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
-  return { form, handleChange };
+  const { email } = form;
+
+  const validateEmail = () => {
+    if (email.length === 0) return true;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    return emailRegex.test(email);
+  };
+
+  const isValidEmail = useDebounce(validateEmail, true);
+
+  const isErrorEmail = !isValidEmail;
+
+  return {
+    form,
+    isErrorEmail,
+    handleChange,
+  };
 };
