@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, userEvent, expect } from "@storybook/test";
-import { Input } from "./Input";
+import { Input, InputProps } from "./Input";
+import { useState } from "react";
+import { useDebounce } from "@/shared/lib";
 
 /*----------leadingIcon, trailingIcon 등에 들어갈 svg 컴포넌트 ---------- */
 const SearchIcon = () => (
@@ -872,5 +874,78 @@ export const WhenInputFocused: Story = {
 
     await userEvent.click(document.body);
     expect($p?.textContent).toBe(p_originalTextContent);
+  },
+};
+
+const InputWithDebounceComponent = (args: InputProps) => {
+  const [text, setText] = useState<string>("");
+
+  const validateText = () => {
+    if (text.length < 5) {
+      return { isError: true, statusText: "5글자 이상 입력해주세요" };
+    }
+    return {
+      isError: false,
+      statusText: `현재 글자 수는 ${text.length}개 입니다.`,
+    };
+  };
+
+  const { isError, statusText } = useDebounce(validateText, {
+    isError: true,
+    statusText: "5글자 이상 입력해주세요",
+  });
+
+  return (
+    <div className="flex gap-10">
+      <div className="border border-grey-300 px-2 py-2">
+        <Input
+          {...args}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          // debounce 함수를 사용하여 입력값이 변경될 때마다 콘솔에 입력값을 출력합니다.
+          isError={isError}
+          statusText={statusText}
+        />
+      </div>
+    </div>
+  );
+};
+
+export const InputWithDebounce: Story = {
+  args: {
+    ...Default.args,
+    componentType: "outlinedText",
+    label: "Title",
+    trailingNode: <MockUpIcon />,
+  },
+  render: (args) => <InputWithDebounceComponent {...args} />,
+
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const $input = canvas.getByRole("textbox");
+    const $p = canvas.getByRole("status", { name: "status-text" });
+
+    const errorStatusText = "5글자 이상 입력해주세요";
+    const successStatusText = (text: string) =>
+      `현재 글자 수는 ${text.length}개 입니다.`;
+
+    const DELAY = 500;
+    const DELTA = 100; // 실행 환경을 고려하여 딜레이를 조정합니다.
+
+    // 기본적으로 p 태그는 존재해야 한다.
+    expect($p).toBeInTheDocument();
+    expect($p).toHaveTextContent(errorStatusText);
+
+    // 유저가 값을 입력 했을 때 디바운스로 인해 statusText가 변경되는 것을 확인합니다.
+    await userEvent.type($input, "1234567");
+    expect($p).toHaveTextContent(errorStatusText);
+    await new Promise((resolve) => setTimeout(resolve, DELAY + DELTA));
+    expect($p).toHaveTextContent(successStatusText("1234567"));
+
+    // 유저가 값을 제거 했을 때에도 statusText가 변경되는 것을 확인합니다.
+    await userEvent.type($input, "{backspace}{backspace}{backspace}");
+    expect($p).toHaveTextContent(successStatusText("1234567"));
+    await new Promise((resolve) => setTimeout(resolve, DELAY + DELTA));
+    expect($p).toHaveTextContent(errorStatusText);
   },
 };
