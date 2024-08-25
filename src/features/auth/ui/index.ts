@@ -1,1 +1,1 @@
-export * from "./login-hyperlink";
+export * from "./hyperlinks";

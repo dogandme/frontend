@@ -2,9 +2,10 @@ import { HTMLAttributes, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NaverIcon, GoogleIcon } from "@/entities/auth/assets";
 import { EmailIcon } from "@/shared/ui/icon";
+import { useAuthStore } from "@/shared/store/auth";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useOauthLogin } from "../api";
 import type { OAuthServerName } from "../api";
-import { useAuthStore } from "@/shared/store/auth";
 
 /* ----------------------------------컴포넌트 내부에서만 사용되는 컴포넌트------------------------------- */
 const hyperLinkColorMap = {
@@ -40,7 +41,7 @@ const GoogleLoginHyperLink = (props: HTMLAttributes<HTMLButtonElement>) => (
 
 export const EmailLoginHyperLink = () => (
   <Link
-    to="/login/email"
+    to={ROUTER_PATH.LOGIN_BY_EMAIL}
     className={`${LoginHyperLinkClass} ${hyperLinkColorMap.email}`}
   >
     <EmailIcon fill="#D9D9D9" />
@@ -49,13 +50,13 @@ export const EmailLoginHyperLink = () => (
 );
 
 export const OAuthLoginHyperLinks = () => {
-  const [OAuthServerName, setOAuthServerName] =
+  const [oAuthServerName, setOauthServerName] =
     useState<OAuthServerName | null>(null);
 
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
 
-  const { data: authResponse } = useOauthLogin(OAuthServerName);
+  const { data: authResponse } = useOauthLogin(oAuthServerName);
 
   useEffect(() => {
     if (authResponse) {
@@ -68,8 +69,8 @@ export const OAuthLoginHyperLinks = () => {
 
   return (
     <>
-      <NaverLoginHyperLink onClick={() => setOAuthServerName("NAVER")} />
-      <GoogleLoginHyperLink onClick={() => setOAuthServerName("GOOGLE")} />
+      <NaverLoginHyperLink onClick={() => setOauthServerName("NAVER")} />
+      <GoogleLoginHyperLink onClick={() => setOauthServerName("GOOGLE")} />
     </>
   );
 };

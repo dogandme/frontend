@@ -6,7 +6,6 @@ import MainLayout from "../layout";
 
 const meta: Meta = {
   title: "Pages/login",
-  tags: ["pages"],
   parameters: {
     docs: {
       description: {
