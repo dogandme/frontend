@@ -8,8 +8,10 @@ const SignUpByEmailForm = () => {
   const [isFocusedEmailInput, setIsFocusedEmailInput] =
     useState<boolean>(false);
 
-  const { form, handleChange } = useSignUpByEmailForm();
+  const { form, handleChange, isErrorEmail } = useSignUpByEmailForm();
   const { email, confirmCode, password, passwordConfirm } = form;
+
+  const shouldShowEmailStatusText = isFocusedEmailInput || isErrorEmail;
 
   return (
     <form className="flex flex-col gap-8 self-stretch">
@@ -20,13 +22,14 @@ const SignUpByEmailForm = () => {
               id="email"
               name="email"
               label="이메일"
+              isError={isErrorEmail}
               placeholder="이메일을 입력해 주세요"
               statusText={undefined}
               essential
-              onFocus={() => setIsFocusedEmailInput(true)}
-              onBlur={() => setIsFocusedEmailInput(false)}
               value={email}
               onChange={handleChange}
+              onFocus={() => setIsFocusedEmailInput(true)}
+              onBlur={() => setIsFocusedEmailInput(false)}
             />
             <Button
               type="button"
@@ -38,8 +41,10 @@ const SignUpByEmailForm = () => {
               코드전송
             </Button>
           </div>
-          {isFocusedEmailInput && (
-            <p className="body-3 pl-1 pr-3 pt-1 text-grey-500">
+          {shouldShowEmailStatusText && (
+            <p
+              className={`body-3 pl-1 pr-3 pt-1 ${isErrorEmail ? "text-pink-500" : "text-grey-500"}`}
+            >
               이메일 형식으로 입력해 주세요
             </p>
           )}
@@ -65,7 +70,6 @@ const SignUpByEmailForm = () => {
           placeholder="비밀번호를 입력해 주세요"
           statusText="비밀번호를 입력해 주세요"
           essential
-          isError={false}
           value={password}
           onChange={handleChange}
         />
@@ -75,7 +79,6 @@ const SignUpByEmailForm = () => {
           placeholder="비밀번호를 다시 한번 입력해 주세요"
           statusText="비밀번호를 다시 한번 입력해 주세요"
           essential
-          isError={false}
           value={passwordConfirm}
           onChange={handleChange}
         />
