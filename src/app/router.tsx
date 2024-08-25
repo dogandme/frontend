@@ -1,9 +1,10 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import { MainLayout, MainPage } from "../pages";
+import { ROUTER_PATH } from "@/shared/constants";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: ROUTER_PATH.MAIN,
     element: <MainLayout />,
     children: [
       {
@@ -12,7 +13,7 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "login",
+        path: ROUTER_PATH.LOGIN,
         element: <Outlet />,
         children: [
           {
@@ -31,7 +32,7 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "sign-up",
+        path: ROUTER_PATH.SIGN_UP,
         element: <Outlet />,
         children: [
           {
