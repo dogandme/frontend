@@ -8,11 +8,11 @@ import { useState, useEffect } from "react";
  */
 export const useDebounce = <F extends (...args: unknown[]) => ReturnType<F>>(
   callbackFn: F,
-  defaultValue: ReturnType<F>,
+  initialValue: ReturnType<F>,
   delay: number = 500,
 ) => {
   const [debouncedValue, setDebouncedValue] =
-    useState<ReturnType<F>>(defaultValue);
+    useState<ReturnType<F>>(initialValue);
 
   useEffect(() => {
     const handler = setTimeout(() => {
