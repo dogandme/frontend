@@ -97,3 +97,13 @@ export const colors = {
     900: "#4600E0",
   },
 } as const;
+
+export const ROUTER_PATH = {
+  MAIN: "/",
+  LOGIN: "/login",
+  LOGIN_BY_EMAIL: "/login/email",
+  FORGET_PASSWORD: "/login/forgot-password",
+  SIGN_UP: "/sign-up",
+  SIGN_UP_USER_INFO: "/sign-up/user-info",
+  SIGN_UP_PET_INFO: "/sign-up/pet-info",
+};
