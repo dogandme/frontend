@@ -1,9 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  EmailLoginHyperLink,
-  GoogleLoginHyperLink,
-  NaverLoginHyperLink,
-} from "@/entities/auth/ui/login";
+import { OAuthLoginHyperLinks, EmailLoginHyperLink } from "@/features/auth/ui";
 
 const LoginPage = () => (
   <>
@@ -17,8 +13,7 @@ const LoginPage = () => (
       </p>
     </header>
     <div className="flex flex-col items-start gap-4 self-stretch">
-      <NaverLoginHyperLink />
-      <GoogleLoginHyperLink />
+      <OAuthLoginHyperLinks />
       <EmailLoginHyperLink />
     </div>
     <p className="flex items-center justify-center self-stretch">
