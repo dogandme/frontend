@@ -1,6 +1,7 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import { MainLayout, MainPage } from "../pages";
 import { ROUTER_PATH } from "@/shared/constants";
+import { SignUpPage } from "@/pages/sign-up";
 
 export const router = createBrowserRouter([
   {
@@ -37,7 +38,7 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <div>sign-up</div>,
+            element: <SignUpPage />,
           },
           {
             path: "user-info",
