@@ -25,8 +25,8 @@ const LoginForm = () => {
         // TODO : alert 창 모달로 변경하기
         if (emailHasError || password.length === 0) {
           alert("아이디 또는 비밀번호를 모두 입력해 주세요");
+          return;
         }
-
         mutate.mutate({ email, password, persistLogin });
       }}
     >
