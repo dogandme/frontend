@@ -22,7 +22,7 @@ const SignUpByEmailForm = () => {
   const isPasswordConfirmEmpty = passwordConfirm.length === 0;
 
   const shouldShowEmailStatusText =
-    (!isValidEmail && email.length > 0) || isFocusedEmailInput;
+    (!isValidEmail && !isEmailEmpty) || isFocusedEmailInput;
 
   let passwordConfirmStatusText = "";
 
@@ -44,7 +44,7 @@ const SignUpByEmailForm = () => {
               id="email"
               name="email"
               label="이메일"
-              isError={!(isValidEmail || isEmailEmpty)}
+              isError={!isEmailEmpty && !isValidEmail}
               placeholder="이메일을 입력해 주세요"
               statusText={undefined}
               essential
@@ -92,7 +92,7 @@ const SignUpByEmailForm = () => {
           name="password"
           placeholder="비밀번호를 입력해 주세요"
           statusText={
-            password.length === 0
+            isPasswordEmpty
               ? "비밀번호를 입력해 주세요"
               : isValidPassword
                 ? ""
@@ -101,7 +101,7 @@ const SignUpByEmailForm = () => {
           essential
           value={password}
           onChange={handleChange}
-          isError={!(isValidPassword || isPasswordEmpty)}
+          isError={!isPasswordEmpty && !isValidPassword}
         />
         <PasswordInput
           id="password-confirm"
@@ -111,7 +111,7 @@ const SignUpByEmailForm = () => {
           essential
           value={passwordConfirm}
           onChange={handleChange}
-          isError={!(isPasswordConfirmEmpty || isPasswordMatched)}
+          isError={!isPasswordConfirmEmpty && !isPasswordMatched}
         />
         <span className="body-3 px-3 pt-1 text-grey-500">
           영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로 입력해
