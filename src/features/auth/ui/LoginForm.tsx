@@ -33,7 +33,7 @@ const LoginForm = () => {
         fullWidth
         value={email}
         onChange={handleChange}
-        isError={emailHasError}
+        isError={!emailIsEmpty && emailHasError}
         statusText={emailStatusText}
       />
       <PasswordInput

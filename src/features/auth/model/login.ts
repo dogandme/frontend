@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import { useDebounce } from "@/shared/lib";
 
 interface LoginForm {
   email: string;
@@ -23,17 +22,15 @@ export const useLoginForm = () => {
     return {
       emailHasError,
       emailIsEmpty,
-      emailStatusText: emailHasError
-        ? "올바른 이메일 형식으로 입력해 주세요"
-        : "",
+      emailStatusText: emailIsEmpty
+        ? "이메일 형식으로 입력해 주세요"
+        : emailHasError
+          ? "올바른 이메일 형식으로 입력해 주세요"
+          : "",
     };
   }, [loginForm.email]);
 
-  const formValidationResult = useDebounce(checkEmailHasError, {
-    emailHasError: false,
-    emailIsEmpty: true,
-    emailStatusText: "이메일 형식으로 입력해 주세요",
-  });
+  const formValidationResult = checkEmailHasError();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
