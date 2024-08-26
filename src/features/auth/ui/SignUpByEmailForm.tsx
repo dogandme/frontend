@@ -8,10 +8,32 @@ const SignUpByEmailForm = () => {
   const [isFocusedEmailInput, setIsFocusedEmailInput] =
     useState<boolean>(false);
 
-  const { form, handleChange, isErrorEmail } = useSignUpByEmailForm();
+  const {
+    form,
+    handleChange,
+    isValidEmail,
+    isValidPassword,
+    isPasswordMatched,
+  } = useSignUpByEmailForm();
   const { email, confirmCode, password, passwordConfirm } = form;
 
-  const shouldShowEmailStatusText = isFocusedEmailInput || isErrorEmail;
+  const isEmailEmpty = email.length === 0;
+  const isPasswordEmpty = password.length === 0;
+  const isPasswordConfirmEmpty = passwordConfirm.length === 0;
+
+  const shouldShowEmailStatusText =
+    (!isValidEmail && !isEmailEmpty) || isFocusedEmailInput;
+
+  let passwordConfirmStatusText = "";
+
+  if (isValidPassword) {
+    if (isPasswordMatched)
+      passwordConfirmStatusText = "사용가능한 비밀번호 입니다";
+    else passwordConfirmStatusText = "비밀번호가 서로 일치하지 않습니다";
+  } else {
+    if (isPasswordMatched) passwordConfirmStatusText = "";
+    else passwordConfirmStatusText = "비밀번호가 서로 일치하지 않습니다";
+  }
 
   return (
     <form className="flex flex-col gap-8 self-stretch">
@@ -22,7 +44,7 @@ const SignUpByEmailForm = () => {
               id="email"
               name="email"
               label="이메일"
-              isError={isErrorEmail}
+              isError={!isEmailEmpty && !isValidEmail}
               placeholder="이메일을 입력해 주세요"
               statusText={undefined}
               essential
@@ -37,13 +59,14 @@ const SignUpByEmailForm = () => {
               variant="filled"
               size="medium"
               fullWidth={false}
+              disabled={!isValidEmail}
             >
               코드전송
             </Button>
           </div>
           {shouldShowEmailStatusText && (
             <p
-              className={`body-3 pl-1 pr-3 pt-1 ${isErrorEmail ? "text-pink-500" : "text-grey-500"}`}
+              className={`body-3 pl-1 pr-3 pt-1 ${isValidEmail || isEmailEmpty ? "text-grey-500" : "text-pink-500"}`}
             >
               이메일 형식으로 입력해 주세요
             </p>
@@ -68,19 +91,27 @@ const SignUpByEmailForm = () => {
           label="비밀번호"
           name="password"
           placeholder="비밀번호를 입력해 주세요"
-          statusText="비밀번호를 입력해 주세요"
+          statusText={
+            isPasswordEmpty
+              ? "비밀번호를 입력해 주세요"
+              : isValidPassword
+                ? ""
+                : "비밀번호 형식에 맞게 입력해 주세요"
+          }
           essential
           value={password}
           onChange={handleChange}
+          isError={!isPasswordEmpty && !isValidPassword}
         />
         <PasswordInput
           id="password-confirm"
           name="passwordConfirm"
           placeholder="비밀번호를 다시 한번 입력해 주세요"
-          statusText="비밀번호를 다시 한번 입력해 주세요"
+          statusText={passwordConfirmStatusText}
           essential
           value={passwordConfirm}
           onChange={handleChange}
+          isError={!isPasswordConfirmEmpty && !isPasswordMatched}
         />
         <span className="body-3 px-3 pt-1 text-grey-500">
           영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로 입력해
