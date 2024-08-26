@@ -1,50 +1,61 @@
 import { useEffect, useState, useCallback } from "react";
 
-export const useEmailValidation = () => {
-  const [email, setEmail] = useState<string>("");
-  const [errorObject, setErrorObject] = useState<{
-    emailHasError: boolean;
-    emailStatusText: string;
-  }>({
+interface LoginForm {
+  email: string;
+  password: string;
+  persistLogin: boolean;
+}
+
+export const useLoginForm = () => {
+  const [loginForm, setLoginForm] = useState<LoginForm>({
+    email: "",
+    password: "",
+    persistLogin: false,
+  });
+
+  const [formValidationResult, setFormValidationResult] = useState({
     emailHasError: false,
+    emailIsEmpty: true,
     emailStatusText: "이메일 형식으로 입력해 주세요",
   });
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginForm({
+      ...loginForm,
+      [name]: value,
+    });
   };
 
-  /* email 정규성 검사 코드 */
-  const checkIsErrorEmail = useCallback(() => {
-    // 입력값이 존재하지 않는 경우
-    if (email.length === 0) {
-      return {
-        emailHasError: false,
-        emailStatusText: "이메일 형식으로 입력해 주세요",
-      };
-    }
-    // 유효성 검증 정규식
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const emailHasError = !emailRegex.test(email);
+  const handlePersistLogin = () => {
+    setLoginForm({
+      ...loginForm,
+      persistLogin: !loginForm.persistLogin,
+    });
+  };
 
-    // 에러 상태에 따라 errorObject를 다르게 반환합니다.
+  /* 이메일 유효성  검사 */
+  const checkEmailHasError = useCallback(() => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailHasError = !emailRegex.test(loginForm.email);
+    const emailIsEmpty = loginForm.email.length === 0;
+
     return {
       emailHasError,
+      emailIsEmpty,
       emailStatusText: emailHasError
         ? "올바른 이메일 형식으로 입력해 주세요"
         : "",
     };
-  }, [email]);
+  }, [loginForm.email]);
 
-  /* email 정규성 검사 */
   useEffect(() => {
-    // 정규성 검사를 해야 하는 상태 값은 실제 DOM 업데이트 이후에 발생하기 때문에 useEffect를 사용합니다.
-    setErrorObject(() => checkIsErrorEmail());
-  }, [email, checkIsErrorEmail]);
+    setFormValidationResult(() => checkEmailHasError());
+  }, [loginForm.email, checkEmailHasError]);
 
   return {
-    email,
-    handleEmailChange,
-    ...errorObject,
+    loginForm,
+    handler: { handleChange, handlePersistLogin },
+    formValidationResult,
   };
 };

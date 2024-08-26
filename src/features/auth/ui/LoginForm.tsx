@@ -1,14 +1,15 @@
-import { useState } from "react";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
-import { useEmailValidation } from "../model";
+import { useLoginForm } from "../model";
 import { useEmailForm } from "../api";
 
 const LoginForm = () => {
-  const { email, handleEmailChange, emailHasError, emailStatusText } =
-    useEmailValidation();
-  const [password, setPassword] = useState<string>("");
-  const [persistLogin, setPersistLogin] = useState(false);
+  const { loginForm, handler, formValidationResult } = useLoginForm();
+
+  const { email, password, persistLogin } = loginForm;
+  const { emailHasError, emailIsEmpty, emailStatusText } = formValidationResult;
+  const { handleChange, handlePersistLogin } = handler;
+  const passwordIsEmpty = password.length === 0;
 
   const mutate = useEmailForm();
 
@@ -18,7 +19,7 @@ const LoginForm = () => {
       onSubmit={(e) => {
         e.preventDefault();
         // TODO : alert 창 모달로 변경하기
-        if (emailHasError || password.length === 0) {
+        if (emailHasError || emailIsEmpty || passwordIsEmpty) {
           alert("아이디 또는 비밀번호를 모두 입력해 주세요");
           return;
         }
@@ -31,7 +32,7 @@ const LoginForm = () => {
         label="이메일"
         fullWidth
         value={email}
-        onChange={handleEmailChange}
+        onChange={handleChange}
         isError={emailHasError}
         statusText={emailStatusText}
       />
@@ -41,14 +42,14 @@ const LoginForm = () => {
         label="비밀번호"
         fullWidth
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={handleChange}
       />
       <div className="flex items-center gap-1">
         <input
           type="checkbox"
           id="rememberMe"
           name="rememberMe"
-          onClick={() => setPersistLogin(!persistLogin)}
+          onClick={handlePersistLogin}
         />
         <label htmlFor="rememberMe" className="btn-3 text-grey-700">
           로그인 유지
