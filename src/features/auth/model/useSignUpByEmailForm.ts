@@ -20,7 +20,7 @@ export const useSignUpByEmailForm = () => {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
-  const { email, password } = form;
+  const { email, password, passwordConfirm } = form;
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -39,11 +39,13 @@ export const useSignUpByEmailForm = () => {
 
   const isValidEmail = validateEmail(email);
   const isValidPassword = validatePassword(password);
+  const isPasswordMatched = password === passwordConfirm;
 
   return {
     form,
     isValidEmail,
     isValidPassword,
+    isPasswordMatched,
     handleChange,
   };
 };

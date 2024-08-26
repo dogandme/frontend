@@ -8,12 +8,28 @@ const SignUpByEmailForm = () => {
   const [isFocusedEmailInput, setIsFocusedEmailInput] =
     useState<boolean>(false);
 
-  const { form, handleChange, isValidEmail, isValidPassword } =
-    useSignUpByEmailForm();
+  const {
+    form,
+    handleChange,
+    isValidEmail,
+    isValidPassword,
+    isPasswordMatched,
+  } = useSignUpByEmailForm();
   const { email, confirmCode, password, passwordConfirm } = form;
 
   const shouldShowEmailStatusText =
     (!isValidEmail && email.length > 0) || isFocusedEmailInput;
+
+  let passwordConfirmStatusText = "";
+
+  if (isValidPassword) {
+    if (isPasswordMatched)
+      passwordConfirmStatusText = "사용가능한 비밀번호 입니다";
+    else passwordConfirmStatusText = "비밀번호가 서로 일치하지 않습니다";
+  } else {
+    if (isPasswordMatched) passwordConfirmStatusText = "";
+    else passwordConfirmStatusText = "비밀번호가 서로 일치하지 않습니다";
+  }
 
   return (
     <form className="flex flex-col gap-8 self-stretch">
@@ -87,10 +103,11 @@ const SignUpByEmailForm = () => {
           id="password-confirm"
           name="passwordConfirm"
           placeholder="비밀번호를 다시 한번 입력해 주세요"
-          statusText="비밀번호를 다시 한번 입력해 주세요"
+          statusText={passwordConfirmStatusText}
           essential
           value={passwordConfirm}
           onChange={handleChange}
+          isError={!(passwordConfirm.length === 0 || isPasswordMatched)}
         />
         <span className="body-3 px-3 pt-1 text-grey-500">
           영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로 입력해

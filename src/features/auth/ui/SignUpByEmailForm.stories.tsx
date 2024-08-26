@@ -124,5 +124,7 @@ export const Default: Story = {
         expect($statusText.textContent).toBe("");
       },
     );
+
+    // todo: 비밀번호 확인 input 테스트 코드
   },
 };
