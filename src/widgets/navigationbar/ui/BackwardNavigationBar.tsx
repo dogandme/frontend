@@ -21,11 +21,13 @@ const BackWardButton = (props: React.HTMLAttributes<HTMLButtonElement>) => {
   );
 };
 
-const BackwardNavigationBar = () => {
+const BackwardNavigationBar = (
+  props: React.HTMLAttributes<HTMLButtonElement>,
+) => {
   return (
     <NavigationBar
       componentType="buttonLeft"
-      button={<BackWardButton />}
+      button={<BackWardButton {...props} />}
     ></NavigationBar>
   );
 };
