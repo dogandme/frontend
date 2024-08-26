@@ -1,7 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useAuthStore } from "@/shared/store/auth";
 import { LOGIN_END_POINT } from "../constants";
 
-interface OAuthLoginResponse {
+interface LoginResponse {
   code: number;
   message: string;
   content: {
@@ -23,7 +24,7 @@ export const useOauthLogin = (OAuthServerName: OAuthServerName | null) => {
   const END_POINT = isOauthLoginEnabled && LOGIN_END_POINT[OAuthServerName];
 
   // TODO 리액트 쿼리를 활용하여 최적화 하기
-  const query = useQuery<OAuthLoginResponse>({
+  const query = useQuery<LoginResponse>({
     queryKey: ["OAuthLogin", OAuthServerName],
     // TODO fetch 함수 커스텀 라이브러리로 분리하기
     queryFn: async () => {
@@ -43,4 +44,48 @@ export const useOauthLogin = (OAuthServerName: OAuthServerName | null) => {
   });
 
   return query;
+};
+
+interface EmailLoginFormData {
+  email: string;
+  password: string;
+}
+
+// TODO 리액트 쿼리를 활용하여 최적화 하기
+export const useEmailForm = () => {
+  const setToken = useAuthStore((state) => state.setToken);
+  const setRole = useAuthStore((state) => state.setRole);
+
+  const mutate = useMutation<LoginResponse, Error, EmailLoginFormData>({
+    mutationFn: async (formData) => {
+      const response = await fetch(LOGIN_END_POINT.EMAIL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("예상치 못한 오류가 발생했습니다.");
+      }
+
+      const data = await response.json();
+
+      return data;
+    },
+    onSuccess: (data) => {
+      const { token, role } = data.content;
+      // 성공하면 토큰을 저장하기
+      setToken(token);
+      setRole(role);
+      // TODO 이전에 접속했던 페이지로 리다이렉션 시키기
+    },
+    // TODO 에러 핸들링 로직 작성하기
+    onError: (error) => {
+      alert(error.message);
+    },
+  });
+
+  return mutate;
 };

@@ -1,6 +1,7 @@
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
-import { useLogin } from "../model/login";
+import { useLogin } from "../model";
+import { useEmailForm } from "../api";
 
 const LoginForm = () => {
   const {
@@ -12,11 +13,14 @@ const LoginForm = () => {
     emailStatusText,
   } = useLogin();
 
+  const mutate = useEmailForm();
+
   return (
     <form
       className="flex flex-col items-start gap-4 self-stretch"
       onSubmit={(e) => {
         e.preventDefault();
+        mutate.mutate({ email, password });
       }}
     >
       <EmailInput
@@ -43,7 +47,13 @@ const LoginForm = () => {
           로그인 유지
         </label>
       </div>
-      <Button colorType="primary" size="large" variant="filled">
+      <Button
+        colorType="primary"
+        size="large"
+        variant="filled"
+        role="submit"
+        aria-label="login-submit-button"
+      >
         로그인
       </Button>
     </form>
