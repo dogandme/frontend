@@ -1,8 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 
-export const useLogin = () => {
+export const useEmailValidation = () => {
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [errorObject, setErrorObject] = useState<{
     emailHasError: boolean;
     emailStatusText: string;
@@ -13,10 +12,6 @@ export const useLogin = () => {
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
   };
 
   /* email 정규성 검사 코드 */
@@ -50,8 +45,6 @@ export const useLogin = () => {
   return {
     email,
     handleEmailChange,
-    password,
-    handlePasswordChange,
     ...errorObject,
   };
 };

@@ -1,18 +1,13 @@
 import { useState } from "react";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
-import { useLogin } from "../model";
+import { useEmailValidation } from "../model";
 import { useEmailForm } from "../api";
 
 const LoginForm = () => {
-  const {
-    email,
-    handleEmailChange,
-    password,
-    handlePasswordChange,
-    emailHasError,
-    emailStatusText,
-  } = useLogin();
+  const { email, handleEmailChange, emailHasError, emailStatusText } =
+    useEmailValidation();
+  const [password, setPassword] = useState<string>("");
   const [persistLogin, setPersistLogin] = useState(false);
 
   const mutate = useEmailForm();
@@ -46,7 +41,7 @@ const LoginForm = () => {
         label="비밀번호"
         fullWidth
         value={password}
-        onChange={handlePasswordChange}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <div className="flex items-center gap-1">
         <input
