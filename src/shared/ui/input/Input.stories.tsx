@@ -789,6 +789,7 @@ export const Essential: Story = {
   args: {
     ...Default.args,
     componentType: "outlinedText",
+    label: "Title",
   },
   parameters: {
     docs: {
