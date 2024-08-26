@@ -53,7 +53,7 @@ interface EmailLoginFormData {
 }
 
 // TODO 리액트 쿼리를 활용하여 최적화 하기
-export const useEmailForm = () => {
+export const usePostLoginForm = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
 

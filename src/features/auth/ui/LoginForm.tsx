@@ -1,7 +1,7 @@
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
 import { useLoginForm } from "../model";
-import { useEmailForm } from "../api";
+import { usePostLoginForm } from "../api";
 
 const LoginForm = () => {
   const { loginForm, handler, formValidationResult } = useLoginForm();
@@ -11,7 +11,7 @@ const LoginForm = () => {
   const { handleChange, handlePersistLogin } = handler;
   const passwordIsEmpty = password.length === 0;
 
-  const { mutate: submitLoginForm } = useEmailForm();
+  const { mutate: postLoginForm } = usePostLoginForm();
 
   return (
     <form
@@ -23,7 +23,7 @@ const LoginForm = () => {
           alert("아이디 또는 비밀번호를 모두 입력해 주세요");
           return;
         }
-        submitLoginForm({ email, password, persistLogin });
+        postLoginForm({ email, password, persistLogin });
       }}
     >
       <EmailInput
