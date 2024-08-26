@@ -3,6 +3,7 @@ import { MainLayout, MainPage } from "../pages";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { ROUTER_PATH } from "@/shared/constants";
 import { SignUpPage } from "@/pages/sign-up";
+import { EmailLoginPage } from "@/pages/login/email";
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "email",
-            element: <div>email login</div>,
+            element: <EmailLoginPage />,
           },
           {
             path: "forgot-password",
