@@ -4,9 +4,12 @@ export const useLogin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorObject, setErrorObject] = useState<{
-    isError: boolean;
-    statusText: string;
-  }>({ isError: false, statusText: "이메일 형식으로 입력해 주세요" });
+    emailHasError: boolean;
+    emailStatusText: string;
+  }>({
+    emailHasError: false,
+    emailStatusText: "이메일 형식으로 입력해 주세요",
+  });
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -21,18 +24,20 @@ export const useLogin = () => {
     // 입력값이 존재하지 않는 경우
     if (email.length === 0) {
       return {
-        isError: false,
-        statusText: "이메일 형식으로 입력해 주세요",
+        emailHasError: false,
+        emailStatusText: "이메일 형식으로 입력해 주세요",
       };
     }
     // 유효성 검증 정규식
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const isError = !emailRegex.test(email);
+    const emailHasError = !emailRegex.test(email);
 
     // 에러 상태에 따라 errorObject를 다르게 반환합니다.
     return {
-      isError,
-      statusText: isError ? "올바른 이메일 형식으로 입력해 주세요" : "",
+      emailHasError,
+      emailStatusText: emailHasError
+        ? "올바른 이메일 형식으로 입력해 주세요"
+        : "",
     };
   }, [email]);
 
@@ -47,7 +52,6 @@ export const useLogin = () => {
     handleEmailChange,
     password,
     handlePasswordChange,
-    emailHasError: errorObject.isError,
-    emailStatusText: errorObject.statusText,
+    ...errorObject,
   };
 };
