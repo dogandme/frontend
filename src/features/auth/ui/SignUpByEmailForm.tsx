@@ -8,10 +8,11 @@ const SignUpByEmailForm = () => {
   const [isFocusedEmailInput, setIsFocusedEmailInput] =
     useState<boolean>(false);
 
-  const { form, handleChange, isErrorEmail } = useSignUpByEmailForm();
+  const { form, handleChange, isValidEmail, isValidPassword } =
+    useSignUpByEmailForm();
   const { email, confirmCode, password, passwordConfirm } = form;
 
-  const shouldShowEmailStatusText = isFocusedEmailInput || isErrorEmail;
+  const shouldShowEmailStatusText = isFocusedEmailInput || !isValidEmail;
 
   return (
     <form className="flex flex-col gap-8 self-stretch">
@@ -22,7 +23,7 @@ const SignUpByEmailForm = () => {
               id="email"
               name="email"
               label="이메일"
-              isError={isErrorEmail}
+              isError={!isValidEmail}
               placeholder="이메일을 입력해 주세요"
               statusText={undefined}
               essential
@@ -37,13 +38,14 @@ const SignUpByEmailForm = () => {
               variant="filled"
               size="medium"
               fullWidth={false}
+              disabled={!isValidEmail}
             >
               코드전송
             </Button>
           </div>
           {shouldShowEmailStatusText && (
             <p
-              className={`body-3 pl-1 pr-3 pt-1 ${isErrorEmail ? "text-pink-500" : "text-grey-500"}`}
+              className={`body-3 pl-1 pr-3 pt-1 ${isValidEmail || email.length === 0 ? "text-grey-500" : "text-pink-500"}`}
             >
               이메일 형식으로 입력해 주세요
             </p>
@@ -68,10 +70,17 @@ const SignUpByEmailForm = () => {
           label="비밀번호"
           name="password"
           placeholder="비밀번호를 입력해 주세요"
-          statusText="비밀번호를 입력해 주세요"
+          statusText={
+            password.length === 0
+              ? "비밀번호를 입력해 주세요"
+              : isValidPassword
+                ? ""
+                : "비밀번호 형식에 맞게 입력해 주세요"
+          }
           essential
           value={password}
           onChange={handleChange}
+          isError={!(isValidPassword || password.length === 0)}
         />
         <PasswordInput
           id="password-confirm"

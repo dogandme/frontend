@@ -1,4 +1,3 @@
-import { useDebounce } from "@/shared/lib";
 import { useState } from "react";
 
 interface SignUpByEmailFormType {
@@ -21,22 +20,30 @@ export const useSignUpByEmailForm = () => {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
-  const { email } = form;
+  const { email, password } = form;
 
-  const validateEmail = () => {
-    if (email.length === 0) return true;
+  const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     return emailRegex.test(email);
   };
+  const validatePassword = (password: string) => {
+    // 조건
+    // 1. 영문, 숫자, 특수문자 3가지 조합 포함
+    // 2. 8~15자 이내
+    const passwordRegex =
+      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
 
-  const isValidEmail = useDebounce(validateEmail, true);
+    return passwordRegex.test(password);
+  };
 
-  const isErrorEmail = !isValidEmail;
+  const isValidEmail = validateEmail(email);
+  const isValidPassword = validatePassword(password);
 
   return {
     form,
-    isErrorEmail,
+    isValidEmail,
+    isValidPassword,
     handleChange,
   };
 };
