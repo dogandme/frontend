@@ -49,6 +49,7 @@ export const useOauthLogin = (OAuthServerName: OAuthServerName | null) => {
 interface EmailLoginFormData {
   email: string;
   password: string;
+  persistLogin: boolean;
 }
 
 // TODO 리액트 쿼리를 활용하여 최적화 하기
@@ -66,11 +67,14 @@ export const useEmailForm = () => {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error("예상치 못한 오류가 발생했습니다.");
-      }
-
       const data = await response.json();
+
+      if (response.ok) {
+        throw new Error("문제가 발생했습니다. 잠시 후 다시 이용해주세요");
+      }
+      if (data.code === 401) {
+        throw new Error("아이디 또는 비밀번호를 다시 확인해 주세요");
+      }
 
       return data;
     },

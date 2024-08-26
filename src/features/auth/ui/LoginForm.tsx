@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
 import { useLogin } from "../model";
@@ -12,6 +13,7 @@ const LoginForm = () => {
     emailHasError,
     emailStatusText,
   } = useLogin();
+  const [persistLogin, setPersistLogin] = useState(false);
 
   const mutate = useEmailForm();
 
@@ -20,7 +22,12 @@ const LoginForm = () => {
       className="flex flex-col items-start gap-4 self-stretch"
       onSubmit={(e) => {
         e.preventDefault();
-        mutate.mutate({ email, password });
+        // TODO : alert 창 모달로 변경하기
+        if (emailHasError || password.length === 0) {
+          alert("아이디 또는 비밀번호를 모두 입력해 주세요");
+        }
+
+        mutate.mutate({ email, password, persistLogin });
       }}
     >
       <EmailInput
@@ -42,7 +49,12 @@ const LoginForm = () => {
         onChange={handlePasswordChange}
       />
       <div className="flex items-center gap-1">
-        <input type="checkbox" id="rememberMe" name="rememberMe" />
+        <input
+          type="checkbox"
+          id="rememberMe"
+          name="rememberMe"
+          onClick={() => setPersistLogin(!persistLogin)}
+        />
         <label htmlFor="rememberMe" className="btn-3 text-grey-700">
           로그인 유지
         </label>
@@ -53,6 +65,7 @@ const LoginForm = () => {
         variant="filled"
         role="submit"
         aria-label="login-submit-button"
+        type="submit"
       >
         로그인
       </Button>
