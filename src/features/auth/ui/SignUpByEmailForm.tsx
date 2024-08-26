@@ -12,7 +12,8 @@ const SignUpByEmailForm = () => {
     useSignUpByEmailForm();
   const { email, confirmCode, password, passwordConfirm } = form;
 
-  const shouldShowEmailStatusText = isFocusedEmailInput || !isValidEmail;
+  const shouldShowEmailStatusText =
+    (!isValidEmail && email.length > 0) || isFocusedEmailInput;
 
   return (
     <form className="flex flex-col gap-8 self-stretch">
@@ -23,7 +24,7 @@ const SignUpByEmailForm = () => {
               id="email"
               name="email"
               label="이메일"
-              isError={!isValidEmail}
+              isError={!(isValidEmail || email.length === 0)}
               placeholder="이메일을 입력해 주세요"
               statusText={undefined}
               essential
