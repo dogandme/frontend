@@ -11,7 +11,7 @@ const LoginForm = () => {
   const { handleChange, handlePersistLogin } = handler;
   const passwordIsEmpty = password.length === 0;
 
-  const mutate = useEmailForm();
+  const { mutate: submitLoginForm } = useEmailForm();
 
   return (
     <form
@@ -23,7 +23,7 @@ const LoginForm = () => {
           alert("아이디 또는 비밀번호를 모두 입력해 주세요");
           return;
         }
-        mutate.mutate({ email, password, persistLogin });
+        submitLoginForm({ email, password, persistLogin });
       }}
     >
       <EmailInput
