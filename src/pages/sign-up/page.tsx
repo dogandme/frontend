@@ -1,14 +1,13 @@
 import { SignUpByEmailForm } from "@/features/auth/ui";
 import { ROUTER_PATH } from "@/shared/constants";
+import { BackwardNavigationBar } from "@/widgets/navigationbar/ui";
 import { Link } from "react-router-dom";
 
 const SignUpPage = () => {
   return (
     <div>
-      {/* todo: 이전으로 돌아가는 navigationbar 만들어지면 추가 */}
-
       <main className="flex flex-col gap-8 self-stretch px-4">
-        {/* progress bar */}
+        <BackwardNavigationBar />
         <div></div>
         <h1 className="headline-3 mx-auto">이메일로 회원가입</h1>
 
