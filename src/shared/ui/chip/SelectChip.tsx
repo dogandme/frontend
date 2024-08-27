@@ -3,13 +3,13 @@ import { selectChipStyles } from "./chip.styles";
 
 interface SelectChipProps extends React.HTMLAttributes<HTMLButtonElement> {
   label: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const SelectChip = (props: SelectChipProps) => {
+export const SelectChip = ({ onClick, label, ...rest }: SelectChipProps) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const chipState = isSelected ? "selected" : "unselected";
 
-  const { onClick, label, ...rest } = props;
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (onClick) {
       onClick(e);
