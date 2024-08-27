@@ -39,7 +39,9 @@ export const usePetInfoStore = create<PetInfoStore>((set) => ({
   setGreed: (greed: string) => set({ greed }),
   setCharacterList: (character: string) =>
     set((state) => {
-      const newCharacter = state.characterList.includes(character)
+      // 배열에 character 값이 존재 할 경우 제거하고, 존재하지 않을 경우 추가합니다.
+      const isAlreadyExist = state.characterList.includes(character);
+      const newCharacter = isAlreadyExist
         ? state.characterList.filter((c) => c !== character)
         : [...state.characterList, character];
       return { characterList: newCharacter };
