@@ -14,10 +14,10 @@ const PetInfoPage = () => {
         <PetInfoForm.Form>
           <PetInfoForm.ProfileInput />
           <PetInfoForm.NameInput />
-          <PetInfoForm.GreedInput />
+          <PetInfoForm.BreedInput />
           <PetInfoForm.CharacterInput />
           <PetInfoForm.IntroduceTextArea />
-          <PetInfoForm.Submit />
+          <PetInfoForm.SubmitButton />
         </PetInfoForm.Form>
       </main>
     </div>
