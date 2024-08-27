@@ -3,7 +3,7 @@ import { Button } from "@/shared/ui/button";
 import { NavigationBar } from "@/shared/ui/navigationbar";
 import { CloseIcon } from "@/shared/ui/icon";
 
-const CloseButton = (props: React.HTMLAttributes<HTMLButtonElement>) => {
+const CloseButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <Button
       size="large"
