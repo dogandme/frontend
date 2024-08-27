@@ -69,11 +69,9 @@ export const ProfileInput = () => {
       <input
         type="file"
         accept="image/*"
-        // input의 기본 스타일을 제거하기 위해 hidden으로 렌더링 하지 않습니다.
-        className="hidden"
+        className="visually-hidden"
         ref={inputRef}
         onChange={handleFileChange}
-        aria-label="프로필 이미지 업로드"
       />
       <button
         className="flex h-8 w-8 items-center justify-center rounded-2xl border border-grey-500 bg-grey-0"
