@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const DEFAULT_PROFILE_IMAGE = "src/shared/assets/default-profile.svg";
+const DEFAULT_PROFILE_IMAGE = "/default-profile.svg";
 
 interface PetInfoStore {
   profileImage: string;
@@ -16,8 +16,12 @@ interface PetInfoStore {
   setIntroduce: (introduce: string) => void;
 }
 
+/**
+ * public 폴더에 존재하는 기본 프로필 이미지를 사용합니다.
+ * origin/{파일명} 을 통해 public 폴더에 접근하는 파일에 접근 할 수 있습니다.
+ */
 export const usePetInfoStore = create<PetInfoStore>((set) => ({
-  profileImage: DEFAULT_PROFILE_IMAGE,
+  profileImage: `${window.location.origin}/${DEFAULT_PROFILE_IMAGE}`,
   name: "",
   greed: "",
   characterList: [],

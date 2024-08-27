@@ -8,7 +8,8 @@ import { characterList } from "../constants/form";
 import { Button } from "@/shared/ui/button";
 
 // TODO svg 경로를 문자열로 가져오는 방법 찾아보기
-const DEFAULT_PROFILE_IMAGE = "@/shared/assets/default-profile.svg";
+const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
+
 const TextCounter = ({
   text,
   maxLength,
@@ -54,7 +55,7 @@ export const ProfileInput = () => {
     const file = e.target.files?.[0];
     const profileImage = file
       ? URL.createObjectURL(file)
-      : DEFAULT_PROFILE_IMAGE;
+      : `${window.location.origin}${DEFAULT_PROFILE_IMAGE}`;
     setProfileImage(profileImage);
   };
 
