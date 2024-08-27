@@ -135,7 +135,16 @@ export const GreedInput = () => {
           type="checkbox"
           id="isMixDog"
           name="ixMixDog"
-          onChange={(e) => setIsMixDog(e.target.checked)}
+          onChange={(e) => {
+            const { checked } = e.target;
+            if (checked) {
+              setGreed("mix");
+              setIsMixDog(e.target.checked);
+            } else {
+              setIsMixDog(e.target.checked);
+              setGreed("");
+            }
+          }}
         />
         <label htmlFor="isMixDog" className="btn-3 text-center text-grey-500">
           모르겠어요
