@@ -1,10 +1,12 @@
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
-const DEFAULT_PROFILE_IMAGE = "/default-profile.svg";
+const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
 
 interface PetInfoStore {
   profileImage: string;
   name: string;
+  isValidName: boolean;
   greed: string;
   characterList: string[];
   introduce: string;
@@ -20,23 +22,39 @@ interface PetInfoStore {
  * public 폴더에 존재하는 기본 프로필 이미지를 사용합니다.
  * origin/{파일명} 을 통해 public 폴더에 접근하는 파일에 접근 할 수 있습니다.
  */
-export const usePetInfoStore = create<PetInfoStore>((set) => ({
-  profileImage: `${window.location.origin}/${DEFAULT_PROFILE_IMAGE}`,
-  name: "",
-  greed: "",
-  characterList: [],
-  introduce: "",
 
-  setProfileImage: (profileImage: string) => set({ profileImage }),
-  setName: (name: string) => set({ name }),
-  setGreed: (greed: string) => set({ greed }),
-  setCharacterList: (character: string) =>
-    set((state) => {
-      // 성격은 중복 선택이 가능하므로, 중복 선택된 성격을 제거하거나 추가합니다.
-      const newCharacter = state.characterList.includes(character)
-        ? state.characterList.filter((c) => c !== character)
-        : [...state.characterList, character];
-      return { characterList: newCharacter };
-    }),
-  setIntroduce: (introduce: string) => set({ introduce }),
-}));
+const nameRegex = /^[가-힣a-zA-Z]{1,20}$/;
+
+export const usePetInfoStore = create<PetInfoStore>()(
+  subscribeWithSelector((set) => ({
+    profileImage: `${window.location.origin}/${DEFAULT_PROFILE_IMAGE}`,
+    name: "",
+    isValidName: true,
+    greed: "",
+    characterList: [],
+    introduce: "",
+
+    setProfileImage: (profileImage: string) => set({ profileImage }),
+    setName: (name: string) => set({ name }),
+    setGreed: (greed: string) => set({ greed }),
+    setCharacterList: (character: string) =>
+      set((state) => {
+        const newCharacter = state.characterList.includes(character)
+          ? state.characterList.filter((c) => c !== character)
+          : [...state.characterList, character];
+        return { characterList: newCharacter };
+      }),
+    setIntroduce: (introduce: string) => set({ introduce }),
+  })),
+);
+
+// name 상태가 변경될 때마다 isValidName 상태를 업데이트하는 구독 설정
+// ! subscribeWithSelector 미들웨어를 이용하여 state.name 상태를 셀렉하는 셀렉터와
+// ! 상태 변경을 감지하는 리스너 함수를 이용하여 isValidName 상태를 변경합니다.
+usePetInfoStore.subscribe(
+  (state) => state.name,
+  (name) => {
+    console.log(name, nameRegex.test(name));
+    usePetInfoStore.setState({ isValidName: nameRegex.test(name) });
+  },
+);
