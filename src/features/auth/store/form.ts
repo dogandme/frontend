@@ -6,7 +6,7 @@ interface PetInfoStore {
   profileImage: string;
   name: string;
   isValidName: boolean;
-  greed: string;
+  breed: string;
   characterList: string[];
   introduce: string;
 
@@ -26,7 +26,7 @@ export const usePetInfoStore = create<PetInfoStore>((set) => ({
   profileImage: `${window.location.origin}/${DEFAULT_PROFILE_IMAGE}`,
   name: "",
   isValidName: true,
-  greed: "",
+  breed: "",
   characterList: [],
   introduce: "",
 
@@ -36,12 +36,13 @@ export const usePetInfoStore = create<PetInfoStore>((set) => ({
     set({
       isValidName: new RegExp("^[가-힣a-zA-Z]{1,20}$").test(name),
     }),
-  setGreed: (greed: string) => set({ greed }),
+  setGreed: (breed: string) => set({ breed }),
   setCharacterList: (character: string) =>
     set((state) => {
       // 배열에 character 값이 존재 할 경우 제거하고, 존재하지 않을 경우 추가합니다.
-      const isAlreadyExist = state.characterList.includes(character);
-      const newCharacter = isAlreadyExist
+      const isAlreadySelected = state.characterList.includes(character);
+
+      const newCharacter = isAlreadySelected
         ? state.characterList.filter((c) => c !== character)
         : [...state.characterList, character];
       return { characterList: newCharacter };
