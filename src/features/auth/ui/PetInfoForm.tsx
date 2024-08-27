@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { EditIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { SelectChip } from "@/shared/ui/chip";
@@ -88,7 +88,11 @@ export const ProfileInput = () => {
 
 export const NameInput = () => {
   const name = usePetInfoStore((state) => state.name);
+  const isValidName = usePetInfoStore((state) => state.isValidName);
+
   const setName = usePetInfoStore((state) => state.setName);
+  const setIsValidName = usePetInfoStore((state) => state.setIsValidName);
+
   const MAX_LENGTH = 20;
 
   return (
@@ -100,22 +104,21 @@ export const NameInput = () => {
       maxLength={MAX_LENGTH}
       trailingNode={<TextCounter text={name} maxLength={MAX_LENGTH} />}
       value={name}
-      onChange={(e) => setName(e.target.value)}
+      onChange={(e) => {
+        const { value } = e.target;
+        setName(value);
+        setIsValidName(value);
+      }}
+      isError={!isValidName}
+      statusText="20자 이내의 한글 영문의 이름을 입력해 주세요"
       essential
     />
   );
 };
 
-export const GreedInput = () => {
+export const BreedInput = () => {
   const [isMixDog, setIsMixDog] = useState<boolean>(false);
   const setGreed = usePetInfoStore((state) => state.setGreed);
-
-  // TODO useEffect 로 전역 상태를 변경하는 행위가 괜찮은걸까 ?
-  useEffect(() => {
-    if (isMixDog) {
-      setGreed("mix");
-    }
-  }, [isMixDog, setGreed]);
 
   return (
     <div className="flex w-full flex-col gap-[10px]">
@@ -186,7 +189,7 @@ export const IntroduceTextArea = () => {
   );
 };
 
-export const Submit = () => {
+export const SubmitButton = () => {
   /**
    * 유효성 검사를 위해 form 데이터에 존재하는 상태를 객체 형태로 가져옵니다.
    * getState() 는 호출 시점의 store 를 가져오기 떄문에 클릭이 일어난 시점의 상태 값들을 가져 올 수 있습니다.
@@ -199,7 +202,6 @@ export const Submit = () => {
     const nameIsEmpty = name === "";
     const greedIsEmpty = greed === "";
 
-    console.log(petInfoForm);
     if (nameIsEmpty && greedIsEmpty) {
       alert("필수 항목을 모두 입력해 주세요");
       return;
