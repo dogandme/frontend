@@ -1,6 +1,9 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router-dom";
+import { initialize, mswLoader } from "msw-storybook-addon";
+
+initialize();
 
 const queryClient = new QueryClient();
 
@@ -29,6 +32,7 @@ const preview: Preview = {
       },
     },
   },
+  loaders: [mswLoader],
   // 모든 스토리에 전역적으로 react-router-dom을 적용
   decorators: [withProviders],
 };
