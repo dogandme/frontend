@@ -61,7 +61,7 @@ jobs:
           script: |
             const fs = require('fs');
             const output = fs.readFileSync('test-storybook-output.txt', 'utf8');
-            const lines = output.split('\n\n')[1].join('\n');
+            const lines = output.split('\n\n').slice(1).join('\n');
             const outcome = "${{ steps.test-storybook.outcome }}"; 
             const success = outcome === 'success';
             const comment = success 
