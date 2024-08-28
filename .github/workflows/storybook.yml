@@ -45,11 +45,10 @@ jobs:
       - name: Kill any process using port 6006 &
         run: npx kill-port 6006
 
-      - name: Run Storybook locally
-        run: npm run storybook -- --ci --port 6006
-
-      - name: Wait for Storybook to start
-        run: npx wait-on http://localhost:6006
+      - name: Run Storybook and tests concurrently
+        run: npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+          "npx http-server storybook-static --port 6006 --silent" \
+          "npx wait-on tcp:6006 && yarn test-storybook"
 
       - name: Run interaction tests and save output
         id: test-storybook
