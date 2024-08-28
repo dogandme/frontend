@@ -86,7 +86,7 @@ export const Input = ({
     <div className={`flex ${fullWidth && "w-full"} flex-col items-start`}>
       {label && (
         <div className="flex gap-1 pb-2">
-          <label htmlFor={id} className="title-3">
+          <label htmlFor={id} className="title-3 text-grey-700">
             {label}
           </label>
           {essential && <Badge colorType="primary" />}
