@@ -51,6 +51,9 @@ jobs:
         run: npm run test-storybook 2> >(sed 's/\x1b\[[0-9;]*m//g' > test-storybook-output.txt)
         continue-on-error: true
 
+      - name: Kill Storybook server
+        run: npx kill-port 6006
+
       - name: Post test results as PR comment
         uses: actions/github-script@v6
         if: always()
