@@ -78,7 +78,7 @@ export const ProfileInput = () => {
         onClick={handleInputClick}
         type="button"
       >
-        <EditIcon />
+        <EditIcon fill="#9E9E9E" />
       </button>
     </div>
   );
