@@ -70,7 +70,7 @@ export const OAuthLoginHyperLinks = () => {
       setUserId(userId);
 
       if (role === "ROLE_NONE") {
-        navigate(ROUTER_PATH.SIGN_UP);
+        navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
         return;
       }
 
