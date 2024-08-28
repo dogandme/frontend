@@ -47,7 +47,7 @@ jobs:
 
       - name: Run Storybook and tests concurrently
         run: npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-          "start-storybook -p 6006" \
+          "npx start-storybook -p 6006" \
           "npx wait-on tcp:6006 && yarn test-storybook 2> >(sed 's/\\x1b\\[[0-9;]*m//g' > test-storybook-output.txt)"
         continue-on-error: true
 
