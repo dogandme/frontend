@@ -45,11 +45,14 @@ jobs:
       - name: Kill any process using port 6006 &
         run: npx kill-port 6006
 
-      - name: Run Storybook and tests concurrently
-        run: npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-          "npx start-storybook -p 6006" \
-          "npx wait-on tcp:6006 && yarn test-storybook 2> >(sed 's/\\x1b\\[[0-9;]*m//g' > test-storybook-output.txt)"
-        continue-on-error: true
+      - name: Run Storybook locally
+        run: npx start-storybook -p 6006 &
+
+      - name: Wait for Storybook to start
+        run: npx wait-on tcp:6006
+
+      - name: Test Storybook
+        run: yarn test-storybook 2> >(sed 's/\\x1b\\[[0-9;]*m//g' > test-storybook-output.txt)
 
       - name: Kill Storybook server
         run: npx kill-port 6006
