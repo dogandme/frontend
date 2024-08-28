@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { selectChipStyles } from "./chip.styles";
 
-interface SelectChipProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface SelectChipProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   controlledIsSelected?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
