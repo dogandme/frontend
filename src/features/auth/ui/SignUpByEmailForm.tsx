@@ -5,8 +5,12 @@ import { Input } from "@/shared/ui/input";
 import { useSignUpByEmailForm } from "../model";
 import { usePostSignUpByEmail } from "../api";
 import { useAuthStore } from "@/shared/store/auth";
+import { useNavigate } from "react-router-dom";
+import { ROUTER_PATH } from "@/shared/constants";
 
 const SignUpByEmailForm = () => {
+  const navigate = useNavigate();
+
   const [isFocusedEmailInput, setIsFocusedEmailInput] =
     useState<boolean>(false);
 
@@ -60,6 +64,8 @@ const SignUpByEmailForm = () => {
 
           setToken(authorization);
           setRole(role);
+
+          navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
         },
         onError: (error) => {
           // todo: snackbar 띄우기
