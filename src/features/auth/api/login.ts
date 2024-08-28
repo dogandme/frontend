@@ -65,7 +65,7 @@ export const usePostLoginForm = () => {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (!response.ok) {
         throw new Error("문제가 발생했습니다. 잠시 후 다시 이용해주세요");
       }
       if (data.code === 401) {
