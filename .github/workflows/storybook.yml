@@ -43,7 +43,7 @@ jobs:
       - name: Install playwright browsers
         run: npx playwright install
 
-      - name: Kill any process using port 6006
+      - name: Kill any process using port 6006 &
         run: npx kill-port 6006
 
       - name: Run Storybook locally
