@@ -87,7 +87,7 @@ export const ProfileInput = () => {
 export const NameInput = () => {
   const name = usePetInfoStore((state) => state.name);
   const isValidName = usePetInfoStore((state) => state.isValidName);
-
+  const isNameEmpty = name.length === 0;
   const setName = usePetInfoStore((state) => state.setName);
   const setIsValidName = usePetInfoStore((state) => state.setIsValidName);
 
@@ -107,7 +107,7 @@ export const NameInput = () => {
         setName(value);
         setIsValidName(value);
       }}
-      isError={!isValidName}
+      isError={!isNameEmpty && !isValidName}
       statusText="20자 이내의 한글 영문의 이름을 입력해 주세요"
       essential
     />
@@ -196,11 +196,11 @@ export const SubmitButton = () => {
   const handleClick = () => {
     const petInfoForm = usePetInfoStore.getState();
     // TODO refactor : 유효성 검사 메소드 만들어 사용하기
-    const { name, greed } = petInfoForm;
-    const nameIsEmpty = name === "";
-    const greedIsEmpty = greed === "";
+    const { isValidName, name, breed } = petInfoForm;
+    const isNameEmpty = name.length === 0;
+    const isBreedEmpty = breed.length === 0;
 
-    if (nameIsEmpty && greedIsEmpty) {
+    if (isValidName && isNameEmpty && isBreedEmpty) {
       alert("필수 항목을 모두 입력해 주세요");
       return;
     }

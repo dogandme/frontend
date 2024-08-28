@@ -33,8 +33,9 @@ export const usePetInfoStore = create<PetInfoStore>((set) => ({
   setProfileImage: (profileImage: string) => set({ profileImage }),
   setName: (name: string) => set({ name }),
   setIsValidName: (name: string) =>
-    set({
-      isValidName: new RegExp("^[가-힣a-zA-Z]{1,20}$").test(name),
+    set(() => {
+      const isValidName = new RegExp("^[가-힣a-zA-Z]{1,20}$").test(name);
+      return { isValidName };
     }),
   setGreed: (breed: string) => set({ breed }),
   setCharacterList: (character: string) =>
