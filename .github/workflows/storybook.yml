@@ -47,7 +47,8 @@ jobs:
         run: npx kill-port 6006
 
       - name: Run Storybook locally
-        run: npx start-storybook -p 6006 &
+        run: npx storybook dev -p 6006 &
+        continue-on-error: true
 
       - name: Wait for Storybook to start
         run: npx wait-on tcp:6006
