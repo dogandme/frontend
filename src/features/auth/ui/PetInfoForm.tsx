@@ -116,7 +116,7 @@ export const NameInput = () => {
 
 export const BreedInput = () => {
   const [isMixDog, setIsMixDog] = useState<boolean>(false);
-  const setGreed = usePetInfoStore((state) => state.setGreed);
+  const setBreed = usePetInfoStore((state) => state.setBreed);
 
   return (
     <div className="flex w-full flex-col gap-[10px]">
@@ -126,7 +126,7 @@ export const BreedInput = () => {
         id="greed"
         label="어떤 종의 아이인가요?"
         placeholder="품종을 선택해 주세요"
-        onChange={(e) => setGreed(isMixDog ? "mix" : e.target.value)}
+        onChange={(e) => setBreed(isMixDog ? "mix" : e.target.value)}
         // TODO disabled 되면 선택된 값을 기본 값으로 변경하기
         disabled={isMixDog}
         essential
@@ -139,12 +139,12 @@ export const BreedInput = () => {
           onChange={(e) => {
             const { checked } = e.target;
             if (checked) {
-              setGreed("mix");
+              setBreed("mix");
               setIsMixDog(e.target.checked);
               return;
             }
             setIsMixDog(e.target.checked);
-            setGreed("");
+            setBreed("");
           }}
         />
         <label htmlFor="isMixDog" className="btn-3 text-center text-grey-500">

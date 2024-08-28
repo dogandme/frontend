@@ -13,7 +13,7 @@ interface PetInfoStore {
   setProfileImage: (profileImage: string) => void;
   setName: (name: string) => void;
   setIsValidName: (name: string) => void;
-  setGreed: (greed: string) => void;
+  setBreed: (greed: string) => void;
   setCharacterList: (character: string) => void;
   setIntroduce: (introduce: string) => void;
 }
@@ -37,7 +37,7 @@ export const usePetInfoStore = create<PetInfoStore>((set) => ({
       const isValidName = new RegExp("^[가-힣a-zA-Z]{1,20}$").test(name);
       return { isValidName };
     }),
-  setGreed: (breed: string) => set({ breed }),
+  setBreed: (breed: string) => set({ breed }),
   setCharacterList: (character: string) =>
     set((state) => {
       // 배열에 character 값이 존재 할 경우 제거하고, 존재하지 않을 경우 추가합니다.
