@@ -4,6 +4,7 @@ import { LoginPage, LoginLayout } from "@/pages/login";
 import { ROUTER_PATH } from "@/shared/constants";
 import { SignUpPage } from "@/pages/sign-up";
 import { EmailLoginPage } from "@/pages/login/email";
+import PetInfoPage from "@/pages/sign-up/pet-info/page";
 
 export const router = createBrowserRouter([
   {
@@ -47,8 +48,8 @@ export const router = createBrowserRouter([
             element: <div>user-info</div>,
           },
           {
-            path: "pet-info",
-            element: <div>pet-info</div>,
+            path: ROUTER_PATH.SIGN_UP_PET_INFO,
+            element: <PetInfoPage />,
           },
         ],
       },
