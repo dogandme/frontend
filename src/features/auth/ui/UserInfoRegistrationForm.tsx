@@ -27,6 +27,7 @@ const UserInfoRegistrationForm = () => {
           name="nickname"
           label="닉네임"
           placeholder="닉네임을 입력해 주세요"
+          statusText="20자 이내의 한글 영어 숫자만 사용 가능합니다."
           essential
           componentType="outlinedText"
         />
