@@ -141,10 +141,10 @@ export const BreedInput = () => {
             if (checked) {
               setGreed("mix");
               setIsMixDog(e.target.checked);
-            } else {
-              setIsMixDog(e.target.checked);
-              setGreed("");
+              return;
             }
+            setIsMixDog(e.target.checked);
+            setGreed("");
           }}
         />
         <label htmlFor="isMixDog" className="btn-3 text-center text-grey-500">
