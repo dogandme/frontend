@@ -12,7 +12,7 @@ const CloseButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
       fullWidth={false}
       {...props}
     >
-      <CloseIcon fill="#616161" />
+      <CloseIcon fill="grey-700" />
     </Button>
   );
 };
