@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { useLastNoneAuthRouteStore } from "@/shared/store/history";
+import { useRouteHistory } from "@/shared/store/history";
 import { ROUTER_PATH } from "@/shared/constants";
 /**
  * 해당 컴포넌트는 / 경로 layout 상단에서 라우팅 경로를 추적합니다.
@@ -8,10 +8,10 @@ import { ROUTER_PATH } from "@/shared/constants";
  */
 export const HistoryTracker = () => {
   const { pathname } = useLocation();
-  const setLastNoneAuthRoute = useLastNoneAuthRouteStore(
+  const setLastNoneAuthRoute = useRouteHistory(
     (state) => state.setLastNoneAuthRoute,
   );
-  // 해당 이펙트는 라우팅 경로가 변경 될 때 마다 useLastNoneAuthRouteStore의 조건에 따라 상태 값을 변경합니다.
+
   useEffect(() => {
     const authPageRouterList: string[] = [
       ROUTER_PATH.LOGIN,
