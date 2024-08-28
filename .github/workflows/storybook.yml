@@ -43,6 +43,9 @@ jobs:
       - name: Install playwright browsers
         run: npx playwright install
 
+      - name: Run Storybook locally
+        run: npm run storybook -- --ci --port 6006
+
       - name: Run interaction tests and save output
         id: test-storybook
         run: npm run test-storybook 2> >(sed 's/\x1b\[[0-9;]*m//g' > test-storybook-output.txt)
@@ -56,11 +59,12 @@ jobs:
           script: |
             const fs = require('fs');
             const output = fs.readFileSync('test-storybook-output.txt', 'utf8');
+            const lines = output.split('\n\n')[1].join('\n');
             const outcome = "${{ steps.test-storybook.outcome }}"; 
             const success = outcome === 'success';
             const comment = success 
-              ? `### ✅ Test-Storybook Results - Success\n\`\`\`\n${output}\n\`\`\`\n🚀 [스토리북 확인하기](https://66bae48876a5167719ee1778-jqrdxsprac.chromatic.com)`
-              : `### ❌ Test-Storybook Results - Failed\n\`\`\`\n${output}\n\`\`\`\n🚀 [스토리북 확인하기](https://66bae48876a5167719ee1778-jqrdxsprac.chromatic.com)`;
+              ? `### ✅ 현재 작업중인 브랜치의 인터렉션 테스트 결과 - 모두 통과했습니다🔥\n\`\`\`\n${output}\n\`\`\`\n`
+              : `### ❌ 현재 작업중인 브랜치의 인터렉션 테스트 결과 - 통과하지 못한 테스트가 있어요!🫠\n\`\`\`\n${output}\n\`\`\`\n`;
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
