@@ -48,12 +48,8 @@ jobs:
 
       - name: Run Storybook and tests concurrently
         run: npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-          "npx http-server storybook-static --port 6006 --silent" \
-          "npx wait-on tcp:6006 && yarn test-storybook"
-
-      - name: Run interaction tests and save output
-        id: test-storybook
-        run: npm run test-storybook 2> >(sed 's/\x1b\[[0-9;]*m//g' > test-storybook-output.txt)
+          "start-storybook -p 6006" \
+          "npx wait-on tcp:6006 && yarn test-storybook 2> >(sed 's/\\x1b\\[[0-9;]*m//g' > test-storybook-output.txt)"
         continue-on-error: true
 
       - name: Kill Storybook server
