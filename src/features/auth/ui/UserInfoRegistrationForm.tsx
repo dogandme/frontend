@@ -1,7 +1,7 @@
-import { AgreementCheckbox } from "@/entities/auth/ui";
+import { AgreementCheckbox, SelectOpener } from "@/entities/auth/ui";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
-import { ArrowDropDownIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";
+import { MapLocationSearchingIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { useState } from "react";
 
@@ -30,29 +30,21 @@ const UserInfoRegistrationForm = () => {
           essential
           componentType="outlinedText"
         />
-        <Input
-          type="text"
+        <SelectOpener
           id="sex"
           name="sex"
           label="성별"
           essential
           // value={"남자"}
-          readOnly
           placeholder="성별을 선택해 주세요"
-          trailingNode={<ArrowDropDownIcon />}
-          componentType="outlinedText"
         />
-        <Input
-          type="text"
+        <SelectOpener
           id="age"
           name="age"
           label="연령대"
           essential
           // value={"10대"}
-          readOnly
           placeholder="연령대를 선택해 주세요"
-          trailingNode={<ArrowDropDownIcon />}
-          componentType="outlinedText"
         />
 
         <div>
