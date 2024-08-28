@@ -1,11 +1,12 @@
-import { HTMLAttributes, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { HTMLAttributes, useCallback, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { NaverIcon, GoogleIcon } from "@/entities/auth/assets";
 import { EmailIcon } from "@/shared/ui/icon";
+import { useRouteHistoryStore } from "@/shared/store/history";
 import { useAuthStore } from "@/shared/store/auth";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useOauthLogin } from "../api";
-import type { OAuthServerName } from "../api";
+import type { LoginResponse, OAuthServerName } from "../api";
 
 /* ----------------------------------컴포넌트 내부에서만 사용되는 컴포넌트------------------------------- */
 const hyperLinkColorMap = {
@@ -53,19 +54,38 @@ export const OAuthLoginHyperLinks = () => {
   const [OAuthServerName, setOAuthServerName] =
     useState<OAuthServerName | null>(null);
 
-  const setToken = useAuthStore((state) => state.setToken);
+  const navigate = useNavigate();
+
+  const setAuthorization = useAuthStore((state) => state.setAuthorization);
   const setRole = useAuthStore((state) => state.setRole);
+  const setUserId = useAuthStore((state) => state.setUserId);
 
   const { data: authResponse } = useOauthLogin(OAuthServerName);
 
-  useEffect(() => {
-    if (authResponse) {
-      const { token, role } = authResponse.content;
-
-      setToken(token);
+  const handleAuthResponse = useCallback(
+    (authResponse: LoginResponse) => {
+      const { authorization, role, userId } = authResponse.content;
+      setAuthorization(authorization);
       setRole(role);
+      setUserId(userId);
+
+      if (role === "ROLE_NONE") {
+        navigate(ROUTER_PATH.SIGN_UP);
+        return;
+      }
+
+      const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
+      navigate(lastNoneAuthRoute);
+    },
+    [navigate, setAuthorization, setRole, setUserId],
+  );
+
+  useEffect(() => {
+    if (!authResponse) {
+      return;
     }
-  }, [authResponse, setToken, setRole]);
+    handleAuthResponse(authResponse);
+  }, [authResponse, handleAuthResponse]);
 
   return (
     <>

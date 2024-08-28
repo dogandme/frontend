@@ -1,16 +1,17 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { LOGIN_END_POINT } from "../constants";
 
-interface LoginResponse {
+export interface LoginResponse {
   code: number;
   message: string;
   content: {
-    token: string;
+    authorization: string;
     role: string;
+    userId: number;
   };
 }
 
-export type OAuthServerName = "GOOGLE" | "NAVER";
+export type OAuthServerName = Exclude<keyof typeof LOGIN_END_POINT, "EMAIL">;
 
 /**
  * 해당 훅은 OAuthServerName이 주어지면 해당 OAuthServer로 로그인을 시도합니다.
@@ -19,18 +20,11 @@ export type OAuthServerName = "GOOGLE" | "NAVER";
 export const useOauthLogin = (OAuthServerName: OAuthServerName | null) => {
   const isOauthLoginEnabled = OAuthServerName !== null;
 
-  // OauthLogin을 사용 할 수 없는 경우엔 EndPoint는 false
-  const END_POINT = isOauthLoginEnabled && LOGIN_END_POINT[OAuthServerName];
-
-  // TODO 리액트 쿼리를 활용하여 최적화 하기
   const query = useQuery<LoginResponse>({
     queryKey: ["OAuthLogin", OAuthServerName],
-    // TODO fetch 함수 커스텀 라이브러리로 분리하기
     queryFn: async () => {
-      if (!END_POINT) {
-        return;
-      }
-
+      // 컴파일러에게 OAuthServerName이 null이 아님을 알려줍니다.
+      const END_POINT = LOGIN_END_POINT[OAuthServerName!];
       const response = await fetch(END_POINT);
       if (!response.ok) {
         // TODO 에러 메시지 픽스하기
