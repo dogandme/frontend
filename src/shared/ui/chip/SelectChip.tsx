@@ -13,13 +13,12 @@ export const SelectChip = ({
   label,
   ...rest
 }: SelectChipProps) => {
-  // 제어 컴포넌트의 경우에는 unControlledIsSelected를 사용하지 않음을 명확히 하기 위해 상태를 null로 초기화 합니다.
-  const [unControlledIsSelected, setIsUnControlledIsSelected] = useState<
-    boolean | null
-  >(() => controlledIsSelected || null);
+  const [unControlledIsSelected, setIsUnControlledIsSelected] = useState(false);
+
+  // 제어컴포넌트와 비제어컴포넌트를 구분하는 boolean 변수를 선언합니다.
+  const isUncontrolled = typeof controlledIsSelected === "undefined";
 
   // 제어 컴포넌트와 비제어컴포넌트의 경우를 구분하여 내부에서 스타일에 사용할 state인 chipState를 결정합니다.
-  const isUncontrolled = typeof controlledIsSelected === "undefined";
   const chipState = isUncontrolled
     ? unControlledIsSelected
       ? "selected"
