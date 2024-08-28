@@ -46,6 +46,9 @@ jobs:
       - name: Run Storybook locally
         run: npm run storybook -- --ci --port 6006
 
+      - name: Wait for Storybook to start
+        run: npx wait-on http://localhost:6006
+
       - name: Run interaction tests and save output
         id: test-storybook
         run: npm run test-storybook 2> >(sed 's/\x1b\[[0-9;]*m//g' > test-storybook-output.txt)
