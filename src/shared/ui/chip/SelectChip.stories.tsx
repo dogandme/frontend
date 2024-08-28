@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { SelectChip } from "./SelectChip";
-import { expect, userEvent, within } from "@storybook/test";
+import { userEvent, within } from "@storybook/test";
 import { useState } from "react";
 
 const meta: Meta<typeof SelectChip> = {
