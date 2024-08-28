@@ -69,7 +69,7 @@ export const ProfileInput = () => {
       <input
         type="file"
         accept="image/*"
-        className="visually-hidden"
+        className="sr-only"
         ref={inputRef}
         onChange={handleFileChange}
       />

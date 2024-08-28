@@ -89,17 +89,3 @@ textarea {
 .icon-in-button svg {
   fill: currentColor;
 }
-
-/* 스크린 리더기 사용자를 위한 visually-hidden class 
-  시각적으로 숨겨지지만 스크린 리더기 사용자에게는 읽히는 태그를 위한 스타일
-*/
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
