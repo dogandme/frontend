@@ -42,6 +42,9 @@ jobs:
       - name: Install playwright browsers
         run: npx playwright install
 
+      - name: Kill any process using port 6006
+        run: npx kill-port 6006
+
       - name: Run Storybook locally
         run: npm run storybook -- --ci --port 6006
 
@@ -68,8 +71,8 @@ jobs:
             const outcome = "${{ steps.test-storybook.outcome }}"; 
             const success = outcome === 'success';
             const comment = success 
-              ? `### ✅ 현재 작업중인 브랜치의 인터렉션 테스트 결과 - 모두 통과했습니다🔥\n\`\`\`\n${output}\n\`\`\`\n`
-              : `### ❌ 현재 작업중인 브랜치의 인터렉션 테스트 결과 - 통과하지 못한 테스트가 있어요!🫠\n\`\`\`\n${output}\n\`\`\`\n`;
+              ? `### ✅ 현재 작업중인 브랜치의 스토리북 인터렉션 테스트 결과 - 모두 통과했습니다🔥\n\`\`\`\n${output}\n\`\`\`\n`
+              : `### ❌ 현재 작업중인 브랜치의 스토리북 인터렉션 테스트 결과 - 통과하지 못한 테스트가 있어요!🫠\n\`\`\`\n${output}\n\`\`\`\n`;
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
