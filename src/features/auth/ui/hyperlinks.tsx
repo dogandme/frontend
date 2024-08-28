@@ -60,7 +60,7 @@ export const OAuthLoginHyperLinks = () => {
   const setRole = useAuthStore((state) => state.setRole);
   const setUserId = useAuthStore((state) => state.setUserId);
 
-  const { data: authResponse } = useOauthLogin(OAuthServerName);
+  const { data: authResponse, error } = useOauthLogin(OAuthServerName);
 
   const handleAuthResponse = useCallback(
     (authResponse: LoginResponse) => {
@@ -86,6 +86,14 @@ export const OAuthLoginHyperLinks = () => {
     }
     handleAuthResponse(authResponse);
   }, [authResponse, handleAuthResponse]);
+
+  useEffect(() => {
+    if (error instanceof Error) {
+      // TODO 모달로 변경하기
+      alert(error.message);
+    }
+    console.error(error);
+  }, [error]);
 
   return (
     <>
