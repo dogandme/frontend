@@ -106,4 +106,4 @@ export const ROUTER_PATH = {
   SIGN_UP: "/sign-up",
   SIGN_UP_USER_INFO: "/sign-up/user-info",
   SIGN_UP_PET_INFO: "/sign-up/pet-info",
-};
+} as const;

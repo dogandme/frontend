@@ -1,5 +1,4 @@
 import { create } from "zustand";
-
 type AuthStore = {
   token: string;
   role: string;
