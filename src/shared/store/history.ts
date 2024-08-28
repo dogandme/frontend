@@ -10,7 +10,7 @@ interface RouteHistoryStore {
  * @param lastNoneAuthRoute - 인증이 필요한 페이지로 이동하기 전 마지막 경로
  * @param setLastNoneAuthRoute - 인증이 필요한 페이지로 이동하기 전 마지막 경로를 변경합니다.
  */
-export const useRouteHistory = create<RouteHistoryStore>((set) => ({
+export const useRouteHistoryStore = create<RouteHistoryStore>((set) => ({
   lastNoneAuthRoute: "/",
   setLastNoneAuthRoute: (newRoute: string) =>
     set({ lastNoneAuthRoute: newRoute }),

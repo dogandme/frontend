@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { useRouteHistory } from "@/shared/store/history";
+import { useRouteHistoryStore } from "@/shared/store/history";
 import { ROUTER_PATH } from "@/shared/constants";
 /**
  * 해당 컴포넌트는 / 경로 layout 상단에서 라우팅 경로를 추적합니다.
@@ -8,7 +8,7 @@ import { ROUTER_PATH } from "@/shared/constants";
  */
 export const HistoryTracker = () => {
   const { pathname } = useLocation();
-  const setLastNoneAuthRoute = useRouteHistory(
+  const setLastNoneAuthRoute = useRouteHistoryStore(
     (state) => state.setLastNoneAuthRoute,
   );
 
