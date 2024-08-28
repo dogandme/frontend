@@ -1,26 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { BackwardNavigationBar } from "@/widgets/navigationbar/ui";
 import { OAuthLoginHyperLinks, EmailLoginHyperLink } from "@/features/auth/ui";
-import { useLoginProcessStore } from "@/shared/store/auth";
-import { useEffect } from "react";
-import { ROUTER_PATH } from "@/shared/constants";
 
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  const popProcess = useLoginProcessStore((state) => state.popProcess);
-  const pushProcess = useLoginProcessStore((state) => state.pushProcess);
-
   // 이전 경로로 이동하면 로그인 프로세스에서 현재 경로 제거
   const handleBackward = () => {
-    popProcess();
     navigate(-1);
   };
-
-  // Login Page에 진입하면 로그인 프로세스에 현재 경로 추가
-  useEffect(() => {
-    pushProcess(ROUTER_PATH.LOGIN);
-  }, []);
 
   return (
     <>
