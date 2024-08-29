@@ -5,7 +5,7 @@ export interface LoginResponse {
   code: number;
   message: string;
   content: {
-    authorization: string;
+    token: string;
     role: string;
     userId: number;
   };

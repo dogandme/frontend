@@ -56,7 +56,7 @@ export const OAuthLoginHyperLinks = () => {
 
   const navigate = useNavigate();
 
-  const setAuthorization = useAuthStore((state) => state.setAuthorization);
+  const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
   const setUserId = useAuthStore((state) => state.setUserId);
 
@@ -64,8 +64,8 @@ export const OAuthLoginHyperLinks = () => {
 
   const handleAuthResponse = useCallback(
     (authResponse: LoginResponse) => {
-      const { authorization, role, userId } = authResponse.content;
-      setAuthorization(authorization);
+      const { token, role, userId } = authResponse.content;
+      setToken(token);
       setRole(role);
       setUserId(userId);
 
@@ -77,7 +77,7 @@ export const OAuthLoginHyperLinks = () => {
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
       navigate(lastNoneAuthRoute);
     },
-    [navigate, setAuthorization, setRole, setUserId],
+    [navigate, setToken, setRole, setUserId],
   );
 
   useEffect(() => {

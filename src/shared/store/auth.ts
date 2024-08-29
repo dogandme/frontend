@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
 type AuthStore = {
-  authorization: string;
+  token: string;
   role: string;
   userId: number;
 
-  setAuthorization: (token: string) => void;
+  setToken: (token: string) => void;
   setRole: (role: string) => void;
   setUserId: (userId: number) => void;
 };
@@ -16,11 +16,11 @@ type AuthStore = {
  * role은 사용자의 권한을 나타냅니다.
  */
 export const useAuthStore = create<AuthStore>((set) => ({
-  authorization: "",
+  token: "",
   role: "",
   userId: 0,
 
-  setAuthorization: (authorization: string) => set({ authorization }),
+  setToken: (token: string) => set({ token }),
   setRole: (role: string) => set({ role }),
   setUserId: (userId: number) => set({ userId }),
 }));
