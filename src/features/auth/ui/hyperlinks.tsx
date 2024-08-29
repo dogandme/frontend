@@ -5,7 +5,7 @@ import { EmailIcon } from "@/shared/ui/icon";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { useAuthStore } from "@/shared/store/auth";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useOauthLogin } from "../api";
+import { useGetOauthLogin } from "../api";
 import type { LoginResponse, OAuthServerName } from "../api";
 
 /* ----------------------------------컴포넌트 내부에서만 사용되는 컴포넌트------------------------------- */
@@ -59,15 +59,17 @@ export const OAuthLoginHyperLinks = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
   const setUserId = useAuthStore((state) => state.setUserId);
+  const setNickname = useAuthStore((state) => state.setNickname);
 
-  const { data: authResponse, error } = useOauthLogin(OAuthServerName);
+  const { data: authResponse, error } = useGetOauthLogin(OAuthServerName);
 
   const handleAuthResponse = useCallback(
     (authResponse: LoginResponse) => {
-      const { token, role, userId } = authResponse.content;
-      setToken(token);
+      const { authorization, role, userId, nickname } = authResponse.content;
+      setToken(authorization);
       setRole(role);
       setUserId(userId);
+      setNickname(nickname);
 
       if (role === "ROLE_NONE") {
         navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
@@ -77,7 +79,7 @@ export const OAuthLoginHyperLinks = () => {
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
       navigate(lastNoneAuthRoute);
     },
-    [navigate, setToken, setRole, setUserId],
+    [navigate, setToken, setRole, setUserId, setNickname],
   );
 
   useEffect(() => {

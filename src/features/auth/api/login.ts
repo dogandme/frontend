@@ -7,7 +7,8 @@ export interface LoginResponse {
   content: {
     authorization: string;
     role: string;
-    userId: number;
+    userId: number | null;
+    nickname: string | null;
   };
 }
 
