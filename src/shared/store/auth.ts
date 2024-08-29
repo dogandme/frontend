@@ -2,8 +2,10 @@ import { create } from "zustand";
 type AuthStore = {
   token: string;
   role: string;
+  userId: number | null;
   setToken: (token: string) => void;
   setRole: (role: string) => void;
+  setUserId: (userId: number) => void;
 };
 
 /**
@@ -14,6 +16,8 @@ type AuthStore = {
 export const useAuthStore = create<AuthStore>((set) => ({
   token: "",
   role: "",
+  userId: null,
   setToken: (token: string) => set({ token }),
   setRole: (role: string) => set({ role }),
+  setUserId: (userId: number) => set({ userId }),
 }));

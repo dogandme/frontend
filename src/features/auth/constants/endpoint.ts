@@ -4,3 +4,7 @@ export const LOGIN_END_POINT = {
   NAVER: "http://localhost:80/oauth2/authorization/naver",
   EMAIL: "http://localhost:80/login",
 };
+
+export const SIGN_UP_END_POINT = {
+  EMAIL: "http://localhost:80/users",
+};
