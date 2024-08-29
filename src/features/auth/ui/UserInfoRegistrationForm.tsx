@@ -6,7 +6,8 @@ import { Input } from "@/shared/ui/input";
 import { useState } from "react";
 
 const UserInfoRegistrationForm = () => {
-  // todo: 리팩토링 필요
+  // todo: input 상태 리팩토링 필요
+  const [nickname, setNickname] = useState<string>("");
   const [checkedItems, setCheckedItems] = useState<boolean[]>([
     false,
     false,
@@ -17,6 +18,18 @@ const UserInfoRegistrationForm = () => {
   const allChecked = checkedItems.every(Boolean);
   // 전체 선택되어 있지 않고 하나 이상 선택되어 있는 경우
   const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
+
+  // nickname 제한
+  // 20자 이내의 한글 영어 숫자만 사용 가능합니다.
+  // 특수문자 입력 x
+  // 공백 입력 x
+
+  const validateNickname = (nickName: string) => {
+    const regExp = /^[a-zA-Z0-9ㄱ-ㅎ가-힣]{1,20}$/;
+    return regExp.test(nickName);
+  };
+
+  const isValidNickname = validateNickname(nickname);
 
   return (
     <form className="flex flex-col gap-8 self-stretch">
@@ -30,6 +43,9 @@ const UserInfoRegistrationForm = () => {
           statusText="20자 이내의 한글 영어 숫자만 사용 가능합니다."
           essential
           componentType="outlinedText"
+          isError={!isValidNickname && nickname.length > 0}
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
         />
         <SelectOpener
           id="sex"
