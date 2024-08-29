@@ -17,6 +17,7 @@ const SignUpByEmailForm = () => {
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
+  const setUserId = useAuthStore((state) => state.setUserId);
 
   const {
     form,
@@ -60,10 +61,11 @@ const SignUpByEmailForm = () => {
       { email, password },
       {
         onSuccess: ({ content }) => {
-          const { authorization, role } = content;
+          const { authorization, role, userId } = content;
 
           setToken(authorization);
           setRole(role);
+          setUserId(userId);
 
           navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
         },
