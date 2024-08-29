@@ -29,8 +29,8 @@ const LoginForm = () => {
           { email, password, persistLogin },
           {
             onSuccess: (data) => {
-              const { token, role } = data.content;
-              setToken(token);
+              const { authorization, role } = data.content;
+              setToken(authorization);
               setRole(role);
               // TODO 리다이렉션하기
             },

@@ -5,7 +5,7 @@ export interface LoginResponse {
   code: number;
   message: string;
   content: {
-    token: string;
+    authorization: string;
     role: string;
     userId: number;
   };
@@ -17,7 +17,7 @@ export type OAuthServerName = Exclude<keyof typeof LOGIN_END_POINT, "EMAIL">;
  * 해당 훅은 OAuthServerName이 주어지면 해당 OAuthServer로 로그인을 시도합니다.
  * 만약 OAuthServerName이 null일 경우엔 로그인을 시도하지 않습니다.
  */
-export const useOauthLogin = (OAuthServerName: OAuthServerName | null) => {
+export const useGetOauthLogin = (OAuthServerName: OAuthServerName | null) => {
   const isOauthLoginEnabled = OAuthServerName !== null;
 
   const query = useQuery<LoginResponse>({
@@ -57,7 +57,7 @@ export const usePostLoginForm = () => {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      const data: LoginResponse = await response.json();
 
       if (!response.ok) {
         throw new Error("문제가 발생했습니다. 잠시 후 다시 이용해주세요");
