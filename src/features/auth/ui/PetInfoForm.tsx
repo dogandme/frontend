@@ -93,6 +93,15 @@ export const NameInput = () => {
 
   const MAX_LENGTH = 20;
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    // 한글,영문,숫자가 아닌 경우 true 를 반환하는 정규식
+    const regex = /[^가-힣a-zA-Z0-9ㄱ-ㅎ\s]/g;
+    const filteredName = value.replace(regex, "");
+    setName(filteredName);
+    setIsValidName(filteredName);
+  };
+
   return (
     <Input
       componentType="outlinedText"
@@ -102,11 +111,7 @@ export const NameInput = () => {
       maxLength={MAX_LENGTH}
       trailingNode={<TextCounter text={name} maxLength={MAX_LENGTH} />}
       value={name}
-      onChange={(e) => {
-        const { value } = e.target;
-        setName(value);
-        setIsValidName(value);
-      }}
+      onChange={handleChange}
       isError={!isNameEmpty && !isValidName}
       statusText="20자 이내의 한글 영문의 이름을 입력해 주세요"
       essential
