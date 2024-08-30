@@ -1,7 +1,7 @@
 import { InputHTMLAttributes, ReactNode, useEffect, useRef } from "react";
 import { CheckboxIcon, CheckboxOutlineIcon, IndeterminateIcon } from "../icon";
 
-type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & {
+export type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & {
   isIndeterminate?: boolean;
   children: ReactNode;
   gap?: string;
@@ -31,7 +31,7 @@ const colors = {
   },
 };
 
-const Checkbox = ({
+export const Checkbox = ({
   id,
   checked,
   isIndeterminate = false,
@@ -92,5 +92,3 @@ const Checkbox = ({
     </label>
   );
 };
-
-export default Checkbox;
