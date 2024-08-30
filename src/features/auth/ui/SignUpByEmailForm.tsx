@@ -3,10 +3,21 @@ import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { useSignUpByEmailForm } from "../model";
+import { usePostSignUpByEmail } from "../api";
+import { useAuthStore } from "@/shared/store/auth";
+import { useNavigate } from "react-router-dom";
+import { ROUTER_PATH } from "@/shared/constants";
 
 const SignUpByEmailForm = () => {
+  const navigate = useNavigate();
+
   const [isFocusedEmailInput, setIsFocusedEmailInput] =
     useState<boolean>(false);
+
+  const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
+  const setToken = useAuthStore((state) => state.setToken);
+  const setRole = useAuthStore((state) => state.setRole);
+  const setUserId = useAuthStore((state) => state.setUserId);
 
   const {
     form,
@@ -35,8 +46,39 @@ const SignUpByEmailForm = () => {
     else passwordConfirmStatusText = "비밀번호가 서로 일치하지 않습니다";
   }
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const canSignUp = isValidEmail && isValidPassword && isPasswordMatched;
+
+    if (!canSignUp) {
+      // todo: snackbar 띄우기
+      alert("이메일과 비밀번호를 모두 입력해 주세요");
+      return;
+    }
+
+    postSignUpByEmail(
+      { email, password },
+      {
+        onSuccess: ({ content }) => {
+          const { authorization, role, userId } = content;
+
+          setToken(authorization);
+          setRole(role);
+          setUserId(userId);
+
+          navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
+        },
+        onError: (error) => {
+          // todo: snackbar 띄우기
+          alert(error.message);
+        },
+      },
+    );
+  };
+
   return (
-    <form className="flex flex-col gap-8 self-stretch">
+    <form className="flex flex-col gap-8 self-stretch" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
         <div>
           <div className="flex items-end justify-between gap-2">
