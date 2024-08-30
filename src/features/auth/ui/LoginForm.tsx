@@ -20,32 +20,28 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
  * 폼에서 email,  에러 상태 , 상태 메시지 상태를 변경 시킵니다.
  */
 export const Email = () => {
-  const isEmailNotValidate = useLoginFormStore(
-    (state) => state.isNotValidEmail,
-  );
+  const isValidEmail = useLoginFormStore((state) => state.isValidEmail);
   const statusText = useLoginFormStore((state) => state.statusText);
 
   const setEmail = useLoginFormStore((state) => state.setEmail);
   const setStatusText = useLoginFormStore((state) => state.setStatusText);
-  const setIsNotValidEmail = useLoginFormStore(
-    (state) => state.setIsNotValidEmail,
-  );
+  const setIsValidEmail = useLoginFormStore((state) => state.setIsValidEmail);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: email } = e.currentTarget;
-    const isEmailNotValidate = !new RegExp(
+    const isValidEmail = !new RegExp(
       "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
     ).test(email);
     const isEmailEmpty = email.length === 0;
     const statusText = isEmailEmpty
       ? "이메일 형식으로 입력해 주세요"
-      : isEmailNotValidate
+      : isValidEmail
         ? "올바른 이메일 형식으로 입력해 주세요"
         : "";
 
     setEmail(email);
     setStatusText(statusText);
-    setIsNotValidEmail(!isEmailEmpty && isEmailNotValidate);
+    setIsValidEmail(isEmailEmpty && isValidEmail);
   };
 
   return (
@@ -55,7 +51,7 @@ export const Email = () => {
       label="이메일"
       fullWidth
       onChange={handleChange}
-      isError={isEmailNotValidate}
+      isError={!isValidEmail}
       statusText={statusText}
     />
   );
@@ -112,12 +108,12 @@ export const SubmitButton = () => {
   const setNickname = useAuthStore((state) => state.setNickname);
 
   const handleSubmit = () => {
-    const { email, password, isNotValidEmail, persistLogin } =
+    const { email, password, isValidEmail, persistLogin } =
       useLoginFormStore.getState();
     const isEmailEmpty = email.length === 0;
     const isPasswordEmpty = password.length === 0;
 
-    if (isEmailEmpty || isPasswordEmpty || isNotValidEmail) {
+    if (isEmailEmpty || isPasswordEmpty || isValidEmail) {
       // TODO : alert 창 모달로 변경하기
       alert("아이디 또는 비밀번호를 모두 입력해 주세요");
       // TODO : 유효성을 만족하지 않는 경우의 메시지를 디자이너와 상담하여 생성하기
