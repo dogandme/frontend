@@ -8,7 +8,12 @@ const EmailLoginPage = () => {
       <h1 className="headline-3 self-stretch text-ellipsis text-center text-grey-900">
         이메일로 로그인
       </h1>
-      <LoginForm />
+      <LoginForm.Form>
+        <LoginForm.Email />
+        <LoginForm.Password />
+        <LoginForm.PersistLogin />
+        <LoginForm.SubmitButton />
+      </LoginForm.Form>
       <div className="flex flex-col items-center justify-center self-stretch">
         <p className="flex items-center justify-center self-stretch">
           <span className="title-3 text-center text-grey-500">

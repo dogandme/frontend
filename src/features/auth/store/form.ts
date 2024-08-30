@@ -50,3 +50,32 @@ export const usePetInfoStore = create<PetInfoStore>((set) => ({
     }),
   setIntroduce: (introduce: string) => set({ introduce }),
 }));
+
+interface LoginFormStore {
+  email: string;
+  password: string;
+  persistLogin: boolean;
+  isEmailNotValidate: boolean;
+  statusText: string;
+
+  setEmail: (email: string) => void;
+  setPassword: (password: string) => void;
+  setPersistLogin: (persistLogin: boolean) => void;
+  setIsEmailNotValidate: (isEmailValidate: boolean) => void;
+  setStatusText: (statusText: string) => void;
+}
+
+export const useLoginFormStore = create<LoginFormStore>((set) => ({
+  email: "",
+  password: "",
+  persistLogin: false,
+  isEmailNotValidate: false,
+  statusText: "",
+
+  setEmail: (email: string) => set({ email }),
+  setPassword: (password: string) => set({ password }),
+  setPersistLogin: (persistLogin: boolean) => set({ persistLogin }),
+  setIsEmailNotValidate: (isEmailNotValidate: boolean) =>
+    set({ isEmailNotValidate }),
+  setStatusText: (statusText: string) => set({ statusText }),
+}));
