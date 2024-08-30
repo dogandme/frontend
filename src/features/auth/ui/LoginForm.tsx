@@ -41,7 +41,7 @@ export const Email = () => {
 
     setEmail(email);
     setStatusText(statusText);
-    setIsValidEmail(isEmailEmpty && isValidEmail);
+    setIsValidEmail(isEmailEmpty || isValidEmail);
   };
 
   return (
