@@ -29,15 +29,15 @@ export const Email = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: email } = e.currentTarget;
-    const isValidEmail = !new RegExp(
+    const isValidEmail = new RegExp(
       "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
     ).test(email);
     const isEmailEmpty = email.length === 0;
     const statusText = isEmailEmpty
       ? "이메일 형식으로 입력해 주세요"
       : isValidEmail
-        ? "올바른 이메일 형식으로 입력해 주세요"
-        : "";
+        ? ""
+        : "올바른 이메일 형식으로 입력해 주세요";
 
     setEmail(email);
     setStatusText(statusText);
@@ -113,7 +113,7 @@ export const SubmitButton = () => {
     const isEmailEmpty = email.length === 0;
     const isPasswordEmpty = password.length === 0;
 
-    if (isEmailEmpty || isPasswordEmpty || isValidEmail) {
+    if (isEmailEmpty || isPasswordEmpty || !isValidEmail) {
       // TODO : alert 창 모달로 변경하기
       alert("아이디 또는 비밀번호를 모두 입력해 주세요");
       // TODO : 유효성을 만족하지 않는 경우의 메시지를 디자이너와 상담하여 생성하기
