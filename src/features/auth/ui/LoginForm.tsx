@@ -48,15 +48,6 @@ export const Email = () => {
     setIsEmailNotValidate(!isEmailEmpty && isEmailNotValidate);
   };
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    const { value } = e.currentTarget;
-    const isEmailEmpty = value.length === 0;
-    if (!isEmailEmpty) {
-      return;
-    }
-    setStatusText("이메일 형식으로 입력해 주세요");
-  };
-
   return (
     <EmailInput
       id="email"
@@ -64,7 +55,6 @@ export const Email = () => {
       label="이메일"
       fullWidth
       onChange={handleChange}
-      onFocus={handleFocus}
       isError={isEmailNotValidate}
       statusText={statusText}
     />

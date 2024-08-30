@@ -70,7 +70,7 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
   password: "",
   persistLogin: false,
   isEmailNotValidate: false,
-  statusText: "",
+  statusText: "이메일 형식으로 입력해 주세요",
 
   setEmail: (email: string) => set({ email }),
   setPassword: (password: string) => set({ password }),
