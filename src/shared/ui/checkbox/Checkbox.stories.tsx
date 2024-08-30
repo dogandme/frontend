@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import Checkbox from "./Checkbox";
+import { Checkbox } from "./Checkbox";
 import { useState } from "react";
 import { expect, userEvent, within } from "@storybook/test";
 

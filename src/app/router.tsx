@@ -5,6 +5,7 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { SignUpPage } from "@/pages/sign-up";
 import { EmailLoginPage } from "@/pages/login/email";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
+import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 
 export const router = createBrowserRouter([
   {
@@ -45,7 +46,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "user-info",
-            element: <div>user-info</div>,
+            element: <UserInfoRegistrationPage />,
           },
           {
             path: ROUTER_PATH.SIGN_UP_PET_INFO,
