@@ -55,13 +55,13 @@ interface LoginFormStore {
   email: string;
   password: string;
   persistLogin: boolean;
-  isEmailNotValidate: boolean;
+  isNotValidEmail: boolean;
   statusText: string;
 
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   setPersistLogin: (persistLogin: boolean) => void;
-  setIsEmailNotValidate: (isEmailValidate: boolean) => void;
+  setIsNotValidEmail: (isEmailValidate: boolean) => void;
   setStatusText: (statusText: string) => void;
 }
 
@@ -69,13 +69,12 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
   email: "",
   password: "",
   persistLogin: false,
-  isEmailNotValidate: false,
+  isNotValidEmail: false,
   statusText: "이메일 형식으로 입력해 주세요",
 
   setEmail: (email: string) => set({ email }),
   setPassword: (password: string) => set({ password }),
   setPersistLogin: (persistLogin: boolean) => set({ persistLogin }),
-  setIsEmailNotValidate: (isEmailNotValidate: boolean) =>
-    set({ isEmailNotValidate }),
+  setIsNotValidEmail: (isNotValidEmail: boolean) => set({ isNotValidEmail }),
   setStatusText: (statusText: string) => set({ statusText }),
 }));

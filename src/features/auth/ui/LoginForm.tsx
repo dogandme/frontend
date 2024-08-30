@@ -21,14 +21,14 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
  */
 export const Email = () => {
   const isEmailNotValidate = useLoginFormStore(
-    (state) => state.isEmailNotValidate,
+    (state) => state.isNotValidEmail,
   );
   const statusText = useLoginFormStore((state) => state.statusText);
 
   const setEmail = useLoginFormStore((state) => state.setEmail);
   const setStatusText = useLoginFormStore((state) => state.setStatusText);
-  const setIsEmailNotValidate = useLoginFormStore(
-    (state) => state.setIsEmailNotValidate,
+  const setIsNotValidEmail = useLoginFormStore(
+    (state) => state.setIsNotValidEmail,
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +45,7 @@ export const Email = () => {
 
     setEmail(email);
     setStatusText(statusText);
-    setIsEmailNotValidate(!isEmailEmpty && isEmailNotValidate);
+    setIsNotValidEmail(!isEmailEmpty && isEmailNotValidate);
   };
 
   return (
@@ -112,12 +112,12 @@ export const SubmitButton = () => {
   const setNickname = useAuthStore((state) => state.setNickname);
 
   const handleSubmit = () => {
-    const { email, password, isEmailNotValidate, persistLogin } =
+    const { email, password, isNotValidEmail, persistLogin } =
       useLoginFormStore.getState();
     const isEmailEmpty = email.length === 0;
     const isPasswordEmpty = password.length === 0;
 
-    if (isEmailEmpty || isPasswordEmpty || isEmailNotValidate) {
+    if (isEmailEmpty || isPasswordEmpty || isNotValidEmail) {
       // TODO : alert 창 모달로 변경하기
       alert("아이디 또는 비밀번호를 모두 입력해 주세요");
       // TODO : 유효성을 만족하지 않는 경우의 메시지를 디자이너와 상담하여 생성하기
