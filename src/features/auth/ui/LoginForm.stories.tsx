@@ -117,7 +117,7 @@ const ApiTestComponent = () => {
   );
 };
 
-export const APITest: StoryObj<typeof LoginForm> = {
+export const APISuccessTest: StoryObj<typeof LoginForm> = {
   decorators: (Story) => {
     // 스토리 시작 전 스토어 초기화
     useAuthStore.setState({
@@ -178,6 +178,80 @@ export const APITest: StoryObj<typeof LoginForm> = {
       expect($role).toHaveTextContent("USER_USER");
       expect($nickname).toHaveTextContent("뽀송이");
       expect($userId).toHaveTextContent("1234");
+    });
+  },
+};
+
+export const APIFailedTest: StoryObj<typeof LoginForm> = {
+  decorators: (Story) => {
+    // 스토리 시작 전 스토어 초기화
+    useAuthStore.setState({
+      token: null,
+      role: null,
+      nickname: null,
+      userId: null,
+    });
+    return <Story />;
+  },
+  render: () => <ApiTestComponent />,
+  parameters: {
+    msw: {
+      handlers: [
+        http.post("http://localhost/login", () => {
+          return HttpResponse.json({
+            code: 401,
+            message: "아이디 또는 비밀번호를 다시 확인해 주세요",
+            content: {
+              authorization: null,
+              role: null,
+              nickname: null,
+              userId: null,
+            },
+          });
+        }),
+      ],
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const $input = canvas.getByLabelText("이메일-input");
+    const $password = canvas.getByLabelText("비밀번호-input");
+    const $submit = await canvas.getByRole("submit", {
+      name: "login-submit-button",
+    });
+
+    const $token = canvas.getByTestId("token");
+    const $role = canvas.getByTestId("role");
+    const $nickname = canvas.getByTestId("nickname");
+    const $userId = canvas.getByTestId("userid");
+
+    await step("API 요청이 일어나기 전까지 토큰은 존재하지 않는다.", () => {
+      expect($token).toHaveTextContent("");
+      expect($role).toHaveTextContent("");
+      expect($nickname).toHaveTextContent("");
+      expect($userId).toHaveTextContent("");
+    });
+
+    await step("API 요청이 실패한 경우엔 상태가 변경되지 않는다.", async () => {
+      // window.alert 목업하기
+      const originalAlert = window.alert;
+      let alertMessage;
+      window.alert = (message) => {
+        alertMessage = message;
+      };
+
+      await userEvent.type($input, "abcd123@naver.com");
+      await userEvent.type($password, "password");
+      await userEvent.click($submit);
+      // 목업된 API 데이터를 받기 위한 딜레이 설정
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      expect($token).toHaveTextContent("");
+      expect($role).toHaveTextContent("");
+      expect($nickname).toHaveTextContent("");
+      expect($userId).toHaveTextContent("");
+      expect(alertMessage).toEqual("아이디 또는 비밀번호를 다시 확인해 주세요");
+      window.alert = originalAlert;
     });
   },
 };
