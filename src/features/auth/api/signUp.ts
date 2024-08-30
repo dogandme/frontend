@@ -46,3 +46,58 @@ export const usePostSignUpByEmail = () => {
     mutationFn: postSignUpByEmail,
   });
 };
+
+interface UserInfoRegistrationRequest {
+  token: string;
+  userId: number;
+  nickname: string;
+  gender: "FEMALE" | "MALE";
+  age: number;
+  region: string;
+  marketingYn: boolean;
+}
+
+interface UserInfoRegistrationResponse {
+  code: number;
+  message: string;
+  content: {
+    role: string;
+    nickname: string;
+  };
+}
+
+const putUserInfoRegister = async ({
+  token,
+  userId,
+  ...userInfo
+}: UserInfoRegistrationRequest) => {
+  const response = await fetch(SIGN_UP_END_POINT.USER_INFO(userId), {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(userInfo),
+  });
+
+  const data: UserInfoRegistrationResponse = await response.json();
+
+  // todo: 예외처리 구체화하기
+  if (!response.ok) {
+    const { message } = data;
+
+    throw new Error(message);
+  }
+
+  return data;
+};
+
+export const usePutUserInfoRegistration = () => {
+  return useMutation<
+    UserInfoRegistrationResponse,
+    Error,
+    UserInfoRegistrationRequest
+  >({
+    mutationFn: putUserInfoRegister,
+  });
+};
