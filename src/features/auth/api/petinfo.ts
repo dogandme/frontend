@@ -13,14 +13,22 @@ interface PetInfoFormData {
   name: string;
   personalities: string[];
   description: string;
-  profile: File;
+  profile: File | null;
 }
 
 const postPetInfo = async (formObject: PetInfoFormData) => {
   const { userId, name, personalities, description, profile } = formObject;
 
   const formData = new FormData();
-  formData.append("profile", profile, `${name}-profile`);
+
+  // 이미지 파일은 파일 이름과 확장자를 붙혀 보내야 합니다.
+  if (profile) {
+    const profileExtension = profile.type.split("/")[1];
+    formData.append("profile", profile, `${name}-profile.${profileExtension}`);
+  } else {
+    formData.append("profile", "");
+  }
+
   formData.append("userid", userId.toString());
   formData.append("name", name);
   formData.append("personalities", JSON.stringify(personalities));
