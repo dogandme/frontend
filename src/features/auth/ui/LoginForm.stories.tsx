@@ -100,7 +100,6 @@ export const Default: StoryObj<typeof LoginForm> = {
 };
 
 const ApiTestComponent = () => {
-  const { token, role, nickname, userId } = useAuthStore((state) => state);
   return (
     <>
       <LoginForm.Form>
@@ -109,10 +108,6 @@ const ApiTestComponent = () => {
         <LoginForm.PersistLogin />
         <LoginForm.SubmitButton />
       </LoginForm.Form>
-      <p data-testid="token">{token}</p>
-      <p data-testid="role">{role}</p>
-      <p data-testid="nickname">{nickname}</p>
-      <p data-testid="userid">{userId}</p>
     </>
   );
 };
@@ -155,16 +150,12 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
       name: "login-submit-button",
     });
 
-    const $token = canvas.getByTestId("token");
-    const $role = canvas.getByTestId("role");
-    const $nickname = canvas.getByTestId("nickname");
-    const $userId = canvas.getByTestId("userid");
-
     await step("API 요청이 일어나기 전까지 토큰은 존재하지 않는다.", () => {
-      expect($token).toHaveTextContent("");
-      expect($role).toHaveTextContent("");
-      expect($nickname).toHaveTextContent("");
-      expect($userId).toHaveTextContent("");
+      const { token, role, nickname, userId } = useAuthStore.getState();
+      expect(token).toBe(null);
+      expect(role).toBe(null);
+      expect(nickname).toBe(null);
+      expect(userId).toBe(null);
     });
 
     await userEvent.type($input, "abcd123@naver.com");
@@ -174,10 +165,11 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
     await step("API 요청이 일어난 후에는 토큰에 값이 존재한다.", async () => {
       // 목업된 API 데이터를 받기 위한 딜레이 설정
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      expect($token).toHaveTextContent("Bearer token");
-      expect($role).toHaveTextContent("USER_USER");
-      expect($nickname).toHaveTextContent("뽀송이");
-      expect($userId).toHaveTextContent("1234");
+      const { token, role, nickname, userId } = useAuthStore.getState();
+      expect(token).toBe("Bearer token");
+      expect(role).toBe("USER_USER");
+      expect(nickname).toBe("뽀송이");
+      expect(userId).toBe(1234);
     });
   },
 };
@@ -220,16 +212,12 @@ export const APIFailedTest: StoryObj<typeof LoginForm> = {
       name: "login-submit-button",
     });
 
-    const $token = canvas.getByTestId("token");
-    const $role = canvas.getByTestId("role");
-    const $nickname = canvas.getByTestId("nickname");
-    const $userId = canvas.getByTestId("userid");
-
     await step("API 요청이 일어나기 전까지 토큰은 존재하지 않는다.", () => {
-      expect($token).toHaveTextContent("");
-      expect($role).toHaveTextContent("");
-      expect($nickname).toHaveTextContent("");
-      expect($userId).toHaveTextContent("");
+      const { token, role, nickname, userId } = useAuthStore.getState();
+      expect(token).toBe(null);
+      expect(role).toBe(null);
+      expect(nickname).toBe(null);
+      expect(userId).toBe(null);
     });
 
     await step("API 요청이 실패한 경우엔 상태가 변경되지 않는다.", async () => {
@@ -246,10 +234,12 @@ export const APIFailedTest: StoryObj<typeof LoginForm> = {
       // 목업된 API 데이터를 받기 위한 딜레이 설정
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      expect($token).toHaveTextContent("");
-      expect($role).toHaveTextContent("");
-      expect($nickname).toHaveTextContent("");
-      expect($userId).toHaveTextContent("");
+      const { token, role, nickname, userId } = useAuthStore.getState();
+      expect(token).toBe(null);
+      expect(role).toBe(null);
+      expect(nickname).toBe(null);
+      expect(userId).toBe(null);
+
       expect(alertMessage).toEqual("아이디 또는 비밀번호를 다시 확인해 주세요");
       window.alert = originalAlert;
     });
