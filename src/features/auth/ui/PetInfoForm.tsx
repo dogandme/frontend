@@ -207,6 +207,7 @@ export const SubmitButton = () => {
    * getState() 로 인해 반환되는 store 자체는 불변하기 때문에 store 내부 상태들이 변경되어도 리렌더링이 일어나지 않습니다.
    */
   const navigate = useNavigate();
+
   const setRole = useAuthStore((state) => state.setRole);
   const { mutate: postPetInfo } = usePostPetInfo();
 
@@ -216,6 +217,7 @@ export const SubmitButton = () => {
     const { isValidName, name, breed, characterList, introduce, profileImage } =
       petInfoForm;
     const { userId, token } = useAuthStore.getState();
+
 
     const isNameEmpty = name.length === 0;
     const isBreedEmpty = breed.length === 0;
@@ -231,6 +233,7 @@ export const SubmitButton = () => {
         "userId나 토큰이 존재하지 않을 경우 페이지에 접속 할 수 없습니다. 권한의 범위를 확인하세요",
       );
     }
+
 
     postPetInfo(
       {

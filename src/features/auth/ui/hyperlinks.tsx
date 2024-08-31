@@ -86,7 +86,7 @@ export const OAuthLoginHyperLinks = () => {
   return (
     <>
       <NaverLoginHyperLink />
-      <GoogleLoginHyperLink />{" "}
+      <GoogleLoginHyperLink />
     </>
   );
 };

@@ -28,3 +28,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   setUserId: (userId: number | null) => set({ userId }),
   setNickname: (nickname: string | null) => set({ nickname }),
 }));
+
+useAuthStore.subscribe((state) => {
+  console.log(state);
+});
