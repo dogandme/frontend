@@ -15,9 +15,13 @@ interface BottomSheetMetrics {
 export function useBottomSheetMoving({
   minY,
   maxY,
+  onOpen,
+  onClose,
 }: {
   minY: number;
   maxY: number;
+  onOpen?: () => void;
+  onClose?: () => void;
 }) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -109,6 +113,7 @@ export function useBottomSheetMoving({
         // 아래 방향으로 터치했을 때, 바텀 시트가 최대로 내려간다.
         if (touchMove.movingDirection === "down") {
           sheetRef.current!.style.setProperty("transform", "translateY(0)");
+          onClose?.();
         }
 
         // 위로 터치했을 때, 바텀 시트가 최대로 올라간다.
@@ -117,6 +122,7 @@ export function useBottomSheetMoving({
             "transform",
             `translateY(${minY - maxY}px)`,
           );
+          onOpen?.();
         }
       }
 
@@ -143,7 +149,7 @@ export function useBottomSheetMoving({
       sheetRef.current?.removeEventListener("touchmove", handleTouchMove);
       sheetRef.current?.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [minY, maxY]);
+  }, [minY, maxY, onClose, onOpen]);
 
   // content 영역 터치 기록
   useEffect(() => {

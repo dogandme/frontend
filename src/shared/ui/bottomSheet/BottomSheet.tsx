@@ -5,18 +5,33 @@ interface BottomSheetProps {
   children: ReactNode;
   minY: number;
   maxY?: number;
+  isOpen?: boolean;
+  onOpen?: () => void;
+  onClose?: () => void;
 }
 
 const HEADER_HEIGHT = 36;
 
 const BottomSheet = ({
+  isOpen,
+  onOpen,
+  onClose,
   children,
   minY,
   maxY = window.innerHeight - HEADER_HEIGHT,
 }: BottomSheetProps) => {
   const BOTTOM_SHEET_HEIGHT = window.innerHeight - minY;
 
-  const { sheet, content } = useBottomSheetMoving({ minY, maxY });
+  if (typeof isOpen === "boolean" && !(onOpen && onClose)) {
+    throw new Error("isOpen 상태가 있다면, onOpen과 onClose를 설정해주세요.");
+  }
+
+  const { sheet, content } = useBottomSheetMoving({
+    minY,
+    maxY,
+    onClose,
+    onOpen,
+  });
 
   return (
     <div
@@ -25,6 +40,7 @@ const BottomSheet = ({
       style={{
         top: `${maxY}px`,
         height: `${BOTTOM_SHEET_HEIGHT}px`,
+        transform: `translateY(${isOpen ? minY - maxY : 0}px)`,
       }}
     >
       {/* header */}
