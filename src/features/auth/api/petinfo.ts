@@ -56,6 +56,6 @@ const postPetInfo = async (formObject: PetInfoFormData) => {
 
 export const usePostPetInfo = () => {
   return useMutation<PetInfoResponse, Error, PetInfoFormData>({
-    mutationFn: (formData) => postPetInfo(formData),
+    mutationFn: postPetInfo,
   });
 };
