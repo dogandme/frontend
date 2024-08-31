@@ -9,10 +9,12 @@ interface BottomSheetMetrics {
     prevTouchY?: number; // 이전 터치 지점의 Y값
     movingDirection: "none" | "down" | "up"; // 터치 이동 방향
   };
+  isContentAreaTouched: boolean;
 }
 
 export function useBottomSheet({ minY, maxY }: { minY: number; maxY: number }) {
   const sheetRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const metrics = useRef<BottomSheetMetrics>({
     touchStart: {
@@ -23,9 +25,27 @@ export function useBottomSheet({ minY, maxY }: { minY: number; maxY: number }) {
       prevTouchY: 0,
       movingDirection: "none",
     },
+    isContentAreaTouched: false, // 현재 터치된 지점이 content인지 여부
   });
 
   useEffect(() => {
+    const canUserMoveBottomSheet = () => {
+      const { touchMove, isContentAreaTouched } = metrics.current;
+
+      if (!isContentAreaTouched) {
+        return true;
+      }
+
+      if (sheetRef.current!.getBoundingClientRect().y !== minY) {
+        return true;
+      }
+
+      if (touchMove.movingDirection === "down") {
+        return contentRef.current!.scrollTop <= 0;
+      }
+      return false;
+    };
+
     // * bottom sheet를 터치했을 때 실행
     const handleTouchStart = (e: TouchEvent) => {
       const { touchStart } = metrics.current;
@@ -36,8 +56,6 @@ export function useBottomSheet({ minY, maxY }: { minY: number; maxY: number }) {
 
     // * 터치한 상태에서 이동할 때 실행
     const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault();
-
       const { touchStart, touchMove } = metrics.current;
 
       // e.touches는 현재 화면에 터치된 모든 지점들의 정보
@@ -56,9 +74,9 @@ export function useBottomSheet({ minY, maxY }: { minY: number; maxY: number }) {
         touchMove.movingDirection = "up";
       }
 
-      // 터치 시작점에서부터 현재 터치 포인트까지의 변화된 y값
+      if (!canUserMoveBottomSheet()) return;
+
       const touchOffset = currentTouch.clientY - touchStart.touchY;
-      // 다음 sheet 가장 맨 위의 위치
       let nextSheetY = touchStart.sheetY + touchOffset;
 
       if (nextSheetY <= minY) {
@@ -69,11 +87,10 @@ export function useBottomSheet({ minY, maxY }: { minY: number; maxY: number }) {
         nextSheetY = maxY;
       }
 
-      // sheet 위치 갱신.
       sheetRef.current!.style.setProperty(
         "transform",
         `translateY(${nextSheetY - maxY}px)`,
-      );
+      ); //바닥 만큼은 빼야한다
     };
 
     // * 터치가 끝났을 때 bottom sheet 이동 및 위치 정보 초기화
@@ -107,6 +124,7 @@ export function useBottomSheet({ minY, maxY }: { minY: number; maxY: number }) {
           prevTouchY: 0,
           movingDirection: "none",
         },
+        isContentAreaTouched: false,
       };
     };
 
@@ -119,7 +137,20 @@ export function useBottomSheet({ minY, maxY }: { minY: number; maxY: number }) {
       sheetRef.current?.removeEventListener("touchmove", handleTouchMove);
       sheetRef.current?.removeEventListener("touchend", handleTouchEnd);
     };
+  }, [minY, maxY]);
+
+  // content 영역 터치 기록
+  useEffect(() => {
+    const handleTouchStart = () => {
+      metrics.current.isContentAreaTouched = true;
+    };
+
+    contentRef.current?.addEventListener("touchstart", handleTouchStart);
+
+    return () => {
+      contentRef.current?.removeEventListener("touchstart", handleTouchStart);
+    };
   }, []);
 
-  return { sheet: sheetRef };
+  return { sheet: sheetRef, content: contentRef };
 }

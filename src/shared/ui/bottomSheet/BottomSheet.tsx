@@ -16,7 +16,7 @@ const BottomSheet = ({
 }: BottomSheetProps) => {
   const BOTTOM_SHEET_HEIGHT = window.innerHeight - minY;
 
-  const { sheet } = useBottomSheet({ minY, maxY });
+  const { sheet, content } = useBottomSheet({ minY, maxY });
 
   return (
     <div
@@ -33,7 +33,15 @@ const BottomSheet = ({
       </div>
 
       {/* body */}
-      <div className="h-fit overflow-auto p-4">{children}</div>
+      <div
+        ref={content}
+        className="h-fit overflow-auto p-4"
+        style={{
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 };
