@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useBottomSheet } from "./bottomSheet.hook";
+import { useBottomSheetMoving } from "./bottomSheet.hook";
 
 interface BottomSheetProps {
   children: ReactNode;
@@ -16,7 +16,7 @@ const BottomSheet = ({
 }: BottomSheetProps) => {
   const BOTTOM_SHEET_HEIGHT = window.innerHeight - minY;
 
-  const { sheet, content } = useBottomSheet({ minY, maxY });
+  const { sheet, content } = useBottomSheetMoving({ minY, maxY });
 
   return (
     <div

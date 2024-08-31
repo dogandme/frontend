@@ -12,7 +12,13 @@ interface BottomSheetMetrics {
   isContentAreaTouched: boolean;
 }
 
-export function useBottomSheet({ minY, maxY }: { minY: number; maxY: number }) {
+export function useBottomSheetMoving({
+  minY,
+  maxY,
+}: {
+  minY: number;
+  maxY: number;
+}) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
