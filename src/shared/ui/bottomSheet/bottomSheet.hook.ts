@@ -144,10 +144,85 @@ export function useBottomSheetMoving({
     sheetRef.current?.addEventListener("touchmove", handleTouchMove);
     sheetRef.current?.addEventListener("touchend", handleTouchEnd);
 
+    const handleMouseDown = (e: MouseEvent) => {
+      // handleTouchStart 과정
+      const { touchStart } = metrics.current;
+
+      touchStart.sheetY = sheetRef.current!.getBoundingClientRect().y;
+      touchStart.touchY = e.clientY;
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      // handleTouchMove 과정
+      const { touchStart, touchMove } = metrics.current;
+
+      const currentTouchY = e.clientY;
+
+      if (touchMove.prevTouchY === undefined || touchMove.prevTouchY === 0) {
+        touchMove.prevTouchY = touchStart.touchY;
+      }
+
+      if (touchMove.prevTouchY < currentTouchY) {
+        touchMove.movingDirection = "down";
+      }
+      if (touchMove.prevTouchY > currentTouchY) {
+        touchMove.movingDirection = "up";
+      }
+
+      if (!canUserMoveBottomSheet()) return;
+
+      const touchOffset = currentTouchY - touchStart.touchY;
+      let nextSheetY = touchStart.sheetY + touchOffset;
+
+      if (nextSheetY <= minY) {
+        nextSheetY = minY;
+      }
+
+      if (nextSheetY >= maxY) {
+        nextSheetY = maxY;
+      }
+
+      // handleTouchEnd 과정
+      const currentSheetY = sheetRef.current!.getBoundingClientRect().y;
+
+      if (currentSheetY !== minY) {
+        if (touchMove.movingDirection === "down") {
+          sheetRef.current!.style.setProperty("transform", "translateY(0)");
+          onClose?.();
+        }
+
+        if (touchMove.movingDirection === "up") {
+          sheetRef.current!.style.setProperty(
+            "transform",
+            `translateY(${minY - maxY}px)`,
+          );
+          onOpen?.();
+        }
+      }
+
+      metrics.current = {
+        touchStart: {
+          sheetY: 0,
+          touchY: 0,
+        },
+        touchMove: {
+          prevTouchY: 0,
+          movingDirection: "none",
+        },
+        isContentAreaTouched: false,
+      };
+    };
+
+    sheetRef.current?.addEventListener("mousedown", handleMouseDown);
+    sheetRef.current?.addEventListener("mouseup", handleMouseUp);
+
     return () => {
       sheetRef.current?.removeEventListener("touchstart", handleTouchStart);
       sheetRef.current?.removeEventListener("touchmove", handleTouchMove);
       sheetRef.current?.removeEventListener("touchend", handleTouchEnd);
+
+      sheetRef.current?.removeEventListener("mousedown", handleMouseDown);
+      sheetRef.current?.removeEventListener("mouseup", handleMouseUp);
     };
   }, [minY, maxY, onClose, onOpen]);
 
@@ -156,11 +231,16 @@ export function useBottomSheetMoving({
     const handleTouchStart = () => {
       metrics.current.isContentAreaTouched = true;
     };
+    const handleMouseDown = () => {
+      metrics.current.isContentAreaTouched = true;
+    };
 
     contentRef.current?.addEventListener("touchstart", handleTouchStart);
+    contentRef.current?.addEventListener("mousedown", handleMouseDown);
 
     return () => {
       contentRef.current?.removeEventListener("touchstart", handleTouchStart);
+      contentRef.current?.removeEventListener("mousedown", handleMouseDown);
     };
   }, []);
 
