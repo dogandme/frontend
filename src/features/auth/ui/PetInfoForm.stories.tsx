@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import * as PetInfoForm from "./PetInfoForm";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { usePetInfoStore } from "../store";
 import { useAuthStore } from "@/shared/store/auth";
 
@@ -181,6 +181,9 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     });
 
     await step("submit 버튼 유효성 테스트", async () => {
+      // submit 하기 위해선 userId 가 필요하기 때문에 userId를 설정해줍니다.
+      useAuthStore.setState({ userId: 123 });
+
       const clearAll = async () => {
         await userEvent.clear($name);
         await userEvent.clear($textarea);
@@ -194,19 +197,16 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       window.alert = (message: string) => {
         alertMessage = message;
       };
-
       // 모든 입력 내용 지우기
-      await userEvent.clear($name);
-      await userEvent.clear($textarea);
-      await userEvent.clear($breed);
+      await clearAll();
 
       // 아무 내용도 입력하지 않고 submit 버튼을 누른 경우
       await step(
         "아무내용도 입력하지 않고 submit 버튼을 누르면 alert 창이 뜬다.",
         async () => {
+          alertMessage = "";
           await userEvent.click($submit);
           expect(alertMessage).toBe("필수 항목을 모두 입력해 주세요");
-          alertMessage = "";
         },
       );
 
@@ -214,10 +214,10 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       await step(
         "이름만 입력하고 submit 버튼을 누르면 alert 창이 뜬다.",
         async () => {
+          alertMessage = "";
           await userEvent.type($name, "초코");
           await userEvent.click($submit);
           expect(alertMessage).toBe("필수 항목을 모두 입력해 주세요");
-          alertMessage = "";
         },
       );
 
@@ -227,18 +227,20 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       await step(
         "이름이 유효성을 만족하지 않은 채로 submit 버튼을 누르면 alert 창이 뜬다.",
         async () => {
+          alertMessage = "";
           await userEvent.type($name, "123");
           await userEvent.click($submit);
           // TODO 유효성을 만족하지 않는 경우의 메시지 디자이너에게 확인
           expect(alertMessage).toBe("필수 항목을 모두 입력해 주세요");
-          alertMessage = "";
         },
       );
+
+      await clearAll();
 
       await step(
         "이름과 종을 유효성에 맞게 입력하고 submit 버튼을 누르면 alert 창이 뜨지 않는다.",
         async () => {
-          await userEvent.clear($name);
+          alertMessage = "";
           await userEvent.type($name, "초코");
           await userEvent.type($breed, "푸들");
           await userEvent.click($submit);
@@ -251,6 +253,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       await step(
         "이름을 유효성에 맞게 입력하고 breed 를 mix로 선택하고 submit 버튼을 누르면 alert 창이 뜨지 않는다.",
         async () => {
+          alertMessage = "";
           await userEvent.type($name, "초코");
           // breed를 mix 로 하였을 경우
           await userEvent.click($mix!);
