@@ -208,6 +208,8 @@ export const SubmitButton = () => {
    */
   const navigate = useNavigate();
   const userId = useAuthStore((state) => state.userId);
+  const token = useAuthStore((state) => state.token);
+
   const setRole = useAuthStore((state) => state.setRole);
   const { mutate: postPetInfo } = usePostPetInfo();
 
@@ -232,8 +234,13 @@ export const SubmitButton = () => {
       );
     }
 
+    if (!token) {
+      throw new Error("토큰이 없어요");
+    }
+
     postPetInfo(
       {
+        token,
         userId,
         name,
         breed,
