@@ -47,25 +47,29 @@ export const ProfileInput = () => {
   const setProfileImage = usePetInfoStore((state) => state.setProfileImage);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  // 상태에 저장된 파일 객체가 존재하는 경우엔 파일 객체를 URL로 변경하여 사용합니다.
+  // 만약 파일 객체가 존재하지 않는 경우 기본 이미지를 제공합니다.
+  const profileUrl = profileImage
+    ? URL.createObjectURL(profileImage)
+    : `${window.location.origin}/${DEFAULT_PROFILE_IMAGE}`;
+
   const handleInputClick = () => {
     inputRef.current?.click();
   };
 
   // type이 file인 input에게 파일이 존재하는 경우엔 Blob URL을 생성하여 프로필 이미지로 설정합니다.
   // 만약 사진이 존재하지 않는 경우 기본 이미지를 제공합니다.
+  // TODO 바텀 시트가 생성되고 사진 선택하기 , 삭제 기능이 추가되면 로직을 변경해야 합니다.
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const profileImage = file
-      ? URL.createObjectURL(file)
-      : `${window.location.origin}${DEFAULT_PROFILE_IMAGE}`;
-    setProfileImage(profileImage);
+    setProfileImage(file || null);
   };
 
   return (
     <div
       className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-tangerine-500 bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `url(${profileImage})`,
+        backgroundImage: `url(${profileUrl})`,
       }}
     >
       <input
