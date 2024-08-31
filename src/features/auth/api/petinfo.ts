@@ -20,7 +20,9 @@ export interface PetInfoFormData {
 }
 
 const postPetInfo = async (formObject: PetInfoFormData) => {
-  const { userId, name, personalities, description, profile, token } =
+
+  const { token, userId, name, personalities, description, profile } =
+
     formObject;
 
   const formData = new FormData();
