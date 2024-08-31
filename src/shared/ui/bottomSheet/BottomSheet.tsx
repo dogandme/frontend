@@ -33,9 +33,7 @@ const BottomSheet = ({
       </div>
 
       {/* body */}
-      <div className="flex flex-grow flex-col justify-center overflow-auto p-4">
-        {children}
-      </div>
+      <div className="h-fit overflow-auto p-4">{children}</div>
     </div>
   );
 };
