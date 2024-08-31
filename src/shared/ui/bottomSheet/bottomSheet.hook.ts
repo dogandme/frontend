@@ -69,8 +69,6 @@ export function useBottomSheet({ minY, maxY }: { minY: number; maxY: number }) {
         nextSheetY = maxY;
       }
 
-      console.log(nextSheetY);
-
       // sheet 위치 갱신.
       sheetRef.current!.style.setProperty(
         "transform",
