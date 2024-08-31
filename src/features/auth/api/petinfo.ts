@@ -10,6 +10,7 @@ export interface PetInfoResponse {
 }
 
 export interface PetInfoFormData {
+  token: string;
   userId: number;
   name: string;
   breed: string;
@@ -19,7 +20,8 @@ export interface PetInfoFormData {
 }
 
 const postPetInfo = async (formObject: PetInfoFormData) => {
-  const { userId, name, personalities, description, profile } = formObject;
+  const { token, userId, name, personalities, description, profile } =
+    formObject;
 
   const formData = new FormData();
 
@@ -40,6 +42,7 @@ const postPetInfo = async (formObject: PetInfoFormData) => {
     method: "POST",
     headers: {
       "Content-Type": "multipart/form-data",
+      Authorization: token,
     },
     body: formData,
   });
