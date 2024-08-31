@@ -218,7 +218,7 @@ export const SubmitButton = () => {
     const isNameEmpty = name.length === 0;
     const isBreedEmpty = breed.length === 0;
 
-    if (isValidName && isNameEmpty && isBreedEmpty) {
+    if (!isValidName || isNameEmpty || isBreedEmpty) {
       alert("필수 항목을 모두 입력해 주세요");
       return;
     }
