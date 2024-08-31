@@ -18,7 +18,6 @@ export const SelectChip = ({
 
   // 제어컴포넌트와 비제어컴포넌트를 구분하는 boolean 변수를 선언합니다.
   const isUncontrolled = typeof controlledIsSelected === "undefined";
-
   // 제어 컴포넌트와 비제어컴포넌트의 경우를 구분하여 내부에서 스타일에 사용할 state인 chipState를 결정합니다.
   const isSelected = isUncontrolled
     ? unControlledIsSelected
@@ -30,7 +29,6 @@ export const SelectChip = ({
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (isUncontrolled) {
       setIsUnControlledIsSelected((prev) => !prev);
-      return;
     }
     onClick?.(e);
   };
