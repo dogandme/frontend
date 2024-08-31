@@ -8,6 +8,8 @@ import { useAuthStore } from "@/shared/store/auth";
 import { usePetInfoStore } from "../store";
 import { characterList } from "../constants/form";
 import { usePostPetInfo } from "../api/petinfo";
+import { useNavigate } from "react-router-dom";
+import { useRouteHistoryStore } from "@/shared/store/history";
 
 // TODO svg 경로를 문자열로 가져오는 방법 찾아보기
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
@@ -204,7 +206,7 @@ export const SubmitButton = () => {
    * getState() 는 호출 시점의 store 를 가져오기 떄문에 클릭이 일어난 시점의 상태 값들을 가져 올 수 있습니다.
    * getState() 로 인해 반환되는 store 자체는 불변하기 때문에 store 내부 상태들이 변경되어도 리렌더링이 일어나지 않습니다.
    */
-
+  const navigate = useNavigate();
   const userId = useAuthStore((state) => state.userId);
   const setRole = useAuthStore((state) => state.setRole);
   const { mutate: postPetInfo } = usePostPetInfo();
@@ -242,7 +244,10 @@ export const SubmitButton = () => {
       {
         onSuccess: (data) => {
           const { role } = data.content;
+          const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
+
           setRole(role);
+          navigate(lastNoneAuthRoute);
         },
         // TODO 에러 바운더리 생성되면 로직 변경하기
         onError: (error) => {
