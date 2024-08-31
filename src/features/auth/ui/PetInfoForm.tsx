@@ -207,7 +207,6 @@ export const SubmitButton = () => {
    * getState() 로 인해 반환되는 store 자체는 불변하기 때문에 store 내부 상태들이 변경되어도 리렌더링이 일어나지 않습니다.
    */
   const navigate = useNavigate();
-  const userId = useAuthStore((state) => state.userId);
   const setRole = useAuthStore((state) => state.setRole);
   const { mutate: postPetInfo } = usePostPetInfo();
 
@@ -216,6 +215,7 @@ export const SubmitButton = () => {
     // TODO refactor : 유효성 검사 메소드 만들어 사용하기
     const { isValidName, name, breed, characterList, introduce, profileImage } =
       petInfoForm;
+    const { userId, token } = useAuthStore.getState();
 
     const isNameEmpty = name.length === 0;
     const isBreedEmpty = breed.length === 0;
@@ -226,14 +226,15 @@ export const SubmitButton = () => {
     }
     // TODO 엔드포인트 양식 정해지면 API 요청 기능 추가하기
 
-    if (!userId) {
+    if (!userId || !token) {
       throw new Error(
-        "userId가 존재하지 않습니다. userId가 존재하지 않는 경우엔 해당 페이지에 들어올 수 없습니다. 페이지에 접속 할 수 있는 권한의 범위를 확인하세요",
+        "userId가 없거나 token이 존재하지 않는다면 해당 페이지에 접속 할 수 없습니다. 페이지에 접속 할 수 있는 권한의 범위를 확인하세요",
       );
     }
 
     postPetInfo(
       {
+        token,
         userId,
         name,
         breed,
