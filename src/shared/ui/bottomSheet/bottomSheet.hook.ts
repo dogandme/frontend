@@ -56,107 +56,17 @@ export function useBottomSheetMoving({
       return false;
     };
 
-    // * bottom sheet를 터치했을 때 실행
-    const handleTouchStart = (e: TouchEvent) => {
+    const handleStart = (clientY: number) => {
       const { touchStart } = metrics.current;
 
       touchStart.sheetY = sheetRef.current!.getBoundingClientRect().y;
-      touchStart.touchY = e.touches[0].clientY;
+      touchStart.touchY = clientY;
     };
 
-    // * 터치한 상태에서 이동할 때 실행
-    const handleTouchMove = (e: TouchEvent) => {
+    const handleMove = (clientY: number) => {
       const { touchStart, touchMove } = metrics.current;
 
-      // e.touches는 현재 화면에 터치된 모든 지점들의 정보
-      const currentTouch = e.touches[0];
-
-      // 이전 터치 지점 정보가 없을 경우, 현재 터치 지점으로 초기화
-      if (touchMove.prevTouchY === 0) {
-        touchMove.prevTouchY = touchStart.touchY;
-      }
-
-      // 이전 터치 지점과 현재 터치 지점의 y값을 비교하여 이동 방향 파악
-      if (touchMove.prevTouchY < currentTouch.clientY) {
-        touchMove.movingDirection = "down";
-      }
-      if (touchMove.prevTouchY > currentTouch.clientY) {
-        touchMove.movingDirection = "up";
-      }
-
-      if (!canUserMoveBottomSheet()) return;
-
-      const touchOffset = currentTouch.clientY - touchStart.touchY;
-      let nextSheetY = touchStart.sheetY + touchOffset;
-
-      if (nextSheetY <= minY) {
-        nextSheetY = minY;
-      }
-
-      if (nextSheetY >= maxY) {
-        nextSheetY = maxY;
-      }
-
-      sheetRef.current!.style.setProperty(
-        "transform",
-        `translateY(${nextSheetY - maxY}px)`,
-      ); //바닥 만큼은 빼야한다
-    };
-
-    // * 터치가 끝났을 때 bottom sheet 이동 및 위치 정보 초기화
-    const handleTouchEnd = () => {
-      const { touchMove } = metrics.current;
-
-      const currentSheetY = sheetRef.current!.getBoundingClientRect().y;
-
-      if (currentSheetY !== minY) {
-        // 아래 방향으로 터치했을 때, 바텀 시트가 최대로 내려간다.
-        if (touchMove.movingDirection === "down") {
-          sheetRef.current!.style.setProperty("transform", "translateY(0)");
-          onClose?.();
-        }
-
-        // 위로 터치했을 때, 바텀 시트가 최대로 올라간다.
-        if (touchMove.movingDirection === "up") {
-          sheetRef.current!.style.setProperty(
-            "transform",
-            `translateY(${minY - maxY}px)`,
-          );
-          onOpen?.();
-        }
-      }
-
-      // metrics 초기화.
-      metrics.current = {
-        touchStart: {
-          sheetY: 0,
-          touchY: 0,
-        },
-        touchMove: {
-          prevTouchY: 0,
-          movingDirection: "none",
-        },
-        isContentAreaTouched: false,
-      };
-    };
-
-    sheetRef.current?.addEventListener("touchstart", handleTouchStart);
-    sheetRef.current?.addEventListener("touchmove", handleTouchMove);
-    sheetRef.current?.addEventListener("touchend", handleTouchEnd);
-
-    const handleMouseDown = (e: MouseEvent) => {
-      // handleTouchStart 과정
-      const { touchStart } = metrics.current;
-
-      touchStart.sheetY = sheetRef.current!.getBoundingClientRect().y;
-      touchStart.touchY = e.clientY;
-    };
-
-    const handleMouseUp = (e: MouseEvent) => {
-      // handleTouchMove 과정
-      const { touchStart, touchMove } = metrics.current;
-
-      const currentTouchY = e.clientY;
+      const currentTouchY = clientY;
 
       if (touchMove.prevTouchY === 0) {
         touchMove.prevTouchY = touchStart.touchY;
@@ -182,7 +92,14 @@ export function useBottomSheetMoving({
         nextSheetY = maxY;
       }
 
-      // handleTouchEnd 과정
+      sheetRef.current!.style.setProperty(
+        "transform",
+        `translateY(${nextSheetY - maxY}px)`,
+      );
+    };
+
+    const handleEnd = () => {
+      const { touchMove } = metrics.current;
       const currentSheetY = sheetRef.current!.getBoundingClientRect().y;
 
       if (currentSheetY !== minY) {
@@ -211,6 +128,29 @@ export function useBottomSheetMoving({
         },
         isContentAreaTouched: false,
       };
+    };
+
+    // * 첫 터치 시작했을 때 실행
+    const handleTouchStart = (e: TouchEvent) =>
+      handleStart(e.touches[0].clientY);
+
+    // * 터치한 상태에서 이동할 때 실행
+    const handleTouchMove = (e: TouchEvent) => handleMove(e.touches[0].clientY);
+
+    // * 터치가 끝났을 때 bottom sheet 이동 및 위치 정보 초기화
+    const handleTouchEnd = () => handleEnd();
+
+    sheetRef.current?.addEventListener("touchstart", handleTouchStart);
+    sheetRef.current?.addEventListener("touchmove", handleTouchMove);
+    sheetRef.current?.addEventListener("touchend", handleTouchEnd);
+
+    // * 마우스를 처음 눌렀을 때 실행
+    const handleMouseDown = (e: MouseEvent) => handleStart(e.clientY);
+
+    // * 마우스를 뗐을 때 실행
+    const handleMouseUp = (e: MouseEvent) => {
+      handleMove(e.clientY);
+      handleEnd();
     };
 
     sheetRef.current?.addEventListener("mousedown", handleMouseDown);
