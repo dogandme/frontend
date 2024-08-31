@@ -1,16 +1,14 @@
 import { create } from "zustand";
 
-const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
-
 interface PetInfoStore {
-  profileImage: string;
+  profileImage: File | null;
   name: string;
   isValidName: boolean;
   breed: string;
   characterList: string[];
   introduce: string;
 
-  setProfileImage: (profileImage: string) => void;
+  setProfileImage: (profileImage: File | null) => void;
   setName: (name: string) => void;
   setIsValidName: (name: string) => void;
   setBreed: (greed: string) => void;
@@ -23,14 +21,14 @@ interface PetInfoStore {
  * origin/{파일명} 을 통해 public 폴더에 접근하는 파일에 접근 할 수 있습니다.
  */
 export const usePetInfoStore = create<PetInfoStore>((set) => ({
-  profileImage: `${window.location.origin}/${DEFAULT_PROFILE_IMAGE}`,
+  profileImage: null,
   name: "",
   isValidName: true,
   breed: "",
   characterList: [],
   introduce: "",
 
-  setProfileImage: (profileImage: string) => set({ profileImage }),
+  setProfileImage: (profileImage: File | null) => set({ profileImage }),
   setName: (name: string) => set({ name }),
   setIsValidName: (name: string) =>
     set(() => {

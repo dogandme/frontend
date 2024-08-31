@@ -3,9 +3,13 @@ import { EditIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { SelectChip } from "@/shared/ui/chip";
 import { TextArea } from "@/shared/ui/textarea";
+import { Button } from "@/shared/ui/button";
+import { useAuthStore } from "@/shared/store/auth";
 import { usePetInfoStore } from "../store";
 import { characterList } from "../constants/form";
-import { Button } from "@/shared/ui/button";
+import { usePostPetInfo } from "../api/petinfo";
+import { useNavigate } from "react-router-dom";
+import { useRouteHistoryStore } from "@/shared/store/history";
 
 // TODO svg 경로를 문자열로 가져오는 방법 찾아보기
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
@@ -45,25 +49,29 @@ export const ProfileInput = () => {
   const setProfileImage = usePetInfoStore((state) => state.setProfileImage);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  // 상태에 저장된 파일 객체가 존재하는 경우엔 파일 객체를 URL로 변경하여 사용합니다.
+  // 만약 파일 객체가 존재하지 않는 경우 기본 이미지를 제공합니다.
+  const profileUrl = profileImage
+    ? URL.createObjectURL(profileImage)
+    : `${window.location.origin}/${DEFAULT_PROFILE_IMAGE}`;
+
   const handleInputClick = () => {
     inputRef.current?.click();
   };
 
   // type이 file인 input에게 파일이 존재하는 경우엔 Blob URL을 생성하여 프로필 이미지로 설정합니다.
   // 만약 사진이 존재하지 않는 경우 기본 이미지를 제공합니다.
+  // TODO 바텀 시트가 생성되고 사진 선택하기 , 삭제 기능이 추가되면 로직을 변경해야 합니다.
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const profileImage = file
-      ? URL.createObjectURL(file)
-      : `${window.location.origin}${DEFAULT_PROFILE_IMAGE}`;
-    setProfileImage(profileImage);
+    setProfileImage(file || null);
   };
 
   return (
     <div
       className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-tangerine-500 bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `url(${profileImage})`,
+        backgroundImage: `url(${profileUrl})`,
       }}
     >
       <input
@@ -93,6 +101,15 @@ export const NameInput = () => {
 
   const MAX_LENGTH = 20;
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    // 한글,영문,숫자가 아닌 경우 true 를 반환하는 정규식
+    const regex = /[^가-힣a-zA-Z0-9ㄱ-ㅎ\s]/g;
+    const filteredName = value.replace(regex, "");
+    setName(filteredName);
+    setIsValidName(filteredName);
+  };
+
   return (
     <Input
       componentType="outlinedText"
@@ -102,11 +119,7 @@ export const NameInput = () => {
       maxLength={MAX_LENGTH}
       trailingNode={<TextCounter text={name} maxLength={MAX_LENGTH} />}
       value={name}
-      onChange={(e) => {
-        const { value } = e.target;
-        setName(value);
-        setIsValidName(value);
-      }}
+      onChange={handleChange}
       isError={!isNameEmpty && !isValidName}
       statusText="20자 이내의 한글 영문의 이름을 입력해 주세요"
       essential
@@ -193,18 +206,55 @@ export const SubmitButton = () => {
    * getState() 는 호출 시점의 store 를 가져오기 떄문에 클릭이 일어난 시점의 상태 값들을 가져 올 수 있습니다.
    * getState() 로 인해 반환되는 store 자체는 불변하기 때문에 store 내부 상태들이 변경되어도 리렌더링이 일어나지 않습니다.
    */
+  const navigate = useNavigate();
+  const userId = useAuthStore((state) => state.userId);
+  const setRole = useAuthStore((state) => state.setRole);
+  const { mutate: postPetInfo } = usePostPetInfo();
+
   const handleClick = () => {
     const petInfoForm = usePetInfoStore.getState();
     // TODO refactor : 유효성 검사 메소드 만들어 사용하기
-    const { isValidName, name, breed } = petInfoForm;
+    const { isValidName, name, breed, characterList, introduce, profileImage } =
+      petInfoForm;
+
     const isNameEmpty = name.length === 0;
     const isBreedEmpty = breed.length === 0;
 
-    if (isValidName && isNameEmpty && isBreedEmpty) {
+    if (!isValidName || isNameEmpty || isBreedEmpty) {
       alert("필수 항목을 모두 입력해 주세요");
       return;
     }
     // TODO 엔드포인트 양식 정해지면 API 요청 기능 추가하기
+
+    if (!userId) {
+      throw new Error(
+        "userId가 존재하지 않습니다. userId가 존재하지 않는 경우엔 해당 페이지에 들어올 수 없습니다. 페이지에 접속 할 수 있는 권한의 범위를 확인하세요",
+      );
+    }
+
+    postPetInfo(
+      {
+        userId,
+        name,
+        breed,
+        personalities: characterList,
+        description: introduce,
+        profile: profileImage,
+      },
+      {
+        onSuccess: (data) => {
+          const { role } = data.content;
+          const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
+
+          setRole(role);
+          navigate(lastNoneAuthRoute);
+        },
+        // TODO 에러 바운더리 생성되면 로직 변경하기
+        onError: (error) => {
+          throw new Error(error.message);
+        },
+      },
+    );
   };
   return (
     <Button
