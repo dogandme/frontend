@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
+import { http, HttpResponse } from "msw";
 import * as PetInfoForm from "./PetInfoForm";
-import { expect, userEvent, waitFor, within } from "@storybook/test";
+import { expect, userEvent, within } from "@storybook/test";
 import { usePetInfoStore } from "../store";
 import { useAuthStore } from "@/shared/store/auth";
 
@@ -28,40 +29,17 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
   parameters: {
     msw: {
       // TODO 공식문서 보고 타입 선언 하기
-      handlers: async (req, res, ctx) => {
-        // request 를 가로채서 특정 url 일 때만 처리하도록 설정
-        if (req.url.pathname !== "/api/pet") {
-          return;
-        }
-        // 보낼 request의 형태 생성
-        const formData = new FormData();
-        formData.append("profile", new File([""], "profile.png"));
-        formData.append("userid", "123");
-        formData.append("name", "초코");
-        formData.append(
-          "personalities",
-          JSON.stringify(["호기심 많은", "애착이 강한"]),
-        );
-        formData.append("description", "안녕하세요");
-
-        await fetch("http://localhost:3000/pet", {
-          method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          body: formData,
-        });
-        const response = await res(
-          ctx.json({
+      handlers: [
+        http.post("http://localhost/pet", async () => {
+          return HttpResponse.json({
             code: 200,
             message: "success",
             content: {
               role: "USER_USER",
             },
-          }),
-        );
-        return response;
-      },
+          });
+        }),
+      ],
     },
   },
 
@@ -107,7 +85,25 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     );
     const $submit = await canvas.getByText("등록하기");
 
-    step("모든 컴포넌트들이 Actual DOM에 존재한다.", () => {
+    const clearAll = async () => {
+      await userEvent.clear($name);
+      await userEvent.clear($textarea);
+      await userEvent.clear($breed);
+
+      const { characterList } = usePetInfoStore.getState();
+      characterList.forEach((character) => {
+        if (character === "호기심 많은") {
+          userEvent.click($characterButton1!);
+        }
+        if (character === "애착이 강한") {
+          userEvent.click($characterButton2!);
+        }
+      });
+    };
+
+    await clearAll();
+
+    await step("모든 컴포넌트들이 Actual DOM에 존재한다.", () => {
       expect($name).toBeInTheDocument();
       expect($breed).toBeInTheDocument();
       expect($mix).toBeInTheDocument();
@@ -266,25 +262,9 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       window.alert = originalAlert;
     });
 
+    await clearAll();
+
     await step("폼 데이터가 상태에 잘 저장되는지 테스트", async () => {
-      const clearAll = async () => {
-        await userEvent.clear($name);
-        await userEvent.clear($textarea);
-        await userEvent.clear($breed);
-
-        const { characterList } = usePetInfoStore.getState();
-        characterList.forEach((character) => {
-          if (character === "호기심 많은") {
-            userEvent.click($characterButton1!);
-          }
-          if (character === "애착이 강한") {
-            userEvent.click($characterButton2!);
-          }
-        });
-      };
-
-      await clearAll();
-
       await step(
         "input , textarea 에 적은 내용은 상태에 잘 저장된다.",
         async () => {
@@ -339,5 +319,27 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         await userEvent.click($characterButton2!);
       });
     });
+
+    await clearAll();
+
+    await step(
+      "올바른 API 요청이 전송되면 role 에 값이 저장된다.",
+      async () => {
+        await userEvent.type($name, "초코");
+        await userEvent.type($breed, "푸들");
+
+        await userEvent.click($characterButton1!);
+        await userEvent.click($characterButton2!);
+        await userEvent.type(
+          $textarea,
+          "안녕하세요 너무 귀여운 강아지 입니다.",
+        );
+
+        await userEvent.click($submit);
+
+        const { role } = useAuthStore.getState();
+        expect(role).toBe("USER_USER");
+      },
+    );
   },
 };
