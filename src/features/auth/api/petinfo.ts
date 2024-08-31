@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
-interface PetInfoReeponse {
+export interface PetInfoReeponse {
   code: number;
   message: string;
   contetn: {
@@ -8,7 +8,7 @@ interface PetInfoReeponse {
   };
 }
 
-interface PetInfoFormData {
+export interface PetInfoFormData {
   userId: number;
   name: string;
   personalities: string[];
