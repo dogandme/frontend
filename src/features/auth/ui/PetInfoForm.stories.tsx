@@ -30,7 +30,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     msw: {
       // TODO 공식문서 보고 타입 선언 하기
       handlers: [
-        http.post("http://localhost/pet", async () => {
+        http.post("http://localhost/pets", async () => {
           return HttpResponse.json({
             code: 200,
             message: "success",
