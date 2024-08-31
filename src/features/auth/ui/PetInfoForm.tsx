@@ -3,9 +3,11 @@ import { EditIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { SelectChip } from "@/shared/ui/chip";
 import { TextArea } from "@/shared/ui/textarea";
+import { Button } from "@/shared/ui/button";
+import { useAuthStore } from "@/shared/store/auth";
 import { usePetInfoStore } from "../store";
 import { characterList } from "../constants/form";
-import { Button } from "@/shared/ui/button";
+import { usePostPetInfo } from "../api/petinfo";
 
 // TODO svg 경로를 문자열로 가져오는 방법 찾아보기
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
@@ -198,10 +200,17 @@ export const SubmitButton = () => {
    * getState() 는 호출 시점의 store 를 가져오기 떄문에 클릭이 일어난 시점의 상태 값들을 가져 올 수 있습니다.
    * getState() 로 인해 반환되는 store 자체는 불변하기 때문에 store 내부 상태들이 변경되어도 리렌더링이 일어나지 않습니다.
    */
+
+  const userId = useAuthStore((state) => state.userId);
+  const setRole = useAuthStore((state) => state.setRole);
+  const { mutate: postPetInfo } = usePostPetInfo();
+
   const handleClick = () => {
     const petInfoForm = usePetInfoStore.getState();
     // TODO refactor : 유효성 검사 메소드 만들어 사용하기
-    const { isValidName, name, breed } = petInfoForm;
+    const { isValidName, name, breed, characterList, introduce, profileImage } =
+      petInfoForm;
+
     const isNameEmpty = name.length === 0;
     const isBreedEmpty = breed.length === 0;
 
@@ -210,6 +219,33 @@ export const SubmitButton = () => {
       return;
     }
     // TODO 엔드포인트 양식 정해지면 API 요청 기능 추가하기
+
+    if (!userId) {
+      throw new Error(
+        "userId가 존재하지 않습니다. userId가 존재하지 않는 경우엔 해당 페이지에 들어올 수 없습니다. 페이지에 접속 할 수 있는 권한의 범위를 확인하세요",
+      );
+    }
+
+    postPetInfo(
+      {
+        userId,
+        name,
+        breed,
+        personalities: characterList,
+        description: introduce,
+        profile: profileImage,
+      },
+      {
+        onSuccess: (data) => {
+          const { role } = data.content;
+          setRole(role);
+        },
+        // TODO 에러 바운더리 생성되면 로직 변경하기
+        onError: (error) => {
+          throw new Error(error.message);
+        },
+      },
+    );
   };
   return (
     <Button
