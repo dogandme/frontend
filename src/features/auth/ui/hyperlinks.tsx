@@ -7,6 +7,7 @@ import { useAuthStore } from "@/shared/store/auth";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useGetOauthLogin } from "../api";
 import type { LoginResponse, OAuthServerName } from "../api";
+import { LOGIN_END_POINT } from "../constants";
 
 /* ----------------------------------컴포넌트 내부에서만 사용되는 컴포넌트------------------------------- */
 const hyperLinkColorMap = {
@@ -99,8 +100,8 @@ export const OAuthLoginHyperLinks = () => {
 
   return (
     <>
-      <NaverLoginHyperLink onClick={() => setOAuthServerName("NAVER")} />
-      <GoogleLoginHyperLink onClick={() => setOAuthServerName("GOOGLE")} />
+      <a href={LOGIN_END_POINT.NAVER}>NAVER</a>
+      <a href={LOGIN_END_POINT.GOOGLE}>GOOGLE</a>
     </>
   );
 };
