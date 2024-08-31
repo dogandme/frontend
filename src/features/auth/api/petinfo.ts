@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
+import { SIGN_UP_END_POINT } from "../constants";
 
-export interface PetInfoReeponse {
+export interface PetInfoResponse {
   code: number;
   message: string;
-  contetn: {
+  content: {
     role: string;
   };
 }
@@ -11,6 +12,7 @@ export interface PetInfoReeponse {
 export interface PetInfoFormData {
   userId: number;
   name: string;
+  breed: string;
   personalities: string[];
   description: string;
   profile: File | null;
@@ -34,7 +36,7 @@ const postPetInfo = async (formObject: PetInfoFormData) => {
   formData.append("personalities", JSON.stringify(personalities));
   formData.append("description", description);
 
-  const response = await fetch("http://localhost:3000/pet", {
+  const response = await fetch(SIGN_UP_END_POINT.PET_INFO, {
     method: "POST",
     headers: {
       "Content-Type": "multipart/form-data",
@@ -53,7 +55,7 @@ const postPetInfo = async (formObject: PetInfoFormData) => {
 };
 
 export const usePostPetInfo = () => {
-  return useMutation<PetInfoReeponse, Error, PetInfoFormData>({
+  return useMutation<PetInfoResponse, Error, PetInfoFormData>({
     mutationFn: (formData) => postPetInfo(formData),
   });
 };
