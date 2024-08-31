@@ -6,7 +6,7 @@ interface BottomSheetMetrics {
     touchY: number; // 터치 시작 지점의 Y값
   };
   touchMove: {
-    prevTouchY?: number; // 이전 터치 지점의 Y값
+    prevTouchY: number; // 이전 터치 지점의 Y값
     movingDirection: "none" | "down" | "up"; // 터치 이동 방향
   };
   isContentAreaTouched: boolean;
@@ -72,7 +72,7 @@ export function useBottomSheetMoving({
       const currentTouch = e.touches[0];
 
       // 이전 터치 지점 정보가 없을 경우, 현재 터치 지점으로 초기화
-      if (touchMove.prevTouchY === undefined || touchMove.prevTouchY === 0) {
+      if (touchMove.prevTouchY === 0) {
         touchMove.prevTouchY = touchStart.touchY;
       }
 
@@ -158,7 +158,7 @@ export function useBottomSheetMoving({
 
       const currentTouchY = e.clientY;
 
-      if (touchMove.prevTouchY === undefined || touchMove.prevTouchY === 0) {
+      if (touchMove.prevTouchY === 0) {
         touchMove.prevTouchY = touchStart.touchY;
       }
 
