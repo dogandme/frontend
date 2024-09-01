@@ -6,7 +6,7 @@ import { useRouteHistoryStore } from "@/shared/store/history";
 import { useAuthStore } from "@/shared/store/auth";
 import { ROUTER_PATH } from "@/shared/constants";
 import { LOGIN_END_POINT } from "../constants";
-import { useOAuthOnCookie } from "../api/oauth";
+import { deleteCookie, getCookie } from "@/shared/lib";
 
 /* ----------------------------------컴포넌트 내부에서만 사용되는 컴포넌트------------------------------- */
 const hyperLinkColorMap = {
@@ -52,17 +52,6 @@ export const EmailLoginHyperLink = () => (
   </Link>
 );
 
-/**
- * OAuth 와 관련된 컴포넌트는 로그인에 성공 하여 쿠키에 정보를 담아 /login 페이지로 리다이렉션 된 경우
- * 다음과 같은 라이프 사이클을 갖습니다.
- * 1. useOAuthOnCookie 훅을 통해 token , role , nickname이 null 인 상태에서 초기 렌더링
- * 2. useOAuthOnCookie 내부 effect 를 통해 token , role , nickname 이 쿠키에서 값을 추출하여 상태 변경
- * 3. OAuthLoginHyperLinks 컴포넌트 내부에서 token , role , nickname 이 변경되면서 리렌더링
- * 4. 렌더링 이후 OAuthLoginHyperLinks 의 Effect 가 발동 되어 변경된 token  ,role , nickname 을 store에 저장
- * 5. 이후 로그인을 하지 않았던 페이지로 리다이렉션
- * 6. 리다이렉션이 일어나며 useOAuthOnCookie 내부 클린업 함수가 발동되어 쿠키를 삭제
- * ps. 쿠키가 삭제되어도 useAuthStore 내부의 상태는 변하지 않습니다.
- */
 export const OAuthLoginHyperLinks = () => {
   const navigate = useNavigate();
 
@@ -70,32 +59,48 @@ export const OAuthLoginHyperLinks = () => {
   const setRole = useAuthStore((state) => state.setRole);
   const setNickname = useAuthStore((state) => state.setNickname);
 
-  const {
-    token: tokenOnCookie,
-    role: roleOnCookie,
-    nickname: nicknameOnCookie,
-  } = useOAuthOnCookie();
-
+  /**
+   * 해당 Effect는 다음과 같은 상황을 위해 사용됩니다.
+   * 1. 사용자가 토큰을 가진 채로 /login 페이지에 접근 했을 때 로그인 페이지가 아닌 다른 곳으로 리다이렉션 시키기 위해 사용됩니다.
+   * 2. OAuth 인증을 마쳐 서버에서 쿠키를 삽입 받은 채 /login 페이지로 리다이렉션 된 경우, 쿠키를 사용해 AuthStore에 정보를 저장합니다.
+   * 3. 쿠키에서 로그인 정보를 가져온 후 AuthStore에 상태 값을 저장하고 난 후엔 로그인 페이지가 아닌 다른 곳으로 리다이렉션 됩니다.
+   * - 리다이렉션 될 때 클린업 함수로 인해 쿠키에 저장되어있던 인증 정보를 제거합니다.
+   */
   useEffect(() => {
-    // Oauth login 에 성공하여 쿠키에 정보가 있을 떄에만 스토어에 값을 저장하고 리다이렉션 합니다.
-    if (tokenOnCookie && roleOnCookie && nicknameOnCookie) {
-      const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
+    const { token, role, nickname } = useAuthStore.getState();
+    const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
+    if (token && role && nickname) {
+      navigate(lastNoneAuthRoute);
+      return;
+    }
 
+    const tokenOnCookie = getCookie("authorization");
+    const roleOnCookie = getCookie("role");
+    const nicknameOnCookie = getCookie("nickname");
+
+    if (tokenOnCookie && roleOnCookie && nicknameOnCookie) {
       setToken(tokenOnCookie);
       setRole(roleOnCookie);
       setNickname(nicknameOnCookie);
-
       navigate(lastNoneAuthRoute);
     }
-  }, [
-    tokenOnCookie,
-    roleOnCookie,
-    nicknameOnCookie,
-    setToken,
-    setRole,
-    setNickname,
-    navigate,
-  ]);
+
+    return () => {
+      if (tokenOnCookie && roleOnCookie && nicknameOnCookie) {
+        deleteCookie({
+          name: "authorization",
+          value: tokenOnCookie,
+          path: "/login",
+        });
+        deleteCookie({ name: "role", value: roleOnCookie, path: "/login" });
+        deleteCookie({
+          name: "nickname",
+          value: nicknameOnCookie,
+          path: "/login",
+        });
+      }
+    };
+  }, [navigate, setToken, setRole, setNickname]);
 
   return (
     <>
