@@ -6,6 +6,7 @@ import { SignUpPage } from "@/pages/sign-up";
 import { EmailLoginPage } from "@/pages/login/email";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
+import { HistoryTracker } from "./HistoryTracker";
 
 export const router = createBrowserRouter([
   {
@@ -16,43 +17,46 @@ export const router = createBrowserRouter([
         index: true,
         element: <MainPage />,
       },
-
+    ],
+  },
+  {
+    path: ROUTER_PATH.LOGIN,
+    element: <LoginLayout />,
+    children: [
       {
-        path: ROUTER_PATH.LOGIN,
-        element: <LoginLayout />,
-        children: [
-          {
-            index: true,
-            element: <LoginPage />,
-          },
-          {
-            path: "email",
-            element: <EmailLoginPage />,
-          },
-          {
-            path: "forgot-password",
-            element: <div>forgot-password</div>,
-          },
-        ],
+        index: true,
+        element: <LoginPage />,
       },
-
       {
-        path: ROUTER_PATH.SIGN_UP,
-        element: <Outlet />,
-        children: [
-          {
-            index: true,
-            element: <SignUpPage />,
-          },
-          {
-            path: "user-info",
-            element: <UserInfoRegistrationPage />,
-          },
-          {
-            path: ROUTER_PATH.SIGN_UP_PET_INFO,
-            element: <PetInfoPage />,
-          },
-        ],
+        path: "email",
+        element: <EmailLoginPage />,
+      },
+      {
+        path: "forgot-password",
+        element: <div>forgot-password</div>,
+      },
+    ],
+  },
+  {
+    path: ROUTER_PATH.SIGN_UP,
+    element: (
+      <>
+        <HistoryTracker />
+        <Outlet />
+      </>
+    ),
+    children: [
+      {
+        index: true,
+        element: <SignUpPage />,
+      },
+      {
+        path: "user-info",
+        element: <UserInfoRegistrationPage />,
+      },
+      {
+        path: ROUTER_PATH.SIGN_UP_PET_INFO,
+        element: <PetInfoPage />,
       },
     ],
   },
