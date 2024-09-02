@@ -54,6 +54,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
 
     useAuthStore.setState({
       userId: 1,
+      token: "Bearer token",
     });
 
     return <Story />;
