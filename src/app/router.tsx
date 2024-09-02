@@ -28,11 +28,11 @@ export const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "email",
+        path: ROUTER_PATH.LOGIN_BY_EMAIL,
         element: <EmailLoginPage />,
       },
       {
-        path: "forgot-password",
+        path: ROUTER_PATH.FORGET_PASSWORD,
         element: <div>forgot-password</div>,
       },
     ],
@@ -51,7 +51,7 @@ export const router = createBrowserRouter([
         element: <SignUpPage />,
       },
       {
-        path: "user-info",
+        path: ROUTER_PATH.SIGN_UP_USER_INFO,
         element: <UserInfoRegistrationPage />,
       },
       {
