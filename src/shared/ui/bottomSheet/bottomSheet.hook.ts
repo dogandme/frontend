@@ -12,7 +12,7 @@ interface BottomSheetMetrics {
   isContentAreaTouched: boolean;
 }
 
-export function useBottomSheetMoving({
+export const useBottomSheetMoving = ({
   minY,
   maxY,
   onOpen,
@@ -22,7 +22,7 @@ export function useBottomSheetMoving({
   maxY: number;
   onOpen?: () => void;
   onClose?: () => void;
-}) {
+}) => {
   const sheetRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -185,4 +185,4 @@ export function useBottomSheetMoving({
   }, []);
 
   return { sheet: sheetRef, content: contentRef };
-}
+};
