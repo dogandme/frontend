@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
 import MainLayout from "@/pages/layout";
-import LoginLayout from "../layout";
 import { Routes, Route } from "react-router-dom";
 
 import EmailLoginPage from "./page";
@@ -26,9 +25,7 @@ export const Default: Story = {
   render: () => (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route element={<LoginLayout />}>
-          <Route index element={<EmailLoginPage />} />
-        </Route>
+        <Route index element={<EmailLoginPage />} />
       </Route>
     </Routes>
   ),

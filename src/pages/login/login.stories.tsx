@@ -1,8 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
-import LoginLayout from "./layout";
 import LoginPage from "./page";
 import { Routes, Route } from "react-router-dom";
-import MainLayout from "../layout";
 
 const meta: Meta = {
   title: "Pages/login",
@@ -17,7 +15,9 @@ const meta: Meta = {
   decorators: [
     (Story) => (
       <div className="w-96 border border-grey-300">
-        <Story />
+        <main className="flex flex-col items-start gap-8 self-stretch px-4 pb-32 pt-8">
+          <Story />
+        </main>
       </div>
     ),
   ],
@@ -28,11 +28,7 @@ export default meta;
 export const Default: StoryObj = {
   render: () => (
     <Routes>
-      <Route element={<MainLayout />}>
-        <Route element={<LoginLayout />}>
-          <Route index element={<LoginPage />} />
-        </Route>
-      </Route>
+      <Route index element={<LoginPage />} />
     </Routes>
   ),
 };
