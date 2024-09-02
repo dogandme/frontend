@@ -33,7 +33,7 @@ const GoogleLoginHyperLink = (props: HTMLAttributes<HTMLAnchorElement>) => (
   <Link
     className={`${LoginHyperLinkClass} ${hyperLinkColorMap.google}`}
     {...props}
-    to={LOGIN_END_POINT.NAVER}
+    to={LOGIN_END_POINT.GOOGLE}
   >
     <GoogleIcon />
     <p className="button-2 text-center text-grey-900">Google로 계속하기</p>
