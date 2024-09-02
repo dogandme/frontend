@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type AuthStore = {
+type AuthStore = {
   token: string | null;
   role: string | null;
   userId: number | null;
