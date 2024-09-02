@@ -1,5 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useBottomSheetMoving } from "./bottomSheet.hook";
+import { createPortal } from "react-dom";
 
 interface BottomSheetProps {
   children: ReactNode;
@@ -33,10 +34,18 @@ const BottomSheet = ({
     onOpen,
   });
 
-  return (
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isOpen]);
+
+  return createPortal(
     <div
       ref={sheet}
-      className={`shadow-bottom-sheet absolute left-0 right-0 z-10 flex flex-col rounded-t-[1.75rem] bg-grey-0 transition-transform ease-in-out`}
+      className="shadow-bottom-sheet z-bottom-sheet fixed left-0 right-0 mx-auto flex w-full min-w-80 max-w-[37.5rem] flex-col rounded-t-[1.75rem] bg-grey-0 transition-transform ease-in-out"
       style={{
         top: `${maxY}px`,
         height: `${BOTTOM_SHEET_HEIGHT}px`,
@@ -58,7 +67,8 @@ const BottomSheet = ({
       >
         {children}
       </div>
-    </div>
+    </div>,
+    document.querySelector("#bottom-sheet") as HTMLElement,
   );
 };
 
