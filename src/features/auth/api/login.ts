@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { LOGIN_END_POINT } from "../constants";
 
 export interface LoginResponse {
@@ -11,34 +11,6 @@ export interface LoginResponse {
     nickname: string | null;
   };
 }
-
-export type OAuthServerName = Exclude<keyof typeof LOGIN_END_POINT, "EMAIL">;
-
-/**
- * 해당 훅은 OAuthServerName이 주어지면 해당 OAuthServer로 로그인을 시도합니다.
- * 만약 OAuthServerName이 null일 경우엔 로그인을 시도하지 않습니다.
- */
-export const useGetOauthLogin = (OAuthServerName: OAuthServerName | null) => {
-  const isOauthLoginEnabled = OAuthServerName !== null;
-
-  const query = useQuery<LoginResponse>({
-    queryKey: ["OAuthLogin", OAuthServerName],
-    queryFn: async () => {
-      // 컴파일러에게 OAuthServerName이 null이 아님을 알려줍니다.
-      const END_POINT = LOGIN_END_POINT[OAuthServerName!];
-      const response = await fetch(END_POINT);
-      if (!response.ok) {
-        // TODO 에러 메시지 픽스하기
-        throw new Error("예기치 못한 네트워크 오류가 발생했습니다.");
-      }
-      const data = await response.json();
-      return data;
-    },
-    enabled: isOauthLoginEnabled,
-  });
-
-  return query;
-};
 
 interface EmailLoginFormData {
   email: string;
