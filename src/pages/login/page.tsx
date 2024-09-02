@@ -3,7 +3,7 @@ import { OAuthLoginHyperLinks, EmailLoginHyperLink } from "@/features/auth/ui";
 
 const LoginPage = () => (
   <>
-    <header className="flex flex-col items-center justify-center gap-2 self-stretch">
+    <section className="flex flex-col items-center justify-center gap-2 self-stretch">
       <h1 className="headline-3 overflow-ellipsis text-center text-grey-900">
         로그인 및 회원가입
       </h1>
@@ -11,7 +11,7 @@ const LoginPage = () => (
         <span>반려동물과 함께한 특별한 장소를</span>
         <span>마킹하고 공유하세요</span>
       </p>
-    </header>
+    </section>
     <div className="flex flex-col items-start gap-4 self-stretch">
       <OAuthLoginHyperLinks />
       <EmailLoginHyperLink />
