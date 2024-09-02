@@ -9,7 +9,7 @@ const BackWardButton = (props: React.HTMLAttributes<HTMLButtonElement>) => {
 
   return (
     <Button
-      size="large"
+      size="medium"
       variant="text"
       colorType="tertiary"
       onClick={onClick || (() => navigate(-1))}
