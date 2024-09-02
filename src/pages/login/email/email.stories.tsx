@@ -26,9 +26,7 @@ export const Default: Story = {
   render: () => (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route element={<LoginLayout />}>
-          <Route index element={<EmailLoginPage />} />
-        </Route>
+        <Route index element={<EmailLoginPage />} />
       </Route>
     </Routes>
   ),
