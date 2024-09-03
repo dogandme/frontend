@@ -15,7 +15,19 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <MainPage />,
+        element: <MainPage />, // 탐색
+      },
+      {
+        path: ROUTER_PATH.MAP,
+        element: <div>map</div>, // 지도
+      },
+      {
+        path: ROUTER_PATH.COMMUNITY,
+        element: <div>community</div>, // 커뮤니티
+      },
+      {
+        path: ROUTER_PATH.MY_PAGE,
+        element: <div>my page</div>, // 기록
       },
     ],
   },
