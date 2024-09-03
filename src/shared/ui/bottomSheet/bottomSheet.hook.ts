@@ -42,17 +42,12 @@ export const useBottomSheetMoving = ({
     const canUserMoveBottomSheet = () => {
       const { touchMove, isContentAreaTouched } = metrics.current;
 
-      if (!isContentAreaTouched) {
-        return true;
-      }
-
-      if (sheetRef.current!.getBoundingClientRect().y !== minY) {
-        return true;
-      }
+      if (!isContentAreaTouched) return true;
 
       if (touchMove.movingDirection === "down") {
         return contentRef.current!.scrollTop <= 0;
       }
+
       return false;
     };
 
