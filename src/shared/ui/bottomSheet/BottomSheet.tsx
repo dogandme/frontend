@@ -1,10 +1,11 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { useBottomSheetMoving } from "./bottomSheet.hook";
 import { createPortal } from "react-dom";
 
 interface BottomSheetProps {
   children: ReactNode;
   minY: number;
+  midY?: number;
   maxY?: number;
   isOpen?: boolean;
   onOpen?: () => void;
@@ -19,17 +20,25 @@ const BottomSheet = ({
   onClose,
   children,
   minY,
+  midY,
   maxY = window.innerHeight - HEADER_HEIGHT,
 }: BottomSheetProps) => {
   const BOTTOM_SHEET_HEIGHT = window.innerHeight - minY;
+
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   if (typeof isOpen === "boolean" && !(onOpen && onClose)) {
     throw new Error("isOpen 상태가 있다면, onOpen과 onClose를 설정해주세요.");
   }
 
-  const { sheet, content } = useBottomSheetMoving({
+  useBottomSheetMoving({
+    sheetRef,
+    contentRef,
     minY,
     maxY,
+    midY,
     onClose,
     onOpen,
   });
@@ -44,8 +53,8 @@ const BottomSheet = ({
 
   return createPortal(
     <div
-      ref={sheet}
-      className="shadow-bottom-sheet z-bottom-sheet fixed left-0 right-0 mx-auto flex w-full min-w-80 max-w-[37.5rem] flex-col rounded-t-[1.75rem] bg-grey-0 transition-transform ease-in-out"
+      ref={sheetRef}
+      className="fixed left-0 right-0 z-bottom-sheet mx-auto flex w-full min-w-80 max-w-[37.5rem] flex-col rounded-t-[1.75rem] bg-grey-0 shadow-bottom-sheet transition-transform ease-in-out"
       style={{
         top: `${maxY}px`,
         height: `${BOTTOM_SHEET_HEIGHT}px`,
@@ -53,13 +62,16 @@ const BottomSheet = ({
       }}
     >
       {/* header */}
-      <div className="flex flex-col items-center gap-3 rounded-t-[1.75rem] p-4">
+      <div
+        ref={headerRef}
+        className="flex flex-col items-center gap-3 rounded-t-[1.75rem] p-4"
+      >
         <div className="h-1 w-8 rounded-[6.25rem] bg-grey-500"></div>
       </div>
 
       {/* body */}
       <div
-        ref={content}
+        ref={contentRef}
         className="h-fit overflow-auto p-4"
         style={{
           WebkitOverflowScrolling: "touch",

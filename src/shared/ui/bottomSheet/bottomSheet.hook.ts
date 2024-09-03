@@ -13,19 +13,22 @@ interface BottomSheetMetrics {
 }
 
 export const useBottomSheetMoving = ({
+  sheetRef,
+  contentRef,
   minY,
   maxY,
+  midY,
   onOpen,
   onClose,
 }: {
+  sheetRef: React.RefObject<HTMLDivElement>;
+  contentRef: React.RefObject<HTMLDivElement>;
   minY: number;
   maxY: number;
+  midY?: number;
   onOpen?: () => void;
   onClose?: () => void;
 }) => {
-  const sheetRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
   const metrics = useRef<BottomSheetMetrics>({
     touchStart: {
       sheetY: 0, // 터치 시작 지점의 bottom sheet가 위치한 y값
@@ -184,6 +187,4 @@ export const useBottomSheetMoving = ({
       contentRef.current?.removeEventListener("mousedown", handleMouseDown);
     };
   }, []);
-
-  return { sheet: sheetRef, content: contentRef };
 };
