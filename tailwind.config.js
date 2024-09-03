@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+import { background, keyframes } from "storybook/internal/theming";
 import { colors } from "./src/shared/constants";
+import { transform } from "typescript";
 
 export default {
   content: [
@@ -15,6 +17,25 @@ export default {
       boxShadow: {
         "floating-button":
           "0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.30)",
+      },
+    },
+    extend: {
+      keyframes: {
+        radar: {
+          "0%": {
+            transform: "scale(0)",
+            "transform-origin": "center center",
+            opacity: 1,
+          },
+          "100%": {
+            transform: "scale(1.5)",
+            "transform-origin": "center center",
+            opacity: 0,
+          },
+        },
+      },
+      animation: {
+        radar: "radar 1.5s linear infinite",
       },
     },
   },
