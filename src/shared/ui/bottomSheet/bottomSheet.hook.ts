@@ -93,25 +93,7 @@ export const useBottomSheetMoving = ({
       );
     };
 
-    const handleEnd = () => {
-      const { touchMove } = metrics.current;
-      const currentSheetY = sheetRef.current!.getBoundingClientRect().y;
-
-      if (currentSheetY !== minY) {
-        if (touchMove.movingDirection === "down") {
-          sheetRef.current!.style.setProperty("transform", "translateY(0)");
-          onClose?.();
-        }
-
-        if (touchMove.movingDirection === "up") {
-          sheetRef.current!.style.setProperty(
-            "transform",
-            `translateY(${minY - maxY}px)`,
-          );
-          onOpen?.();
-        }
-      }
-
+    const initMetrics = () => {
       metrics.current = {
         touchStart: {
           sheetY: 0,
@@ -123,6 +105,30 @@ export const useBottomSheetMoving = ({
         },
         isContentAreaTouched: false,
       };
+    };
+
+    const handleEnd = () => {
+      if (!canUserMoveBottomSheet()) {
+        initMetrics();
+        return;
+      }
+
+      const { touchMove } = metrics.current;
+
+      if (touchMove.movingDirection === "down") {
+        sheetRef.current!.style.setProperty("transform", "translateY(0)");
+        onClose?.();
+      }
+
+      if (touchMove.movingDirection === "up") {
+        sheetRef.current!.style.setProperty(
+          "transform",
+          `translateY(${minY - maxY}px)`,
+        );
+        onOpen?.();
+      }
+
+      initMetrics();
     };
 
     // * 첫 터치 시작했을 때 실행
