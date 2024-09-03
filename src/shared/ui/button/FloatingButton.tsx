@@ -5,6 +5,7 @@ interface FloatingButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   controlledIsActive?: boolean;
   onClick?: React.MouseEventHandler;
   imgSrc?: string;
+  disabled?: boolean;
   children?: React.ReactNode;
 }
 
@@ -12,7 +13,14 @@ interface FloatingButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
  * 제어 컴포넌트와 비제어 컴포넌트로서의 역할을 수행하는 플로팅 버튼 컴포넌트입니다.
  */
 export const FloatingButton = (props: FloatingButtonProps) => {
-  const { controlledIsActive, onClick, imgSrc, children, ...rest } = props;
+  const {
+    controlledIsActive,
+    onClick,
+    imgSrc,
+    disabled = false,
+    children,
+    ...rest
+  } = props;
 
   if (!imgSrc && !children) {
     throw new Error("배경 이미지나 children 중 하나는 있어야 합니다.");
@@ -34,6 +42,7 @@ export const FloatingButton = (props: FloatingButtonProps) => {
     <button
       className={`${base} ${isActive ? active : inactive} `}
       onClick={handleClick}
+      disabled={disabled}
       {...rest}
     >
       {imgSrc && (

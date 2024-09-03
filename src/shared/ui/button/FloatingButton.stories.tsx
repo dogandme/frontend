@@ -86,6 +86,12 @@ export const Default: Story = {
           <h1 className="title-1">Counter FloatingButton</h1>
           <CounterFloatingButton data-testid="counter-floating-button" />
         </div>
+        <div>
+          <h1 className="title-1">Disabled Floating Button</h1>
+          <FloatingButton disabled>
+            <MyLocationIcon />
+          </FloatingButton>
+        </div>
       </>
     );
   },
