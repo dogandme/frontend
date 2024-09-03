@@ -200,9 +200,15 @@ export const useBottomSheetMoving = ({
       else handleEnd();
     };
 
-    sheetRef.current?.addEventListener("touchstart", handleTouchStart);
-    sheetRef.current?.addEventListener("touchmove", handleTouchMove);
-    sheetRef.current?.addEventListener("touchend", handleTouchEnd);
+    sheetRef.current?.addEventListener("touchstart", handleTouchStart, {
+      passive: true,
+    });
+    sheetRef.current?.addEventListener("touchmove", handleTouchMove, {
+      passive: true,
+    });
+    sheetRef.current?.addEventListener("touchend", handleTouchEnd, {
+      passive: true,
+    });
 
     // * 마우스를 처음 눌렀을 때 실행
     const handleMouseDown = (e: MouseEvent) => {
@@ -251,6 +257,7 @@ export const useBottomSheetMoving = ({
     };
     const handleMouseDown = () => {
       metrics.current.isContentAreaTouched = true;
+      isDragging.current = true;
     };
 
     contentRef.current?.addEventListener("touchstart", handleTouchStart);
