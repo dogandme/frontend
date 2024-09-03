@@ -149,12 +149,12 @@ export const useBottomSheetMoving = ({
             "transform",
             `translateY(${minY - maxY}px)`,
           );
+          onOpen?.();
         } else {
           sheetRef.current!.style.setProperty(
             "transform",
             `translateY(${midY - maxY}px)`,
           );
-          onOpen?.();
         }
       }
 
