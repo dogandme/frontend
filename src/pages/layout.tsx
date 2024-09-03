@@ -6,9 +6,9 @@ const MainLayout = () => {
     // TODO 레이아웃 범위 디자이너와 상의 후 픽스하기
     <>
       <GlobalNavigationBar />
-      <div className="flex grow flex-col">
+      <section className="flex grow flex-col overflow-y-scroll">
         <Outlet />
-      </div>
+      </section>
       {/* 해당 부분은 바텀 시트가 나오게 되면 삭제 될 부분 */}
       <div className="rounded-t-[28px] px-4 py-4"></div>
       <MainFooter />
