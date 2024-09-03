@@ -149,16 +149,24 @@ export const useBottomSheetMoving = ({
     sheetRef.current?.addEventListener("touchend", handleTouchEnd);
 
     // * 마우스를 처음 눌렀을 때 실행
-    const handleMouseDown = (e: MouseEvent) => handleStart(e.clientY);
+    const handleMouseDown = (e: MouseEvent) => {
+      handleStart(e.clientY);
 
-    // * 마우스를 뗐을 때 실행
-    const handleMouseUp = (e: MouseEvent) => {
-      handleMove(e.clientY);
-      handleEnd();
+      const handleMouseMove = (e: MouseEvent) => handleMove(e.clientY);
+      sheetRef.current?.addEventListener("mousemove", handleMouseMove);
+
+      const handleMouseUp = () => {
+        handleEnd();
+        sheetRef.current?.removeEventListener("mousemove", handleMouseMove);
+      };
+
+      // * once: true 옵션은 리스너가 한 번만 실행되고 자동으로 제거됨
+      sheetRef.current?.addEventListener("mouseup", handleMouseUp, {
+        once: true,
+      });
     };
 
     sheetRef.current?.addEventListener("mousedown", handleMouseDown);
-    sheetRef.current?.addEventListener("mouseup", handleMouseUp);
 
     return () => {
       sheetRef.current?.removeEventListener("touchstart", handleTouchStart);
@@ -166,7 +174,6 @@ export const useBottomSheetMoving = ({
       sheetRef.current?.removeEventListener("touchend", handleTouchEnd);
 
       sheetRef.current?.removeEventListener("mousedown", handleMouseDown);
-      sheetRef.current?.removeEventListener("mouseup", handleMouseUp);
     };
   }, [minY, maxY, onClose, onOpen]);
 
