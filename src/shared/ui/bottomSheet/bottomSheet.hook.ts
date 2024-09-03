@@ -41,6 +41,9 @@ export const useBottomSheetMoving = ({
     isContentAreaTouched: false, // 현재 터치된 지점이 content인지 여부
   });
 
+  // 마우스 드래그 여부
+  const isDragging = useRef<boolean>(false);
+
   useEffect(() => {
     const canUserMoveBottomSheet = () => {
       const { touchMove, isContentAreaTouched } = metrics.current;
@@ -110,6 +113,54 @@ export const useBottomSheetMoving = ({
       };
     };
 
+    const handleEndWithMidY = (midY: number) => {
+      if (!canUserMoveBottomSheet()) {
+        initMetrics();
+        return;
+      }
+
+      const { touchMove } = metrics.current;
+      const { movingDirection } = touchMove;
+      const currentY = sheetRef.current!.getBoundingClientRect().y;
+
+      // 바텀 시트가 상단 ~ 중단 사이에 위치하는지
+      const isBetweenMinAndMid = currentY < midY && currentY > minY;
+
+      if (movingDirection === "down") {
+        if (isBetweenMinAndMid) {
+          // 바텀 시트 중간에 위치
+          sheetRef.current!.style.setProperty(
+            "transform",
+            `translateY(${midY - maxY}px)`,
+          );
+        } else {
+          // 바텀 시트 맨 아래에 위치
+          sheetRef.current!.style.setProperty("transform", `translateY(0)`);
+          onClose?.();
+        }
+      }
+
+      // 바텀 시트 중단 ~ 하단 사이에 위치하는지
+      const isBetweenMidAndMax = currentY < maxY && currentY > midY;
+
+      if (movingDirection === "up") {
+        if (isBetweenMidAndMax) {
+          sheetRef.current!.style.setProperty(
+            "transform",
+            `translateY(${minY - maxY}px)`,
+          );
+        } else {
+          sheetRef.current!.style.setProperty(
+            "transform",
+            `translateY(${midY - maxY}px)`,
+          );
+          onOpen?.();
+        }
+      }
+
+      initMetrics();
+    };
+
     const handleEnd = () => {
       if (!canUserMoveBottomSheet()) {
         initMetrics();
@@ -139,10 +190,15 @@ export const useBottomSheetMoving = ({
       handleStart(e.touches[0].clientY);
 
     // * 터치한 상태에서 이동할 때 실행
-    const handleTouchMove = (e: TouchEvent) => handleMove(e.touches[0].clientY);
+    const handleTouchMove = (e: TouchEvent) => {
+      handleMove(e.touches[0].clientY);
+    };
 
     // * 터치가 끝났을 때 bottom sheet 이동 및 위치 정보 초기화
-    const handleTouchEnd = () => handleEnd();
+    const handleTouchEnd = () => {
+      if (typeof midY === "number") handleEndWithMidY(midY);
+      else handleEnd();
+    };
 
     sheetRef.current?.addEventListener("touchstart", handleTouchStart);
     sheetRef.current?.addEventListener("touchmove", handleTouchMove);
@@ -150,13 +206,24 @@ export const useBottomSheetMoving = ({
 
     // * 마우스를 처음 눌렀을 때 실행
     const handleMouseDown = (e: MouseEvent) => {
+      isDragging.current = true;
+
       handleStart(e.clientY);
 
-      const handleMouseMove = (e: MouseEvent) => handleMove(e.clientY);
+      const handleMouseMove = (e: MouseEvent) => {
+        if (!isDragging.current) return;
+
+        handleMove(e.clientY);
+      };
+
       sheetRef.current?.addEventListener("mousemove", handleMouseMove);
 
       const handleMouseUp = () => {
-        handleEnd();
+        isDragging.current = false;
+
+        if (typeof midY === "number") handleEndWithMidY(midY);
+        else handleEnd();
+
         sheetRef.current?.removeEventListener("mousemove", handleMouseMove);
       };
 
@@ -175,7 +242,7 @@ export const useBottomSheetMoving = ({
 
       sheetRef.current?.removeEventListener("mousedown", handleMouseDown);
     };
-  }, [minY, maxY, onClose, onOpen]);
+  }, [minY, maxY, onClose, onOpen, midY]);
 
   // content 영역 터치 기록
   useEffect(() => {
