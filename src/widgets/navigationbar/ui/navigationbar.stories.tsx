@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import BackwardNavigationBar from "./BackwardNavigationBar";
 import { CloseNavigationBar } from "./CloseNavigationBar";
+import { GlobalNavigationBar } from "./GlobalNavigationBar";
 
 const meta: Meta<typeof BackwardNavigationBar> = {
   title: "Widgets/NavigationBar",
@@ -30,6 +31,10 @@ export const Default: Story = {
           <h1>CloseNavigationBar</h1>
           <div className="border">
             <CloseNavigationBar />
+          </div>
+          <h1>Global Navigation Bar</h1>
+          <div className="border">
+            <GlobalNavigationBar />
           </div>
         </div>
       </div>

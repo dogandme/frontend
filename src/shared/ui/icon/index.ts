@@ -12,6 +12,10 @@ import CheckboxOutline from "@/shared/assets/check-box-outline.svg";
 import Indeterminate from "@/shared/assets/indeterminate.svg";
 import MapLocationSearching from "@/shared/assets/map-location-searching.svg";
 import ArrowDropDown from "@/shared/assets/arrow-drop-down.svg";
+import NotificationSVG from "@/shared/assets/notification.svg";
+import CompassSVG from "@/shared/assets/compass.svg";
+import MapSVG from "@/shared/assets/map.svg";
+import CommunitySVG from "@/shared/assets/community.svg";
 // Icon 컴포넌트 생성
 export const EmailIcon = withIcon(EmailSvg);
 export const VisibilityOnIcon = withIcon(VisibilityOnSvg);
@@ -24,3 +28,7 @@ export const CheckboxOutlineIcon = withIcon(CheckboxOutline);
 export const IndeterminateIcon = withIcon(Indeterminate);
 export const MapLocationSearchingIcon = withIcon(MapLocationSearching);
 export const ArrowDropDownIcon = withIcon(ArrowDropDown);
+export const NotificationIcon = withIcon(NotificationSVG);
+export const CompassIcon = withIcon(CompassSVG);
+export const MapIcon = withIcon(MapSVG);
+export const CommunityIcon = withIcon(CommunitySVG);

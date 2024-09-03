@@ -106,4 +106,9 @@ export const ROUTER_PATH = {
   SIGN_UP: "/sign-up",
   SIGN_UP_USER_INFO: "/sign-up/user-info",
   SIGN_UP_PET_INFO: "/sign-up/pet-info",
+  // TODO 라우팅 경로 이름 변경하기
+  SEARCH: "/",
+  MAP: "/map",
+  COMMUNITY: "/community",
+  MY_PAGE: "/my-page",
 } as const;
