@@ -1,6 +1,8 @@
 import { Map } from "@vis.gl/react-google-maps";
-import { mapOptions } from "../constants";
 import { useEffect } from "react";
+import { GOOGLE_MAPS_MAP_ID } from "@/shared/constants";
+import { mapOptions } from "../constants";
+import { CustomMarker } from "@/entities/auth/map/ui";
 
 /**
  * 기본적으로 GoogleMaps 는 w-full h-full relative로 설정 되어 있습니다.
@@ -27,10 +29,13 @@ export const GoogleMaps = () => {
 
   return (
     <Map
+      mapId={GOOGLE_MAPS_MAP_ID}
       options={mapOptions}
       defaultCenter={{ lat: 37.5665, lng: 126.978 }}
       defaultZoom={16}
       reuseMaps // Map 컴포넌트가 unmount 되었다가 다시 mount 될 때 기존의 map instance 를 재사용 하여 memory leak을 방지합니다.
-    ></Map>
+    >
+      <CustomMarker.User position={{ lat: 37.5665, lng: 126.978 }} />
+    </Map>
   );
 };
