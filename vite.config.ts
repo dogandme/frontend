@@ -20,4 +20,10 @@ export default defineConfig({
   resolve: {
     alias: [{ find: "@", replacement: path.resolve(__dirname, "src") }],
   },
+  /**
+   * 빌드 시 env 파일을 객체 형태로 저장하여 빌드하도록 합니다.
+   */
+  define: {
+    "process.env": process.env,
+  },
 });
