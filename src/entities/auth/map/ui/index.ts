@@ -1,1 +1,1 @@
-export * as Marker from "./Marker";
+export * as CustomMarker from "./CustomMarker";

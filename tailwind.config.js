@@ -1,7 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import { background, keyframes } from "storybook/internal/theming";
 import { colors } from "./src/shared/constants";
-import { transform } from "typescript";
 
 export default {
   content: [
