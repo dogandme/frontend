@@ -53,7 +53,7 @@ jobs:
         run: npx wait-on tcp:6006
 
       - name: Test Storybook
-        run: yarn test-storybook 2> >(sed 's/\\x1b\\[[0-9;]*m//g' > test-storybook-output.txt)
+        run: npm run test-storybook 2> >(sed 's/\\x1b\\[[0-9;]*m//g' > test-storybook-output.txt)
 
       - name: Kill Storybook server
         run: npx kill-port 6006
