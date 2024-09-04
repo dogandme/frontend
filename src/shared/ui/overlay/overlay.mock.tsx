@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useOverlay } from "@/shared/store/overlay";
+import { useOverlay } from "@/shared/lib/overlay";
 
 /**
  * 사용법 예시
