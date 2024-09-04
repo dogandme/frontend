@@ -89,3 +89,18 @@ textarea {
 .icon-in-button svg {
   fill: currentColor;
 }
+
+/* WebKit 기반 브라우저 (Chrome, Safari) */
+section::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+section {
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Edge, Internet Explorer */
+section {
+  -ms-overflow-style: none; /* IE and Edge */
+}

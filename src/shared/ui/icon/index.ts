@@ -15,6 +15,10 @@ import ArrowDropDown from "@/shared/assets/arrow-drop-down.svg";
 import StartSVG from "@/shared/assets/start.svg";
 import LocationSVG from "@/shared/assets/location.svg";
 import MyLocationSVG from "@/shared/assets/my-location.svg";
+import NotificationSVG from "@/shared/assets/notification.svg";
+import CompassSVG from "@/shared/assets/compass.svg";
+import MapSVG from "@/shared/assets/map.svg";
+import CommunitySVG from "@/shared/assets/community.svg";
 // Icon 컴포넌트 생성
 export const EmailIcon = withIcon(EmailSvg);
 export const VisibilityOnIcon = withIcon(VisibilityOnSvg);
@@ -30,3 +34,7 @@ export const ArrowDropDownIcon = withIcon(ArrowDropDown);
 export const StartIcon = withIcon(StartSVG);
 export const LocationIcon = withIcon(LocationSVG);
 export const MyLocationIcon = withIcon(MyLocationSVG);
+export const NotificationIcon = withIcon(NotificationSVG);
+export const CompassIcon = withIcon(CompassSVG);
+export const MapIcon = withIcon(MapSVG);
+export const CommunityIcon = withIcon(CommunitySVG);
