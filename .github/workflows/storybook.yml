@@ -58,20 +58,25 @@ jobs:
       - name: Kill Storybook server
         run: npx kill-port 6006
 
+      - name: Build and deploy with Chromatic
+        run: npx chromatic --auto-accept-changes --exit-zero-on-changes --project-token=$CHROMATIC_PROJECT_TOKEN
+        id: chromatic-build
+
       - name: Post test results as PR comment
         uses: actions/github-script@v6
         if: always()
         with:
-          github-token: ${{secrets.YONGHYEUN_GITHUB_TOKEN}}
+          github-token: ${{ secrets.YONGHYEUN_GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
             const output = fs.readFileSync('test-storybook-output.txt', 'utf8');
             const lines = output.split('\n\n').slice(1).join('\n');
             const outcome = "${{ steps.test-storybook.outcome }}"; 
             const success = outcome === 'success';
+            const chromaticUrl = "${{ steps.chromatic-build.outputs.url }}";
             const comment = success 
-              ? `### ✅ 현재 작업중인 브랜치의 스토리북 인터렉션 테스트 결과 - 모두 통과했습니다🔥\n\`\`\`\n${output}\n\`\`\`\n`
-              : `### ❌ 현재 작업중인 브랜치의 스토리북 인터렉션 테스트 결과 - 통과하지 못한 테스트가 있어요!🫠\n\`\`\`\n${output}\n\`\`\`\n`;
+              ? `### ✅ 현재 작업중인 브랜치의 스토리북 인터렉션 테스트 결과 - 모두 통과했습니다🔥\n\`\`\`\n${output}\n\`\`\`\n\n[Chromatic 빌드 결과 보기](${chromaticUrl})`
+              : `### ❌ 현재 작업중인 브랜치의 스토리북 인터렉션 테스트 결과 - 통과하지 못한 테스트가 있어요!🫠\n\`\`\`\n${output}\n\`\`\`\n\n[Chromatic 빌드 결과 보기](${chromaticUrl})`;
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
