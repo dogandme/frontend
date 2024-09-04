@@ -7,6 +7,7 @@ import { EmailLoginPage } from "@/pages/login/email";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { HistoryTracker } from "./HistoryTracker";
+import { MapPage } from "@/pages/map";
 
 export const router = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTER_PATH.MAP,
-        element: <div>map</div>, // 지도
+        element: <MapPage />, // 지도
       },
       {
         path: ROUTER_PATH.COMMUNITY,
