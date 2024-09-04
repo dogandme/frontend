@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./global.css";
 import { RouterProvider } from "react-router-dom";
 import { ReactQueryProvider, MobileLayout, router } from "./app";
-import { GoogleMapsProvider } from "./app/GoogleMapProvider";
+import { GoogleMapsProvider } from "./app/GoogleMapsProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
