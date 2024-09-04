@@ -104,3 +104,32 @@ section {
 section {
   -ms-overflow-style: none; /* IE and Edge */
 }
+
+/* modal css */
+.react-modal-sheet-container {
+  margin: 0 auto;
+  right: 0;
+  max-width: 37.5rem;
+  border-top-left-radius: 1.75rem !important;
+  border-top-right-radius: 1.75rem !important;
+  background: #fff;
+  box-shadow:
+    0px 4px 8px 3px rgba(0, 0, 0, 0.15),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.3) !important;
+}
+
+.react-modal-sheet-header {
+  padding: 1rem;
+  height: 2.25rem !important;
+}
+
+.react-modal-sheet-drag-indicator {
+  width: 1rem;
+  height: 0.25rem;
+  border-radius: 6.25rem;
+  background: #9e9e9e;
+}
+
+.react-modal-sheet-content {
+  padding: 1rem;
+}
