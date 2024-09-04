@@ -1,5 +1,5 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
-import { GOOGLE_MAPS_API_KEY } from "@/shared/constants";
+import { GOOGLE_MAPS_API_KEY } from "@/entities/map/constants";
 
 export const GoogleMapsProvider = ({
   children,

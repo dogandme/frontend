@@ -1,7 +1,7 @@
 import { Map } from "@vis.gl/react-google-maps";
 import { useEffect } from "react";
 import { CustomMarker } from "@/entities/map/ui";
-import { GOOGLE_MAPS_MAP_ID } from "@/shared/constants";
+import { GOOGLE_MAPS_MAP_ID } from "@/entities/map/constants";
 import { mapOptions } from "../constants";
 
 /**

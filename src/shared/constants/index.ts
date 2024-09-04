@@ -112,6 +112,3 @@ export const ROUTER_PATH = {
   COMMUNITY: "/community",
   MY_PAGE: "/my-page",
 } as const;
-
-export const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-export const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
