@@ -119,41 +119,43 @@ export const useBottomSheetMoving = ({
         return;
       }
 
-      const { touchMove } = metrics.current;
+      const { touchStart, touchMove } = metrics.current;
       const { movingDirection } = touchMove;
-      const currentY = sheetRef.current!.getBoundingClientRect().y;
+      const { sheetY } = touchStart;
 
-      // 바텀 시트가 상단 ~ 중단 사이에 위치하는지
-      const isBetweenMinAndMid = currentY < midY && currentY > minY;
+      const isTop = Math.abs(sheetY - minY) < 1;
+      const isMid = Math.abs(sheetY - midY) < 1;
+      const isBottom = Math.abs(sheetY - maxY) < 1;
 
       if (movingDirection === "down") {
-        if (isBetweenMinAndMid) {
+        if (isTop) {
           // 바텀 시트 중간에 위치
           sheetRef.current!.style.setProperty(
             "transform",
             `translateY(${midY - maxY}px)`,
           );
-        } else {
+        }
+
+        if (isMid) {
           // 바텀 시트 맨 아래에 위치
           sheetRef.current!.style.setProperty("transform", `translateY(0)`);
           onClose?.();
         }
       }
 
-      // 바텀 시트 중단 ~ 하단 사이에 위치하는지
-      const isBetweenMidAndMax = currentY < maxY && currentY > midY;
-
       if (movingDirection === "up") {
-        if (isBetweenMidAndMax) {
-          sheetRef.current!.style.setProperty(
-            "transform",
-            `translateY(${minY - maxY}px)`,
-          );
-          onOpen?.();
-        } else {
+        if (isBottom) {
           sheetRef.current!.style.setProperty(
             "transform",
             `translateY(${midY - maxY}px)`,
+          );
+          onOpen?.();
+        }
+
+        if (isMid) {
+          sheetRef.current!.style.setProperty(
+            "transform",
+            `translateY(${minY - maxY}px)`,
           );
         }
       }
@@ -206,7 +208,7 @@ export const useBottomSheetMoving = ({
     sheetRef.current?.addEventListener("touchmove", handleTouchMove, {
       passive: true,
     });
-    sheetRef.current?.addEventListener("touchend", handleTouchEnd, {
+    document.body.addEventListener("touchend", handleTouchEnd, {
       passive: true,
     });
 
@@ -234,7 +236,7 @@ export const useBottomSheetMoving = ({
       };
 
       // * once: true 옵션은 리스너가 한 번만 실행되고 자동으로 제거됨
-      sheetRef.current?.addEventListener("mouseup", handleMouseUp, {
+      document.body.addEventListener("mouseup", handleMouseUp, {
         once: true,
       });
     };
@@ -244,7 +246,7 @@ export const useBottomSheetMoving = ({
     return () => {
       sheetRef.current?.removeEventListener("touchstart", handleTouchStart);
       sheetRef.current?.removeEventListener("touchmove", handleTouchMove);
-      sheetRef.current?.removeEventListener("touchend", handleTouchEnd);
+      document.body.removeEventListener("touchend", handleTouchEnd);
 
       sheetRef.current?.removeEventListener("mousedown", handleMouseDown);
     };
