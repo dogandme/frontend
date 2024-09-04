@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FloatingButtonStyles } from "./FloatingButton.styles";
+import { floatingButtonStyles } from "./FloatingButton.styles";
 
 interface FloatingButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -33,7 +33,7 @@ export const FloatingButton = ({
   };
 
   const isActive = controlledIsActive ?? unControlledIsActive;
-  const { base, active, inactive } = FloatingButtonStyles;
+  const { base, active, inactive } = floatingButtonStyles;
   return (
     <button
       className={`${base} ${isActive ? active : inactive} `}
