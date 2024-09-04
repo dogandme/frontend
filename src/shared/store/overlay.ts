@@ -21,9 +21,9 @@ interface OverlayStore {
 export const useOverlayStore = create<OverlayStore>((set) => ({
   overlays: [],
 
-  addOverlays: (overlay: OverlayInfo) =>
-    set((newOverlay) => ({
-      overlays: [...newOverlay.overlays, overlay],
+  addOverlays: (newOverlay: OverlayInfo) =>
+    set(({ overlays }) => ({
+      overlays: [...overlays, newOverlay],
     })),
 
   removeOverlay: (id: OverlayInfo["id"]) =>
