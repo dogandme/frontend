@@ -1,8 +1,8 @@
 import { Map } from "@vis.gl/react-google-maps";
 import { useEffect } from "react";
 import { CustomMarker } from "@/entities/map/ui";
-import { GOOGLE_MAPS_MAP_ID } from "@/entities/map/constants";
 import { mapOptions } from "../constants";
+const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
 
 /**
  * 기본적으로 GoogleMaps 는 w-full h-full relative로 설정 되어 있습니다.
