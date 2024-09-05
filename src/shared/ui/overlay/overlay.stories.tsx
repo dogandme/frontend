@@ -1,5 +1,9 @@
 import { Meta } from "@storybook/react";
-import { ModalTrigger, NestedModalTrigger } from "./overlay.mock";
+import {
+  AnimationModalTrigger,
+  ModalTrigger,
+  NestedModalTrigger,
+} from "./overlay.mock";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { expect, userEvent, within } from "@storybook/test";
 
@@ -131,6 +135,34 @@ export const Nested = {
               </p>
               <div className="flex justify-end">
                 <NestedModalTrigger />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const AnimationModal = {
+  render: () => {
+    return (
+      <div>
+        {/* html 태그라 가정 */}
+        {/* 스크롤 위치와 상관 없이 Overlay 들이 잘 나타나는지 확인하기 위해 뷰포트 크기를 늘림 */}
+        <div id="root" className="h-[200vh]">
+          {/* Overlay 들이 나타날 공간 , 실제론 RouterProvider 외부에 존재한다. */}
+          <OverlayPortal />
+          <div className="flex h-screen items-center justify-center">
+            <div className="w-96">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Consequatur recusandae ut neque illo, odit accusantium eum quam
+                iste maiores, eveniet mollitia officia veritatis nostrum
+                voluptas dolorum vel ipsam voluptatem eaque.
+              </p>
+              <div className="flex justify-end">
+                <AnimationModalTrigger />
               </div>
             </div>
           </div>

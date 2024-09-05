@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useOverlay } from "@/shared/lib/overlay";
 
 /**
@@ -7,7 +7,7 @@ import { useOverlay } from "@/shared/lib/overlay";
  */
 
 interface ModalProps {
-  handleClose: () => void;
+  handleClose: () => void | Promise<void>;
 }
 
 const ConfirmModal = ({ handleClose }: ModalProps) => {
@@ -121,6 +121,62 @@ export const NestedModalTrigger = () => {
       <button onClick={() => (isOpen ? handleClose() : handleOpen())}>
         {isOpen ? "열려있음" : "중첩 모달 열기"}
       </button>
+    </div>
+  );
+};
+
+/** Close Handler 사용 예시
+ * 24/09/05 추가 된 closeHandler 사용 예시입니다.
+ * 오버레이의 경우 마운트 되기 전,후에 작업 하고 싶은 내용들이 존재 할 수 있습니다.
+ * 예를 들어 애니메이션 효과를 위해 클래스 명을 추가하고 제거하거나, 오버레이가 떠있는 시간을 서버에게 전송하거나 싶을 수 있습니다.
+ * 그 때 사용하는 option 이 closeHandler 입니다.
+ */
+export const AnimationModalTrigger = () => {
+  const { isOpen, handleClose, handleOpen } = useOverlay(
+    () => <AnimationModal handleClose={handleClose} />,
+    {
+      closeHandler: {
+        beforeClose: async () => {
+          const modal = document.getElementById("animation-modal")!;
+          modal.style.transition = "opacity 1s ease-in-out";
+          modal.style.opacity = "0";
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        },
+      },
+    },
+  );
+
+  return (
+    <div className="flex items-center justify-center bg-tangerine-400 px-2 py-2">
+      <button onClick={() => (isOpen ? handleClose() : handleOpen())}>
+        {isOpen ? "열려있음" : "모달 열기"}
+      </button>
+    </div>
+  );
+};
+
+export const AnimationModal = ({ handleClose }: ModalProps) => {
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    // 모달이 열릴 때 애니메이션 적용
+    setIsAnimating(true);
+  }, []);
+
+  const baseClassName = `absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-grey-100 px-12 py-12`;
+  const animationClassName = isAnimating
+    ? "transform scale-100 -translate-x-1/2 -translate-y-1/2 transition-transform duration-1000 ease-in-out"
+    : "transform scale-0 -translate-x-1/2 -translate-y-1/2";
+
+  return (
+    <div
+      id="animation-modal"
+      className={`${baseClassName} ${animationClassName}`}
+    >
+      <p>안녕하세요 저는 모달이예요</p>
+      <div className="mt-2 flex justify-between border-tangerine-50 px-2 py-2">
+        <button onClick={handleClose}>닫기</button>
+      </div>
     </div>
   );
 };

@@ -1,14 +1,17 @@
 import { create } from "zustand";
-import { useState } from "react";
 
 export interface OverlayOptions {
   disabledInteraction?: boolean;
+  closeHandler?: {
+    beforeClose?: () => void | Promise<void>;
+    afterClose?: () => void | Promise<void>;
+  };
 }
 
 export interface OverlayInfo {
   id: number;
   component: JSX.Element;
-  handleClose: () => void;
+  handleClose: () => Promise<void>;
   options: OverlayOptions;
 }
 
@@ -26,7 +29,7 @@ export const useOverlayStore = create<OverlayStore>((set) => ({
       overlays: [...overlays, newOverlay],
     })),
 
-  removeOverlay: (id: OverlayInfo["id"]) =>
+  removeOverlay: (id: number) =>
     set(({ overlays }) => ({
       overlays: overlays.filter((overlay) => overlay.id !== id),
     })),
