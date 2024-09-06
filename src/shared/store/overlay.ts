@@ -2,10 +2,8 @@ import { create } from "zustand";
 
 export interface OverlayOptions {
   disableInteraction?: boolean;
-  closeHandler?: {
-    beforeClose?: () => void | Promise<void>;
-    afterClose?: () => void | Promise<void>;
-  };
+  beforeClose?: () => void | Promise<void>;
+  afterClose?: () => void | Promise<void>;
 }
 
 export interface OverlayInfo {

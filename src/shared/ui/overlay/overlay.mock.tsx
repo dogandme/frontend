@@ -134,13 +134,11 @@ export const AnimationModalTrigger = () => {
   const { isOpen, handleClose, handleOpen } = useOverlay(
     () => <AnimationModal handleClose={handleClose} />,
     {
-      closeHandler: {
-        beforeClose: async () => {
-          const modal = document.getElementById("animation-modal")!;
-          modal.style.transition = "opacity 1s ease-in-out";
-          modal.style.opacity = "0";
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        },
+      beforeClose: async () => {
+        const modal = document.getElementById("animation-modal")!;
+        modal.style.transition = "opacity 1s ease-in-out";
+        modal.style.opacity = "0";
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       },
     },
   );
@@ -162,7 +160,7 @@ export const AnimationModal = ({ handleClose }: ModalProps) => {
     setIsAnimating(true);
   }, []);
 
-  const baseClassName = `absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-grey-100 px-12 py-12`;
+  const baseClassName = `fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-grey-100 px-12 py-12`;
   const animationClassName = isAnimating
     ? "transform scale-100 -translate-x-1/2 -translate-y-1/2 transition-transform duration-1000 ease-in-out"
     : "transform scale-0 -translate-x-1/2 -translate-y-1/2";
