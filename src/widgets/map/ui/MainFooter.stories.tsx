@@ -3,11 +3,11 @@ import { MainFooter } from "./MainFooter";
 import { within, userEvent, expect } from "@storybook/test";
 
 const meta: Meta = {
-  title: "Widgets/Footer",
+  title: "Widgets/map/Footer",
   parameters: {
     docs: {
       description: {
-        component: "하단 푸터를 모아둔 스토리북입니다.",
+        component: "map 에서 사용하는 NavigationFooter 의 스토리북입니다.",
       },
     },
   },
