@@ -12,7 +12,7 @@ export const useOverlay = (
   const { closeHandler } = options;
   const id = new Date().getTime(); // 커스텀 훅이 호출 될 때 마다 유일한 id를 생성합니다.
 
-  const addOverlays = useOverlayStore((state) => state.addOverlays);
+  const addOverlay = useOverlayStore((state) => state.addOverlay);
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
 
   const handleClose = async () => {
@@ -23,7 +23,7 @@ export const useOverlay = (
   };
 
   const handleOpen = async () => {
-    addOverlays({
+    addOverlay({
       id,
       component: createOverlayComponent(handleClose),
       handleClose,

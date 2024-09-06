@@ -17,14 +17,14 @@ export interface OverlayInfo {
 
 interface OverlayStore {
   overlays: OverlayInfo[];
-  addOverlays: (newOverlay: OverlayInfo) => void;
+  addOverlay: (newOverlay: OverlayInfo) => void;
   removeOverlay: (id: number) => void;
 }
 
 export const useOverlayStore = create<OverlayStore>((set) => ({
   overlays: [],
 
-  addOverlays: (newOverlay: OverlayInfo) =>
+  addOverlay: (newOverlay: OverlayInfo) =>
     set(({ overlays }) => ({
       overlays: [...overlays, newOverlay],
     })),
