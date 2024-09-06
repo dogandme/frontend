@@ -1,22 +1,22 @@
 import { forwardRef, HTMLAttributes, LiHTMLAttributes } from "react";
-import { listItemColors } from "./list.styles";
+import { listItemStyles } from "./list.styles";
 
 interface ItemProps extends LiHTMLAttributes<HTMLLIElement> {
   disabled?: boolean;
   isSelected?: boolean;
 }
 
-const Item = forwardRef<HTMLLIElement, ItemProps>(
+export const Item = forwardRef<HTMLLIElement, ItemProps>(
   (
     { children, disabled = false, isSelected = false, onClick, ...props },
     ref,
   ) => {
     const baseStyles =
-      "flex h-[3.625rem] w-full min-h-12 shrink-0 justify-center items-center gap-[.625rem] px-[.625rem] py-[1.125rem] rounded-2xl title-2 cursor-pointer";
+      "flex h-[3.625rem] w-full min-h-12 shrink-0 justify-center items-center gap-[.625rem] px-[.625rem] py-[1.125rem] rounded-2xl title-2";
 
-    const { base, active, hover, focus } = listItemColors;
+    const { base, active, hover, focus } = listItemStyles;
     const ableStyles = `${base} ${active} ${hover} ${focus}`;
-    const disabledStyles = listItemColors.disabled;
+    const disabledStyles = listItemStyles.disabled;
 
     const textColorStyles = disabled
       ? "text-grey-300"
