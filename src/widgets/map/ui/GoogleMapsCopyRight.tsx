@@ -15,8 +15,8 @@ export const GoogleMapsCopyRight = () => {
   };
 
   return (
-    <div className="fixed bottom-[7.5rem] left-0 flex w-full justify-between px-4">
-      <a href="" onClick={handleClick}>
+    <div className="absolute -bottom-6 left-0 flex w-full justify-between px-4">
+      <a href="https://www.google.co.kr/maps/?hl=ko" onClick={handleClick}>
         <img src="/public/google_on_white.png" alt="google-logo" />
       </a>
       <p className="flex items-end gap-1 text-center text-[11px] text-grey-700">
