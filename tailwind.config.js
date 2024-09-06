@@ -16,8 +16,9 @@ export default {
         "floating-button":
           "0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.30)",
       },
-    },
-    extend: {
+      backgroundColor: {
+        "translucent-gray": "rgba(33,33,33,0.25)",
+      },
       keyframes: {
         radar: {
           "0%": {
