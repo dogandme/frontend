@@ -1,14 +1,12 @@
 import { create } from "zustand";
 
-type AuthStore = {
+export type AuthStore = {
   token: string | null;
   role: string | null;
-  userId: number | null;
   nickname: string | null;
 
   setToken: (token: string | null) => void;
   setRole: (role: string | null) => void;
-  setUserId: (userId: number | null) => void;
   setNickname: (nickname: string | null) => void;
 };
 
@@ -20,11 +18,9 @@ type AuthStore = {
 export const useAuthStore = create<AuthStore>((set) => ({
   token: null,
   role: null,
-  userId: null,
   nickname: null,
 
   setToken: (token: string | null) => set({ token }),
   setRole: (role: string | null) => set({ role }),
-  setUserId: (userId: number | null) => set({ userId }),
   setNickname: (nickname: string | null) => set({ nickname }),
 }));

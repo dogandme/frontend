@@ -53,7 +53,6 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     });
 
     useAuthStore.setState({
-      userId: 1,
       token: "Bearer token",
     });
 
@@ -178,9 +177,6 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     });
 
     await step("submit 버튼 유효성 테스트", async () => {
-      // submit 하기 위해선 userId 가 필요하기 때문에 userId를 설정해줍니다.
-      useAuthStore.setState({ userId: 123 });
-
       const clearAll = async () => {
         await userEvent.clear($name);
         await userEvent.clear($textarea);
