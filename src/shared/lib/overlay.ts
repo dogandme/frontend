@@ -19,7 +19,7 @@ export const useOverlay = (
     await closeHandler?.beforeClose?.();
     removeOverlay(id);
     setIsOpen(false);
-    await closeHandler?.beforeClose?.();
+    await closeHandler?.afterClose?.();
   };
 
   const handleOpen = async () => {
