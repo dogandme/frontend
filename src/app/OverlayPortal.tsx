@@ -45,6 +45,8 @@ export const OverlayPortal = () => {
     ({ options: { disableInteraction } }) => disableInteraction === true,
   );
 
+  console.log(ShouldDisableInteraction);
+
   // 떠있는 overlay 중 하나라도 interaction을 막아야 하는 경우에는 body의 스크롤을 막습니다.
   useEffect(() => {
     if (ShouldDisableInteraction) {
@@ -58,7 +60,7 @@ export const OverlayPortal = () => {
 
   // 떠있는 overlay 중 하나라도 전체 뷰포트를 덮어야 하는 경우 배경색을 검정색으로 설정합니다.
   const overlayAreaBackground = ShouldDisableInteraction
-    ? "bg-[rgba(33,33,33,0.32)]" // bg-grey-900 + opacity.32
+    ? "bg-translucent-gray" // bg-gray-900 + opacity.32
     : "";
 
   if (overlays.length === 0) return null;
