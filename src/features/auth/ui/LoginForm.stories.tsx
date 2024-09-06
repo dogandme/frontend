@@ -119,7 +119,6 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
       token: null,
       role: null,
       nickname: null,
-      userId: null,
     });
     return <Story />;
   },
@@ -151,11 +150,10 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
     });
 
     await step("API 요청이 일어나기 전까지 토큰은 존재하지 않는다.", () => {
-      const { token, role, nickname, userId } = useAuthStore.getState();
+      const { token, role, nickname } = useAuthStore.getState();
       expect(token).toBe(null);
       expect(role).toBe(null);
       expect(nickname).toBe(null);
-      expect(userId).toBe(null);
     });
 
     await userEvent.type($input, "abcd123@naver.com");
@@ -165,11 +163,10 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
     await step("API 요청이 일어난 후에는 토큰에 값이 존재한다.", async () => {
       // 목업된 API 데이터를 받기 위한 딜레이 설정
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const { token, role, nickname, userId } = useAuthStore.getState();
+      const { token, role, nickname } = useAuthStore.getState();
       expect(token).toBe("Bearer token");
       expect(role).toBe("USER_USER");
       expect(nickname).toBe("뽀송이");
-      expect(userId).toBe(1234);
     });
   },
 };
@@ -181,7 +178,6 @@ export const APIFailedTest: StoryObj<typeof LoginForm> = {
       token: null,
       role: null,
       nickname: null,
-      userId: null,
     });
     return <Story />;
   },
@@ -213,11 +209,10 @@ export const APIFailedTest: StoryObj<typeof LoginForm> = {
     });
 
     await step("API 요청이 일어나기 전까지 토큰은 존재하지 않는다.", () => {
-      const { token, role, nickname, userId } = useAuthStore.getState();
+      const { token, role, nickname } = useAuthStore.getState();
       expect(token).toBe(null);
       expect(role).toBe(null);
       expect(nickname).toBe(null);
-      expect(userId).toBe(null);
     });
 
     await step("API 요청이 실패한 경우엔 상태가 변경되지 않는다.", async () => {
@@ -234,11 +229,10 @@ export const APIFailedTest: StoryObj<typeof LoginForm> = {
       // 목업된 API 데이터를 받기 위한 딜레이 설정
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const { token, role, nickname, userId } = useAuthStore.getState();
+      const { token, role, nickname } = useAuthStore.getState();
       expect(token).toBe(null);
       expect(role).toBe(null);
       expect(nickname).toBe(null);
-      expect(userId).toBe(null);
 
       expect(alertMessage).toEqual("아이디 또는 비밀번호를 다시 확인해 주세요");
       window.alert = originalAlert;

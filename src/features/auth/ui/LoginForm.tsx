@@ -104,7 +104,6 @@ export const SubmitButton = () => {
   const { mutate: postLoginForm } = usePostLoginForm();
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
-  const setUserId = useAuthStore((state) => state.setUserId);
   const setNickname = useAuthStore((state) => state.setNickname);
 
   const handleSubmit = () => {
@@ -123,10 +122,9 @@ export const SubmitButton = () => {
       { email, password, persistLogin },
       {
         onSuccess: (data) => {
-          const { authorization, role, userId, nickname } = data.content;
+          const { authorization, role, nickname } = data.content;
           setToken(authorization);
           setRole(role);
-          setUserId(userId);
           setNickname(nickname);
 
           const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
