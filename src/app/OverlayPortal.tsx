@@ -22,16 +22,6 @@ const OverlayController = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
     ? "h-screen w-screen "
     : "w-screen h-fit";
 
-  useEffect(() => {
-    if (disabledInteraction) {
-      document.body.style.overflow = "hidden";
-    }
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [disabledInteraction]);
-
   return (
     <div
       onClick={handleOverlayClick}
@@ -46,10 +36,24 @@ const OverlayController = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
  * OverlayPortal 컴포넌트는 오버레이를 렌더링합니다.
  * overlay들이 렌더링 되는 영역은 뷰포트 크기를 가진 div 입니다.
  * 따라서 overlay들은 뷰포트를 기준으로 하여 top, left, right, bottom 값으로 위치를 조정합니다.
- *
  */
 export const OverlayPortal = () => {
   const overlays = useOverlayStore((state) => state.overlays);
+
+  // 떠있는 overlay 중 하나라도 interaction을 막아야 하는 경우에는 body의 스크롤을 막습니다.
+  const isShouldDisabledInteraction = overlays.some(
+    ({ options: { disabledInteraction } }) => disabledInteraction === true,
+  );
+
+  useEffect(() => {
+    if (isShouldDisabledInteraction) {
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isShouldDisabledInteraction]);
 
   if (overlays.length === 0) return null;
 
