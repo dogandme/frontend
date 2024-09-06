@@ -8,7 +8,7 @@ import { OverlayPortal } from "@/app/OverlayPortal";
 import { expect, userEvent, within } from "@storybook/test";
 
 export default {
-  title: "shared/ui/overlay",
+  title: "shared/overlay",
 } as Meta;
 
 /**
