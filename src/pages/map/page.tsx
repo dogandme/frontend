@@ -5,7 +5,7 @@ export const MapPage = () => {
   return (
     <div className="relative h-full">
       <GoogleMaps />
-      <div className="absolute bottom-[52px] flex w-full flex-col gap-2 px-4">
+      <div className="absolute bottom-[60px] flex w-full flex-col gap-2 px-4">
         {/* TODO 버튼들 기능 붙혀서 리팩토링 하기 */}
         <div className="flex justify-between">
           <div className="flex items-end">
