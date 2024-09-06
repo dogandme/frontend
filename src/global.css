@@ -91,17 +91,19 @@ textarea {
 }
 
 /* WebKit 기반 브라우저 (Chrome, Safari) */
+main,
 section::-webkit-scrollbar {
   display: none;
 }
 
 /* Firefox */
+main,
 section {
   scrollbar-width: none; /* Firefox */
 }
 
 /* Edge, Internet Explorer */
-section {
+main section {
   -ms-overflow-style: none; /* IE and Edge */
 }
 
