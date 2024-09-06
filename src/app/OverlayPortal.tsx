@@ -41,25 +41,25 @@ const OverlayWrapper = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
 export const OverlayPortal = () => {
   const overlays = useOverlayStore((state) => state.overlays);
 
-  const ShouldDisableInteraction = overlays.some(
+  const shouldDisableInteraction = overlays.some(
     ({ options: { disableInteraction } }) => disableInteraction === true,
   );
 
-  console.log(ShouldDisableInteraction);
+  console.log(shouldDisableInteraction);
 
   // 떠있는 overlay 중 하나라도 interaction을 막아야 하는 경우에는 body의 스크롤을 막습니다.
   useEffect(() => {
-    if (ShouldDisableInteraction) {
+    if (shouldDisableInteraction) {
       document.body.style.overflow = "hidden";
     }
 
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [ShouldDisableInteraction]);
+  }, [shouldDisableInteraction]);
 
   // 떠있는 overlay 중 하나라도 전체 뷰포트를 덮어야 하는 경우 배경색을 검정색으로 설정합니다.
-  const overlayAreaBackground = ShouldDisableInteraction
+  const overlayAreaBackground = shouldDisableInteraction
     ? "bg-translucent-gray" // bg-gray-900 + opacity.32
     : "";
 
