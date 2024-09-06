@@ -1,5 +1,4 @@
 import { OverlayPortal } from "@/app/OverlayPortal";
-import { MainFooter } from "@/widgets/footer/ui";
 import { MainFooter } from "@/widgets/map/ui";
 import { GlobalNavigationBar } from "@/widgets/navigationbar/ui";
 import { Outlet } from "react-router-dom";
