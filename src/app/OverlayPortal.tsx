@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useOverlayStore } from "@/shared/store/overlay";
 import type { OverlayInfo } from "@/shared/store/overlay";
 
@@ -61,13 +62,14 @@ export const OverlayPortal = () => {
     : "";
 
   if (overlays.length === 0) return null;
-  return (
+  return createPortal(
     <div
       className={`fixed left-0 top-0 z-[1000] h-screen w-screen ${overlayAreaBackground}`}
     >
       {overlays.map((overlayInfo) => (
         <OverlayWrapper key={overlayInfo.id} overlayInfo={overlayInfo} />
       ))}
-    </div>
+    </div>,
+    document.body,
   );
 };
