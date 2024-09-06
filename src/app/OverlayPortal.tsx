@@ -8,13 +8,13 @@ import type { OverlayInfo } from "@/shared/store/overlay";
  * 만약 overlay.options.disabledInteraction 이 true 일 경우엔 외부 클릭을 막습니다.
  */
 const OverlayWrapper = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
-  const { component, handleClose, options } = overlayInfo;
+  const { component, onClose, options } = overlayInfo;
   const { disableInteraction } = options;
 
   // 기본적으로 발생한 Overlay가 아닌 영역을 클릭하면 Overlay를 닫습니다.
   const handleWrapperClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      handleClose();
+      onClose();
     }
   };
   // 만약 disabledInteraction 이 false인 경우 (Overlay와 함께 인터렉션을 할 경우)에는
@@ -44,8 +44,6 @@ export const OverlayPortal = () => {
   const shouldDisableInteraction = overlays.some(
     ({ options: { disableInteraction } }) => disableInteraction === true,
   );
-
-  console.log(shouldDisableInteraction);
 
   // 떠있는 overlay 중 하나라도 interaction을 막아야 하는 경우에는 body의 스크롤을 막습니다.
   useEffect(() => {

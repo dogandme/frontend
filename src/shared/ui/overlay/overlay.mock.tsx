@@ -7,17 +7,17 @@ import { useOverlay } from "@/shared/lib/overlay";
  */
 
 interface ModalProps {
-  handleClose: () => void | Promise<void>;
+  onClose: () => void | Promise<void>;
 }
 
-const ConfirmModal = ({ handleClose }: ModalProps) => {
+const ConfirmModal = ({ onClose }: ModalProps) => {
   /**
    * 가끔씩 어떤 오버레이는 다른 오버레이를 호출 하기도 합니다.
    * ConfirmModal은 저장 시 저장이 완료되었단 스낵바를 렌더링 해야 합니다.
    * ConfirmModal은 트리거 되는 오버레이면서, 다른 오버레이를 트리거 하는 컴포넌트 이기도 합니다.
    */
-  const { handleClose: closeSnackbar, handleOpen: openSnackbar } = useOverlay(
-    () => <SaveSnackbar handleClose={closeSnackbar} />,
+  const { onClose: closeSnackbar, handleOpen: openSnackbar } = useOverlay(
+    () => <SaveSnackbar onClose={closeSnackbar} />,
     {
       disableInteraction: false, // 스낵바의 경우엔 interaction을 중지시키지 않을 것입니다.
     },
@@ -26,11 +26,11 @@ const ConfirmModal = ({ handleClose }: ModalProps) => {
   // 모달의 비즈니스 로직과 상위에서 정의된 onClose 메소드를 사용합니다.
   const handleSave = () => {
     // 비즈니스 로직..
-    handleClose();
+    onClose();
     openSnackbar(); // 다른 오버레이를 호출합니다.
   };
   const handleExit = () => {
-    handleClose();
+    onClose();
   };
 
   return (
@@ -49,10 +49,10 @@ const ConfirmModal = ({ handleClose }: ModalProps) => {
 /**
  * 해당 스낵바는 노출 이후 1초 뒤 자동으로 사라집니다.
  */
-const SaveSnackbar = ({ handleClose }: ModalProps) => {
+const SaveSnackbar = ({ onClose }: ModalProps) => {
   useEffect(() => {
     setTimeout(() => {
-      handleClose();
+      onClose();
     }, 1000);
   });
 
@@ -66,13 +66,13 @@ const SaveSnackbar = ({ handleClose }: ModalProps) => {
 /* 오버레이를 호출시키는 컴포넌트를 만들어봅시다. */
 
 export const ModalTrigger = () => {
-  const { isOpen, handleClose, handleOpen } = useOverlay(() => (
-    <ConfirmModal handleClose={handleClose} />
+  const { isOpen, onClose, handleOpen } = useOverlay(() => (
+    <ConfirmModal onClose={onClose} />
   ));
 
   return (
     <div className="flex items-center justify-center bg-tangerine-400 px-2 py-2">
-      <button onClick={() => (isOpen ? handleClose() : handleOpen())}>
+      <button onClick={() => (isOpen ? onClose() : handleOpen())}>
         {isOpen ? "열려있음" : "모달 열기"}
       </button>
     </div>
@@ -83,9 +83,9 @@ export const ModalTrigger = () => {
  * 모달을 중첩적으롭 불러와 사용하는 경우를 연출합니다
  */
 
-const FirstNestedModal = ({ handleClose }: ModalProps) => {
-  const { handleClose: secondHandleClose, handleOpen } = useOverlay(() => (
-    <SecondNestedModal handleClose={secondHandleClose} />
+const FirstNestedModal = ({ onClose }: ModalProps) => {
+  const { onClose: secondonClose, handleOpen } = useOverlay(() => (
+    <SecondNestedModal onClose={secondonClose} />
   ));
 
   return (
@@ -93,31 +93,31 @@ const FirstNestedModal = ({ handleClose }: ModalProps) => {
       <p>첫번째 모달</p>
       <div className="mt-2 flex justify-between border-tangerine-50 px-2 py-2">
         <button onClick={handleOpen}>두 번째 모달 열기</button>
-        <button onClick={handleClose}>닫기</button>
+        <button onClick={onClose}>닫기</button>
       </div>
     </div>
   );
 };
 
-const SecondNestedModal = ({ handleClose }: ModalProps) => {
+const SecondNestedModal = ({ onClose }: ModalProps) => {
   return (
     <div className="absolute left-1/2 top-1/2 w-40 -translate-x-1/2 -translate-y-1/2 transform bg-grey-200 px-12 py-12">
       <p>두번째 모달</p>
       <div className="mt-2 flex justify-between border-tangerine-50 px-2 py-2">
-        <button onClick={handleClose}>닫기</button>
+        <button onClick={onClose}>닫기</button>
       </div>
     </div>
   );
 };
 
 export const NestedModalTrigger = () => {
-  const { isOpen, handleClose, handleOpen } = useOverlay(() => (
-    <FirstNestedModal handleClose={handleClose} />
+  const { isOpen, onClose, handleOpen } = useOverlay(() => (
+    <FirstNestedModal onClose={onClose} />
   ));
 
   return (
     <div className="flex items-center justify-center bg-tangerine-400 px-2 py-2">
-      <button onClick={() => (isOpen ? handleClose() : handleOpen())}>
+      <button onClick={() => (isOpen ? onClose() : handleOpen())}>
         {isOpen ? "열려있음" : "중첩 모달 열기"}
       </button>
     </div>
@@ -131,8 +131,8 @@ export const NestedModalTrigger = () => {
  * 그 때 사용하는 option 이 closeHandler 입니다.
  */
 export const AnimationModalTrigger = () => {
-  const { isOpen, handleClose, handleOpen } = useOverlay(
-    () => <AnimationModal handleClose={handleClose} />,
+  const { isOpen, onClose, handleOpen } = useOverlay(
+    () => <AnimationModal onClose={onClose} />,
     {
       beforeClose: async () => {
         const modal = document.getElementById("animation-modal")!;
@@ -145,14 +145,14 @@ export const AnimationModalTrigger = () => {
 
   return (
     <div className="flex items-center justify-center bg-tangerine-400 px-2 py-2">
-      <button onClick={() => (isOpen ? handleClose() : handleOpen())}>
+      <button onClick={() => (isOpen ? onClose() : handleOpen())}>
         {isOpen ? "열려있음" : "모달 열기"}
       </button>
     </div>
   );
 };
 
-export const AnimationModal = ({ handleClose }: ModalProps) => {
+export const AnimationModal = ({ onClose }: ModalProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
@@ -172,7 +172,7 @@ export const AnimationModal = ({ handleClose }: ModalProps) => {
     >
       <p>안녕하세요 저는 모달이예요</p>
       <div className="mt-2 flex justify-between border-tangerine-50 px-2 py-2">
-        <button onClick={handleClose}>닫기</button>
+        <button onClick={onClose}>닫기</button>
       </div>
     </div>
   );

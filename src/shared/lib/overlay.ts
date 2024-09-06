@@ -2,7 +2,7 @@ import { useState } from "react";
 import { OverlayOptions, useOverlayStore } from "../store/overlay";
 
 export const useOverlay = (
-  createOverlayComponent: (handleClose: () => Promise<void>) => JSX.Element,
+  createOverlayComponent: (onClose: () => Promise<void>) => JSX.Element,
   options: OverlayOptions = {},
 ) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -12,7 +12,7 @@ export const useOverlay = (
   const addOverlay = useOverlayStore((state) => state.addOverlay);
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
 
-  const handleClose = async () => {
+  const onClose = async () => {
     await beforeClose?.();
     removeOverlay(id);
     setIsOpen(false);
@@ -22,12 +22,12 @@ export const useOverlay = (
   const handleOpen = async () => {
     addOverlay({
       id,
-      component: createOverlayComponent(handleClose),
-      handleClose,
+      component: createOverlayComponent(onClose),
+      onClose,
       options: { disableInteraction },
     });
     setIsOpen(true);
   };
 
-  return { handleOpen, handleClose, isOpen };
+  return { handleOpen, onClose, isOpen };
 };
