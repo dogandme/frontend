@@ -11,7 +11,7 @@ export const GoogleMapsCopyRight = () => {
     const center = map.getCenter();
     const centerString = center.toString();
     const url = `https://www.google.com/maps?ll=${centerString.substring(1, centerString.length - 1)}&z=16&t=m&hl=ko-KR&gl=US&mapclient=apiv3`;
-    window.open(url, "_blank");
+    window.open(url, "_blank", "noopener noreferrer");
   };
 
   return (
@@ -24,6 +24,7 @@ export const GoogleMapsCopyRight = () => {
         <a
           href="https://www.google.com/intl/ko-KR_US/help/terms_maps/"
           target="_blank"
+          rel="noreferrer noopener"
         >
           약관
         </a>
