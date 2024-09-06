@@ -1,4 +1,4 @@
-import { LiHTMLAttributes, useRef } from "react";
+import { LiHTMLAttributes } from "react";
 import List from "../list/List";
 import { useSelectContext } from "./select.context";
 
@@ -14,7 +14,6 @@ const Option = ({
   onClick,
   ...props
 }: OptionProps) => {
-  const ref = useRef<HTMLLIElement>(null);
   const { onClose } = useSelectContext();
 
   const handleClick = (e: React.MouseEvent<HTMLLIElement>) => {
@@ -30,7 +29,6 @@ const Option = ({
 
   return (
     <List.Item
-      ref={ref}
       onClick={handleClick}
       additionalClassName={textColorStyles}
       {...props}
