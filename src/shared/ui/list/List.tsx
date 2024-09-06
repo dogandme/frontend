@@ -23,7 +23,6 @@ export const Item = forwardRef<HTMLLIElement, ItemProps>(
         ref={ref}
         className={`${baseStyles} ${disabled ? disabledStyles : ableStyles} ${additionalClassName}`}
         aria-disabled={disabled}
-        role="listitem"
         onClick={onClick}
         {...props}
       >
@@ -37,7 +36,7 @@ type ListProps = HTMLAttributes<HTMLUListElement>;
 
 const ListMain = ({ children, ...props }: ListProps) => {
   return (
-    <ul className="flex w-full flex-col justify-center" role="list" {...props}>
+    <ul className="flex w-full flex-col justify-center" {...props}>
       {children}
     </ul>
   );
