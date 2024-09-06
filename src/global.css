@@ -133,3 +133,14 @@ section {
 .react-modal-sheet-content {
   padding: 1rem;
 }
+
+/* Google 기본 로고 숨기기 */
+img[alt="Google"] {
+  display: none !important;
+}
+/* Google 기본 저작권 숨기기 */
+.gm-style-cc,
+.gmnoprint,
+.gm-style-cc a {
+  display: none !important;
+}

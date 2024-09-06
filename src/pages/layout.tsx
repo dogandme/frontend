@@ -1,4 +1,4 @@
-import { MainFooter } from "@/widgets/footer/ui";
+import { MainFooter } from "@/widgets/map/ui";
 import { GlobalNavigationBar } from "@/widgets/navigationbar/ui";
 import { Outlet } from "react-router-dom";
 const MainLayout = () => {
@@ -12,7 +12,7 @@ const MainLayout = () => {
       {/* TODO 바텀시트 나오면 바텀시트로 대체하기 
         TODO 저작권 정책 아이콘 어디에 둘 지 생각해보기
       */}
-      <div className="z-999 absolute bottom-[5.125rem] w-full rounded-t-[28px] border px-4 py-4"></div>
+      <div className="z-999 absolute bottom-[5rem] w-full rounded-t-[28px] bg-grey-0 px-4 py-4"></div>
       <MainFooter />
     </>
   );
