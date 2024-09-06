@@ -9,8 +9,8 @@ export const GoogleMapsCopyRight = () => {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const center = map.getCenter();
-    const centerString = center.toString();
-    const url = `https://www.google.com/maps?ll=${centerString.substring(1, centerString.length - 1)}&z=16&t=m&hl=ko-KR&gl=US&mapclient=apiv3`;
+    const latlon = center.toUrlValue();
+    const url = `https://www.google.com/maps?ll=${latlon}&z=16&t=m&hl=ko-KR&gl=US&mapclient=apiv3`;
     window.open(url, "_blank", "noopener noreferrer");
   };
 
