@@ -11,7 +11,6 @@ export interface PetInfoResponse {
 
 export interface PetInfoFormData {
   token: string;
-  userId: number;
   name: string;
   breed: string;
   personalities: string[];
@@ -20,8 +19,7 @@ export interface PetInfoFormData {
 }
 
 const postPetInfo = async (formObject: PetInfoFormData) => {
-  const { token, userId, name, personalities, description, profile } =
-    formObject;
+  const { token, name, personalities, description, profile } = formObject;
 
   const formData = new FormData();
 
@@ -33,7 +31,6 @@ const postPetInfo = async (formObject: PetInfoFormData) => {
     formData.append("profile", "");
   }
 
-  formData.append("userid", userId.toString());
   formData.append("name", name);
   formData.append("personalities", JSON.stringify(personalities));
   formData.append("description", description);

@@ -215,7 +215,7 @@ export const SubmitButton = () => {
     // TODO refactor : 유효성 검사 메소드 만들어 사용하기
     const { isValidName, name, breed, characterList, introduce, profileImage } =
       petInfoForm;
-    const { userId, token } = useAuthStore.getState();
+    const { token } = useAuthStore.getState();
 
     const isNameEmpty = name.length === 0;
     const isBreedEmpty = breed.length === 0;
@@ -226,16 +226,15 @@ export const SubmitButton = () => {
     }
     // TODO 엔드포인트 양식 정해지면 API 요청 기능 추가하기
 
-    if (!userId || !token) {
+    if (!token) {
       throw new Error(
-        "userId가 없거나 token이 존재하지 않는다면 해당 페이지에 접속 할 수 없습니다. 페이지에 접속 할 수 있는 권한의 범위를 확인하세요",
+        "토큰이 없다면 해당 페이지에 접근할 수 없습니다. 토큰이 존재하는지 확인해주세요",
       );
     }
 
     postPetInfo(
       {
         token,
-        userId,
         name,
         breed,
         personalities: characterList,
