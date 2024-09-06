@@ -40,11 +40,11 @@ const OverlayController = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
 export const OverlayPortal = () => {
   const overlays = useOverlayStore((state) => state.overlays);
 
-  // 떠있는 overlay 중 하나라도 interaction을 막아야 하는 경우에는 body의 스크롤을 막습니다.
   const isShouldDisabledInteraction = overlays.some(
     ({ options: { disabledInteraction } }) => disabledInteraction === true,
   );
 
+  // 떠있는 overlay 중 하나라도 interaction을 막아야 하는 경우에는 body의 스크롤을 막습니다.
   useEffect(() => {
     if (isShouldDisabledInteraction) {
       document.body.style.overflow = "hidden";
@@ -55,10 +55,16 @@ export const OverlayPortal = () => {
     };
   }, [isShouldDisabledInteraction]);
 
-  if (overlays.length === 0) return null;
+  // 떠있는 overlay 중 하나라도 전체 뷰포트를 덮어야 하는 경우 배경색을 검정색으로 설정합니다.
+  const overlayAreaBackground = isShouldDisabledInteraction
+    ? "bg-[rgba(33,33,33,0.32)]" // bg-grey-900 + opacity.32
+    : "";
 
+  if (overlays.length === 0) return null;
   return (
-    <div className="fixed left-0 top-0 z-[1000] h-screen w-screen">
+    <div
+      className={`fixed left-0 top-0 z-[1000] h-screen w-screen ${overlayAreaBackground}`}
+    >
       {overlays.map((overlayInfo) => (
         <OverlayController key={overlayInfo.id} overlayInfo={overlayInfo} />
       ))}
