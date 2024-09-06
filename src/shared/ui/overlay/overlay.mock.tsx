@@ -19,7 +19,7 @@ const ConfirmModal = ({ handleClose }: ModalProps) => {
   const { handleClose: SnackbarClose, handleOpen: SnackbarOpen } = useOverlay(
     () => <SaveSnackbar handleClose={SnackbarClose} />,
     {
-      disabledInteraction: false, // 스낵바의 경우엔 interaction을 중지시키지 않을 것입니다.
+      disableInteraction: false, // 스낵바의 경우엔 interaction을 중지시키지 않을 것입니다.
     },
   );
 
