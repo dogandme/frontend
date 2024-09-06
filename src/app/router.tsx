@@ -8,6 +8,7 @@ import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { HistoryTracker } from "./HistoryTracker";
 import { MapPage } from "@/pages/map";
+import { OverlayPortal } from "./OverlayPortal";
 
 export const router = createBrowserRouter([
   {
@@ -54,6 +55,7 @@ export const router = createBrowserRouter([
     path: ROUTER_PATH.SIGN_UP,
     element: (
       <>
+        <OverlayPortal />
         <HistoryTracker />
         <Outlet />
       </>
