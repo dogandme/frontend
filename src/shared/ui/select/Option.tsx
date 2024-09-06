@@ -4,11 +4,13 @@ import { useSelectContext } from "./select.context";
 
 interface OptionProps extends LiHTMLAttributes<HTMLLIElement> {
   isSelected?: boolean;
+  disabled?: boolean;
 }
 
 const Option = ({
   children,
   isSelected = false,
+  disabled = false,
   onClick,
   ...props
 }: OptionProps) => {
@@ -20,11 +22,17 @@ const Option = ({
     onClose();
   };
 
+  const textColorStyles = disabled
+    ? "text-grey-300"
+    : isSelected
+      ? "text-tangerine-500"
+      : "text-grey-700";
+
   return (
     <List.Item
       ref={ref}
-      isSelected={isSelected}
       onClick={handleClick}
+      additionalClassName={textColorStyles}
       {...props}
     >
       {children}
