@@ -25,10 +25,6 @@ export const MapPage = () => {
         </div>
         <MarkingButton />
       </div>
-      {/* TODO 바텀시트 나오면 바텀시트로 대체하기 
-        TODO 저작권 정책 아이콘 어디에 둘 지 생각해보기
-      */}
-      <div className="z-999 absolute bottom-0 w-full rounded-t-[28px] border px-4 py-4"></div>
     </div>
   );
 };

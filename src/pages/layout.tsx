@@ -9,8 +9,10 @@ const MainLayout = () => {
       <section className="flex grow flex-col overflow-y-scroll">
         <Outlet />
       </section>
-      {/* 해당 부분은 바텀 시트가 나오게 되면 삭제 될 부분 */}
-      <div className="rounded-t-[28px] px-4 py-4"></div>
+      {/* TODO 바텀시트 나오면 바텀시트로 대체하기 
+        TODO 저작권 정책 아이콘 어디에 둘 지 생각해보기
+      */}
+      <div className="z-999 absolute bottom-[5.125rem] w-full rounded-t-[28px] border px-4 py-4"></div>
       <MainFooter />
     </>
   );
