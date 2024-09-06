@@ -235,11 +235,13 @@ export const SubmitButton = () => {
     postPetInfo(
       {
         token,
-        name,
-        breed,
-        personalities: characterList,
-        description: introduce,
-        profile: profileImage,
+        formObject: {
+          name,
+          breed,
+          personalities: characterList,
+          description: introduce,
+          profile: profileImage,
+        },
       },
       {
         onSuccess: (data) => {

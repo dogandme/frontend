@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { SIGN_UP_END_POINT } from "../constants";
+import type { AuthStore } from "@/shared/store/auth";
 
 export interface PetInfoResponse {
   code: number;
@@ -10,7 +11,6 @@ export interface PetInfoResponse {
 }
 
 export interface PetInfoFormData {
-  token: string;
   name: string;
   breed: string;
   personalities: string[];
@@ -18,8 +18,16 @@ export interface PetInfoFormData {
   profile: File | null;
 }
 
-const postPetInfo = async (formObject: PetInfoFormData) => {
-  const { token, name, personalities, description, profile } = formObject;
+interface PostPetInfoArgs {
+  token: NonNullable<AuthStore["token"]>;
+  formObject: PetInfoFormData;
+}
+
+const postPetInfo = async ({
+  token,
+  formObject,
+}: PostPetInfoArgs): Promise<PetInfoResponse> => {
+  const { name, personalities, description, profile } = formObject;
 
   const formData = new FormData();
 
@@ -55,7 +63,7 @@ const postPetInfo = async (formObject: PetInfoFormData) => {
 };
 
 export const usePostPetInfo = () => {
-  return useMutation<PetInfoResponse, Error, PetInfoFormData>({
+  return useMutation<PetInfoResponse, Error, PostPetInfoArgs>({
     mutationFn: postPetInfo,
   });
 };
