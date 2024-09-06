@@ -16,8 +16,8 @@ const ConfirmModal = ({ handleClose }: ModalProps) => {
    * ConfirmModal은 저장 시 저장이 완료되었단 스낵바를 렌더링 해야 합니다.
    * ConfirmModal은 트리거 되는 오버레이면서, 다른 오버레이를 트리거 하는 컴포넌트 이기도 합니다.
    */
-  const { handleClose: SnackbarClose, handleOpen: SnackbarOpen } = useOverlay(
-    () => <SaveSnackbar handleClose={SnackbarClose} />,
+  const { handleClose: closeSnackbar, handleOpen: openSnackbar } = useOverlay(
+    () => <SaveSnackbar handleClose={closeSnackbar} />,
     {
       disableInteraction: false, // 스낵바의 경우엔 interaction을 중지시키지 않을 것입니다.
     },
@@ -27,9 +27,8 @@ const ConfirmModal = ({ handleClose }: ModalProps) => {
   const handleSave = () => {
     // 비즈니스 로직..
     handleClose();
-    SnackbarOpen(); // 다른 오버레이를 호출합니다.
+    openSnackbar(); // 다른 오버레이를 호출합니다.
   };
-
   const handleExit = () => {
     handleClose();
   };
