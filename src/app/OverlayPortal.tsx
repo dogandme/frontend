@@ -6,12 +6,12 @@ import type { OverlayInfo } from "@/shared/store/overlay";
  * OverlayController 컴포넌트는 overlayInfo 에 담긴 정보에 따라 다르게 행동합니다.
  * 만약 overlay.options.disabledInteraction 이 true 일 경우엔 외부 클릭을 막습니다.
  */
-const OverlayController = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
+const OverlayWrapper = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
   const { component, handleClose, options } = overlayInfo;
   const { disableInteraction } = options;
 
   // 기본적으로 발생한 Overlay가 아닌 영역을 클릭하면 Overlay를 닫습니다.
-  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleWrapperClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       handleClose();
     }
@@ -24,7 +24,7 @@ const OverlayController = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
 
   return (
     <div
-      onClick={handleOutsideClick}
+      onClick={handleWrapperClick}
       className={`absolute ${overlayAreaClass}`}
     >
       {component}
@@ -66,7 +66,7 @@ export const OverlayPortal = () => {
       className={`fixed left-0 top-0 z-[1000] h-screen w-screen ${overlayAreaBackground}`}
     >
       {overlays.map((overlayInfo) => (
-        <OverlayController key={overlayInfo.id} overlayInfo={overlayInfo} />
+        <OverlayWrapper key={overlayInfo.id} overlayInfo={overlayInfo} />
       ))}
     </div>
   );
