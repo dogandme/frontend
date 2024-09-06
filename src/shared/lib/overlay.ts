@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { OverlayOptions, useOverlayStore } from "../store/overlay";
 
-export const useOverlay = <T = unknown, V = unknown>(
-  createOverlayComponent: (
-    handleClose: (closeArgs?: { beforeArgs: T; afterArgs: V }) => Promise<void>,
-  ) => JSX.Element,
+export const useOverlay = (
+  createOverlayComponent: (handleClose: () => Promise<void>) => JSX.Element,
   options: OverlayOptions = {
-    disabledInteraction: true,
+    disableInteraction: true,
     closeHandler: undefined,
   },
 ) => {
@@ -29,7 +27,7 @@ export const useOverlay = <T = unknown, V = unknown>(
       id,
       component: createOverlayComponent(handleClose),
       handleClose,
-      options: { disabledInteraction: true, ...options },
+      options: { disableInteraction: true, ...options },
     });
     setIsOpen(true);
   };

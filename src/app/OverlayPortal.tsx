@@ -8,23 +8,23 @@ import type { OverlayInfo } from "@/shared/store/overlay";
  */
 const OverlayController = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
   const { component, handleClose, options } = overlayInfo;
-  const { disabledInteraction } = options;
+  const { disableInteraction } = options;
 
   // 기본적으로 발생한 Overlay가 아닌 영역을 클릭하면 Overlay를 닫습니다.
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       handleClose();
     }
   };
   // 만약 disabledInteraction 이 false인 경우 (Overlay와 함께 인터렉션을 할 경우)에는
   // OverlayController 영역을 최소화 합니다.
-  const overlayAreaClass = disabledInteraction
+  const overlayAreaClass = disableInteraction
     ? "h-screen w-screen "
     : "w-screen h-fit";
 
   return (
     <div
-      onClick={handleOverlayClick}
+      onClick={handleOutsideClick}
       className={`absolute ${overlayAreaClass}`}
     >
       {component}
@@ -40,23 +40,23 @@ const OverlayController = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
 export const OverlayPortal = () => {
   const overlays = useOverlayStore((state) => state.overlays);
 
-  const isShouldDisabledInteraction = overlays.some(
-    ({ options: { disabledInteraction } }) => disabledInteraction === true,
+  const isShouldDisableInteraction = overlays.some(
+    ({ options: { disableInteraction } }) => disableInteraction === true,
   );
 
   // 떠있는 overlay 중 하나라도 interaction을 막아야 하는 경우에는 body의 스크롤을 막습니다.
   useEffect(() => {
-    if (isShouldDisabledInteraction) {
+    if (isShouldDisableInteraction) {
       document.body.style.overflow = "hidden";
     }
 
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [isShouldDisabledInteraction]);
+  }, [isShouldDisableInteraction]);
 
   // 떠있는 overlay 중 하나라도 전체 뷰포트를 덮어야 하는 경우 배경색을 검정색으로 설정합니다.
-  const overlayAreaBackground = isShouldDisabledInteraction
+  const overlayAreaBackground = isShouldDisableInteraction
     ? "bg-[rgba(33,33,33,0.32)]" // bg-grey-900 + opacity.32
     : "";
 

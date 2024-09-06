@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export interface OverlayOptions {
-  disabledInteraction?: boolean;
+  disableInteraction?: boolean;
   closeHandler?: {
     beforeClose?: () => void | Promise<void>;
     afterClose?: () => void | Promise<void>;
