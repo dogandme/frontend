@@ -3,12 +3,12 @@ import { listItemStyles } from "./list.styles";
 
 interface ItemProps extends LiHTMLAttributes<HTMLLIElement> {
   disabled?: boolean;
-  isSelected?: boolean;
+  additionalClassName?: string;
 }
 
 export const Item = forwardRef<HTMLLIElement, ItemProps>(
   (
-    { children, disabled = false, isSelected = false, onClick, ...props },
+    { children, disabled = false, onClick, additionalClassName, ...props },
     ref,
   ) => {
     const baseStyles =
@@ -18,16 +18,10 @@ export const Item = forwardRef<HTMLLIElement, ItemProps>(
     const ableStyles = `${base} ${active} ${hover} ${focus}`;
     const disabledStyles = listItemStyles.disabled;
 
-    const textColorStyles = disabled
-      ? "text-grey-300"
-      : isSelected
-        ? "text-tangerine-500"
-        : "text-grey-700";
-
     return (
       <li
         ref={ref}
-        className={`${baseStyles} ${textColorStyles} ${disabled ? disabledStyles : ableStyles}`}
+        className={`${baseStyles} ${disabled ? disabledStyles : ableStyles} ${additionalClassName}`}
         aria-disabled={disabled}
         role="listitem"
         onClick={onClick}
