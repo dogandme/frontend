@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import List from "./List";
+import List, { Item } from "./List";
 
 const meta: Meta<typeof List> = {
   title: "shared/List",
@@ -16,23 +16,33 @@ const meta: Meta<typeof List> = {
       },
     },
   },
-  argTypes: {
-    onClick: { action: "onClick" },
-  },
 };
 
 export default meta;
 
-type Story = StoryObj<typeof List>;
+type ListStory = StoryObj<typeof List>;
 
-export const Default: Story = {
+export const Default: ListStory = {
   render: () => {
     return (
       <List>
-        <List.Item disabled>Item 1</List.Item>
+        <List.Item>Item 1</List.Item>
         <List.Item>Item 2</List.Item>
         <List.Item>Item 3</List.Item>
       </List>
     );
+  },
+};
+
+type ItemStory = StoryObj<typeof Item>;
+
+export const ListItem: ItemStory = {
+  argTypes: {
+    disabled: {
+      control: "boolean",
+    },
+  },
+  render: ({ disabled }) => {
+    return <List.Item disabled={disabled}>Item 1</List.Item>;
   },
 };
