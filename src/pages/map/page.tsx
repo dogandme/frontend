@@ -24,6 +24,19 @@ export const MapPage = () => {
           </div>
         </div>
         <MarkingButton />
+        <div className="fixed bottom-[7.5rem] left-0 flex w-full justify-between px-4">
+          {/* TODO 현재 지도 중심을 기준으로 해당 로고를 클릭하면 구글 맵스에서 열릴 수 있도록 src 설정하기 */}
+          <img src="/public/google_on_white.png" alt="google-logo" />
+          <p className="flex items-center gap-1 text-center text-[11px] text-grey-700">
+            <span>지도 데이터 @2024 TMap Mobility</span>
+            <a
+              href="https://www.google.com/intl/ko-KR_US/help/terms_maps/"
+              target="_blank"
+            >
+              약관
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
