@@ -70,6 +70,6 @@ export const OverlayPortal = () => {
         <OverlayWrapper key={overlayInfo.id} overlayInfo={overlayInfo} />
       ))}
     </div>,
-    document.body,
+    document.querySelector("#root")!,
   );
 };
