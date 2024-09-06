@@ -19,8 +19,8 @@ export const GoogleMapsCopyRight = () => {
       <a href="" onClick={handleClick}>
         <img src="/public/google_on_white.png" alt="google-logo" />
       </a>
-      <p className="flex items-center gap-1 text-center text-[11px] text-grey-700">
-        <span>지도 데이터 @2024 TMap Mobility</span>
+      <p className="flex items-end gap-1 text-center text-[11px] text-grey-700">
+        <span>지도 데이터 &copy;2024 TMap Mobility</span>
         <a
           href="https://www.google.com/intl/ko-KR_US/help/terms_maps/"
           target="_blank"
