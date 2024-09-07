@@ -45,7 +45,7 @@ export const InfoSnackBar = ({
         onClick={onClose}
         aria-label="info-snackbar-close-button"
       >
-        <CloseIcon fill="grey-500" />
+        <CloseIcon />
       </button>
     </div>
   );
