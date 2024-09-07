@@ -11,11 +11,7 @@ import { useUserInfoRegistrationFormStore } from "../store";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
-
-const validateNickname = (nickName: string) => {
-  const regExp = /^[a-zA-Z0-9ㄱ-ㅎ가-힣]{1,20}$/;
-  return regExp.test(nickName);
-};
+import { validateNickname } from "../lib";
 
 const NicknameInput = () => {
   const nickname = useUserInfoRegistrationFormStore((state) => state.nickname);
