@@ -144,6 +144,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       await step("이름은 최대 글자는 20글자만 입력 된다.", async () => {
         const maxName = "가".repeat(20);
         const extraName = "나";
+
         await userEvent.type($name, maxName + extraName);
         await expect($name).toHaveValue(maxName);
         await userEvent.clear($name);
@@ -200,16 +201,18 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           const snackBarCloseButton = await canvas.getByLabelText(
             "info-snackbar-close-button",
           );
+
           await expect(
             canvas.getByText("필수 항목을 모두 입력해 주세요"),
           ).toBeVisible();
+
           await userEvent.click(snackBarCloseButton);
         },
       );
 
       // 이름만 입력 한 경우
       await step(
-        "이름만 입력하고 submit 버튼을 누르면  스낵바가 뜬다.",
+        "이름만 입력하고 submit 버튼을 누르면 스낵바가 뜬다.",
         async () => {
           await userEvent.click($submit);
           await expect(
@@ -222,6 +225,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
               const snackBarCloseButton = await canvas.getByLabelText(
                 "info-snackbar-close-button",
               );
+
               await userEvent.click(snackBarCloseButton);
               await expect(snackBarCloseButton).not.toBeInTheDocument();
             },
@@ -236,15 +240,18 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         "이름이 유효성을 만족하지 않은 채로 submit 버튼을 누르면 스낵바가 뜬다.",
         async () => {
           await userEvent.click($submit);
+
           await expect(
             canvas.getByText("필수 항목을 모두 입력해 주세요"),
           ).toBeVisible();
+
           await step(
             "스낵바 닫힘 버튼을 클릭하면 스낵바가 사라진다.",
             async () => {
               const snackBarCloseButton = await canvas.getByLabelText(
                 "info-snackbar-close-button",
               );
+
               await userEvent.click(snackBarCloseButton);
               await expect(snackBarCloseButton).not.toBeInTheDocument();
             },
@@ -261,6 +268,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           await userEvent.type($name, "초코");
           await userEvent.type($breed, "푸들");
           await userEvent.click($submit);
+
           expect(
             canvas.queryByText("필수 항목을 모두 입력해 주세요"),
           ).not.toBeInTheDocument();
@@ -270,12 +278,13 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       await clearAll();
 
       await step(
-        "이름을 유효성에 맞게 입력하고 breed 를 mix로 선택하고 submit 버튼을 스낵바가 뜨지 않는다.",
+        "이름을 유효성에 맞게 입력하고 breed 를 mix로 선택하고 submit 버튼을 누르면 스낵바가 뜨지 않는다.",
         async () => {
           await userEvent.type($name, "초코");
           // breed를 mix 로 하였을 경우
           await userEvent.click($mix!);
           await userEvent.click($submit);
+
           expect(
             canvas.queryByText("필수 항목을 모두 입력해 주세요"),
           ).toBeNull();
@@ -297,7 +306,9 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
             "안녕하세요 너무 귀여운 강아지 입니다.",
           );
           await userEvent.click($submit);
+
           const { name, breed, introduce } = usePetInfoStore.getState();
+
           expect(name).toBe("초코");
           expect(breed).toBe("푸들");
           expect(introduce).toBe("안녕하세요 너무 귀여운 강아지 입니다.");
@@ -306,6 +317,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
 
       await step("mix 를 선택 했을 때 상태에 mix로 잘 저장된다.", async () => {
         await userEvent.click($mix!);
+
         const { breed } = usePetInfoStore.getState();
         expect(breed).toBe("mix");
         await userEvent.click($mix!);

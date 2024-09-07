@@ -88,20 +88,24 @@ export const Default: Story = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const button = canvasElement.querySelector("button")!;
+    const $button = canvasElement.querySelector("button")!;
 
     await step("스낵바 열기를 클릭하면", async () => {
-      await userEvent.click(button);
+      await userEvent.click($button);
+
       await step("스낵바 컴포넌트가 렌더링 됩니다.", () => {
         expect(canvas.queryByText("스낵바가 열렸습니다")).toBeInTheDocument();
       });
+
       await step(
         "스낵바 컴포넌트의 닫힘 버튼을 클릭하면 스낵바가 사라집니다.",
         async () => {
-          const closeButton = canvas.getByLabelText(
+          const $closeButton = canvas.getByLabelText(
             "info-snackbar-close-button",
           );
-          await userEvent.click(closeButton);
+
+          await userEvent.click($closeButton);
+
           expect(
             canvas.queryByText("스낵바가 열렸습니다"),
           ).not.toBeInTheDocument();
@@ -112,9 +116,12 @@ export const Default: Story = {
     await step(
       "스낵바를 열고 나서 1초가 지나면 자동으로 스낵바는 사라진다.",
       async () => {
-        await userEvent.click(button);
+        await userEvent.click($button);
+
         expect(canvas.queryByText("스낵바가 열렸습니다")).toBeInTheDocument();
+
         await new Promise((resolve) => setTimeout(resolve, 1000));
+
         expect(
           canvas.queryByText("스낵바가 열렸습니다"),
         ).not.toBeInTheDocument();
