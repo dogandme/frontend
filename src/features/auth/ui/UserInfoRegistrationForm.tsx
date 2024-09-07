@@ -268,6 +268,12 @@ const UserInfoRegistrationForm = () => {
       필수 항목을 모두 입력해 주세요
     </Snackbar>
   ));
+  const { handleOpen: openNicknameAlert, onClose: closeNicknameAlert } =
+    useSnackBar(() => (
+      <Snackbar onClose={closeNicknameAlert}>
+        올바른 닉네임을 입력해 주세요
+      </Snackbar>
+    ));
 
   const token = useAuthStore((state) => state.token);
   const setNickname = useAuthStore((state) => state.setNickname);
@@ -299,7 +305,8 @@ const UserInfoRegistrationForm = () => {
     const isValidNickname = validateNickname(nickname);
 
     if (!isValidNickname) {
-      throw new Error("올바른 닉네임을 입력해 주세요");
+      openNicknameAlert();
+      return;
     }
 
     const areRequiredAgreementsChecked = checkList[0] && checkList[1];
