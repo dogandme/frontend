@@ -2,8 +2,9 @@ import { Meta, StoryObj } from "@storybook/react";
 import { http, HttpResponse } from "msw";
 import * as PetInfoForm from "./PetInfoForm";
 import { expect, userEvent, within } from "@storybook/test";
-import { usePetInfoStore } from "../store";
 import { useAuthStore } from "@/shared/store/auth";
+import { usePetInfoStore } from "../store";
+import { OverlayPortal } from "@/app/OverlayPortal";
 
 const _PetInfoForm = () => (
   <PetInfoForm.Form>
@@ -56,7 +57,12 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       token: "Bearer token",
     });
 
-    return <Story />;
+    return (
+      <div id="root">
+        <OverlayPortal />
+        <Story />
+      </div>
+    );
   },
 
   render: () => (
@@ -138,6 +144,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       await step("이름은 최대 글자는 20글자만 입력 된다.", async () => {
         const maxName = "가".repeat(20);
         const extraName = "나";
+
         await userEvent.type($name, maxName + extraName);
         await expect($name).toHaveValue(maxName);
         await userEvent.clear($name);
@@ -183,34 +190,46 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         await userEvent.clear($breed);
       };
 
-      // TODO 스낵바 생성되면 테스트 코드 변경하기
-      // alert 창 목업
-      let alertMessage = "";
-      const originalAlert = window.alert;
-      window.alert = (message: string) => {
-        alertMessage = message;
-      };
       // 모든 입력 내용 지우기
       await clearAll();
 
       // 아무 내용도 입력하지 않고 submit 버튼을 누른 경우
       await step(
-        "아무내용도 입력하지 않고 submit 버튼을 누르면 alert 창이 뜬다.",
+        "아무내용도 입력하지 않고 submit 버튼을 누르면 스낵바가 뜬다.",
         async () => {
-          alertMessage = "";
           await userEvent.click($submit);
-          expect(alertMessage).toBe("필수 항목을 모두 입력해 주세요");
+          const snackBarCloseButton = await canvas.getByLabelText(
+            "info-snackbar-close-button",
+          );
+
+          await expect(
+            canvas.getByText("필수 항목을 모두 입력해 주세요"),
+          ).toBeVisible();
+
+          await userEvent.click(snackBarCloseButton);
         },
       );
 
       // 이름만 입력 한 경우
       await step(
-        "이름만 입력하고 submit 버튼을 누르면 alert 창이 뜬다.",
+        "이름만 입력하고 submit 버튼을 누르면 스낵바가 뜬다.",
         async () => {
-          alertMessage = "";
-          await userEvent.type($name, "초코");
           await userEvent.click($submit);
-          expect(alertMessage).toBe("필수 항목을 모두 입력해 주세요");
+          await expect(
+            canvas.getByText("필수 항목을 모두 입력해 주세요"),
+          ).toBeVisible();
+
+          await step(
+            "스낵바 닫힘 버튼을 클릭하면 스낵바가 사라진다.",
+            async () => {
+              const snackBarCloseButton = await canvas.getByLabelText(
+                "info-snackbar-close-button",
+              );
+
+              await userEvent.click(snackBarCloseButton);
+              await expect(snackBarCloseButton).not.toBeInTheDocument();
+            },
+          );
         },
       );
 
@@ -218,45 +237,60 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
 
       // 이름이 유효성을 만족하지 않는 경우
       await step(
-        "이름이 유효성을 만족하지 않은 채로 submit 버튼을 누르면 alert 창이 뜬다.",
+        "이름이 유효성을 만족하지 않은 채로 submit 버튼을 누르면 스낵바가 뜬다.",
         async () => {
-          alertMessage = "";
-          await userEvent.type($name, "123");
           await userEvent.click($submit);
-          // TODO 유효성을 만족하지 않는 경우의 메시지 디자이너에게 확인
-          expect(alertMessage).toBe("필수 항목을 모두 입력해 주세요");
+
+          await expect(
+            canvas.getByText("필수 항목을 모두 입력해 주세요"),
+          ).toBeVisible();
+
+          await step(
+            "스낵바 닫힘 버튼을 클릭하면 스낵바가 사라진다.",
+            async () => {
+              const snackBarCloseButton = await canvas.getByLabelText(
+                "info-snackbar-close-button",
+              );
+
+              await userEvent.click(snackBarCloseButton);
+              await expect(snackBarCloseButton).not.toBeInTheDocument();
+            },
+          );
         },
       );
 
       await clearAll();
 
       await step(
-        "이름과 종을 유효성에 맞게 입력하고 submit 버튼을 누르면 alert 창이 뜨지 않는다.",
+        "이름과 종을 유효성에 맞게 입력하고 submit 버튼을 누르면 스낵바가 뜨지 않는다.",
+
         async () => {
-          alertMessage = "";
           await userEvent.type($name, "초코");
           await userEvent.type($breed, "푸들");
           await userEvent.click($submit);
-          expect(alertMessage).toBe("");
+
+          expect(
+            canvas.queryByText("필수 항목을 모두 입력해 주세요"),
+          ).not.toBeInTheDocument();
         },
       );
 
       await clearAll();
 
       await step(
-        "이름을 유효성에 맞게 입력하고 breed 를 mix로 선택하고 submit 버튼을 누르면 alert 창이 뜨지 않는다.",
+        "이름을 유효성에 맞게 입력하고 breed 를 mix로 선택하고 submit 버튼을 누르면 스낵바가 뜨지 않는다.",
         async () => {
-          alertMessage = "";
           await userEvent.type($name, "초코");
           // breed를 mix 로 하였을 경우
           await userEvent.click($mix!);
           await userEvent.click($submit);
-          expect(alertMessage).toBe("");
+
+          expect(
+            canvas.queryByText("필수 항목을 모두 입력해 주세요"),
+          ).toBeNull();
           await userEvent.click($mix!);
         },
       );
-
-      window.alert = originalAlert;
     });
 
     await clearAll();
@@ -272,7 +306,9 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
             "안녕하세요 너무 귀여운 강아지 입니다.",
           );
           await userEvent.click($submit);
+
           const { name, breed, introduce } = usePetInfoStore.getState();
+
           expect(name).toBe("초코");
           expect(breed).toBe("푸들");
           expect(introduce).toBe("안녕하세요 너무 귀여운 강아지 입니다.");
@@ -281,6 +317,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
 
       await step("mix 를 선택 했을 때 상태에 mix로 잘 저장된다.", async () => {
         await userEvent.click($mix!);
+
         const { breed } = usePetInfoStore.getState();
         expect(breed).toBe("mix");
         await userEvent.click($mix!);

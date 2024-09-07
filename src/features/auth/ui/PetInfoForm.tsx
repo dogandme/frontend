@@ -10,7 +10,8 @@ import { characterList } from "../constants/form";
 import { usePostPetInfo } from "../api/petinfo";
 import { useNavigate } from "react-router-dom";
 import { useRouteHistoryStore } from "@/shared/store/history";
-
+import { useSnackBar } from "@/shared/lib/overlay";
+import { Snackbar } from "@/shared/ui/snackbar";
 // TODO svg 경로를 문자열로 가져오는 방법 찾아보기
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
 
@@ -210,6 +211,11 @@ export const SubmitButton = () => {
   const setRole = useAuthStore((state) => state.setRole);
   const { mutate: postPetInfo } = usePostPetInfo();
 
+  // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
+  const { handleOpen: openInfoSnackBar, onClose } = useSnackBar(() => (
+    <Snackbar onClose={onClose}>필수 항목을 모두 입력해 주세요</Snackbar>
+  ));
+
   const handleClick = () => {
     const petInfoForm = usePetInfoStore.getState();
     // TODO refactor : 유효성 검사 메소드 만들어 사용하기
@@ -221,7 +227,7 @@ export const SubmitButton = () => {
     const isBreedEmpty = breed.length === 0;
 
     if (!isValidName || isNameEmpty || isBreedEmpty) {
-      alert("필수 항목을 모두 입력해 주세요");
+      openInfoSnackBar();
       return;
     }
     // TODO 엔드포인트 양식 정해지면 API 요청 기능 추가하기
