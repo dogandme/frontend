@@ -5,10 +5,12 @@ import OptionList from "./OptionList";
 import Option from "./Option";
 
 const SelectMain = ({
+  id,
   isOpen,
   onClose,
   children,
 }: SelectContextType & {
+  id?: string;
   children: ReactNode;
 }) => {
   useEffect(() => {
@@ -22,7 +24,7 @@ const SelectMain = ({
   }, [isOpen]);
 
   return (
-    <SelectContext.Provider value={{ isOpen, onClose }}>
+    <SelectContext.Provider value={{ id, isOpen, onClose }}>
       {children}
     </SelectContext.Provider>
   );

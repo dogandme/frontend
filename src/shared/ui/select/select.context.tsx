@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 
 export interface SelectContextType {
+  id?: string;
   isOpen: boolean;
   onClose: () => void;
 }
