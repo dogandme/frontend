@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "@/shared/ui/snackbar";
-
 // TODO svg 경로를 문자열로 가져오는 방법 찾아보기
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
 
