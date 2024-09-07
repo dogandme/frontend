@@ -10,7 +10,7 @@ import { characterList } from "../constants/form";
 import { usePostPetInfo } from "../api/petinfo";
 import { useNavigate } from "react-router-dom";
 import { useRouteHistoryStore } from "@/shared/store/history";
-import { useOverlay } from "@/shared/lib/overlay";
+import { useSnackBar } from "@/shared/lib/overlay";
 import { InfoSnackBar } from "@/shared/ui/snackbar";
 
 // TODO svg 경로를 문자열로 가져오는 방법 찾아보기
@@ -213,16 +213,11 @@ export const SubmitButton = () => {
   const { mutate: postPetInfo } = usePostPetInfo();
 
   // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
-  const { handleOpen: openInfoSnackBar, onClose } = useOverlay(
-    () => (
-      <InfoSnackBar onClose={onClose}>
-        필수 항목을 모두 입력해 주세요
-      </InfoSnackBar>
-    ),
-    {
-      disableInteraction: false,
-    },
-  );
+  const { handleOpen: openInfoSnackBar, onClose } = useSnackBar(() => (
+    <InfoSnackBar onClose={onClose}>
+      필수 항목을 모두 입력해 주세요
+    </InfoSnackBar>
+  ));
 
   const handleClick = () => {
     const petInfoForm = usePetInfoStore.getState();

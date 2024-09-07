@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
-import { useOverlay } from "@/shared/lib/overlay";
+import { useSnackBar } from "@/shared/lib/overlay";
 import { InfoSnackBar } from "./InfoSnackBar";
 import { userEvent, expect, within } from "@storybook/test";
 
@@ -73,12 +73,9 @@ export const Default: Story = {
 
   render: () => {
     /* eslint-disable */
-    const { handleOpen, onClose } = useOverlay(
-      () => <InfoSnackBar onClose={onClose}>스낵바가 열렸습니다</InfoSnackBar>,
-      {
-        disableInteraction: false,
-      },
-    );
+    const { handleOpen, onClose } = useSnackBar(() => (
+      <InfoSnackBar onClose={onClose}>스낵바가 열렸습니다</InfoSnackBar>
+    ));
 
     return (
       <div className="flex h-96 w-full items-end justify-end px-2 py-2">
