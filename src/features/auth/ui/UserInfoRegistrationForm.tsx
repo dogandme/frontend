@@ -8,6 +8,8 @@ import { usePutUserInfoRegistration } from "../api";
 import { useAuthStore } from "@/shared/store/auth";
 import { Select } from "@/shared/ui/select";
 import { useUserInfoRegistrationFormStore } from "../store";
+import { useSnackBar } from "@/shared/lib/overlay";
+import { Snackbar } from "@/shared/ui/snackbar";
 
 const validateNickname = (nickName: string) => {
   const regExp = /^[a-zA-Z0-9ㄱ-ㅎ가-힣]{1,20}$/;
@@ -258,6 +260,15 @@ const AgreementCheckboxList = () => {
 };
 
 const UserInfoRegistrationForm = () => {
+  const {
+    handleOpen: openRequiredFieldsAlert,
+    onClose: closeRequiredFieldsAlert,
+  } = useSnackBar(() => (
+    <Snackbar onClose={closeRequiredFieldsAlert}>
+      필수 항목을 모두 입력해 주세요
+    </Snackbar>
+  ));
+
   const token = useAuthStore((state) => state.token);
   const setNickname = useAuthStore((state) => state.setNickname);
   const setRole = useAuthStore((state) => state.setRole);
@@ -281,7 +292,8 @@ const UserInfoRegistrationForm = () => {
       !isNicknameEmpty && ageRange !== null && gender !== null;
 
     if (!areEssentialFieldsFilled) {
-      throw new Error("필수 항목을 모두 입력해 주세요");
+      openRequiredFieldsAlert();
+      return;
     }
 
     const isValidNickname = validateNickname(nickname);
