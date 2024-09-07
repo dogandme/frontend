@@ -274,6 +274,12 @@ const UserInfoRegistrationForm = () => {
         올바른 닉네임을 입력해 주세요
       </Snackbar>
     ));
+  const { handleOpen: openAgreementAlert, onClose: closeAgreementAlert } =
+    useSnackBar(() => (
+      <Snackbar onClose={closeAgreementAlert}>
+        필수 약관에 모두 동의해 주세요
+      </Snackbar>
+    ));
 
   const token = useAuthStore((state) => state.token);
   const setNickname = useAuthStore((state) => state.setNickname);
@@ -312,7 +318,8 @@ const UserInfoRegistrationForm = () => {
     const areRequiredAgreementsChecked = checkList[0] && checkList[1];
 
     if (!areRequiredAgreementsChecked) {
-      throw new Error("필수 약관에 모두 동의해 주세요");
+      openAgreementAlert();
+      return;
     }
 
     // todo: region 수정
