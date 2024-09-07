@@ -258,9 +258,6 @@ const AgreementCheckboxList = () => {
 };
 
 const UserInfoRegistrationForm = () => {
-  const { nickname, checkList } = useUserInfoRegistrationFormStore.getState();
-  const isValidNickname = validateNickname(nickname);
-
   const token = useAuthStore((state) => state.token);
   const setNickname = useAuthStore((state) => state.setNickname);
   const setRole = useAuthStore((state) => state.setRole);
@@ -270,20 +267,26 @@ const UserInfoRegistrationForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const { nickname, ageRange, gender, checkList } =
+      useUserInfoRegistrationFormStore.getState();
+
     if (!token) {
       throw new Error("로그인 정보가 없습니다");
     }
 
     const isNicknameEmpty = nickname.length === 0;
 
-    // todo: 조건문 수정 필요
-    // 닉네임, 성별, 연령대, 동네설정 중 하나라도 입력하지 않은 경우
-    if (isNicknameEmpty) {
+    // todo: 조건에 region !== null인 경우 추가하기
+    const areEssentialFieldsFilled =
+      !isNicknameEmpty && ageRange !== null && gender !== null;
+
+    if (!areEssentialFieldsFilled) {
       throw new Error("필수 항목을 모두 입력해 주세요");
     }
 
-    // 닉네임이 유효하지 않은 경우
-    if (!isValidNickname && !isNicknameEmpty) {
+    const isValidNickname = validateNickname(nickname);
+
+    if (!isValidNickname) {
       throw new Error("올바른 닉네임을 입력해 주세요");
     }
 
@@ -293,14 +296,15 @@ const UserInfoRegistrationForm = () => {
       throw new Error("필수 약관에 모두 동의해 주세요");
     }
 
+    // todo: region 수정
     putUserInfoRegistration(
       {
         token,
         nickname,
-        gender: "MALE",
-        age: 10,
+        gender,
+        ageRange,
         region: "서울 강남구",
-        marketingYn: true,
+        marketingYn: checkList[2],
       },
       {
         onSuccess: (data) => {
