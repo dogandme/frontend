@@ -51,7 +51,7 @@ interface UserInfoRegistrationRequest {
   token: string;
   nickname: string;
   gender: "FEMALE" | "MALE";
-  age: number;
+  ageRange: 10 | 20 | 30 | 40 | 50;
   region: string;
   marketingYn: boolean;
 }
