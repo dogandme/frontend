@@ -1,13 +1,13 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useSnackBar } from "@/shared/lib/overlay";
-import { InfoSnackBar } from "./InfoSnackBar";
+import { Snackbar } from "./snackbar";
 import { userEvent, expect, within } from "@storybook/test";
 
-const meta: Meta<typeof InfoSnackBar> = {
-  title: "shared/Snackbar/InfoSnackBar",
+const meta: Meta<typeof Snackbar> = {
+  title: "shared/Snackbar",
   tags: ["autodocs"],
-  component: InfoSnackBar,
+  component: Snackbar,
   parameters: {
     docs: {
       description: {
@@ -47,7 +47,7 @@ const meta: Meta<typeof InfoSnackBar> = {
 
 export default meta;
 
-type Story = StoryObj<typeof InfoSnackBar>;
+type Story = StoryObj<typeof Snackbar>;
 
 export const Default: Story = {
   parameters: {
@@ -74,7 +74,7 @@ export const Default: Story = {
   render: () => {
     /* eslint-disable */
     const { handleOpen, onClose } = useSnackBar(() => (
-      <InfoSnackBar onClose={onClose}>스낵바가 열렸습니다</InfoSnackBar>
+      <Snackbar onClose={onClose}>스낵바가 열렸습니다</Snackbar>
     ));
 
     return (

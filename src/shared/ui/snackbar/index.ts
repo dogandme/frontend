@@ -1,1 +1,1 @@
-export * from "./InfoSnackBar";
+export * from "./snackbar";

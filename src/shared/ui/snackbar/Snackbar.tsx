@@ -15,7 +15,7 @@ interface InfoSnackBarProps extends React.HTMLAttributes<HTMLDivElement> {
  * @param autoHideDuration - 스낵바가 자동으로 사라지는 시간 (ms), 기본적으로 InfoSnackbar는 1초 후 사라집니다. 만약 사라지기를 원치 않는 경우엔 null 을 전달해 주세요
  * @param positionClassName - 스낵바의 위치를 지정하는 클래스명
  */
-export const InfoSnackBar = ({
+export const Snackbar = ({
   children,
   onClose,
   autoHideDuration = 1000,

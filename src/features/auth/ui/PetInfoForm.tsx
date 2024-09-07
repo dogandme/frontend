@@ -11,7 +11,7 @@ import { usePostPetInfo } from "../api/petinfo";
 import { useNavigate } from "react-router-dom";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { useSnackBar } from "@/shared/lib/overlay";
-import { InfoSnackBar } from "@/shared/ui/snackbar";
+import { Snackbar } from "@/shared/ui/snackbar";
 
 // TODO svg 경로를 문자열로 가져오는 방법 찾아보기
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
@@ -214,9 +214,7 @@ export const SubmitButton = () => {
 
   // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
   const { handleOpen: openInfoSnackBar, onClose } = useSnackBar(() => (
-    <InfoSnackBar onClose={onClose}>
-      필수 항목을 모두 입력해 주세요
-    </InfoSnackBar>
+    <Snackbar onClose={onClose}>필수 항목을 모두 입력해 주세요</Snackbar>
   ));
 
   const handleClick = () => {
