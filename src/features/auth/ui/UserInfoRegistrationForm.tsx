@@ -10,6 +10,7 @@ import { Select } from "@/shared/ui/select";
 import { useUserInfoRegistrationFormStore } from "../store";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "@/shared/ui/snackbar";
+import { ageRangeOptionList, genderOptionList } from "../constants/form";
 
 const validateNickname = (nickName: string) => {
   const regExp = /^[a-zA-Z0-9ㄱ-ㅎ가-힣]{1,20}$/;
@@ -43,17 +44,6 @@ const NicknameInput = () => {
 };
 
 const GenderSelect = () => {
-  const genderOptionList = [
-    {
-      value: "MALE",
-      name: "남자",
-    },
-    {
-      value: "FEMALE",
-      name: "여자",
-    },
-  ] as const;
-
   const gender = useUserInfoRegistrationFormStore((state) => state.gender);
   const setGender = useUserInfoRegistrationFormStore(
     (state) => state.setGender,
@@ -61,7 +51,9 @@ const GenderSelect = () => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const selectedName = genderOptionList.find((e) => e.value === gender)?.name;
+  const selectedName = genderOptionList.find(
+    ({ value }) => value === gender,
+  )?.name;
 
   return (
     <>
@@ -102,29 +94,6 @@ const GenderSelect = () => {
 };
 
 const AgeRangeSelect = () => {
-  const ageRangeOptionList = [
-    {
-      value: 10,
-      name: "10대",
-    },
-    {
-      value: 20,
-      name: "20~30대",
-    },
-    {
-      value: 30,
-      name: "30~40대",
-    },
-    {
-      value: 40,
-      name: "50~60대",
-    },
-    {
-      value: 50,
-      name: "60대 이상",
-    },
-  ] as const;
-
   const ageRange = useUserInfoRegistrationFormStore((state) => state.ageRange);
   const setAgeRange = useUserInfoRegistrationFormStore(
     (state) => state.setAgeRange,
@@ -133,7 +102,7 @@ const AgeRangeSelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const selectedName = ageRangeOptionList.find(
-    (e) => e.value === ageRange,
+    ({ value }) => value === ageRange,
   )?.name;
 
   return (
