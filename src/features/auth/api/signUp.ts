@@ -49,7 +49,6 @@ export const usePostSignUpByEmail = () => {
 
 interface UserInfoRegistrationRequest {
   token: string;
-  userId: number;
   nickname: string;
   gender: "FEMALE" | "MALE";
   age: number;
@@ -68,10 +67,9 @@ interface UserInfoRegistrationResponse {
 
 const putUserInfoRegister = async ({
   token,
-  userId,
   ...userInfo
 }: UserInfoRegistrationRequest) => {
-  const response = await fetch(SIGN_UP_END_POINT.USER_INFO(userId), {
+  const response = await fetch(SIGN_UP_END_POINT.USER_INFO, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
