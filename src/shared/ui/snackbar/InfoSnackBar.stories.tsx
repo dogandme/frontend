@@ -16,6 +16,33 @@ const meta: Meta<typeof InfoSnackBar> = {
       },
     },
   },
+
+  argTypes: {
+    onClose: {
+      description:
+        "useOverlay 를 통해 생성되는 onClose를 받기 위한 props 입니다.",
+    },
+    children: {
+      description: "스낵바에 표시할 메시지 혹은 컴포넌트 입니다.",
+      control: {
+        type: "text",
+      },
+    },
+
+    autoHideDuration: {
+      control: {
+        type: "number",
+      },
+      description:
+        "스낵바가 자동으로 사라지는 시간 (ms), 기본적으로 InfoSnackbar는 1초 후 사라집니다. 만약 사라지기를 원치 않는 경우엔 null 을 전달해 주세요",
+    },
+    positionClassName: {
+      description: "스낵바의 위치를 지정하는 클래스명입니다.",
+      control: {
+        type: "text",
+      },
+    },
+  },
 };
 
 export default meta;
