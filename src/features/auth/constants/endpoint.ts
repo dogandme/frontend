@@ -7,7 +7,6 @@ export const LOGIN_END_POINT = {
 
 export const SIGN_UP_END_POINT = {
   EMAIL: "http://localhost:80/users",
-  USER_INFO: (userId: number) =>
-    `http://localhost:80/users/${userId}/additional-info`,
+  USER_INFO: "http://localhost:80/users/additional-info",
   PET_INFO: "http://localhost:80/pets",
 };
