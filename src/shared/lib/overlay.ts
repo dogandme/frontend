@@ -35,8 +35,10 @@ export const useOverlay = (
 
 export const useSnackBar = (
   createOverlayComponent: (onClose: () => Promise<void>) => JSX.Element,
+  options?: OverlayOptions,
 ) => {
   return useOverlay(createOverlayComponent, {
     disableInteraction: false,
+    ...options,
   });
 };
