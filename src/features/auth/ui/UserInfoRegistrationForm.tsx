@@ -64,10 +64,15 @@ const GenderSelect = () => {
           onClick={() => {
             setIsOpen(true);
           }}
+          aria-controls="gender-select"
         />
       </div>
 
-      <Select isOpen={isOpen} onClose={() => setIsOpen(false)}>
+      <Select
+        id="gender-select"
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      >
         <Select.BottomSheet>
           <Select.OptionList>
             {genderOptionList.map(({ value, name }) => {
@@ -112,10 +117,11 @@ const AgeRangeSelect = () => {
           value={selectedName ?? ""}
           onClick={() => setIsOpen(true)}
           placeholder="연령대를 선택해 주세요"
+          aria-controls="age-select"
         />
       </div>
 
-      <Select isOpen={isOpen} onClose={() => setIsOpen(false)}>
+      <Select id="age-select" isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <Select.BottomSheet>
           <Select.OptionList>
             {ageRangeOptionList.map(({ value, name }) => {
