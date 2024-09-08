@@ -303,7 +303,7 @@ const UserInfoRegistrationForm = () => {
         token,
         nickname,
         gender,
-        ageRange,
+        age: ageRange,
         region: "서울 강남구",
         marketingYn: checkList[2],
       },
