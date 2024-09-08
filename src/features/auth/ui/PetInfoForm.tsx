@@ -5,16 +5,16 @@ import { SelectChip } from "@/shared/ui/chip";
 import { TextArea } from "@/shared/ui/textarea";
 import { Button } from "@/shared/ui/button";
 import { useAuthStore } from "@/shared/store/auth";
-import { usePetInfoStore } from "../store";
-import { characterList } from "../constants/form";
-import { usePostPetInfo } from "../api/petinfo";
+
 import { useNavigate } from "react-router-dom";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { Select } from "@/shared/ui/select";
 import { SelectOpener } from "@/entities/auth/ui";
-import { dogBreeds } from "../constants";
+import { usePetInfoStore } from "../store";
+import { characterList, dogBreeds } from "../constants/form";
+import { usePostPetInfo } from "../api/petinfo";
 
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
 
