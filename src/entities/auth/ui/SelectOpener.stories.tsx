@@ -3,14 +3,7 @@ import { action } from "@storybook/addon-actions";
 import { SelectOpener } from "./SelectOpener";
 import { useState } from "react";
 import { Select } from "@/shared/ui/select";
-import {
-  expect,
-  fireEvent,
-  waitFor,
-  within,
-  fn,
-  userEvent,
-} from "@storybook/test";
+import { expect, within, fn, userEvent } from "@storybook/test";
 import { Checkbox } from "@/shared/ui/checkbox";
 
 const meta: Meta = {
@@ -69,12 +62,10 @@ export const Default: Story = {
     $opener.onclick = handleOpenerClick;
 
     await step("label을 클릭하면, button이 포커스되고 클릭된다.", async () => {
-      fireEvent.click($label);
+      await userEvent.click($label);
 
-      await waitFor(() => {
-        expect($opener).toHaveFocus();
-        expect(handleOpenerClick).toHaveBeenCalled();
-      });
+      expect($opener).toHaveFocus();
+      expect(handleOpenerClick).toHaveBeenCalled();
     });
   },
 };
@@ -216,10 +207,8 @@ export const Disabled: Story = {
 
         await userEvent.click($label);
 
-        await waitFor(() => {
-          expect($opener).not.toHaveFocus();
-          expect(handleOpenerClick).not.toHaveBeenCalled();
-        });
+        expect($opener).not.toHaveFocus();
+        expect(handleOpenerClick).not.toHaveBeenCalled();
       },
     );
   },
