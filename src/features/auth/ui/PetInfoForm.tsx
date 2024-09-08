@@ -200,7 +200,12 @@ export const BreedInput = () => {
         <Select.BottomSheet>
           <Select.OptionList>
             {dogBreeds.map((value, idx) => (
-              <Select.Option key={idx} onClick={() => setBreed(value)}>
+              <Select.Option
+                key={idx}
+                id={value}
+                onClick={() => setBreed(value)}
+                isSelected={breed === value}
+              >
                 {value}
               </Select.Option>
             ))}
