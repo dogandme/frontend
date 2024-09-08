@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { SelectOpener } from "@/entities/auth/ui";
 import { EditIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { SelectChip } from "@/shared/ui/chip";
@@ -10,7 +11,7 @@ import { useRouteHistoryStore } from "@/shared/store/history";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { Select } from "@/shared/ui/select";
-import { SelectOpener } from "@/entities/auth/ui";
+import { Checkbox } from "@/shared/ui/checkbox";
 import { usePetInfoStore } from "../store";
 import { characterList, dogBreeds } from "../constants/form";
 import { usePostPetInfo } from "../api/petinfo";
@@ -176,24 +177,20 @@ export const BreedInput = () => {
           onClick={onOpen}
           disabled={breed === "모르겠어요"}
         />
-        <div className="flex items-center gap-1">
-          <input
-            type="checkbox"
-            id="isMixDog"
-            name="ixMixDog"
-            onChange={(e) => {
-              const { checked } = e.target;
-              if (checked) {
-                setBreed("모르겠어요");
-                return;
-              }
-              setBreed("");
-            }}
-          />
-          <label htmlFor="isMixDog" className="btn-3 text-center text-grey-500">
-            모르겠어요
-          </label>
-        </div>
+        <Checkbox
+          id="isMixDog"
+          checked={breed === "모르겠어요"}
+          onChange={(e) => {
+            const { checked } = e.target;
+            if (checked) {
+              setBreed("모르겠어요");
+              return;
+            }
+            setBreed("");
+          }}
+        >
+          <span className="btn-3 text-center text-grey-500">모르겠어요</span>{" "}
+        </Checkbox>
       </div>
       <Select isOpen={isOpen} onClose={onClose}>
         <Select.BottomSheet>

@@ -48,6 +48,7 @@ export const ageRangeOptionList = [
 ] as const;
 
 export const dogBreeds = [
+  "해당하는 품종 없음",
   "그레이 하운드",
   "그레이트 데인",
   "그레이트 피레네",
