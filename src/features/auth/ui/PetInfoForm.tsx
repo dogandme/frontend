@@ -84,7 +84,7 @@ export const ProfileInput = () => {
   return (
     <>
       <button
-        className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-tangerine-500 bg-cover bg-center bg-no-repeat"
+        className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${profileUrl})`,
         }}
