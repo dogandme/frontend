@@ -111,7 +111,12 @@ export const ProfileInput = () => {
             <Select.Option onClick={handleInputClick}>
               사진 선택하기
             </Select.Option>
-            <Select.Option onClick={handleDelete}>삭제 하기</Select.Option>
+            <Select.Option
+              onClick={handleDelete}
+              disabled={profileImage === null}
+            >
+              삭제 하기
+            </Select.Option>
           </Select.OptionList>
         </Select.BottomSheet>
       </Select>
