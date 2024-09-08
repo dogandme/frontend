@@ -19,6 +19,7 @@ import NotificationSVG from "@/shared/assets/notification.svg";
 import CompassSVG from "@/shared/assets/compass.svg";
 import MapSVG from "@/shared/assets/map.svg";
 import CommunitySVG from "@/shared/assets/community.svg";
+import PinShadowSVG from "@/shared/assets/pin-shadow.svg";
 // Icon 컴포넌트 생성
 export const EmailIcon = withIcon(EmailSvg);
 export const VisibilityOnIcon = withIcon(VisibilityOnSvg);
@@ -38,3 +39,4 @@ export const NotificationIcon = withIcon(NotificationSVG);
 export const CompassIcon = withIcon(CompassSVG);
 export const MapIcon = withIcon(MapSVG);
 export const CommunityIcon = withIcon(CommunitySVG);
+export const PinShadowIcon = withIcon(PinShadowSVG);

@@ -20,6 +20,7 @@ export default {
       },
       backgroundColor: {
         "translucent-gray": "rgba(33,33,33,0.25)",
+        "translucent-tangerine": "rgba(251,88,33,0.5)",
       },
       keyframes: {
         radar: {

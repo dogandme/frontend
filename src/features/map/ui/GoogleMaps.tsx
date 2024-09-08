@@ -1,6 +1,6 @@
 import { Map } from "@vis.gl/react-google-maps";
 import { useEffect } from "react";
-import { CustomMarker } from "@/entities/map/ui";
+import { User, Pin, MultiplePin, Cluster } from "@/entities/map/ui";
 import { mapOptions } from "../constants";
 const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
 
@@ -36,7 +36,25 @@ export const GoogleMaps = () => {
       defaultZoom={16}
       reuseMaps // Map 컴포넌트가 unmount 되었다가 다시 mount 될 때 기존의 map instance 를 재사용 하여 memory leak을 방지합니다.
     >
-      <CustomMarker.User position={{ lat: 37.5665, lng: 126.978 }} />
+      <User position={{ lat: 37.5665, lng: 126.978 }} />
+      <Pin
+        alt="test"
+        position={{ lat: 37.56651, lng: 126.977 }}
+        imageUrl="/public/default-profile.svg"
+      />
+      <MultiplePin
+        position={{ lat: 37.5664, lng: 126.976 }}
+        imageUrl="/public/default-profile.svg"
+        alt="test"
+        markerCount={2}
+      />
+      <MultiplePin
+        position={{ lat: 37.5663, lng: 126.9765 }}
+        imageUrl="/public/default-profile.svg"
+        alt="test"
+        markerCount={500}
+      />
+      <Cluster position={{ lat: 37.5662, lng: 126.976 }} markerCount={16} />
     </Map>
   );
 };
