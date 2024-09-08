@@ -204,7 +204,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       });
 
       await step(
-        "모르겠어요를 클릭하면 종 입력란에 모르겠어요로 값이 바뀌며 종 입력란이 disabled가 된다.",
+        "'모르겠어요'를 클릭하면 종 입력란에 '모르겠어요'로 값이 바뀌며 종 입력란이 disabled가 된다.",
         async () => {
           await userEvent.click($mix);
           expect($breedSpan).toHaveTextContent("모르겠어요");
@@ -213,7 +213,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       );
 
       await step(
-        "모르겠어요가 선택된 상황에서 모르겠어요를 클릭하면 종 입력란은 초기 값으로 돌아온다.",
+        "'모르겠어요' 선택된 상황에서 '모르겠어요'를 클릭하면 종 입력란은 초기 값으로 돌아온다.",
         async () => {
           await userEvent.click($mix);
           expect($breedSpan).toHaveTextContent("품종을 선택해 주세요");
