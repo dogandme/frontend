@@ -14,12 +14,25 @@ import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 
 const NicknameInput = () => {
-  const nickname = useUserInfoRegistrationFormStore((state) => state.nickname);
+  const isValidNickname = useUserInfoRegistrationFormStore(
+    (state) => state.isValidNickname,
+  );
   const setNickname = useUserInfoRegistrationFormStore(
     (state) => state.setNickname,
   );
+  const setIsValidNickname = useUserInfoRegistrationFormStore(
+    (state) => state.setIsValidNickname,
+  );
 
-  const isValidNickname = validateNickname(nickname);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value: nickname } = e.target;
+    const isValidNickname = validateNickname(nickname);
+
+    const isNicknameEmpty = nickname.length === 0;
+
+    setNickname(nickname);
+    setIsValidNickname(isValidNickname || isNicknameEmpty);
+  };
 
   return (
     <Input
@@ -31,9 +44,8 @@ const NicknameInput = () => {
       statusText="20자 이내의 한글 영어 숫자만 사용 가능합니다."
       essential
       componentType="outlinedText"
-      isError={!isValidNickname && nickname.length > 0}
-      value={nickname}
-      onChange={(e) => setNickname(e.target.value)}
+      isError={!isValidNickname}
+      onChange={handleChange}
       maxLength={20}
     />
   );
