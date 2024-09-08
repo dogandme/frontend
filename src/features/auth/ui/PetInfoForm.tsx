@@ -69,11 +69,12 @@ export const ProfileInput = () => {
   };
 
   return (
-    <div
+    <button
       className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-tangerine-500 bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage: `url(${profileUrl})`,
       }}
+      onClick={handleInputClick}
     >
       <input
         type="file"
@@ -82,14 +83,10 @@ export const ProfileInput = () => {
         ref={inputRef}
         onChange={handleFileChange}
       />
-      <button
-        className="flex h-8 w-8 items-center justify-center rounded-2xl border border-grey-500 bg-grey-0"
-        onClick={handleInputClick}
-        type="button"
-      >
+      <span className="flex h-8 w-8 items-center justify-center rounded-2xl border border-grey-500 bg-grey-0">
         <EditIcon fill="#9E9E9E" />
-      </button>
-    </div>
+      </span>
+    </button>
   );
 };
 
