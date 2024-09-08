@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import UserInfoRegistrationForm from "./UserInfoRegistrationForm";
 import { expect, userEvent, within } from "@storybook/test";
+import { useUserInfoRegistrationFormStore } from "../store";
+import { useAuthStore } from "@/shared/store/auth";
 
 const meta: Meta<typeof UserInfoRegistrationForm> = {
   title: "features/auth/UserInfoRegistrationForm",
@@ -16,6 +18,26 @@ export default meta;
 type Story = StoryObj<typeof UserInfoRegistrationForm>;
 
 export const Default: Story = {
+  decorators: (Story) => {
+    useUserInfoRegistrationFormStore.setState({
+      nickname: "",
+      gender: null,
+      ageRange: null,
+      region: null,
+      checkList: [false, false, false],
+    });
+
+    useAuthStore.setState({
+      token: "Bearer token",
+    });
+
+    return (
+      <div id="root">
+        <Story />
+      </div>
+    );
+  },
+
   render: () => (
     <div className="w-96">
       <UserInfoRegistrationForm />
@@ -59,12 +81,14 @@ export const Default: Story = {
         },
       );
 
+      const validNickname = "hihihi";
+
       await step(
         "닉네임 형식에 맞게 입력한 경우, 안내 문구는 기본 색상으로 표시된다.",
         async () => {
           // 이메일 입력 필드의 값을 초기화합니다.
           await userEvent.clear($nicknameInput);
-          await userEvent.type($nicknameInput, "hihihi");
+          await userEvent.type($nicknameInput, validNickname);
 
           const $statusText = canvas.getByText(STATUS_TEXT);
 
@@ -81,6 +105,11 @@ export const Default: Story = {
           expect($statusText).not.toBeInTheDocument();
         },
       );
+
+      await step("닉네임이 store에 저장된다.", async () => {
+        const { nickname } = useUserInfoRegistrationFormStore.getState();
+        expect(nickname).toEqual(validNickname);
+      });
     });
 
     await step("gender select 검사", async () => {
@@ -142,6 +171,11 @@ export const Default: Story = {
           await userEvent.click($maleOption);
         },
       );
+
+      await step("성별이 store에 저장된다.", async () => {
+        const { gender } = useUserInfoRegistrationFormStore.getState();
+        expect(gender).toEqual("MALE");
+      });
     });
 
     await step("age range select 검사", async () => {
@@ -202,6 +236,13 @@ export const Default: Story = {
           await userEvent.click($teenagerOption);
         },
       );
+
+      await step("연령대가 store에 저장된다.", async () => {
+        const { ageRange } = useUserInfoRegistrationFormStore.getState();
+        expect(ageRange).toEqual(10);
+      });
     });
+
+    // todo: 동네 설정 검사
   },
 };
