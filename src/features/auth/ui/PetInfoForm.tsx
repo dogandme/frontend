@@ -47,7 +47,6 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// TODO 바텀시트 완성되고 나면 사진 업로드 , 삭제하기 기능 추가하기
 export const ProfileInput = () => {
   const profileImage = usePetInfoStore((state) => state.profileImage);
   const setProfileImage = usePetInfoStore((state) => state.setProfileImage);
@@ -63,7 +62,6 @@ export const ProfileInput = () => {
 
   // type이 file인 input에게 파일이 존재하는 경우엔 Blob URL을 생성하여 프로필 이미지로 설정합니다.
   // 만약 사진이 존재하지 않는 경우 기본 이미지를 제공합니다.
-  // TODO 바텀 시트가 생성되고 사진 선택하기 , 삭제 기능이 추가되면 로직을 변경해야 합니다.
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     setProfileImage(file || null);
@@ -98,6 +96,7 @@ export const ProfileInput = () => {
           type="file"
           accept="image/*"
           className="sr-only"
+          id="profile"
           ref={inputRef}
           onChange={handleFileChange}
         />
@@ -105,7 +104,7 @@ export const ProfileInput = () => {
           <EditIcon fill="#9E9E9E" />
         </span>
       </button>
-      <Select isOpen={isOpen} onClose={onClose}>
+      <Select isOpen={isOpen} onClose={onClose} id="profile-bottom-sheet">
         <Select.BottomSheet>
           <Select.OptionList>
             <Select.Option onClick={handleInputClick}>
