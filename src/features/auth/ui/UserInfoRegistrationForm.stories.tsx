@@ -5,6 +5,7 @@ import { expect, userEvent, within } from "@storybook/test";
 import { useUserInfoRegistrationFormStore } from "../store";
 import { useAuthStore } from "@/shared/store/auth";
 import { OverlayPortal } from "@/app/OverlayPortal";
+import { userInfoRegistrationHandlers } from "@/mocks/handler";
 
 const meta: Meta<typeof UserInfoRegistrationForm> = {
   title: "features/auth/UserInfoRegistrationForm",
@@ -12,6 +13,16 @@ const meta: Meta<typeof UserInfoRegistrationForm> = {
   tags: ["autodocs"],
   args: {},
   argTypes: {},
+  decorators: (Story) => {
+    return (
+      <div id="root">
+        <OverlayPortal />
+        <div className="w-96">
+          <Story />
+        </div>
+      </div>
+    );
+  },
 };
 
 export default meta;
@@ -32,19 +43,10 @@ export const Default: Story = {
       token: "Bearer token",
     });
 
-    return (
-      <div id="root">
-        <OverlayPortal />
-        <Story />
-      </div>
-    );
+    return <Story />;
   },
 
-  render: () => (
-    <div className="w-96">
-      <UserInfoRegistrationForm />
-    </div>
-  ),
+  render: () => <UserInfoRegistrationForm />,
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -316,6 +318,84 @@ export const Default: Story = {
 
         await userEvent.click($snackBarCloseButton);
         await expect($snackBarCloseButton).not.toBeInTheDocument();
+      },
+    );
+  },
+};
+
+export const ApiTest: Story = {
+  decorators: (Story) => {
+    useAuthStore.setState({
+      token: "Bearer token",
+    });
+
+    useUserInfoRegistrationFormStore.setState({
+      nickname: "",
+      gender: null,
+      ageRange: null,
+      region: null,
+      checkList: [false, false, false],
+    });
+
+    return <Story />;
+  },
+
+  render: () => <UserInfoRegistrationForm />,
+
+  parameters: {
+    msw: {
+      handlers: userInfoRegistrationHandlers,
+    },
+  },
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    const $nicknameInput = canvasElement.querySelector(
+      'input[name="nickname"]',
+    ) as HTMLInputElement;
+
+    const $genderTriggerButton = canvasElement.querySelector("#gender");
+    const $ageRangeTriggerButton = canvasElement.querySelector("#age-range");
+
+    const $firstAgreementCheckbox = canvas.getByText("이용약관 동의 (필수)");
+    const $secondAgreementCheckbox = canvas.getByText(
+      "개인정보 수집 및 이용 동의 (필수)",
+    );
+
+    const $submitButton = canvas.getByText("회원가입");
+
+    await step(
+      "form을 올바르게 입력하고 필수 약관에 동의한 상태에서 [회원가입] 버튼을 누르면, nickname과 role을 store에 저장된다.",
+      async () => {
+        const validNickname = "hihihi";
+        await userEvent.type($nicknameInput, validNickname);
+
+        await userEvent.click($genderTriggerButton!);
+
+        const $bottomSheet = document.querySelector("#gender-select");
+        const $optionList = $bottomSheet?.querySelectorAll("li");
+        const $maleOption = $optionList?.[0];
+        await userEvent.click($maleOption!);
+
+        await userEvent.click($ageRangeTriggerButton!);
+
+        const $ageRangeBottomSheet =
+          document.querySelector("#age-range-select");
+        const $ageRangeOptionList =
+          $ageRangeBottomSheet?.querySelectorAll("li");
+        const $teenagerOption = $ageRangeOptionList?.[0];
+        await userEvent.click($teenagerOption!);
+
+        await userEvent.click($firstAgreementCheckbox);
+        await userEvent.click($secondAgreementCheckbox);
+
+        await userEvent.click($submitButton);
+
+        const { nickname, role } = useAuthStore.getState();
+
+        expect(role).toBe("ROLE_GUEST");
+        expect(nickname).toBe(validNickname);
       },
     );
   },
