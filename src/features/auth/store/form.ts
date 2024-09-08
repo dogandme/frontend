@@ -76,3 +76,41 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
   setIsValidEmail: (isValidEmail: boolean) => set({ isValidEmail }),
   setStatusText: (statusText: string) => set({ statusText }),
 }));
+
+type Gender = "FEMALE" | "MALE" | null;
+type AgeRange = 10 | 20 | 30 | 40 | 50 | null;
+type Region = string | null;
+type CheckedList = boolean[];
+
+interface UserInfoRegistrationFormStore {
+  nickname: string;
+  isValidNickname: boolean;
+  gender: Gender;
+  ageRange: AgeRange;
+  region: Region;
+  checkList: CheckedList;
+
+  setNickname: (email: string) => void;
+  setIsValidNickname: (isValidNickname: boolean) => void;
+  setGender: (gender: Gender) => void;
+  setAgeRange: (birth: AgeRange) => void;
+  setRegion: (region: Region) => void;
+  setCheckList: (checkList: CheckedList) => void;
+}
+
+export const useUserInfoRegistrationFormStore =
+  create<UserInfoRegistrationFormStore>((set) => ({
+    nickname: "",
+    isValidNickname: true,
+    gender: null,
+    ageRange: null,
+    region: null,
+    checkList: [false, false, false],
+
+    setNickname: (nickname) => set({ nickname }),
+    setIsValidNickname: (isValidNickname) => set({ isValidNickname }),
+    setGender: (gender) => set({ gender }),
+    setAgeRange: (birth) => set({ ageRange: birth }),
+    setRegion: (region) => set({ region }),
+    setCheckList: (checkList) => set({ checkList }),
+  }));
