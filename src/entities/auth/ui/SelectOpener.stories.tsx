@@ -159,7 +159,10 @@ export const Disabled: Story = {
             placeholder="품종을 선택해 주세요"
             value={selectedName ?? ""}
             disabled={isDisabled}
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => {
+              action("onSelectOpenerClick")();
+              setIsOpen(!isOpen);
+            }}
           />
           <Checkbox
             checked={isDisabled}
@@ -179,7 +182,7 @@ export const Disabled: Story = {
                     value={value}
                     isSelected={value === selectedValue}
                     onClick={() => {
-                      action("onClick")(value);
+                      action("onOptionClick")(value);
                       setSelectedValue(value);
                     }}
                   >
