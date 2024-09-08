@@ -138,6 +138,68 @@ export const Default: Story = {
           if (!$maleOption) return;
 
           expect($maleOption).toHaveClass("text-tangerine-500");
+
+          await userEvent.click($maleOption);
+        },
+      );
+    });
+
+    await step("age range select 검사", async () => {
+      const $ageRangeLabel = canvas.getByText("연령대");
+      const $ageRangeTriggerButton = canvasElement.querySelector("#age-range");
+
+      await step("연령대 라벨을 클릭하면, 바텀 시트가 열린다.", async () => {
+        await userEvent.click($ageRangeLabel);
+
+        expect($ageRangeTriggerButton).toHaveFocus();
+
+        const $bottomSheet = document.querySelector("#age-range-select");
+
+        expect($bottomSheet).toBeInTheDocument();
+      });
+
+      if (!$ageRangeTriggerButton) return;
+
+      await step(
+        "연령대 바텀시트의 trigger 버튼을 클릭하면, 바텀 시트가 열린다.",
+        async () => {
+          await userEvent.click($ageRangeTriggerButton);
+
+          const $bottomSheet = document.querySelector("#age-range-select");
+
+          expect($bottomSheet).toBeInTheDocument();
+        },
+      );
+
+      await step(
+        "바텀 시트에 '10대'를 선택하면, trigger 버튼에 '10대'가 표시된다.",
+        async () => {
+          const $bottomSheet = document.querySelector("#age-range-select");
+          const $optionList = $bottomSheet?.querySelectorAll("li");
+          const $teenagerOption = $optionList?.[0];
+
+          if (!$teenagerOption) return;
+          await userEvent.click($teenagerOption);
+
+          expect($ageRangeTriggerButton).toHaveTextContent("10대");
+        },
+      );
+
+      await step(
+        "'10대'를 선택한 상태에서 바텀 시트를 다시 열면, '10대' 옵션이 빨간색으로 표시되어 있다.",
+        async () => {
+          await userEvent.click($ageRangeTriggerButton);
+
+          const $bottomSheet = document.querySelector("#age-range-select");
+          expect($bottomSheet).toBeInTheDocument();
+
+          const $optionList = $bottomSheet?.querySelectorAll("li");
+          const $teenagerOption = $optionList?.[0];
+
+          if (!$teenagerOption) return;
+
+          expect($teenagerOption).toHaveClass("text-tangerine-500");
+          await userEvent.click($teenagerOption);
         },
       );
     });
