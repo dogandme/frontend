@@ -82,5 +82,64 @@ export const Default: Story = {
         },
       );
     });
+
+    await step("gender select 검사", async () => {
+      const $genderLabel = canvas.getByText("성별");
+      const $genderTriggerButton = canvasElement.querySelector("#gender");
+
+      await step("성별 라벨을 클릭하면, 바텀 시트가 열린다.", async () => {
+        await userEvent.click($genderLabel);
+
+        expect($genderTriggerButton).toHaveFocus();
+
+        const $bottomSheet = document.querySelector("#gender-select");
+
+        expect($bottomSheet).toBeInTheDocument();
+      });
+
+      if (!$genderTriggerButton) return;
+
+      await step(
+        "성별 바텀시트의 trigger 버튼을 클릭하면, 바텀 시트가 열린다.",
+        async () => {
+          await userEvent.click($genderTriggerButton);
+
+          const $bottomSheet = document.querySelector("#gender-select");
+
+          expect($bottomSheet).toBeInTheDocument();
+        },
+      );
+
+      await step(
+        "바텀 시트에 '남자'를 선택하면, trigger 버튼에 '남자'가 표시된다.",
+        async () => {
+          const $bottomSheet = document.querySelector("#gender-select");
+          const $optionList = $bottomSheet?.querySelectorAll("li");
+          const $maleOption = $optionList?.[0];
+
+          if (!$maleOption) return;
+          await userEvent.click($maleOption);
+
+          expect($genderTriggerButton).toHaveTextContent("남자");
+        },
+      );
+
+      await step(
+        "'남자'를 선택한 상태에서 바텀 시트를 다시 열면, '남자' 옵션이 빨간색으로 표시되어 있다.",
+        async () => {
+          await userEvent.click($genderTriggerButton);
+
+          const $bottomSheet = document.querySelector("#gender-select");
+          expect($bottomSheet).toBeInTheDocument();
+
+          const $optionList = $bottomSheet?.querySelectorAll("li");
+          const $maleOption = $optionList?.[0];
+
+          if (!$maleOption) return;
+
+          expect($maleOption).toHaveClass("text-tangerine-500");
+        },
+      );
+    });
   },
 };
