@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import UserInfoRegistrationForm from "./UserInfoRegistrationForm";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { useUserInfoRegistrationFormStore } from "../store";
 import { useAuthStore } from "@/shared/store/auth";
 import { OverlayPortal } from "@/app/OverlayPortal";
@@ -392,10 +392,12 @@ export const ApiTest: Story = {
 
         await userEvent.click($submitButton);
 
-        const { nickname, role } = useAuthStore.getState();
+        await waitFor(() => {
+          const { nickname, role } = useAuthStore.getState();
 
-        expect(role).toBe("ROLE_GUEST");
-        expect(nickname).toBe(validNickname);
+          expect(role).toBe("ROLE_GUEST");
+          expect(nickname).toBe(validNickname);
+        });
       },
     );
   },
