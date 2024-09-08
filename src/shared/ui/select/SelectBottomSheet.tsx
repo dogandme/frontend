@@ -10,7 +10,13 @@ const SelectBottomSheet = ({ children }: SelectBottomSheetProps) => {
   const { id, isOpen, onClose } = useSelectContext();
 
   return (
-    <Sheet id={id} isOpen={isOpen} onClose={onClose} detent="content-height">
+    <Sheet
+      id={id}
+      isOpen={isOpen}
+      onClose={onClose}
+      detent="content-height"
+      mountPoint={document.querySelector("#root")!}
+    >
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content>{children}</Sheet.Content>
