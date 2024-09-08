@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
 
 import Select from "./Select";
 import { useState } from "react";
@@ -89,6 +90,47 @@ export const BottomSheetSelect: Story = {
                     onClick={() => setSelectedValue(value)}
                   >
                     {name}
+                  </Select.Option>
+                );
+              })}
+            </Select.OptionList>
+          </Select.BottomSheet>
+        </Select>
+      </>
+    );
+  },
+};
+
+export const WithDisabledOption: Story = {
+  render: () => {
+    const optionList = [1, 2, 3, 4, 5];
+
+    /* eslint-disable */
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [selectedValue, setSelectedValue] = useState<number | null>(null);
+
+    return (
+      <>
+        {/* select 컴포넌트를 여는 trigger */}
+        <button onClick={() => setIsOpen(true)}>click option</button>
+        <div>value: {selectedValue}</div>
+
+        <Select isOpen={isOpen} onClose={() => setIsOpen(false)}>
+          <Select.BottomSheet>
+            <Select.OptionList>
+              {optionList.map((value) => {
+                return (
+                  <Select.Option
+                    key={value}
+                    value={value}
+                    isSelected={value === selectedValue}
+                    onClick={() => {
+                      action("onClick")(value);
+                      setSelectedValue(value);
+                    }}
+                    disabled={value === 5}
+                  >
+                    {value}
                   </Select.Option>
                 );
               })}

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
 
 import List, { Item } from "./List";
 
@@ -43,6 +44,10 @@ export const ListItem: ItemStory = {
     },
   },
   render: ({ disabled }) => {
-    return <List.Item disabled={disabled}>Item 1</List.Item>;
+    return (
+      <List.Item disabled={disabled} onClick={action("onClick")}>
+        Item 1
+      </List.Item>
+    );
   },
 };
