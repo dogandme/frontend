@@ -37,22 +37,22 @@ export const MultiplePin = ({
   position,
   imageUrl,
   alt,
-  amount,
-}: GooglePinProps & { amount: number }) => {
+  markerCount,
+}: GooglePinProps & { markerCount: number }) => {
   return (
     <AdvancedMarker position={position}>
-      <_Pin.Multiple imageUrl={imageUrl} alt={alt} amount={amount} />
+      <_Pin.Multiple imageUrl={imageUrl} alt={alt} markerCount={markerCount} />
     </AdvancedMarker>
   );
 };
 
 export const Cluster = ({
   position,
-  amount,
-}: MarkerProps & { amount: number }) => {
+  markerCount,
+}: MarkerProps & { markerCount: number }) => {
   return (
     <AdvancedMarker position={position}>
-      <_Pin.Cluster amount={amount} />
+      <_Pin.Cluster markerCount={markerCount} />
     </AdvancedMarker>
   );
 };

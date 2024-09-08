@@ -3,7 +3,7 @@ import { PinShadowIcon } from "@/shared/ui/icon";
 
 export interface PinProps {
   imageUrl: string;
-  alt?: string;
+  alt: string;
 }
 
 const Pin = ({ imageUrl, alt }: PinProps) => (
@@ -30,22 +30,22 @@ export const Default = ({ imageUrl, alt }: PinProps) => {
 export const Multiple = ({
   imageUrl,
   alt,
-  amount,
-}: PinProps & { amount: number }) => {
+  markerCount,
+}: PinProps & { markerCount: number }) => {
   return (
     <div className="relative">
       <Pin imageUrl={imageUrl} alt={alt} />
       <div className="absolute left-[0.75rem] top-[0.7rem]">
-        <Badge colorType="secondary">{`+${Math.min(amount, 99)}`}</Badge>
+        <Badge colorType="secondary">{`+${Math.min(markerCount, 99)}`}</Badge>
       </div>
     </div>
   );
 };
 
-export const Cluster = ({ amount }: { amount: number }) => {
+export const Cluster = ({ markerCount }: { markerCount: number }) => {
   return (
-    <span className="btn-2 flex h-[3.75rem] w-[3.75rem] items-center justify-center rounded-full bg-translucent-tangerine text-center text-tangerine-900">
-      {amount}
+    <span className="btn-2 bg-translucent-tangerine flex h-[3.75rem] w-[3.75rem] items-center justify-center rounded-full text-center text-tangerine-900">
+      {markerCount}
     </span>
   );
 };

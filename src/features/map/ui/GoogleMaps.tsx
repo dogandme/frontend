@@ -38,22 +38,25 @@ export const GoogleMaps = () => {
     >
       <CustomMarker.User position={{ lat: 37.5665, lng: 126.978 }} />
       <CustomMarker.Pin
+        alt="test"
         position={{ lat: 37.56651, lng: 126.977 }}
         imageUrl="/public/default-profile.svg"
       />
       <CustomMarker.MultiplePin
         position={{ lat: 37.5664, lng: 126.976 }}
         imageUrl="/public/default-profile.svg"
-        amount={2}
+        alt="test"
+        markerCount={2}
       />
       <CustomMarker.MultiplePin
         position={{ lat: 37.5663, lng: 126.9765 }}
         imageUrl="/public/default-profile.svg"
-        amount={500}
+        alt="test"
+        markerCount={500}
       />
       <CustomMarker.Cluster
         position={{ lat: 37.5662, lng: 126.976 }}
-        amount={16}
+        markerCount={16}
       />
     </Map>
   );
