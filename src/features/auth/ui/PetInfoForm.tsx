@@ -13,7 +13,9 @@ import { useRouteHistoryStore } from "@/shared/store/history";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { Select } from "@/shared/ui/select";
-// TODO svg 경로를 문자열로 가져오는 방법 찾아보기
+import { SelectOpener } from "@/entities/auth/ui";
+import { dogBreeds } from "../constants";
+
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
 
 const TextCounter = ({
@@ -120,10 +122,10 @@ export const ProfileInput = () => {
 export const NameInput = () => {
   const name = usePetInfoStore((state) => state.name);
   const isValidName = usePetInfoStore((state) => state.isValidName);
-  const isNameEmpty = name.length === 0;
   const setName = usePetInfoStore((state) => state.setName);
   const setIsValidName = usePetInfoStore((state) => state.setIsValidName);
 
+  const isNameEmpty = name.length === 0;
   const MAX_LENGTH = 20;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,43 +155,56 @@ export const NameInput = () => {
 };
 
 export const BreedInput = () => {
-  const [isMixDog, setIsMixDog] = useState<boolean>(false);
+  const breed = usePetInfoStore((state) => state.breed);
   const setBreed = usePetInfoStore((state) => state.setBreed);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const onOpen = () => setIsOpen(true);
+  const onClose = () => setIsOpen(false);
 
   return (
-    <div className="flex w-full flex-col gap-[10px]">
-      {/* TODO select로 변경하기 */}
-      <Input
-        componentType="outlinedText"
-        id="greed"
-        label="어떤 종의 아이인가요?"
-        placeholder="품종을 선택해 주세요"
-        onChange={(e) => setBreed(isMixDog ? "mix" : e.target.value)}
-        // TODO disabled 되면 선택된 값을 기본 값으로 변경하기
-        disabled={isMixDog}
-        essential
-      />
-      <div className="flex items-center gap-1">
-        <input
-          type="checkbox"
-          id="isMixDog"
-          name="ixMixDog"
-          onChange={(e) => {
-            const { checked } = e.target;
-            if (checked) {
-              setBreed("mix");
-              setIsMixDog(e.target.checked);
-              return;
-            }
-            setIsMixDog(e.target.checked);
-            setBreed("");
-          }}
+    <>
+      <div className="flex w-full flex-col gap-[10px]">
+        <SelectOpener
+          id="breed"
+          label="어떤 종의 아이인가요?"
+          essential
+          value={breed}
+          placeholder="품종을 선택해 주세요"
+          onClick={onOpen}
+          disabled={breed === "모르겠어요"}
         />
-        <label htmlFor="isMixDog" className="btn-3 text-center text-grey-500">
-          모르겠어요
-        </label>
+        <div className="flex items-center gap-1">
+          <input
+            type="checkbox"
+            id="isMixDog"
+            name="ixMixDog"
+            onChange={(e) => {
+              const { checked } = e.target;
+              if (checked) {
+                setBreed("모르겠어요");
+                return;
+              }
+              setBreed("");
+            }}
+          />
+          <label htmlFor="isMixDog" className="btn-3 text-center text-grey-500">
+            모르겠어요
+          </label>
+        </div>
       </div>
-    </div>
+      <Select isOpen={isOpen} onClose={onClose}>
+        <Select.BottomSheet>
+          <Select.OptionList>
+            {dogBreeds.map((value, idx) => (
+              <Select.Option key={idx} onClick={() => setBreed(value)}>
+                {value}
+              </Select.Option>
+            ))}
+          </Select.OptionList>
+        </Select.BottomSheet>
+      </Select>
+    </>
   );
 };
 
