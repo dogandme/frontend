@@ -265,7 +265,6 @@ export const SubmitButton = () => {
 
   const handleClick = () => {
     const petInfoForm = usePetInfoStore.getState();
-    // TODO refactor : 유효성 검사 메소드 만들어 사용하기
     const { isValidName, name, breed, characterList, introduce, profileImage } =
       petInfoForm;
     const { token } = useAuthStore.getState();
@@ -273,11 +272,11 @@ export const SubmitButton = () => {
     const isNameEmpty = name.length === 0;
     const isBreedEmpty = breed.length === 0;
 
+    // TODO 에러 바운더리 생성되면 로직 변경하기
     if (!isValidName || isNameEmpty || isBreedEmpty) {
       openInfoSnackBar();
       return;
     }
-    // TODO 엔드포인트 양식 정해지면 API 요청 기능 추가하기
 
     if (!token) {
       throw new Error(
