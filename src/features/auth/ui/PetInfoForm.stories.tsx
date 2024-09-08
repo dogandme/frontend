@@ -82,7 +82,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     const $name = canvas.getByLabelText("이름이 어떻게 되나요?-input")!;
     const $statusText = canvas.getAllByLabelText("status-text")[0]!;
     const $breed = document.querySelector("#breed")!;
-    const $breedSpan = $breed.querySelector("span")!;
+    const $selectedBreedName = $breed.querySelector("span")!;
     const $mix = canvasElement.querySelector("#isMixDog")!;
     const $characterButton1 = canvas.queryByText("호기심 많은")!;
     const $characterButton2 = canvas.queryByText("애착이 강한")!;
@@ -194,8 +194,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           "바텀 시트에서 특정 견종을 클릭하면 입력란에 값이 채워지고 바텀 시트가 내려간다.",
           async () => {
             await userEvent.click(document.querySelector("#푸들")!);
-            const $breedSpan = $breed.querySelector("span");
-            expect($breedSpan).toHaveTextContent("푸들");
+            const $selectedBreedName = $breed.querySelector("span");
+            expect($selectedBreedName).toHaveTextContent("푸들");
             await waitFor(() => {
               expect($bottomSheetContent).not.toBeInTheDocument();
             });
@@ -207,7 +207,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         "'모르겠어요'를 클릭하면 종 입력란에 '모르겠어요'로 값이 바뀌며 종 입력란이 disabled가 된다.",
         async () => {
           await userEvent.click($mix);
-          expect($breedSpan).toHaveTextContent("모르겠어요");
+          expect($selectedBreedName).toHaveTextContent("모르겠어요");
           expect($breed).toBeDisabled();
         },
       );
@@ -216,7 +216,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         "'모르겠어요' 선택된 상황에서 '모르겠어요'를 클릭하면 종 입력란은 초기 값으로 돌아온다.",
         async () => {
           await userEvent.click($mix);
-          expect($breedSpan).toHaveTextContent("품종을 선택해 주세요");
+          expect($selectedBreedName).toHaveTextContent("품종을 선택해 주세요");
           expect($breed).not.toBeDisabled();
         },
       );
