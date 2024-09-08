@@ -204,7 +204,7 @@ export const BreedInput = () => {
                 key={idx}
                 id={value}
                 onClick={() => setBreed(value)}
-                isSelected={breed === value}
+                isSelected={value === breed}
               >
                 {value}
               </Select.Option>
