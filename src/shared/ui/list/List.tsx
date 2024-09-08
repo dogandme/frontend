@@ -23,7 +23,11 @@ export const Item = forwardRef<HTMLLIElement, ItemProps>(
         ref={ref}
         className={`${baseStyles} ${disabled ? disabledStyles : ableStyles} ${additionalClassName}`}
         aria-disabled={disabled}
-        onClick={onClick}
+        onClick={(e) => {
+          if (disabled) return;
+
+          onClick?.(e);
+        }}
         {...props}
       >
         {children}

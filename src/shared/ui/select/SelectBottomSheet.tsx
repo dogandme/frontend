@@ -19,7 +19,9 @@ const SelectBottomSheet = ({ children }: SelectBottomSheetProps) => {
     >
       <Sheet.Container>
         <Sheet.Header />
-        <Sheet.Content>{children}</Sheet.Content>
+        <Sheet.Content>
+          <Sheet.Scroller>{children}</Sheet.Scroller>
+        </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop onTap={onClose} />
     </Sheet>
