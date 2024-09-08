@@ -74,7 +74,6 @@ export const ProfileInput = () => {
   // 사진을 삭제하는 핸들러
   const handleDelete = () => {
     setProfileImage(null);
-    setOpen(false);
   };
 
   // 사진 선택하기 버튼을 클릭했을 때 input을 클릭하는 핸들기
@@ -94,7 +93,7 @@ export const ProfileInput = () => {
       >
         <input
           type="file"
-          accept="image/*"
+          accept="image/jpeg, image/png, image/webp"
           className="sr-only"
           id="profile"
           ref={inputRef}
