@@ -167,8 +167,7 @@ export const Default: Story = {
           const $optionList = $bottomSheet?.querySelectorAll("li");
           const $maleOption = $optionList?.[0];
 
-          if (!$maleOption) return;
-          await userEvent.click($maleOption);
+          await userEvent.click($maleOption!);
 
           expect($genderTriggerButton).toHaveTextContent("남자");
         },
@@ -185,11 +184,9 @@ export const Default: Story = {
           const $optionList = $bottomSheet?.querySelectorAll("li");
           const $maleOption = $optionList?.[0];
 
-          if (!$maleOption) return;
-
           expect($maleOption).toHaveClass("text-tangerine-500");
 
-          await userEvent.click($maleOption);
+          await userEvent.click($maleOption!);
         },
       );
 
@@ -230,12 +227,10 @@ export const Default: Story = {
         expect($bottomSheet).toBeInTheDocument();
       });
 
-      if (!$ageRangeTriggerButton) return;
-
       await step(
         "연령대 바텀시트의 trigger 버튼을 클릭하면, 바텀 시트가 열린다.",
         async () => {
-          await userEvent.click($ageRangeTriggerButton);
+          await userEvent.click($ageRangeTriggerButton!);
 
           const $bottomSheet = document.querySelector("#age-range-select");
 
@@ -250,8 +245,7 @@ export const Default: Story = {
           const $optionList = $bottomSheet?.querySelectorAll("li");
           const $teenagerOption = $optionList?.[0];
 
-          if (!$teenagerOption) return;
-          await userEvent.click($teenagerOption);
+          await userEvent.click($teenagerOption!);
 
           expect($ageRangeTriggerButton).toHaveTextContent("10대");
         },
@@ -260,7 +254,7 @@ export const Default: Story = {
       await step(
         "'10대'를 선택한 상태에서 바텀 시트를 다시 열면, '10대' 옵션이 빨간색으로 표시되어 있다.",
         async () => {
-          await userEvent.click($ageRangeTriggerButton);
+          await userEvent.click($ageRangeTriggerButton!);
 
           const $bottomSheet = document.querySelector("#age-range-select");
           expect($bottomSheet).toBeInTheDocument();
