@@ -4,6 +4,7 @@ import UserInfoRegistrationForm from "./UserInfoRegistrationForm";
 import { expect, userEvent, within } from "@storybook/test";
 import { useUserInfoRegistrationFormStore } from "../store";
 import { useAuthStore } from "@/shared/store/auth";
+import { OverlayPortal } from "@/app/OverlayPortal";
 
 const meta: Meta<typeof UserInfoRegistrationForm> = {
   title: "features/auth/UserInfoRegistrationForm",
@@ -33,6 +34,7 @@ export const Default: Story = {
 
     return (
       <div id="root">
+        <OverlayPortal />
         <Story />
       </div>
     );
@@ -50,6 +52,10 @@ export const Default: Story = {
     const $nicknameInput = canvasElement.querySelector(
       'input[name="nickname"]',
     ) as HTMLInputElement;
+    const validNickname = "hihihi";
+    const invalidNickname = "!!@#$@";
+
+    const $submitButton = canvas.getByText("회원가입");
 
     await step("nickname input 검사", async () => {
       const STATUS_TEXT = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";
@@ -72,7 +78,7 @@ export const Default: Story = {
       await step(
         "닉네임 형식에 맞지 않게 입력할 경우, 안내 문구가 핑크색으로 표시된다.",
         async () => {
-          await userEvent.type($nicknameInput, "!!@#$@");
+          await userEvent.type($nicknameInput, invalidNickname);
           // outfocus되도 statusText를 pink-500 색상으로 표시
           await userEvent.tab();
 
@@ -80,8 +86,6 @@ export const Default: Story = {
           expect($statusText).toHaveClass(textColor.error);
         },
       );
-
-      const validNickname = "hihihi";
 
       await step(
         "닉네임 형식에 맞게 입력한 경우, 안내 문구는 기본 색상으로 표시된다.",
@@ -115,6 +119,23 @@ export const Default: Story = {
     await step("gender select 검사", async () => {
       const $genderLabel = canvas.getByText("성별");
       const $genderTriggerButton = canvasElement.querySelector("#gender");
+
+      await step(
+        "성별을 선택하지 않은 상태에서 [회원가입] 버튼을 누르면, snackbar가 뜬다.",
+        async () => {
+          await userEvent.click($submitButton);
+
+          const $snackbar = canvas.getByText("필수 항목을 모두 입력해 주세요");
+          expect($snackbar).toBeInTheDocument();
+
+          const $snackBarCloseButton = canvas.getByLabelText(
+            "info-snackbar-close-button",
+          );
+
+          await userEvent.click($snackBarCloseButton);
+          await expect($snackBarCloseButton).not.toBeInTheDocument();
+        },
+      );
 
       await step("성별 라벨을 클릭하면, 바텀 시트가 열린다.", async () => {
         await userEvent.click($genderLabel);
@@ -182,6 +203,23 @@ export const Default: Story = {
       const $ageRangeLabel = canvas.getByText("연령대");
       const $ageRangeTriggerButton = canvasElement.querySelector("#age-range");
 
+      await step(
+        "연령대를 선택하지 않은 상태에서 [회원가입] 버튼을 누르면, snackbar가 뜬다.",
+        async () => {
+          await userEvent.click($submitButton);
+
+          const $snackbar = canvas.getByText("필수 항목을 모두 입력해 주세요");
+          expect($snackbar).toBeInTheDocument();
+
+          const $snackBarCloseButton = canvas.getByLabelText(
+            "info-snackbar-close-button",
+          );
+
+          await userEvent.click($snackBarCloseButton);
+          await expect($snackBarCloseButton).not.toBeInTheDocument();
+        },
+      );
+
       await step("연령대 라벨을 클릭하면, 바텀 시트가 열린다.", async () => {
         await userEvent.click($ageRangeLabel);
 
@@ -244,5 +282,47 @@ export const Default: Story = {
     });
 
     // todo: 동네 설정 검사
+
+    await step(
+      "form을 다 입력했지만 이메일 형식에 맞지 않은 상태에서 [회원가입] 버튼을 누르면, snackbar가 뜬다.",
+      async () => {
+        await userEvent.clear($nicknameInput);
+
+        await userEvent.type($nicknameInput, invalidNickname);
+        await userEvent.click($submitButton);
+
+        const $snackbar = canvas.getByText("올바른 닉네임을 입력해 주세요");
+        expect($snackbar).toBeInTheDocument();
+
+        const $snackBarCloseButton = canvas.getByLabelText(
+          "info-snackbar-close-button",
+        );
+
+        await userEvent.click($snackBarCloseButton);
+        await expect($snackBarCloseButton).not.toBeInTheDocument();
+      },
+    );
+
+    await userEvent.clear($nicknameInput);
+    await userEvent.type($nicknameInput, validNickname);
+
+    // todo: 유저 중복 snackbar 검사
+
+    await step(
+      "필수 약관에 동의하지 않은 상태에서 [회원가입] 버튼을 누르면, snackbar가 뜬다.",
+      async () => {
+        await userEvent.click($submitButton);
+
+        const $snackbar = canvas.getByText("필수 약관에 모두 동의해 주세요");
+        expect($snackbar).toBeInTheDocument();
+
+        const $snackBarCloseButton = canvas.getByLabelText(
+          "info-snackbar-close-button",
+        );
+
+        await userEvent.click($snackBarCloseButton);
+        await expect($snackBarCloseButton).not.toBeInTheDocument();
+      },
+    );
   },
 };
