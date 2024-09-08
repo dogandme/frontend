@@ -1,12 +1,11 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { EditIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { SelectChip } from "@/shared/ui/chip";
 import { TextArea } from "@/shared/ui/textarea";
 import { Button } from "@/shared/ui/button";
 import { useAuthStore } from "@/shared/store/auth";
-
-import { useNavigate } from "react-router-dom";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "@/shared/ui/snackbar";
