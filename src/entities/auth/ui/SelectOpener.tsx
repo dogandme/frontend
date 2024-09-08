@@ -25,8 +25,7 @@ export const SelectOpener = ({
 
   const isValueEmpty = value === undefined || value === "";
 
-  const baseStyles =
-    "body-2 flex h-12 w-full items-center justify-between gap-1 rounded-2xl border px-3 py-2 ";
+  const baseStyles = `body-2 flex h-12 w-full items-center justify-between gap-1 rounded-2xl border px-3 py-2 ${disabled && "cursor-not-allowed"}`;
   const colorStyles =
     "border-grey-300 bg-grey-0 hover:border-grey-500 hover:bg-grey-100 focus:border-tangerine-500 focus:bg-grey-0 focus-visible:outline-none disabled:border-grey-100 disabled:bg-grey-0";
   const textStyles = `body-2 ${disabled ? "text-grey-300" : !isValueEmpty ? "text-grey-700" : "text-grey-500"}`;
@@ -47,6 +46,7 @@ export const SelectOpener = ({
         ref={buttonRef}
         type="button"
         className={`${baseStyles} ${colorStyles} ${textStyles}`}
+        disabled={disabled}
         {...props}
       >
         <span>{isValueEmpty ? placeholder : value}</span>
