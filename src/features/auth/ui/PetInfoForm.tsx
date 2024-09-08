@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "@/shared/ui/snackbar";
+import { Select } from "@/shared/ui/select";
 // TODO svg 경로를 문자열로 가져오는 방법 찾아보기
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
 
@@ -48,6 +49,8 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
 export const ProfileInput = () => {
   const profileImage = usePetInfoStore((state) => state.profileImage);
   const setProfileImage = usePetInfoStore((state) => state.setProfileImage);
+  // 바텀 시트를 조작하기 위한 상태값
+  const [isOpen, setOpen] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // 상태에 저장된 파일 객체가 존재하는 경우엔 파일 객체를 URL로 변경하여 사용합니다.
@@ -55,10 +58,6 @@ export const ProfileInput = () => {
   const profileUrl = profileImage
     ? URL.createObjectURL(profileImage)
     : `${window.location.origin}/${DEFAULT_PROFILE_IMAGE}`;
-
-  const handleInputClick = () => {
-    inputRef.current?.click();
-  };
 
   // type이 file인 input에게 파일이 존재하는 경우엔 Blob URL을 생성하여 프로필 이미지로 설정합니다.
   // 만약 사진이 존재하지 않는 경우 기본 이미지를 제공합니다.
@@ -68,25 +67,53 @@ export const ProfileInput = () => {
     setProfileImage(file || null);
   };
 
+  // 바텀 시트를 여닫는 핸들러
+  const onOpen = () => setOpen(true);
+  const onClose = () => setOpen(false);
+
+  // 사진을 삭제하는 핸들러
+  const handleDelete = () => {
+    setProfileImage(null);
+    setOpen(false);
+  };
+
+  // 사진 선택하기 버튼을 클릭했을 때 input을 클릭하는 핸들기
+  const handleInputClick = () => {
+    inputRef.current?.click();
+  };
+
   return (
-    <button
-      className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-tangerine-500 bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: `url(${profileUrl})`,
-      }}
-      onClick={handleInputClick}
-    >
-      <input
-        type="file"
-        accept="image/*"
-        className="sr-only"
-        ref={inputRef}
-        onChange={handleFileChange}
-      />
-      <span className="flex h-8 w-8 items-center justify-center rounded-2xl border border-grey-500 bg-grey-0">
-        <EditIcon fill="#9E9E9E" />
-      </span>
-    </button>
+    <>
+      <button
+        className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-tangerine-500 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url(${profileUrl})`,
+        }}
+        onClick={onOpen}
+        aria-label="profile-image-button"
+      >
+        <input
+          type="file"
+          accept="image/*"
+          className="sr-only"
+          ref={inputRef}
+          onChange={handleFileChange}
+        />
+        <span className="flex h-8 w-8 items-center justify-center rounded-2xl border border-grey-500 bg-grey-0">
+          <EditIcon fill="#9E9E9E" />
+        </span>
+      </button>
+      <Select isOpen={isOpen} onClose={onClose}>
+        <Select.BottomSheet>
+          <Select.OptionList>
+            <Select.Option onClick={handleInputClick}>
+              사진 선택하기
+            </Select.Option>
+            <Select.Option onClick={handleDelete}>삭제 하기</Select.Option>
+          </Select.OptionList>
+        </Select.BottomSheet>
+      </Select>
+    </>
   );
 };
 
