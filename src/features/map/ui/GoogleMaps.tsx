@@ -37,6 +37,24 @@ export const GoogleMaps = () => {
       reuseMaps // Map 컴포넌트가 unmount 되었다가 다시 mount 될 때 기존의 map instance 를 재사용 하여 memory leak을 방지합니다.
     >
       <CustomMarker.User position={{ lat: 37.5665, lng: 126.978 }} />
+      <CustomMarker.Pin
+        position={{ lat: 37.56651, lng: 126.977 }}
+        imageUrl="/public/default-profile.svg"
+      />
+      <CustomMarker.MultiplePin
+        position={{ lat: 37.5664, lng: 126.976 }}
+        imageUrl="/public/default-profile.svg"
+        amount={2}
+      />
+      <CustomMarker.MultiplePin
+        position={{ lat: 37.5663, lng: 126.9765 }}
+        imageUrl="/public/default-profile.svg"
+        amount={500}
+      />
+      <CustomMarker.Cluster
+        position={{ lat: 37.5662, lng: 126.976 }}
+        amount={16}
+      />
     </Map>
   );
 };
