@@ -17,6 +17,8 @@ const Option = ({
   const { onClose } = useSelectContext();
 
   const handleClick = (e: React.MouseEvent<HTMLLIElement>) => {
+    if (disabled) return;
+
     onClick?.(e);
     onClose();
   };
@@ -31,6 +33,7 @@ const Option = ({
     <List.Item
       onClick={handleClick}
       additionalClassName={textColorStyles}
+      disabled={disabled}
       {...props}
     >
       {children}
