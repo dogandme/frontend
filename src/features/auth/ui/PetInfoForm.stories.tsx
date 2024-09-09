@@ -79,15 +79,15 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const $profile = canvas.getByLabelText("profile-image-button")!;
-    const $name = document.querySelector("#name")!;
+    const $name = canvasElement.querySelector("#name")!;
     const $statusText = canvas.getAllByLabelText("status-text")[0]!;
-    const $breed = document.querySelector("#breed")!;
+    const $breed = canvasElement.querySelector("#breed")!;
     const $selectedBreedName = $breed.querySelector("span")!;
     const $unknownBreed = canvasElement.querySelector("#unknown-breed")!;
     const $characterButton1 = canvas.queryByText("호기심 많은")!;
     const $characterButton2 = canvas.queryByText("애착이 강한")!;
-    const $textarea = document.querySelector("#introduce")!;
-    const $submit = await canvas.getByText("등록하기")!;
+    const $textarea = canvasElement.querySelector("#introduce")!;
+    const $submit = canvas.getByText("등록하기")!;
     const $bottomSheet = document.querySelector("#profile-bottom-sheet")!;
 
     const clearAll = async () => {
