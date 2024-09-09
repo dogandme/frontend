@@ -6,7 +6,7 @@ export const selectChipStyles = {
 } as const;
 
 export const actionChipStyles = {
-  base: "btn-3 border inline-flex h-8 justify-center items-center gap-2 rounded-2xl",
+  base: "btn-3 border inline-flex h-8 justify-center items-center gap-2 rounded-2xl flex-shrink-0",
   selected: {
     filled:
       "bg-tangerine-500 border-tangerine-500 text-grey-50 hover:bg-tangerine-700 hover:border-tangerine-700 focus-visible:bg-tangerine-700 focus-visible:border-tangerine-700 active:bg-tangerine-900 active:border-tangerine-900 disabled:bg-tangerine-100 disabled:border-tangerine-100 disabled:text-grey-50",
