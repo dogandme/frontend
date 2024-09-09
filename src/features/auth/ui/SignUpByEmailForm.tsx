@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { ROUTER_PATH } from "@/shared/constants";
-import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { useAuthStore } from "@/shared/store/auth";
