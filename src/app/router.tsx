@@ -1,13 +1,13 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
-import { MainLayout, MainPage } from "../pages";
 import { LoginPage, LoginLayout } from "@/pages/login";
-import { ROUTER_PATH } from "@/shared/constants";
-import { SignUpPage } from "@/pages/sign-up";
 import { EmailLoginPage } from "@/pages/login/email";
+import { MapPage } from "@/pages/map";
+import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
+import { ROUTER_PATH } from "@/shared/constants";
+import { MainLayout, MainPage } from "../pages";
 import { HistoryTracker } from "./HistoryTracker";
-import { MapPage } from "@/pages/map";
 import { OverlayPortal } from "./OverlayPortal";
 
 export const router = createBrowserRouter([

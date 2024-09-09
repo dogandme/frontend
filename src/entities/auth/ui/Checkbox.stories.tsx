@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import { AgreementCheckbox } from "./Checkbox";
-import { useState } from "react";
 
 const meta: Meta = {
   title: "entities/auth/Checkbox",

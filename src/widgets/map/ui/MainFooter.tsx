@@ -1,7 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
-import { mainFooterStyles } from "./MainFooter.style";
 import { CommunityIcon, CompassIcon, MapIcon } from "@/shared/ui/icon";
+import { mainFooterStyles } from "./MainFooter.style";
+
 export const MainFooter = () => {
   const { active, inactive, base } = mainFooterStyles;
 

@@ -1,20 +1,20 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectOpener } from "@/entities/auth/ui";
-import { EditIcon } from "@/shared/ui/icon";
-import { Input } from "@/shared/ui/input";
-import { SelectChip } from "@/shared/ui/chip";
-import { TextArea } from "@/shared/ui/textarea";
-import { Button } from "@/shared/ui/button";
+import { useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
-import { useSnackBar } from "@/shared/lib/overlay";
-import { Snackbar } from "@/shared/ui/snackbar";
-import { Select } from "@/shared/ui/select";
+import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
-import { usePetInfoStore } from "../store";
-import { characterList, dogBreeds } from "../constants/form";
+import { SelectChip } from "@/shared/ui/chip";
+import { EditIcon } from "@/shared/ui/icon";
+import { Input } from "@/shared/ui/input";
+import { Select } from "@/shared/ui/select";
+import { Snackbar } from "@/shared/ui/snackbar";
+import { TextArea } from "@/shared/ui/textarea";
 import { usePostPetInfo } from "../api/petinfo";
+import { characterList, dogBreeds } from "../constants/form";
+import { usePetInfoStore } from "../store";
 
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
 

@@ -1,11 +1,11 @@
 import { Meta } from "@storybook/react";
+import { expect, userEvent, within } from "@storybook/test";
+import { OverlayPortal } from "@/app/OverlayPortal";
 import {
   AnimationModalTrigger,
   ModalTrigger,
   NestedModalTrigger,
 } from "./overlay.mock";
-import { OverlayPortal } from "@/app/OverlayPortal";
-import { expect, userEvent, within } from "@storybook/test";
 
 export default {
   title: "shared/overlay",

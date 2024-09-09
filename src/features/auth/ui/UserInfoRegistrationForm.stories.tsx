@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-
-import UserInfoRegistrationForm from "./UserInfoRegistrationForm";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
-import { useUserInfoRegistrationFormStore } from "../store";
-import { useAuthStore } from "@/shared/store/auth";
 import { OverlayPortal } from "@/app/OverlayPortal";
+import { useAuthStore } from "@/shared/store/auth";
 import { userInfoRegistrationHandlers } from "@/mocks/handler";
+import { useUserInfoRegistrationFormStore } from "../store";
+import UserInfoRegistrationForm from "./UserInfoRegistrationForm";
 
 const meta: Meta<typeof UserInfoRegistrationForm> = {
   title: "features/auth/UserInfoRegistrationForm",

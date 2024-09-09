@@ -1,5 +1,5 @@
-import { within, userEvent, expect } from "@storybook/test";
 import { Meta, StoryObj } from "@storybook/react";
+import { within, userEvent, expect } from "@storybook/test";
 import { EmailInput, PasswordInput } from "./Input";
 
 const meta: Meta = {

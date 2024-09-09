@@ -1,7 +1,7 @@
+import { Link } from "react-router-dom";
+import { BackwardNavigationBar } from "@/widgets/navigationbar/ui";
 import { SignUpByEmailForm } from "@/features/auth/ui";
 import { ROUTER_PATH } from "@/shared/constants";
-import { BackwardNavigationBar } from "@/widgets/navigationbar/ui";
-import { Link } from "react-router-dom";
 
 const SignUpPage = () => {
   return (

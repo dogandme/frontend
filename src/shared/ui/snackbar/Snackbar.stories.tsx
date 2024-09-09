@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from "@storybook/react";
+import { userEvent, expect, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "./Snackbar";
-import { userEvent, expect, within } from "@storybook/test";
 
 const meta: Meta<typeof Snackbar> = {
   title: "shared/Snackbar",

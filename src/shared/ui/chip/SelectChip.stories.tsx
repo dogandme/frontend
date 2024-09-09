@@ -1,7 +1,7 @@
-import { Meta, StoryObj } from "@storybook/react";
-import { SelectChip } from "./SelectChip";
-import { userEvent, within } from "@storybook/test";
 import { useState } from "react";
+import { Meta, StoryObj } from "@storybook/react";
+import { userEvent, within } from "@storybook/test";
+import { SelectChip } from "./SelectChip";
 
 const meta: Meta<typeof SelectChip> = {
   title: "shared/SelectChip",

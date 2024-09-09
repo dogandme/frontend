@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { inputStyles, baseStyles } from "./input.styles";
 import { Badge } from "../badge";
+import { inputStyles, baseStyles } from "./input.styles";
 
 type ComponentType = keyof typeof inputStyles;
 type StatusType = keyof (typeof inputStyles)[ComponentType];

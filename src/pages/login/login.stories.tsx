@@ -1,6 +1,6 @@
+import { Routes, Route } from "react-router-dom";
 import { Meta, StoryObj } from "@storybook/react";
 import LoginPage from "./page";
-import { Routes, Route } from "react-router-dom";
 
 const meta: Meta = {
   title: "Pages/login",

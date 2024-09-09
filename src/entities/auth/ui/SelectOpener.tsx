@@ -1,6 +1,6 @@
+import { ButtonHTMLAttributes, useRef } from "react";
 import { Badge } from "@/shared/ui/badge";
 import { ArrowDropDownIcon } from "@/shared/ui/icon";
-import { ButtonHTMLAttributes, useRef } from "react";
 
 interface SelectOpenerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
