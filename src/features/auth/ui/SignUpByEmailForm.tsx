@@ -32,6 +32,7 @@ const Email = () => {
   const isEmailEmpty = email.length === 0;
   const isValidEmail = validateEmail(email);
 
+  // todo: error code에 따라 status text 변경
   const {
     mutate: postVerificationCode,
     isError,
@@ -46,6 +47,15 @@ const Email = () => {
   const { handleOpen, onClose } = useSnackBar(() => (
     <Snackbar onClose={onClose}>메일로 인증코드가 전송되었습니다</Snackbar>
   ));
+
+  const statusTextColorStyle = isDuplicateEmail
+  ? "text-pink-500"
+  : isValidEmail || isEmailEmpty
+    ? "text-grey-500"
+    : "text-pink-500"
+  const statusText = isDuplicateEmail
+  ? "이미 가입된 이메일 입니다"
+  : "이메일 형식으로 입력해 주세요"
 
   return (
     <div>
@@ -78,18 +88,8 @@ const Email = () => {
         </Button>
       </div>
       {shouldShowEmailStatusText && (
-        <p
-          className={`body-3 pl-1 pr-3 pt-1 ${
-            isDuplicateEmail
-              ? "text-pink-500"
-              : isValidEmail || isEmailEmpty
-                ? "text-grey-500"
-                : "text-pink-500"
-          }`}
-        >
-          {isDuplicateEmail
-            ? "이미 가입된 이메일 입니다"
-            : "이메일 형식으로 입력해 주세요"}
+        <p className={`body-3 pl-1 pr-3 pt-1 h-6 ${statusTextColorStyle}`}>
+          {statusText}
         </p>
       )}
     </div>
@@ -155,7 +155,7 @@ const VerificationCode = () => {
         onBlur={handleBlur}
       />
       <p
-        className={`body-3 } pl-1 pr-3 pt-1 ${isError ? "text-pink-500" : "text-grey-500"}`}
+        className={`body-3 pl-1 pr-3 pt-1 h-6 ${isError ? "text-pink-500" : "text-grey-500"}`}
       >
         {statusText}
       </p>
@@ -176,19 +176,19 @@ const Password = () => {
   const isPasswordEmpty = password.length === 0;
   const isValidPassword = validatePassword(password);
 
+  const statusText =  isPasswordEmpty
+  ? "비밀번호를 입력해 주세요"
+  : isValidPassword
+    ? ""
+    : "비밀번호 형식에 맞게 입력해 주세요"
+
   return (
     <PasswordInput
       id="password"
       label="비밀번호"
       name="password"
       placeholder="비밀번호를 입력해 주세요"
-      statusText={
-        isPasswordEmpty
-          ? "비밀번호를 입력해 주세요"
-          : isValidPassword
-            ? ""
-            : "비밀번호 형식에 맞게 입력해 주세요"
-      }
+      statusText={statusText}
       essential
       onChange={handleChange}
       isError={!isValidPassword && !isPasswordEmpty}
@@ -228,16 +228,23 @@ const PasswordConfirm = () => {
 
   return (
     <>
-      <PasswordInput
-        id="password-confirm"
-        name="passwordConfirm"
-        placeholder="비밀번호를 다시 한번 입력해 주세요"
-        statusText={statusText}
-        essential
-        value={passwordConfirm}
-        onChange={handleChange}
-        isError={!isPasswordConfirmEmpty && !isPasswordMatched}
-      />
+      <div>
+        <PasswordInput
+          id="password-confirm"
+          name="passwordConfirm"
+          placeholder="비밀번호를 다시 한번 입력해 주세요"
+          statusText={undefined}
+          essential
+          value={passwordConfirm}
+          onChange={handleChange}
+          isError={!isPasswordConfirmEmpty && !isPasswordMatched}
+        />
+        <p
+          className={`body-3 pl-1 pr-3 pt-1 h-6 ${!isPasswordConfirmEmpty && !isPasswordMatched ? "text-pink-500" : "text-grey-500"}`}
+        >
+          {isPasswordConfirmEmpty ? "" :statusText}
+        </p>
+      </div>
       <span className="body-3 px-3 pt-1 text-grey-500">
         영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로 입력해
         주세요.
