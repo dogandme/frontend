@@ -1,4 +1,5 @@
 import ArrowDropDown from "@/shared/assets/arrow-drop-down.svg";
+import CancelSVG from "@/shared/assets/cancel.svg";
 import CheckboxOutline from "@/shared/assets/check-box-outline.svg";
 import Checkbox from "@/shared/assets/check-box.svg";
 import CloseSvg from "@/shared/assets/close.svg";
@@ -40,3 +41,4 @@ export const CompassIcon = withIcon(CompassSVG);
 export const MapIcon = withIcon(MapSVG);
 export const CommunityIcon = withIcon(CommunitySVG);
 export const PinShadowIcon = withIcon(PinShadowSVG);
+export const CancelIcon = withIcon(CancelSVG);
