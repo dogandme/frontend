@@ -1,8 +1,9 @@
 import { http, HttpResponse } from "msw";
 import { Meta, StoryObj } from "@storybook/react";
-import { LoginForm } from ".";
 import { within, userEvent, expect } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
+import { LoginForm } from ".";
+
 const meta: Meta<typeof LoginForm> = {
   title: "features/auth/LoginForm",
   decorators: [

@@ -1,8 +1,7 @@
 import React from "react";
-import { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-
 import { Sheet } from "react-modal-sheet";
+import { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Sheet> = {
   title: "shared/BottomSheet",

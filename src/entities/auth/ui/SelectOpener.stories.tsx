@@ -1,10 +1,10 @@
-import { Meta, StoryObj } from "@storybook/react";
-import { action } from "@storybook/addon-actions";
-import { SelectOpener } from "./SelectOpener";
 import { useState } from "react";
-import { Select } from "@/shared/ui/select";
+import { action } from "@storybook/addon-actions";
+import { Meta, StoryObj } from "@storybook/react";
 import { expect, within, fn, userEvent } from "@storybook/test";
 import { Checkbox } from "@/shared/ui/checkbox";
+import { Select } from "@/shared/ui/select";
+import { SelectOpener } from "./SelectOpener";
 
 const meta: Meta = {
   title: "entities/auth/SelectOpener",

@@ -1,12 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
+import { ROUTER_PATH } from "@/shared/constants";
+import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { useSignUpByEmailForm } from "../model";
 import { usePostSignUpByEmail } from "../api";
-import { useAuthStore } from "@/shared/store/auth";
-import { useNavigate } from "react-router-dom";
-import { ROUTER_PATH } from "@/shared/constants";
+import { useSignUpByEmailForm } from "../model";
 
 const SignUpByEmailForm = () => {
   const navigate = useNavigate();

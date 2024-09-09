@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-
-import SignUpByEmailForm from "./SignUpByEmailForm";
 import { expect, userEvent, within } from "@storybook/test";
+import SignUpByEmailForm from "./SignUpByEmailForm";
 
 const meta: Meta<typeof SignUpByEmailForm> = {
   title: "features/auth/SignUpByEmailForm",

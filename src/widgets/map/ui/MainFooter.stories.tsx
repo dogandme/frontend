@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { MainFooter } from "./MainFooter";
 import { within, userEvent, expect } from "@storybook/test";
+import { MainFooter } from "./MainFooter";
 
 const meta: Meta = {
   title: "Widgets/map/Footer",

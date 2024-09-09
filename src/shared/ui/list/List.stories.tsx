@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-
+import type { Meta, StoryObj } from "@storybook/react";
 import List, { Item } from "./List";
 
 const meta: Meta<typeof List> = {

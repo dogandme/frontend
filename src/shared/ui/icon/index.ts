@@ -1,25 +1,25 @@
-import withIcon from "./Icon";
-
+import ArrowDropDown from "@/shared/assets/arrow-drop-down.svg";
+import CheckboxOutline from "@/shared/assets/check-box-outline.svg";
+import Checkbox from "@/shared/assets/check-box.svg";
+import CloseSvg from "@/shared/assets/close.svg";
+import CommunitySVG from "@/shared/assets/community.svg";
+import CompassSVG from "@/shared/assets/compass.svg";
+import EditSvg from "@/shared/assets/edit.svg";
 // svg 파일 Import
 import EmailSvg from "@/shared/assets/email.svg";
-import VisibilityOnSvg from "@/shared/assets/visibility-on.svg";
-import VisibilityOffSvg from "@/shared/assets/visibility-off.svg";
-import WardLeftSvg from "@/shared/assets/ward-left.svg";
-import CloseSvg from "@/shared/assets/close.svg";
-import EditSvg from "@/shared/assets/edit.svg";
-import Checkbox from "@/shared/assets/check-box.svg";
-import CheckboxOutline from "@/shared/assets/check-box-outline.svg";
 import Indeterminate from "@/shared/assets/indeterminate.svg";
-import MapLocationSearching from "@/shared/assets/map-location-searching.svg";
-import ArrowDropDown from "@/shared/assets/arrow-drop-down.svg";
-import StartSVG from "@/shared/assets/start.svg";
 import LocationSVG from "@/shared/assets/location.svg";
+import MapLocationSearching from "@/shared/assets/map-location-searching.svg";
+import MapSVG from "@/shared/assets/map.svg";
 import MyLocationSVG from "@/shared/assets/my-location.svg";
 import NotificationSVG from "@/shared/assets/notification.svg";
-import CompassSVG from "@/shared/assets/compass.svg";
-import MapSVG from "@/shared/assets/map.svg";
-import CommunitySVG from "@/shared/assets/community.svg";
 import PinShadowSVG from "@/shared/assets/pin-shadow.svg";
+import StartSVG from "@/shared/assets/start.svg";
+import VisibilityOffSvg from "@/shared/assets/visibility-off.svg";
+import VisibilityOnSvg from "@/shared/assets/visibility-on.svg";
+import WardLeftSvg from "@/shared/assets/ward-left.svg";
+import withIcon from "./Icon";
+
 // Icon 컴포넌트 생성
 export const EmailIcon = withIcon(EmailSvg);
 export const VisibilityOnIcon = withIcon(VisibilityOnSvg);

@@ -1,10 +1,10 @@
-import { Meta, StoryObj } from "@storybook/react";
 import { http, HttpResponse } from "msw";
-import * as PetInfoForm from "./PetInfoForm";
+import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
+import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { usePetInfoStore } from "../store";
-import { OverlayPortal } from "@/app/OverlayPortal";
+import * as PetInfoForm from "./PetInfoForm";
 
 const _PetInfoForm = () => (
   <PetInfoForm.Form>

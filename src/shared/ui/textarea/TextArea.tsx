@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { textAreaStyles, baseStyles } from "./TextArea.styles";
 import { Badge } from "../badge";
+import { textAreaStyles, baseStyles } from "./TextArea.styles";
 
 // 현재 디자인 시스템상에서 TextArea 컴포넌트에선 statusText가 존재하지 않습니다.
 // 만약 statusText 를 추가할 일이 생긴다면 해당 디자인 시스템에 맞게 추가해주세요.

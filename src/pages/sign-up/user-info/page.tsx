@@ -1,5 +1,5 @@
-import { UserInfoRegistrationForm } from "@/features/auth/ui";
 import { BackwardNavigationBar } from "@/widgets/navigationbar/ui";
+import { UserInfoRegistrationForm } from "@/features/auth/ui";
 
 const UserInfoRegistrationPage = () => {
   return (

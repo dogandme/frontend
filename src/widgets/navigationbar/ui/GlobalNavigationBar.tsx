@@ -1,5 +1,5 @@
-import { NotificationIcon } from "@/shared/ui/icon";
 import { Link } from "react-router-dom";
+import { NotificationIcon } from "@/shared/ui/icon";
 
 export const GlobalNavigationBar = () => {
   return (

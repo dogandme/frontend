@@ -1,10 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { action } from "@storybook/addon-actions";
-
-import Select from "./Select";
 import { useState } from "react";
+import { action } from "@storybook/addon-actions";
+import type { Meta, StoryObj } from "@storybook/react";
 import { ArrowDropDownIcon } from "../icon";
 import { Input } from "../input";
+import Select from "./Select";
 
 const meta: Meta<typeof Select> = {
   title: "shared/Select",

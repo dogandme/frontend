@@ -1,8 +1,8 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, userEvent, expect } from "@storybook/test";
-import { Input, InputProps } from "./Input";
-import { useState } from "react";
 import { useDebounce } from "@/shared/lib";
+import { Input, InputProps } from "./Input";
 
 /*----------leadingIcon, trailingIcon 등에 들어갈 svg 컴포넌트 ---------- */
 const SearchIcon = () => (
