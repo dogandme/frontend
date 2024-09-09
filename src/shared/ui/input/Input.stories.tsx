@@ -860,7 +860,7 @@ export const WhenInputFocused: Story = {
     const canvas = within(canvasElement);
     // 테스트에 필요한 엘리먼트들을 가져옵니다
     const $input = canvas.getByRole("textbox");
-    const $p = canvas.getByRole("status", { name: "status-text" });
+    const $p = canvasElement.querySelector("p");
     const p_originalHeight = $p?.clientHeight;
     const p_originalTextContent = $p?.textContent;
 
@@ -924,7 +924,7 @@ export const InputWithDebounce: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const $input = canvas.getByRole("textbox");
-    const $p = canvas.getByRole("status", { name: "status-text" });
+    const $p = canvasElement.querySelector("p");
 
     const errorStatusText = "5글자 이상 입력해주세요";
     const successStatusText = (text: string) =>

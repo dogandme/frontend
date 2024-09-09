@@ -137,7 +137,7 @@ export const BreedInput = () => {
       {/* TODO select로 변경하기 */}
       <Input
         componentType="outlinedText"
-        id="greed"
+        id="breed"
         label="어떤 종의 아이인가요?"
         placeholder="품종을 선택해 주세요"
         onChange={(e) => setBreed(isMixDog ? "mix" : e.target.value)}

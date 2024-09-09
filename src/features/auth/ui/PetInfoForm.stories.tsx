@@ -81,9 +81,9 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const $name = canvasElement.querySelector("#name")!;
-    const $statusText = await canvas.getAllByLabelText("status-text")[0];
+    const $statusText = canvasElement.querySelectorAll("p")?.[1];
     const $breed = canvasElement.querySelector("#breed")!;
-    const $mix = await canvasElement.querySelector("#isMixDog");
+    const $mix = canvasElement.querySelector("#isMixDog");
     const $characterButton1 = canvas.queryByText("호기심 많은");
     const $characterButton2 = canvas.queryByText("애착이 강한");
     const $textarea = canvasElement.querySelector("#introduce")!;
@@ -93,7 +93,6 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     const clearAll = async () => {
       await userEvent.clear($name);
       await userEvent.clear($textarea);
-      await userEvent.clear($breed);
 
       const { characterList } = usePetInfoStore.getState();
       characterList.forEach((character) => {

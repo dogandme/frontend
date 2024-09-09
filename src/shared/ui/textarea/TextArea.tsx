@@ -88,7 +88,6 @@ export const TextArea = ({
           autoComplete="off"
           maxLength={maxLength}
           disabled={disabled}
-          aria-label={`${label ?? id}-textarea`}
           onInput={handleInput}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -102,7 +101,6 @@ export const TextArea = ({
         <p
           className={`${statusTextClass} ${baseStyles.statusText}`}
           role="status"
-          aria-label="status-text"
         >
           {isError ? statusText : isFocus ? statusText : ""}
         </p>

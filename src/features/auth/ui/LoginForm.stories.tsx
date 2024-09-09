@@ -28,11 +28,9 @@ export const Default: StoryObj<typeof LoginForm> = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const $input = canvasElement.querySelector("#email");
-    const $p = canvasElement.querySelector("p");
-    const $submit = await canvas.getByRole("submit", {
-      name: "login-submit-button",
-    });
+    const $input = canvasElement.querySelector("#email")!;
+    const $p = canvasElement.querySelector("p")!;
+    const $submit = canvas.getByText("로그인")!;
 
     const DEFAULT_STATUS_TEXT = "이메일 형식으로 입력해 주세요";
     const EMPTY_STATUS_TEXT = "이메일 형식으로 입력해 주세요";
@@ -145,9 +143,7 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
     const canvas = within(canvasElement);
     const $input = canvasElement.querySelector("#email")!;
     const $password = canvasElement.querySelector("#password")!;
-    const $submit = await canvas.getByRole("submit", {
-      name: "login-submit-button",
-    });
+    const $submit = canvas.getByText("로그인");
 
     await step("API 요청이 일어나기 전까지 토큰은 존재하지 않는다.", () => {
       const { token, role, nickname } = useAuthStore.getState();
@@ -204,9 +200,7 @@ export const APIFailedTest: StoryObj<typeof LoginForm> = {
     const canvas = within(canvasElement);
     const $input = canvasElement.querySelector("#email")!;
     const $password = canvasElement.querySelector("#password")!;
-    const $submit = await canvas.getByRole("submit", {
-      name: "login-submit-button",
-    });
+    const $submit = canvas.getByText("로그인");
 
     await step("API 요청이 일어나기 전까지 토큰은 존재하지 않는다.", () => {
       const { token, role, nickname } = useAuthStore.getState();
