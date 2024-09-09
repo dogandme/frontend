@@ -66,16 +66,16 @@ const Email = () => {
   );
 };
 
-const ConfirmCode = () => {
+const VerificationCode = () => {
   const email = useSignUpByEmailFormStore((state) => state.email);
-  const setConfirmCode = useSignUpByEmailFormStore(
-    (state) => state.setConfirmCode,
+  const setVerificationCode = useSignUpByEmailFormStore(
+    (state) => state.setVerificationCode,
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value: confirmCode } = e.target;
+    const { value: verificationCode } = e.target;
 
-    setConfirmCode(confirmCode);
+    setVerificationCode(verificationCode);
   };
 
   const isEmptyEmail = email.length === 0;
@@ -84,8 +84,8 @@ const ConfirmCode = () => {
   return (
     <Input
       componentType="outlinedText"
-      id="confirm-code"
-      name="confirmCode"
+      id="verification-code"
+      name="verificationCode"
       type="text"
       placeholder="인증코드 7자리를 입력해 주세요"
       statusText="인증코드 7자리를 입력해 주세요"
@@ -226,7 +226,7 @@ const SignUpByEmailForm = () => {
     <form className="flex flex-col gap-8 self-stretch" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
         <Email />
-        <ConfirmCode />
+        <VerificationCode />
       </div>
 
       <div>
