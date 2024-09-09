@@ -196,9 +196,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         "아무내용도 입력하지 않고 submit 버튼을 누르면 스낵바가 뜬다.",
         async () => {
           await userEvent.click($submit);
-          const snackBarCloseButton = await canvas.getByLabelText(
-            "info-snackbar-close-button",
-          );
+          const snackBarCloseButton =
+            await canvas.getByLabelText("스낵바 닫기");
 
           await expect(
             canvas.getByText("필수 항목을 모두 입력해 주세요"),
@@ -220,9 +219,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           await step(
             "스낵바 닫힘 버튼을 클릭하면 스낵바가 사라진다.",
             async () => {
-              const snackBarCloseButton = await canvas.getByLabelText(
-                "info-snackbar-close-button",
-              );
+              const snackBarCloseButton =
+                await canvas.getByLabelText("스낵바 닫기");
 
               await userEvent.click(snackBarCloseButton);
               await expect(snackBarCloseButton).not.toBeInTheDocument();
@@ -246,9 +244,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           await step(
             "스낵바 닫힘 버튼을 클릭하면 스낵바가 사라진다.",
             async () => {
-              const snackBarCloseButton = await canvas.getByLabelText(
-                "info-snackbar-close-button",
-              );
+              const snackBarCloseButton =
+                await canvas.getByLabelText("스낵바 닫기");
 
               await userEvent.click(snackBarCloseButton);
               await expect(snackBarCloseButton).not.toBeInTheDocument();
