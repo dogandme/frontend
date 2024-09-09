@@ -189,7 +189,7 @@ export const BreedInput = () => {
             setBreed("");
           }}
         >
-          <span className="btn-3 text-center text-grey-500">모르겠어요</span>{" "}
+          <span className="btn-3 text-center text-grey-500">모르겠어요</span>
         </Checkbox>
       </div>
       <Select isOpen={isOpen} onClose={onClose}>
