@@ -80,15 +80,14 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const $name = await canvas.getByLabelText("이름이 어떻게 되나요?-input");
+    const $name = canvasElement.querySelector("#name")!;
     const $statusText = await canvas.getAllByLabelText("status-text")[0];
-    const $breed = await canvas.getByLabelText("어떤 종의 아이인가요?-input");
+    const $breed = canvasElement.querySelector("#breed")!;
     const $mix = await canvasElement.querySelector("#isMixDog");
     const $characterButton1 = canvas.queryByText("호기심 많은");
     const $characterButton2 = canvas.queryByText("애착이 강한");
-    const $textarea = await canvas.getByLabelText(
-      "간단히 소개해 주세요-textarea",
-    );
+    const $textarea = canvasElement.querySelector("#introduce")!;
+
     const $submit = await canvas.getByText("등록하기");
 
     const clearAll = async () => {

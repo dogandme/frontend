@@ -28,7 +28,7 @@ export const Default: StoryObj<typeof LoginForm> = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const $input = canvas.getByLabelText("이메일-input");
+    const $input = canvasElement.querySelector("#email");
     const $p = await canvas.findByRole("status", { name: "status-text" });
     const $submit = await canvas.getByRole("submit", {
       name: "login-submit-button",
@@ -143,8 +143,8 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const $input = canvas.getByLabelText("이메일-input");
-    const $password = canvas.getByLabelText("비밀번호-input");
+    const $input = canvasElement.querySelector("#email")!;
+    const $password = canvasElement.querySelector("#password")!;
     const $submit = await canvas.getByRole("submit", {
       name: "login-submit-button",
     });
@@ -202,8 +202,8 @@ export const APIFailedTest: StoryObj<typeof LoginForm> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const $input = canvas.getByLabelText("이메일-input");
-    const $password = canvas.getByLabelText("비밀번호-input");
+    const $input = canvasElement.querySelector("#email")!;
+    const $password = canvasElement.querySelector("#password")!;
     const $submit = await canvas.getByRole("submit", {
       name: "login-submit-button",
     });
