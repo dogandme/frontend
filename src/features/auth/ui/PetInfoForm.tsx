@@ -100,7 +100,7 @@ export const ProfileInput = () => {
           onChange={handleFileChange}
         />
         <span className="flex h-8 w-8 items-center justify-center rounded-2xl border border-grey-500 bg-grey-0">
-          <EditIcon fill="#9E9E9E" />
+          <EditIcon />
         </span>
       </button>
       <Select isOpen={isOpen} onClose={onClose} id="profile-bottom-sheet">
