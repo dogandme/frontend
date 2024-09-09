@@ -48,6 +48,9 @@ export const useSnackBar: UseOverlay = (createOverlayComponent, options) => {
   });
 };
 
+/**
+ * useModal 의 경우엔 모달간 상호작용을 막기 위해 disableInteraction 을 true 로 설정합니다.
+ */
 export const useModal: UseOverlay = (createOverlayComponent, options) => {
   return useOverlay(createOverlayComponent, {
     disableInteraction: true,
