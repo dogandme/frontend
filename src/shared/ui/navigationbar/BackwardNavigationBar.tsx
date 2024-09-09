@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/shared/ui/button";
 import { WardLeftIcon } from "@/shared/ui/icon";
-import { NavigationBar } from "@/shared/ui/navigationbar";
+import { NavigationBar } from "./NavigationBar";
 
 const BackWardButton = (props: React.HTMLAttributes<HTMLButtonElement>) => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const BackWardButton = (props: React.HTMLAttributes<HTMLButtonElement>) => {
   );
 };
 
-const BackwardNavigationBar = (
+export const BackwardNavigationBar = (
   props: React.HTMLAttributes<HTMLButtonElement>,
 ) => {
   return (
@@ -31,5 +31,3 @@ const BackwardNavigationBar = (
     ></NavigationBar>
   );
 };
-
-export default BackwardNavigationBar;
