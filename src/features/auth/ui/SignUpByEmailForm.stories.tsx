@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import SignUpByEmailForm from "./SignUpByEmailForm";
 import { expect, userEvent, within } from "@storybook/test";
+import { useAuthStore } from "@/shared/store/auth";
+import { signUpByEmailHandlers } from "@/mocks/handler";
 
 const meta: Meta<typeof SignUpByEmailForm> = {
   title: "features/auth/SignUpByEmailForm",
@@ -29,6 +31,8 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const $emailInput = canvasElement.querySelector("#email")!;
 
+    const validEmail = "hi@example.com";
+    const invalidEmail = "invalid-email";
     const statusTextColor = {
       valid: "text-grey-500",
       invalid: "text-pink-500",
@@ -48,9 +52,6 @@ export const Default: Story = {
           expect($statusText).toHaveClass(statusTextColor.valid);
         },
       );
-
-      const validEmail = "hi@example.com";
-      const invalidEmail = "invalid-email";
 
       await step("이메일 형식에 맞지 않게 입력할 경우,", async () => {
         await userEvent.type($emailInput, invalidEmail);
@@ -101,5 +102,97 @@ export const Default: Story = {
         },
       );
     });
+
+    await userEvent.clear($emailInput);
+
+    const $codeSendButton = canvas.getByText("코드전송");
+
+    await step("[코드 전송] 버튼", async () => {
+      await step(
+        "입력한 이메일이 형식에 맞지 않을 경우, 버튼은 비활성화된다.",
+        async () => {
+          await userEvent.type($emailInput, invalidEmail);
+          expect($codeSendButton).toBeDisabled();
+        },
+      );
+
+      await userEvent.clear($emailInput);
+
+      await step(
+        "입력한 이메일 값이 유효할 경우, 버튼은 활성화된다.",
+        async () => {
+          await userEvent.type($emailInput, validEmail);
+          expect($codeSendButton).toBeEnabled();
+        },
+      );
+    });
+  },
+};
+
+export const ApiTest: Story = {
+  decorators: (Story) => {
+    useAuthStore.setState({
+      token: null,
+      role: null,
+      nickname: null,
+    });
+
+    return <Story />;
+  },
+
+  parameters: {
+    msw: {
+      handlers: signUpByEmailHandlers,
+    },
+  },
+
+  render: () => <SignUpByEmailForm />,
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    const $emailInput = canvasElement.querySelector("#email")!;
+    const validEmail = "hihihihihi@naver.com";
+    const duplicatedEmail = "hihihi@naver.com";
+
+    const $sendConfirmCodeButton = canvas.getByText("코드전송");
+    const $codeInput = canvasElement.querySelector("#verification-code")!;
+
+    const statusTextColor = {
+      valid: "text-grey-500",
+      invalid: "text-pink-500",
+    };
+
+    await step(
+      "이미 가입된 이메일을 입력하고 [코드 전송] 버튼을 클릭할 경우,",
+      async () => {
+        await userEvent.type($emailInput, duplicatedEmail);
+        await userEvent.click($sendConfirmCodeButton);
+
+        await step(
+          '"이미 가입된 이메일 입니다" 안내 문구가 핑크색으로 표시됩니다.',
+          async () => {
+            const $statusText =
+              await canvas.findByText("이미 가입된 이메일 입니다");
+
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.invalid);
+          },
+        );
+        await step("버튼은 비활성화된다.", async () => {
+          expect($sendConfirmCodeButton).toBeDisabled();
+        });
+      },
+    );
+
+    await userEvent.clear($emailInput);
+
+    await step(
+      "이메일을 올바르게 입력하고, [코드 전송] 버튼을 클릭한다.",
+      async () => {
+        await userEvent.type($emailInput, validEmail);
+        await userEvent.click($sendConfirmCodeButton);
+      },
+    );
   },
 };
