@@ -29,7 +29,7 @@ export const Default: StoryObj<typeof LoginForm> = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const $input = canvasElement.querySelector("#email");
-    const $p = await canvas.findByRole("status", { name: "status-text" });
+    const $p = canvasElement.querySelector("p");
     const $submit = await canvas.getByRole("submit", {
       name: "login-submit-button",
     });
