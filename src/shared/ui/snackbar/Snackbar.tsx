@@ -35,7 +35,7 @@ export const Snackbar = ({
   }, [autoHideDuration, onClose]);
 
   const baseClassName =
-    "shadow-info-snackbar inline-flex min-w-[328px] max-w-96 items-center justify-between rounded-2xl bg-grey-0 py-1 pl-4 pr-3";
+    "shadow-custom-2 inline-flex min-w-[328px] max-w-96 items-center justify-between rounded-2xl bg-grey-0 py-1 pl-4 pr-3";
 
   return (
     <div className={`${baseClassName} ${positionClassName}`} {...props}>
