@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { OverlayOptions, useOverlayStore } from "../store/overlay";
 
-// TODO overlay 를 사용하는 훅이 대체 되면 export 하지 않기
-export const useOverlay = (
+type UseOverlay = (
   createOverlayComponent: (onClose: () => Promise<void>) => JSX.Element,
-  options: OverlayOptions = {},
+  options?: OverlayOptions,
+) => {
+  handleOpen: () => Promise<void>;
+  onClose: () => Promise<void>;
+  isOpen: boolean;
+};
+
+export const useOverlay: UseOverlay = (
+  createOverlayComponent,
+  options = {},
 ) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { disableInteraction = true, beforeClose, afterClose } = options;
@@ -33,12 +41,16 @@ export const useOverlay = (
   return { handleOpen, onClose, isOpen };
 };
 
-export const useSnackBar = (
-  createOverlayComponent: (onClose: () => Promise<void>) => JSX.Element,
-  options?: OverlayOptions,
-) => {
+export const useSnackBar: UseOverlay = (createOverlayComponent, options) => {
   return useOverlay(createOverlayComponent, {
     disableInteraction: false,
+    ...options,
+  });
+};
+
+export const useModal: UseOverlay = (createOverlayComponent, options) => {
+  return useOverlay(createOverlayComponent, {
+    disableInteraction: true,
     ...options,
   });
 };
