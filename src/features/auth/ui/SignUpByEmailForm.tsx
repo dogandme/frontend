@@ -143,15 +143,14 @@ const PasswordConfirm = () => {
   const isValidPassword = validatePassword(password);
   const isPasswordMatched = password === passwordConfirm;
 
-  let passwordConfirmStatusText = "";
+  let statusText = "";
 
   if (isValidPassword) {
-    if (isPasswordMatched)
-      passwordConfirmStatusText = "사용가능한 비밀번호 입니다";
-    else passwordConfirmStatusText = "비밀번호가 서로 일치하지 않습니다";
+    if (isPasswordMatched) statusText = "사용가능한 비밀번호 입니다";
+    else statusText = "비밀번호가 서로 일치하지 않습니다";
   } else {
-    if (isPasswordMatched) passwordConfirmStatusText = "";
-    else passwordConfirmStatusText = "비밀번호가 서로 일치하지 않습니다";
+    if (isPasswordMatched) statusText = "";
+    else statusText = "비밀번호가 서로 일치하지 않습니다";
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,7 +165,7 @@ const PasswordConfirm = () => {
         id="password-confirm"
         name="passwordConfirm"
         placeholder="비밀번호를 다시 한번 입력해 주세요"
-        statusText={passwordConfirmStatusText}
+        statusText={statusText}
         essential
         value={passwordConfirm}
         onChange={handleChange}
