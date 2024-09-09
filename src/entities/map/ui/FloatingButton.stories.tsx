@@ -1,12 +1,12 @@
-import { within, expect, userEvent } from "@storybook/test";
+import { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
-import { FloatingButton } from "./FloatingButton";
+import { within, expect, userEvent } from "@storybook/test";
 import {
   LocationIcon,
   MyLocationIcon,
   StartIcon,
 } from "../../../shared/ui/icon";
-import { useState } from "react";
+import { FloatingButton } from "./FloatingButton";
 
 const meta: Meta<typeof FloatingButton> = {
   title: "entities/map/FloatingButton",

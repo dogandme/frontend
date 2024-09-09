@@ -1,7 +1,6 @@
+import { Routes, Route } from "react-router-dom";
 import { Meta, StoryObj } from "@storybook/react";
 import MainLayout from "@/pages/layout";
-import { Routes, Route } from "react-router-dom";
-
 import EmailLoginPage from "./page";
 
 const meta: Meta<typeof EmailLoginPage> = {

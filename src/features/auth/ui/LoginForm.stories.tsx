@@ -1,8 +1,9 @@
 import { http, HttpResponse } from "msw";
 import { Meta, StoryObj } from "@storybook/react";
-import { LoginForm } from ".";
 import { within, userEvent, expect } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
+import { LoginForm } from ".";
+
 const meta: Meta<typeof LoginForm> = {
   title: "features/auth/LoginForm",
   decorators: [
@@ -28,59 +29,57 @@ export const Default: StoryObj<typeof LoginForm> = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const $input = canvas.getByLabelText("이메일-input");
-    const $p = await canvas.findByRole("status", { name: "status-text" });
-    const $submit = await canvas.getByRole("submit", {
-      name: "login-submit-button",
-    });
+    const $input = canvasElement.querySelector("#email")!;
+    const $statusText = canvasElement.querySelector("p")!;
+    const $submit = canvas.getByText("로그인")!;
 
     const DEFAULT_STATUS_TEXT = "이메일 형식으로 입력해 주세요";
     const EMPTY_STATUS_TEXT = "이메일 형식으로 입력해 주세요";
     const ERROR_STATUS_TEXT = "올바른 이메일 형식으로 입력해 주세요";
 
     await step(
-      "인풋 필드가 포커스 되어 있지 않는 경우에 p 태그는 돔에 존재해야 한다.",
+      "인풋 필드가 포커스 되어 있지 않는 경우에 statusText를 가리키는 태그는 돔에 존재해야 한다.",
       () => {
-        expect($p).toBeInTheDocument();
+        expect($statusText).toBeInTheDocument();
       },
     );
 
     await step(
-      "인풋 필드가 포커스 되어 있지 않은 경우에 p 태그는 문자를 가지면 안된다.",
+      "인풋 필드가 포커스 되어 있지 않은 경우에 statusText를 가리키는 태그는 문자를 가지면 안된다.",
       () => {
-        expect($p).toHaveTextContent("");
+        expect($statusText).toHaveTextContent("");
       },
     );
 
     await step(
-      "인풋 필드가 포커스 되면 p 태그의 문자는 이메일 형식으로 입력해 주세요 라는 안내 문구가 떠야 한다. ",
+      "인풋 필드가 포커스 되면 statusText를 가리키는 태그의 문자는 이메일 형식으로 입력해 주세요 라는 안내 문구가 떠야 한다. ",
       async () => {
         await userEvent.click($input);
-        expect($p).toHaveTextContent(EMPTY_STATUS_TEXT);
+        expect($statusText).toHaveTextContent(EMPTY_STATUS_TEXT);
       },
     );
 
     await step(
-      "이메일 유효성 검사를 통과하지 않는 문자가 나타나면 p 태그의 문자열은 올바른 이메일 형식으로 입력해 주세요 라는 안내 문구가 떠야 한다.",
+      "이메일 유효성 검사를 통과하지 않는 문자가 나타나면 statusText를 가리키는 태그의 문자열은 올바른 이메일 형식으로 입력해 주세요 라는 안내 문구가 떠야 한다.",
       async () => {
         await userEvent.type($input, "test");
-        expect($p).toHaveTextContent(ERROR_STATUS_TEXT);
+        expect($statusText).toHaveTextContent(ERROR_STATUS_TEXT);
       },
     );
 
     await step(
-      "이메일 유효성 검사를 통과하는 문자가 나타나면 p 태그의 문자열은 빈 문자열이 되어야 한다.",
+      "이메일 유효성 검사를 통과하는 문자가 나타나면 statusText를 가리키는 태그의 문자열은 빈 문자열이 되어야 한다.",
       async () => {
         await userEvent.type($input, "test123@naver.com");
-        expect($p).toHaveTextContent("");
+        expect($statusText).toHaveTextContent("");
       },
     );
 
     await step(
-      "인풋 필드가 비어 있으면 p 태그의 문자열은 이메일 형식으로 입력해 주세요 라는 안내 문구가 떠야 한다.",
+      "인풋 필드가 비어 있으면 statusText를 가리키는 태그의 문자열은 이메일 형식으로 입력해 주세요 라는 안내 문구가 떠야 한다.",
       async () => {
         await userEvent.clear($input);
-        expect($p).toHaveTextContent(DEFAULT_STATUS_TEXT);
+        expect($statusText).toHaveTextContent(DEFAULT_STATUS_TEXT);
       },
     );
 
@@ -143,11 +142,9 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const $input = canvas.getByLabelText("이메일-input");
-    const $password = canvas.getByLabelText("비밀번호-input");
-    const $submit = await canvas.getByRole("submit", {
-      name: "login-submit-button",
-    });
+    const $input = canvasElement.querySelector("#email")!;
+    const $password = canvasElement.querySelector("#password")!;
+    const $submit = canvas.getByText("로그인");
 
     await step("API 요청이 일어나기 전까지 토큰은 존재하지 않는다.", () => {
       const { token, role, nickname } = useAuthStore.getState();
@@ -202,11 +199,9 @@ export const APIFailedTest: StoryObj<typeof LoginForm> = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const $input = canvas.getByLabelText("이메일-input");
-    const $password = canvas.getByLabelText("비밀번호-input");
-    const $submit = await canvas.getByRole("submit", {
-      name: "login-submit-button",
-    });
+    const $input = canvasElement.querySelector("#email")!;
+    const $password = canvasElement.querySelector("#password")!;
+    const $submit = canvas.getByText("로그인");
 
     await step("API 요청이 일어나기 전까지 토큰은 존재하지 않는다.", () => {
       const { token, role, nickname } = useAuthStore.getState();

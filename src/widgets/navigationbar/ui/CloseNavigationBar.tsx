@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/shared/ui/button";
-import { NavigationBar } from "@/shared/ui/navigationbar";
 import { CloseIcon } from "@/shared/ui/icon";
+import { NavigationBar } from "@/shared/ui/navigationbar";
 
 const CloseButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (

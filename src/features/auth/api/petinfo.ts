@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { SIGN_UP_END_POINT } from "../constants";
 import type { AuthStore } from "@/shared/store/auth";
+import { SIGN_UP_END_POINT } from "../constants";
 
 export interface PetInfoResponse {
   code: number;

@@ -1,17 +1,17 @@
+import { useState } from "react";
 import { AgreementCheckbox, SelectOpener } from "@/entities/auth/ui";
+import { useSnackBar } from "@/shared/lib/overlay";
+import { useAuthStore } from "@/shared/store/auth";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { MapLocationSearchingIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
-import { useState } from "react";
-import { usePutUserInfoRegistration } from "../api";
-import { useAuthStore } from "@/shared/store/auth";
 import { Select } from "@/shared/ui/select";
-import { useUserInfoRegistrationFormStore } from "../store";
-import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "@/shared/ui/snackbar";
+import { usePutUserInfoRegistration } from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
+import { useUserInfoRegistrationFormStore } from "../store";
 
 const NicknameInput = () => {
   const isValidNickname = useUserInfoRegistrationFormStore(

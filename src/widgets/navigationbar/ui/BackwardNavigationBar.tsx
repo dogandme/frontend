@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { WardLeftIcon } from "@/shared/ui/icon";
 import { Button } from "@/shared/ui/button";
+import { WardLeftIcon } from "@/shared/ui/icon";
 import { NavigationBar } from "@/shared/ui/navigationbar";
 
 const BackWardButton = (props: React.HTMLAttributes<HTMLButtonElement>) => {

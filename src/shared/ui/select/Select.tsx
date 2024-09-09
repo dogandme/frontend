@@ -1,8 +1,8 @@
 import { ReactNode, useEffect } from "react";
-import { SelectContext, SelectContextType } from "./select.context";
-import SelectBottomSheet from "./SelectBottomSheet";
-import OptionList from "./OptionList";
 import Option from "./Option";
+import OptionList from "./OptionList";
+import SelectBottomSheet from "./SelectBottomSheet";
+import { SelectContext, SelectContextType } from "./select.context";
 
 const SelectMain = ({
   id,

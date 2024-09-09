@@ -1,12 +1,12 @@
 import { HTMLAttributes, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { NaverIcon, GoogleIcon } from "@/entities/auth/assets";
-import { EmailIcon } from "@/shared/ui/icon";
-import { useRouteHistoryStore } from "@/shared/store/history";
-import { useAuthStore } from "@/shared/store/auth";
 import { ROUTER_PATH } from "@/shared/constants";
-import { LOGIN_END_POINT } from "../constants";
 import { deleteCookie, getCookie } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store/auth";
+import { useRouteHistoryStore } from "@/shared/store/history";
+import { EmailIcon } from "@/shared/ui/icon";
+import { LOGIN_END_POINT } from "../constants";
 
 /* ----------------------------------컴포넌트 내부에서만 사용되는 컴포넌트------------------------------- */
 const hyperLinkColorMap = {

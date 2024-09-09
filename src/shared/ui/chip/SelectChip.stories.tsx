@@ -1,7 +1,7 @@
-import { Meta, StoryObj } from "@storybook/react";
-import { SelectChip } from "./SelectChip";
-import { userEvent, within } from "@storybook/test";
 import { useState } from "react";
+import { Meta, StoryObj } from "@storybook/react";
+import { userEvent, within } from "@storybook/test";
+import { SelectChip } from "./SelectChip";
 
 const meta: Meta<typeof SelectChip> = {
   title: "shared/SelectChip",
@@ -51,12 +51,11 @@ const DefaultComponent = () => {
     <div>
       <p>부모 컴포넌트의 상태 : {String(controlledIsSelected)}</p>
       <div className="flex w-fit gap-2 border border-grey-300 px-2 py-2">
-        <SelectChip label="UnControlled Chip" aria-label="on" />
+        <SelectChip label="UnControlled Chip" />
         <SelectChip
           label="Controlled Chip"
           controlledIsSelected={controlledIsSelected}
           onClick={handler}
-          aria-label="off"
         />
       </div>
     </div>
@@ -67,7 +66,7 @@ export const Default: StoryObj<typeof SelectChip> = {
   render: () => <DefaultComponent />,
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const $on = canvas.getByLabelText("on");
+    const $on = canvas.getByText("Controlled Chip");
     userEvent.click($on);
   },
 };

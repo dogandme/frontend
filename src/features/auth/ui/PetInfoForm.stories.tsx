@@ -1,10 +1,10 @@
-import { Meta, StoryObj } from "@storybook/react";
 import { http, HttpResponse } from "msw";
-import * as PetInfoForm from "./PetInfoForm";
-import { expect, userEvent, within } from "@storybook/test";
+import { Meta, StoryObj } from "@storybook/react";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
+import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { usePetInfoStore } from "../store";
-import { OverlayPortal } from "@/app/OverlayPortal";
+import * as PetInfoForm from "./PetInfoForm";
 
 const _PetInfoForm = () => (
   <PetInfoForm.Form>
@@ -25,11 +25,9 @@ const meta: Meta<typeof _PetInfoForm> = {
 
 export default meta;
 
-// TODO 사진 업로드 기능은 어떻게 테스트 할 수 있을까?
 export const Default: StoryObj<typeof _PetInfoForm> = {
   parameters: {
     msw: {
-      // TODO 공식문서 보고 타입 선언 하기
       handlers: [
         http.post("http://localhost/pets", async () => {
           return HttpResponse.json({
@@ -80,21 +78,21 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const $name = await canvas.getByLabelText("이름이 어떻게 되나요?-input");
-    const $statusText = await canvas.getAllByLabelText("status-text")[0];
-    const $breed = await canvas.getByLabelText("어떤 종의 아이인가요?-input");
-    const $mix = await canvasElement.querySelector("#isMixDog");
+    const $profile = canvas.getByLabelText("profile-image-button")!;
+    const $name = canvasElement.querySelector("#name")!;
+    const $statusText = canvasElement.querySelectorAll("p")?.[1];
+    const $breed = canvasElement.querySelector("#breed")!;
+    const $selectedBreedName = $breed.querySelector("span")!;
+    const $unknownBreed = canvasElement.querySelector("#unknown-breed")!;
     const $characterButton1 = canvas.queryByText("호기심 많은");
     const $characterButton2 = canvas.queryByText("애착이 강한");
-    const $textarea = await canvas.getByLabelText(
-      "간단히 소개해 주세요-textarea",
-    );
-    const $submit = await canvas.getByText("등록하기");
+    const $textarea = canvasElement.querySelector("#introduce")!;
+    const $submit = canvas.getByText("등록하기");
+    const $bottomSheet = document.querySelector("#profile-bottom-sheet")!;
 
     const clearAll = async () => {
       await userEvent.clear($name);
       await userEvent.clear($textarea);
-      await userEvent.clear($breed);
 
       const { characterList } = usePetInfoStore.getState();
       characterList.forEach((character) => {
@@ -112,14 +110,48 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     await step("모든 컴포넌트들이 Actual DOM에 존재한다.", () => {
       expect($name).toBeInTheDocument();
       expect($breed).toBeInTheDocument();
-      expect($mix).toBeInTheDocument();
+      expect($unknownBreed).toBeInTheDocument();
       expect($characterButton1).toBeInTheDocument();
       expect($characterButton2).toBeInTheDocument();
       expect($textarea).toBeInTheDocument();
       expect($submit).toBeInTheDocument();
+      expect($bottomSheet).toBeInTheDocument();
     });
 
     await step("기본 기능 테스트", async () => {
+      await step("사진 선택 시 바텀 시트는 적절히 나타난다.", async () => {
+        await userEvent.click($profile);
+        const $bottomSheetContent = document.querySelector(
+          ".react-modal-sheet-content ",
+        )!;
+        expect($bottomSheetContent).toBeInTheDocument();
+
+        const $backdrop = document.querySelector(
+          ".react-modal-sheet-backdrop",
+        )!;
+        await userEvent.click($backdrop);
+        await waitFor(() => {
+          expect($bottomSheetContent).not.toBeInTheDocument();
+        });
+      });
+      await step(
+        "종 입력란을 클릭 시 바텀 시트는 적절히 나타난다.",
+        async () => {
+          await userEvent.click($breed);
+          const $bottomSheetContent = document.querySelector(
+            ".react-modal-sheet-content ",
+          )!;
+
+          expect($bottomSheetContent).toBeInTheDocument();
+          const $backdrop = document.querySelector(
+            ".react-modal-sheet-backdrop",
+          )!;
+          await userEvent.click($backdrop);
+          await waitFor(() => {
+            expect($bottomSheetContent).not.toBeInTheDocument();
+          });
+        },
+      );
       await step(
         "한글 혹은 영문이 아닌 문자를 입력하면 에러 메시지가 나타난다.",
         async () => {
@@ -150,19 +182,44 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         await userEvent.clear($name);
       });
 
-      // TODO : 바텀 시트 도입 시 테스트 코드 추가하기
+      await step("종 입력란을 클릭하면 바텀 시트가 나타난다.", async () => {
+        await userEvent.click($breed);
+        const $bottomSheetContent = document.querySelector(
+          ".react-modal-sheet-content ",
+        )!;
+
+        expect($bottomSheetContent).toBeInTheDocument();
+
+        await step(
+          "바텀 시트에서 특정 견종을 클릭하면 입력란에 값이 채워지고 바텀 시트가 내려간다.",
+          async () => {
+            await userEvent.click(document.querySelector("#푸들")!);
+            const $selectedBreedName = $breed.querySelector("span");
+            expect($selectedBreedName).toHaveTextContent("푸들");
+            await waitFor(() => {
+              expect($bottomSheetContent).not.toBeInTheDocument();
+            });
+          },
+        );
+      });
+
       await step(
-        "종 입력란에 모르겠어요를 체크하면 입력란이 비활성화 된다.",
+        "'모르겠어요'를 클릭하면 종 입력란에 '모르겠어요'로 값이 바뀌며 종 입력란이 disabled가 된다.",
         async () => {
-          await userEvent.click($mix!);
+          await userEvent.click($unknownBreed);
+          expect($selectedBreedName).toHaveTextContent("모르겠어요");
           expect($breed).toBeDisabled();
-          await userEvent.click($mix!);
-          expect($breed).not.toBeDisabled();
         },
       );
 
-      // 종 입력
-      await userEvent.type($breed, "푸들");
+      await step(
+        "'모르겠어요' 선택된 상황에서 '모르겠어요'를 클릭하면 종 입력란은 초기 값으로 돌아온다.",
+        async () => {
+          await userEvent.click($unknownBreed);
+          expect($selectedBreedName).toHaveTextContent("품종을 선택해 주세요");
+          expect($breed).not.toBeDisabled();
+        },
+      );
 
       /**
        * 단위테스트를 시행한 셀레트 칩에 대한 테스트 코드는 진행하지 않습니다.
@@ -187,7 +244,6 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       const clearAll = async () => {
         await userEvent.clear($name);
         await userEvent.clear($textarea);
-        await userEvent.clear($breed);
       };
 
       // 모든 입력 내용 지우기
@@ -198,9 +254,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         "아무내용도 입력하지 않고 submit 버튼을 누르면 스낵바가 뜬다.",
         async () => {
           await userEvent.click($submit);
-          const snackBarCloseButton = await canvas.getByLabelText(
-            "info-snackbar-close-button",
-          );
+          const snackBarCloseButton =
+            await canvas.getByLabelText("스낵바 닫기");
 
           await expect(
             canvas.getByText("필수 항목을 모두 입력해 주세요"),
@@ -222,9 +277,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           await step(
             "스낵바 닫힘 버튼을 클릭하면 스낵바가 사라진다.",
             async () => {
-              const snackBarCloseButton = await canvas.getByLabelText(
-                "info-snackbar-close-button",
-              );
+              const snackBarCloseButton =
+                await canvas.getByLabelText("스낵바 닫기");
 
               await userEvent.click(snackBarCloseButton);
               await expect(snackBarCloseButton).not.toBeInTheDocument();
@@ -248,9 +302,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           await step(
             "스낵바 닫힘 버튼을 클릭하면 스낵바가 사라진다.",
             async () => {
-              const snackBarCloseButton = await canvas.getByLabelText(
-                "info-snackbar-close-button",
-              );
+              const snackBarCloseButton =
+                await canvas.getByLabelText("스낵바 닫기");
 
               await userEvent.click(snackBarCloseButton);
               await expect(snackBarCloseButton).not.toBeInTheDocument();
@@ -266,7 +319,9 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
 
         async () => {
           await userEvent.type($name, "초코");
-          await userEvent.type($breed, "푸들");
+          await userEvent.click($breed);
+          await userEvent.click(document.querySelector("#푸들")!);
+
           await userEvent.click($submit);
 
           expect(
@@ -282,13 +337,13 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         async () => {
           await userEvent.type($name, "초코");
           // breed를 mix 로 하였을 경우
-          await userEvent.click($mix!);
+          await userEvent.click($unknownBreed!);
           await userEvent.click($submit);
 
           expect(
             canvas.queryByText("필수 항목을 모두 입력해 주세요"),
           ).toBeNull();
-          await userEvent.click($mix!);
+          await userEvent.click($unknownBreed!);
         },
       );
     });
@@ -300,7 +355,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         "input , textarea 에 적은 내용은 상태에 잘 저장된다.",
         async () => {
           await userEvent.type($name, "초코");
-          await userEvent.type($breed, "푸들");
+          await userEvent.click($breed);
+          await userEvent.click(document.querySelector("#푸들")!);
           await userEvent.type(
             $textarea,
             "안녕하세요 너무 귀여운 강아지 입니다.",
@@ -316,11 +372,11 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       );
 
       await step("mix 를 선택 했을 때 상태에 mix로 잘 저장된다.", async () => {
-        await userEvent.click($mix!);
+        await userEvent.click($unknownBreed!);
 
         const { breed } = usePetInfoStore.getState();
-        expect(breed).toBe("mix");
-        await userEvent.click($mix!);
+        expect(breed).toBe("모르겠어요");
+        await userEvent.click($unknownBreed!);
       });
 
       await step(
@@ -360,8 +416,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       "올바른 API 요청이 전송되면 role 에 값이 저장된다.",
       async () => {
         await userEvent.type($name, "초코");
-        await userEvent.type($breed, "푸들");
-
+        await userEvent.click($breed);
+        await userEvent.click(document.querySelector("#푸들")!);
         await userEvent.click($characterButton1!);
         await userEvent.click($characterButton2!);
         await userEvent.type(

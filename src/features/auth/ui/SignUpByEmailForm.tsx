@@ -1,19 +1,22 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
+import { ROUTER_PATH } from "@/shared/constants";
+import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
+import { useAuthStore } from "@/shared/store/auth";
+import { ROUTER_PATH } from "@/shared/constants";
+import { useSnackBar } from "@/shared/lib/overlay";
+import { Snackbar } from "@/shared/ui/snackbar";
 import {
   usePostCheckVerificationCode,
   usePostSignUpByEmail,
   usePostVerificationCode,
 } from "../api";
-import { useAuthStore } from "@/shared/store/auth";
-import { useNavigate } from "react-router-dom";
-import { ROUTER_PATH } from "@/shared/constants";
 import { useSignUpByEmailFormStore } from "../store";
 import { validateEmail, validatePassword } from "../lib";
-import { useSnackBar } from "@/shared/lib/overlay";
-import { Snackbar } from "@/shared/ui/snackbar";
 
 const Email = () => {
   const [isFocusedEmailInput, setIsFocusedEmailInput] =

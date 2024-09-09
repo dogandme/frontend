@@ -1,7 +1,8 @@
-import { Map } from "@vis.gl/react-google-maps";
 import { useEffect } from "react";
+import { Map } from "@vis.gl/react-google-maps";
 import { User, Pin, MultiplePin, Cluster } from "@/entities/map/ui";
 import { mapOptions } from "../constants";
+
 const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
 
 /**

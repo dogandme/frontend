@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-
-import SignUpByEmailForm from "./SignUpByEmailForm";
+import { OverlayPortal } from "@/app/OverlayPortal";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
 import { signUpByEmailHandlers } from "@/mocks/handler";
-import { OverlayPortal } from "@/app/OverlayPortal";
+import SignUpByEmailForm from "./SignUpByEmailForm";
+
 
 const meta: Meta<typeof SignUpByEmailForm> = {
   title: "features/auth/SignUpByEmailForm",

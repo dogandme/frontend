@@ -1,10 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { Button } from "@/shared/ui/button";
-import { useLoginFormStore } from "../store";
-import { usePostLoginForm } from "../api";
 import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@/shared/ui/button";
+import { usePostLoginForm } from "../api";
+import { useLoginFormStore } from "../store";
 
 export const Form = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -150,7 +150,6 @@ export const SubmitButton = () => {
       size="large"
       variant="filled"
       role="submit"
-      aria-label="login-submit-button"
       type="button"
       onClick={handleSubmit}
     >

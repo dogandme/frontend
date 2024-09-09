@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { VisibilityOffIcon, VisibilityOnIcon } from "@/shared/ui/icon";
 import { Input, InputProps } from "@/shared/ui/input/Input";
-import { useState } from "react";
 
 type FixedInputProps = "type" | "componentType";
 
@@ -27,7 +27,9 @@ export const PasswordInput = (props: Omit<InputProps, FixedInputProps>) => {
       trailingNode={
         <button
           onClick={handleVisibility}
-          aria-label="visibility-control-button"
+          aria-label="비밀번호 보기 버튼"
+          aria-pressed={isVisibilityOn}
+          title={isVisibilityOn ? "비밀번호 숨기기" : "비밀번호 보기"}
           type="button"
         >
           {isVisibilityOn ? <VisibilityOnIcon /> : <VisibilityOffIcon />}
