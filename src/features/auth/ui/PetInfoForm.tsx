@@ -1,18 +1,21 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { SelectOpener } from "@/entities/auth/ui";
 import { EditIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { SelectChip } from "@/shared/ui/chip";
 import { TextArea } from "@/shared/ui/textarea";
 import { Button } from "@/shared/ui/button";
 import { useAuthStore } from "@/shared/store/auth";
-import { usePetInfoStore } from "../store";
-import { characterList } from "../constants/form";
-import { usePostPetInfo } from "../api/petinfo";
-import { useNavigate } from "react-router-dom";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "@/shared/ui/snackbar";
-// TODO svg 경로를 문자열로 가져오는 방법 찾아보기
+import { Select } from "@/shared/ui/select";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { usePetInfoStore } from "../store";
+import { characterList, dogBreeds } from "../constants/form";
+import { usePostPetInfo } from "../api/petinfo";
+
 const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
 
 const TextCounter = ({
@@ -44,10 +47,11 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// TODO 바텀시트 완성되고 나면 사진 업로드 , 삭제하기 기능 추가하기
 export const ProfileInput = () => {
   const profileImage = usePetInfoStore((state) => state.profileImage);
   const setProfileImage = usePetInfoStore((state) => state.setProfileImage);
+  // 바텀 시트를 조작하기 위한 상태값
+  const [isOpen, setOpen] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // 상태에 저장된 파일 객체가 존재하는 경우엔 파일 객체를 URL로 변경하여 사용합니다.
@@ -56,50 +60,75 @@ export const ProfileInput = () => {
     ? URL.createObjectURL(profileImage)
     : `${window.location.origin}/${DEFAULT_PROFILE_IMAGE}`;
 
-  const handleInputClick = () => {
-    inputRef.current?.click();
-  };
-
   // type이 file인 input에게 파일이 존재하는 경우엔 Blob URL을 생성하여 프로필 이미지로 설정합니다.
   // 만약 사진이 존재하지 않는 경우 기본 이미지를 제공합니다.
-  // TODO 바텀 시트가 생성되고 사진 선택하기 , 삭제 기능이 추가되면 로직을 변경해야 합니다.
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     setProfileImage(file || null);
   };
 
+  // 바텀 시트를 여닫는 핸들러
+  const onOpen = () => setOpen(true);
+  const onClose = () => setOpen(false);
+
+  // 사진을 삭제하는 핸들러
+  const handleDelete = () => {
+    setProfileImage(null);
+  };
+
+  // 사진 선택하기 버튼을 클릭했을 때 input을 클릭하는 핸들기
+  const handleInputClick = () => {
+    inputRef.current?.click();
+  };
+
   return (
-    <div
-      className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-tangerine-500 bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: `url(${profileUrl})`,
-      }}
-    >
-      <input
-        type="file"
-        accept="image/*"
-        className="sr-only"
-        ref={inputRef}
-        onChange={handleFileChange}
-      />
+    <>
       <button
-        className="flex h-8 w-8 items-center justify-center rounded-2xl border border-grey-500 bg-grey-0"
-        onClick={handleInputClick}
-        type="button"
+        className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url(${profileUrl})`,
+        }}
+        onClick={onOpen}
+        aria-label="profile-image-button"
       >
-        <EditIcon fill="#9E9E9E" />
+        <input
+          type="file"
+          accept="image/jpeg, image/png, image/webp"
+          className="sr-only"
+          id="profile"
+          ref={inputRef}
+          onChange={handleFileChange}
+        />
+        <span className="flex h-8 w-8 items-center justify-center rounded-2xl border border-grey-500 bg-grey-0">
+          <EditIcon />
+        </span>
       </button>
-    </div>
+      <Select isOpen={isOpen} onClose={onClose} id="profile-bottom-sheet">
+        <Select.BottomSheet>
+          <Select.OptionList>
+            <Select.Option onClick={handleInputClick}>
+              사진 선택하기
+            </Select.Option>
+            <Select.Option
+              onClick={handleDelete}
+              disabled={profileImage === null}
+            >
+              삭제 하기
+            </Select.Option>
+          </Select.OptionList>
+        </Select.BottomSheet>
+      </Select>
+    </>
   );
 };
 
 export const NameInput = () => {
   const name = usePetInfoStore((state) => state.name);
   const isValidName = usePetInfoStore((state) => state.isValidName);
-  const isNameEmpty = name.length === 0;
   const setName = usePetInfoStore((state) => state.setName);
   const setIsValidName = usePetInfoStore((state) => state.setIsValidName);
 
+  const isNameEmpty = name.length === 0;
   const MAX_LENGTH = 20;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,43 +158,57 @@ export const NameInput = () => {
 };
 
 export const BreedInput = () => {
-  const [isMixDog, setIsMixDog] = useState<boolean>(false);
+  const breed = usePetInfoStore((state) => state.breed);
   const setBreed = usePetInfoStore((state) => state.setBreed);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const onOpen = () => setIsOpen(true);
+  const onClose = () => setIsOpen(false);
 
   return (
-    <div className="flex w-full flex-col gap-[10px]">
-      {/* TODO select로 변경하기 */}
-      <Input
-        componentType="outlinedText"
-        id="greed"
-        label="어떤 종의 아이인가요?"
-        placeholder="품종을 선택해 주세요"
-        onChange={(e) => setBreed(isMixDog ? "mix" : e.target.value)}
-        // TODO disabled 되면 선택된 값을 기본 값으로 변경하기
-        disabled={isMixDog}
-        essential
-      />
-      <div className="flex items-center gap-1">
-        <input
-          type="checkbox"
-          id="isMixDog"
-          name="ixMixDog"
+    <>
+      <div className="flex w-full flex-col gap-[10px]">
+        <SelectOpener
+          id="breed"
+          label="어떤 종의 아이인가요?"
+          essential
+          value={breed}
+          placeholder="품종을 선택해 주세요"
+          onClick={onOpen}
+          disabled={breed === "모르겠어요"}
+        />
+        <Checkbox
+          id="unknown-breed"
+          checked={breed === "모르겠어요"}
           onChange={(e) => {
             const { checked } = e.target;
             if (checked) {
-              setBreed("mix");
-              setIsMixDog(e.target.checked);
+              setBreed("모르겠어요");
               return;
             }
-            setIsMixDog(e.target.checked);
             setBreed("");
           }}
-        />
-        <label htmlFor="isMixDog" className="btn-3 text-center text-grey-500">
-          모르겠어요
-        </label>
+        >
+          <span className="btn-3 text-center text-grey-500">모르겠어요</span>
+        </Checkbox>
       </div>
-    </div>
+      <Select isOpen={isOpen} onClose={onClose}>
+        <Select.BottomSheet>
+          <Select.OptionList>
+            {dogBreeds.map((value, idx) => (
+              <Select.Option
+                key={idx}
+                id={value}
+                onClick={() => setBreed(value)}
+                isSelected={value === breed}
+              >
+                {value}
+              </Select.Option>
+            ))}
+          </Select.OptionList>
+        </Select.BottomSheet>
+      </Select>
+    </>
   );
 };
 
@@ -218,7 +261,6 @@ export const SubmitButton = () => {
 
   const handleClick = () => {
     const petInfoForm = usePetInfoStore.getState();
-    // TODO refactor : 유효성 검사 메소드 만들어 사용하기
     const { isValidName, name, breed, characterList, introduce, profileImage } =
       petInfoForm;
     const { token } = useAuthStore.getState();
@@ -226,11 +268,11 @@ export const SubmitButton = () => {
     const isNameEmpty = name.length === 0;
     const isBreedEmpty = breed.length === 0;
 
+    // TODO 에러 바운더리 생성되면 로직 변경하기
     if (!isValidName || isNameEmpty || isBreedEmpty) {
       openInfoSnackBar();
       return;
     }
-    // TODO 엔드포인트 양식 정해지면 API 요청 기능 추가하기
 
     if (!token) {
       throw new Error(
