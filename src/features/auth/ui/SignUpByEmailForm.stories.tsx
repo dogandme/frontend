@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import SignUpByEmailForm from "./SignUpByEmailForm";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
 import { signUpByEmailHandlers } from "@/mocks/handler";
 import { OverlayPortal } from "@/app/OverlayPortal";
@@ -230,6 +230,36 @@ export const ApiTest: Story = {
         const $snackbar =
           await canvas.findByText("메일로 인증코드가 전송되었습니다");
         expect($snackbar).toBeInTheDocument();
+      },
+    );
+
+    const $codeInput = canvasElement.querySelector("#verification-code")!;
+    const validCode = "1111111";
+    const invalidCode = "7654321";
+
+    await step(
+      "인증 코드를 입력하고 outfocus하면, 인증 코드가 검증된다.",
+      async () => {
+        await step("인증 코드가 일치할 경우", async () => {
+          await userEvent.clear($codeInput);
+          await userEvent.type($codeInput, validCode);
+          await userEvent.tab();
+          
+          const $snackbar = await canvas.findByText("인증되었습니다");
+          expect($snackbar).toBeInTheDocument();
+        });
+
+        await step("인증 코드가 일치하지 않을 경우", async () => {
+          await userEvent.clear($codeInput);
+          await userEvent.type($codeInput, invalidCode);
+          await userEvent.tab();
+
+
+          await waitFor(() => {
+            const $snackbar = canvas.getByText("인증코드를 다시 확인해 주세요");
+            expect($snackbar).toBeInTheDocument();
+          })
+        });
       },
     );
   },

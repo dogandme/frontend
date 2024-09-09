@@ -2,7 +2,11 @@ import { useState } from "react";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { usePostSignUpByEmail, usePostVerificationCode } from "../api";
+import {
+  usePostCheckVerificationCode,
+  usePostSignUpByEmail,
+  usePostVerificationCode,
+} from "../api";
 import { useAuthStore } from "@/shared/store/auth";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
@@ -115,19 +119,47 @@ const VerificationCode = () => {
   const isEmptyEmail = email.length === 0;
   const isValidEmail = validateEmail(email);
 
+  // todo: error code에 따라 status text 변경
+  const {
+    mutate: postCheckCode,
+    isError,
+    isSuccess,
+  } = usePostCheckVerificationCode();
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+
+    postCheckCode({ email, authNum: value });
+  };
+
+  const statusText = isSuccess
+    ? "인증되었습니다"
+    : isError
+      ? "인증코드를 다시 확인해 주세요"
+      : "";
+
   return (
-    <Input
-      componentType="outlinedText"
-      id="verification-code"
-      name="verificationCode"
-      type="text"
-      placeholder="인증코드 7자리를 입력해 주세요"
-      statusText="인증코드 7자리를 입력해 주세요"
-      maxLength={7}
-      value={verificationCode}
-      onChange={handleChange}
-      disabled={isEmptyEmail || !isValidEmail}
-    />
+    <div>
+      <Input
+        componentType="outlinedText"
+        id="verification-code"
+        name="verificationCode"
+        type="text"
+        placeholder="인증코드 7자리를 입력해 주세요"
+        statusText={undefined}
+        maxLength={7}
+        value={verificationCode}
+        onChange={handleChange}
+        isError={isError}
+        disabled={isEmptyEmail || !isValidEmail}
+        onBlur={handleBlur}
+      />
+      <p
+        className={`body-3 } pl-1 pr-3 pt-1 ${isError ? "text-pink-500" : "text-grey-500"}`}
+      >
+        {statusText}
+      </p>
+    </div>
   );
 };
 
