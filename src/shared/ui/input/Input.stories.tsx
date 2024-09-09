@@ -860,21 +860,21 @@ export const WhenInputFocused: Story = {
     const canvas = within(canvasElement);
     // 테스트에 필요한 엘리먼트들을 가져옵니다
     const $input = canvas.getByRole("textbox");
-    const $p = canvas.getByRole("status", { name: "status-text" });
-    const p_originalHeight = $p?.clientHeight;
-    const p_originalTextContent = $p?.textContent;
+    const $statusText = canvasElement.querySelector("p");
+    const p_originalHeight = $statusText?.clientHeight;
+    const p_originalTextContent = $statusText?.textContent;
 
     const statusText = "올바른 이메일을 입력해주세요";
 
     // 아무런 이벤트가 발생하지 않더라도 p 태그는 존재해야 한다.
-    expect($p).toBeInTheDocument();
+    expect($statusText).toBeInTheDocument();
 
     await userEvent.click($input);
-    expect($p?.textContent).toBe(statusText);
-    expect($p?.clientHeight).toBe(p_originalHeight);
+    expect($statusText?.textContent).toBe(statusText);
+    expect($statusText?.clientHeight).toBe(p_originalHeight);
 
     await userEvent.click(document.body);
-    expect($p?.textContent).toBe(p_originalTextContent);
+    expect($statusText?.textContent).toBe(p_originalTextContent);
   },
 };
 
@@ -924,7 +924,7 @@ export const InputWithDebounce: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const $input = canvas.getByRole("textbox");
-    const $p = canvas.getByRole("status", { name: "status-text" });
+    const $statusText = canvasElement.querySelector("p");
 
     const errorStatusText = "5글자 이상 입력해주세요";
     const successStatusText = (text: string) =>
@@ -934,19 +934,19 @@ export const InputWithDebounce: Story = {
     const DELTA = 100; // 실행 환경을 고려하여 딜레이를 조정합니다.
 
     // 기본적으로 p 태그는 존재해야 한다.
-    expect($p).toBeInTheDocument();
-    expect($p).toHaveTextContent(errorStatusText);
+    expect($statusText).toBeInTheDocument();
+    expect($statusText).toHaveTextContent(errorStatusText);
 
     // 유저가 값을 입력 했을 때 디바운스로 인해 statusText가 변경되는 것을 확인합니다.
     await userEvent.type($input, "1234567");
-    expect($p).toHaveTextContent(errorStatusText);
+    expect($statusText).toHaveTextContent(errorStatusText);
     await new Promise((resolve) => setTimeout(resolve, DELAY + DELTA));
-    expect($p).toHaveTextContent(successStatusText("1234567"));
+    expect($statusText).toHaveTextContent(successStatusText("1234567"));
 
     // 유저가 값을 제거 했을 때에도 statusText가 변경되는 것을 확인합니다.
     await userEvent.type($input, "{backspace}{backspace}{backspace}");
-    expect($p).toHaveTextContent(successStatusText("1234567"));
+    expect($statusText).toHaveTextContent(successStatusText("1234567"));
     await new Promise((resolve) => setTimeout(resolve, DELAY + DELTA));
-    expect($p).toHaveTextContent(errorStatusText);
+    expect($statusText).toHaveTextContent(errorStatusText);
   },
 };

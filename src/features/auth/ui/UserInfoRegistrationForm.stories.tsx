@@ -130,9 +130,7 @@ export const Default: Story = {
           const $snackbar = canvas.getByText("필수 항목을 모두 입력해 주세요");
           expect($snackbar).toBeInTheDocument();
 
-          const $snackBarCloseButton = canvas.getByLabelText(
-            "info-snackbar-close-button",
-          );
+          const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
 
           await userEvent.click($snackBarCloseButton);
           await expect($snackBarCloseButton).not.toBeInTheDocument();
@@ -210,9 +208,7 @@ export const Default: Story = {
           const $snackbar = canvas.getByText("필수 항목을 모두 입력해 주세요");
           expect($snackbar).toBeInTheDocument();
 
-          const $snackBarCloseButton = canvas.getByLabelText(
-            "info-snackbar-close-button",
-          );
+          const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
 
           await userEvent.click($snackBarCloseButton);
           await expect($snackBarCloseButton).not.toBeInTheDocument();
@@ -290,9 +286,7 @@ export const Default: Story = {
         const $snackbar = canvas.getByText("올바른 닉네임을 입력해 주세요");
         expect($snackbar).toBeInTheDocument();
 
-        const $snackBarCloseButton = canvas.getByLabelText(
-          "info-snackbar-close-button",
-        );
+        const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
 
         await userEvent.click($snackBarCloseButton);
         await expect($snackBarCloseButton).not.toBeInTheDocument();
@@ -312,9 +306,7 @@ export const Default: Story = {
         const $snackbar = canvas.getByText("필수 약관에 모두 동의해 주세요");
         expect($snackbar).toBeInTheDocument();
 
-        const $snackBarCloseButton = canvas.getByLabelText(
-          "info-snackbar-close-button",
-        );
+        const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
 
         await userEvent.click($snackBarCloseButton);
         await expect($snackBarCloseButton).not.toBeInTheDocument();

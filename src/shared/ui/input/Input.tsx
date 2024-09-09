@@ -102,7 +102,6 @@ export const Input = ({
           className={baseStyles.input}
           autoComplete="off"
           disabled={disabled}
-          aria-label={`${label ?? id}-input`}
           // focus 상태일 때만 statusText를 보여주기 위한 이벤트 핸들러
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -111,11 +110,7 @@ export const Input = ({
         {trailingNode}
       </div>
       {shouldShowStatusText && (
-        <p
-          className={`${statusTextClass} ${baseStyles.statusText}`}
-          role="status"
-          aria-label="status-text"
-        >
+        <p className={`${statusTextClass} ${baseStyles.statusText}`}>
           {
             // 에러 상태일 경우엔 focus 유무와 상관없이 statusText를 띄우고 에러가 아닐 경우엔 focus 시에만 나타나게 하자
             isError ? statusText : isFocused ? statusText : ""

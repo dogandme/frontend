@@ -147,20 +147,20 @@ export const WhenTextAreaFocused: Story = {
     const canvas = within(canvasElement);
     // 테스트에 필요한 엘리먼트들을 가져옵니다
     const $textArea = canvas.getByRole("textbox");
-    const $p = canvas.getByRole("status", { name: "status-text" });
-    const p_originalHeight = $p?.clientHeight;
-    const p_originalTextContent = $p?.textContent;
+    const $statusText = canvasElement.querySelectorAll("p")?.[1];
+    const statusText_originalHeight = $statusText?.clientHeight;
+    const statusText_originalTextContent = $statusText?.textContent;
 
     const statusText = "올바른 이메일을 입력해주세요";
 
     // 아무런 이벤트가 발생하지 않더라도 p 태그는 존재해야 한다.
-    expect($p).toBeInTheDocument();
+    expect($statusText).toBeInTheDocument();
 
     await userEvent.click($textArea);
-    expect($p?.textContent).toBe(statusText);
-    expect($p?.clientHeight).toBe(p_originalHeight);
+    expect($statusText?.textContent).toBe(statusText);
+    expect($statusText?.clientHeight).toBe(statusText_originalHeight);
 
     await userEvent.click(document.body);
-    expect($p?.textContent).toBe(p_originalTextContent);
+    expect($statusText?.textContent).toBe(statusText_originalTextContent);
   },
 };

@@ -80,14 +80,14 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     const canvas = within(canvasElement);
     const $profile = canvas.getByLabelText("profile-image-button")!;
     const $name = canvasElement.querySelector("#name")!;
-    const $statusText = canvas.getAllByLabelText("status-text")[0]!;
+    const $statusText = canvasElement.querySelectorAll("p")?.[1];
     const $breed = canvasElement.querySelector("#breed")!;
     const $selectedBreedName = $breed.querySelector("span")!;
     const $unknownBreed = canvasElement.querySelector("#unknown-breed")!;
-    const $characterButton1 = canvas.queryByText("호기심 많은")!;
-    const $characterButton2 = canvas.queryByText("애착이 강한")!;
+    const $characterButton1 = canvas.queryByText("호기심 많은");
+    const $characterButton2 = canvas.queryByText("애착이 강한");
     const $textarea = canvasElement.querySelector("#introduce")!;
-    const $submit = canvas.getByText("등록하기")!;
+    const $submit = canvas.getByText("등록하기");
     const $bottomSheet = document.querySelector("#profile-bottom-sheet")!;
 
     const clearAll = async () => {
@@ -254,9 +254,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         "아무내용도 입력하지 않고 submit 버튼을 누르면 스낵바가 뜬다.",
         async () => {
           await userEvent.click($submit);
-          const snackBarCloseButton = await canvas.getByLabelText(
-            "info-snackbar-close-button",
-          );
+          const snackBarCloseButton =
+            await canvas.getByLabelText("스낵바 닫기");
 
           await expect(
             canvas.getByText("필수 항목을 모두 입력해 주세요"),
@@ -278,9 +277,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           await step(
             "스낵바 닫힘 버튼을 클릭하면 스낵바가 사라진다.",
             async () => {
-              const snackBarCloseButton = await canvas.getByLabelText(
-                "info-snackbar-close-button",
-              );
+              const snackBarCloseButton =
+                await canvas.getByLabelText("스낵바 닫기");
 
               await userEvent.click(snackBarCloseButton);
               await expect(snackBarCloseButton).not.toBeInTheDocument();
@@ -304,9 +302,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           await step(
             "스낵바 닫힘 버튼을 클릭하면 스낵바가 사라진다.",
             async () => {
-              const snackBarCloseButton = await canvas.getByLabelText(
-                "info-snackbar-close-button",
-              );
+              const snackBarCloseButton =
+                await canvas.getByLabelText("스낵바 닫기");
 
               await userEvent.click(snackBarCloseButton);
               await expect(snackBarCloseButton).not.toBeInTheDocument();

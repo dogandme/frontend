@@ -100,9 +100,7 @@ export const Default: Story = {
       await step(
         "스낵바 컴포넌트의 닫힘 버튼을 클릭하면 스낵바가 사라집니다.",
         async () => {
-          const $closeButton = canvas.getByLabelText(
-            "info-snackbar-close-button",
-          );
+          const $closeButton = canvas.getByLabelText("스낵바 닫기");
 
           await userEvent.click($closeButton);
 
