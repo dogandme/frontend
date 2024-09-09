@@ -9,10 +9,16 @@ export const signUpByEmailHandlers = [
   >("http://localhost/users/auth", async ({ request }) => {
     const { email } = await request.json();
 
-    const isDuplicateEmail = email === "중복";
+    const isDuplicateEmail = email === "hihihi@naver.com";
 
     if (isDuplicateEmail) {
-      return new HttpResponse(null, { status: 409 });
+      return HttpResponse.json(
+        {
+          code: 409,
+          message: "FAIL",
+        },
+        { status: 409, statusText: "Conflict" },
+      );
     }
 
     return HttpResponse.json({
@@ -47,7 +53,7 @@ export const signUpByEmailHandlers = [
   >("http://localhost/users", async ({ request }) => {
     const { email } = await request.json();
 
-    if (email === "중복") {
+    if (email === "hihihi@naver.com") {
       return new HttpResponse(null, { status: 409 });
     }
 
