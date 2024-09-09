@@ -7,8 +7,8 @@ export const LOGIN_END_POINT = {
 
 export const SIGN_UP_END_POINT = {
   EMAIL: "http://localhost:80/users",
-  GET_CONFIRM_CODE: "http://localhost:80/users/auth",
-  CHECK_CONFIRM_CODE: "http://localhost:80/users/auth/check",
+  VERIFICATION_CODE: "http://localhost:80/users/auth",
+  CHECK_VERIFICATION_CODE: "http://localhost:80/users/auth/check",
   USER_INFO: "http://localhost:80/users/additional-info",
   PET_INFO: "http://localhost:80/pets",
 };
