@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
-import { useAuthStore } from "@/shared/store/auth";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib/overlay";
+import { useAuthStore } from "@/shared/store/auth";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
 import { Snackbar } from "@/shared/ui/snackbar";
 import {
   usePostCheckVerificationCode,
   usePostSignUpByEmail,
   usePostVerificationCode,
 } from "../api";
-import { useSignUpByEmailFormStore } from "../store";
 import { validateEmail, validatePassword } from "../lib";
+import { useSignUpByEmailFormStore } from "../store";
 
 const Email = () => {
   const [isFocusedEmailInput, setIsFocusedEmailInput] =
@@ -49,13 +49,13 @@ const Email = () => {
   ));
 
   const statusTextColorStyle = isDuplicateEmail
-  ? "text-pink-500"
-  : isValidEmail || isEmailEmpty
-    ? "text-grey-500"
-    : "text-pink-500"
+    ? "text-pink-500"
+    : isValidEmail || isEmailEmpty
+      ? "text-grey-500"
+      : "text-pink-500";
   const statusText = isDuplicateEmail
-  ? "이미 가입된 이메일 입니다"
-  : "이메일 형식으로 입력해 주세요"
+    ? "이미 가입된 이메일 입니다"
+    : "이메일 형식으로 입력해 주세요";
 
   return (
     <div>
@@ -132,11 +132,12 @@ const VerificationCode = () => {
     postCheckCode({ email, authNum: value });
   };
 
-  const statusText = isSuccess
-    ? "인증되었습니다"
-    : isError
-      ? "인증코드를 다시 확인해 주세요"
-      : "";
+  let statusText = "";
+
+  if (verificationCode.length === 0)
+    statusText = "인증코드 7자리를 입력해 주세요";
+  if (isSuccess) statusText = "인증되었습니다";
+  if (isError) statusText = "인증코드를 다시 확인해 주세요";
 
   return (
     <div>
@@ -176,11 +177,11 @@ const Password = () => {
   const isPasswordEmpty = password.length === 0;
   const isValidPassword = validatePassword(password);
 
-  const statusText =  isPasswordEmpty
-  ? "비밀번호를 입력해 주세요"
-  : isValidPassword
-    ? ""
-    : "비밀번호 형식에 맞게 입력해 주세요"
+  const statusText = isPasswordEmpty
+    ? "비밀번호를 입력해 주세요"
+    : isValidPassword
+      ? ""
+      : "비밀번호 형식에 맞게 입력해 주세요";
 
   return (
     <PasswordInput
@@ -242,7 +243,7 @@ const PasswordConfirm = () => {
         <p
           className={`body-3 pl-1 pr-3 pt-1 h-6 ${!isPasswordConfirmEmpty && !isPasswordMatched ? "text-pink-500" : "text-grey-500"}`}
         >
-          {isPasswordConfirmEmpty ? "" :statusText}
+          {isPasswordConfirmEmpty ? "" : statusText}
         </p>
       </div>
       <span className="body-3 px-3 pt-1 text-grey-500">
