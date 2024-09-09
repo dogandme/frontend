@@ -1,6 +1,3 @@
-/**
- *
- */
 export const modalStyles = {
   fullPage: "fixed left-0 top-0 h-full w-full flex-col gap-8 bg-grey-0",
   center:
