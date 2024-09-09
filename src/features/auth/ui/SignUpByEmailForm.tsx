@@ -94,6 +94,10 @@ const Email = () => {
 
 const VerificationCode = () => {
   const email = useSignUpByEmailFormStore((state) => state.email);
+
+  const verificationCode = useSignUpByEmailFormStore(
+    (state) => state.verificationCode,
+  );
   const setVerificationCode = useSignUpByEmailFormStore(
     (state) => state.setVerificationCode,
   );
@@ -101,7 +105,11 @@ const VerificationCode = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: verificationCode } = e.target;
 
-    setVerificationCode(verificationCode);
+    const isNumber = /^[0-9]*$/.test(verificationCode);
+
+    if (isNumber) {
+      setVerificationCode(verificationCode);
+    }
   };
 
   const isEmptyEmail = email.length === 0;
@@ -116,6 +124,7 @@ const VerificationCode = () => {
       placeholder="인증코드 7자리를 입력해 주세요"
       statusText="인증코드 7자리를 입력해 주세요"
       maxLength={7}
+      value={verificationCode}
       onChange={handleChange}
       disabled={isEmptyEmail || !isValidEmail}
     />

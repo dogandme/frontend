@@ -130,6 +130,37 @@ export const Default: Story = {
         },
       );
     });
+
+    const $codeInput = canvasElement.querySelector("#verification-code")!;
+
+    await step("인증 코드 input 검사", async () => {
+      await step(
+        '인증 코드 Input을 focus하면, "인증코드 7자리를 입력해 주세요" 안내 문구가 뜬다.',
+        async () => {
+          await userEvent.click($codeInput);
+
+          const $statusText =
+            canvas.getByText("인증코드 7자리를 입력해 주세요");
+
+          expect($statusText).toBeInTheDocument();
+          expect($statusText).toHaveClass(statusTextColor.valid);
+        },
+      );
+
+      await step("숫자만 입력할 수 있다.", async () => {
+        await userEvent.type($codeInput, "a123b4567");
+
+        expect($codeInput).toHaveValue("1234567");
+      });
+
+      await userEvent.clear($codeInput);
+
+      await step("7자리 이상 입력할 수 없다.", async () => {
+        await userEvent.type($codeInput, "12345678");
+
+        expect($codeInput).toHaveValue("1234567");
+      });
+    });
   },
 };
 
@@ -160,7 +191,6 @@ export const ApiTest: Story = {
     const duplicatedEmail = "hihihi@naver.com";
 
     const $sendConfirmCodeButton = canvas.getByText("코드전송");
-    const $codeInput = canvasElement.querySelector("#verification-code")!;
 
     const statusTextColor = {
       valid: "text-grey-500",
