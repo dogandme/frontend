@@ -150,7 +150,6 @@ export const SubmitButton = () => {
       size="large"
       variant="filled"
       role="submit"
-      aria-label="login-submit-button"
       type="button"
       onClick={handleSubmit}
     >
