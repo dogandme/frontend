@@ -178,7 +178,7 @@ export const BreedInput = () => {
           disabled={breed === "모르겠어요"}
         />
         <Checkbox
-          id="isMixDog"
+          id="unknown-breed"
           checked={breed === "모르겠어요"}
           onChange={(e) => {
             const { checked } = e.target;

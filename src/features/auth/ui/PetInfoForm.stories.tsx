@@ -83,7 +83,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     const $statusText = canvas.getAllByLabelText("status-text")[0]!;
     const $breed = document.querySelector("#breed")!;
     const $selectedBreedName = $breed.querySelector("span")!;
-    const $mix = canvasElement.querySelector("#isMixDog")!;
+    const $unknownBreed = canvasElement.querySelector("#unknown-breed")!;
     const $characterButton1 = canvas.queryByText("호기심 많은")!;
     const $characterButton2 = canvas.queryByText("애착이 강한")!;
     const $textarea = canvas.getByLabelText("간단히 소개해 주세요-textarea")!;
@@ -110,7 +110,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     await step("모든 컴포넌트들이 Actual DOM에 존재한다.", () => {
       expect($name).toBeInTheDocument();
       expect($breed).toBeInTheDocument();
-      expect($mix).toBeInTheDocument();
+      expect($unknownBreed).toBeInTheDocument();
       expect($characterButton1).toBeInTheDocument();
       expect($characterButton2).toBeInTheDocument();
       expect($textarea).toBeInTheDocument();
@@ -206,7 +206,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       await step(
         "'모르겠어요'를 클릭하면 종 입력란에 '모르겠어요'로 값이 바뀌며 종 입력란이 disabled가 된다.",
         async () => {
-          await userEvent.click($mix);
+          await userEvent.click($unknownBreed);
           expect($selectedBreedName).toHaveTextContent("모르겠어요");
           expect($breed).toBeDisabled();
         },
@@ -215,7 +215,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       await step(
         "'모르겠어요' 선택된 상황에서 '모르겠어요'를 클릭하면 종 입력란은 초기 값으로 돌아온다.",
         async () => {
-          await userEvent.click($mix);
+          await userEvent.click($unknownBreed);
           expect($selectedBreedName).toHaveTextContent("품종을 선택해 주세요");
           expect($breed).not.toBeDisabled();
         },
@@ -340,13 +340,13 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
         async () => {
           await userEvent.type($name, "초코");
           // breed를 mix 로 하였을 경우
-          await userEvent.click($mix!);
+          await userEvent.click($unknownBreed!);
           await userEvent.click($submit);
 
           expect(
             canvas.queryByText("필수 항목을 모두 입력해 주세요"),
           ).toBeNull();
-          await userEvent.click($mix!);
+          await userEvent.click($unknownBreed!);
         },
       );
     });
@@ -375,11 +375,11 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       );
 
       await step("mix 를 선택 했을 때 상태에 mix로 잘 저장된다.", async () => {
-        await userEvent.click($mix!);
+        await userEvent.click($unknownBreed!);
 
         const { breed } = usePetInfoStore.getState();
         expect(breed).toBe("모르겠어요");
-        await userEvent.click($mix!);
+        await userEvent.click($unknownBreed!);
       });
 
       await step(
