@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OverlayPortal } from "@/app/OverlayPortal";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
+import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { signUpByEmailHandlers } from "@/mocks/handler";
 import SignUpByEmailForm from "./SignUpByEmailForm";
-
 
 const meta: Meta<typeof SignUpByEmailForm> = {
   title: "features/auth/SignUpByEmailForm",
@@ -187,6 +186,12 @@ export const ApiTest: Story = {
     const canvas = within(canvasElement);
 
     const $emailInput = canvasElement.querySelector("#email")!;
+    const $codeInput = canvasElement.querySelector("#verification-code")!;
+    const $passwordInput = canvasElement.querySelector("#password")!;
+    const $passwordConfirmInput =
+      canvasElement.querySelector("#password-confirm")!;
+    const $nextButton = canvas.getByText("다음");
+
     const validEmail = "hihihihihi@naver.com";
     const duplicatedEmail = "hihihi@naver.com";
 
@@ -196,6 +201,14 @@ export const ApiTest: Story = {
       valid: "text-grey-500",
       invalid: "text-pink-500",
     };
+
+    const clearAll = async () => {
+      await userEvent.clear($emailInput);
+      await userEvent.clear($passwordInput);
+      await userEvent.clear($passwordConfirmInput);
+    };
+
+    await clearAll();
 
     await step(
       "이미 가입된 이메일을 입력하고 [코드 전송] 버튼을 클릭할 경우,",
@@ -233,32 +246,47 @@ export const ApiTest: Story = {
       },
     );
 
-    const $codeInput = canvasElement.querySelector("#verification-code")!;
     const validCode = "1111111";
     const invalidCode = "7654321";
 
     await step(
       "인증 코드를 입력하고 outfocus하면, 인증 코드가 검증된다.",
       async () => {
-        await step("인증 코드가 일치할 경우", async () => {
-          await userEvent.clear($codeInput);
-          await userEvent.type($codeInput, validCode);
-          await userEvent.tab();
-          
-          const $snackbar = await canvas.findByText("인증되었습니다");
-          expect($snackbar).toBeInTheDocument();
-        });
-
         await step("인증 코드가 일치하지 않을 경우", async () => {
           await userEvent.clear($codeInput);
           await userEvent.type($codeInput, invalidCode);
           await userEvent.tab();
 
+          const $snackbar =
+            await canvas.findByText("인증코드를 다시 확인해 주세요");
+          expect($snackbar).toBeInTheDocument();
+        });
 
-          await waitFor(() => {
-            const $snackbar = canvas.getByText("인증코드를 다시 확인해 주세요");
-            expect($snackbar).toBeInTheDocument();
-          })
+        await step("인증 코드가 일치할 경우", async () => {
+          await userEvent.clear($codeInput);
+          await userEvent.type($codeInput, validCode);
+          await userEvent.tab();
+
+          const $snackbar = await canvas.findByText("인증되었습니다");
+          expect($snackbar).toBeInTheDocument();
+        });
+      },
+    );
+
+    const validPassword = "abcd1234!";
+
+    await step(
+      "비밀번호와 비밀번호 재확인 Input에 올바르게 입력한 상태에서 [다음] 버튼을 누르면, auth store에 token과 role이 저장된다.",
+      async () => {
+        await userEvent.type($passwordInput, validPassword);
+        await userEvent.type($passwordConfirmInput, validPassword);
+
+        await userEvent.click($nextButton);
+
+        await waitFor(() => {
+          const { token, role } = useAuthStore.getState();
+          expect(token).toBe("token");
+          expect(role).toBe("ROLE_NONE");
         });
       },
     );
