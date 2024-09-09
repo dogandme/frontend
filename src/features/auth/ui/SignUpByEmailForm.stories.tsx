@@ -4,6 +4,7 @@ import SignUpByEmailForm from "./SignUpByEmailForm";
 import { expect, userEvent, within } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
 import { signUpByEmailHandlers } from "@/mocks/handler";
+import { OverlayPortal } from "@/app/OverlayPortal";
 
 const meta: Meta<typeof SignUpByEmailForm> = {
   title: "features/auth/SignUpByEmailForm",
@@ -13,8 +14,11 @@ const meta: Meta<typeof SignUpByEmailForm> = {
   argTypes: {},
   decorators: [
     (Story) => (
-      <div className="w-96">
-        <Story />
+      <div id="root">
+        <OverlayPortal />
+        <div className="w-96">
+          <Story />
+        </div>
       </div>
     ),
   ],
@@ -188,10 +192,14 @@ export const ApiTest: Story = {
     await userEvent.clear($emailInput);
 
     await step(
-      "이메일을 올바르게 입력하고, [코드 전송] 버튼을 클릭한다.",
+      "이메일을 올바르게 입력하고 [코드 전송] 버튼을 클릭하면, snackbar가 노출된다.",
       async () => {
         await userEvent.type($emailInput, validEmail);
         await userEvent.click($sendConfirmCodeButton);
+
+        const $snackbar =
+          await canvas.findByText("메일로 인증코드가 전송되었습니다");
+        expect($snackbar).toBeInTheDocument();
       },
     );
   },

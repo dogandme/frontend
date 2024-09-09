@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useSignUpByEmailFormStore } from "../store";
 import { validateEmail, validatePassword } from "../lib";
+import { useSnackBar } from "@/shared/lib/overlay";
+import { Snackbar } from "@/shared/ui/snackbar";
 
 const Email = () => {
   const [isFocusedEmailInput, setIsFocusedEmailInput] =
@@ -37,6 +39,10 @@ const Email = () => {
   const shouldShowEmailStatusText =
     isFocusedEmailInput || (!isValidEmail && !isEmailEmpty) || isDuplicateEmail;
 
+  const { handleOpen, onClose } = useSnackBar(() => (
+    <Snackbar onClose={onClose}>메일로 인증코드가 전송되었습니다</Snackbar>
+  ));
+
   return (
     <div>
       <div className="flex items-end justify-between gap-2">
@@ -60,6 +66,7 @@ const Email = () => {
           fullWidth={false}
           disabled={!isValidEmail || isEmailEmpty || isDuplicateEmail}
           onClick={() => {
+            handleOpen();
             postVerificationCode({ email });
           }}
         >
