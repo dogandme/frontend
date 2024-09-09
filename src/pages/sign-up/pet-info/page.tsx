@@ -1,5 +1,5 @@
-import { CloseNavigationBar } from "@/widgets/navigationbar/ui";
 import { PetInfoForm } from "@/features/auth/ui";
+import { CloseNavigationBar } from "@/shared/ui/navigationbar";
 
 const PetInfoPage = () => {
   return (
