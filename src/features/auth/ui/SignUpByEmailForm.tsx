@@ -2,7 +2,7 @@ import { useState } from "react";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { usePostSignUpByEmail } from "../api";
+import { usePostSignUpByEmail, usePostVerificationCode } from "../api";
 import { useAuthStore } from "@/shared/store/auth";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
@@ -26,8 +26,16 @@ const Email = () => {
   const isEmailEmpty = email.length === 0;
   const isValidEmail = validateEmail(email);
 
+  const {
+    mutate: postVerificationCode,
+    isError,
+    variables,
+  } = usePostVerificationCode();
+
+  const isDuplicateEmail = isError && variables?.email === email;
+
   const shouldShowEmailStatusText =
-    isFocusedEmailInput || (!isValidEmail && !isEmailEmpty);
+    isFocusedEmailInput || (!isValidEmail && !isEmailEmpty) || isDuplicateEmail;
 
   return (
     <div>
@@ -50,16 +58,27 @@ const Email = () => {
           variant="filled"
           size="medium"
           fullWidth={false}
-          disabled={!isValidEmail || isEmailEmpty}
+          disabled={!isValidEmail || isEmailEmpty || isDuplicateEmail}
+          onClick={() => {
+            postVerificationCode({ email });
+          }}
         >
           코드전송
         </Button>
       </div>
       {shouldShowEmailStatusText && (
         <p
-          className={`body-3 pl-1 pr-3 pt-1 ${isValidEmail || isEmailEmpty ? "text-grey-500" : "text-pink-500"}`}
+          className={`body-3 pl-1 pr-3 pt-1 ${
+            isDuplicateEmail
+              ? "text-pink-500"
+              : isValidEmail || isEmailEmpty
+                ? "text-grey-500"
+                : "text-pink-500"
+          }`}
         >
-          이메일 형식으로 입력해 주세요
+          {isDuplicateEmail
+            ? "이미 가입된 이메일 입니다"
+            : "이메일 형식으로 입력해 주세요"}
         </p>
       )}
     </div>
