@@ -114,13 +114,3 @@ export const useUserInfoRegistrationFormStore =
     setRegion: (region) => set({ region }),
     setCheckList: (checkList) => set({ checkList }),
   }));
-
-interface RegionModalStore {
-  regionKeyword: string;
-  setRegionKeyword: (regionKeyword: string) => void;
-}
-
-export const useRegionModalStore = create<RegionModalStore>((set) => ({
-  regionKeyword: "",
-  setRegionKeyword: (regionKeyword) => set({ regionKeyword }),
-}));

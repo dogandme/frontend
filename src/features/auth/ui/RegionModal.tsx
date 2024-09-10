@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
 import { CancelIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";
@@ -6,6 +8,37 @@ import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
+import { DELAY } from "../constants";
+
+// TODO inputRef 로 비제어 컴포넌트로 관리하기
+const AddressesSearchInput = () => {
+  const [address, setAddress] = useState<string>("");
+  const [isQueryEnabled, setIsQueryEnabled] = useState<boolean>(false);
+  const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleDebouncedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setAddress(value);
+    setIsQueryEnabled(false);
+
+    if (timerId.current) {
+      clearTimeout(timerId.current);
+    }
+    timerId.current = setTimeout(() => {
+      setIsQueryEnabled(value.length > 0 ? true : false);
+    }, DELAY);
+  };
+
+  return (
+    <Input
+      id="region-search"
+      componentType="searchText"
+      leadingNode={<SearchIcon />}
+      placeholder="동명(읍,면)으로 검색"
+      onChange={handleDebouncedChange}
+    />
+  );
+};
 
 export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
   // TODO API 요청으로 받아오기
@@ -33,12 +66,7 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
       >
         <div className="flex flex-col gap-4">
           {/* 검색창 */}
-          <Input
-            id="region-search"
-            componentType="searchText"
-            leadingNode={<SearchIcon />}
-            placeholder="동명(읍,면)으로 검색"
-          />
+          <AddressesSearchInput />
           {/* 현재 위치로 찾기 버튼 */}
           <Button
             type="button"

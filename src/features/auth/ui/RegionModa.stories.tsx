@@ -1,4 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
+import { expect, userEvent, within } from "@storybook/test";
+import { DELAY } from "../constants";
 import { RegionModal } from "./RegionModal";
 
 const meta: Meta<typeof RegionModal> = {
@@ -34,5 +36,10 @@ export const Default: Story = {
         </div>
       </div>
     );
+  },
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const $regionSearchInput = canvasElement.querySelector("#region-search")!;
   },
 };
