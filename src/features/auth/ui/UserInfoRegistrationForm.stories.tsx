@@ -416,6 +416,10 @@ export const Default: Story = {
 
         const $snackbar = canvas.getByText("필수 항목을 모두 입력해 주세요");
         expect($snackbar).toBeInTheDocument();
+
+        const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
+        await userEvent.click($snackBarCloseButton);
+        await expect($snackBarCloseButton).not.toBeInTheDocument();
       },
     );
 
