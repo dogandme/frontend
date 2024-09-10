@@ -210,6 +210,7 @@ const SearchAddressControlList = ({
         justifyContent: "start",
       }}
       onClick={handleRegion}
+      additionalClassName="title-3"
     >{`${province} ${cityCounty} ${subDistrict}`}</List.Item>
   );
 };
