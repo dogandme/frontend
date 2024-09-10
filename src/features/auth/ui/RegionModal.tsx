@@ -24,9 +24,13 @@ import {
 const RegionSearchInput = () => {
   const [keyword, setKeyword] = useState<string>("");
   const { token } = useAuthStore.getState();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const setAddressesList = useAddressModalStore(
     (state) => state.setAddressList,
+  );
+  const setAddressOrigin = useAddressModalStore(
+    (state) => state.setAddressOrigin,
   );
 
   const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -49,17 +53,20 @@ const RegionSearchInput = () => {
   useEffect(() => {
     if (data && !isError) {
       setAddressesList(data);
+      setAddressOrigin(inputRef.current as HTMLInputElement);
     }
-  }, [data, setAddressesList, isError]);
+  }, [data, isError, keyword, setAddressesList, setAddressOrigin]);
 
-  const handleDebouncedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+  const handleDebouncedChange = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = target;
     setKeyword(value);
-
     if (timerId.current) {
       clearTimeout(timerId.current);
     }
     timerId.current = setTimeout(() => {
+      setKeyword(value);
       debouncedFetch();
     }, REGION_API_DEBOUNCE_DELAY);
   };
@@ -71,15 +78,27 @@ const RegionSearchInput = () => {
       leadingNode={<SearchIcon />}
       placeholder="동명(읍,면)으로 검색"
       onChange={handleDebouncedChange}
+      ref={inputRef}
     />
   );
 };
 
 const SearchRegionByGPSButton = () => {
   const [position, setPosition] = useState<LatLng>({ lat: 0, lng: 0 });
+  const origin = useAddressModalStore((state) => state.addressOrigin);
+
   const setAddressesList = useAddressModalStore(
     (state) => state.setAddressList,
   );
+  const setAddressOrigin = useAddressModalStore(
+    (state) => state.setAddressOrigin,
+  );
+
+  const isOriginLatLng = !(origin instanceof HTMLInputElement);
+  const additionalCLassName = isOriginLatLng
+    ? "border-tangerine-500 text-tangerine-500"
+    : "";
+
   const failureCount = useRef(0);
   const TIME_OUT = 1000;
 
@@ -88,8 +107,9 @@ const SearchRegionByGPSButton = () => {
   useEffect(() => {
     if (data && !isError) {
       setAddressesList(data);
+      setAddressOrigin(position);
     }
-  }, [data, setAddressesList, isError]);
+  }, [data, isError, position, setAddressesList, setAddressOrigin]);
 
   const successCallback = ({ coords }: GeolocationPosition) => {
     const { latitude: lat, longitude: lng } = coords;
@@ -144,6 +164,7 @@ const SearchRegionByGPSButton = () => {
       colorType="tertiary"
       size="medium"
       onClick={handleClick}
+      additionalClassName={additionalCLassName}
     >
       <MapLocationSearchingIcon />
       <span>현재 위치로 찾기</span>
@@ -195,13 +216,19 @@ const SearchAddressControlList = ({
 
 const SearchedRegionList = () => {
   const addressList = useAddressModalStore((state) => state.addressList);
+  const addressOrigin = useAddressModalStore((state) => state.addressOrigin);
+
+  const origin =
+    addressOrigin instanceof HTMLInputElement
+      ? addressOrigin.value
+      : "현재 위치";
 
   if (addressList.length === 0) {
     return <section className="flex flex-col gap-4"></section>;
   }
   return (
     <section className="flex flex-col gap-4">
-      <h1 className="title-2 text-grey-900">검색 결과</h1>
+      <h1 className="title-2 text-grey-900">{origin} 동네 검색 결과</h1>
       <List
         style={{
           maxHeight: "18rem",

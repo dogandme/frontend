@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { AddressResponse } from "../api/region";
+import type { AddressResponse, LatLng } from "../api/region";
 
 interface PetInfoStore {
   profileImage: File | null;
@@ -121,15 +121,20 @@ export const useUserInfoRegistrationFormStore =
     setCheckList: (checkList) => set({ checkList }),
   }));
 
-
 interface AddressModalStore {
   addressList: AddressResponse;
+  addressOrigin: null | HTMLInputElement | LatLng;
+
   setAddressList: (addressList: AddressResponse) => void;
+  setAddressOrigin: (addressOrigin: HTMLInputElement | LatLng) => void;
 }
 
 export const useAddressModalStore = create<AddressModalStore>((set) => ({
   addressList: [],
+  addressOrigin: null,
+
   setAddressList: (addressList) => set({ addressList }),
+  setAddressOrigin: (addressOrigin) => set({ addressOrigin }),
 }));
 
 interface SignUpByEmailFormStore {
@@ -157,4 +162,3 @@ export const useSignUpByEmailFormStore = create<SignUpByEmailFormStore>(
     setPasswordConfirm: (passwordConfirm) => set({ passwordConfirm }),
   }),
 );
-
