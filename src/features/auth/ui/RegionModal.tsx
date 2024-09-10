@@ -8,7 +8,9 @@ import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
+import type { LatLng } from "../api/region";
 import { DELAY } from "../constants";
+import { errorMessage } from "../constants";
 
 // TODO inputRef 로 비제어 컴포넌트로 관리하기
 const AddressesSearchInput = () => {
@@ -40,6 +42,73 @@ const AddressesSearchInput = () => {
   );
 };
 
+const SearchAddressesByGPSButton = () => {
+  const [position, setPosition] = useState<LatLng>({ lat: 0, lng: 0 });
+  const failureCount = useRef(0);
+  const TIME_OUT = 1000;
+
+  const successCallback = (position: GeolocationPosition) => {
+    const {
+      coords: { latitude: lat, longitude: lng },
+    } = position;
+    setPosition({ lat, lng });
+  };
+
+  // TODO 에러 바운더리로 스낵바 띄우기
+  const errorCallback = (error: GeolocationPositionError) => {
+    switch (error.code) {
+      case GeolocationPositionError.PERMISSION_DENIED:
+        throw new Error(errorMessage.PERMISSION_DENIED);
+      case GeolocationPositionError.POSITION_UNAVAILABLE:
+        throw new Error(errorMessage.POSITION_UNAVAILABLE);
+      case GeolocationPositionError.TIMEOUT:
+        if (failureCount.current >= 3) {
+          throw new Error(errorMessage.POSITION_UNAVAILABLE);
+        }
+        failureCount.current += 1;
+        window.navigator.geolocation.getCurrentPosition(
+          successCallback,
+          errorCallback,
+          {
+            ...options,
+            timeout: TIME_OUT / (2 ** failureCount.current * 100),
+            enableHighAccuracy: false,
+          },
+        );
+        break;
+      default:
+        throw new Error(errorMessage.UNKNOWN);
+    }
+  };
+
+  const options = {
+    enableHighAccuracy: true,
+    timeout: TIME_OUT,
+    maximumAge: 0,
+  };
+
+  const handleClick = () => {
+    navigator.geolocation.getCurrentPosition(
+      successCallback,
+      errorCallback,
+      options,
+    );
+  };
+
+  return (
+    <Button
+      type="button"
+      variant="outlined"
+      colorType="tertiary"
+      size="medium"
+      onClick={handleClick}
+    >
+      <MapLocationSearchingIcon />
+      <span>현재 위치로 찾기</span>
+    </Button>
+  );
+};
+
 export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
   // TODO API 요청으로 받아오기
   const regionList = [
@@ -68,15 +137,7 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
           {/* 검색창 */}
           <AddressesSearchInput />
           {/* 현재 위치로 찾기 버튼 */}
-          <Button
-            type="button"
-            variant="outlined"
-            colorType="tertiary"
-            size="medium"
-          >
-            <MapLocationSearchingIcon />
-            <span>현재 위치로 찾기</span>
-          </Button>
+          <SearchAddressesByGPSButton />
         </div>
         <div className="flex flex-col flex-grow justify-between ">
           <div>
