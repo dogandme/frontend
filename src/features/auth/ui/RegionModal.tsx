@@ -45,19 +45,28 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
         </div>
         {/* 검색 리스트 */}
         <section className="flex flex-col gap-4 min-h-24">
-          <h1 className="title-2 text-grey-900">검색 결과</h1>
-          {/* TODO 높이를 정적으로 정해두고 overflow-y 를 설정해두는 편이 좋을듯 */}
-          <List>
-            {regionList.map((region, idx) => (
-              <List.Item
-                key={idx}
-                style={{ justifyContent: "start" }}
-                additionalClassName="title-3"
+          {regionList.length > 0 && (
+            <>
+              <h1 className="title-2 text-grey-900">검색 결과</h1>
+              <List
+                style={{
+                  height: "18rem",
+                  overflowY: "auto",
+                  justifyContent: "start",
+                }}
               >
-                {region}
-              </List.Item>
-            ))}
-          </List>
+                {regionList.map((region, idx) => (
+                  <List.Item
+                    key={idx}
+                    style={{ justifyContent: "start" }}
+                    additionalClassName="title-3"
+                  >
+                    {region}
+                  </List.Item>
+                ))}
+              </List>
+            </>
+          )}
         </section>
         {/* 검색 결과 리스트 */}
         <section className="py-2 flex flex-col gap-4">
