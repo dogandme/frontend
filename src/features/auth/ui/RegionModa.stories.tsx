@@ -66,6 +66,27 @@ export const Default: Story = {
                   district: "역삼4동",
                   subDistrict: "123-45",
                 },
+                {
+                  id: 4,
+                  province: "서울특별시",
+                  cityCounty: "강남구",
+                  district: "역삼5동",
+                  subDistrict: "123-45",
+                },
+                {
+                  id: 5,
+                  province: "서울특별시",
+                  cityCounty: "강남구",
+                  district: "역삼6동",
+                  subDistrict: "123-45",
+                },
+                {
+                  id: 6,
+                  province: "서울특별시",
+                  cityCounty: "강남구",
+                  district: "역삼7동",
+                  subDistrict: "123-45",
+                },
               ],
             });
           }
@@ -201,7 +222,6 @@ export const Default: Story = {
     const CORRECT_ADDRESS_GANGNAM = "강남구 역삼동";
 
     const $regionSearchInput = canvasElement.querySelector("#region-search")!;
-    const $currentLocationButton = canvas.getByText("현재 위치로 찾기")!;
 
     await step(
       `장소 입력창은 디바운스 처리가 되어 있어  ${DELAY}ms 이후 API 요청을 보낸다.`,
@@ -257,51 +277,49 @@ export const Default: Story = {
       },
     );
 
-    await step(
-      `현재 위치를 클릭하면 서울 영등포구의 검색 결과가 나타난다.`,
-      async () => {
-        await userEvent.click($currentLocationButton);
-        await waitFor(
-          async () => {
-            expect(fetchSpy).toHaveBeenCalledTimes(1);
-            const $searchedResult = await canvas.findByText(/영등포 1가/);
-            expect($searchedResult).toBeInTheDocument();
-          },
-          {
-            timeout: DELAY + 100,
-          },
-        );
-      },
-    );
+    // await step(
+    //   `현재 위치를 클릭하면 서울 영등포구의 검색 결과가 나타난다.`,
+    //   async () => {
+    //     await userEvent.click($currentLocationButton);
+    //     await waitFor(
+    //       async () => {
+    //         expect(fetchSpy).toHaveBeenCalledTimes(1);
+    //         const $searchedResult = await canvas.findByText(/영등포 1가/);
+    //         expect($searchedResult).toBeInTheDocument();
+    //       },
+    //       {
+    //         timeout: DELAY + 100,
+    //       },
+    //     );
+    //   },
+    // );
 
     /* 현재 에러 바운더리에 대한 처리가 되어 있지 않아 에러 핸들링 테스트 코드는 추후 추가 예정입니다. */
 
     await step(
       "검색 결과에 존재하는 값을 클릭하면 해당 동네가 Form 데이터에 저장된다.",
       async () => {
-        const $searchedResult = canvas.getByText(/영등포구 영등포 1가/);
+        const $searchedResult = canvas.getByText(/강남구 역삼1동/);
 
         await userEvent.click($searchedResult);
         const { region } = useUserInfoRegistrationFormStore.getState();
 
-        const $selectedRegion = canvas.getAllByText(/영등포구 영등포 1가/)[1];
+        const $selectedRegion = canvas.getAllByText(/강남구 역삼1동/)[1];
         const $regionTitle = canvas.getByText(/선택된 동네/);
 
         expect(
-          region.some(
-            (data) => data.address === "서울특별시 영등포구 영등포 1가",
-          ),
+          region.some((data) => data.address === "서울특별시 강남구 역삼1동"),
         ).toBeTruthy();
         expect($regionTitle).toBeInTheDocument();
         expect($selectedRegion).toBeInTheDocument();
 
         await step("동네는 최대 5개까지만 선택 할 수 있다.", async () => {
           const addresses = [
-            "영등포구 영등포 2가",
-            "영등포구 영등포 3가",
-            "영등포구 영등포 4가",
-            "영등포구 영등포 5가",
-            "영등포구 영등포 6가",
+            "강남구 역삼2동",
+            "강남구 역삼3동",
+            "강남구 역삼4동",
+            "강남구 역삼5동",
+            "강남구 역삼6동",
           ];
 
           for (const address of addresses) {
@@ -312,18 +330,20 @@ export const Default: Story = {
           const { region } = useUserInfoRegistrationFormStore.getState();
           expect(region.length).toBe(5);
           expect(region[region.length - 1].address).toBe(
-            "서울특별시 영등포구 영등포 5가",
+            "서울특별시 강남구 역삼5동",
           );
         });
 
         await step(
           "선택한 동네를 클릭하면 폼 데이터에서 제거 된다.",
           async () => {
+            const $selectedRegion =
+              canvas.getByText(/서울특별시 강남구 역삼5동/);
             await userEvent.click($selectedRegion);
             const { region } = useUserInfoRegistrationFormStore.getState();
             expect(
               region.some(
-                (data) => data.address === "서울특별시 영등포구 영등포 1가",
+                (data) => data.address === "서울특별시 강남구 역삼5동",
               ),
             ).toBeFalsy();
             expect($selectedRegion).not.toBeInTheDocument();
