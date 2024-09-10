@@ -146,6 +146,27 @@ export const Default: Story = {
                 district: "영등포 4가",
                 subDistrict: "123-45",
               },
+              {
+                id: 4,
+                province: "서울특별시",
+                cityCounty: "영등포구",
+                district: "영등포 5가",
+                subDistrict: "123-45",
+              },
+              {
+                id: 5,
+                province: "서울특별시",
+                cityCounty: "영등포구",
+                district: "영등포 6가",
+                subDistrict: "123-45",
+              },
+              {
+                id: 6,
+                province: "서울특별시",
+                cityCounty: "영등포구",
+                district: "영등포 7가",
+                subDistrict: "123-45",
+              },
             ],
           });
         }),
@@ -265,13 +286,36 @@ export const Default: Story = {
         const { region } = useUserInfoRegistrationFormStore.getState();
 
         const $selectedRegion = canvas.getAllByText(/영등포구 영등포 1가/)[1];
-
         const $regionTitle = canvas.getByText(/선택된 동네/);
+
         expect(
-          region.some((data) => data.address === "영등포구 영등포 1가"),
+          region.some(
+            (data) => data.address === "서울특별시 영등포구 영등포 1가",
+          ),
         ).toBeTruthy();
         expect($regionTitle).toBeInTheDocument();
         expect($selectedRegion).toBeInTheDocument();
+
+        await step("동네는 최대 5개까지만 선택 할 수 있다.", async () => {
+          const addresses = [
+            "영등포구 영등포 2가",
+            "영등포구 영등포 3가",
+            "영등포구 영등포 4가",
+            "영등포구 영등포 5가",
+            "영등포구 영등포 6가",
+          ];
+
+          for (const address of addresses) {
+            const $searchedResult = canvas.getByText(new RegExp(address));
+            await userEvent.click($searchedResult);
+          }
+
+          const { region } = useUserInfoRegistrationFormStore.getState();
+          expect(region.length).toBe(5);
+          expect(region[region.length - 1].address).toBe(
+            "서울특별시 영등포구 영등포 5가",
+          );
+        });
 
         await step(
           "선택한 동네를 클릭하면 폼 데이터에서 제거 된다.",
@@ -279,7 +323,9 @@ export const Default: Story = {
             await userEvent.click($selectedRegion);
             const { region } = useUserInfoRegistrationFormStore.getState();
             expect(
-              region.some((data) => data.address === "영등포구 영등포 1가"),
+              region.some(
+                (data) => data.address === "서울특별시 영등포구 영등포 1가",
+              ),
             ).toBeFalsy();
             expect($selectedRegion).not.toBeInTheDocument();
           },

@@ -18,6 +18,8 @@ import {
 } from "../store";
 
 // TODO inputRef 로 비제어 컴포넌트로 관리하기
+// TODO 에러 처리 , 로딩 처리 작업 추가 예정
+
 const RegionSearchInput = () => {
   const [keyword, setKeyword] = useState<string>("");
   const [isQueryEnabled, setIsQueryEnabled] = useState<boolean>(false);
@@ -158,6 +160,12 @@ const SearchAddressControlList = ({
   const address = `${province} ${cityCounty} ${district}`;
 
   const handleRegion = () => {
+    // TODO 에러 바운더리 나오면 에러 던지기
+    if (region.length >= 5) {
+      // throw new Error("동네는 최대 5개까지 선택할 수 있습니다.");
+      return;
+    }
+
     if (region.some((data) => data.address === address)) {
       return;
     }
