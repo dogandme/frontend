@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, within, spyOn, waitFor } from "@storybook/test";
-import { ADDRESSES_END_POINT, DELAY } from "../constants";
+import { DELAY } from "../constants";
 import { useUserInfoRegistrationFormStore } from "../store";
 import { RegionModal } from "./RegionModal";
 
@@ -199,7 +199,6 @@ export const Default: Story = {
 
     const CORRECT_ADDRESS_DOBONG = "도봉구 도봉동";
     const CORRECT_ADDRESS_GANGNAM = "강남구 역삼동";
-    const INCORRECT_ADDRESS = "땡땡구 떙땡동";
 
     const $regionSearchInput = canvasElement.querySelector("#region-search")!;
     const $currentLocationButton = canvas.getByText("현재 위치로 찾기")!;
