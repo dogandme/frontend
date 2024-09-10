@@ -46,16 +46,14 @@ const getAddressByKeyword = async (
 export const useGetAddressByKeyword = ({
   token,
   keyword,
-  enabled,
 }: {
   token: string;
   keyword: AddressKeyword;
-  enabled: boolean;
 }) => {
   return useQuery<AddressResponse, Error>({
     queryKey: ["addresses", keyword],
     queryFn: () => getAddressByKeyword(keyword, token),
-    enabled,
+    enabled: false, // refetch를 활용한 debounce를 위해 false로 설정합니다.
   });
 };
 

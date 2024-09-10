@@ -23,7 +23,6 @@ import {
 
 const RegionSearchInput = () => {
   const [keyword, setKeyword] = useState<string>("");
-  const [isQueryEnabled, setIsQueryEnabled] = useState<boolean>(false);
   const { token } = useAuthStore.getState();
 
   const setAddressesList = useAddressModalStore(
@@ -38,10 +37,13 @@ const RegionSearchInput = () => {
     );
   }
 
-  const { data, isError } = useGetAddressByKeyword({
+  const {
+    data,
+    isError,
+    refetch: debouncedFetch,
+  } = useGetAddressByKeyword({
     token,
     keyword,
-    enabled: isQueryEnabled,
   });
 
   useEffect(() => {
@@ -53,13 +55,12 @@ const RegionSearchInput = () => {
   const handleDebouncedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setKeyword(value);
-    setIsQueryEnabled(false);
 
     if (timerId.current) {
       clearTimeout(timerId.current);
     }
     timerId.current = setTimeout(() => {
-      setIsQueryEnabled(value.length > 0 ? true : false);
+      debouncedFetch();
     }, REGION_API_DEBOUNCE_DELAY);
   };
 
