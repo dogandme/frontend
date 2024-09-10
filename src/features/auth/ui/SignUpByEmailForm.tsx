@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutationState } from "@tanstack/react-query";
+import { MutationState, useMutationState } from "@tanstack/react-query";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib/overlay";
@@ -9,6 +9,8 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Snackbar } from "@/shared/ui/snackbar";
 import {
+  CheckVerificationCodeRequestData,
+  CheckVerificationCodeResponse,
   usePostCheckVerificationCode,
   usePostSignUpByEmail,
   usePostVerificationCode,
@@ -117,28 +119,28 @@ const VerificationCode = () => {
     }
   };
 
-  const isEmptyEmail = email.length === 0;
-  const isValidEmail = validateEmail(email);
-
   // todo: error code에 따라 status text 변경
   const {
     mutate: postCheckCode,
-    isError,
-    isSuccess,
+    isError: isErrorCheckCode,
+    isSuccess: isSuccessCheckCode,
+    variables,
   } = usePostCheckVerificationCode();
 
   const CODE_LENGTH = 7;
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-
-    postCheckCode({ email, authNum: value });
+  const handleCheckButtonClick = () => {
+    postCheckCode({ email, authNum: verificationCode });
   };
+
+  const isValidEmail = validateEmail(email);
+  const isEmailChanged = variables?.email !== email;
+
+  const isSuccess = isSuccessCheckCode && !isEmailChanged;
+  const isError = isErrorCheckCode || (isSuccessCheckCode && isEmailChanged);
 
   let statusText = "";
 
-  if (verificationCode.length === 0)
-    statusText = "인증코드 7자리를 입력해 주세요";
   if (isSuccess) statusText = "인증되었습니다";
   if (isError) statusText = "인증코드를 다시 확인해 주세요";
 
@@ -154,20 +156,37 @@ const VerificationCode = () => {
 
   return (
     <div>
-      <Input
-        componentType="outlinedText"
-        id="verification-code"
-        name="verificationCode"
-        type="text"
-        placeholder="인증코드 7자리를 입력해 주세요"
-        statusText={undefined}
-        maxLength={CODE_LENGTH}
-        value={verificationCode}
-        onChange={handleChange}
-        isError={isError}
-        disabled={isEmptyEmail || !isValidEmail || isErrorSendCode}
-        onBlur={handleBlur}
-      />
+      <div className="flex items-end justify-between gap-2">
+        <Input
+          componentType="outlinedText"
+          id="verification-code"
+          name="verificationCode"
+          type="text"
+          placeholder="인증코드 7자리를 입력해 주세요"
+          statusText={undefined}
+          maxLength={CODE_LENGTH}
+          value={verificationCode}
+          onChange={handleChange}
+          isError={isError}
+          disabled={!isValidEmail || isErrorSendCode || isSuccess}
+        />
+        <Button
+          type="button"
+          colorType="secondary"
+          variant="filled"
+          size="medium"
+          fullWidth={false}
+          onClick={handleCheckButtonClick}
+          disabled={
+            !isValidEmail ||
+            isErrorSendCode ||
+            isSuccess ||
+            verificationCode.length < CODE_LENGTH
+          }
+        >
+          확인
+        </Button>
+      </div>
       <p
         className={`body-3 pl-1 pr-3 pt-1 h-6 ${isError ? "text-pink-500" : "text-grey-500"}`}
       >
@@ -274,7 +293,13 @@ const SignUpByEmailForm = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
 
-  const checkCodeResponseCacheArr = useMutationState({
+  const checkCodeResponseCacheArr = useMutationState<
+    MutationState<
+      CheckVerificationCodeResponse,
+      Error,
+      CheckVerificationCodeRequestData
+    >
+  >({
     filters: {
       mutationKey: ["checkVerificationCode"],
     },
@@ -307,9 +332,16 @@ const SignUpByEmailForm = () => {
       return;
     }
 
+    const lastCheckCodeResponse =
+      checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1];
+
+    if (lastCheckCodeResponse.variables?.email !== email) {
+      alert("인증코드를 확인해 주세요");
+      return;
+    }
+
     const isVerificationCodeCorrect =
-      checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1].status ===
-      "success";
+      lastCheckCodeResponse.status === "success";
 
     if (!isVerificationCodeCorrect) {
       // todo: snackbar 띄우기

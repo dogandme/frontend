@@ -249,13 +249,15 @@ export const ApiTest: Story = {
     const validCode = "1111111";
     const invalidCode = "7654321";
 
+    const $codeConfirmButton = canvas.getByText("확인");
+
     await step(
-      "인증 코드를 입력하고 outfocus하면, 인증 코드가 검증된다.",
+      "인증 코드를 입력하고 [확인] 버튼을 클릭하면, 인증 코드가 검증된다.",
       async () => {
         await step("인증 코드가 일치하지 않을 경우", async () => {
           await userEvent.clear($codeInput);
           await userEvent.type($codeInput, invalidCode);
-          await userEvent.tab();
+          await userEvent.click($codeConfirmButton);
 
           const $snackbar =
             await canvas.findByText("인증코드를 다시 확인해 주세요");
@@ -265,7 +267,7 @@ export const ApiTest: Story = {
         await step("인증 코드가 일치할 경우", async () => {
           await userEvent.clear($codeInput);
           await userEvent.type($codeInput, validCode);
-          await userEvent.tab();
+          await userEvent.click($codeConfirmButton);
 
           const $snackbar = await canvas.findByText("인증되었습니다");
           expect($snackbar).toBeInTheDocument();

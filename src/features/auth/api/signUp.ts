@@ -43,12 +43,12 @@ export const usePostVerificationCode = () => {
   });
 };
 
-interface CheckVerificationCodeRequestData {
+export interface CheckVerificationCodeRequestData {
   email: string;
   authNum: string;
 }
 
-interface CheckVerificationCodeResponse {
+export interface CheckVerificationCodeResponse {
   code: number;
   message: string;
 }
