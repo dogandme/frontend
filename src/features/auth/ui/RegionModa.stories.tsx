@@ -338,7 +338,7 @@ export const Default: Story = {
           "선택한 동네를 클릭하면 폼 데이터에서 제거 된다.",
           async () => {
             const $selectedRegion =
-              canvas.getByText(/서울특별시 강남구 역삼5동/);
+              canvas.getAllByText(/서울특별시 강남구 역삼5동/)[1];
             await userEvent.click($selectedRegion);
             const { region } = useUserInfoRegistrationFormStore.getState();
             expect(

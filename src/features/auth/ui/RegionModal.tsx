@@ -180,7 +180,7 @@ const SearchAddressControlList = ({
         justifyContent: "start",
       }}
       onClick={handleRegion}
-    >{`${cityCounty} ${district}`}</List.Item>
+    >{`${province} ${cityCounty} ${district}`}</List.Item>
   );
 };
 
