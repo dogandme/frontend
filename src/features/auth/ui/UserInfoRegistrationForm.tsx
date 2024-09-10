@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AgreementCheckbox, SelectOpener } from "@/entities/auth/ui";
-import { useSnackBar } from "@/shared/lib/overlay";
+import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -12,6 +12,7 @@ import { usePutUserInfoRegistration } from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
+import { RegionModal } from "./RegionModal";
 
 const NicknameInput = () => {
   const isValidNickname = useUserInfoRegistrationFormStore(
@@ -160,6 +161,10 @@ const AgeRangeSelect = () => {
 };
 
 const RegionSetting = () => {
+  const { handleOpen, onClose } = useModal(() => (
+    <RegionModal onClose={onClose} />
+  ));
+
   return (
     <div>
       <div className="flex items-start gap-1 pb-2">
@@ -172,6 +177,7 @@ const RegionSetting = () => {
         variant="outlined"
         colorType="tertiary"
         size="medium"
+        onClick={handleOpen}
       >
         <MapLocationSearchingIcon />
         <span>동네 설정하기</span>
