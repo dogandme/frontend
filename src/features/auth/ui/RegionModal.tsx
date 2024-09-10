@@ -18,9 +18,7 @@ import {
   useUserInfoRegistrationFormStore,
 } from "../store";
 
-// TODO inputRef 로 비제어 컴포넌트로 관리하기
 // TODO 에러 처리 , 로딩 처리 작업 추가 예정
-
 const RegionSearchInput = () => {
   const [keyword, setKeyword] = useState<string>("");
   const { token } = useAuthStore.getState();
@@ -203,8 +201,6 @@ const SearchAddressControlList = ({
   };
 
   return (
-    // TODO 추가 className 받을 수 있도록 변경하기
-    // TODO 현재 폰트가 인식 되지 않고 있음
     <List.Item
       style={{
         justifyContent: "start",
