@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { AddressResponse } from "../api/region";
 
 interface PetInfoStore {
   profileImage: File | null;
@@ -79,22 +80,22 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
 
 type Gender = "FEMALE" | "MALE" | null;
 type AgeRange = 10 | 20 | 30 | 40 | 50 | null;
-type Region = string | null;
 type CheckedList = boolean[];
+type Address = { address: string; id: number };
 
 interface UserInfoRegistrationFormStore {
   nickname: string;
   isValidNickname: boolean;
   gender: Gender;
   ageRange: AgeRange;
-  region: Region;
+  region: Address[];
   checkList: CheckedList;
 
   setNickname: (email: string) => void;
   setIsValidNickname: (isValidNickname: boolean) => void;
   setGender: (gender: Gender) => void;
   setAgeRange: (birth: AgeRange) => void;
-  setRegion: (region: Region) => void;
+  setRegion: (region: Address[]) => void;
   setCheckList: (checkList: CheckedList) => void;
 }
 
@@ -104,16 +105,32 @@ export const useUserInfoRegistrationFormStore =
     isValidNickname: true,
     gender: null,
     ageRange: null,
-    region: null,
+    region: [],
     checkList: [false, false, false],
 
     setNickname: (nickname) => set({ nickname }),
     setIsValidNickname: (isValidNickname) => set({ isValidNickname }),
     setGender: (gender) => set({ gender }),
     setAgeRange: (birth) => set({ ageRange: birth }),
-    setRegion: (region) => set({ region }),
+    setRegion: (region) =>
+      set({
+        region: region.sort((prev, cur) =>
+          prev.address.localeCompare(cur.address),
+        ),
+      }),
     setCheckList: (checkList) => set({ checkList }),
   }));
+
+
+interface AddressModalStore {
+  addressList: AddressResponse;
+  setAddressList: (addressList: AddressResponse) => void;
+}
+
+export const useAddressModalStore = create<AddressModalStore>((set) => ({
+  addressList: [],
+  setAddressList: (addressList) => set({ addressList }),
+}));
 
 interface SignUpByEmailFormStore {
   email: string;
@@ -140,3 +157,4 @@ export const useSignUpByEmailFormStore = create<SignUpByEmailFormStore>(
     setPasswordConfirm: (passwordConfirm) => set({ passwordConfirm }),
   }),
 );
+

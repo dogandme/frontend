@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { MainFooter } from "@/widgets/map/ui";
-import { GlobalNavigationBar } from "@/widgets/navigationbar/ui";
+import { GlobalNavigationBar } from "@/shared/ui/navigationbar";
 
 const MainLayout = () => {
   return (

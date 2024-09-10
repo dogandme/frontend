@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { AgreementCheckbox, SelectOpener } from "@/entities/auth/ui";
-import { useSnackBar } from "@/shared/lib/overlay";
+import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
+import { ActionChip } from "@/shared/ui/chip";
 import { MapLocationSearchingIcon } from "@/shared/ui/icon";
+import { CancelIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
@@ -12,6 +14,7 @@ import { usePutUserInfoRegistration } from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
+import { RegionModal } from "./RegionModal";
 
 const NicknameInput = () => {
   const isValidNickname = useUserInfoRegistrationFormStore(
@@ -160,6 +163,10 @@ const AgeRangeSelect = () => {
 };
 
 const RegionSetting = () => {
+  const { handleOpen, onClose } = useModal(() => (
+    <RegionModal onClose={onClose} />
+  ));
+
   return (
     <div>
       <div className="flex items-start gap-1 pb-2">
@@ -172,6 +179,7 @@ const RegionSetting = () => {
         variant="outlined"
         colorType="tertiary"
         size="medium"
+        onClick={handleOpen}
       >
         <MapLocationSearchingIcon />
         <span>동네 설정하기</span>
@@ -246,6 +254,38 @@ const AgreementCheckboxList = () => {
   );
 };
 
+const MyRegionList = () => {
+  const region = useUserInfoRegistrationFormStore((state) => state.region);
+  const setRegion = useUserInfoRegistrationFormStore(
+    (state) => state.setRegion,
+  );
+
+  if (region.length === 0) {
+    return;
+  }
+
+  const handleRemoveRegion = (address: string) => {
+    setRegion(region.filter((region) => region.address !== address));
+  };
+
+  return (
+    <ul className="flex items-start gap-2 self-stretch overflow-auto">
+      {region.map(({ address, id }) => (
+        <li className="flex flex-shrink-0" key={id}>
+          <ActionChip
+            variant="outlined"
+            label={address}
+            trailingIcon={<CancelIcon width={20} height={20} />}
+            controlledIsSelected={true}
+            key={id}
+            onClick={() => handleRemoveRegion(address)}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+};
+
 const UserInfoRegistrationForm = () => {
   const {
     handleOpen: openRequiredFieldsAlert,
@@ -277,7 +317,7 @@ const UserInfoRegistrationForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { nickname, ageRange, gender, checkList } =
+    const { nickname, ageRange, gender, checkList, region } =
       useUserInfoRegistrationFormStore.getState();
 
     if (!token) {
@@ -288,7 +328,10 @@ const UserInfoRegistrationForm = () => {
 
     // todo: 조건에 region !== null인 경우 추가하기
     const areEssentialFieldsFilled =
-      !isNicknameEmpty && ageRange !== null && gender !== null;
+      !isNicknameEmpty &&
+      ageRange !== null &&
+      gender !== null &&
+      region.length > 0;
 
     if (!areEssentialFieldsFilled) {
       openRequiredFieldsAlert();
@@ -316,7 +359,7 @@ const UserInfoRegistrationForm = () => {
         nickname,
         gender,
         age: ageRange,
-        region: "서울 강남구",
+        region: region.map(({ id }) => id),
         marketingYn: checkList[2],
       },
       {
@@ -344,6 +387,7 @@ const UserInfoRegistrationForm = () => {
         <GenderSelect />
         <AgeRangeSelect />
         <RegionSetting />
+        <MyRegionList />
       </section>
 
       <hr className="text-grey-200" />

@@ -207,3 +207,5 @@ export const dogBreeds = [
   "푸들",
   "풍산개",
 ];
+
+export const DELAY = 500;

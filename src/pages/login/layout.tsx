@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { OverlayPortal } from "@/app/OverlayPortal";
-import { BackwardNavigationBar } from "@/widgets/navigationbar/ui";
+import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { HistoryTracker } from "@/app";
 
 const LoginLayout = () => (

@@ -12,3 +12,10 @@ export const SIGN_UP_END_POINT = {
   USER_INFO: "http://localhost:80/users/additional-info",
   PET_INFO: "http://localhost:80/pets",
 };
+
+export const ADDRESSES_END_POINT = {
+  CURRENT_POSITION: ({ lat, lng }: { lat: number; lng: number }) =>
+    `http://localhost:80/addresses/search-by-location?lat=${lat}&lng=${lng}`,
+  ADDRESS: (keyword: string) =>
+    `http://localhost:80/addresses?keyword=${keyword}`,
+};

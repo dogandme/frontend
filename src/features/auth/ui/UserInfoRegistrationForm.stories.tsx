@@ -1,8 +1,10 @@
+import { http, HttpResponse } from "msw";
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { userInfoRegistrationHandlers } from "@/mocks/handler";
+import { DELAY } from "../constants";
 import { useUserInfoRegistrationFormStore } from "../store";
 import UserInfoRegistrationForm from "./UserInfoRegistrationForm";
 
@@ -34,7 +36,7 @@ export const Default: Story = {
       nickname: "",
       gender: null,
       ageRange: null,
-      region: null,
+      region: [],
       checkList: [false, false, false],
     });
 
@@ -43,6 +45,137 @@ export const Default: Story = {
     });
 
     return <Story />;
+  },
+
+  parameters: {
+    msw: {
+      handlers: [
+        http.get("http://localhost/addresses", (req) => {
+          const {
+            request: { url },
+          } = req;
+
+          const URLObject = new URL(url);
+          const keyword = URLObject.searchParams.get("keyword");
+
+          if (keyword === "강남구 역삼동") {
+            return HttpResponse.json({
+              code: 200,
+              message: "good",
+              content: [
+                {
+                  id: 0,
+                  province: "서울특별시",
+                  cityCounty: "강남구",
+                  district: "역삼1동",
+                  subDistrict: "123-45",
+                },
+                {
+                  id: 1,
+                  province: "서울특별시",
+                  cityCounty: "강남구",
+                  district: "역삼2동",
+                  subDistrict: "123-45",
+                },
+                {
+                  id: 2,
+                  province: "서울특별시",
+                  cityCounty: "강남구",
+                  district: "역삼3동",
+                  subDistrict: "123-45",
+                },
+                {
+                  id: 3,
+                  province: "서울특별시",
+                  cityCounty: "강남구",
+                  district: "역삼4동",
+                  subDistrict: "123-45",
+                },
+              ],
+            });
+          }
+
+          if (keyword === "도봉구 도봉동") {
+            return HttpResponse.json({
+              code: 200,
+              message: "good",
+              content: [
+                {
+                  id: 0,
+                  province: "서울특별시",
+                  cityCounty: "도봉구",
+                  district: "도봉1동",
+                  subDistrict: "123-45",
+                },
+                {
+                  id: 1,
+                  province: "서울특별시",
+                  cityCounty: "도봉구",
+                  district: "도봉2동",
+                  subDistrict: "123-45",
+                },
+                {
+                  id: 2,
+                  province: "서울특별시",
+                  cityCounty: "도봉구",
+                  district: "도봉3동",
+                  subDistrict: "123-45",
+                },
+                {
+                  id: 3,
+                  province: "서울특별시",
+                  cityCounty: "도봉구",
+                  district: "도봉4동",
+                  subDistrict: "123-45",
+                },
+              ],
+            });
+          }
+
+          return HttpResponse.json({
+            code: 204, // 검색 결과 없을 시를 가정
+            message: "bad",
+            content: [],
+          });
+        }),
+        http.get("http://localhost/addresses/search-by-location", () => {
+          return HttpResponse.json({
+            code: 200,
+            message: "good",
+            content: [
+              {
+                id: 0,
+                province: "서울특별시",
+                cityCounty: "영등포구",
+                district: "영등포 1가",
+                subDistrict: "123-45",
+              },
+              {
+                id: 1,
+                province: "서울특별시",
+                cityCounty: "영등포구",
+                district: "영등포 2가",
+                subDistrict: "123-45",
+              },
+              {
+                id: 2,
+                province: "서울특별시",
+                cityCounty: "영등포구",
+                district: "영등포 3가",
+                subDistrict: "123-45",
+              },
+              {
+                id: 3,
+                province: "서울특별시",
+                cityCounty: "영등포구",
+                district: "영등포 4가",
+                subDistrict: "123-45",
+              },
+            ],
+          });
+        }),
+      ],
+    },
   },
 
   render: () => <UserInfoRegistrationForm />,
@@ -57,6 +190,7 @@ export const Default: Story = {
     const invalidNickname = "!!@#$@";
 
     const $submitButton = canvas.getByText("회원가입");
+    const $regionSelectButton = canvas.getByText("동네 설정하기");
 
     await step("nickname input 검사", async () => {
       const STATUS_TEXT = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";
@@ -272,14 +406,43 @@ export const Default: Story = {
       });
     });
 
-    // todo: 동네 설정 검사
+    await step(
+      "동네 설정을 제외하고 form 을 다 입력한 상태에서 [회원가입] 버튼을 누르면 snackbar가 뜬다.",
+      async () => {
+        await userEvent.clear($nicknameInput);
+        await userEvent.type($nicknameInput, validNickname);
+        await userEvent.type($nicknameInput, invalidNickname);
+        await userEvent.click($submitButton);
+
+        const $snackbar = canvas.getByText("필수 항목을 모두 입력해 주세요");
+        expect($snackbar).toBeInTheDocument();
+
+        const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
+        await userEvent.click($snackBarCloseButton);
+        await expect($snackBarCloseButton).not.toBeInTheDocument();
+      },
+    );
 
     await step(
       "form을 다 입력했지만 이메일 형식에 맞지 않은 상태에서 [회원가입] 버튼을 누르면, snackbar가 뜬다.",
       async () => {
         await userEvent.clear($nicknameInput);
-
         await userEvent.type($nicknameInput, invalidNickname);
+        await userEvent.click($regionSelectButton);
+
+        const $regionSearchInput =
+          canvasElement.querySelector("#region-search")!;
+        await userEvent.type($regionSearchInput, "강남구 역삼동");
+
+        await new Promise((res) => setTimeout(res, DELAY)); // API 요청이 끝날 때까지 안전하게 딜레이 추가
+
+        const $selectedRegion =
+          await canvas.findByText(/서울특별시 강남구 역삼1동/);
+        await userEvent.click($selectedRegion);
+
+        const $confirmButton = canvas.getByText("확인");
+        await userEvent.click($confirmButton);
+
         await userEvent.click($submitButton);
 
         const $snackbar = canvas.getByText("올바른 닉네임을 입력해 주세요");
@@ -324,7 +487,7 @@ export const ApiTest: Story = {
       nickname: "",
       gender: null,
       ageRange: null,
-      region: null,
+      region: [],
       checkList: [false, false, false],
     });
 
@@ -335,7 +498,10 @@ export const ApiTest: Story = {
 
   parameters: {
     msw: {
-      handlers: userInfoRegistrationHandlers,
+      handlers: [
+        ...userInfoRegistrationHandlers,
+        Default?.parameters?.msw.handlers[0],
+      ],
     },
   },
 
@@ -353,6 +519,7 @@ export const ApiTest: Story = {
     const $secondAgreementCheckbox = canvas.getByText(
       "개인정보 수집 및 이용 동의 (필수)",
     );
+    const $regionSelectButton = canvas.getByText("동네 설정하기");
 
     const $submitButton = canvas.getByText("회원가입");
 
@@ -380,6 +547,18 @@ export const ApiTest: Story = {
 
         await userEvent.click($firstAgreementCheckbox);
         await userEvent.click($secondAgreementCheckbox);
+
+        await userEvent.click($regionSelectButton);
+
+        const $regionSearchInput =
+          canvasElement.querySelector("#region-search")!;
+        await userEvent.type($regionSearchInput, "강남구 역삼동");
+
+        const $selectedRegion = await canvas.findByText(/강남구 역삼1동/);
+        await userEvent.click($selectedRegion);
+
+        const $confirmButton = canvas.getByText("확인");
+        await userEvent.click($confirmButton);
 
         await userEvent.click($submitButton);
 

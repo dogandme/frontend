@@ -6,7 +6,7 @@ interface NavigationBarProps {
   label?: React.ReactNode;
 }
 
-const NavigationBar = ({
+export const NavigationBar = ({
   componentType,
   button,
   label = <div className="invisible"></div>,
@@ -22,5 +22,3 @@ const NavigationBar = ({
     </nav>
   );
 };
-
-export default NavigationBar;
