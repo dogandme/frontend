@@ -39,6 +39,7 @@ export const usePostVerificationCode = () => {
     VerificationCodeRequestData
   >({
     mutationFn: postVerificationCode,
+    mutationKey: ["sendVerificationCode"],
   });
 };
 

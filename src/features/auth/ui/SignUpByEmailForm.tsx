@@ -142,6 +142,16 @@ const VerificationCode = () => {
   if (isSuccess) statusText = "인증되었습니다";
   if (isError) statusText = "인증코드를 다시 확인해 주세요";
 
+  const sendCodeResponseCacheArr = useMutationState({
+    filters: {
+      mutationKey: ["sendVerificationCode"],
+    },
+  });
+
+  const isErrorSendCode =
+    sendCodeResponseCacheArr[sendCodeResponseCacheArr.length - 1]?.status ===
+    "error";
+
   return (
     <div>
       <Input
@@ -155,7 +165,7 @@ const VerificationCode = () => {
         value={verificationCode}
         onChange={handleChange}
         isError={isError}
-        disabled={isEmptyEmail || !isValidEmail}
+        disabled={isEmptyEmail || !isValidEmail || isErrorSendCode}
         onBlur={handleBlur}
       />
       <p
