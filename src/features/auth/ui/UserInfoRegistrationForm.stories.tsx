@@ -50,10 +50,8 @@ export const Default: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get("http://localhost/addresses", (req) => {
-          const {
-            request: { url },
-          } = req;
+        http.get("http://localhost/addresses", ({ request }) => {
+          const { url } = request;
 
           const URLObject = new URL(url);
           const keyword = URLObject.searchParams.get("keyword");
