@@ -96,6 +96,24 @@ export const userInfoRegistrationHandlers = [
       },
     });
   }),
+
+  http.post<
+    PathParams,
+    {
+      nickname: string;
+    }
+  >("http://localhost/users/nickname", async ({ request }) => {
+    const { nickname } = await request.json();
+
+    if (nickname === "중복") {
+      return new HttpResponse(null, { status: 409 });
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
 ];
 
 // * 나중에 msw 사용을 대비하여 만들었습니다.
