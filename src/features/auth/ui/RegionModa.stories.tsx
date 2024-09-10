@@ -30,10 +30,7 @@ export const Default: Story = {
     return (
       <div className="flex flex-col gap-10">
         <div className="w-[360px] px-2 py-2">
-          <h1>RegionModal</h1>
-          <div className="border">
-            <RegionModal onClose={async () => {}} />
-          </div>
+          <RegionModal onClose={async () => {}} />
         </div>
       </div>
     );
