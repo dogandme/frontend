@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MutationState, useMutationState } from "@tanstack/react-query";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
@@ -129,8 +129,17 @@ const VerificationCode = () => {
 
   const CODE_LENGTH = 7;
 
+  const ref = useRef<HTMLInputElement>(null);
+
   const handleCheckButtonClick = () => {
-    postCheckCode({ email, authNum: verificationCode });
+    postCheckCode(
+      { email, authNum: verificationCode },
+      {
+        onError: () => {
+          ref.current?.focus();
+        },
+      },
+    );
   };
 
   const isValidEmail = validateEmail(email);
@@ -158,6 +167,7 @@ const VerificationCode = () => {
     <div>
       <div className="flex items-end justify-between gap-2">
         <Input
+          ref={ref}
           componentType="outlinedText"
           id="verification-code"
           name="verificationCode"
