@@ -114,3 +114,29 @@ export const useUserInfoRegistrationFormStore =
     setRegion: (region) => set({ region }),
     setCheckList: (checkList) => set({ checkList }),
   }));
+
+interface SignUpByEmailFormStore {
+  email: string;
+  verificationCode: string;
+  password: string;
+  passwordConfirm: string;
+
+  setEmail: (email: string) => void;
+  setVerificationCode: (verificationCode: string) => void;
+  setPassword: (password: string) => void;
+  setPasswordConfirm: (passwordConfirm: string) => void;
+}
+
+export const useSignUpByEmailFormStore = create<SignUpByEmailFormStore>(
+  (set) => ({
+    email: "",
+    verificationCode: "",
+    password: "",
+    passwordConfirm: "",
+
+    setEmail: (email) => set({ email }),
+    setVerificationCode: (verificationCode) => set({ verificationCode }),
+    setPassword: (password) => set({ password }),
+    setPasswordConfirm: (passwordConfirm) => set({ passwordConfirm }),
+  }),
+);
