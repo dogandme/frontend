@@ -105,6 +105,9 @@ const VerificationCode = () => {
   const setVerificationCode = useSignUpByEmailFormStore(
     (state) => state.setVerificationCode,
   );
+  const setIsVerificationCodeCorrect = useSignUpByEmailFormStore(
+    (state) => state.setIsVerificationCodeCorrect,
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: verificationCode } = e.target;
@@ -126,10 +129,22 @@ const VerificationCode = () => {
     isSuccess,
   } = usePostCheckVerificationCode();
 
+  const CODE_LENGTH = 7;
+
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
-    postCheckCode({ email, authNum: value });
+    postCheckCode(
+      { email, authNum: value },
+      {
+        onSuccess: () => {
+          setIsVerificationCodeCorrect(true);
+        },
+        onError: () => {
+          setIsVerificationCodeCorrect(false);
+        },
+      },
+    );
   };
 
   let statusText = "";
@@ -148,7 +163,7 @@ const VerificationCode = () => {
         type="text"
         placeholder="인증코드 7자리를 입력해 주세요"
         statusText={undefined}
-        maxLength={7}
+        maxLength={CODE_LENGTH}
         value={verificationCode}
         onChange={handleChange}
         isError={isError}
@@ -264,37 +279,54 @@ const SignUpByEmailForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { email, password, passwordConfirm } =
+    const { email, password, passwordConfirm, isVerificationCodeCorrect } =
       useSignUpByEmailFormStore.getState();
+
+    const isEmailEmpty = email.length === 0;
+    const isPasswordEmpty = password.length === 0;
+    const isPasswordConfirmEmpty = passwordConfirm.length === 0;
+
+    if (isEmailEmpty || isPasswordEmpty || isPasswordConfirmEmpty) {
+      // todo: snackbar 띄우기
+      alert("이메일 또는 비밀번호를 입력해 주세요");
+      return;
+    }
+
+    const isMatchedPassword = password === passwordConfirm;
+
+    const isValidEmailAndPassword =
+      validateEmail(email) && validatePassword(password) && isMatchedPassword;
+
+    if (!isValidEmailAndPassword) {
+      // todo: snackbar 띄우기
+      alert("이메일 또는 비밀번호를 올바르게 입력해 주세요");
+      return;
+    }
 
     const canSignUp =
       validateEmail(email) &&
       validatePassword(password) &&
-      password === passwordConfirm;
+      isMatchedPassword &&
+      isVerificationCodeCorrect;
 
-    if (!canSignUp) {
-      // todo: snackbar 띄우기
-      alert("이메일과 비밀번호를 모두 입력해 주세요");
-      return;
-    }
+    if (canSignUp)
+      postSignUpByEmail(
+        { email, password },
+        {
+          onSuccess: ({ content }) => {
+            const { authorization, role } = content;
 
-    postSignUpByEmail(
-      { email, password },
-      {
-        onSuccess: ({ content }) => {
-          const { authorization, role } = content;
+            setToken(authorization);
+            setRole(role);
 
-          setToken(authorization);
-          setRole(role);
-
-          navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
+            navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
+          },
+          onError: (error) => {
+            // todo: snackbar 띄우기
+            alert(error.message);
+          },
         },
-        onError: (error) => {
-          // todo: snackbar 띄우기
-          alert(error.message);
-        },
-      },
-    );
+      );
   };
 
   return (
