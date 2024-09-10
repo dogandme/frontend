@@ -18,7 +18,7 @@ import {
 } from "../store";
 
 // TODO inputRef 로 비제어 컴포넌트로 관리하기
-const AddressesSearchInput = () => {
+const RegionSearchInput = () => {
   const [keyword, setKeyword] = useState<string>("");
   const [isQueryEnabled, setIsQueryEnabled] = useState<boolean>(false);
   const setAddressesList = useAddressModalStore(
@@ -62,7 +62,7 @@ const AddressesSearchInput = () => {
   );
 };
 
-const SearchAddressesByGPSButton = () => {
+const SearchRegionByGPSButton = () => {
   const [position, setPosition] = useState<LatLng>({ lat: 0, lng: 0 });
   const setAddressesList = useAddressModalStore(
     (state) => state.setAddressList,
@@ -173,7 +173,7 @@ const SearchAddressControlList = ({
   );
 };
 
-const SearchedAddressList = () => {
+const SearchedRegionList = () => {
   const addressList = useAddressModalStore((state) => state.addressList);
 
   if (addressList.length === 0) {
@@ -204,7 +204,7 @@ const SearchedAddressList = () => {
   );
 };
 
-const SelectedAddressList = () => {
+const SelectedRegionList = () => {
   const region = useUserInfoRegistrationFormStore((state) => state.region);
   const setRegion = useUserInfoRegistrationFormStore(
     (state) => state.setRegion,
@@ -276,24 +276,24 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
           height: "calc(100% - 6rem)",
         }}
       >
-        <div className="flex flex-col gap-4">
+        <section className="flex flex-col gap-4">
           {/* 검색창 */}
-          <AddressesSearchInput />
+          <RegionSearchInput />
           {/* 현재 위치로 찾기 버튼 */}
-          <SearchAddressesByGPSButton />
-        </div>
-        <div className="flex flex-col flex-grow justify-between ">
+          <SearchRegionByGPSButton />
+        </section>
+        <section className="flex flex-col flex-grow justify-between ">
           <div>
             {/* API 검색 결과 리스트 */}
-            <SearchedAddressList />
+            <SearchedRegionList />
           </div>
           <div className="flex flex-col gap-4 pb-8">
             {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
-            <SelectedAddressList />
+            <SelectedRegionList />
             {/* 확인 버튼 */}
             <RegionModalCloseButton onClose={onClose} />
           </div>
-        </div>
+        </section>
       </section>
     </Modal>
   );
