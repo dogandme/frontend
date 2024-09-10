@@ -88,7 +88,6 @@ interface UserInfoRegistrationFormStore {
   isValidNickname: boolean;
   gender: Gender;
   ageRange: AgeRange;
-  // TODO 상태 명 변경하기
   region: Address[];
   checkList: CheckedList;
 
@@ -122,6 +121,7 @@ export const useUserInfoRegistrationFormStore =
     setCheckList: (checkList) => set({ checkList }),
   }));
 
+
 interface AddressModalStore {
   addressList: AddressResponse;
   setAddressList: (addressList: AddressResponse) => void;
@@ -131,3 +131,30 @@ export const useAddressModalStore = create<AddressModalStore>((set) => ({
   addressList: [],
   setAddressList: (addressList) => set({ addressList }),
 }));
+
+interface SignUpByEmailFormStore {
+  email: string;
+  verificationCode: string;
+  password: string;
+  passwordConfirm: string;
+
+  setEmail: (email: string) => void;
+  setVerificationCode: (verificationCode: string) => void;
+  setPassword: (password: string) => void;
+  setPasswordConfirm: (passwordConfirm: string) => void;
+}
+
+export const useSignUpByEmailFormStore = create<SignUpByEmailFormStore>(
+  (set) => ({
+    email: "",
+    verificationCode: "",
+    password: "",
+    passwordConfirm: "",
+
+    setEmail: (email) => set({ email }),
+    setVerificationCode: (verificationCode) => set({ verificationCode }),
+    setPassword: (password) => set({ password }),
+    setPasswordConfirm: (passwordConfirm) => set({ passwordConfirm }),
+  }),
+);
+

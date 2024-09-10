@@ -1,5 +1,73 @@
 import { http, HttpResponse, PathParams } from "msw";
 
+export const signUpByEmailHandlers = [
+  http.post<
+    PathParams,
+    {
+      email: string;
+    }
+  >("http://localhost/users/auth", async ({ request }) => {
+    const { email } = await request.json();
+
+    const isDuplicateEmail = email === "hihihi@naver.com";
+
+    if (isDuplicateEmail) {
+      return HttpResponse.json(
+        {
+          code: 409,
+          message: "FAIL",
+        },
+        { status: 409, statusText: "Conflict" },
+      );
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+  http.post<
+    PathParams,
+    {
+      email: string;
+      authNum: string;
+    }
+  >("http://localhost/users/auth/check", async ({ request }) => {
+    const { authNum } = await request.json();
+
+    if (authNum === "1111111") {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    }
+
+    return new HttpResponse(null, { status: 401 });
+  }),
+  http.post<
+    PathParams,
+    {
+      email: string;
+      password: string;
+    }
+  >("http://localhost/users", async ({ request }) => {
+    const { email } = await request.json();
+
+    if (email === "hihihi@naver.com") {
+      return new HttpResponse(null, { status: 409 });
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        authorization: "token",
+        role: "ROLE_NONE",
+      },
+    });
+  }),
+];
+
 export const userInfoRegistrationHandlers = [
   http.put<
     PathParams,
@@ -31,4 +99,7 @@ export const userInfoRegistrationHandlers = [
 ];
 
 // * 나중에 msw 사용을 대비하여 만들었습니다.
-export const handlers = [...userInfoRegistrationHandlers];
+export const handlers = [
+  ...signUpByEmailHandlers,
+  ...userInfoRegistrationHandlers,
+];
