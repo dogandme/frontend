@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, within, spyOn, waitFor } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
-import { DELAY } from "../constants";
+import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { useUserInfoRegistrationFormStore } from "../store";
 import { RegionModal } from "./RegionModal";
 
@@ -229,7 +229,7 @@ export const Default: Story = {
     const $regionSearchInput = canvasElement.querySelector("#region-search")!;
 
     await step(
-      `장소 입력창은 디바운스 처리가 되어 있어  ${DELAY}ms 이후 API 요청을 보낸다.`,
+      `장소 입력창은 디바운스 처리가 되어 있어  ${REGION_API_DEBOUNCE_DELAY}ms 이후 API 요청을 보낸다.`,
       async () => {
         await userEvent.type($regionSearchInput, CORRECT_ADDRESS_DOBONG);
 
@@ -238,7 +238,7 @@ export const Default: Story = {
           () => {
             expect(fetchSpy).toHaveBeenCalledTimes(1);
           },
-          { timeout: DELAY + 100 },
+          { timeout: REGION_API_DEBOUNCE_DELAY + 100 },
         );
       },
     );
@@ -258,7 +258,7 @@ export const Default: Story = {
           () => {
             expect(fetchSpy).not.toHaveBeenCalled();
           },
-          { timeout: DELAY + 100 },
+          { timeout: REGION_API_DEBOUNCE_DELAY + 100 },
         );
       },
     );
@@ -276,7 +276,7 @@ export const Default: Story = {
             expect($searchedResult).toBeInTheDocument();
           },
           {
-            timeout: DELAY + 100,
+            timeout: REGION_API_DEBOUNCE_DELAY + 100,
           },
         );
       },
@@ -293,7 +293,7 @@ export const Default: Story = {
     //         expect($searchedResult).toBeInTheDocument();
     //       },
     //       {
-    //         timeout: DELAY + 100,
+    //         timeout: REGION_API_DEBOUNCE_DELAY + 100,
     //       },
     //     );
     //   },

@@ -11,7 +11,7 @@ import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
 import { useGetAddressByKeyword, useGetAddressByLatLng } from "../api/region";
 import type { LatLng } from "../api/region";
-import { DELAY } from "../constants";
+import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { errorMessage } from "../constants";
 import {
   useAddressModalStore,
@@ -60,7 +60,7 @@ const RegionSearchInput = () => {
     }
     timerId.current = setTimeout(() => {
       setIsQueryEnabled(value.length > 0 ? true : false);
-    }, DELAY);
+    }, REGION_API_DEBOUNCE_DELAY);
   };
 
   return (
