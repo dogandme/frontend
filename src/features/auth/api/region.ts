@@ -9,7 +9,7 @@ export interface LatLng {
 
 type AddressKeyword = string;
 
-interface Address {
+export interface Address {
   id: number;
   province: string;
   cityCounty: string;

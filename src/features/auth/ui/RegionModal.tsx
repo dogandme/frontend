@@ -12,7 +12,10 @@ import { useGetAddressByKeyword, useGetAddressByLatLng } from "../api/region";
 import type { LatLng } from "../api/region";
 import { DELAY } from "../constants";
 import { errorMessage } from "../constants";
-import { useAddressModalStore } from "../store";
+import {
+  useAddressModalStore,
+  useUserInfoRegistrationFormStore,
+} from "../store";
 
 // TODO inputRef 로 비제어 컴포넌트로 관리하기
 const AddressesSearchInput = () => {
@@ -137,6 +140,39 @@ const SearchAddressesByGPSButton = () => {
   );
 };
 
+const SearchAddressControlList = ({
+  cityCounty,
+  district,
+}: {
+  cityCounty: string;
+  district: string;
+}) => {
+  const region = useUserInfoRegistrationFormStore((state) => state.region);
+  const setRegion = useUserInfoRegistrationFormStore(
+    (state) => state.setRegion,
+  );
+  const address = `${cityCounty} ${district}`;
+
+  const handleRegion = () => {
+    if (region.includes(address)) {
+      setRegion(region.filter((region) => region !== address));
+      return;
+    }
+    setRegion([...region, address]);
+  };
+
+  return (
+    // TODO 추가 className 받을 수 있도록 변경하기
+    // TODO 현재 폰트가 인식 되지 않고 있음
+    <List.Item
+      style={{
+        justifyContent: "start",
+      }}
+      onClick={handleRegion}
+    >{`${cityCounty} ${district}`}</List.Item>
+  );
+};
+
 const SearchedAddressList = () => {
   const addressList = useAddressModalStore((state) => state.addressList);
 
@@ -153,39 +189,82 @@ const SearchedAddressList = () => {
           justifyContent: "start",
         }}
       >
-        {addressList.map((region , idx) => {
-          const {cityCounty , district} = region;
-
+        {addressList.map((address) => {
+          const { cityCounty, district, id } = address;
           return (
-            (
-              <List.Item
-                key={idx}
-                style={{ justifyContent: "start" }}
-                additionalClassName="title-3"
-              >
-                {cityCounty + district}
-              </List.Item>
-            ))}
-          )
+            <SearchAddressControlList
+              key={id}
+              cityCounty={cityCounty}
+              district={district}
+            />
+          );
         })}
       </List>
     </section>
   );
 };
 
-export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
-  // TODO API 요청으로 받아오기
-  const regionList = [
-    "영등포 1동",
-    "영등포 2동",
-    "영등포 3동",
-    "영등포 4동",
-    "영등포 5동",
-    "영등포 6동",
-    "영등포 7동",
-  ];
-  const selectedRegionList = ["영등포 1동", "영등포 2동", "영등포 3동"];
+const SelectedAddressList = () => {
+  const region = useUserInfoRegistrationFormStore((state) => state.region);
+  const setRegion = useUserInfoRegistrationFormStore(
+    (state) => state.setRegion,
+  );
 
+  if (region.length === 0) {
+    return <section className="py-2 flex flex-col gap-4"></section>;
+  }
+
+  const handleRemoveRegion = (address: string) => {
+    setRegion(region.filter((region) => region !== address));
+  };
+
+  return (
+    <section className="py-2 flex flex-col gap-4">
+      <p className="title-2">선택된 동네</p>
+      <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
+        {region.map((address, idx) => (
+          <li className="flex flex-shrink-0" key={idx}>
+            <ActionChip
+              variant="outlined"
+              label={address}
+              trailingIcon={<CancelIcon width={20} height={20} />}
+              controlledIsSelected={true}
+              key={idx}
+              onClick={() => handleRemoveRegion(address)}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
+
+const RegionModalCloseButton = ({
+  onClose,
+}: {
+  onClose: () => Promise<void>;
+}) => {
+  const region = useUserInfoRegistrationFormStore((state) => state.region);
+  const handleCloseRegionModal = () => {
+    if (region.length === 0) {
+      throw new Error(errorMessage.NON_SELECTED_ADDRESS);
+    }
+    onClose();
+  };
+
+  return (
+    <Button
+      colorType="primary"
+      variant="filled"
+      size="medium"
+      onClick={handleCloseRegionModal}
+    >
+      확인
+    </Button>
+  );
+};
+
+export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
   return (
     <Modal modalType="fullPage">
       {/* Header */}
@@ -205,58 +284,14 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
         </div>
         <div className="flex flex-col flex-grow justify-between ">
           <div>
-            {/* 검색 리스트 */}
-            <section className="flex flex-col gap-4">
-              {regionList.length > 0 && (
-                <>
-                  <h1 className="title-2 text-grey-900">검색 결과</h1>
-                  <List
-                    style={{
-                      maxHeight: "18rem",
-                      overflowY: "auto",
-                      justifyContent: "start",
-                    }}
-                  >
-                    {regionList.map((region, idx) => (
-                      <List.Item
-                        key={idx}
-                        style={{ justifyContent: "start" }}
-                        additionalClassName="title-3"
-                      >
-                        {region}
-                      </List.Item>
-                    ))}
-                  </List>
-                </>
-              )}
-            </section>
+            {/* API 검색 결과 리스트 */}
+            <SearchedAddressList />
           </div>
           <div className="flex flex-col gap-4 pb-8">
-            {/* 검색 결과 리스트 */}
-            <section className="py-2 flex flex-col gap-4">
-              {selectedRegionList.length > 0 && (
-                <>
-                  <p className="title-2">선택된 동네</p>
-                  <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
-                    {selectedRegionList.map((selectedRegion, idx) => (
-                      <li className="flex flex-shrink-0">
-                        <ActionChip
-                          variant="outlined"
-                          label={selectedRegion}
-                          trailingIcon={<CancelIcon width={20} height={20} />}
-                          unControlledInitialIsSelect={true}
-                          key={idx}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </section>
+            {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
+            <SelectedAddressList />
             {/* 확인 버튼 */}
-            <Button colorType="primary" variant="filled" size="medium">
-              확인
-            </Button>
+            <RegionModalCloseButton onClose={onClose} />
           </div>
         </div>
       </section>
