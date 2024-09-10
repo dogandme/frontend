@@ -81,7 +81,7 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
 type Gender = "FEMALE" | "MALE" | null;
 type AgeRange = 10 | 20 | 30 | 40 | 50 | null;
 type CheckedList = boolean[];
-type Address = string;
+type Address = { address: string; id: number };
 
 interface UserInfoRegistrationFormStore {
   nickname: string;
@@ -96,7 +96,6 @@ interface UserInfoRegistrationFormStore {
   setIsValidNickname: (isValidNickname: boolean) => void;
   setGender: (gender: Gender) => void;
   setAgeRange: (birth: AgeRange) => void;
-  // TODO 상태 명 변경하기
   setRegion: (region: Address[]) => void;
   setCheckList: (checkList: CheckedList) => void;
 }
@@ -116,8 +115,8 @@ export const useUserInfoRegistrationFormStore =
     setAgeRange: (birth) => set({ ageRange: birth }),
     setRegion: (region) =>
       set({
-        region: region.sort((prev: string, cur: string) =>
-          prev.localeCompare(cur),
+        region: region.sort((prev, cur) =>
+          prev.address.localeCompare(cur.address),
         ),
       }),
     setCheckList: (checkList) => set({ checkList }),

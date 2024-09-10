@@ -34,7 +34,7 @@ export const Default: Story = {
       nickname: "",
       gender: null,
       ageRange: null,
-      region: null,
+      region: [],
       checkList: [false, false, false],
     });
 

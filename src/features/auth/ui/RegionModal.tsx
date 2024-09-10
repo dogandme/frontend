@@ -141,23 +141,27 @@ const SearchRegionByGPSButton = () => {
 };
 
 const SearchAddressControlList = ({
+  province,
   cityCounty,
   district,
+  id,
 }: {
+  province: string;
   cityCounty: string;
   district: string;
+  id: number;
 }) => {
   const region = useUserInfoRegistrationFormStore((state) => state.region);
   const setRegion = useUserInfoRegistrationFormStore(
     (state) => state.setRegion,
   );
-  const address = `${cityCounty} ${district}`;
+  const address = `${province} ${cityCounty} ${district}`;
 
   const handleRegion = () => {
-    if (region.includes(address)) {
+    if (region.some((data) => data.address === address)) {
       return;
     }
-    setRegion([...region, address]);
+    setRegion([...region, { address, id }]);
   };
 
   return (
@@ -189,12 +193,14 @@ const SearchedRegionList = () => {
         }}
       >
         {addressList.map((address) => {
-          const { cityCounty, district, id } = address;
+          const { province, cityCounty, district, id } = address;
           return (
             <SearchAddressControlList
               key={id}
+              province={province}
               cityCounty={cityCounty}
               district={district}
+              id={id}
             />
           );
         })}
@@ -214,21 +220,21 @@ const SelectedRegionList = () => {
   }
 
   const handleRemoveRegion = (address: string) => {
-    setRegion(region.filter((region) => region !== address));
+    setRegion(region.filter((region) => region.address !== address));
   };
 
   return (
     <section className="py-2 flex flex-col gap-4">
       <p className="title-2">선택된 동네</p>
       <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
-        {region.map((address, idx) => (
-          <li className="flex flex-shrink-0" key={idx}>
+        {region.map(({ address, id }) => (
+          <li className="flex flex-shrink-0" key={id}>
             <ActionChip
               variant="outlined"
               label={address}
               trailingIcon={<CancelIcon width={20} height={20} />}
               controlledIsSelected={true}
-              key={idx}
+              key={id}
               onClick={() => handleRemoveRegion(address)}
             />
           </li>

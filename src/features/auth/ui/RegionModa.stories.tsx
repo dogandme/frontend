@@ -267,7 +267,9 @@ export const Default: Story = {
         const $selectedRegion = canvas.getAllByText(/영등포구 영등포 1가/)[1];
 
         const $regionTitle = canvas.getByText(/선택된 동네/);
-        expect(region.includes("영등포구 영등포 1가")).toBeTruthy();
+        expect(
+          region.some((data) => data.address === "영등포구 영등포 1가"),
+        ).toBeTruthy();
         expect($regionTitle).toBeInTheDocument();
         expect($selectedRegion).toBeInTheDocument();
 
@@ -276,7 +278,9 @@ export const Default: Story = {
           async () => {
             await userEvent.click($selectedRegion);
             const { region } = useUserInfoRegistrationFormStore.getState();
-            expect(region.includes("영등포구 영등포 1가")).toBeFalsy();
+            expect(
+              region.some((data) => data.address === "영등포구 영등포 1가"),
+            ).toBeFalsy();
             expect($selectedRegion).not.toBeInTheDocument();
           },
         );

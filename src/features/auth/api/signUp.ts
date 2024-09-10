@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { SIGN_UP_END_POINT } from "../constants";
+import { Address } from "./region";
 
 interface SignUpByEmailResponse {
   code: number;
@@ -52,7 +53,7 @@ interface UserInfoRegistrationRequest {
   nickname: string;
   gender: "FEMALE" | "MALE";
   age: 10 | 20 | 30 | 40 | 50;
-  region: string;
+  region: number[];
   marketingYn: boolean;
 }
 
