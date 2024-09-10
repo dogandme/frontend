@@ -137,6 +137,42 @@ const SearchAddressesByGPSButton = () => {
   );
 };
 
+const SearchedAddressList = () => {
+  const addressList = useAddressModalStore((state) => state.addressList);
+
+  if (addressList.length === 0) {
+    return <section className="flex flex-col gap-4"></section>;
+  }
+  return (
+    <section className="flex flex-col gap-4">
+      <h1 className="title-2 text-grey-900">검색 결과</h1>
+      <List
+        style={{
+          maxHeight: "18rem",
+          overflowY: "auto",
+          justifyContent: "start",
+        }}
+      >
+        {addressList.map((region , idx) => {
+          const {cityCounty , district} = region;
+
+          return (
+            (
+              <List.Item
+                key={idx}
+                style={{ justifyContent: "start" }}
+                additionalClassName="title-3"
+              >
+                {cityCounty + district}
+              </List.Item>
+            ))}
+          )
+        })}
+      </List>
+    </section>
+  );
+};
+
 export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
   // TODO API 요청으로 받아오기
   const regionList = [

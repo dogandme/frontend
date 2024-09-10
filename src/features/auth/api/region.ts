@@ -9,7 +9,19 @@ export interface LatLng {
 
 type AddressKeyword = string;
 
-const getAddressByKeyword = async (keyword: AddressKeyword) => {
+interface Address {
+  id: number;
+  province: string;
+  cityCounty: string;
+  district: string;
+  subDistrict: string;
+}
+
+export type AddressResponse = Address[];
+
+const getAddressByKeyword = async (
+  keyword: AddressKeyword,
+): Promise<AddressResponse> => {
   const response = await fetch(ADDRESSES_END_POINT.ADDRESS(keyword));
 
   // TODO 에러 바운더리로 처리하기
@@ -21,7 +33,8 @@ const getAddressByKeyword = async (keyword: AddressKeyword) => {
   if (data.code > 200) {
     throw new Error(data.message);
   }
-  return data;
+  const addressList = data.content as AddressResponse;
+  return addressList;
 };
 
 export const useGetAddressByKeyword = ({
@@ -31,31 +44,17 @@ export const useGetAddressByKeyword = ({
   keyword: AddressKeyword;
   enabled: boolean;
 }) => {
-  return useQuery<AddressResponse[], Error>({
+  return useQuery<AddressResponse, Error>({
     queryKey: ["addresses", keyword],
     queryFn: () => getAddressByKeyword(keyword),
     enabled,
   });
 };
 
-export interface AddressResponse {
-  code: number;
-  message: string;
-  content: [
-    {
-      id: number;
-      province: string;
-      cityCounty: string;
-      district: string;
-      subDistrict: string;
-    },
-  ];
-}
-
 const getAddressByLatLng = async ({
   lat,
   lng,
-}: LatLng): Promise<AddressResponse[]> => {
+}: LatLng): Promise<AddressResponse> => {
   const response = await fetch(
     ADDRESSES_END_POINT.CURRENT_POSITION({ lat, lng }),
   );
@@ -69,11 +68,13 @@ const getAddressByLatLng = async ({
   if (data.code > 200) {
     throw new Error(data.message);
   }
-  return data;
+
+  const addressList = data.content as AddressResponse;
+  return addressList;
 };
 
 export const useGetAddressByLatLng = ({ lat, lng }: LatLng) => {
-  return useQuery<AddressResponse[], Error>({
+  return useQuery<AddressResponse, Error>({
     queryKey: ["addresses", lat, lng],
     queryFn: () => getAddressByLatLng({ lat, lng }),
     enabled: !!lat && !!lng, // lat,  lng 가 모두 존재할 때만 쿼리를 실행합니다.
