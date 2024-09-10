@@ -17,7 +17,7 @@ export const inputStyles = {
       focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
-      disabled: "pointer-events-none",
+      disabled: "border-pink-100 bg-grey-0 text-grey-300 pointer-events-none",
       statusTextClass: "text-pink-500",
     },
   },
@@ -60,7 +60,7 @@ export const inputStyles = {
       focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
-      disabled: "pointer-events-none",
+      disabled: "border-pink-100 bg-grey-0 text-grey-300 pointer-events-none",
       statusTextClass: "text-pink-500",
     },
   },
@@ -81,7 +81,7 @@ export const inputStyles = {
       hover: "hover:bg-pink-100",
       focus: "focus-within:bg-pink-50",
       focusHover: "hover:focus-within:bg-pink-50",
-      disabled: "pointer-events-none",
+      disabled: "border-pink-100 bg-grey-0 text-grey-300 pointer-events-none",
       statusTextClass: "text-pink-500",
     },
   },
@@ -104,7 +104,7 @@ export const inputStyles = {
       focus: "focus-within:border-pink-500 focus-within:bg-grey-0",
       focusHover:
         "hover:focus-within:border-pink-500 hover:focus-within:bg-grey-0",
-      disabled: "pointer-events-none",
+      disabled: "border-pink-100 bg-grey-0 text-grey-300 pointer-events-none",
       statusTextClass: "text-pink-500",
     },
   },
