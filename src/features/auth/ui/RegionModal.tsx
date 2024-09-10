@@ -8,6 +8,7 @@ import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
+import { useGetAddressByKeyword, useGetAddressByLatLng } from "../api/region";
 import type { LatLng } from "../api/region";
 import { DELAY } from "../constants";
 import { errorMessage } from "../constants";
@@ -17,6 +18,11 @@ const AddressesSearchInput = () => {
   const [address, setAddress] = useState<string>("");
   const [isQueryEnabled, setIsQueryEnabled] = useState<boolean>(false);
   const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const query = useGetAddressByKeyword({
+    keyword: address,
+    enabled: isQueryEnabled,
+  });
 
   const handleDebouncedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -46,6 +52,8 @@ const SearchAddressesByGPSButton = () => {
   const [position, setPosition] = useState<LatLng>({ lat: 0, lng: 0 });
   const failureCount = useRef(0);
   const TIME_OUT = 1000;
+
+  const query = useGetAddressByLatLng(position);
 
   const successCallback = (position: GeolocationPosition) => {
     const {
