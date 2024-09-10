@@ -4,6 +4,7 @@ import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { userInfoRegistrationHandlers } from "@/mocks/handler";
+import { DELAY } from "../constants";
 import { useUserInfoRegistrationFormStore } from "../store";
 import UserInfoRegistrationForm from "./UserInfoRegistrationForm";
 
@@ -429,7 +430,10 @@ export const Default: Story = {
           canvasElement.querySelector("#region-search")!;
         await userEvent.type($regionSearchInput, "강남구 역삼동");
 
-        const $selectedRegion = await canvas.findByText(/강남구 역삼1동/);
+        await new Promise((res) => setTimeout(res, DELAY)); // API 요청이 끝날 때까지 안전하게 딜레이 추가
+
+        const $selectedRegion =
+          await canvas.findByText(/서울특별시 강남구 역삼1동/);
         await userEvent.click($selectedRegion);
 
         const $confirmButton = canvas.getByText("확인");
