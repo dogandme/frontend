@@ -21,8 +21,14 @@ export type AddressResponse = Address[];
 
 const getAddressByKeyword = async (
   keyword: AddressKeyword,
+  token: string,
 ): Promise<AddressResponse> => {
-  const response = await fetch(ADDRESSES_END_POINT.ADDRESS(keyword));
+  const response = await fetch(ADDRESSES_END_POINT.ADDRESS(keyword), {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  });
 
   // TODO 에러 바운더리로 처리하기
   if (!response.ok) {
@@ -38,15 +44,17 @@ const getAddressByKeyword = async (
 };
 
 export const useGetAddressByKeyword = ({
+  token,
   keyword,
   enabled,
 }: {
+  token: string;
   keyword: AddressKeyword;
   enabled: boolean;
 }) => {
   return useQuery<AddressResponse, Error>({
     queryKey: ["addresses", keyword],
-    queryFn: () => getAddressByKeyword(keyword),
+    queryFn: () => getAddressByKeyword(keyword, token),
     enabled,
   });
 };

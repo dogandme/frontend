@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, within, spyOn, waitFor } from "@storybook/test";
+import { useAuthStore } from "@/shared/store/auth";
 import { DELAY } from "../constants";
 import { useUserInfoRegistrationFormStore } from "../store";
 import { RegionModal } from "./RegionModal";
@@ -196,11 +197,15 @@ export const Default: Story = {
   },
 
   decorators: [
-    (Story) => (
-      <div id="root" className="w-96">
-        <Story />
-      </div>
-    ),
+    (Story) => {
+      useAuthStore.setState({ token: "Valid token" });
+
+      return (
+        <div id="root" className="w-96">
+          <Story />
+        </div>
+      );
+    },
   ],
 
   render: () => {

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useState } from "react";
+import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
 import { CancelIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";
@@ -23,13 +24,22 @@ import {
 const RegionSearchInput = () => {
   const [keyword, setKeyword] = useState<string>("");
   const [isQueryEnabled, setIsQueryEnabled] = useState<boolean>(false);
+  const { token } = useAuthStore.getState();
+
   const setAddressesList = useAddressModalStore(
     (state) => state.setAddressList,
   );
 
   const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  if (!token) {
+    throw new Error(
+      "토큰이 존재하지 않습니다. 토큰이 없다면 해당 컴포넌트를 렌더링 할 수 없습니다.",
+    );
+  }
+
   const { data, isError } = useGetAddressByKeyword({
+    token,
     keyword,
     enabled: isQueryEnabled,
   });
