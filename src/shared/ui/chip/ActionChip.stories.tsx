@@ -33,137 +33,175 @@ export const Default: Story = {
           <div className="flex gap-2 px-2 py-2 bg-grey-200 flex-wrap w-fit">
             <ActionChip
               variant="filled"
-              label="Filled"
-              controlledIsSelected={isSelected}
+              isSelected={isSelected}
               onClick={handleClick}
-            />
+            >
+              Filled
+            </ActionChip>
             <ActionChip
               variant="filled"
               leadingIcon={<CancelIcon width={20} height={20} />}
-              label="Filled"
-              controlledIsSelected={isSelected}
+              isSelected={isSelected}
               onClick={handleClick}
-            />
+            >
+              Filled
+            </ActionChip>
             <ActionChip
               variant="filled"
               trailingIcon={<CancelIcon width={20} height={20} />}
-              label="Filled"
-              controlledIsSelected={isSelected}
+              isSelected={isSelected}
               onClick={handleClick}
-            />
+            >
+              Filled
+            </ActionChip>
             <ActionChip
               variant="filled"
-              label="Filled"
               leadingIcon={<CancelIcon width={20} height={20} />}
               trailingIcon={<CancelIcon width={20} height={20} />}
-              controlledIsSelected={isSelected}
+              isSelected={isSelected}
               onClick={handleClick}
-            />
+            >
+              Filled
+            </ActionChip>
             <ActionChip
               variant="filled"
-              label="Filled"
               leadingIcon={<CancelIcon width={20} height={20} />}
               trailingIcon={<CancelIcon width={20} height={20} />}
-              controlledIsSelected={isSelected}
+              isSelected={isSelected}
               onClick={handleClick}
               disabled
-            />
+            >
+              Filled
+            </ActionChip>
           </div>
           <div className="flex gap-2 px-2 py-2 bg-grey-200 flex-wrap w-fit">
             <ActionChip
               variant="outlined"
-              label="outlined"
-              controlledIsSelected={isSelected}
+              isSelected={isSelected}
               onClick={handleClick}
-            />
+            >
+              Filled
+            </ActionChip>
             <ActionChip
               variant="outlined"
               leadingIcon={<CancelIcon width={20} height={20} />}
-              label="outlined"
-              controlledIsSelected={isSelected}
+              isSelected={isSelected}
               onClick={handleClick}
-            />
+            >
+              Filled
+            </ActionChip>
             <ActionChip
               variant="outlined"
               trailingIcon={<CancelIcon width={20} height={20} />}
-              label="outlined"
-              controlledIsSelected={isSelected}
+              isSelected={isSelected}
               onClick={handleClick}
-            />
+            >
+              Filled
+            </ActionChip>
             <ActionChip
               variant="outlined"
-              label="outlined"
               leadingIcon={<CancelIcon width={20} height={20} />}
               trailingIcon={<CancelIcon width={20} height={20} />}
-              controlledIsSelected={isSelected}
+              isSelected={isSelected}
               onClick={handleClick}
-            />
+            >
+              Filled
+            </ActionChip>
             <ActionChip
               variant="outlined"
-              label="outlined"
               leadingIcon={<CancelIcon width={20} height={20} />}
               trailingIcon={<CancelIcon width={20} height={20} />}
-              controlledIsSelected={isSelected}
+              isSelected={isSelected}
               onClick={handleClick}
               disabled
-            />
+            >
+              Filled
+            </ActionChip>
           </div>
         </div>
         <div>
           <div>
+            <h1>비제어 컴포넌트</h1>
             <div className="flex gap-2 px-2 py-2 bg-grey-200 flex-wrap w-fit">
-              <h1>비제어 컴포넌트</h1>
               <div className="flex gap-2 px-2 py-2 bg-grey-200 flex-wrap w-fit">
-                <ActionChip variant="filled" label="Filled" />
+                <ActionChip variant="filled" isSelected={true} isUncontrolled>
+                  Filled
+                </ActionChip>
                 <ActionChip
                   variant="filled"
                   leadingIcon={<CancelIcon width={20} height={20} />}
-                  label="Filled"
-                />
+                  isSelected={true}
+                  isUncontrolled
+                >
+                  Filled
+                </ActionChip>
                 <ActionChip
                   variant="filled"
                   trailingIcon={<CancelIcon width={20} height={20} />}
-                  label="Filled"
-                />
+                  isSelected={true}
+                  isUncontrolled
+                >
+                  Filled
+                </ActionChip>
                 <ActionChip
                   variant="filled"
-                  label="Filled"
                   leadingIcon={<CancelIcon width={20} height={20} />}
                   trailingIcon={<CancelIcon width={20} height={20} />}
-                />
+                  isSelected={true}
+                  isUncontrolled
+                >
+                  Filled
+                </ActionChip>
                 <ActionChip
                   variant="filled"
-                  label="Filled"
                   leadingIcon={<CancelIcon width={20} height={20} />}
                   trailingIcon={<CancelIcon width={20} height={20} />}
+                  isSelected={true}
+                  isUncontrolled
                   disabled
-                />
+                >
+                  Filled
+                </ActionChip>
               </div>
               <div className="flex gap-2 px-2 py-2 bg-grey-200 flex-wrap w-fit">
-                <ActionChip variant="outlined" label="outlined" />
+                <ActionChip variant="outlined" isSelected={true}>
+                  Filled
+                </ActionChip>
                 <ActionChip
                   variant="outlined"
                   leadingIcon={<CancelIcon width={20} height={20} />}
-                  label="outlined"
-                />
+                  isSelected={true}
+                  isUncontrolled
+                >
+                  Filled
+                </ActionChip>
                 <ActionChip
                   variant="outlined"
                   trailingIcon={<CancelIcon width={20} height={20} />}
-                  label="outlined"
-                />
+                  isSelected={true}
+                  isUncontrolled
+                >
+                  Filled
+                </ActionChip>
                 <ActionChip
                   variant="outlined"
-                  label="outlined"
                   leadingIcon={<CancelIcon width={20} height={20} />}
                   trailingIcon={<CancelIcon width={20} height={20} />}
-                />
+                  isSelected={true}
+                  isUncontrolled
+                >
+                  Filled
+                </ActionChip>
                 <ActionChip
                   variant="outlined"
-                  label="outlined"
                   leadingIcon={<CancelIcon width={20} height={20} />}
                   trailingIcon={<CancelIcon width={20} height={20} />}
+                  isSelected={true}
+                  isUncontrolled
                   disabled
-                />
+                >
+                  Filled
+                </ActionChip>
               </div>
             </div>
           </div>
