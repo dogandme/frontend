@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { AddressResponse } from "../api/region";
 
 interface PetInfoStore {
   profileImage: File | null;
@@ -114,3 +115,13 @@ export const useUserInfoRegistrationFormStore =
     setRegion: (region) => set({ region }),
     setCheckList: (checkList) => set({ checkList }),
   }));
+
+interface AddressModalStore {
+  addressList: AddressResponse[];
+  setAddressList: (addressList: AddressResponse[]) => void;
+}
+
+export const useAddressModalStore = create<AddressModalStore>((set) => ({
+  addressList: [],
+  setAddressList: (addressList) => set({ addressList }),
+}));
