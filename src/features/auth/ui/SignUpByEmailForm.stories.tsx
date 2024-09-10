@@ -132,20 +132,7 @@ export const Default: Story = {
 
     const $codeInput = canvasElement.querySelector("#verification-code")!;
 
-    await step("인증 코드 input 검사", async () => {
-      await step(
-        '인증 코드 Input을 focus하면, "인증코드 7자리를 입력해 주세요" 안내 문구가 뜬다.',
-        async () => {
-          await userEvent.click($codeInput);
-
-          const $statusText =
-            canvas.getByText("인증코드 7자리를 입력해 주세요");
-
-          expect($statusText).toBeInTheDocument();
-          expect($statusText).toHaveClass(statusTextColor.valid);
-        },
-      );
-
+    await step("인증 코드 검사", async () => {
       await step("숫자만 입력할 수 있다.", async () => {
         await userEvent.type($codeInput, "a123b4567");
 
@@ -159,6 +146,19 @@ export const Default: Story = {
 
         expect($codeInput).toHaveValue("1234567");
       });
+
+      await userEvent.clear($codeInput);
+
+      await step(
+        "입력한 인증 코드가 7자리일 경우, [확인] 버튼이 활성화 상태로 변한다.",
+        async () => {
+          const $confirmButton = canvas.getByText("확인");
+          expect($confirmButton).toBeDisabled();
+
+          await userEvent.type($codeInput, "1234567");
+          expect($confirmButton).toBeEnabled();
+        },
+      );
     });
   },
 };
