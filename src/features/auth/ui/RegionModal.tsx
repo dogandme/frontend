@@ -92,9 +92,9 @@ const SearchRegionByGPSButton = () => {
     (state) => state.setAddressOrigin,
   );
 
-  const isOriginLatLng = !(origin instanceof HTMLInputElement);
+  const isOriginLatLng = origin && !(origin instanceof HTMLInputElement);
   const additionalCLassName = isOriginLatLng
-    ? "border-tangerine-500 text-tangerine-500"
+    ? "border-tangerine-500 text-tangerine-500 active:border-tangerine-500 active:text-tangerine-500 hover:border-tangerine-500 hover:text-tangerine-500 focus-visible:border-tangerine-500 focus-visible:text-tangerine-500"
     : "";
 
   const failureCount = useRef(0);
