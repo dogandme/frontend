@@ -17,6 +17,10 @@ const getAddressByKeyword = async (keyword: AddressKeyword) => {
     throw new Error(errorMessage.UNKNOWN);
   }
   const data = await response.json();
+  // TODO 백엔드와 데이터 처리 어떻게 할지 살펴보기
+  if (data.code > 200) {
+    throw new Error(data.message);
+  }
   return data;
 };
 
@@ -27,7 +31,7 @@ export const useGetAddressByKeyword = ({
   keyword: AddressKeyword;
   enabled: boolean;
 }) => {
-  return useQuery<AddressResponse, Error, AddressKeyword>({
+  return useQuery<AddressResponse[], Error>({
     queryKey: ["addresses", keyword],
     queryFn: () => getAddressByKeyword(keyword),
     enabled,
@@ -51,7 +55,7 @@ export interface AddressResponse {
 const getAddressByLatLng = async ({
   lat,
   lng,
-}: LatLng): Promise<AddressResponse> => {
+}: LatLng): Promise<AddressResponse[]> => {
   const response = await fetch(
     ADDRESSES_END_POINT.CURRENT_POSITION({ lat, lng }),
   );
@@ -61,11 +65,15 @@ const getAddressByLatLng = async ({
     throw new Error(errorMessage.UNKNOWN);
   }
   const data = await response.json();
+  // TODO 백엔드와 데이터 처리 어떻게 할지 살펴보기
+  if (data.code > 200) {
+    throw new Error(data.message);
+  }
   return data;
 };
 
 export const useGetAddressByLatLng = ({ lat, lng }: LatLng) => {
-  return useQuery<AddressResponse, Error, LatLng>({
+  return useQuery<AddressResponse[], Error>({
     queryKey: ["addresses", lat, lng],
     queryFn: () => getAddressByLatLng({ lat, lng }),
     enabled: !!lat && !!lng, // lat,  lng 가 모두 존재할 때만 쿼리를 실행합니다.

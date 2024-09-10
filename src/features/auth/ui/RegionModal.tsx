@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
@@ -12,21 +12,32 @@ import { useGetAddressByKeyword, useGetAddressByLatLng } from "../api/region";
 import type { LatLng } from "../api/region";
 import { DELAY } from "../constants";
 import { errorMessage } from "../constants";
+import { useAddressModalStore } from "../store";
 
 // TODO inputRef 로 비제어 컴포넌트로 관리하기
 const AddressesSearchInput = () => {
-  const [address, setAddress] = useState<string>("");
+  const [keyword, setKeyword] = useState<string>("");
   const [isQueryEnabled, setIsQueryEnabled] = useState<boolean>(false);
+  const setAddressesList = useAddressModalStore(
+    (state) => state.setAddressList,
+  );
+
   const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const query = useGetAddressByKeyword({
-    keyword: address,
+  const { data, isError } = useGetAddressByKeyword({
+    keyword,
     enabled: isQueryEnabled,
   });
 
+  useEffect(() => {
+    if (data && !isError) {
+      setAddressesList(data);
+    }
+  }, [data, setAddressesList, isError]);
+
   const handleDebouncedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setAddress(value);
+    setKeyword(value);
     setIsQueryEnabled(false);
 
     if (timerId.current) {
@@ -50,10 +61,19 @@ const AddressesSearchInput = () => {
 
 const SearchAddressesByGPSButton = () => {
   const [position, setPosition] = useState<LatLng>({ lat: 0, lng: 0 });
+  const setAddressesList = useAddressModalStore(
+    (state) => state.setAddressList,
+  );
   const failureCount = useRef(0);
   const TIME_OUT = 1000;
 
-  const query = useGetAddressByLatLng(position);
+  const { data, isError } = useGetAddressByLatLng(position);
+
+  useEffect(() => {
+    if (data && !isError) {
+      setAddressesList(data);
+    }
+  }, [data, setAddressesList, isError]);
 
   const successCallback = (position: GeolocationPosition) => {
     const {
