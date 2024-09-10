@@ -118,13 +118,11 @@ export const useUserInfoRegistrationFormStore =
 interface SignUpByEmailFormStore {
   email: string;
   verificationCode: string;
-  isVerificationCodeCorrect: boolean;
   password: string;
   passwordConfirm: string;
 
   setEmail: (email: string) => void;
   setVerificationCode: (verificationCode: string) => void;
-  setIsVerificationCodeCorrect: (isVerificationCodeCorrect: boolean) => void;
   setPassword: (password: string) => void;
   setPasswordConfirm: (passwordConfirm: string) => void;
 }
@@ -133,14 +131,11 @@ export const useSignUpByEmailFormStore = create<SignUpByEmailFormStore>(
   (set) => ({
     email: "",
     verificationCode: "",
-    isVerificationCodeCorrect: false,
     password: "",
     passwordConfirm: "",
 
     setEmail: (email) => set({ email }),
     setVerificationCode: (verificationCode) => set({ verificationCode }),
-    setIsVerificationCodeCorrect: (isVerificationCodeCorrect) =>
-      set({ isVerificationCodeCorrect }),
     setPassword: (password) => set({ password }),
     setPasswordConfirm: (passwordConfirm) => set({ passwordConfirm }),
   }),

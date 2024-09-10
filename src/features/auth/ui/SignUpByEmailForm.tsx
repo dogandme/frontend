@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutationState } from "@tanstack/react-query";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib/overlay";
@@ -105,9 +106,6 @@ const VerificationCode = () => {
   const setVerificationCode = useSignUpByEmailFormStore(
     (state) => state.setVerificationCode,
   );
-  const setIsVerificationCodeCorrect = useSignUpByEmailFormStore(
-    (state) => state.setIsVerificationCodeCorrect,
-  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: verificationCode } = e.target;
@@ -134,17 +132,7 @@ const VerificationCode = () => {
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
-    postCheckCode(
-      { email, authNum: value },
-      {
-        onSuccess: () => {
-          setIsVerificationCodeCorrect(true);
-        },
-        onError: () => {
-          setIsVerificationCodeCorrect(false);
-        },
-      },
-    );
+    postCheckCode({ email, authNum: value });
   };
 
   let statusText = "";
@@ -276,10 +264,16 @@ const SignUpByEmailForm = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
 
+  const checkCodeResponseCacheArr = useMutationState({
+    filters: {
+      mutationKey: ["checkVerificationCode"],
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { email, password, passwordConfirm, isVerificationCodeCorrect } =
+    const { email, password, passwordConfirm } =
       useSignUpByEmailFormStore.getState();
 
     const isEmailEmpty = email.length === 0;
@@ -300,6 +294,16 @@ const SignUpByEmailForm = () => {
     if (!isValidEmailAndPassword) {
       // todo: snackbar 띄우기
       alert("이메일 또는 비밀번호를 올바르게 입력해 주세요");
+      return;
+    }
+
+    const isVerificationCodeCorrect =
+      checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1].status ===
+      "success";
+
+    if (!isVerificationCodeCorrect) {
+      // todo: snackbar 띄우기
+      alert("인증코드를 확인해 주세요");
       return;
     }
 
