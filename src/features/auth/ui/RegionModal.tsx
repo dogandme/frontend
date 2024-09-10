@@ -155,7 +155,6 @@ const SearchAddressControlList = ({
 
   const handleRegion = () => {
     if (region.includes(address)) {
-      setRegion(region.filter((region) => region !== address));
       return;
     }
     setRegion([...region, address]);
