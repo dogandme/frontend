@@ -344,8 +344,9 @@ const SignUpByEmailForm = () => {
 
     const lastCheckCodeResponse =
       checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1];
+    const isEmailChanged = lastCheckCodeResponse.variables?.email !== email;
 
-    if (lastCheckCodeResponse.variables?.email !== email) {
+    if (isEmailChanged) {
       alert("인증코드를 확인해 주세요");
       return;
     }
