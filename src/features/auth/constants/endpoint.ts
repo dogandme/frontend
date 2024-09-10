@@ -9,6 +9,7 @@ export const SIGN_UP_END_POINT = {
   EMAIL: "http://localhost:80/users",
   VERIFICATION_CODE: "http://localhost:80/users/auth",
   CHECK_VERIFICATION_CODE: "http://localhost:80/users/auth/check",
+  DUPLICATE_NICKNAME: "http://localhost:80/users/nickname",
   USER_INFO: "http://localhost:80/users/additional-info",
   PET_INFO: "http://localhost:80/pets",
 };
