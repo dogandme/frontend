@@ -154,19 +154,19 @@ const SearchRegionByGPSButton = () => {
 const SearchAddressControlList = ({
   province,
   cityCounty,
-  district,
+  subDistrict,
   id,
 }: {
   province: string;
   cityCounty: string;
-  district: string;
+  subDistrict: string;
   id: number;
 }) => {
   const region = useUserInfoRegistrationFormStore((state) => state.region);
   const setRegion = useUserInfoRegistrationFormStore(
     (state) => state.setRegion,
   );
-  const address = `${province} ${cityCounty} ${district}`;
+  const address = `${province} ${cityCounty} ${subDistrict}`;
 
   const handleRegion = () => {
     // TODO 에러 바운더리 나오면 에러 던지기
@@ -189,7 +189,7 @@ const SearchAddressControlList = ({
         justifyContent: "start",
       }}
       onClick={handleRegion}
-    >{`${province} ${cityCounty} ${district}`}</List.Item>
+    >{`${province} ${cityCounty} ${subDistrict}`}</List.Item>
   );
 };
 
@@ -209,12 +209,12 @@ const SearchedRegionList = () => {
           justifyContent: "start",
         }}
       >
-        {addressList.map(({ province, cityCounty, district, id }) => (
+        {addressList.map(({ province, cityCounty, subDistrict, id }) => (
           <SearchAddressControlList
             key={id}
             province={province}
             cityCounty={cityCounty}
-            district={district}
+            subDistrict={subDistrict}
             id={id}
           />
         ))}
