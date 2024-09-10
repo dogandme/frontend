@@ -91,10 +91,8 @@ const SearchRegionByGPSButton = () => {
     }
   }, [data, setAddressesList, isError]);
 
-  const successCallback = (position: GeolocationPosition) => {
-    const {
-      coords: { latitude: lat, longitude: lng },
-    } = position;
+  const successCallback = ({ coords }: GeolocationPosition) => {
+    const { latitude: lat, longitude: lng } = coords;
     setPosition({ lat, lng });
   };
 
@@ -115,7 +113,7 @@ const SearchRegionByGPSButton = () => {
           errorCallback,
           {
             ...options,
-            timeout: TIME_OUT / (2 ** failureCount.current * 100),
+            timeout: TIME_OUT + 2 ** failureCount.current * 100,
             enableHighAccuracy: false,
           },
         );
@@ -211,18 +209,15 @@ const SearchedRegionList = () => {
           justifyContent: "start",
         }}
       >
-        {addressList.map((address) => {
-          const { province, cityCounty, district, id } = address;
-          return (
-            <SearchAddressControlList
-              key={id}
-              province={province}
-              cityCounty={cityCounty}
-              district={district}
-              id={id}
-            />
-          );
-        })}
+        {addressList.map(({ province, cityCounty, district, id }) => (
+          <SearchAddressControlList
+            key={id}
+            province={province}
+            cityCounty={cityCounty}
+            district={district}
+            id={id}
+          />
+        ))}
       </List>
     </section>
   );
