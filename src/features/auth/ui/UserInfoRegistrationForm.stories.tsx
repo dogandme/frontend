@@ -453,6 +453,7 @@ export const Default: Story = {
 
     await userEvent.clear($nicknameInput);
     await userEvent.type($nicknameInput, validNickname);
+
     // todo: 유저 중복 snackbar 검사
 
     await step(
