@@ -121,7 +121,7 @@ const SearchRegionByGPSButton = () => {
       colorType="tertiary"
       size="medium"
       onClick={handleClick}
-      additionalClassName={additionalCLassName}
+      className={additionalCLassName}
     >
       <MapLocationSearchingIcon />
       <span>현재 위치로 찾기</span>
@@ -165,7 +165,7 @@ const SearchAddressControlList = ({
         justifyContent: "start",
       }}
       onClick={handleRegion}
-      additionalClassName="title-3"
+      className="title-3"
     >{`${province} ${cityCounty} ${subDistrict}`}</List.Item>
   );
 };
