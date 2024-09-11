@@ -46,23 +46,33 @@ const getAddressByKeyword = async (
 export const useGetAddressByKeyword = ({
   token,
   keyword,
+  enabled = false,
 }: {
   token: string;
   keyword: AddressKeyword;
+  enabled: boolean;
 }) => {
   return useQuery<AddressResponse, Error>({
     queryKey: ["addresses", keyword],
     queryFn: () => getAddressByKeyword(keyword, token),
-    enabled: false, // refetch를 활용한 debounce를 위해 false로 설정합니다.
+    enabled,
+    staleTime: 1000 * 60 * 5,
   });
 };
 
 const getAddressByLatLng = async ({
   lat,
   lng,
-}: LatLng): Promise<AddressResponse> => {
+  token,
+}: LatLng & { token: string }): Promise<AddressResponse> => {
   const response = await fetch(
     ADDRESSES_END_POINT.CURRENT_POSITION({ lat, lng }),
+    {
+      method: "GET",
+      headers: {
+        Authorization: token,
+      },
+    },
   );
 
   // TODO 에러 바운더리로 처리하기
@@ -79,10 +89,16 @@ const getAddressByLatLng = async ({
   return addressList;
 };
 
-export const useGetAddressByLatLng = ({ lat, lng }: LatLng) => {
+export const useGetAddressByLatLng = ({
+  lat,
+  lng,
+  token,
+  enabled = false,
+}: LatLng & { token: string; enabled: boolean }) => {
   return useQuery<AddressResponse, Error>({
     queryKey: ["addresses", lat, lng],
-    queryFn: () => getAddressByLatLng({ lat, lng }),
-    enabled: !!lat && !!lng, // lat,  lng 가 모두 존재할 때만 쿼리를 실행합니다.
+    queryFn: () => getAddressByLatLng({ lat, lng, token }),
+    enabled,
+    staleTime: 1000 * 60 * 5,
   });
 };

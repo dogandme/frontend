@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { useState } from "react";
+import { useRef } from "react";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
@@ -10,7 +9,6 @@ import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
 import { useGetAddressByKeyword, useGetAddressByLatLng } from "../api/region";
-import type { LatLng } from "../api/region";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { errorMessage } from "../constants";
 import {
@@ -20,47 +18,16 @@ import {
 
 // TODO 에러 처리 , 로딩 처리 작업 추가 예정
 const RegionSearchInput = () => {
-  const [keyword, setKeyword] = useState<string>("");
-  const { token } = useAuthStore.getState();
+  const setKeyword = useAddressModalStore((state) => state.setKeyword);
+  const setOrigin = useAddressModalStore((state) => state.setOrigin);
+
   const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const setAddressesList = useAddressModalStore(
-    (state) => state.setAddressList,
-  );
-  const setAddressOrigin = useAddressModalStore(
-    (state) => state.setAddressOrigin,
-  );
-
   const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  if (!token) {
-    throw new Error(
-      "토큰이 존재하지 않습니다. 토큰이 없다면 해당 컴포넌트를 렌더링 할 수 없습니다.",
-    );
-  }
-
-  const {
-    data,
-    isError,
-    refetch: debouncedFetch,
-  } = useGetAddressByKeyword({
-    token,
-    keyword,
-  });
-
-  useEffect(() => {
-    if (data && !isError) {
-      setAddressesList(data);
-      setAddressOrigin(inputRef.current as HTMLInputElement);
-    }
-  }, [data, isError, setAddressesList, setAddressOrigin]);
 
   const handleDebouncedChange = ({
     target,
   }: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = target;
-
-    setKeyword(value);
 
     if (timerId.current) {
       clearTimeout(timerId.current);
@@ -68,7 +35,8 @@ const RegionSearchInput = () => {
 
     timerId.current = setTimeout(() => {
       if (value.length > 0) {
-        debouncedFetch();
+        setKeyword(value);
+        setOrigin("keyword");
       }
     }, REGION_API_DEBOUNCE_DELAY);
   };
@@ -86,36 +54,23 @@ const RegionSearchInput = () => {
 };
 
 const SearchRegionByGPSButton = () => {
-  const [position, setPosition] = useState<LatLng>({ lat: 0, lng: 0 });
-  const origin = useAddressModalStore((state) => state.addressOrigin);
+  const origin = useAddressModalStore((state) => state.origin);
 
-  const setAddressesList = useAddressModalStore(
-    (state) => state.setAddressList,
-  );
-  const setAddressOrigin = useAddressModalStore(
-    (state) => state.setAddressOrigin,
-  );
+  const setPosition = useAddressModalStore((state) => state.setPosition);
+  const setOrigin = useAddressModalStore((state) => state.setOrigin);
 
-  const isOriginLatLng = origin && !(origin instanceof HTMLInputElement);
-  const additionalCLassName = isOriginLatLng
-    ? "border-tangerine-500 text-tangerine-500 active:border-tangerine-500 active:text-tangerine-500 hover:border-tangerine-500 hover:text-tangerine-500 focus-visible:border-tangerine-500 focus-visible:text-tangerine-500"
-    : "";
+  const additionalCLassName =
+    origin === "position"
+      ? "border-tangerine-500 text-tangerine-500 active:border-tangerine-500 active:text-tangerine-500 hover:border-tangerine-500 hover:text-tangerine-500 focus-visible:border-tangerine-500 focus-visible:text-tangerine-500"
+      : "";
 
   const failureCount = useRef(0);
   const TIME_OUT = 1000;
 
-  const { data, isError } = useGetAddressByLatLng(position);
-
-  useEffect(() => {
-    if (data && !isError) {
-      setAddressesList(data);
-      setAddressOrigin(position);
-    }
-  }, [data, isError, position, setAddressesList, setAddressOrigin]);
-
   const successCallback = ({ coords }: GeolocationPosition) => {
     const { latitude: lat, longitude: lng } = coords;
     setPosition({ lat, lng });
+    setOrigin("position");
   };
 
   // TODO 에러 바운더리로 스낵바 띄우기
@@ -216,20 +171,43 @@ const SearchAddressControlList = ({
 };
 
 const SearchedRegionList = () => {
-  const addressList = useAddressModalStore((state) => state.addressList);
-  const addressOrigin = useAddressModalStore((state) => state.addressOrigin);
+  const keyword = useAddressModalStore((state) => state.keyword);
+  const position = useAddressModalStore((state) => state.position);
+  const origin = useAddressModalStore((state) => state.origin);
 
-  const origin =
-    addressOrigin instanceof HTMLInputElement
-      ? addressOrigin.value
-      : "현재 위치";
+  const { token } = useAuthStore.getState();
 
-  if (addressList.length === 0) {
+  if (!token) {
+    throw new Error("로그인 후 다시 이용해주세요");
+  }
+
+  const isOriginFromKeyword = origin === "keyword";
+
+  const { data: addressListByKeyword } = useGetAddressByKeyword({
+    keyword,
+    token,
+    enabled: keyword.length > 0 && isOriginFromKeyword,
+  });
+
+  const { data: addressListByLatLng } = useGetAddressByLatLng({
+    ...position,
+    token,
+    enabled: !isOriginFromKeyword,
+  });
+
+  const addressList = isOriginFromKeyword
+    ? addressListByKeyword
+    : addressListByLatLng;
+
+  if (!addressList || addressList.length === 0) {
     return <section className="flex flex-col gap-4"></section>;
   }
+
   return (
     <section className="flex flex-col gap-4">
-      <h1 className="title-2 text-grey-900">{origin} 동네 검색 결과</h1>
+      <h1 className="title-2 text-grey-900">
+        {isOriginFromKeyword ? keyword : "현재 위치"} 동네 검색 결과
+      </h1>
       <List
         style={{
           maxHeight: "18rem",
