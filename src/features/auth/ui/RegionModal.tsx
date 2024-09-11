@@ -307,7 +307,6 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
     <Modal modalType="fullPage">
       {/* Header */}
       <CloseNavigationBar onClick={onClose} />
-      {/* TODO flex grow 가 왜 안되지 ? */}
       <section
         className="px-4 flex flex-col gap-8"
         style={{
