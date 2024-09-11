@@ -81,21 +81,21 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
 type Gender = "FEMALE" | "MALE" | null;
 type AgeRange = 10 | 20 | 30 | 40 | 50 | null;
 type CheckedList = boolean[];
-type Address = { address: string; id: number };
+type Region = { address: string; id: number };
 
 interface UserInfoRegistrationFormStore {
   nickname: string;
   isValidNickname: boolean;
   gender: Gender;
   ageRange: AgeRange;
-  region: Address[];
+  region: Region[];
   checkList: CheckedList;
 
   setNickname: (email: string) => void;
   setIsValidNickname: (isValidNickname: boolean) => void;
   setGender: (gender: Gender) => void;
   setAgeRange: (birth: AgeRange) => void;
-  setRegion: (region: Address[]) => void;
+  setRegion: (region: Region[]) => void;
   setCheckList: (checkList: CheckedList) => void;
 }
 
@@ -121,34 +121,34 @@ export const useUserInfoRegistrationFormStore =
     setCheckList: (checkList) => set({ checkList }),
   }));
 
-interface AddressModalState {
+interface RegionModalState {
   keyword: string;
   position: LatLng;
   origin: "keyword" | "position";
 }
 
-interface AddressModalActions {
+interface RegionModalActions {
   setKeyword: (keyword: string) => void;
   setPosition: (position: LatLng) => void;
   setOrigin: (origin: "keyword" | "position") => void;
-  resetAddressModalStore: () => void;
+  resetRegionModalStore: () => void;
 }
 
-const addressModalInitialState: AddressModalState = {
+const addressModalInitialState: RegionModalState = {
   keyword: "",
   position: { lat: 0, lng: 0 },
   origin: "keyword",
 };
 
-export const useAddressModalStore = create<
-  AddressModalState & AddressModalActions
+export const useRegionModalStore = create<
+  RegionModalState & RegionModalActions
 >((set) => ({
   ...addressModalInitialState,
 
   setKeyword: (keyword) => set({ keyword }),
   setPosition: (position) => set({ position }),
   setOrigin: (origin) => set({ origin }),
-  resetAddressModalStore: () => set(addressModalInitialState),
+  resetRegionModalStore: () => set(addressModalInitialState),
 }));
 
 interface SignUpByEmailFormStore {

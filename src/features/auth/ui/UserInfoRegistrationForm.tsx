@@ -278,7 +278,6 @@ const MyRegionList = () => {
             key={id}
             onClick={() => handleRemoveRegion(address)}
             isSelected={true}
-            isUncontrolled
           >
             {address}
           </ActionChip>

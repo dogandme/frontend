@@ -8,18 +8,18 @@ import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
-import { useGetAddressByKeyword, useGetAddressByLatLng } from "../api/region";
+import { useGetRegionByKeyword, useGetRegionByLatLng } from "../api/region";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { errorMessage } from "../constants";
 import {
-  useAddressModalStore,
+  useRegionModalStore,
   useUserInfoRegistrationFormStore,
 } from "../store";
 
 // TODO 에러 처리 , 로딩 처리 작업 추가 예정
 const RegionSearchInput = () => {
-  const setKeyword = useAddressModalStore((state) => state.setKeyword);
-  const setOrigin = useAddressModalStore((state) => state.setOrigin);
+  const setKeyword = useRegionModalStore((state) => state.setKeyword);
+  const setOrigin = useRegionModalStore((state) => state.setOrigin);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -54,10 +54,10 @@ const RegionSearchInput = () => {
 };
 
 const SearchRegionByGPSButton = () => {
-  const origin = useAddressModalStore((state) => state.origin);
+  const origin = useRegionModalStore((state) => state.origin);
 
-  const setPosition = useAddressModalStore((state) => state.setPosition);
-  const setOrigin = useAddressModalStore((state) => state.setOrigin);
+  const setPosition = useRegionModalStore((state) => state.setPosition);
+  const setOrigin = useRegionModalStore((state) => state.setOrigin);
 
   const additionalClassName =
     origin === "position"
@@ -129,7 +129,7 @@ const SearchRegionByGPSButton = () => {
   );
 };
 
-const SearchAddressControlList = ({
+const SearchRegionControlList = ({
   province,
   cityCounty,
   subDistrict,
@@ -171,9 +171,9 @@ const SearchAddressControlList = ({
 };
 
 const SearchedRegionList = () => {
-  const keyword = useAddressModalStore((state) => state.keyword);
-  const position = useAddressModalStore((state) => state.position);
-  const origin = useAddressModalStore((state) => state.origin);
+  const keyword = useRegionModalStore((state) => state.keyword);
+  const position = useRegionModalStore((state) => state.position);
+  const origin = useRegionModalStore((state) => state.origin);
 
   const { token } = useAuthStore.getState();
 
@@ -183,13 +183,13 @@ const SearchedRegionList = () => {
 
   const isOriginFromKeyword = origin === "keyword";
 
-  const { data: addressListByKeyword } = useGetAddressByKeyword({
+  const { data: addressListByKeyword } = useGetRegionByKeyword({
     keyword,
     token,
     enabled: keyword.length > 0 && isOriginFromKeyword,
   });
 
-  const { data: addressListByLatLng } = useGetAddressByLatLng({
+  const { data: addressListByLatLng } = useGetRegionByLatLng({
     ...position,
     token,
     enabled: !isOriginFromKeyword,
@@ -216,7 +216,7 @@ const SearchedRegionList = () => {
         }}
       >
         {addressList.map(({ province, cityCounty, subDistrict, id }) => (
-          <SearchAddressControlList
+          <SearchRegionControlList
             key={id}
             province={province}
             cityCounty={cityCounty}
@@ -255,7 +255,6 @@ const SelectedRegionList = () => {
               key={id}
               onClick={() => handleRemoveRegion(address)}
               isSelected={true}
-              isUncontrolled
             >
               {address}
             </ActionChip>
@@ -292,14 +291,14 @@ const RegionModalCloseButton = ({
 };
 
 export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
-  const resetAddressModalStore = useAddressModalStore(
-    (state) => state.resetAddressModalStore,
+  const resetRegionModalStore = useRegionModalStore(
+    (state) => state.resetRegionModalStore,
   );
 
   useEffect(() => {
     // 모달이 닫힌 후엔 모달 내부 내용을 초기화 하는 클린업 함수
     return () => {
-      resetAddressModalStore();
+      resetRegionModalStore();
     };
   }, []);
 
