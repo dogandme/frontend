@@ -7,9 +7,9 @@ export interface LatLng {
   lng: number;
 }
 
-type AddressKeyword = string;
+type RegionKeyword = string;
 
-export interface Address {
+export interface Region {
   id: number;
   province: string;
   cityCounty: string;
@@ -17,12 +17,12 @@ export interface Address {
   subDistrict: string;
 }
 
-export type AddressResponse = Address[];
+export type RegionResponse = Region[];
 
-const getAddressByKeyword = async (
-  keyword: AddressKeyword,
+const getRegionByKeyword = async (
+  keyword: RegionKeyword,
   token: string,
-): Promise<AddressResponse> => {
+): Promise<RegionResponse> => {
   const response = await fetch(ADDRESSES_END_POINT.ADDRESS(keyword), {
     method: "GET",
     headers: {
@@ -39,32 +39,40 @@ const getAddressByKeyword = async (
   if (data.code > 200) {
     throw new Error(data.message);
   }
-  const addressList = data.content as AddressResponse;
-  return addressList;
+  const regionList = data.content as RegionResponse;
+  return regionList;
 };
 
-export const useGetAddressByKeyword = ({
+export const useGetRegionByKeyword = ({
   token,
   keyword,
-  enabled,
+  enabled = false,
 }: {
   token: string;
-  keyword: AddressKeyword;
+  keyword: RegionKeyword;
   enabled: boolean;
 }) => {
-  return useQuery<AddressResponse, Error>({
-    queryKey: ["addresses", keyword],
-    queryFn: () => getAddressByKeyword(keyword, token),
+  return useQuery<RegionResponse, Error>({
+    queryKey: ["regiones", keyword],
+    queryFn: () => getRegionByKeyword(keyword, token),
     enabled,
+    staleTime: 1000 * 60 * 5,
   });
 };
 
-const getAddressByLatLng = async ({
+const getRegionByLatLng = async ({
   lat,
   lng,
-}: LatLng): Promise<AddressResponse> => {
+  token,
+}: LatLng & { token: string }): Promise<RegionResponse> => {
   const response = await fetch(
     ADDRESSES_END_POINT.CURRENT_POSITION({ lat, lng }),
+    {
+      method: "GET",
+      headers: {
+        Authorization: token,
+      },
+    },
   );
 
   // TODO 에러 바운더리로 처리하기
@@ -77,14 +85,20 @@ const getAddressByLatLng = async ({
     throw new Error(data.message);
   }
 
-  const addressList = data.content as AddressResponse;
-  return addressList;
+  const regionList = data.content as RegionResponse;
+  return regionList;
 };
 
-export const useGetAddressByLatLng = ({ lat, lng }: LatLng) => {
-  return useQuery<AddressResponse, Error>({
-    queryKey: ["addresses", lat, lng],
-    queryFn: () => getAddressByLatLng({ lat, lng }),
-    enabled: !!lat && !!lng, // lat,  lng 가 모두 존재할 때만 쿼리를 실행합니다.
+export const useGetRegionByLatLng = ({
+  lat,
+  lng,
+  token,
+  enabled = false,
+}: LatLng & { token: string; enabled: boolean }) => {
+  return useQuery<RegionResponse, Error>({
+    queryKey: ["regions", lat, lng],
+    queryFn: () => getRegionByLatLng({ lat, lng, token }),
+    enabled,
+    staleTime: 1000 * 60 * 5,
   });
 };

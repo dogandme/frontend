@@ -208,4 +208,4 @@ export const dogBreeds = [
   "풍산개",
 ];
 
-export const DELAY = 500;
+export const REGION_API_DEBOUNCE_DELAY = 500;

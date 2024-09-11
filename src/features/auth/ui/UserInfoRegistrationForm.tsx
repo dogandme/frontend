@@ -295,12 +295,13 @@ const MyRegionList = () => {
         <li className="flex flex-shrink-0" key={id}>
           <ActionChip
             variant="outlined"
-            label={address}
             trailingIcon={<CancelIcon width={20} height={20} />}
-            controlledIsSelected={true}
             key={id}
             onClick={() => handleRemoveRegion(address)}
-          />
+            isSelected={true}
+          >
+            {address}
+          </ActionChip>
         </li>
       ))}
     </ul>

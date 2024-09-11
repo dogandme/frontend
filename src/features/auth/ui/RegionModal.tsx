@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { useState } from "react";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
@@ -9,58 +8,37 @@ import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
-import { useGetAddressByKeyword, useGetAddressByLatLng } from "../api/region";
-import type { LatLng } from "../api/region";
-import { DELAY } from "../constants";
+import { useGetRegionByKeyword, useGetRegionByLatLng } from "../api/region";
+import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { errorMessage } from "../constants";
 import {
-  useAddressModalStore,
+  useRegionModalStore,
   useUserInfoRegistrationFormStore,
 } from "../store";
 
-// TODO inputRef 로 비제어 컴포넌트로 관리하기
 // TODO 에러 처리 , 로딩 처리 작업 추가 예정
-
 const RegionSearchInput = () => {
-  const [keyword, setKeyword] = useState<string>("");
-  const [isQueryEnabled, setIsQueryEnabled] = useState<boolean>(false);
-  const { token } = useAuthStore.getState();
+  const setKeyword = useRegionModalStore((state) => state.setKeyword);
+  const setOrigin = useRegionModalStore((state) => state.setOrigin);
 
-  const setAddressesList = useAddressModalStore(
-    (state) => state.setAddressList,
-  );
-
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  if (!token) {
-    throw new Error(
-      "토큰이 존재하지 않습니다. 토큰이 없다면 해당 컴포넌트를 렌더링 할 수 없습니다.",
-    );
-  }
-
-  const { data, isError } = useGetAddressByKeyword({
-    token,
-    keyword,
-    enabled: isQueryEnabled,
-  });
-
-  useEffect(() => {
-    if (data && !isError) {
-      setAddressesList(data);
-    }
-  }, [data, setAddressesList, isError]);
-
-  const handleDebouncedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setKeyword(value);
-    setIsQueryEnabled(false);
+  const handleDebouncedChange = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = target;
 
     if (timerId.current) {
       clearTimeout(timerId.current);
     }
+
     timerId.current = setTimeout(() => {
-      setIsQueryEnabled(value.length > 0 ? true : false);
-    }, DELAY);
+      if (value.length > 0) {
+        setKeyword(value);
+        setOrigin("keyword");
+      }
+    }, REGION_API_DEBOUNCE_DELAY);
   };
 
   return (
@@ -70,31 +48,29 @@ const RegionSearchInput = () => {
       leadingNode={<SearchIcon />}
       placeholder="동명(읍,면)으로 검색"
       onChange={handleDebouncedChange}
+      ref={inputRef}
     />
   );
 };
 
 const SearchRegionByGPSButton = () => {
-  const [position, setPosition] = useState<LatLng>({ lat: 0, lng: 0 });
-  const setAddressesList = useAddressModalStore(
-    (state) => state.setAddressList,
-  );
+  const origin = useRegionModalStore((state) => state.origin);
+
+  const setPosition = useRegionModalStore((state) => state.setPosition);
+  const setOrigin = useRegionModalStore((state) => state.setOrigin);
+
+  const additionalClassName =
+    origin === "position"
+      ? "border-tangerine-500 text-tangerine-500 active:border-tangerine-500 active:text-tangerine-500 hover:border-tangerine-500 hover:text-tangerine-500 focus-visible:border-tangerine-500 focus-visible:text-tangerine-500"
+      : "";
+
   const failureCount = useRef(0);
   const TIME_OUT = 1000;
 
-  const { data, isError } = useGetAddressByLatLng(position);
-
-  useEffect(() => {
-    if (data && !isError) {
-      setAddressesList(data);
-    }
-  }, [data, setAddressesList, isError]);
-
-  const successCallback = (position: GeolocationPosition) => {
-    const {
-      coords: { latitude: lat, longitude: lng },
-    } = position;
+  const successCallback = ({ coords }: GeolocationPosition) => {
+    const { latitude: lat, longitude: lng } = coords;
     setPosition({ lat, lng });
+    setOrigin("position");
   };
 
   // TODO 에러 바운더리로 스낵바 띄우기
@@ -114,7 +90,7 @@ const SearchRegionByGPSButton = () => {
           errorCallback,
           {
             ...options,
-            timeout: TIME_OUT / (2 ** failureCount.current * 100),
+            timeout: TIME_OUT + 2 ** failureCount.current * 100,
             enableHighAccuracy: false,
           },
         );
@@ -145,6 +121,7 @@ const SearchRegionByGPSButton = () => {
       colorType="tertiary"
       size="medium"
       onClick={handleClick}
+      className={additionalClassName}
     >
       <MapLocationSearchingIcon />
       <span>현재 위치로 찾기</span>
@@ -152,22 +129,22 @@ const SearchRegionByGPSButton = () => {
   );
 };
 
-const SearchAddressControlList = ({
+const SearchRegionControlList = ({
   province,
   cityCounty,
-  district,
+  subDistrict,
   id,
 }: {
   province: string;
   cityCounty: string;
-  district: string;
+  subDistrict: string;
   id: number;
 }) => {
   const region = useUserInfoRegistrationFormStore((state) => state.region);
   const setRegion = useUserInfoRegistrationFormStore(
     (state) => state.setRegion,
   );
-  const address = `${province} ${cityCounty} ${district}`;
+  const address = `${province} ${cityCounty} ${subDistrict}`;
 
   const handleRegion = () => {
     // TODO 에러 바운더리 나오면 에러 던지기
@@ -183,26 +160,54 @@ const SearchAddressControlList = ({
   };
 
   return (
-    // TODO 추가 className 받을 수 있도록 변경하기
-    // TODO 현재 폰트가 인식 되지 않고 있음
     <List.Item
       style={{
         justifyContent: "start",
       }}
       onClick={handleRegion}
-    >{`${province} ${cityCounty} ${district}`}</List.Item>
+      additionalClassName="title-3"
+    >{`${province} ${cityCounty} ${subDistrict}`}</List.Item>
   );
 };
 
 const SearchedRegionList = () => {
-  const addressList = useAddressModalStore((state) => state.addressList);
+  const keyword = useRegionModalStore((state) => state.keyword);
+  const position = useRegionModalStore((state) => state.position);
+  const origin = useRegionModalStore((state) => state.origin);
 
-  if (addressList.length === 0) {
+  const { token } = useAuthStore.getState();
+
+  if (!token) {
+    throw new Error("로그인 후 다시 이용해주세요");
+  }
+
+  const isOriginFromKeyword = origin === "keyword";
+
+  const { data: addressListByKeyword } = useGetRegionByKeyword({
+    keyword,
+    token,
+    enabled: keyword.length > 0 && isOriginFromKeyword,
+  });
+
+  const { data: addressListByLatLng } = useGetRegionByLatLng({
+    ...position,
+    token,
+    enabled: !isOriginFromKeyword,
+  });
+
+  const addressList = isOriginFromKeyword
+    ? addressListByKeyword
+    : addressListByLatLng;
+
+  if (!addressList || addressList.length === 0) {
     return <section className="flex flex-col gap-4"></section>;
   }
+
   return (
     <section className="flex flex-col gap-4">
-      <h1 className="title-2 text-grey-900">검색 결과</h1>
+      <h1 className="title-2 text-grey-900">
+        {isOriginFromKeyword ? keyword : "현재 위치"} 동네 검색 결과
+      </h1>
       <List
         style={{
           maxHeight: "18rem",
@@ -210,18 +215,15 @@ const SearchedRegionList = () => {
           justifyContent: "start",
         }}
       >
-        {addressList.map((address) => {
-          const { province, cityCounty, district, id } = address;
-          return (
-            <SearchAddressControlList
-              key={id}
-              province={province}
-              cityCounty={cityCounty}
-              district={district}
-              id={id}
-            />
-          );
-        })}
+        {addressList.map(({ province, cityCounty, subDistrict, id }) => (
+          <SearchRegionControlList
+            key={id}
+            province={province}
+            cityCounty={cityCounty}
+            subDistrict={subDistrict}
+            id={id}
+          />
+        ))}
       </List>
     </section>
   );
@@ -249,12 +251,13 @@ const SelectedRegionList = () => {
           <li className="flex flex-shrink-0" key={id}>
             <ActionChip
               variant="outlined"
-              label={address}
               trailingIcon={<CancelIcon width={20} height={20} />}
-              controlledIsSelected={true}
               key={id}
               onClick={() => handleRemoveRegion(address)}
-            />
+              isSelected={true}
+            >
+              {address}
+            </ActionChip>
           </li>
         ))}
       </ul>
@@ -268,11 +271,16 @@ const RegionModalCloseButton = ({
   onClose: () => Promise<void>;
 }) => {
   const region = useUserInfoRegistrationFormStore((state) => state.region);
-  const handleCloseRegionModal = () => {
+  const resetRegionModalStore = useRegionModalStore(
+    (state) => state.resetRegionModalStore,
+  );
+
+  const handleCloseRegionModal = async () => {
     if (region.length === 0) {
       throw new Error(errorMessage.NON_SELECTED_ADDRESS);
     }
-    onClose();
+    await onClose();
+    resetRegionModalStore();
   };
 
   return (
@@ -288,11 +296,18 @@ const RegionModalCloseButton = ({
 };
 
 export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
+  const resetRegionModalStore = useRegionModalStore(
+    (state) => state.resetRegionModalStore,
+  );
+
+  const handleRegionModalClose = async () => {
+    await onClose();
+    resetRegionModalStore();
+  };
   return (
     <Modal modalType="fullPage">
       {/* Header */}
-      <CloseNavigationBar onClick={onClose} />
-      {/* TODO flex grow 가 왜 안되지 ? */}
+      <CloseNavigationBar onClick={handleRegionModalClose} />
       <section
         className="px-4 flex flex-col gap-8"
         style={{
@@ -314,7 +329,7 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
             {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
             <SelectedRegionList />
             {/* 확인 버튼 */}
-            <RegionModalCloseButton onClose={onClose} />
+            <RegionModalCloseButton onClose={handleRegionModalClose} />
           </div>
         </section>
       </section>

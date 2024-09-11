@@ -4,7 +4,7 @@ import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { userInfoRegistrationHandlers } from "@/mocks/handler";
-import { DELAY } from "../constants";
+import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { useUserInfoRegistrationFormStore } from "../store";
 import UserInfoRegistrationForm from "./UserInfoRegistrationForm";
 
@@ -67,29 +67,50 @@ export const Default: Story = {
                   id: 0,
                   province: "서울특별시",
                   cityCounty: "강남구",
-                  district: "역삼1동",
-                  subDistrict: "123-45",
+                  subDistrict: "역삼1동",
+                  distrirct: "123-45",
                 },
                 {
                   id: 1,
                   province: "서울특별시",
                   cityCounty: "강남구",
-                  district: "역삼2동",
-                  subDistrict: "123-45",
+                  subDistrict: "역삼2동",
+                  distrirct: "123-45",
                 },
                 {
                   id: 2,
                   province: "서울특별시",
                   cityCounty: "강남구",
-                  district: "역삼3동",
-                  subDistrict: "123-45",
+                  subDistrict: "역삼3동",
+                  distrirct: "123-45",
                 },
                 {
                   id: 3,
                   province: "서울특별시",
                   cityCounty: "강남구",
-                  district: "역삼4동",
-                  subDistrict: "123-45",
+                  subDistrict: "역삼4동",
+                  distrirct: "123-45",
+                },
+                {
+                  id: 4,
+                  province: "서울특별시",
+                  cityCounty: "강남구",
+                  subDistrict: "역삼5동",
+                  distrirct: "123-45",
+                },
+                {
+                  id: 5,
+                  province: "서울특별시",
+                  cityCounty: "강남구",
+                  subDistrict: "역삼6동",
+                  distrirct: "123-45",
+                },
+                {
+                  id: 6,
+                  province: "서울특별시",
+                  cityCounty: "강남구",
+                  subDistrict: "역삼7동",
+                  distrirct: "123-45",
                 },
               ],
             });
@@ -104,29 +125,29 @@ export const Default: Story = {
                   id: 0,
                   province: "서울특별시",
                   cityCounty: "도봉구",
-                  district: "도봉1동",
-                  subDistrict: "123-45",
+                  subDistrict: "도봉1동",
+                  distrirct: "123-45",
                 },
                 {
                   id: 1,
                   province: "서울특별시",
                   cityCounty: "도봉구",
-                  district: "도봉2동",
-                  subDistrict: "123-45",
+                  subDistrict: "도봉2동",
+                  distrirct: "123-45",
                 },
                 {
                   id: 2,
                   province: "서울특별시",
                   cityCounty: "도봉구",
-                  district: "도봉3동",
-                  subDistrict: "123-45",
+                  subDistrict: "도봉3동",
+                  distrirct: "123-45",
                 },
                 {
                   id: 3,
                   province: "서울특별시",
                   cityCounty: "도봉구",
-                  district: "도봉4동",
-                  subDistrict: "123-45",
+                  subDistrict: "도봉4동",
+                  distrirct: "123-45",
                 },
               ],
             });
@@ -147,29 +168,50 @@ export const Default: Story = {
                 id: 0,
                 province: "서울특별시",
                 cityCounty: "영등포구",
-                district: "영등포 1가",
-                subDistrict: "123-45",
+                subDistrict: "영등포 1가",
+                distrirct: "123-45",
               },
               {
                 id: 1,
                 province: "서울특별시",
                 cityCounty: "영등포구",
-                district: "영등포 2가",
-                subDistrict: "123-45",
+                subDistrict: "영등포 2가",
+                distrirct: "123-45",
               },
               {
                 id: 2,
                 province: "서울특별시",
                 cityCounty: "영등포구",
-                district: "영등포 3가",
-                subDistrict: "123-45",
+                subDistrict: "영등포 3가",
+                distrirct: "123-45",
               },
               {
                 id: 3,
                 province: "서울특별시",
                 cityCounty: "영등포구",
-                district: "영등포 4가",
-                subDistrict: "123-45",
+                subDistrict: "영등포 4가",
+                distrirct: "123-45",
+              },
+              {
+                id: 4,
+                province: "서울특별시",
+                cityCounty: "영등포구",
+                subDistrict: "영등포 5가",
+                distrirct: "123-45",
+              },
+              {
+                id: 5,
+                province: "서울특별시",
+                cityCounty: "영등포구",
+                subDistrict: "영등포 6가",
+                distrirct: "123-45",
+              },
+              {
+                id: 6,
+                province: "서울특별시",
+                cityCounty: "영등포구",
+                subDistrict: "영등포 7가",
+                distrirct: "123-45",
               },
             ],
           });
@@ -435,7 +477,7 @@ export const Default: Story = {
           canvasElement.querySelector("#region-search")!;
         await userEvent.type($regionSearchInput, "강남구 역삼동");
 
-        await new Promise((res) => setTimeout(res, DELAY)); // API 요청이 끝날 때까지 안전하게 딜레이 추가
+        await new Promise((res) => setTimeout(res, REGION_API_DEBOUNCE_DELAY)); // API 요청이 끝날 때까지 안전하게 딜레이 추가
 
         const $selectedRegion =
           await canvas.findByText(/서울특별시 강남구 역삼1동/);
