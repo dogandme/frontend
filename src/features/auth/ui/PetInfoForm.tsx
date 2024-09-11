@@ -16,7 +16,7 @@ import { usePostPetInfo } from "../api/petinfo";
 import { characterList, dogBreeds } from "../constants/form";
 import { usePetInfoStore } from "../store";
 
-const DEFAULT_PROFILE_IMAGE = "default-profile.svg";
+const DEFAULT_PROFILE_IMAGE = "default-image.png";
 
 const TextCounter = ({
   text,
