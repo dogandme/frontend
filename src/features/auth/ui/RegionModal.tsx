@@ -121,7 +121,7 @@ const SearchRegionByGPSButton = () => {
       colorType="tertiary"
       size="medium"
       onClick={handleClick}
-      additionalClassName={additionalClassName}
+      className={additionalClassName}
     >
       <MapLocationSearchingIcon />
       <span>현재 위치로 찾기</span>
