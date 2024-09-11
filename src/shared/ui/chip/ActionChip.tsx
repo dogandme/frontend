@@ -29,7 +29,9 @@ export const ActionChip = ({
   const _isSelected = isUncontrolled ? unControlledIsSelected : isSelected;
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setIsUnControlledIsSelected((prev) => !prev);
+    if (isUncontrolled) {
+      setIsUnControlledIsSelected((prev) => !prev);
+    }
     onClick?.(e);
   };
 
