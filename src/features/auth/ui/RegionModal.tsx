@@ -59,7 +59,7 @@ const SearchRegionByGPSButton = () => {
   const setPosition = useAddressModalStore((state) => state.setPosition);
   const setOrigin = useAddressModalStore((state) => state.setOrigin);
 
-  const additionalCLassName =
+  const additionalClassName =
     origin === "position"
       ? "border-tangerine-500 text-tangerine-500 active:border-tangerine-500 active:text-tangerine-500 hover:border-tangerine-500 hover:text-tangerine-500 focus-visible:border-tangerine-500 focus-visible:text-tangerine-500"
       : "";
@@ -121,7 +121,7 @@ const SearchRegionByGPSButton = () => {
       colorType="tertiary"
       size="medium"
       onClick={handleClick}
-      className={additionalCLassName}
+      className={additionalClassName}
     >
       <MapLocationSearchingIcon />
       <span>현재 위치로 찾기</span>
