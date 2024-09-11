@@ -524,6 +524,20 @@ export const ApiTest: Story = {
     const $submitButton = canvas.getByText("회원가입");
 
     await step(
+      '중복되는 닉네임을 적을 경우, "이미 존재하는 닉네임입니다." 안내 문구가 뜬다.',
+      async () => {
+        await userEvent.type($nicknameInput, "중복");
+        await userEvent.tab();
+
+        const $statusText =
+          await canvas.findByText("이미 존재하는 닉네임입니다.");
+        expect($statusText).toBeInTheDocument();
+      },
+    );
+
+    await userEvent.clear($nicknameInput);
+
+    await step(
       "form을 올바르게 입력하고 필수 약관에 동의한 상태에서 [회원가입] 버튼을 누르면, nickname과 role을 store에 저장된다.",
       async () => {
         const validNickname = "hihihi";
