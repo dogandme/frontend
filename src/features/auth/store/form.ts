@@ -121,7 +121,6 @@ export const useUserInfoRegistrationFormStore =
     setCheckList: (checkList) => set({ checkList }),
   }));
 
-
 interface AddressModalStore {
   addressList: AddressResponse;
   setAddressList: (addressList: AddressResponse) => void;
@@ -132,29 +131,36 @@ export const useAddressModalStore = create<AddressModalStore>((set) => ({
   setAddressList: (addressList) => set({ addressList }),
 }));
 
-interface SignUpByEmailFormStore {
+interface SignUpByEmailFormState {
   email: string;
   verificationCode: string;
   password: string;
   passwordConfirm: string;
+}
 
+interface SignUpByEmailFormActions {
   setEmail: (email: string) => void;
   setVerificationCode: (verificationCode: string) => void;
   setPassword: (password: string) => void;
   setPasswordConfirm: (passwordConfirm: string) => void;
+  resetSignUpByEmailFormStore: () => void;
 }
 
-export const useSignUpByEmailFormStore = create<SignUpByEmailFormStore>(
-  (set) => ({
-    email: "",
-    verificationCode: "",
-    password: "",
-    passwordConfirm: "",
+const initSignUpByEmailFormStore: SignUpByEmailFormState = {
+  email: "",
+  verificationCode: "",
+  password: "",
+  passwordConfirm: "",
+};
 
-    setEmail: (email) => set({ email }),
-    setVerificationCode: (verificationCode) => set({ verificationCode }),
-    setPassword: (password) => set({ password }),
-    setPasswordConfirm: (passwordConfirm) => set({ passwordConfirm }),
-  }),
-);
+export const useSignUpByEmailFormStore = create<
+  SignUpByEmailFormState & SignUpByEmailFormActions
+>((set) => ({
+  ...initSignUpByEmailFormStore,
 
+  setEmail: (email) => set({ email }),
+  setVerificationCode: (verificationCode) => set({ verificationCode }),
+  setPassword: (password) => set({ password }),
+  setPasswordConfirm: (passwordConfirm) => set({ passwordConfirm }),
+  resetSignUpByEmailFormStore: () => set({ ...initSignUpByEmailFormStore }),
+}));
