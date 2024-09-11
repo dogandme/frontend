@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { Button } from "@/shared/ui/button";
@@ -39,14 +40,13 @@ export const SignUpLandingModal = ({
           <p>반려동물을 등록하고</p>
           <p>더 많은 혜택을 받아보세요</p>
         </section>
-        <section>
-          {/* TODO merge 되고 나면 주석 처리 풀기 */}
+        <section className="flex flex-col gap-4">
           <Button
             colorType="primary"
             variant="filled"
             size="large"
             className="btn-3"
-            onClick={() => handleNavigate("/sign-up/pet-info")}
+            onClick={() => handleNavigate(ROUTER_PATH.SIGN_UP_PET_INFO)}
           >
             등록하기
           </Button>
