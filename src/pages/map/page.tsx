@@ -16,7 +16,7 @@ export const MapPage = () => {
             </FloatingButton>
           </div>
           <div className="flex flex-col gap-2">
-            <FloatingButton imgSrc="http://localhost:5173/default-profile.svg" />
+            <FloatingButton imgSrc="http://localhost:5173/default-image.png" />
             <FloatingButton>
               <LocationIcon />
             </FloatingButton>

@@ -41,17 +41,17 @@ export const GoogleMaps = () => {
       <Pin
         alt="test"
         position={{ lat: 37.56651, lng: 126.977 }}
-        imageUrl="/public/default-profile.svg"
+        imageUrl="/public/default-image.png"
       />
       <MultiplePin
         position={{ lat: 37.5664, lng: 126.976 }}
-        imageUrl="/public/default-profile.svg"
+        imageUrl="/public/default-image.png"
         alt="test"
         markerCount={2}
       />
       <MultiplePin
         position={{ lat: 37.5663, lng: 126.9765 }}
-        imageUrl="/public/default-profile.svg"
+        imageUrl="/public/default-image.png"
         alt="test"
         markerCount={500}
       />
