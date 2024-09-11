@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { AddressResponse } from "../api/region";
+import type { LatLng } from "../api/region";
 
 interface PetInfoStore {
   profileImage: File | null;
@@ -81,35 +81,31 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
 type Gender = "FEMALE" | "MALE" | null;
 type AgeRange = 10 | 20 | 30 | 40 | 50 | null;
 type CheckedList = boolean[];
-type Address = { address: string; id: number };
+type Region = { address: string; id: number };
 
 interface UserInfoRegistrationFormStore {
   nickname: string;
-  isValidNickname: boolean;
   gender: Gender;
   ageRange: AgeRange;
-  region: Address[];
+  region: Region[];
   checkList: CheckedList;
 
   setNickname: (email: string) => void;
-  setIsValidNickname: (isValidNickname: boolean) => void;
   setGender: (gender: Gender) => void;
   setAgeRange: (birth: AgeRange) => void;
-  setRegion: (region: Address[]) => void;
+  setRegion: (region: Region[]) => void;
   setCheckList: (checkList: CheckedList) => void;
 }
 
 export const useUserInfoRegistrationFormStore =
   create<UserInfoRegistrationFormStore>((set) => ({
     nickname: "",
-    isValidNickname: true,
     gender: null,
     ageRange: null,
     region: [],
     checkList: [false, false, false],
 
     setNickname: (nickname) => set({ nickname }),
-    setIsValidNickname: (isValidNickname) => set({ isValidNickname }),
     setGender: (gender) => set({ gender }),
     setAgeRange: (birth) => set({ ageRange: birth }),
     setRegion: (region) =>
@@ -121,14 +117,34 @@ export const useUserInfoRegistrationFormStore =
     setCheckList: (checkList) => set({ checkList }),
   }));
 
-interface AddressModalStore {
-  addressList: AddressResponse;
-  setAddressList: (addressList: AddressResponse) => void;
+interface RegionModalState {
+  keyword: string;
+  position: LatLng;
+  origin: "keyword" | "position";
 }
 
-export const useAddressModalStore = create<AddressModalStore>((set) => ({
-  addressList: [],
-  setAddressList: (addressList) => set({ addressList }),
+interface RegionModalActions {
+  setKeyword: (keyword: string) => void;
+  setPosition: (position: LatLng) => void;
+  setOrigin: (origin: "keyword" | "position") => void;
+  resetRegionModalStore: () => void;
+}
+
+const addressModalInitialState: RegionModalState = {
+  keyword: "",
+  position: { lat: 0, lng: 0 },
+  origin: "keyword",
+};
+
+export const useRegionModalStore = create<
+  RegionModalState & RegionModalActions
+>((set) => ({
+  ...addressModalInitialState,
+
+  setKeyword: (keyword) => set({ keyword }),
+  setPosition: (position) => set({ position }),
+  setOrigin: (origin) => set({ origin }),
+  resetRegionModalStore: () => set(addressModalInitialState),
 }));
 
 interface SignUpByEmailFormState {

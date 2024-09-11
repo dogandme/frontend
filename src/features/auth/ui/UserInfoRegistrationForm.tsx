@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MutationState, useMutationState } from "@tanstack/react-query";
 import { AgreementCheckbox, SelectOpener } from "@/entities/auth/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
@@ -10,32 +11,51 @@ import { CancelIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
-import { usePutUserInfoRegistration } from "../api";
+import {
+  DuplicateNicknameRequestData,
+  DuplicateNicknameResponse,
+  usePostDuplicateNickname,
+  usePutUserInfoRegistration,
+} from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
 import { RegionModal } from "./RegionModal";
 
 const NicknameInput = () => {
-  const isValidNickname = useUserInfoRegistrationFormStore(
-    (state) => state.isValidNickname,
-  );
+  const nickname = useUserInfoRegistrationFormStore((state) => state.nickname);
   const setNickname = useUserInfoRegistrationFormStore(
     (state) => state.setNickname,
-  );
-  const setIsValidNickname = useUserInfoRegistrationFormStore(
-    (state) => state.setIsValidNickname,
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: nickname } = e.target;
-    const isValidNickname = validateNickname(nickname);
-
-    const isNicknameEmpty = nickname.length === 0;
 
     setNickname(nickname);
-    setIsValidNickname(isValidNickname || isNicknameEmpty);
   };
+
+  // todo: isError 대신 응답 코드로 status text 변경하기
+  const {
+    mutate: postDuplicateNickname,
+    isError,
+    variables,
+  } = usePostDuplicateNickname();
+
+  const isDuplicateNickname = isError && variables?.nickname === nickname;
+  const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
+  const isNicknameEmpty = nickname.length === 0;
+
+  const handleBlur = () => {
+    if (!isValidNickname || isNicknameEmpty) return;
+
+    postDuplicateNickname({ nickname });
+  };
+
+  let statusText = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";
+
+  if (isDuplicateNickname) {
+    statusText = "이미 존재하는 닉네임입니다.";
+  }
 
   return (
     <Input
@@ -44,11 +64,12 @@ const NicknameInput = () => {
       name="nickname"
       label="닉네임"
       placeholder="닉네임을 입력해 주세요"
-      statusText="20자 이내의 한글 영어 숫자만 사용 가능합니다."
+      statusText={statusText}
       essential
       componentType="outlinedText"
-      isError={!isValidNickname}
+      isError={!isValidNickname && !isNicknameEmpty}
       onChange={handleChange}
+      onBlur={handleBlur}
       maxLength={20}
     />
   );
@@ -274,12 +295,13 @@ const MyRegionList = () => {
         <li className="flex flex-shrink-0" key={id}>
           <ActionChip
             variant="outlined"
-            label={address}
             trailingIcon={<CancelIcon width={20} height={20} />}
-            controlledIsSelected={true}
             key={id}
             onClick={() => handleRemoveRegion(address)}
-          />
+            isSelected={true}
+          >
+            {address}
+          </ActionChip>
         </li>
       ))}
     </ul>
@@ -314,6 +336,18 @@ const UserInfoRegistrationForm = () => {
 
   const { mutate: putUserInfoRegistration } = usePutUserInfoRegistration();
 
+  const duplicateNicknameResponseCacheArr = useMutationState<
+    MutationState<
+      DuplicateNicknameResponse,
+      Error,
+      DuplicateNicknameRequestData
+    >
+  >({
+    filters: {
+      mutationKey: ["checkDuplicateNickname"],
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -338,7 +372,15 @@ const UserInfoRegistrationForm = () => {
       return;
     }
 
-    const isValidNickname = validateNickname(nickname);
+    const lastDuplicateNicknameResponse =
+      duplicateNicknameResponseCacheArr[
+        duplicateNicknameResponseCacheArr.length - 1
+      ];
+    const isDuplicateNickname =
+      lastDuplicateNicknameResponse.status === "error" &&
+      lastDuplicateNicknameResponse.variables?.nickname === nickname;
+
+    const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
 
     if (!isValidNickname) {
       openNicknameAlert();

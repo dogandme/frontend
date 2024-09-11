@@ -32,7 +32,7 @@ const Option = ({
   return (
     <List.Item
       onClick={handleClick}
-      additionalClassName={textColorStyles}
+      className={textColorStyles}
       disabled={disabled}
       {...props}
     >
