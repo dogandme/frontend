@@ -292,14 +292,14 @@ const RegionModalCloseButton = ({
 };
 
 export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
+  const resetAddressModalStore = useAddressModalStore(
+    (state) => state.resetAddressModalStore,
+  );
+
   useEffect(() => {
     // 모달이 닫힌 후엔 모달 내부 내용을 초기화 하는 클린업 함수
     return () => {
-      useAddressModalStore.setState({
-        keyword: "",
-        position: { lat: 0, lng: 0 },
-        origin: "keyword",
-      });
+      resetAddressModalStore();
     };
   }, []);
 

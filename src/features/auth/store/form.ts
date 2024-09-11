@@ -121,24 +121,34 @@ export const useUserInfoRegistrationFormStore =
     setCheckList: (checkList) => set({ checkList }),
   }));
 
-interface AddressModalStore {
+interface AddressModalState {
   keyword: string;
   position: LatLng;
   origin: "keyword" | "position";
+}
 
+interface AddressModalActions {
   setKeyword: (keyword: string) => void;
   setPosition: (position: LatLng) => void;
   setOrigin: (origin: "keyword" | "position") => void;
+  resetAddressModalStore: () => void;
 }
 
-export const useAddressModalStore = create<AddressModalStore>((set) => ({
+const addressModalInitialState: AddressModalState = {
   keyword: "",
   position: { lat: 0, lng: 0 },
   origin: "keyword",
+};
+
+export const useAddressModalStore = create<
+  AddressModalState & AddressModalActions
+>((set) => ({
+  ...addressModalInitialState,
 
   setKeyword: (keyword) => set({ keyword }),
   setPosition: (position) => set({ position }),
   setOrigin: (origin) => set({ origin }),
+  resetAddressModalStore: () => set(addressModalInitialState),
 }));
 
 interface SignUpByEmailFormStore {
