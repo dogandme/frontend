@@ -174,6 +174,7 @@ export const Default: Story = {
             ],
           });
         }),
+        ...userInfoRegistrationHandlers,
       ],
     },
   },
