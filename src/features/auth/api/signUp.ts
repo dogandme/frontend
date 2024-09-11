@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { SIGN_UP_END_POINT } from "../constants";
-import { Address } from "./region";
 
 interface VerificationCodeRequestData {
   email: string;
@@ -135,11 +134,11 @@ export const usePostSignUpByEmail = () => {
   });
 };
 
-interface DuplicateNicknameRequestData {
+export interface DuplicateNicknameRequestData {
   nickname: string;
 }
 
-interface DuplicateNicknameResponse {
+export interface DuplicateNicknameResponse {
   code: number;
   message: string;
 }
@@ -174,6 +173,7 @@ export const usePostDuplicateNickname = () => {
     DuplicateNicknameRequestData
   >({
     mutationFn: postDuplicateNickname,
+    mutationKey: ["checkDuplicateNickname"],
   });
 };
 

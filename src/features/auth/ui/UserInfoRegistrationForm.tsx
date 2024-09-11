@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MutationState, useMutationState } from "@tanstack/react-query";
 import { AgreementCheckbox, SelectOpener } from "@/entities/auth/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
@@ -10,7 +11,12 @@ import { CancelIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
-import { usePostDuplicateNickname, usePutUserInfoRegistration } from "../api";
+import {
+  DuplicateNicknameRequestData,
+  DuplicateNicknameResponse,
+  usePostDuplicateNickname,
+  usePutUserInfoRegistration,
+} from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
@@ -329,6 +335,18 @@ const UserInfoRegistrationForm = () => {
 
   const { mutate: putUserInfoRegistration } = usePutUserInfoRegistration();
 
+  const duplicateNicknameResponseCacheArr = useMutationState<
+    MutationState<
+      DuplicateNicknameResponse,
+      Error,
+      DuplicateNicknameRequestData
+    >
+  >({
+    filters: {
+      mutationKey: ["checkDuplicateNickname"],
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -353,7 +371,15 @@ const UserInfoRegistrationForm = () => {
       return;
     }
 
-    const isValidNickname = validateNickname(nickname);
+    const lastDuplicateNicknameResponse =
+      duplicateNicknameResponseCacheArr[
+        duplicateNicknameResponseCacheArr.length - 1
+      ];
+    const isDuplicateNickname =
+      lastDuplicateNicknameResponse.status === "error" &&
+      lastDuplicateNicknameResponse.variables?.nickname === nickname;
+
+    const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
 
     if (!isValidNickname) {
       openNicknameAlert();
