@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { SIGN_UP_END_POINT } from "../constants";
-import { Address } from "./region";
 
 interface VerificationCodeRequestData {
   email: string;
@@ -132,6 +131,49 @@ const postSignUpByEmail = async ({
 export const usePostSignUpByEmail = () => {
   return useMutation<SignUpByEmailResponse, Error, SignUpByEmailRequestData>({
     mutationFn: postSignUpByEmail,
+  });
+};
+
+export interface DuplicateNicknameRequestData {
+  nickname: string;
+}
+
+export interface DuplicateNicknameResponse {
+  code: number;
+  message: string;
+}
+
+const postDuplicateNickname = async ({
+  nickname,
+}: DuplicateNicknameRequestData) => {
+  const response = await fetch(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ nickname }),
+  });
+
+  const data: DuplicateNicknameResponse = await response.json();
+
+  // 409: 중복된 닉네임
+  if (!response.ok) {
+    const { message } = data;
+
+    throw new Error(message);
+  }
+
+  return data;
+};
+
+export const usePostDuplicateNickname = () => {
+  return useMutation<
+    DuplicateNicknameResponse,
+    Error,
+    DuplicateNicknameRequestData
+  >({
+    mutationFn: postDuplicateNickname,
+    mutationKey: ["checkDuplicateNickname"],
   });
 };
 

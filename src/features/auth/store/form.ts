@@ -85,14 +85,12 @@ type Address = { address: string; id: number };
 
 interface UserInfoRegistrationFormStore {
   nickname: string;
-  isValidNickname: boolean;
   gender: Gender;
   ageRange: AgeRange;
   region: Address[];
   checkList: CheckedList;
 
   setNickname: (email: string) => void;
-  setIsValidNickname: (isValidNickname: boolean) => void;
   setGender: (gender: Gender) => void;
   setAgeRange: (birth: AgeRange) => void;
   setRegion: (region: Address[]) => void;
@@ -102,14 +100,12 @@ interface UserInfoRegistrationFormStore {
 export const useUserInfoRegistrationFormStore =
   create<UserInfoRegistrationFormStore>((set) => ({
     nickname: "",
-    isValidNickname: true,
     gender: null,
     ageRange: null,
     region: [],
     checkList: [false, false, false],
 
     setNickname: (nickname) => set({ nickname }),
-    setIsValidNickname: (isValidNickname) => set({ isValidNickname }),
     setGender: (gender) => set({ gender }),
     setAgeRange: (birth) => set({ ageRange: birth }),
     setRegion: (region) =>
