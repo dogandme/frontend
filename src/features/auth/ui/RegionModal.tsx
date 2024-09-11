@@ -271,11 +271,16 @@ const RegionModalCloseButton = ({
   onClose: () => Promise<void>;
 }) => {
   const region = useUserInfoRegistrationFormStore((state) => state.region);
-  const handleCloseRegionModal = () => {
+  const resetRegionModalStore = useRegionModalStore(
+    (state) => state.resetRegionModalStore,
+  );
+
+  const handleCloseRegionModal = async () => {
     if (region.length === 0) {
       throw new Error(errorMessage.NON_SELECTED_ADDRESS);
     }
-    onClose();
+    await onClose();
+    resetRegionModalStore();
   };
 
   return (
@@ -295,17 +300,14 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
     (state) => state.resetRegionModalStore,
   );
 
-  useEffect(() => {
-    // 모달이 닫힌 후엔 모달 내부 내용을 초기화 하는 클린업 함수
-    return () => {
-      resetRegionModalStore();
-    };
-  }, []);
-
+  const handleRegionModalClose = async () => {
+    await onClose();
+    resetRegionModalStore();
+  };
   return (
     <Modal modalType="fullPage">
       {/* Header */}
-      <CloseNavigationBar onClick={onClose} />
+      <CloseNavigationBar onClick={handleRegionModalClose} />
       <section
         className="px-4 flex flex-col gap-8"
         style={{
@@ -327,7 +329,7 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
             {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
             <SelectedRegionList />
             {/* 확인 버튼 */}
-            <RegionModalCloseButton onClose={onClose} />
+            <RegionModalCloseButton onClose={handleRegionModalClose} />
           </div>
         </section>
       </section>
