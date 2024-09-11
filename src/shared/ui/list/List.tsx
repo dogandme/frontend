@@ -3,11 +3,14 @@ import { listItemStyles } from "./list.styles";
 
 interface ItemProps extends LiHTMLAttributes<HTMLLIElement> {
   disabled?: boolean;
-  className?: string;
+  additionalClassName?: string;
 }
 
 export const Item = forwardRef<HTMLLIElement, ItemProps>(
-  ({ children, disabled = false, onClick, className = "", ...props }, ref) => {
+  (
+    { children, disabled = false, onClick, additionalClassName, ...props },
+    ref,
+  ) => {
     const baseStyles =
       "flex h-[3.625rem] w-full min-h-12 shrink-0 justify-center items-center gap-[.625rem] px-[.625rem] py-[1.125rem] rounded-2xl title-2";
 
@@ -18,7 +21,7 @@ export const Item = forwardRef<HTMLLIElement, ItemProps>(
     return (
       <li
         ref={ref}
-        className={`${baseStyles} ${disabled ? disabledStyles : ableStyles} ${className}`}
+        className={`${baseStyles} ${disabled ? disabledStyles : ableStyles} ${additionalClassName}`}
         aria-disabled={disabled}
         onClick={(e) => {
           if (disabled) return;
