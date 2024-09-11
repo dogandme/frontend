@@ -53,19 +53,23 @@ const RegionSearchInput = () => {
       setAddressesList(data);
       setAddressOrigin(inputRef.current as HTMLInputElement);
     }
-  }, [data, isError, keyword, setAddressesList, setAddressOrigin]);
+  }, [data, isError, setAddressesList, setAddressOrigin]);
 
   const handleDebouncedChange = ({
     target,
   }: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = target;
+
     setKeyword(value);
+
     if (timerId.current) {
       clearTimeout(timerId.current);
     }
+
     timerId.current = setTimeout(() => {
-      setKeyword(value);
-      debouncedFetch();
+      if (value.length > 0) {
+        debouncedFetch();
+      }
     }, REGION_API_DEBOUNCE_DELAY);
   };
 
