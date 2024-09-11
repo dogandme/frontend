@@ -124,80 +124,78 @@ export const Default: Story = {
             <h1>비제어 컴포넌트</h1>
             <div className="flex gap-2 px-2 py-2 bg-grey-200 flex-wrap w-fit">
               <div className="flex gap-2 px-2 py-2 bg-grey-200 flex-wrap w-fit">
-                <ActionChip variant="filled" isSelected={true} isUncontrolled>
+                <ActionChip
+                  variant="filled"
+                  unControlledInitialIsSelected={true}
+                >
                   Filled
                 </ActionChip>
                 <ActionChip
+                  unControlledInitialIsSelected={true}
                   variant="filled"
                   leadingIcon={<CancelIcon width={20} height={20} />}
-                  isSelected={true}
-                  isUncontrolled
                 >
                   Filled
                 </ActionChip>
                 <ActionChip
                   variant="filled"
+                  unControlledInitialIsSelected={true}
                   trailingIcon={<CancelIcon width={20} height={20} />}
-                  isSelected={true}
-                  isUncontrolled
                 >
                   Filled
                 </ActionChip>
                 <ActionChip
+                  unControlledInitialIsSelected={true}
                   variant="filled"
                   leadingIcon={<CancelIcon width={20} height={20} />}
                   trailingIcon={<CancelIcon width={20} height={20} />}
-                  isSelected={true}
-                  isUncontrolled
                 >
                   Filled
                 </ActionChip>
                 <ActionChip
+                  unControlledInitialIsSelected={true}
                   variant="filled"
                   leadingIcon={<CancelIcon width={20} height={20} />}
                   trailingIcon={<CancelIcon width={20} height={20} />}
-                  isSelected={true}
-                  isUncontrolled
                   disabled
                 >
                   Filled
                 </ActionChip>
               </div>
               <div className="flex gap-2 px-2 py-2 bg-grey-200 flex-wrap w-fit">
-                <ActionChip variant="outlined" isSelected={true}>
+                <ActionChip
+                  unControlledInitialIsSelected={true}
+                  variant="outlined"
+                >
                   Filled
                 </ActionChip>
                 <ActionChip
+                  unControlledInitialIsSelected={true}
                   variant="outlined"
                   leadingIcon={<CancelIcon width={20} height={20} />}
-                  isSelected={true}
-                  isUncontrolled
                 >
                   Filled
                 </ActionChip>
                 <ActionChip
                   variant="outlined"
+                  unControlledInitialIsSelected={true}
                   trailingIcon={<CancelIcon width={20} height={20} />}
-                  isSelected={true}
-                  isUncontrolled
-                >
-                  Filled
-                </ActionChip>
-                <ActionChip
-                  variant="outlined"
-                  leadingIcon={<CancelIcon width={20} height={20} />}
-                  trailingIcon={<CancelIcon width={20} height={20} />}
-                  isSelected={true}
-                  isUncontrolled
                 >
                   Filled
                 </ActionChip>
                 <ActionChip
                   variant="outlined"
                   leadingIcon={<CancelIcon width={20} height={20} />}
+                  unControlledInitialIsSelected={true}
                   trailingIcon={<CancelIcon width={20} height={20} />}
-                  isSelected={true}
-                  isUncontrolled
+                >
+                  Filled
+                </ActionChip>
+                <ActionChip
+                  variant="outlined"
+                  leadingIcon={<CancelIcon width={20} height={20} />}
+                  unControlledInitialIsSelected={true}
+                  trailingIcon={<CancelIcon width={20} height={20} />}
                   disabled
                 >
                   Filled

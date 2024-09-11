@@ -1,30 +1,31 @@
 import { useState } from "react";
 import { actionChipStyles } from "./chip.styles";
 
-interface ActionChipProps
+interface ActionChipProps<T extends boolean | undefined>
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant: "filled" | "outlined";
   leadingIcon?: React.ReactNode;
   trailingIcon?: React.ReactNode;
-  isSelected: boolean;
-  unControlledInitialIsSelect?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   children: string;
-  isUncontrolled?: boolean;
+  isSelected?: T;
+  unControlledInitialIsSelected?: T extends boolean ? never : boolean;
 }
 
-export const ActionChip = ({
+export const ActionChip = <T extends boolean | undefined>({
   variant,
   leadingIcon,
   children,
   trailingIcon,
   isSelected,
+  unControlledInitialIsSelected,
   onClick,
-  isUncontrolled = false,
   ...props
-}: ActionChipProps) => {
+}: ActionChipProps<T>) => {
+  const isUncontrolled = typeof isSelected === "undefined";
+
   const [unControlledIsSelected, setIsUnControlledIsSelected] =
-    useState<boolean>(isSelected);
+    useState<boolean>(unControlledInitialIsSelected || false);
 
   const _isSelected = isUncontrolled ? unControlledIsSelected : isSelected;
 
