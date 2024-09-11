@@ -96,7 +96,7 @@ export const useGetRegionByLatLng = ({
   enabled = false,
 }: LatLng & { token: string; enabled: boolean }) => {
   return useQuery<RegionResponse, Error>({
-    queryKey: ["region", lat, lng],
+    queryKey: ["regions", lat, lng],
     queryFn: () => getRegionByLatLng({ lat, lng, token }),
     enabled,
     staleTime: 1000 * 60 * 5,
