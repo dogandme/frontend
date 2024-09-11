@@ -45,7 +45,7 @@ export const SignUpLandingModal = ({
             colorType="primary"
             variant="filled"
             size="large"
-            // className="btn-3"
+            className="btn-3"
             onClick={() => handleNavigate("/sign-up/pet-info")}
           >
             등록하기
@@ -54,7 +54,7 @@ export const SignUpLandingModal = ({
             colorType="tertiary"
             variant="text"
             size="large"
-            // className="btn-3"
+            className="btn-3"
             onClick={() => handleNavigate(lastNoneAuthRoute)}
           >
             나중에 할게요

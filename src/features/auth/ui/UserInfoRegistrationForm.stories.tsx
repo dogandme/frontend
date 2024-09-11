@@ -625,6 +625,16 @@ export const ApiTest: Story = {
           expect(role).toBe("ROLE_GUEST");
           expect(nickname).toBe(validNickname);
         });
+
+        await step(
+          "스토어에 닉네임이 저장된 후엔 회원 가입 축하 모달이 나타난다.",
+          async () => {
+            const { nickname } = useAuthStore.getState();
+            const $landingHeadLine = canvas.getByRole("heading", { level: 1 });
+            expect($landingHeadLine).toBeInTheDocument();
+            expect($landingHeadLine.textContent).toContain(`${nickname}님`);
+          },
+        );
       },
     );
   },

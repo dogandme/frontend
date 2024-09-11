@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { MutationState, useMutationState } from "@tanstack/react-query";
-import { AgreementCheckbox, SelectOpener } from "@/entities/auth/ui";
+import {
+  AgreementCheckbox,
+  SelectOpener,
+  SignUpLandingModal,
+} from "@/entities/auth/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
 import { Badge } from "@/shared/ui/badge";
@@ -330,6 +334,9 @@ const UserInfoRegistrationForm = () => {
       </Snackbar>
     ));
 
+  const { handleOpen: openLandingModal, onClose: onCloseLandingModal } =
+    useModal(() => <SignUpLandingModal onClose={onCloseLandingModal} />);
+
   const token = useAuthStore((state) => state.token);
   const setNickname = useAuthStore((state) => state.setNickname);
   const setRole = useAuthStore((state) => state.setRole);
@@ -413,7 +420,7 @@ const UserInfoRegistrationForm = () => {
           setNickname(nickname);
           setRole(role);
 
-          // todo: 회원가입 완료 페이지로 이동
+          openLandingModal();
         },
         onError: (error) => {
           throw new Error(error.message);
