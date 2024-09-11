@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { useAuthStore } from "@/shared/store/auth";
-import { SignUpLandingModal } from "./SignupLandingModal";
+import { SignUpLandingModal } from "./SignUpLandingModal";
 
 const meta: Meta<typeof SignUpLandingModal> = {
   title: "entities/auth/SignupLandingModal",
