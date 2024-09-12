@@ -4,7 +4,7 @@ import { within, expect, userEvent } from "@storybook/test";
 import {
   LocationIcon,
   MyLocationIcon,
-  StartIcon,
+  StarIcon,
 } from "../../../shared/ui/icon";
 import { FloatingButton } from "./FloatingButton";
 
@@ -79,7 +79,7 @@ export const Default: Story = {
         <div>
           <h1 className="title-1">Icon이 들어간 FloatingButton</h1>
           <FloatingButton data-testid="unControlled-floating-button">
-            <StartIcon />
+            <StarIcon />
           </FloatingButton>
         </div>
         <div>
