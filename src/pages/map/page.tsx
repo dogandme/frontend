@@ -5,8 +5,8 @@ import { LocationIcon, MyLocationIcon, StartIcon } from "@/shared/ui/icon";
 
 export const MapPage = () => {
   return (
-    <div className="relative h-full">
-      <GoogleMaps></GoogleMaps>
-    </div>
+    <GoogleMaps>
+      <GoogleMapsCopyRight />
+    </GoogleMaps>
   );
 };
