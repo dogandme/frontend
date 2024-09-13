@@ -23,12 +23,16 @@ export interface MapInfo {
   zoom: number;
 }
 
+type Mode = "view" | "edit";
+
 interface MapState {
   mapInfo: MapInfo;
+  mode: Mode;
 }
 
 interface MapActions {
   setMapInfo: (mapInfo: MapInfo) => void;
+  setMode: (mode: Mode) => void;
 }
 
 const mapStoreInitialState: MapState = {
@@ -37,9 +41,11 @@ const mapStoreInitialState: MapState = {
     zoom: MAP_INITIAL_ZOOM,
     bounds: MAP_INITIAL_BOUNDS,
   },
+  mode: "view",
 };
 
 export const useMapStore = create<MapState & MapActions>((set) => ({
   ...mapStoreInitialState,
   setMapInfo: (mapInfo) => set({ mapInfo }),
+  setMode: (mode) => set({ mode }),
 }));
