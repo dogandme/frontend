@@ -34,7 +34,7 @@ const Item = ({
   );
 };
 
-const SliderMain = ({ children }: { children: ReactNode }) => {
+const ImgSliderMain = ({ children }: { children: ReactNode }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const isDragging = useRef(false);
 
@@ -90,6 +90,6 @@ const SliderMain = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const Slider = Object.assign(SliderMain, { Item, ImgItem });
+const ImgSlider = Object.assign(ImgSliderMain, { Item, ImgItem });
 
-export default Slider;
+export default ImgSlider;
