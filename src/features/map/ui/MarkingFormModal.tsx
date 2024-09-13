@@ -128,6 +128,24 @@ const PhotoInput = ({
   );
 };
 
+const MarkingTextArea = () => {
+  const setContent = useMarkingFormStore((state) => state.setContent);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  };
+
+  return (
+    <TextArea
+      id="content"
+      name="content"
+      label="메모하기"
+      placeholder="마킹에 대한 메모를 남겨주세요."
+      onChange={handleChange}
+    />
+  );
+};
+
 const MarkingFormButtons = ({ onClose }: MarkingFormModalProps) => {
   return (
     <div className="flex flex-col gap-2">
@@ -153,12 +171,7 @@ export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
         {/* 사진 추가하기 */}
         <PhotoInput label="사진 추가하기" essential />
         {/* 메모하기 */}
-        <TextArea
-          id="content"
-          name="content"
-          label="메모하기"
-          placeholder="마킹에 대한 메모를 남겨주세요."
-        />
+        <MarkingTextArea />
         {/* 제출 버튼들 */}
         <MarkingFormButtons onClose={onClose} />
       </form>
