@@ -2,12 +2,23 @@ import { HTMLAttributes, ImgHTMLAttributes, ReactNode, useRef } from "react";
 import { CloseIcon } from "../icon";
 
 const ImgItem = ({
+  src,
+  alt,
   onRemove,
   ...props
-}: { onRemove?: () => void } & ImgHTMLAttributes<HTMLImageElement>) => {
+}: {
+  src: string;
+  alt: string;
+  onRemove?: () => void;
+} & ImgHTMLAttributes<HTMLImageElement>) => {
   return (
     <div className="relative w-[7.5rem] h-[7.5rem] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0">
-      <img className="w-full h-full object-cover no-drag" {...props} />
+      <img
+        className="w-full h-full object-cover no-drag"
+        src={src}
+        alt={alt}
+        {...props}
+      />
       {onRemove && (
         <button
           className="absolute w-6 h-6 top-1 right-1 bg-grey-0 rounded-2xl"
