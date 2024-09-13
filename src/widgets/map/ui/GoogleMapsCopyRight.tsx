@@ -9,13 +9,13 @@ export const GoogleMapsCopyRight = () => {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const center = map.getCenter();
-    const latlon = center.toUrlValue();
-    const url = `https://www.google.com/maps?ll=${latlon}&z=16&t=m&hl=ko-KR&gl=US&mapclient=apiv3`;
+    const latLon = center.toUrlValue();
+    const url = `https://www.google.com/maps?ll=${latLon}&z=16&t=m&hl=ko-KR&gl=US&mapclient=apiv3`;
     window.open(url, "_blank", "noopener noreferrer");
   };
 
   return (
-    <div className="absolute -bottom-6 left-0 flex w-full justify-between px-4">
+    <section className="flex w-full absolute bottom-8 left-0  justify-between px-4">
       <a href="https://www.google.co.kr/maps/?hl=ko" onClick={handleClick}>
         <img src="/public/google_on_white.png" alt="google-logo" />
       </a>
@@ -29,6 +29,6 @@ export const GoogleMapsCopyRight = () => {
           약관
         </a>
       </p>
-    </div>
+    </section>
   );
 };
