@@ -116,6 +116,30 @@ export const userInfoRegistrationHandlers = [
   }),
 ];
 
+export const markingModalHandlers = [
+  http.get<PathParams>(
+    "http://localhost/maps/reverse-geocoding",
+    async ({ request }) => {
+      const requestUrl = new URL(request.url);
+      const lat = requestUrl.searchParams.get("lat");
+      const lng = requestUrl.searchParams.get("lng");
+
+      if (!lat || !lng) {
+        throw new Error("lat, lng 값이 없습니다.");
+      }
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          region: "서울특별시 강남구 역삼동 123-456",
+        },
+      });
+    },
+  ),
+  // http.post<PathParams>("http;//localhost/markings", async ({ request }) => {}),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,

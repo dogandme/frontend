@@ -363,7 +363,9 @@ const MarkingFormButtons = ({
 };
 
 export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
-  const { lat, lng }: LatLng = useMap().getCenter();
+  const center = useMap().getCenter();
+  const lat = center.lat();
+  const lng = center.lng();
 
   return (
     <Modal modalType="center">
