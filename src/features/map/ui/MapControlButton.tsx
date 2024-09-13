@@ -25,7 +25,7 @@ export const MarkingEditButton = ({ onClick }: { onClick: () => void }) => {
 
 export const MyLocationButton = () => {
   return (
-    <FloatingButton>
+    <FloatingButton aria-label="지도의 중심을 현재 위치로 이동시키기">
       <MyLocationIcon />
     </FloatingButton>
   );
@@ -33,7 +33,7 @@ export const MyLocationButton = () => {
 
 export const ShowOthersMarkingButton = () => {
   return (
-    <FloatingButton>
+    <FloatingButton aria-label="현재 보고 있는 지도의 마킹들 나타내기">
       <LocationIcon />
     </FloatingButton>
   );
@@ -41,7 +41,7 @@ export const ShowOthersMarkingButton = () => {
 
 export const CollectionButton = () => {
   return (
-    <FloatingButton>
+    <FloatingButton aria-label="좋아요 버튼을 눌렀거나 저장한 마킹들 나타내기">
       <StarIcon />
     </FloatingButton>
   );
@@ -67,7 +67,7 @@ export const MarkingFormTriggerButton = () => {
 
 export const ExitEditModeButton = ({ onClick }: { onClick: () => void }) => {
   return (
-    <FloatingButton onClick={onClick}>
+    <FloatingButton onClick={onClick} aria-label="마커 추가 모드 종료하기">
       <ExitIcon />
     </FloatingButton>
   );
