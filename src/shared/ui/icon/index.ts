@@ -8,6 +8,7 @@ import CompassSVG from "@/shared/assets/compass.svg";
 import EditSvg from "@/shared/assets/edit.svg";
 // svg 파일 Import
 import EmailSvg from "@/shared/assets/email.svg";
+import ExitSVG from "@/shared/assets/exit.svg";
 import Indeterminate from "@/shared/assets/indeterminate.svg";
 import LocationSVG from "@/shared/assets/location.svg";
 import MapLocationSearching from "@/shared/assets/map-location-searching.svg";
@@ -46,3 +47,4 @@ export const PinShadowIcon = withIcon(PinShadowSVG);
 export const CancelIcon = withIcon(CancelSVG);
 export const SearchIcon = withIcon(SearchSVG);
 export const PlusIcon = withIcon(PlusSVG);
+export const ExitIcon = withIcon(ExitSVG);
