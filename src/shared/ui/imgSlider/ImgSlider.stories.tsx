@@ -16,7 +16,8 @@ const meta: Meta<typeof ImgSlider> = {
     },
   ],
   parameters: {
-    componentSubtitle: "이미지들을 슬라이드로 보여주는 컴포넌트입니다.",
+    componentSubtitle:
+      "여러 개의 사진들을 가로로 스크롤하여 사용자에게 보여주는 UI입니다.",
     docs: {
       description: {
         component:
