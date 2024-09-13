@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -6,10 +7,16 @@ import { CloseIcon, MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
+import { useGetAddressFromLatLng } from "../api";
 import { useMarkingFormStore } from "../store/form";
 
 interface MarkingFormModalProps {
   onClose: () => Promise<void>;
+}
+
+interface LatLng {
+  lat: number;
+  lng: number;
 }
 
 const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => (
@@ -21,16 +28,36 @@ const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => (
   </header>
 );
 
-const CurrentLocation = () => (
-  <button>
-    <p className="flex gap-[0.625rem]">
-      <span className="text-tangerine-500">
-        <MyLocationIcon />
-      </span>
-      <span className="btn-2">영등포구 여의도동 여의도공원</span>
-    </p>
-  </button>
-);
+const CurrentLocation = ({
+  lat,
+  lng,
+  onClose,
+}: LatLng & { onClose: () => Promise<void> }) => {
+  const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng });
+  const setRegion = useMarkingFormStore((state) => state.setRegion);
+
+  useEffect(() => {
+    if (!data && !isSuccess) {
+      return;
+    }
+    setRegion(data.region);
+  }, [data, isSuccess, setRegion]);
+
+  return (
+    <button onClick={onClose}>
+      <p className="flex gap-[0.625rem]">
+        <span className="text-tangerine-500">
+          <MyLocationIcon />
+        </span>
+        {isSuccess ? (
+          <span className="btn-2">{data.region}</span>
+        ) : (
+          <span className="animate-pulse w-44 bg-grey-200 rounded-2xl"></span>
+        )}
+      </p>
+    </button>
+  );
+};
 
 type POST_VISIBILITY = "전체 공개" | "팔로우 공개" | "나만 보기";
 
@@ -107,10 +134,10 @@ const PhotoInput = ({
       />
       {/* label */}
       <label htmlFor="images">
-        <p className="flex gap-1 pb-1">
+        <div className="flex gap-1 pb-1">
           <span className="title-3 text-grey-700">{label}</span>
           <span>{essential && <Badge colorType="primary" />}</span>
-        </p>
+        </div>
       </label>
       {/* 담긴 사진들 */}
       <section className="flex gap-2 w-full overflow-x-auto">
@@ -146,7 +173,11 @@ const MarkingTextArea = () => {
   );
 };
 
-const MarkingFormButtons = ({ onClose }: MarkingFormModalProps) => {
+const MarkingFormButtons = ({
+  onClose,
+  lat,
+  lng,
+}: MarkingFormModalProps & LatLng) => {
   return (
     <div className="flex flex-col gap-2">
       <Button colorType="primary" size="medium" variant="filled">
@@ -160,12 +191,14 @@ const MarkingFormButtons = ({ onClose }: MarkingFormModalProps) => {
 };
 
 export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
+  const { lat, lng }: LatLng = useMap().getCenter();
+
   return (
     <Modal modalType="center">
       <MarkingModalNav onClose={onClose} />
       <form action="" className="flex flex-col gap-8">
         {/* 사용자 현재 위치 */}
-        <CurrentLocation />
+        <CurrentLocation lat={lat} lng={lng} onClose={onClose} />
         {/* 보기 권한 설정 */}
         <PermissionSelect />
         {/* 사진 추가하기 */}
@@ -173,7 +206,7 @@ export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
         {/* 메모하기 */}
         <MarkingTextArea />
         {/* 제출 버튼들 */}
-        <MarkingFormButtons onClose={onClose} />
+        <MarkingFormButtons onClose={onClose} lat={lat} lng={lng} />
       </form>
     </Modal>
   );
