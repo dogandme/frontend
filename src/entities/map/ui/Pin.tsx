@@ -32,15 +32,6 @@ export const Default = ({ imageUrl, alt }: PinProps) => {
   );
 };
 
-// TODO : 그림자 위치 변경하기
-export const ClickPin = ({ imageUrl, alt }: PinProps) => {
-  return (
-    <div className="relative">
-      <Pin imageUrl={imageUrl} alt={alt} className="transform scale-[2]" />
-    </div>
-  );
-};
-
 export const Multiple = ({
   imageUrl,
   alt,
