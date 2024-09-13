@@ -1,6 +1,7 @@
 import { navigationBarStyles, navigationBaseStyle } from "./Navigation.style";
 
-interface NavigationBarProps {
+export interface NavigationBarProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   componentType: keyof typeof navigationBarStyles;
   button: React.ReactNode;
   label?: React.ReactNode;

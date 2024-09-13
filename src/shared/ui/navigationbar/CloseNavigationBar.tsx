@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
-import { NavigationBar } from "./NavigationBar";
+import { NavigationBar, NavigationBarProps } from "./NavigationBar";
 
 const CloseButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
@@ -17,11 +17,14 @@ const CloseButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   );
 };
 
-export const CloseNavigationBar = (
-  props: React.HTMLAttributes<HTMLButtonElement>,
-) => {
+type CloseNavigationBarProps = Omit<
+  NavigationBarProps,
+  "componentType" | "button"
+>;
+
+export const CloseNavigationBar = (props: CloseNavigationBarProps) => {
   const navigate = useNavigate();
-  const { onClick, ...rest } = props;
+  const { onClick, label, ...rest } = props;
 
   return (
     <NavigationBar
@@ -29,6 +32,7 @@ export const CloseNavigationBar = (
       button={
         <CloseButton onClick={onClick || (() => navigate(-1))} {...rest} />
       }
+      label={label}
     ></NavigationBar>
   );
 };
