@@ -6,7 +6,7 @@ import { CloseIcon, MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
-import { MarkingFormStore } from "../store/form";
+import { useMarkingFormStore } from "../store/form";
 
 interface MarkingFormModalProps {
   onClose: () => Promise<void>;
@@ -32,11 +32,25 @@ const CurrentLocation = () => (
   </button>
 );
 
+type POST_VISIBILITY = "전체 공개" | "팔로우 공개" | "나만 보기";
+
 const PermissionSelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const PERMISSION_LIST = ["전체 공개", "팔로우 공개", "나만 보기"];
+  const VISIBILITY_LIST: POST_VISIBILITY[] = [
+    "전체 공개",
+    "팔로우 공개",
+    "나만 보기",
+  ];
+
+  const visibility = useMarkingFormStore((state) => state.visibility);
+  const setVisibility = useMarkingFormStore((state) => state.setVisibility);
 
   const onClose = () => setIsOpen(false);
+
+  const handleSelect = (value: POST_VISIBILITY) => {
+    setVisibility(value);
+    onClose();
+  };
 
   return (
     <div className="relative">
@@ -45,19 +59,20 @@ const PermissionSelect = () => {
         essential
         onClick={() => setIsOpen(!isOpen)}
         placeholder="공개 범위를 설정해 주세요"
+        value={visibility}
       />
 
       <Select isOpen={isOpen} onClose={onClose}>
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0`}
         >
-          {PERMISSION_LIST.map((option, idx) => {
+          {VISIBILITY_LIST.map((option, idx) => {
             return (
               <Select.Option
                 key={idx}
                 value={option}
-                isSelected={false}
-                onClick={onClose}
+                isSelected={option === visibility}
+                onClick={() => handleSelect(option)}
               >
                 {option}
               </Select.Option>
