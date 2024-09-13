@@ -6,7 +6,7 @@ const ImgItem = ({
   ...props
 }: { onRemove?: () => void } & ImgHTMLAttributes<HTMLImageElement>) => {
   return (
-    <div className="relative w-[120px] h-[120px] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0">
+    <div className="relative w-[7.5rem] h-[7.5rem] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0">
       <img className="w-full h-full object-cover no-drag" {...props} />
       {onRemove && (
         <button
@@ -26,7 +26,7 @@ const Item = ({
 }: { children: ReactNode } & HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className="relative w-[120px] h-[120px] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0"
+      className="relative w-[7.5rem] h-[7.5rem] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0"
       {...props}
     >
       {children}
