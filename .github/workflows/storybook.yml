@@ -21,6 +21,11 @@ jobs:
         run: npm ci
       - name: Install playwright browsers
         run: npx playwright install
+      - name: Create .env file
+        run: |
+          echo "VITE_GOOGLE_MAPS_API_KEY=${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}" >> .env
+          echo "VITE_GOOGLE_MAPS_ID=${{ secrets.VITE_GOOGLE_MAPS_ID }}" >> .env
+
       - name: Run interaction tests and save output
         id: test-storybook
         run: npm run test-storybook 2> >(sed 's/\x1b\[[0-9;]*m//g' > test-storybook-output.txt)
