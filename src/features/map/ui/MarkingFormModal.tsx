@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
-import { useModal } from "@/shared/lib/overlay";
+import { useModal, useSnackBar } from "@/shared/lib/overlay";
+import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon, MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
+import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../api";
+import { usePostMarkingForm, usePostTempMarkingForm } from "../api/form";
 import { useMarkingFormStore } from "../store/form";
 import { useMapStore } from "../store/map";
 
@@ -224,19 +227,137 @@ const MarkingTextArea = () => {
   );
 };
 
+interface FormData {
+  token: string;
+  region: string;
+  visibility: string;
+  content: string;
+  images: File[];
+  lat: number;
+  lng: number;
+}
+
+interface MarkingFormButtonProps {
+  handleExitEditMode: () => void;
+  formData: FormData;
+}
+
+const SaveButton = ({
+  handleExitEditMode,
+  formData,
+}: MarkingFormButtonProps) => {
+  const { token, ...formObj } = formData;
+  const { handleOpen: onOpenSnackbar, onClose } = useSnackBar(() => (
+    <Snackbar onClose={onClose}>
+      <p className="body-2 text-grey-700">내 마킹이 추가되었습니다.</p>
+    </Snackbar>
+  ));
+
+  const { mutate: postMarkingData } = usePostMarkingForm(
+    { token, ...formObj },
+    {
+      onSuccess: () => {
+        handleExitEditMode();
+        onOpenSnackbar();
+      },
+      onError: (error) => {
+        throw new Error(error.message);
+      },
+    },
+  );
+
+  return (
+    <Button
+      colorType="primary"
+      size="medium"
+      variant="filled"
+      type="button"
+      onClick={() => postMarkingData({ token, ...formObj })}
+    >
+      저장하기
+    </Button>
+  );
+};
+const TemporarySaveButton = ({
+  handleExitEditMode,
+  formData,
+}: MarkingFormButtonProps) => {
+  const { token, ...formObj } = formData;
+  const { handleOpen: onOpenSnackbar, onClose } = useSnackBar(() => (
+    <Snackbar onClose={onClose}>
+      <p className="flex flex-col body-2 text-grey-700">
+        <span>임시저장 되었습니다.</span>
+        <span>내 마킹에서 저장을 완료해 주세요</span>
+      </p>
+    </Snackbar>
+  ));
+
+  const { mutate: postTempMarkingData } = usePostTempMarkingForm(
+    {
+      token,
+      ...formObj,
+    },
+    {
+      onSuccess: () => {
+        handleExitEditMode();
+        onOpenSnackbar();
+      },
+      onError: (error) => {
+        throw new Error(error.message);
+      },
+    },
+  );
+
+  return (
+    <Button
+      colorType="tertiary"
+      size="medium"
+      variant="text"
+      type="button"
+      onClick={() => postTempMarkingData({ token, ...formObj })}
+    >
+      임시저장
+    </Button>
+  );
+};
+
 const MarkingFormButtons = ({
   onClose,
   lat,
   lng,
 }: MarkingFormModalProps & LatLng) => {
+  const { token } = useAuthStore.getState();
+  const setMode = useMapStore((state) => state.setMode);
+
+  if (!token) {
+    throw new Error("로그인 후 이용해 주세요");
+  }
+
+  const { region, visibility, content, images } =
+    useMarkingFormStore.getState();
+
+  const formData = {
+    token,
+    region,
+    visibility,
+    content,
+    images,
+    lat,
+    lng,
+  };
+
+  const handleExitEditMode = () => {
+    onClose();
+    setMode("view");
+  };
+
   return (
     <div className="flex flex-col gap-2">
-      <Button colorType="primary" size="medium" variant="filled" type="button">
-        저장하기
-      </Button>
-      <Button colorType="tertiary" size="medium" variant="text" type="button">
-        임시저장
-      </Button>
+      <SaveButton handleExitEditMode={handleExitEditMode} formData={formData} />
+      <TemporarySaveButton
+        handleExitEditMode={handleExitEditMode}
+        formData={formData}
+      />
     </div>
   );
 };

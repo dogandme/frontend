@@ -63,4 +63,6 @@ export const MAP_INITIAL_BOUNDS = {
 export const MAP_ENDPOINT = {
   REVERSE_GEOCODING: ({ lat, lng }: { lat: number; lng: number }) =>
     `http://localhost:80/maps/reverse-geocoding?lat=${lat}&lng=${lng}`,
+  MARKING_SAVE: "http://localhost:80/markings",
+  MARKING_TEMP_SAVE: "http://localhost:80/markings/temp",
 };
