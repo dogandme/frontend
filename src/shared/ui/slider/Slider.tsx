@@ -10,7 +10,7 @@ const ImgItem = ({
       <img className="w-full h-full object-cover no-drag" {...props} />
       {onRemove && (
         <button
-          className="absolute top-1 right-1 bg-tangerine-500 rounded-2xl"
+          className="absolute w-6 h-6 top-1 right-1 bg-tangerine-500 rounded-2xl"
           onClick={onRemove}
         >
           <CloseIcon fill="grey-0" />
@@ -69,7 +69,7 @@ const SliderMain = ({ children }: { children: ReactNode }) => {
     e.preventDefault();
 
     const x = e.pageX - (ref.current?.offsetLeft || 0);
-    const move = x - startX.current;
+    const move = (x - startX.current) * 1.3;
 
     if (ref.current) {
       ref.current.scrollLeft = scrollLeft.current - move;
