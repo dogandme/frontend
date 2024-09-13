@@ -1,2 +1,2 @@
-export * from "./MarkingButton";
+export * from "./MapControlButton";
 export * from "./MarkingFormModal";
