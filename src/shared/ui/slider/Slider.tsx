@@ -10,10 +10,10 @@ const ImgItem = ({
       <img className="w-full h-full object-cover no-drag" {...props} />
       {onRemove && (
         <button
-          className="absolute w-6 h-6 top-1 right-1 bg-tangerine-500 rounded-2xl"
+          className="absolute w-6 h-6 top-1 right-1 bg-grey-0 rounded-2xl"
           onClick={onRemove}
         >
-          <CloseIcon fill="grey-0" />
+          <CloseIcon width={24} height={24} fill="grey-500" />
         </button>
       )}
     </div>
