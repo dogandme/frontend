@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
+import { useModal } from "@/shared/lib/overlay";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon, MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
@@ -9,6 +10,7 @@ import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../api";
 import { useMarkingFormStore } from "../store/form";
+import { useMapStore } from "../store/map";
 
 interface MarkingFormModalProps {
   onClose: () => Promise<void>;
@@ -19,14 +21,63 @@ interface LatLng {
   lng: number;
 }
 
-const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => (
-  <header className="flex justify-between">
-    <h1 className="title-1">마킹하기</h1>
-    <button onClick={onClose}>
-      <CloseIcon />
-    </button>
-  </header>
-);
+const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => {
+  const setMode = useMapStore((state) => state.setMode);
+
+  const { onClose: onCloseExitModal, handleOpen: onOpenExitModal } = useModal(
+    () => (
+      <Modal modalType="center">
+        <section className="flex flex-col gap-8">
+          <div className="flex justify-between">
+            <span className="title-1 text-grey-900">화면을 나가시겠습니까</span>
+            <button onClick={onCloseExitModal}>
+              <CloseIcon />
+            </button>
+          </div>
+          <div className="text-grey-700 body-2">
+            <p>화면을 나갈 경우 입력한 정보들이 모두 삭제 됩니다.</p>
+            <p>정말 화면을 나가시겠습니까?</p>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="text"
+              colorType="tertiary"
+              size="medium"
+              fullWidth={false}
+              className="flex-1"
+              onClick={onCloseExitModal}
+            >
+              취소
+            </Button>
+            <Button
+              variant="text"
+              colorType="primary"
+              size="medium"
+              onClick={() => {
+                onCloseExitModal();
+                onClose();
+                setMode("view");
+              }}
+              fullWidth={false}
+              className="flex-1"
+            >
+              나가기
+            </Button>
+          </div>
+        </section>
+      </Modal>
+    ),
+  );
+
+  return (
+    <header className="flex justify-between">
+      <h1 className="title-1">마킹하기</h1>
+      <button onClick={onOpenExitModal}>
+        <CloseIcon />
+      </button>
+    </header>
+  );
+};
 
 const CurrentLocation = ({
   lat,
@@ -180,10 +231,10 @@ const MarkingFormButtons = ({
 }: MarkingFormModalProps & LatLng) => {
   return (
     <div className="flex flex-col gap-2">
-      <Button colorType="primary" size="medium" variant="filled">
+      <Button colorType="primary" size="medium" variant="filled" type="button">
         저장하기
       </Button>
-      <Button colorType="tertiary" size="medium" variant="text">
+      <Button colorType="tertiary" size="medium" variant="text" type="button">
         임시저장
       </Button>
     </div>
