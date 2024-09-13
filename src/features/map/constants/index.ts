@@ -59,3 +59,8 @@ export const MAP_INITIAL_BOUNDS = {
   south: 37.56055534657849,
   west: 126.97381575396503,
 };
+
+export const MAP_ENDPOINT = {
+  REVERSE_GEOCODING: ({ lat, lng }: { lat: number; lng: number }) =>
+    `http://localhost:80/maps/reverse-geocoding?lat=${lat}&lng=${lng}`,
+};
