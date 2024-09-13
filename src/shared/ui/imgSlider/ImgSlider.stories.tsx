@@ -20,7 +20,7 @@ const meta: Meta<typeof ImgSlider> = {
     docs: {
       description: {
         component:
-          "ImgSlider.ImgItem 컴포넌트는 이미지를 보여줍니다. ImgItem의 props 중 onRemove는 이미지를 삭제할 때 사용합니다.\n\nImgSlider.Item 컴포넌트는 이미지가 아닌 다른 컨텐츠를 보여줍니다.",
+          "ImgSlider.ImgItem 컴포넌트는 이미지를 보여줍니다. ImgItem의 props 중 onRemove는 이미지를 삭제하는 버튼의 클릭 핸들러입니다.\n\nImgSlider.Item 컴포넌트는 이미지가 아닌 다른 컨텐츠를 보여줍니다.",
       },
     },
   },
