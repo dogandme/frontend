@@ -6,6 +6,7 @@ import { CloseIcon, MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
+import { MarkingFormStore } from "../store/form";
 
 interface MarkingFormModalProps {
   onClose: () => Promise<void>;
