@@ -425,9 +425,24 @@ const MarkingFormButtons = ({
 };
 
 export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
-  const center = useMap().getCenter();
-  const lat = center.lat();
-  const lng = center.lng();
+  const map = useMap();
+  const [position, setPosition] = useState<LatLng>({ lat: 0, lng: 0 });
+
+  useEffect(() => {
+    const handleCenterChanged = () => {
+      const newCenter = map.getCenter();
+      setPosition({ lat: newCenter.lat(), lng: newCenter.lng() });
+    };
+
+    map.addListener("center_changed", handleCenterChanged);
+
+    // Cleanup listener on unmount
+    return () => {
+      map.removeListener("center_changed", handleCenterChanged);
+    };
+  }, [map]);
+
+  const { lat, lng } = position;
 
   return (
     <Modal modalType="center">

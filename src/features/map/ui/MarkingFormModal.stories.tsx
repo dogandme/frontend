@@ -98,8 +98,8 @@ export const Default: Story = {
           await canvas.findByText("여기에 마킹하기");
         await userEvent.click($markingModalTriggerButton);
 
-        const $markingForm = await canvasElement.querySelector("form");
-        expect($markingForm).toBeVisible();
+        const $markingFormSubmitButton = await canvas.findByText("저장하기");
+        expect($markingFormSubmitButton).toBeVisible();
       },
     );
 
@@ -111,8 +111,55 @@ export const Default: Story = {
       },
     );
 
-    // ! 이유는 모르겠으나 스토리북에서 STRING_ADDRESS 를 클릭하면 스토리북이 터진다.
-    // ! 그래서 STRING_ADDRESS 를 클릭하는 테스트는 제외하고 진행한다.
-    // ! 사용하면 STRING_ADDRESS 를 클릭하면 이전 모드로 잘 이동하는 것을 확인할 수 있다.
+    await step(
+      "마킹 모달 폼에서 현재 도로명 주소를 클릭하면 모달이 닫히고 edit 모드가 유지 된다.",
+      async () => {
+        const $markingAddress = await canvas.findByText(STRING_ADDRESS);
+        const $markingFormSubmitButton = await canvas.findByText("저장하기");
+
+        await userEvent.click($markingAddress);
+        expect($markingFormSubmitButton).not.toBeInTheDocument();
+
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기");
+        expect($markingModalTriggerButton).toBeVisible();
+      },
+    );
+
+    await step(
+      "edit 모드에서 지도를 일정 부분 이동하고 모달을 다시 열면 새로운 주소에 대한 도로명 주소가 나타난다.",
+      async () => {
+        // 드래그 시작 위치
+        const startElement = canvas.getAllByLabelText("지도")[0];
+        const startBoundingBox = startElement.getBoundingClientRect();
+        const startX = startBoundingBox.left + startBoundingBox.width / 2;
+        const startY = startBoundingBox.top + startBoundingBox.height / 2;
+
+        // 드래그 종료 위치 (예: 100px 오른쪽, 50px 아래로 드래그)
+        const endX = startX + 100;
+        const endY = startY + 50;
+
+        // 드래그 동작 시뮬레이션
+        await userEvent.pointer([
+          {
+            keys: "[MouseLeft]",
+            target: startElement,
+            coords: { x: startX, y: startY },
+          },
+          { coords: { x: endX, y: endY } },
+          { keys: "[/MouseLeft]", coords: { x: endX, y: endY } },
+        ]);
+
+        // 모달 다시 열기
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기");
+        await userEvent.click($markingModalTriggerButton);
+
+        // 새로운 주소에 대한 도로명 주소 확인
+        const $newAddress =
+          await canvas.findByText("새로운 도로명 주소 텍스트");
+        expect($newAddress).toBeVisible();
+      },
+    );
   },
 };
