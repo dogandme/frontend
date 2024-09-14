@@ -1,6 +1,10 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { LatLng } from "@/features/auth/api/region";
-import { MAP_ENDPOINT } from "../constants";
+import {
+  MAP_ENDPOINT,
+  POST_VISIBILITY_KEY,
+  POST_VISIBILITY_MAP,
+} from "../constants";
 
 // Marking Form 저장 API
 export interface MarkingFormRequest extends LatLng {
@@ -35,7 +39,13 @@ const postMarkingFormData = async ({
   const formData = new FormData();
   formData.append(
     "markingAddDto",
-    JSON.stringify({ region, visibility, content, lat, lng }),
+    JSON.stringify({
+      region,
+      visibility: POST_VISIBILITY_MAP[visibility as POST_VISIBILITY_KEY],
+      content,
+      lat,
+      lng,
+    }),
   );
 
   images.forEach((image) => {
@@ -49,6 +59,7 @@ const postMarkingFormData = async ({
       Authorization: `${token}`,
       "Content-Type": "multipart/form-data",
     },
+    body: formData,
   });
 
   const data = await response.json();
@@ -96,7 +107,13 @@ const postMarkingFormDataTemporary = async ({
   const formData = new FormData();
   formData.append(
     "markingAddDto",
-    JSON.stringify({ region, visibility, content, lat, lng }),
+    JSON.stringify({
+      region,
+      visibility: POST_VISIBILITY_MAP[visibility as POST_VISIBILITY_KEY],
+      content,
+      lat,
+      lng,
+    }),
   );
 
   images.forEach((image) => {
@@ -110,6 +127,7 @@ const postMarkingFormDataTemporary = async ({
       Authorization: `${token}`,
       "Content-Type": "multipart/form-data",
     },
+    body: formData,
   });
 
   const data = await response.json();
