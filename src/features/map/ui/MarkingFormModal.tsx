@@ -33,7 +33,10 @@ const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => {
         <section className="flex flex-col gap-8">
           <div className="flex justify-between">
             <span className="title-1 text-grey-900">화면을 나가시겠습니까</span>
-            <button onClick={onCloseExitModal}>
+            <button
+              onClick={onCloseExitModal}
+              aria-label="마킹 하기 제출 폼 닫기"
+            >
               <CloseIcon />
             </button>
           </div>
