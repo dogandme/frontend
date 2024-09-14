@@ -271,6 +271,7 @@ const PhotoInput = ({
 };
 
 const MarkingTextArea = () => {
+  const { content } = useMarkingFormStore.getState();
   const setContent = useMarkingFormStore((state) => state.setContent);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -283,6 +284,7 @@ const MarkingTextArea = () => {
       name="content"
       label="메모하기"
       placeholder="마킹에 대한 메모를 남겨주세요."
+      defaultValue={content}
       onChange={handleChange}
     />
   );
