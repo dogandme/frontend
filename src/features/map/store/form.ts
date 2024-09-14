@@ -13,7 +13,7 @@ interface MarkingFormActions {
   setVisibility: (visibility: POST_VISIBILITY_KEY) => void;
   setContent: (content: string) => void;
   setImages: (images: File[]) => void;
-  reset: () => void;
+  resetMarkingFormStore: () => void;
 }
 
 const MarkingFormInitialState: MarkingFormState = {
@@ -32,5 +32,5 @@ export const useMarkingFormStore = create<
   setVisibility: (visibility) => set({ visibility }),
   setContent: (content) => set({ content }),
   setImages: (images) => set({ images }),
-  reset: () => set(MarkingFormInitialState),
+  resetMarkingFormStore: () => set(MarkingFormInitialState),
 }));

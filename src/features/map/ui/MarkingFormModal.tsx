@@ -28,6 +28,9 @@ interface LatLng {
 
 const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => {
   const setMode = useMapStore((state) => state.setMode);
+  const resetMarkingFormStore = useMarkingFormStore(
+    (state) => state.resetMarkingFormStore,
+  );
 
   const { onClose: onCloseExitModal, handleOpen: onOpenExitModal } = useModal(
     () => (
@@ -64,6 +67,7 @@ const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => {
               onClick={() => {
                 onCloseExitModal();
                 onClose();
+                resetMarkingFormStore();
                 setMode("view");
               }}
               fullWidth={false}
@@ -385,6 +389,9 @@ const MarkingFormButtons = ({
 }: MarkingFormModalProps & LatLng) => {
   const { token } = useAuthStore.getState();
   const setMode = useMapStore((state) => state.setMode);
+  const resetMarkingFormStore = useMarkingFormStore(
+    (state) => state.resetMarkingFormStore,
+  );
 
   if (!token) {
     throw new Error("로그인 후 이용해 주세요");
@@ -406,6 +413,7 @@ const MarkingFormButtons = ({
   const handleExitEditMode = () => {
     onClose();
     setMode("view");
+    resetMarkingFormStore();
   };
 
   return (
