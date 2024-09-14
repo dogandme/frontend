@@ -154,7 +154,7 @@ const PermissionSelect = () => {
 
       <Select isOpen={isOpen} onClose={onClose}>
         <Select.OptionList
-          className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0`}
+          className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
           {VISIBILITY_LIST.map((option, idx) => {
             return (
