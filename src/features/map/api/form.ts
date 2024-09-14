@@ -76,11 +76,10 @@ const postMarkingFormData = async ({
 };
 
 export const usePostMarkingForm = (
-  { token, ...formObj }: MarkingFormRequest,
   options?: UseMutationOptions<MarkingFormResponse, Error, MarkingFormRequest>,
 ) => {
   return useMutation({
-    mutationFn: () => postMarkingFormData({ token, ...formObj }),
+    mutationFn: postMarkingFormData,
     ...options,
   });
 };
@@ -144,11 +143,10 @@ const postMarkingFormDataTemporary = async ({
 };
 
 export const usePostTempMarkingForm = (
-  { token, ...formObj }: MarkingFormRequest,
   options?: UseMutationOptions<MarkingFormResponse, Error, MarkingFormRequest>,
 ) => {
   return useMutation({
-    mutationFn: () => postMarkingFormDataTemporary({ token, ...formObj }),
+    mutationFn: postMarkingFormDataTemporary,
     ...options,
   });
 };
