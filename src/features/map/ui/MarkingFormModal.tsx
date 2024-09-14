@@ -173,13 +173,7 @@ const PermissionSelect = () => {
   );
 };
 
-const PhotoInput = ({
-  label,
-  essential = false,
-}: {
-  label: string;
-  essential?: boolean;
-}) => {
+const PhotoInput = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const images = useMarkingFormStore((state) => state.images);
   const setImages = useMarkingFormStore((state) => state.setImages);
@@ -245,8 +239,10 @@ const PhotoInput = ({
       {/* label */}
       <label htmlFor="images">
         <div className="flex gap-1 pb-1">
-          <span className="title-3 text-grey-700">{label}</span>
-          <span>{essential && <Badge colorType="primary" />}</span>
+          <span className="title-3 text-grey-700">사진 추가하기</span>
+          <span>
+            <Badge colorType="primary" />
+          </span>
         </div>
       </label>
       {/* 담긴 사진들 */}
@@ -442,7 +438,7 @@ export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
         {/* 보기 권한 설정 */}
         <PermissionSelect />
         {/* 사진 추가하기 */}
-        <PhotoInput label="사진 추가하기" essential />
+        <PhotoInput />
         {/* 메모하기 */}
         <MarkingTextArea />
         {/* 제출 버튼들 */}
