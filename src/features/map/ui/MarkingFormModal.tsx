@@ -38,7 +38,7 @@ const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => {
             <span className="title-1 text-grey-900">화면을 나가시겠습니까</span>
             <button
               onClick={onCloseExitModal}
-              aria-label="마킹 하기 제출 폼 닫기"
+              aria-label="게시글 나가기 확인창 닫기"
             >
               <CloseIcon />
             </button>
@@ -82,7 +82,7 @@ const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => {
   return (
     <header className="flex justify-between">
       <h1 className="title-1">마킹하기</h1>
-      <button onClick={onOpenExitModal}>
+      <button onClick={onOpenExitModal} aria-label="작성중인 마킹 게시글 닫기">
         <CloseIcon />
       </button>
     </header>
