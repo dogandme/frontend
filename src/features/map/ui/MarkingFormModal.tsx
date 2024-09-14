@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
