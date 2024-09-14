@@ -19,11 +19,6 @@ interface MarkingFormModalProps {
   onClose: () => Promise<void>;
 }
 
-interface LatLng {
-  lat: number;
-  lng: number;
-}
-
 const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => {
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
@@ -89,11 +84,10 @@ const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => {
   );
 };
 
-const CurrentLocation = ({
-  lat,
-  lng,
-  onClose,
-}: LatLng & { onClose: () => Promise<void> }) => {
+const CurrentLocation = ({ onClose }: { onClose: () => Promise<void> }) => {
+  const { center } = useMapStore((state) => state.mapInfo);
+  const { lat, lng } = center;
+
   const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng });
   const setRegion = useMarkingFormStore((state) => state.setRegion);
 
@@ -287,44 +281,42 @@ const MarkingTextArea = () => {
   );
 };
 
-interface FormData {
-  token: string;
-  region: string;
-  visibility: string;
-  content: string;
-  images: File[];
-  lat: number;
-  lng: number;
-}
-
-interface MarkingFormButtonProps {
-  handleExitEditMode: () => void;
-  formData: FormData;
-}
-
-const SaveButton = ({
-  handleExitEditMode,
-  formData,
-}: MarkingFormButtonProps) => {
-  const { token, ...formObj } = formData;
-  const { handleOpen: onOpenSnackbar, onClose } = useSnackBar(() => (
-    <Snackbar onClose={onClose}>
-      <p className="body-2 text-grey-700">내 마킹이 추가되었습니다.</p>
-    </Snackbar>
-  ));
-
-  const { mutate: postMarkingData } = usePostMarkingForm(
-    { token, ...formObj },
-    {
-      onSuccess: () => {
-        handleExitEditMode();
-        onOpenSnackbar();
-      },
-      onError: (error) => {
-        throw new Error(error.message);
-      },
-    },
+const SaveButton = ({ onClose }: { onClose: () => Promise<void> }) => {
+  const { center } = useMapStore((state) => state.mapInfo);
+  const setMode = useMapStore((state) => state.setMode);
+  const resetMarkingFormStore = useMarkingFormStore(
+    (state) => state.resetMarkingFormStore,
   );
+
+  const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
+    () => (
+      <Snackbar onClose={onCloseSnackbar}>
+        <p className="body-2 text-grey-700">내 마킹이 추가되었습니다.</p>
+      </Snackbar>
+    ),
+  );
+
+  const { mutate: postMarkingData } = usePostMarkingForm({
+    onSuccess: () => {
+      onClose();
+      resetMarkingFormStore();
+      setMode("view");
+      onOpenSnackbar();
+    },
+    onError: (error) => {
+      throw new Error(error.message);
+    },
+  });
+
+  const handleSave = () => {
+    const { token } = useAuthStore.getState();
+    if (!token) {
+      throw new Error("로그인 후 이용해 주세요");
+    }
+
+    const formObj = useMarkingFormStore.getState();
+    postMarkingData({ token, ...center, ...formObj });
+  };
 
   return (
     <Button
@@ -332,41 +324,51 @@ const SaveButton = ({
       size="medium"
       variant="filled"
       type="button"
-      onClick={() => postMarkingData({ token, ...formObj })}
+      onClick={handleSave}
     >
       저장하기
     </Button>
   );
 };
-const TemporarySaveButton = ({
-  handleExitEditMode,
-  formData,
-}: MarkingFormButtonProps) => {
-  const { token, ...formObj } = formData;
-  const { handleOpen: onOpenSnackbar, onClose } = useSnackBar(() => (
-    <Snackbar onClose={onClose}>
-      <p className="flex flex-col body-2 text-grey-700">
-        <span>임시저장 되었습니다.</span>
-        <span>내 마킹에서 저장을 완료해 주세요</span>
-      </p>
-    </Snackbar>
-  ));
-
-  const { mutate: postTempMarkingData } = usePostTempMarkingForm(
-    {
-      token,
-      ...formObj,
-    },
-    {
-      onSuccess: () => {
-        handleExitEditMode();
-        onOpenSnackbar();
-      },
-      onError: (error) => {
-        throw new Error(error.message);
-      },
-    },
+const TemporarySaveButton = ({ onClose }: { onClose: () => Promise<void> }) => {
+  const { center } = useMapStore((state) => state.mapInfo);
+  const setMode = useMapStore((state) => state.setMode);
+  const resetMarkingFormStore = useMarkingFormStore(
+    (state) => state.resetMarkingFormStore,
   );
+
+  const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
+    () => (
+      <Snackbar onClose={onCloseSnackbar}>
+        <p className="flex flex-col body-2 text-grey-700">
+          <span>임시저장 되었습니다.</span>
+          <span>내 마킹에서 저장을 완료해 주세요</span>
+        </p>
+      </Snackbar>
+    ),
+  );
+
+  const { mutate: postTempMarkingData } = usePostTempMarkingForm({
+    onSuccess: () => {
+      onClose();
+      resetMarkingFormStore();
+      setMode("view");
+      onOpenSnackbar();
+    },
+    onError: (error) => {
+      throw new Error(error.message);
+    },
+  });
+
+  const handleSave = () => {
+    const { token } = useAuthStore.getState();
+    if (!token) {
+      throw new Error("로그인 후 이용해 주세요");
+    }
+
+    const formObj = useMarkingFormStore.getState();
+    postTempMarkingData({ token, ...center, ...formObj });
+  };
 
   return (
     <Button
@@ -374,68 +376,29 @@ const TemporarySaveButton = ({
       size="medium"
       variant="text"
       type="button"
-      onClick={() => postTempMarkingData({ token, ...formObj })}
+      onClick={handleSave}
     >
       임시저장
     </Button>
   );
 };
 
-const MarkingFormButtons = ({
-  onClose,
-  lat,
-  lng,
-}: MarkingFormModalProps & LatLng) => {
-  const { token } = useAuthStore.getState();
-  const setMode = useMapStore((state) => state.setMode);
-  const resetMarkingFormStore = useMarkingFormStore(
-    (state) => state.resetMarkingFormStore,
-  );
-
-  if (!token) {
-    throw new Error("로그인 후 이용해 주세요");
-  }
-
-  const { region, visibility, content, images } =
-    useMarkingFormStore.getState();
-
-  const formData = {
-    token,
-    region,
-    visibility,
-    content,
-    images,
-    lat,
-    lng,
-  };
-
-  const handleExitEditMode = () => {
-    onClose();
-    setMode("view");
-    resetMarkingFormStore();
-  };
-
+const MarkingFormButtons = ({ onClose }: MarkingFormModalProps) => {
   return (
     <div className="flex flex-col gap-2">
-      <SaveButton handleExitEditMode={handleExitEditMode} formData={formData} />
-      <TemporarySaveButton
-        handleExitEditMode={handleExitEditMode}
-        formData={formData}
-      />
+      <SaveButton onClose={onClose} />
+      <TemporarySaveButton onClose={onClose} />
     </div>
   );
 };
 
 export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
-  const { center } = useMapStore((state) => state.mapInfo);
-  const { lat, lng } = center;
-
   return (
     <Modal modalType="center">
       <MarkingModalNav onClose={onClose} />
       <section className="flex flex-col gap-8">
         {/* 사용자 현재 위치 */}
-        <CurrentLocation lat={lat} lng={lng} onClose={onClose} />
+        <CurrentLocation onClose={onClose} />
         {/* 보기 권한 설정 */}
         <PermissionSelect />
         {/* 사진 추가하기 */}
@@ -443,7 +406,7 @@ export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
         {/* 메모하기 */}
         <MarkingTextArea />
         {/* 제출 버튼들 */}
-        <MarkingFormButtons onClose={onClose} lat={lat} lng={lng} />
+        <MarkingFormButtons onClose={onClose} />
       </section>
     </Modal>
   );
