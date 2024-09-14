@@ -6,6 +6,7 @@ import { GoogleMaps } from "@/widgets/map/ui";
 import { useAuthStore } from "@/shared/store";
 import { GoogleMapsProvider, MobileLayout } from "@/app";
 import { markingModalHandlers } from "@/mocks/handler";
+import { useMarkingFormStore } from "../store/form";
 import { useMapStore } from "../store/map";
 import { MarkingFormModal } from "./MarkingFormModal";
 
@@ -126,39 +127,241 @@ export const Default: Story = {
       },
     );
 
+    await step("마킹 모달에 작성한 내용은 스토어에 잘 저장 된다.", async () => {
+      const $markingModalTriggerButton =
+        await canvas.findByText("여기에 마킹하기");
+      await userEvent.click($markingModalTriggerButton);
+
+      const $postVisibilityOpener =
+        await canvas.findByText("공개 범위를 설정해 주세요");
+      const $textArea =
+        await canvas.findByPlaceholderText("마킹에 대한 메모를 남겨주세요.");
+      const $fileUploadInput = canvasElement.querySelector(
+        "#images",
+      ) as HTMLInputElement;
+
+      // 공개 범위 설정
+      await $postVisibilityOpener.click();
+      const $publicVisibility = await canvas.findByText("전체 공개");
+      await $publicVisibility.click();
+
+      // 이미지 파일 업로드
+
+      const dummyFiles = [
+        new File([""], "test1.jpg", { type: "image/jpg", lastModified: 1 }),
+        new File([""], "test2.jpg", { type: "image/png", lastModified: 2 }),
+        new File([""], "test3.jpg", { type: "image/jpeg", lastModified: 3 }),
+        new File([""], "test4.jpg", { type: "image/webp", lastModified: 4 }),
+      ];
+
+      await userEvent.upload($fileUploadInput, dummyFiles);
+
+      // 내용 작성
+      await userEvent.type($textArea, "여기는 진짜 대박이긴 해요");
+
+      const { content, visibility, images } = useMarkingFormStore.getState();
+      expect(content).toBe("여기는 진짜 대박이긴 해요");
+      expect(visibility).toBe("전체 공개");
+      expect(images).toHaveLength(4);
+      expect(images.map((file) => file.name)).toEqual(
+        dummyFiles.map((file) => file.name),
+      );
+    });
+
     await step(
-      "edit 모드에서 지도를 일정 부분 이동하고 모달을 다시 열면 새로운 주소에 대한 도로명 주소가 나타난다.",
+      "이미지 파일 업로드는 다음과 같은 결과들을 만족 해야 한다.",
       async () => {
-        // 드래그 시작 위치
-        const startElement = canvas.getAllByLabelText("지도")[0];
-        const startBoundingBox = startElement.getBoundingClientRect();
-        const startX = startBoundingBox.left + startBoundingBox.width / 2;
-        const startY = startBoundingBox.top + startBoundingBox.height / 2;
+        const $fileUploadInput = canvasElement.querySelector(
+          "#images",
+        )! as HTMLInputElement;
 
-        // 드래그 종료 위치 (예: 100px 오른쪽, 50px 아래로 드래그)
-        const endX = startX + 100;
-        const endY = startY + 50;
+        const $fileUploadButton =
+          canvas.getByLabelText("마킹 게시글에 사진 추가하기");
 
-        // 드래그 동작 시뮬레이션
-        await userEvent.pointer([
-          {
-            keys: "[MouseLeft]",
-            target: startElement,
-            coords: { x: startX, y: startY },
+        const originalImagesLength =
+          useMarkingFormStore.getState().images.length;
+
+        await step(
+          "이미지 파일이 5장 이하 일 때엔 사진 추가 버튼이 존재 한다.",
+          async () => {
+            expect($fileUploadButton).toBeVisible();
           },
-          { coords: { x: endX, y: endY } },
-          { keys: "[/MouseLeft]", coords: { x: endX, y: endY } },
-        ]);
+        );
 
-        // 모달 다시 열기
+        await step("중복된 이미지 파일은 업로드 되지 않는다.", async () => {
+          await userEvent.upload(
+            $fileUploadInput,
+            new File([""], "test3.jpg", {
+              type: "image/jpeg",
+              lastModified: 3,
+            }),
+          );
+          expect(useMarkingFormStore.getState().images).toHaveLength(
+            originalImagesLength,
+          );
+        });
+
+        await step(
+          "새로운 파일을 추가로 업로드 하여도 기존 이미지 파일들은 존재 한다.",
+          async () => {
+            const dummyFiles = [
+              new File([""], "test5.jpg", {
+                type: "image/jpg",
+                lastModified: 5,
+              }),
+            ];
+
+            await userEvent.upload($fileUploadInput, dummyFiles);
+            expect(useMarkingFormStore.getState().images).toHaveLength(
+              originalImagesLength + 1,
+            );
+          },
+        );
+
+        await step("사진이 5장이 되면 사진 추가 버튼이 사라진다.", async () => {
+          expect($fileUploadButton).not.toBeVisible();
+        });
+      },
+    );
+
+    await step("나가기 버튼을 클릭하면 확인 모달이 나타난다.", async () => {
+      const $exitButton = canvas.getByLabelText("작성중인 마킹 게시글 닫기");
+      await userEvent.click($exitButton);
+
+      const $confirmModal = await canvas.findByText("화면을 나가시겠습니까");
+      await expect($confirmModal).toBeVisible();
+
+      const $cancelButton = await canvas.findByText("취소");
+      await userEvent.click($cancelButton);
+      await expect($confirmModal).not.toBeVisible();
+    });
+
+    await step(
+      "edit 모드를 유지한 채로 나갔다가 다시 모달을 열어도 내용이 유지 된다.",
+      async () => {
+        const originalState = useMarkingFormStore.getState();
+
+        const $markingAddress = await canvas.findByText(STRING_ADDRESS);
+        await userEvent.click($markingAddress);
+
         const $markingModalTriggerButton =
           await canvas.findByText("여기에 마킹하기");
         await userEvent.click($markingModalTriggerButton);
 
-        // 새로운 주소에 대한 도로명 주소 확인
-        const $newAddress =
-          await canvas.findByText("새로운 도로명 주소 텍스트");
-        expect($newAddress).toBeVisible();
+        expect(useMarkingFormStore.getState()).toEqual(originalState);
+      },
+    );
+
+    await step(
+      "나갈 때 view 모드로 나갈 경우엔 모달 내부 내용이 초기화 된다.",
+      async () => {
+        const $exitButton =
+          await canvas.findByLabelText("작성중인 마킹 게시글 닫기");
+        await userEvent.click($exitButton);
+
+        const $confirmModal = await canvas.findByText("화면을 나가시겠습니까");
+        await expect($confirmModal).toBeVisible();
+
+        const $exitEditModeButton = await canvas.findByText("나가기");
+        await userEvent.click($exitEditModeButton);
+
+        const { content, visibility, images } = useMarkingFormStore.getState();
+        expect(content).toBe("");
+        expect(visibility).toBe("");
+        expect(images).toHaveLength(0);
+
+        const $markingButton = await canvas.findByText("마킹하기");
+        expect($markingButton).toBeVisible();
+      },
+    );
+
+    await step(
+      "임시 저장이 성공하면 view 모드로 변경 되고 스낵 바가 나타난다.",
+      async () => {
+        const $markingButton = await canvas.findByText("마킹하기");
+        await userEvent.click($markingButton);
+
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기");
+        await userEvent.click($markingModalTriggerButton);
+
+        const $fileUploadInput = canvasElement.querySelector(
+          "#images",
+        ) as HTMLInputElement;
+        const dummyFiles = [
+          new File([""], "test1.jpg", { type: "image/jpg", lastModified: 1 }),
+          new File([""], "test2.jpg", { type: "image/png", lastModified: 2 }),
+          new File([""], "test3.jpg", { type: "image/jpeg", lastModified: 3 }),
+          new File([""], "test4.jpg", { type: "image/webp", lastModified: 4 }),
+        ];
+        await userEvent.upload($fileUploadInput, dummyFiles);
+
+        const $postVisibilityOpener =
+          await canvas.findByText("공개 범위를 설정해 주세요");
+        await $postVisibilityOpener.click();
+        const $publicVisibility = await canvas.findByText("전체 공개");
+        await $publicVisibility.click();
+
+        const $textArea =
+          await canvas.findByPlaceholderText("마킹에 대한 메모를 남겨주세요.");
+        await userEvent.type($textArea, "여기는 진짜 대박이긴 해요");
+
+        const $markingFormSubmitButton = await canvas.findByText("임시저장");
+        await userEvent.click($markingFormSubmitButton);
+
+        const $snackBar = await canvas.findByText("임시저장 되었습니다.");
+        expect($snackBar).toBeVisible();
+        expect(useMapStore.getState().mode).toBe("view");
+
+        const { content, visibility, images } = useMarkingFormStore.getState();
+        expect(content).toBe("");
+        expect(visibility).toBe("");
+        expect(images).toHaveLength(0);
+      },
+    );
+
+    await step(
+      "저장이 성공하면 view 모드로 변경 되고 스낵 바가 나타난다.",
+      async () => {
+        const $markingButton = await canvas.findByText("마킹하기");
+        await userEvent.click($markingButton);
+
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기");
+        await userEvent.click($markingModalTriggerButton);
+
+        const $fileUploadInput = canvasElement.querySelector(
+          "#images",
+        ) as HTMLInputElement;
+        const dummyFiles = [
+          new File([""], "test1.jpg", { type: "image/jpg", lastModified: 1 }),
+          new File([""], "test2.jpg", { type: "image/png", lastModified: 2 }),
+          new File([""], "test3.jpg", { type: "image/jpeg", lastModified: 3 }),
+          new File([""], "test4.jpg", { type: "image/webp", lastModified: 4 }),
+        ];
+        await userEvent.upload($fileUploadInput, dummyFiles);
+
+        const $postVisibilityOpener =
+          await canvas.findByText("공개 범위를 설정해 주세요");
+        await $postVisibilityOpener.click();
+        const $publicVisibility = await canvas.findByText("전체 공개");
+        await $publicVisibility.click();
+
+        const $textArea =
+          await canvas.findByPlaceholderText("마킹에 대한 메모를 남겨주세요.");
+        await userEvent.type($textArea, "여기는 진짜 대박이긴 해요");
+
+        const $markingFormSubmitButton = await canvas.findByText("저장하기");
+        await userEvent.click($markingFormSubmitButton);
+
+        const $snackBar = await canvas.findByText("내 마킹이 추가되었습니다.");
+        expect($snackBar).toBeVisible();
+        expect(useMapStore.getState().mode).toBe("view");
+
+        const { content, visibility, images } = useMarkingFormStore.getState();
+        expect(content).toBe("");
+        expect(visibility).toBe("");
+        expect(images).toHaveLength(0);
       },
     );
   },
