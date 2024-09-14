@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Map } from "@vis.gl/react-google-maps";
+import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
 import { mapOptions } from "../constants";
 
 const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
@@ -36,8 +37,8 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       mapId={GOOGLE_MAPS_MAP_ID}
       options={mapOptions}
       // TODO 상태 붙혀서 default Center 이동시키기
-      defaultCenter={{ lat: 37.5665, lng: 126.978 }}
-      defaultZoom={16}
+      defaultCenter={MAP_INITIAL_CENTER}
+      defaultZoom={MAP_INITIAL_ZOOM}
       reuseMaps // Map 컴포넌트가 unmount 되었다가 다시 mount 될 때 기존의 map instance 를 재사용 하여 memory leak을 방지합니다.
     >
       {children}

@@ -50,3 +50,12 @@ export const mapOptions = {
   // 모든 제스처를 활성화합니다. 사용자는 한 손가락으로 드래그하고, 두 손가락으로 확대/축소할 수 있습니다.
   gestureHandling: "greedy",
 };
+
+export const MAP_INITIAL_CENTER = { lat: 37.5665, lng: 126.978 };
+export const MAP_INITIAL_ZOOM = 16;
+export const MAP_INITIAL_BOUNDS = {
+  east: 126.98218424603498,
+  north: 37.572444179048894,
+  south: 37.56055534657849,
+  west: 126.97381575396503,
+};
