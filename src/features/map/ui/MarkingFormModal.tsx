@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
@@ -6,6 +7,7 @@ import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon, MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
+import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
@@ -176,6 +178,52 @@ const PhotoInput = ({
   essential?: boolean;
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const images = useMarkingFormStore((state) => state.images);
+  const setImages = useMarkingFormStore((state) => state.setImages);
+
+  // imageUrls 는 이미지 파일을 렌더링 하기 위해 사용되며 lastModified 는 images 내부 파일들을
+  // 식별 하기 위한 식별자로 사용됩니다.
+  const imageUrls = images.map((image) => ({
+    url: URL.createObjectURL(image),
+    lastModified: image.lastModified,
+    name: image.name,
+  }));
+
+  const handleOpenAlbum = () => {
+    inputRef.current?.click();
+  };
+
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    const { files: newFiles } = target;
+    if (!newFiles) {
+      return;
+    }
+
+    // TODO 이미지 파일 최적화 위해 용량 줄이기
+
+    const isImageAlreadyExist = (newFile: File) => {
+      return images.some(
+        (image) => image.lastModified === newFile.lastModified,
+      );
+    };
+
+    const _images = [...images];
+    for (const newFile of newFiles) {
+      if (_images.length > 5) {
+        throw new Error("사진은 5장까지 이용 가능 합니다.");
+      }
+
+      if (!isImageAlreadyExist(newFile)) {
+        _images.push(newFile);
+      }
+    }
+
+    setImages([..._images]);
+  };
+
+  const handleRemoveImage = (lastModified: number) => {
+    setImages(images.filter((image) => image.lastModified !== lastModified));
+  };
 
   return (
     <div>
@@ -184,10 +232,12 @@ const PhotoInput = ({
         type="file"
         accept=".jpeg,.jpg,.png, .webp"
         multiple
+        max={5}
         className="sr-only"
         ref={inputRef}
         id="images"
         name="images"
+        onChange={handleChange}
       />
       {/* label */}
       <label htmlFor="images">
@@ -197,17 +247,21 @@ const PhotoInput = ({
         </div>
       </label>
       {/* 담긴 사진들 */}
-      <section className="flex gap-2 w-full overflow-x-auto">
-        {/* 첫 번째 사진 */}
-        <div className="w-[120px] h-[120px] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0">
-          <PlusIcon />
-        </div>
-        {/* 이후 사진들 */}
-        <div className="w-[120px] h-[120px] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0"></div>
-        <div className="w-[120px] h-[120px] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0"></div>
-        <div className="w-[120px] h-[120px] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0"></div>
-        <div className="w-[120px] h-[120px] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0"></div>
-      </section>
+      <ImgSlider>
+        {imageUrls.length < 5 && (
+          <ImgSlider.Item onClick={handleOpenAlbum}>
+            <PlusIcon />
+          </ImgSlider.Item>
+        )}
+        {imageUrls.map(({ url, name, lastModified }, idx) => (
+          <ImgSlider.ImgItem
+            src={url}
+            alt={name}
+            key={idx}
+            onRemove={() => handleRemoveImage(lastModified)}
+          />
+        ))}
+      </ImgSlider>
     </div>
   );
 };
@@ -373,7 +427,7 @@ export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
   return (
     <Modal modalType="center">
       <MarkingModalNav onClose={onClose} />
-      <form action="" className="flex flex-col gap-8">
+      <section className="flex flex-col gap-8">
         {/* 사용자 현재 위치 */}
         <CurrentLocation lat={lat} lng={lng} onClose={onClose} />
         {/* 보기 권한 설정 */}
@@ -384,7 +438,7 @@ export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
         <MarkingTextArea />
         {/* 제출 버튼들 */}
         <MarkingFormButtons onClose={onClose} lat={lat} lng={lng} />
-      </form>
+      </section>
     </Modal>
   );
 };
