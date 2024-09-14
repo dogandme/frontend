@@ -8,10 +8,13 @@ import {
   StarIcon,
 } from "@/shared/ui/icon";
 import { Snackbar } from "@/shared/ui/snackbar";
+import { useMapStore } from "../store";
 import { MarkingFormModal } from "./MarkingFormModal";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
-export const MarkingEditButton = ({ onClick }: { onClick: () => void }) => {
+export const MarkingEditButton = () => {
+  const setMode = useMapStore((state) => state.setMode);
+
   const { handleOpen, onClose } = useSnackBar(() => (
     <Snackbar onClose={onClose} autoHideDuration={5000}>
       마킹 위치를 손가락으로 움직여서 선택해 주세요
@@ -20,7 +23,7 @@ export const MarkingEditButton = ({ onClick }: { onClick: () => void }) => {
 
   const handleClick = () => {
     handleOpen();
-    onClick();
+    setMode("edit");
   };
 
   return (
@@ -77,9 +80,13 @@ export const MarkingFormTriggerButton = () => {
   );
 };
 
-export const ExitEditModeButton = ({ onClick }: { onClick: () => void }) => {
+export const ExitEditModeButton = () => {
+  const setMode = useMapStore((state) => state.setMode);
+  const handleClick = () => {
+    setMode("view");
+  };
   return (
-    <FloatingButton onClick={onClick} aria-label="마커 추가 모드 종료하기">
+    <FloatingButton onClick={handleClick} aria-label="마커 추가 모드 종료하기">
       <ExitIcon />
     </FloatingButton>
   );
