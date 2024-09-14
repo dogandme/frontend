@@ -1,4 +1,6 @@
+// svg 파일 Import
 import ArrowDropDown from "@/shared/assets/arrow-drop-down.svg";
+import BookmarkSvg from "@/shared/assets/bookmark.svg";
 import CancelSVG from "@/shared/assets/cancel.svg";
 import CheckboxOutline from "@/shared/assets/check-box-outline.svg";
 import Checkbox from "@/shared/assets/check-box.svg";
@@ -6,12 +8,13 @@ import CloseSvg from "@/shared/assets/close.svg";
 import CommunitySVG from "@/shared/assets/community.svg";
 import CompassSVG from "@/shared/assets/compass.svg";
 import EditSvg from "@/shared/assets/edit.svg";
-// svg 파일 Import
 import EmailSvg from "@/shared/assets/email.svg";
 import Indeterminate from "@/shared/assets/indeterminate.svg";
+import LikeSvg from "@/shared/assets/like.svg";
 import LocationSVG from "@/shared/assets/location.svg";
 import MapLocationSearching from "@/shared/assets/map-location-searching.svg";
 import MapSVG from "@/shared/assets/map.svg";
+import MoreSvg from "@/shared/assets/more.svg";
 import MyLocationSVG from "@/shared/assets/my-location.svg";
 import NotificationSVG from "@/shared/assets/notification.svg";
 import PinShadowSVG from "@/shared/assets/pin-shadow.svg";
@@ -44,3 +47,6 @@ export const CommunityIcon = withIcon(CommunitySVG);
 export const PinShadowIcon = withIcon(PinShadowSVG);
 export const CancelIcon = withIcon(CancelSVG);
 export const SearchIcon = withIcon(SearchSVG);
+export const LikeIcon = withIcon(LikeSvg);
+export const BookmarkIcon = withIcon(BookmarkSvg);
+export const MoreIcon = withIcon(MoreSvg);
