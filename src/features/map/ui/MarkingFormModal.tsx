@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
@@ -248,7 +247,10 @@ const PhotoInput = () => {
       {/* 담긴 사진들 */}
       <ImgSlider>
         {imageUrls.length < 5 && (
-          <ImgSlider.Item onClick={handleOpenAlbum}>
+          <ImgSlider.Item
+            onClick={handleOpenAlbum}
+            aria-label="마킹 게시글에 사진 추가하기"
+          >
             <PlusIcon />
           </ImgSlider.Item>
         )}
@@ -425,24 +427,8 @@ const MarkingFormButtons = ({
 };
 
 export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
-  const map = useMap();
-  const [position, setPosition] = useState<LatLng>({ lat: 0, lng: 0 });
-
-  useEffect(() => {
-    const handleCenterChanged = () => {
-      const newCenter = map.getCenter();
-      setPosition({ lat: newCenter.lat(), lng: newCenter.lng() });
-    };
-
-    map.addListener("center_changed", handleCenterChanged);
-
-    // Cleanup listener on unmount
-    return () => {
-      map.removeListener("center_changed", handleCenterChanged);
-    };
-  }, [map]);
-
-  const { lat, lng } = position;
+  const { center } = useMapStore((state) => state.mapInfo);
+  const { lat, lng } = center;
 
   return (
     <Modal modalType="center">
