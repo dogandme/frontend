@@ -69,9 +69,13 @@ export const Default: Story = {
         await canvas.findByText("여기에 마킹하기")!;
       const $editModeExitButton =
         await canvas.findByLabelText(EXIT_BUTTON_LABEL)!;
+      const $editModeSnackbar = canvas.getByText(
+        "마킹 위치를 손가락으로 움직여서 선택해 주세요",
+      );
 
       expect($markingModalTriggerButton).toBeVisible();
       expect($editModeExitButton).toBeVisible();
+      expect($editModeSnackbar).toBeVisible();
     });
 
     await step("exit 버튼을 누르면 view 모드로 변경 된다.", async () => {

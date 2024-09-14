@@ -1,5 +1,5 @@
 import { FloatingButton } from "@/entities/map/ui";
-import { useModal } from "@/shared/lib/overlay";
+import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
 import {
   ExitIcon,
@@ -7,16 +7,28 @@ import {
   MyLocationIcon,
   StarIcon,
 } from "@/shared/ui/icon";
+import { Snackbar } from "@/shared/ui/snackbar";
 import { MarkingFormModal } from "./MarkingFormModal";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingEditButton = ({ onClick }: { onClick: () => void }) => {
+  const { handleOpen, onClose } = useSnackBar(() => (
+    <Snackbar onClose={onClose} autoHideDuration={5000}>
+      마킹 위치를 손가락으로 움직여서 선택해 주세요
+    </Snackbar>
+  ));
+
+  const handleClick = () => {
+    handleOpen();
+    onClick();
+  };
+
   return (
     <Button
       colorType="primary"
       variant="filled"
       size="medium"
-      onClick={onClick}
+      onClick={handleClick}
     >
       <span className="btn-3">마킹하기</span>
     </Button>
