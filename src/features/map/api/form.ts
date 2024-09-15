@@ -2,6 +2,7 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { LatLng } from "@/features/auth/api/region";
 import {
   MAP_ENDPOINT,
+  MarkingModalError,
   POST_VISIBILITY_MAP,
   PostVisibilityKey,
 } from "../constants";
@@ -27,9 +28,7 @@ const postMarkingFormData = async ({
   const { visibility, images, ...rest } = formObj;
 
   if (!token) {
-    throw new Error(
-      "토큰이 없다면 해당 페이지에 접근 할 수 없습니다. 로그인을 해주세요",
-    );
+    throw new Error(MarkingModalError.unAuthorized);
   }
 
   const formData = new FormData();
@@ -60,9 +59,7 @@ const postMarkingFormData = async ({
 
   if (!response.ok) {
     if (response.status === 500) {
-      throw new Error(
-        "예기치 못한 오류가 발생했습니다. 잠시 후 다시 시도해 주세요",
-      );
+      throw new Error(MarkingModalError.failToFetch);
     }
     throw new Error(data.message);
   }
@@ -92,9 +89,7 @@ const postMarkingFormDataTemporary = async ({
   const { region, visibility, content, images, lat, lng } = formObj;
 
   if (!token) {
-    throw new Error(
-      "토큰이 없다면 해당 페이지에 접근 할 수 없습니다. 로그인을 해주세요",
-    );
+    throw new Error(MarkingModalError.unAuthorized);
   }
 
   const formData = new FormData();
@@ -127,9 +122,7 @@ const postMarkingFormDataTemporary = async ({
 
   if (!response.ok) {
     if (response.status === 500) {
-      throw new Error(
-        "예기치 못한 오류가 발생했습니다. 잠시 후 다시 시도해 주세요",
-      );
+      throw new Error(MarkingModalError.failToFetch);
     }
     throw new Error(data.message);
   }

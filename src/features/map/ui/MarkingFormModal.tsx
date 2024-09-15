@@ -283,11 +283,11 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     const { region, visibility, images } = formObj;
 
     if (!region) {
-      throw new Error("현재 위치를 찾을 수 없습니다");
+      throw new Error(MarkingModalError.regionNotFound);
     }
 
     if (!visibility || images.length === 0) {
-      throw new Error("필수 입력값을 모두 입력해 주세요");
+      throw new Error(MarkingModalError.missingRequiredFields);
     }
 
     postMarkingData({ token, ...center, ...formObj });
