@@ -78,3 +78,5 @@ export const POST_VISIBILITY_MAP: Record<
   "팔로우 공개": "FOLLOWERS_ONLY",
   "나만 보기": "PRIVATE",
 };
+
+export * from "./message";

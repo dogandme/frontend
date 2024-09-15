@@ -13,6 +13,11 @@ import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../api";
 import { usePostMarkingForm, usePostTempMarkingForm } from "../api/form";
 import { POST_VISIBILITY_MAP, PostVisibilityKey } from "../constants";
+import {
+  MarkingModalText,
+  MarkingModalLabel,
+  MarkingModalError,
+} from "../constants";
 import { useMarkingFormStore } from "../store/form";
 import { useMapStore } from "../store/map";
 
@@ -36,17 +41,19 @@ const CloseMarkingFormConfirmModal = ({
     <Modal modalType="center">
       <section className="flex flex-col gap-8">
         <div className="flex justify-between">
-          <span className="title-1 text-grey-900">화면을 나가시겠습니까</span>
+          <span className="title-1 text-grey-900">
+            {MarkingModalText.closeMarkingModalTitle}
+          </span>
           <button
             onClick={onCloseExitModal}
-            aria-label="게시글 나가기 확인창 닫기"
+            aria-label={MarkingModalLabel.confirmModalCancelButton}
           >
             <CloseIcon />
           </button>
         </div>
         <div className="text-grey-700 body-2">
-          <p>화면을 나갈 경우 입력한 정보들이 모두 삭제 됩니다.</p>
-          <p>정말 화면을 나가시겠습니까?</p>
+          <p>{MarkingModalText.closeMarkingModalText1}</p>
+          <p>{MarkingModalText.closeMarkingModalText2}</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -57,7 +64,7 @@ const CloseMarkingFormConfirmModal = ({
             className="flex-1"
             onClick={onCloseExitModal}
           >
-            취소
+            {MarkingModalText.closeMarkingModalCancelButton}
           </Button>
           <Button
             variant="text"
@@ -72,7 +79,7 @@ const CloseMarkingFormConfirmModal = ({
             fullWidth={false}
             className="flex-1"
           >
-            나가기
+            {MarkingModalText.closeMarkingModalConfirmButton}
           </Button>
         </div>
       </section>
@@ -92,8 +99,11 @@ const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 
   return (
     <header className="flex justify-between">
-      <h1 className="title-1">마킹하기</h1>
-      <button onClick={onOpenExitModal} aria-label="작성중인 마킹 게시글 닫기">
+      <h1 className="title-1">{MarkingModalText.confirmModalTitle}</h1>
+      <button
+        onClick={onOpenExitModal}
+        aria-label={MarkingModalLabel.confirmModalCloseButton}
+      >
         <CloseIcon />
       </button>
     </header>
@@ -149,10 +159,10 @@ const PermissionSelect = () => {
   return (
     <div className="relative">
       <SelectOpener
-        label="보기권한 설정"
+        label={MarkingModalLabel.postVisibility}
         essential
         onClick={() => setIsOpen(!isOpen)}
-        placeholder="공개 범위를 설정해 주세요"
+        placeholder={MarkingModalText.postVisibilityPlaceHolder}
         value={visibility}
       />
 
@@ -212,7 +222,7 @@ const PhotoInput = () => {
     const _images = [...images];
     for (const newFile of newFiles) {
       if (_images.length > 5) {
-        throw new Error("사진은 5장까지 이용 가능 합니다.");
+        throw new Error(MarkingModalError.maxPhotoCount);
       }
 
       if (!isImageAlreadyExist(newFile)) {
@@ -244,7 +254,9 @@ const PhotoInput = () => {
       {/* label */}
       <label htmlFor="images">
         <div className="flex gap-1 pb-1">
-          <span className="title-3 text-grey-700">사진 추가하기</span>
+          <span className="title-3 text-grey-700">
+            {MarkingModalText.photoInputButton}
+          </span>
           <span>
             <Badge colorType="primary" />
           </span>
@@ -255,7 +267,7 @@ const PhotoInput = () => {
         {imageUrls.length < 5 && (
           <ImgSlider.Item
             onClick={handleOpenAlbum}
-            aria-label="마킹 게시글에 사진 추가하기"
+            aria-label={MarkingModalLabel.photoInputAddButton}
           >
             <PlusIcon />
           </ImgSlider.Item>
@@ -285,8 +297,8 @@ const MarkingTextArea = () => {
     <TextArea
       id="content"
       name="content"
-      label="메모하기"
-      placeholder="마킹에 대한 메모를 남겨주세요."
+      label={MarkingModalLabel.markingTextArea}
+      placeholder={MarkingModalText.markingTextAreaPlaceholder}
       defaultValue={content}
       onChange={handleChange}
     />
@@ -303,7 +315,9 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
       <Snackbar onClose={onCloseSnackbar}>
-        <p className="body-2 text-grey-700">내 마킹이 추가되었습니다.</p>
+        <p className="body-2 text-grey-700">
+          {MarkingModalText.saveMarkingSnackbar}
+        </p>
       </Snackbar>
     ),
   );
@@ -324,7 +338,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     const { token } = useAuthStore.getState();
 
     if (!token) {
-      throw new Error("로그인 후 이용해 주세요");
+      throw new Error(MarkingModalError.unAuthorized);
     }
 
     const formObj = useMarkingFormStore.getState();
@@ -339,7 +353,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
       type="button"
       onClick={handleSave}
     >
-      저장하기
+      {MarkingModalText.saveButton}
     </Button>
   );
 };
@@ -356,8 +370,8 @@ const TemporarySaveButton = ({
     () => (
       <Snackbar onClose={onCloseSnackbar}>
         <p className="flex flex-col body-2 text-grey-700">
-          <span>임시저장 되었습니다.</span>
-          <span>내 마킹에서 저장을 완료해 주세요</span>
+          <span>{MarkingModalText.tempSaveSnackbar1}</span>
+          <span>{MarkingModalText.tempSaveSnackbar2}</span>
         </p>
       </Snackbar>
     ),
@@ -379,7 +393,7 @@ const TemporarySaveButton = ({
     const { token } = useAuthStore.getState();
 
     if (!token) {
-      throw new Error("로그인 후 이용해 주세요");
+      throw new Error(MarkingModalError.unAuthorized);
     }
 
     const formObj = useMarkingFormStore.getState();
@@ -394,7 +408,7 @@ const TemporarySaveButton = ({
       type="button"
       onClick={handleSave}
     >
-      임시저장
+      {MarkingModalText.tempSaveButton}
     </Button>
   );
 };
