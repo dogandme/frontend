@@ -12,65 +12,81 @@ import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../api";
 import { usePostMarkingForm, usePostTempMarkingForm } from "../api/form";
+import { POST_VISIBILITY_MAP, PostVisibilityKey } from "../constants";
 import { useMarkingFormStore } from "../store/form";
 import { useMapStore } from "../store/map";
 
 interface MarkingFormModalProps {
-  onClose: () => Promise<void>;
+  onCloseMarkingModal: () => Promise<void>;
 }
 
-const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => {
-  const setMode = useMapStore((state) => state.setMode);
+const CloseMarkingFormConfirmModal = ({
+  onCloseExitModal,
+  onCloseMarkingModal,
+}: {
+  onCloseExitModal: () => Promise<void>;
+  onCloseMarkingModal: () => Promise<void>;
+}) => {
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
   );
+  const setMode = useMapStore((state) => state.setMode);
 
+  return (
+    <Modal modalType="center">
+      <section className="flex flex-col gap-8">
+        <div className="flex justify-between">
+          <span className="title-1 text-grey-900">화면을 나가시겠습니까</span>
+          <button
+            onClick={onCloseExitModal}
+            aria-label="게시글 나가기 확인창 닫기"
+          >
+            <CloseIcon />
+          </button>
+        </div>
+        <div className="text-grey-700 body-2">
+          <p>화면을 나갈 경우 입력한 정보들이 모두 삭제 됩니다.</p>
+          <p>정말 화면을 나가시겠습니까?</p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="text"
+            colorType="tertiary"
+            size="medium"
+            fullWidth={false}
+            className="flex-1"
+            onClick={onCloseExitModal}
+          >
+            취소
+          </Button>
+          <Button
+            variant="text"
+            colorType="primary"
+            size="medium"
+            onClick={() => {
+              onCloseExitModal();
+              onCloseMarkingModal();
+              resetMarkingFormStore();
+              setMode("view");
+            }}
+            fullWidth={false}
+            className="flex-1"
+          >
+            나가기
+          </Button>
+        </div>
+      </section>
+    </Modal>
+  );
+};
+
+const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { onClose: onCloseExitModal, handleOpen: onOpenExitModal } = useModal(
     () => (
-      <Modal modalType="center">
-        <section className="flex flex-col gap-8">
-          <div className="flex justify-between">
-            <span className="title-1 text-grey-900">화면을 나가시겠습니까</span>
-            <button
-              onClick={onCloseExitModal}
-              aria-label="게시글 나가기 확인창 닫기"
-            >
-              <CloseIcon />
-            </button>
-          </div>
-          <div className="text-grey-700 body-2">
-            <p>화면을 나갈 경우 입력한 정보들이 모두 삭제 됩니다.</p>
-            <p>정말 화면을 나가시겠습니까?</p>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="text"
-              colorType="tertiary"
-              size="medium"
-              fullWidth={false}
-              className="flex-1"
-              onClick={onCloseExitModal}
-            >
-              취소
-            </Button>
-            <Button
-              variant="text"
-              colorType="primary"
-              size="medium"
-              onClick={() => {
-                onCloseExitModal();
-                onClose();
-                resetMarkingFormStore();
-                setMode("view");
-              }}
-              fullWidth={false}
-              className="flex-1"
-            >
-              나가기
-            </Button>
-          </div>
-        </section>
-      </Modal>
+      <CloseMarkingFormConfirmModal
+        onCloseExitModal={onCloseExitModal}
+        onCloseMarkingModal={onCloseMarkingModal}
+      />
     ),
   );
 
@@ -84,7 +100,7 @@ const MarkingModalNav = ({ onClose }: MarkingFormModalProps) => {
   );
 };
 
-const CurrentLocation = ({ onClose }: { onClose: () => Promise<void> }) => {
+const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { center } = useMapStore((state) => state.mapInfo);
   const { lat, lng } = center;
 
@@ -99,7 +115,7 @@ const CurrentLocation = ({ onClose }: { onClose: () => Promise<void> }) => {
   }, [data, isSuccess, setRegion]);
 
   return (
-    <button onClick={onClose}>
+    <button onClick={onCloseMarkingModal}>
       <p className="flex gap-[0.625rem]">
         <span className="text-tangerine-500">
           <MyLocationIcon />
@@ -114,22 +130,18 @@ const CurrentLocation = ({ onClose }: { onClose: () => Promise<void> }) => {
   );
 };
 
-type POST_VISIBILITY = "전체 공개" | "팔로우 공개" | "나만 보기";
-
 const PermissionSelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const VISIBILITY_LIST: POST_VISIBILITY[] = [
-    "전체 공개",
-    "팔로우 공개",
-    "나만 보기",
-  ];
+  const VISIBILITY_LIST = Object.keys(
+    POST_VISIBILITY_MAP,
+  ) as PostVisibilityKey[];
 
   const visibility = useMarkingFormStore((state) => state.visibility);
   const setVisibility = useMarkingFormStore((state) => state.setVisibility);
 
   const onClose = () => setIsOpen(false);
 
-  const handleSelect = (value: POST_VISIBILITY) => {
+  const handleSelect = (value: PostVisibilityKey) => {
     setVisibility(value);
     onClose();
   };
@@ -220,7 +232,7 @@ const PhotoInput = () => {
       {/* 사진을 담을 input , sr-only로 실제 화면에 렌더링 되지 않음*/}
       <input
         type="file"
-        accept=".jpeg,.jpg,.png, .webp"
+        accept=".jpeg,.jpg,.png,.webp"
         multiple
         max={5}
         className="sr-only"
@@ -281,7 +293,7 @@ const MarkingTextArea = () => {
   );
 };
 
-const SaveButton = ({ onClose }: { onClose: () => Promise<void> }) => {
+const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { center } = useMapStore((state) => state.mapInfo);
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
@@ -298,7 +310,7 @@ const SaveButton = ({ onClose }: { onClose: () => Promise<void> }) => {
 
   const { mutate: postMarkingData } = usePostMarkingForm({
     onSuccess: () => {
-      onClose();
+      onCloseMarkingModal();
       resetMarkingFormStore();
       setMode("view");
       onOpenSnackbar();
@@ -310,6 +322,7 @@ const SaveButton = ({ onClose }: { onClose: () => Promise<void> }) => {
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
+
     if (!token) {
       throw new Error("로그인 후 이용해 주세요");
     }
@@ -330,7 +343,9 @@ const SaveButton = ({ onClose }: { onClose: () => Promise<void> }) => {
     </Button>
   );
 };
-const TemporarySaveButton = ({ onClose }: { onClose: () => Promise<void> }) => {
+const TemporarySaveButton = ({
+  onCloseMarkingModal,
+}: MarkingFormModalProps) => {
   const { center } = useMapStore((state) => state.mapInfo);
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
@@ -350,7 +365,7 @@ const TemporarySaveButton = ({ onClose }: { onClose: () => Promise<void> }) => {
 
   const { mutate: postTempMarkingData } = usePostTempMarkingForm({
     onSuccess: () => {
-      onClose();
+      onCloseMarkingModal();
       resetMarkingFormStore();
       setMode("view");
       onOpenSnackbar();
@@ -362,6 +377,7 @@ const TemporarySaveButton = ({ onClose }: { onClose: () => Promise<void> }) => {
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
+
     if (!token) {
       throw new Error("로그인 후 이용해 주세요");
     }
@@ -383,22 +399,24 @@ const TemporarySaveButton = ({ onClose }: { onClose: () => Promise<void> }) => {
   );
 };
 
-const MarkingFormButtons = ({ onClose }: MarkingFormModalProps) => {
+const MarkingFormButtons = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   return (
     <div className="flex flex-col gap-2">
-      <SaveButton onClose={onClose} />
-      <TemporarySaveButton onClose={onClose} />
+      <SaveButton onCloseMarkingModal={onCloseMarkingModal} />
+      <TemporarySaveButton onCloseMarkingModal={onCloseMarkingModal} />
     </div>
   );
 };
 
-export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
+export const MarkingFormModal = ({
+  onCloseMarkingModal,
+}: MarkingFormModalProps) => {
   return (
     <Modal modalType="center">
-      <MarkingModalNav onClose={onClose} />
+      <MarkingModalNav onCloseMarkingModal={onCloseMarkingModal} />
       <section className="flex flex-col gap-8">
         {/* 사용자 현재 위치 */}
-        <CurrentLocation onClose={onClose} />
+        <CurrentLocation onCloseMarkingModal={onCloseMarkingModal} />
         {/* 보기 권한 설정 */}
         <PermissionSelect />
         {/* 사진 추가하기 */}
@@ -406,7 +424,7 @@ export const MarkingFormModal = ({ onClose }: MarkingFormModalProps) => {
         {/* 메모하기 */}
         <MarkingTextArea />
         {/* 제출 버튼들 */}
-        <MarkingFormButtons onClose={onClose} />
+        <MarkingFormButtons onCloseMarkingModal={onCloseMarkingModal} />
       </section>
     </Modal>
   );

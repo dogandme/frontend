@@ -64,8 +64,8 @@ export const CollectionButton = () => {
 
 /* ----------edit mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingFormTriggerButton = () => {
-  const { handleOpen, onClose } = useModal(() => (
-    <MarkingFormModal onClose={onClose} />
+  const { handleOpen, onClose: onCloseMarkingModal } = useModal(() => (
+    <MarkingFormModal onCloseMarkingModal={onCloseMarkingModal} />
   ));
 
   return (

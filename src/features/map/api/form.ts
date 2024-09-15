@@ -2,8 +2,8 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { LatLng } from "@/features/auth/api/region";
 import {
   MAP_ENDPOINT,
-  POST_VISIBILITY_KEY,
   POST_VISIBILITY_MAP,
+  PostVisibilityKey,
 } from "../constants";
 
 // Marking Form 저장 API
@@ -41,7 +41,7 @@ const postMarkingFormData = async ({
     "markingAddDto",
     JSON.stringify({
       region,
-      visibility: POST_VISIBILITY_MAP[visibility as POST_VISIBILITY_KEY],
+      visibility: POST_VISIBILITY_MAP[visibility as PostVisibilityKey],
       content,
       lat,
       lng,
@@ -108,7 +108,7 @@ const postMarkingFormDataTemporary = async ({
     "markingAddDto",
     JSON.stringify({
       region,
-      visibility: POST_VISIBILITY_MAP[visibility as POST_VISIBILITY_KEY],
+      visibility: POST_VISIBILITY_MAP[visibility as PostVisibilityKey],
       content,
       lat,
       lng,

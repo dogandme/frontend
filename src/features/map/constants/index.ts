@@ -67,12 +67,12 @@ export const MAP_ENDPOINT = {
   MARKING_TEMP_SAVE: "http://localhost:80/markings/temp",
 };
 
-export type POST_VISIBILITY_KEY = "전체 공개" | "팔로우 공개" | "나만 보기";
-type POST_VISIBILITY_VALUE = "PUBLIC" | "FOLLOWERS_ONLY" | "PRIVATE";
+export type PostVisibilityKey = "전체 공개" | "팔로우 공개" | "나만 보기";
+type PostVisibilityValue = "PUBLIC" | "FOLLOWERS_ONLY" | "PRIVATE";
 
 export const POST_VISIBILITY_MAP: Record<
-  POST_VISIBILITY_KEY,
-  POST_VISIBILITY_VALUE
+  PostVisibilityKey,
+  PostVisibilityValue
 > = {
   "전체 공개": "PUBLIC",
   "팔로우 공개": "FOLLOWERS_ONLY",
