@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { CloseIcon } from "../icon";
 
-interface InfoSnackBarProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SnackBarProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   onClose: () => Promise<void>;
   autoHideDuration?: number | null;
@@ -21,7 +21,7 @@ export const Snackbar = ({
   autoHideDuration = 1000,
   positionClassName = "absolute top-4 left-1/2 transform -translate-x-1/2",
   ...props
-}: InfoSnackBarProps) => {
+}: SnackBarProps) => {
   useEffect(() => {
     if (autoHideDuration === null) {
       return;
