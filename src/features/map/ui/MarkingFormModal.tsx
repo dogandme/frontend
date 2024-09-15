@@ -254,9 +254,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
       <Snackbar onClose={onCloseSnackbar}>
-        <p className="body-2 text-grey-700">
-          {MarkingModalText.saveMarkingSnackbar}
-        </p>
+        {MarkingModalText.saveMarkingSnackbar}
       </Snackbar>
     ),
   );
@@ -308,10 +306,8 @@ const TemporarySaveButton = ({
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
       <Snackbar onClose={onCloseSnackbar}>
-        <p className="flex flex-col body-2 text-grey-700">
-          <span>{MarkingModalText.tempSaveSnackbar1}</span>
-          <span>{MarkingModalText.tempSaveSnackbar2}</span>
-        </p>
+        <p>{MarkingModalText.tempSaveSnackbar1}</p>
+        <p>{MarkingModalText.tempSaveSnackbar2}</p>
       </Snackbar>
     ),
   );

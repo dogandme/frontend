@@ -39,7 +39,7 @@ export const Snackbar = ({
 
   return (
     <div className={`${baseClassName} ${positionClassName}`} {...props}>
-      <div className="body-2 text-grey-700">{children}</div>
+      <div className="body-2 text-grey-700 flex flex-col">{children}</div>
       <button className="h-10" onClick={onClose} aria-label="스낵바 닫기">
         <CloseIcon />
       </button>
