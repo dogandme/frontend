@@ -279,6 +279,17 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     }
 
     const formObj = useMarkingFormStore.getState();
+
+    const { region, visibility, images } = formObj;
+
+    if (!region) {
+      throw new Error("현재 위치를 찾을 수 없습니다");
+    }
+
+    if (!visibility || images.length === 0) {
+      throw new Error("필수 입력값을 모두 입력해 주세요");
+    }
+
     postMarkingData({ token, ...center, ...formObj });
   };
 

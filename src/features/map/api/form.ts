@@ -24,11 +24,7 @@ const postMarkingFormData = async ({
   token,
   ...formObj
 }: MarkingFormRequest) => {
-  const { region, visibility, content, images, lat, lng } = formObj;
-
-  if (!region || !visibility || images.length === 0) {
-    throw new Error("필수 입력값을 모두 입력해 주세요");
-  }
+  const { visibility, images, ...rest } = formObj;
 
   if (!token) {
     throw new Error(
@@ -37,14 +33,12 @@ const postMarkingFormData = async ({
   }
 
   const formData = new FormData();
+
   formData.append(
     "markingAddDto",
     JSON.stringify({
-      region,
       visibility: POST_VISIBILITY_MAP[visibility as PostVisibilityKey],
-      content,
-      lat,
-      lng,
+      ...rest,
     }),
   );
 
