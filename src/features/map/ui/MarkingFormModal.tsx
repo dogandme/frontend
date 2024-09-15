@@ -140,7 +140,7 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   );
 };
 
-const PermissionSelect = () => {
+const PostVisibilitySelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const VISIBILITY_LIST = Object.keys(
     POST_VISIBILITY_MAP,
@@ -423,7 +423,7 @@ export const MarkingFormModal = ({
         {/* 사용자 현재 위치 */}
         <CurrentLocation onCloseMarkingModal={onCloseMarkingModal} />
         {/* 보기 권한 설정 */}
-        <PermissionSelect />
+        <PostVisibilitySelect />
         {/* 사진 추가하기 */}
         <PhotoInput />
         {/* 메모하기 */}
