@@ -58,13 +58,13 @@ export const OverlayPortal = () => {
 
   // 떠있는 overlay 중 하나라도 전체 뷰포트를 덮어야 하는 경우 배경색을 검정색으로 설정합니다.
   const overlayAreaBackground = shouldDisableInteraction
-    ? "bg-translucent-gray" // bg-gray-900 + opacity.32
+    ? "h-screen bg-translucent-gray" // bg-gray-900 + opacity.32
     : "";
 
   if (overlays.length === 0) return null;
   return createPortal(
     <div
-      className={`fixed left-0 top-0 z-[1000] h-screen w-screen ${overlayAreaBackground}`}
+      className={`fixed left-0 top-0 z-[1000] w-screen ${overlayAreaBackground}`}
     >
       {overlays.map((overlayInfo) => (
         <OverlayWrapper key={overlayInfo.id} overlayInfo={overlayInfo} />
