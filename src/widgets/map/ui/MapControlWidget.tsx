@@ -14,19 +14,6 @@ import {
 export const MapControlWidget = () => {
   const mode = useMapStore((state) => state.mode);
 
-  if (mode === "edit") {
-    return (
-      <>
-        <div className="absolute top-4 right-4">
-          <ExitEditModeButton />
-        </div>
-        <div className="absolute w-full px-4 bottom-[3.375rem]">
-          <MarkingFormTriggerButton />
-        </div>
-      </>
-    );
-  }
-
   if (mode === "view") {
     return (
       <>
@@ -43,6 +30,19 @@ export const MapControlWidget = () => {
         {/* 마킹하기 버튼 */}
         <div className="absolute w-full px-4 bottom-[3.375rem]">
           <MarkingEditButton />
+        </div>
+      </>
+    );
+  }
+
+  if (mode === "edit") {
+    return (
+      <>
+        <div className="absolute top-4 right-4">
+          <ExitEditModeButton />
+        </div>
+        <div className="absolute w-full px-4 bottom-[3.375rem]">
+          <MarkingFormTriggerButton />
         </div>
       </>
     );

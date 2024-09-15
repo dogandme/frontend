@@ -6,7 +6,6 @@ import {
   ClusterMarker,
   EditPin,
 } from "@/features/map/ui";
-import { User } from "@/entities/map/ui";
 
 export const MapMarkerWidget = () => {
   const mode = useMapStore((state) => state.mode);
