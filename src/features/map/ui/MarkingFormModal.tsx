@@ -413,15 +413,6 @@ const TemporarySaveButton = ({
   );
 };
 
-const MarkingFormButtons = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
-  return (
-    <div className="flex flex-col gap-2">
-      <SaveButton onCloseMarkingModal={onCloseMarkingModal} />
-      <TemporarySaveButton onCloseMarkingModal={onCloseMarkingModal} />
-    </div>
-  );
-};
-
 export const MarkingFormModal = ({
   onCloseMarkingModal,
 }: MarkingFormModalProps) => {
@@ -438,7 +429,10 @@ export const MarkingFormModal = ({
         {/* 메모하기 */}
         <MarkingTextArea />
         {/* 제출 버튼들 */}
-        <MarkingFormButtons onCloseMarkingModal={onCloseMarkingModal} />
+        <div className="flex flex-col gap-2">
+          <SaveButton onCloseMarkingModal={onCloseMarkingModal} />
+          <TemporarySaveButton onCloseMarkingModal={onCloseMarkingModal} />
+        </div>
       </section>
     </Modal>
   );
