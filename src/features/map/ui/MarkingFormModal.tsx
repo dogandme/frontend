@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
+import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -8,7 +9,6 @@ import { CloseIcon, MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
-import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../api";
 import { usePostMarkingForm, usePostTempMarkingForm } from "../api/form";
@@ -253,9 +253,9 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
-      <Snackbar onClose={onCloseSnackbar}>
+      <MapSnackbar onClose={onCloseSnackbar}>
         {MarkingModalText.saveMarkingSnackbar}
-      </Snackbar>
+      </MapSnackbar>
     ),
   );
 
@@ -316,10 +316,10 @@ const TemporarySaveButton = ({
 
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
-      <Snackbar onClose={onCloseSnackbar}>
+      <MapSnackbar onClose={onCloseSnackbar}>
         <p>{MarkingModalText.tempSaveSnackbar1}</p>
         <p>{MarkingModalText.tempSaveSnackbar2}</p>
-      </Snackbar>
+      </MapSnackbar>
     ),
   );
 

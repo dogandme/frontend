@@ -1,4 +1,5 @@
 import { FloatingButton } from "@/entities/map/ui";
+import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
 import {
@@ -7,7 +8,6 @@ import {
   MyLocationIcon,
   StarIcon,
 } from "@/shared/ui/icon";
-import { Snackbar } from "@/shared/ui/snackbar";
 import { MarkingModalLabel, MarkingModalText } from "../constants";
 import { useMapStore } from "../store";
 import { MarkingFormModal } from "./MarkingFormModal";
@@ -17,9 +17,9 @@ export const MarkingEditButton = () => {
   const setMode = useMapStore((state) => state.setMode);
 
   const { handleOpen, onClose } = useSnackBar(() => (
-    <Snackbar onClose={onClose} autoHideDuration={5000}>
+    <MapSnackbar onClose={onClose} autoHideDuration={5000}>
       {MarkingModalText.markingEditSnackbar}
-    </Snackbar>
+    </MapSnackbar>
   ));
 
   const handleClick = () => {
