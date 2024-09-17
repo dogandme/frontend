@@ -34,7 +34,7 @@ jobs:
 
       - name: build storybook
         id: chromatic-build
-        uses: chromaui/action@v2
+        uses: chromaui/action@v1
         with:
           command: build
           token: ${{ secrets.CHROMATIC_TOKEN }}
