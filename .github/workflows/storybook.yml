@@ -5,6 +5,10 @@ on:
     branches:
       - dev
 
+permissions:
+  pull-requests: write
+  contents: write
+
 jobs:
   chromatic:
     name: Run Chromatic and Test Storybook
