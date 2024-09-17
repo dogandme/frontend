@@ -10,19 +10,19 @@ jobs:
     name: Run Chromatic and Test Storybook
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@latests
+      - uses: actions/checkout@v2
 
       - name: install packages
         run: yarn
 
       - name: deploy with chromatic
         id: chromatic
-        uses: chromaui/action@latests
+        uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           token: ${{ secrets.YONGHYEUN_GITHUB_TOKEN }}
 
       - name: comment PR with chromatic results
-        uses: thollander/actions-comment-pull-request@latests
+        uses: thollander/actions-comment-pull-request@v1
         with:
           message: "👀 코드리뷰 전! Storybook 미리보기: ${{ steps.chromatic.outputs.storybookUrl }}"
