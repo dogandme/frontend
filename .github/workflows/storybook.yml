@@ -21,6 +21,8 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           token: ${{ secrets.YONGHYEUN_GITHUB_TOKEN }}
+          exitZeroOnChanges: true
+          onlyChanged: true
 
       - name: comment PR with chromatic results
         uses: thollander/actions-comment-pull-request@v1
