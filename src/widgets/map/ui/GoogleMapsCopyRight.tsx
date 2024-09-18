@@ -17,7 +17,7 @@ export const GoogleMapsCopyRight = () => {
   return (
     <section className="flex w-full absolute bottom-8 left-0  justify-between px-4">
       <a href="https://www.google.co.kr/maps/?hl=ko" onClick={handleClick}>
-        <img src="/public/google_on_white.png" alt="google-logo" />
+        <img src="/google_on_white.png" alt="google-logo" />
       </a>
       <p className="flex items-end gap-1 text-center text-[11px] text-grey-700">
         <span>지도 데이터 &copy;2024 TMap Mobility</span>
