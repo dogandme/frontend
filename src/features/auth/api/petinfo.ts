@@ -34,9 +34,9 @@ const postPetInfo = async ({
   // 이미지 파일은 파일 이름과 확장자를 붙혀 보내야 합니다.
   if (profile) {
     const profileExtension = profile.type.split("/")[1];
-    formData.append("profile", profile, `${name}-profile.${profileExtension}`);
+    formData.append("image", profile, `${name}-profile.${profileExtension}`);
   } else {
-    formData.append("profile", "");
+    formData.append("image", "");
   }
 
   formData.append(
