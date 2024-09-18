@@ -1,4 +1,4 @@
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { LatLng } from "@/features/auth/api/region";
 import {
   MAP_ENDPOINT,
@@ -14,11 +14,6 @@ export interface MarkingFormRequest extends LatLng {
   visibility: string;
   content: string;
   images: File[];
-}
-
-interface MarkingFormResponse {
-  code: number;
-  message: string;
 }
 
 const postMarkingFormData = async ({
@@ -66,21 +61,13 @@ const postMarkingFormData = async ({
   return data;
 };
 
-export const usePostMarkingForm = (
-  options?: UseMutationOptions<MarkingFormResponse, Error, MarkingFormRequest>,
-) => {
+export const usePostMarkingForm = () => {
   return useMutation({
     mutationFn: postMarkingFormData,
-    ...options,
   });
 };
 
 // Marking Form 임시 저장 API
-
-interface MarkingFormResponse {
-  code: number;
-  message: string;
-}
 
 const postMarkingFormDataTemporary = async ({
   token,
@@ -129,11 +116,8 @@ const postMarkingFormDataTemporary = async ({
   return data;
 };
 
-export const usePostTempMarkingForm = (
-  options?: UseMutationOptions<MarkingFormResponse, Error, MarkingFormRequest>,
-) => {
+export const usePostTempMarkingForm = () => {
   return useMutation({
     mutationFn: postMarkingFormDataTemporary,
-    ...options,
   });
 };

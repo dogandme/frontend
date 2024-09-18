@@ -259,17 +259,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     ),
   );
 
-  const { mutate: postMarkingData } = usePostMarkingForm({
-    onSuccess: () => {
-      onCloseMarkingModal();
-      resetMarkingFormStore();
-      setMode("view");
-      onOpenSnackbar();
-    },
-    onError: (error) => {
-      throw new Error(error.message);
-    },
-  });
+  const { mutate: postMarkingData } = usePostMarkingForm();
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
@@ -290,7 +280,20 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
       throw new Error(MarkingModalError.missingRequiredFields);
     }
 
-    postMarkingData({ token, ...center, ...formObj });
+    postMarkingData(
+      { token, ...center, ...formObj },
+      {
+        onSuccess: () => {
+          onCloseMarkingModal();
+          resetMarkingFormStore();
+          setMode("view");
+          onOpenSnackbar();
+        },
+        onError: (error) => {
+          throw new Error(error.message);
+        },
+      },
+    );
   };
 
   return (
@@ -323,17 +326,7 @@ const TemporarySaveButton = ({
     ),
   );
 
-  const { mutate: postTempMarkingData } = usePostTempMarkingForm({
-    onSuccess: () => {
-      onCloseMarkingModal();
-      resetMarkingFormStore();
-      setMode("view");
-      onOpenSnackbar();
-    },
-    onError: (error) => {
-      throw new Error(error.message);
-    },
-  });
+  const { mutate: postTempMarkingData } = usePostTempMarkingForm();
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
@@ -343,7 +336,20 @@ const TemporarySaveButton = ({
     }
 
     const formObj = useMarkingFormStore.getState();
-    postTempMarkingData({ token, ...center, ...formObj });
+    postTempMarkingData(
+      { token, ...center, ...formObj },
+      {
+        onSuccess: () => {
+          onCloseMarkingModal();
+          resetMarkingFormStore();
+          setMode("view");
+          onOpenSnackbar();
+        },
+        onError: (error) => {
+          throw new Error(error.message);
+        },
+      },
+    );
   };
 
   return (
