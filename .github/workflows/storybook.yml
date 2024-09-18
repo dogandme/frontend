@@ -5,50 +5,40 @@ on:
     branches:
       - dev
 
+permissions:
+  pull-requests: write
+  contents: write
+
 jobs:
   chromatic:
     name: Run Chromatic and Test Storybook
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+
+      - name: Cache node modules
+        uses: actions/cache@v2
         with:
-          node-version: 20
-      - name: Install dependencies
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: install packages
         run: npm ci
-      - name: Install playwright browsers
-        run: npx playwright install
-      - name: Run interaction tests and save output
-        id: test-storybook
-        run: npm run test-storybook 2> >(sed 's/\x1b\[[0-9;]*m//g' > test-storybook-output.txt)
-        continue-on-error: true
-      - name: Post test results as PR comment
-        uses: actions/github-script@v6
-        if: always()
-        with:
-          github-token: ${{secrets.YONGHYEUN_GITHUB_TOKEN}}
-          script: |
-            const fs = require('fs');
-            const output = fs.readFileSync('test-storybook-output.txt', 'utf8');
-            const outcome = "${{ steps.test-storybook.outcome }}"; 
-            const success = outcome === 'success';
-            const comment = success 
-              ? `### ✅ Test-Storybook Results - Success\n\`\`\`\n${output}\n\`\`\`\n🚀 [스토리북 확인하기](https://66bae48876a5167719ee1778-jqrdxsprac.chromatic.com)`
-              : `### ❌ Test-Storybook Results - Failed\n\`\`\`\n${output}\n\`\`\`\n🚀 [스토리북 확인하기](https://66bae48876a5167719ee1778-jqrdxsprac.chromatic.com)`;
-            github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: comment
-            });
-      - name: Run Chromatic
-        if: success()
-        uses: chromaui/action@latest
+
+      - name: deploy with chromatic
+        id: chromatic
+        uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          buildScriptName: "build-storybook"
+          token: ${{ secrets.YONGHYEUN_GITHUB_TOKEN }}
           exitZeroOnChanges: true
           onlyChanged: true
+
+      - name: comment PR with chromatic results
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: "👀 코드리뷰 전! Storybook 미리보기: ${{ steps.chromatic.outputs.storybookUrl }}"
