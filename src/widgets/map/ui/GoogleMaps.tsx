@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
-import { Map, MapCameraChangedEvent } from "@vis.gl/react-google-maps";
+import { Map } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
-import { useMapStore } from "@/features/map/store/map";
-import { debounce } from "@/shared/lib/debounce";
 import { mapOptions } from "../constants";
 
 const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
@@ -15,14 +13,6 @@ interface GoogleMapProps {
  * 기본적으로 GoogleMaps 는 w-full h-full relative로 설정 되어 있습니다.
  */
 export const GoogleMaps = ({ children }: GoogleMapProps) => {
-  const setMapInfo = useMapStore((state) => state.setMapInfo);
-  const DELAY_SET_MAP_INFO = 500;
-
-  const handleMapChange = debounce(({ detail }: MapCameraChangedEvent) => {
-    const { bounds, center, zoom } = detail;
-    setMapInfo({ bounds, center, zoom });
-  }, DELAY_SET_MAP_INFO);
-
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.
   // 기본 outline에 해당하는 div 태그는 iframe 태그 다음에 존재하고 있습니다.
   // iframe의 경우 기본 마운트보다 늦게 마운트 되기 때문에 interval을 이용해 iframe을 찾을 때 까지 비동기적으로 반복합니다.
@@ -51,7 +41,6 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       defaultZoom={MAP_INITIAL_ZOOM}
       reuseMaps // Map 컴포넌트가 unmount 되었다가 다시 mount 될 때 기존의 map instance 를 재사용 하여 memory leak을 방지합니다.
       // debounce 를 이용하여 MapStore 의 mapInfo 를 변경합니다.
-      onCameraChanged={handleMapChange}
     >
       {children}
     </Map>

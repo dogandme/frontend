@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
@@ -43,8 +44,12 @@ const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 };
 
 const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
-  const { center } = useMapStore((state) => state.mapInfo);
-  const { lat, lng } = center;
+  const map = useMap();
+  const center = map.getCenter();
+
+  const lat = center.lat();
+  const lng = center.lng();
+
   const { token } = useAuthStore.getState();
 
   if (!token) {
@@ -241,7 +246,8 @@ const MarkingTextArea = () => {
 };
 
 const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
-  const { center } = useMapStore((state) => state.mapInfo);
+  const map = useMap();
+
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
@@ -265,8 +271,11 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     }
 
     const formObj = useMarkingFormStore.getState();
+    const center = map.getCenter();
 
     const { region, visibility, images } = formObj;
+    const lat = center.lat();
+    const lng = center.lng();
 
     if (!region) {
       throw new Error(MarkingModalError.regionNotFound);
@@ -277,7 +286,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     }
 
     postMarkingData(
-      { token, ...center, ...formObj },
+      { token, lat, lng, ...formObj },
       {
         onSuccess: () => {
           onCloseMarkingModal();
@@ -307,7 +316,8 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 const TemporarySaveButton = ({
   onCloseMarkingModal,
 }: MarkingFormModalProps) => {
-  const { center } = useMapStore((state) => state.mapInfo);
+  const map = useMap();
+
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
@@ -332,9 +342,13 @@ const TemporarySaveButton = ({
     }
 
     const formObj = useMarkingFormStore.getState();
+    const center = map.getCenter();
+
+    const lat = center.lat();
+    const lng = center.lng();
 
     postTempMarkingData(
-      { token, ...center, ...formObj },
+      { token, lat, lng, ...formObj },
       {
         onSuccess: () => {
           onCloseMarkingModal();
