@@ -33,6 +33,6 @@ export const CloseNavigationBar = (props: CloseNavigationBarProps) => {
         <CloseButton onClick={onClick || (() => navigate(-1))} {...rest} />
       }
       label={label}
-    ></NavigationBar>
+    />
   );
 };
