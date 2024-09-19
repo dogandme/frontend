@@ -68,13 +68,7 @@ export const ClusterMarker = () => {
     },
   ];
 
-  return (
-    <>
-      {clusterInfo.map((cluster, idx) => (
-        <Cluster {...cluster} key={idx} />
-      ))}
-    </>
-  );
+  return clusterInfo.map((cluster, idx) => <Cluster {...cluster} key={idx} />);
 };
 
 /* 해당 컴포넌트는 edit mode 일 때 사용되는 마커입니다. AdvancedMarker 를 이용하지 않습니다.*/
