@@ -379,6 +379,12 @@ const TemporarySaveButton = ({
 export const MarkingFormModal = ({
   onCloseMarkingModal,
 }: MarkingFormModalProps) => {
+  const setToken = useAuthStore((state) => state.setToken);
+
+  useEffect(() => {
+    setToken("Bearer token");
+  }, []);
+
   return (
     <Modal modalType="center">
       <MarkingModalNav onCloseMarkingModal={onCloseMarkingModal} />
