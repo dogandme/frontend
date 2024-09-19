@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui/button";
 import {
   BookmarkIcon,
   FilledBookmarkIcon,
@@ -13,6 +14,7 @@ interface ContentItemProps {
   petName: string;
   content: string;
   date: string;
+  isOwner?: boolean;
   isLiked?: boolean;
   isBookmarked?: boolean;
   likeCount: number;
@@ -34,6 +36,7 @@ const ContentItem = ({
   petName,
   content,
   date,
+  isOwner = false,
   isLiked = false,
   isBookmarked = false,
   likeCount,
@@ -64,6 +67,16 @@ const ContentItem = ({
             alt={petName}
           />
           <span className="title-3 text-grey-700">{petName}</span>
+          {!isOwner && (
+            <Button
+              colorType="primary"
+              size="xSmall"
+              variant="outlined"
+              fullWidth={false}
+            >
+              팔로우
+            </Button>
+          )}
         </div>
 
         <div className="flex gap-2 items-center text-grey-500">
