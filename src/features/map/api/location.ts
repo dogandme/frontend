@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAuthStore } from "@/shared/store";
 import { MAP_ENDPOINT } from "../constants";
 
 interface AddressFromLatLngRequest {
   lat: number;
   lng: number;
+  token: string;
 }
 
 interface AddressFromLatLngResponse {
@@ -15,9 +15,11 @@ interface AddressFromLatLngResponse {
   };
 }
 
-const getAddressFromLatLng = async ({ lat, lng }: AddressFromLatLngRequest) => {
-  const { token } = useAuthStore.getState();
-
+const getAddressFromLatLng = async ({
+  lat,
+  lng,
+  token,
+}: AddressFromLatLngRequest) => {
   const response = await fetch(MAP_ENDPOINT.REVERSE_GEOCODING({ lat, lng }), {
     method: "GET",
     headers: {
@@ -37,9 +39,10 @@ const getAddressFromLatLng = async ({ lat, lng }: AddressFromLatLngRequest) => {
 export const useGetAddressFromLatLng = ({
   lat,
   lng,
+  token,
 }: AddressFromLatLngRequest) => {
   return useQuery({
     queryKey: ["address", lat, lng],
-    queryFn: () => getAddressFromLatLng({ lat, lng }),
+    queryFn: () => getAddressFromLatLng({ lat, lng, token }),
   });
 };

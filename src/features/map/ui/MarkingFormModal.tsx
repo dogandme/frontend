@@ -45,8 +45,13 @@ const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { center } = useMapStore((state) => state.mapInfo);
   const { lat, lng } = center;
+  const { token } = useAuthStore.getState();
 
-  const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng });
+  if (!token) {
+    throw new Error(MarkingModalError.unAuthorized);
+  }
+
+  const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng, token });
   const setRegion = useMarkingFormStore((state) => state.setRegion);
 
   useEffect(() => {
