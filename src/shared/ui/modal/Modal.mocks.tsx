@@ -13,7 +13,24 @@ export const CenterModal = ({
   return (
     <Modal modalType="center" id={id}>
       <h1>Center Modal 입니다.</h1>
-      <p>Modal Content</p>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ratione ipsa
+        quisquam adipisci delectus nulla assumenda ut a, corporis sed corrupti
+        quas repudiandae illo, similique sunt, quaerat quod nesciunt magnam
+        labore?
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem aliquam
+        dolores necessitatibus nemo in nulla qui? Molestiae modi eaque fugiat
+        quo quae consectetur sit ullam, ducimus, nemo, necessitatibus odit
+        repellendus.
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore fugiat
+        similique, minima perferendis tenetur explicabo deserunt voluptatem quae
+        temporibus soluta corrupti, nesciunt laborum suscipit sint perspiciatis
+        sit quaerat natus voluptatibus.
+      </p>
       <div className="flex justify-end px-2 py-2">
         <button
           onClick={onClose}
@@ -40,7 +57,19 @@ export const FullPageModal = ({
         consequatur, accusantium animi velit corporis minima nihil quia aliquid
         sapiente neque cumque dolore?
       </p>
-      <div className="h-full">
+      <p className="mx-4 my-4">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
+        dignissimos tenetur laboriosam commodi. Ducimus facilis cum autem
+        consequatur, accusantium animi velit corporis minima nihil quia aliquid
+        sapiente neque cumque dolore?
+      </p>
+      <p className="mx-4 my-4">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
+        dignissimos tenetur laboriosam commodi. Ducimus facilis cum autem
+        consequatur, accusantium animi velit corporis minima nihil quia aliquid
+        sapiente neque cumque dolore?
+      </p>
+      <div>
         <div className="flex justify-end px-2 py-2">
           <button
             onClick={onClose}

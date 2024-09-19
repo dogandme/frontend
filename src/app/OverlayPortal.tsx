@@ -20,7 +20,7 @@ const OverlayWrapper = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
   // 만약 disabledInteraction 이 false인 경우 (Overlay와 함께 인터렉션을 할 경우)에는
   // OverlayController 영역을 최소화 합니다.
   const overlayAreaClass = disableInteraction
-    ? "h-screen w-screen "
+    ? "h-screen w-screen bg-translucent-gray"
     : "w-screen h-fit";
 
   return (
@@ -56,10 +56,7 @@ export const OverlayPortal = () => {
     };
   }, [shouldDisableInteraction]);
 
-  // 떠있는 overlay 중 하나라도 전체 뷰포트를 덮어야 하는 경우 배경색을 검정색으로 설정합니다.
-  const overlayAreaBackground = shouldDisableInteraction
-    ? "h-screen bg-translucent-gray" // bg-gray-900 + opacity.32
-    : "";
+  const overlayAreaBackground = shouldDisableInteraction ? "h-screen" : "";
 
   if (overlays.length === 0) return null;
   return createPortal(
