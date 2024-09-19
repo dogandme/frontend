@@ -265,8 +265,8 @@ export const Default: Story = {
         const $confirmModal = await canvas.findByText("화면을 나가시겠습니까");
         await expect($confirmModal).toBeVisible();
 
-        const $exitEditModeButton = await canvas.findByText("나가기");
-        await userEvent.click($exitEditModeButton);
+        const $exitAddModeButton = await canvas.findByText("나가기");
+        await userEvent.click($exitAddModeButton);
 
         const { content, visibility, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
