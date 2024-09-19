@@ -46,15 +46,15 @@ const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
   const center = map.getCenter();
-  const token = useAuthStore((state) => state.token);
+  const token = "token";
   const lat = center.lat();
   const lng = center.lng();
 
   console.log(lat, lng);
 
-  if (!token) {
-    throw new Error(MarkingModalError.unAuthorized);
-  }
+  // if (!token) {
+  //   throw new Error(MarkingModalError.unAuthorized);
+  // }
 
   const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng, token });
   const setRegion = useMarkingFormStore((state) => state.setRegion);
@@ -247,7 +247,8 @@ const MarkingTextArea = () => {
 
 const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
-  const token = useAuthStore((state) => state.token);
+  const token = "token";
+  // const token = useAuthStore((state) => state.token);
 
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
@@ -317,7 +318,8 @@ const TemporarySaveButton = ({
 }: MarkingFormModalProps) => {
   const map = useMap();
 
-  const token = useAuthStore((state) => state.token);
+  // const token = useAuthStore((state) => state.token);
+  const token = "token";
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
