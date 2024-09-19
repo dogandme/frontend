@@ -88,11 +88,11 @@ const PostVisibilitySelect = () => {
   const visibility = useMarkingFormStore((state) => state.visibility);
   const setVisibility = useMarkingFormStore((state) => state.setVisibility);
 
-  const onCloseSelectList = () => setIsOpen(false);
+  const handleCloseSelectList = () => setIsOpen(false);
 
   const handleSelect = (value: PostVisibilityKey) => {
     setVisibility(value);
-    onCloseSelectList();
+    handleCloseSelectList();
   };
 
   return (
@@ -105,7 +105,7 @@ const PostVisibilitySelect = () => {
         value={visibility}
       />
 
-      <Select isOpen={isOpen} onClose={onCloseSelectList}>
+      <Select isOpen={isOpen} onClose={handleCloseSelectList}>
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
