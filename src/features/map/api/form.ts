@@ -4,14 +4,13 @@ import {
   MAP_ENDPOINT,
   MarkingModalError,
   POST_VISIBILITY_MAP,
-  PostVisibilityKey,
 } from "../constants";
 
 // Marking Form 저장 API
 export interface MarkingFormRequest extends LatLng {
   token: string;
   region: string;
-  visibility: string;
+  visibility: keyof typeof POST_VISIBILITY_MAP;
   content: string;
   images: File[];
 }
@@ -31,7 +30,7 @@ const postMarkingFormData = async ({
   formData.append(
     "markingAddDto",
     JSON.stringify({
-      visibility: POST_VISIBILITY_MAP[visibility as PostVisibilityKey],
+      visibility: POST_VISIBILITY_MAP[visibility],
       ...rest,
     }),
   );
@@ -83,7 +82,7 @@ const postMarkingFormDataTemporary = async ({
     "markingAddDto",
     JSON.stringify({
       region,
-      visibility: POST_VISIBILITY_MAP[visibility as PostVisibilityKey],
+      visibility: POST_VISIBILITY_MAP[visibility],
       content,
       lat,
       lng,

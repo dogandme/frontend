@@ -1,16 +1,16 @@
 import { create } from "zustand";
-import { PostVisibilityKey } from "../constants";
+import { POST_VISIBILITY_MAP } from "../constants";
 
 interface MarkingFormState {
   region: string;
-  visibility: PostVisibilityKey | "";
+  visibility: keyof typeof POST_VISIBILITY_MAP | "";
   content: string;
   images: File[];
 }
 
 interface MarkingFormActions {
   setRegion: (region: string) => void;
-  setVisibility: (visibility: PostVisibilityKey) => void;
+  setVisibility: (visibility: keyof typeof POST_VISIBILITY_MAP) => void;
   setContent: (content: string) => void;
   setImages: (images: File[]) => void;
   resetMarkingFormStore: () => void;
