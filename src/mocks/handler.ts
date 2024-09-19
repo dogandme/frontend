@@ -127,7 +127,16 @@ export const markingModalHandlers = [
       const lng = requestUrl.searchParams.get("lng");
 
       if (!lat || !lng) {
-        throw new Error("lat, lng 값이 없습니다.");
+        return HttpResponse.json(
+          {
+            code: 400,
+            menubar: "위경도 값을 입력해 주세요",
+          },
+          {
+            status: 400,
+            statusText: "Bad Request",
+          },
+        );
       }
 
       if (previousUrl && previousUrl !== request.url) {
