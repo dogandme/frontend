@@ -23,7 +23,7 @@ const getAddressFromLatLng = async ({
   const response = await fetch(MAP_ENDPOINT.REVERSE_GEOCODING({ lat, lng }), {
     method: "GET",
     headers: {
-      Authorization: `${token}`,
+      Authorization: token,
     },
   });
 
