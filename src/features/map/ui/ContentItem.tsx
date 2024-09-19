@@ -1,5 +1,7 @@
 import {
   BookmarkIcon,
+  FilledBookmarkIcon,
+  FilledLikeIcon,
   LikeIcon,
   MoreIcon,
   MyLocationIcon,
@@ -8,8 +10,11 @@ import { ImgSlider } from "@/shared/ui/imgSlider";
 
 interface ContentItemProps {
   address: string;
+  petName: string;
   content: string;
   date: string;
+  isLiked?: boolean;
+  isBookmarked?: boolean;
   likeCount: number;
   bookmarkCount: number;
 }
@@ -26,8 +31,11 @@ function formatDate(dateString: string): string {
 
 const ContentItem = ({
   address,
+  petName,
   content,
   date,
+  isLiked = false,
+  isBookmarked = false,
   likeCount,
   bookmarkCount,
 }: ContentItemProps) => {
@@ -53,21 +61,27 @@ const ContentItem = ({
           <img
             className="w-8 h-8 rounded-2xl"
             src="https://via.placeholder.com/150"
-            alt="petname"
+            alt={petName}
           />
-          <span className="title-3 text-grey-700">petname</span>
+          <span className="title-3 text-grey-700">{petName}</span>
         </div>
 
         <div className="flex gap-2 items-center text-grey-500">
-          <button aria-label="마킹 좋아요">
-            <LikeIcon />
+          <button
+            className={isLiked ? "text-tangerine-500" : ""}
+            aria-label="마킹 좋아요"
+          >
+            {isLiked ? <FilledLikeIcon /> : <LikeIcon />}
           </button>
           <span className="title-3">{likeCount > 0 && likeCount}</span>
         </div>
 
         <div className="flex gap-2 items-center text-grey-500">
-          <button aria-label="마킹 저장하기">
-            <BookmarkIcon />
+          <button
+            className={isBookmarked ? "text-tangerine-500" : ""}
+            aria-label="마킹 저장하기"
+          >
+            {isBookmarked ? <FilledBookmarkIcon /> : <BookmarkIcon />}
           </button>
           <span className="title-3">{bookmarkCount > 0 && bookmarkCount}</span>
         </div>
