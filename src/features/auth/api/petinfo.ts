@@ -52,7 +52,6 @@ const postPetInfo = async ({
   const response = await fetch(SIGN_UP_END_POINT.PET_INFO, {
     method: "POST",
     headers: {
-      "Content-Type": "multipart/form-data",
       Authorization: token,
     },
     body: formData,
