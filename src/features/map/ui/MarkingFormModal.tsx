@@ -46,11 +46,18 @@ const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
   const center = map.getCenter();
-  const token = "Bearer token";
+  const token =
+    "Bearer_eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOiJST0xFX05PTkUiLCJleHAiOjE5MjYxMjI3ODQsImlhdCI6MTcyNjExOTE4NCwiZW1haWwiOiJsaW02NDI2NjZAZ21haWwuY29tIn0.C9zl-EpzBVAiWfW8_EMSPCj8lG3v3HcBwpEc86ewSKD7hn7RsIn9_HyaSXTod78PgcD720kNCkBY5WK_VXCnYw";
   const lat = center.lat();
   const lng = center.lng();
-
   console.log(lat, lng);
+
+  useEffect(() => {
+    console.log("mount");
+    return () => {
+      console.log("unmount");
+    };
+  }, []);
 
   // if (!token) {
   //   throw new Error(MarkingModalError.unAuthorized);
@@ -247,7 +254,8 @@ const MarkingTextArea = () => {
 
 const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
-  const token = "Bearer token";
+  const token =
+    "Bearer_eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOiJST0xFX05PTkUiLCJleHAiOjE5MjYxMjI3ODQsImlhdCI6MTcyNjExOTE4NCwiZW1haWwiOiJsaW02NDI2NjZAZ21haWwuY29tIn0.C9zl-EpzBVAiWfW8_EMSPCj8lG3v3HcBwpEc86ewSKD7hn7RsIn9_HyaSXTod78PgcD720kNCkBY5WK_VXCnYw";
   // const token = useAuthStore((state) => state.token);
 
   const setMode = useMapStore((state) => state.setMode);
@@ -319,7 +327,8 @@ const TemporarySaveButton = ({
   const map = useMap();
 
   // const token = useAuthStore((state) => state.token);
-  const token = "Bearer token";
+  const token =
+    "Bearer_eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOiJST0xFX05PTkUiLCJleHAiOjE5MjYxMjI3ODQsImlhdCI6MTcyNjExOTE4NCwiZW1haWwiOiJsaW02NDI2NjZAZ21haWwuY29tIn0.C9zl-EpzBVAiWfW8_EMSPCj8lG3v3HcBwpEc86ewSKD7hn7RsIn9_HyaSXTod78PgcD720kNCkBY5WK_VXCnYw";
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
