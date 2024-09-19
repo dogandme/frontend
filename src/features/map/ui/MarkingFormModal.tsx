@@ -67,17 +67,18 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   }, [data, isSuccess, setRegion]);
 
   return (
-    <button onClick={onCloseMarkingModal}>
-      <p className="flex gap-[0.625rem]">
-        <span className="text-tangerine-500">
-          <MyLocationIcon />
-        </span>
-        {isSuccess ? (
-          <span className="btn-2 text-start">{data.region}</span>
-        ) : (
-          <span className="animate-pulse w-44 bg-grey-200 rounded-2xl"></span>
-        )}
-      </p>
+    <button
+      onClick={onCloseMarkingModal}
+      className="flex gap-[0.625rem] items-center"
+    >
+      <span className="text-tangerine-500">
+        <MyLocationIcon />
+      </span>
+      {isSuccess ? (
+        <span className="btn-2 text-start">{data.region}</span>
+      ) : (
+        <span className="animate-pulse w-44 bg-grey-200 rounded-2xl"></span>
+      )}
     </button>
   );
 };
