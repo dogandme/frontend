@@ -357,7 +357,7 @@ export const Default: Story = {
         const $markingFormSubmitButton = await canvas.findByText("저장하기");
         await userEvent.click($markingFormSubmitButton);
 
-        const $snackBar = await canvas.findByText("내 마킹이 추가되었습니다.");
+        const $snackBar = await canvas.findByText("내 마킹이 추가되었습니다");
         expect($snackBar).toBeVisible();
         expect(useMapStore.getState().mode).toBe("view");
 

@@ -267,7 +267,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
       <MapSnackbar onClose={onCloseSnackbar}>
-        내 마킹이 추가되었습니다.
+        내 마킹이 추가되었습니다
       </MapSnackbar>
     ),
   );
