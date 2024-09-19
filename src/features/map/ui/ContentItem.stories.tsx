@@ -4,10 +4,18 @@ import ContentItem from "./ContentItem";
 const meta: Meta<typeof ContentItem> = {
   title: "features/map/ContentItem",
   component: ContentItem,
+  tags: ["autodocs"],
   argTypes: {
     petName: {
       description: "펫 이름을 나타냅니다.",
       control: "text",
+    },
+    petImage: {
+      description: "펫 이미지를 나타냅니다.",
+      control: "text",
+    },
+    images: {
+      description: "마킹에 올린 이미지들을 나타냅니다.",
     },
     address: {
       description: "주소를 나타냅니다.",
@@ -44,6 +52,15 @@ const meta: Meta<typeof ContentItem> = {
   },
   args: {
     petName: "펫 이름",
+    petImage: "https://via.placeholder.com/150",
+    images: [
+      {
+        id: 1,
+        imageUrl: "https://via.placeholder.com/150",
+        lank: 1,
+        regDt: "2024-09-12T08:20:18.087+00:00",
+      },
+    ],
     address: "서울특별시 강남구",
     content:
       "내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용",

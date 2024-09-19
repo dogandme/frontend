@@ -9,9 +9,18 @@ import {
 } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 
+interface Image {
+  id: number;
+  imageUrl: string;
+  lank: number;
+  regDt: string;
+}
+
 interface ContentItemProps {
   address: string;
   petName: string;
+  petImage: string;
+  images: Image[];
   content: string;
   date: string;
   isOwner?: boolean;
@@ -34,6 +43,8 @@ function formatDate(dateString: string): string {
 const ContentItem = ({
   address,
   petName,
+  petImage,
+  images,
   content,
   date,
   isOwner = false,
@@ -56,16 +67,18 @@ const ContentItem = ({
       </div>
 
       <ImgSlider>
-        <ImgSlider.ImgItem src="https://via.placeholder.com/150" alt="1" />
+        {images.map(({ imageUrl, id }) => (
+          <ImgSlider.ImgItem
+            key={id}
+            src={imageUrl}
+            alt={`${petName}-marking-image-${id}`}
+          />
+        ))}
       </ImgSlider>
 
       <div className="flex gap-4 flex-end">
         <div className="flex items-center gap-1 flex-1">
-          <img
-            className="w-8 h-8 rounded-2xl"
-            src="https://via.placeholder.com/150"
-            alt={petName}
-          />
+          <img className="w-8 h-8 rounded-2xl" src={petImage} alt={petName} />
           <span className="title-3 text-grey-700">{petName}</span>
           {!isOwner && (
             <Button
