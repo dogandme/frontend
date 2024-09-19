@@ -116,11 +116,9 @@ export const userInfoRegistrationHandlers = [
   }),
 ];
 
-let previousUrl: string = "";
-
 export const markingModalHandlers = [
   http.get<PathParams>(
-    "http://localhost/maps/reverse-geocoding",
+    "http://localhost/maps/reverse-geocode",
     async ({ request }) => {
       const requestUrl = new URL(request.url);
       const lat = requestUrl.searchParams.get("lat");
