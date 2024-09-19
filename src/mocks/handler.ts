@@ -139,17 +139,6 @@ export const markingModalHandlers = [
         );
       }
 
-      if (previousUrl && previousUrl !== request.url) {
-        previousUrl = request.url;
-        return HttpResponse.json({
-          code: 200,
-          message: "success",
-          content: {
-            region: "서울특별시 강남구 압구정동 789-123",
-          },
-        });
-      }
-
       return HttpResponse.json({
         code: 200,
         message: "success",
