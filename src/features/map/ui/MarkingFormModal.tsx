@@ -73,7 +73,7 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
           <MyLocationIcon />
         </span>
         {isSuccess ? (
-          <span className="btn-2">{data.region}</span>
+          <span className="btn-2 text-start">{data.region}</span>
         ) : (
           <span className="animate-pulse w-44 bg-grey-200 rounded-2xl"></span>
         )}
