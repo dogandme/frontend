@@ -12,7 +12,7 @@ import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../api";
 import { usePostMarkingForm, usePostTempMarkingForm } from "../api/form";
-import { POST_VISIBILITY_MAP, PostVisibilityKey } from "../constants";
+import { POST_VISIBILITY_MAP } from "../constants";
 import {
   MarkingModalText,
   MarkingModalLabel,
@@ -81,16 +81,14 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 
 const PostVisibilitySelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const VISIBILITY_LIST = Object.keys(
-    POST_VISIBILITY_MAP,
-  ) as PostVisibilityKey[];
+  const VISIBILITY_LIST = Object.keys(POST_VISIBILITY_MAP);
 
   const visibility = useMarkingFormStore((state) => state.visibility);
   const setVisibility = useMarkingFormStore((state) => state.setVisibility);
 
   const handleCloseSelectList = () => setIsOpen(false);
 
-  const handleSelect = (value: PostVisibilityKey) => {
+  const handleSelect = (value: keyof typeof POST_VISIBILITY_MAP) => {
     setVisibility(value);
     handleCloseSelectList();
   };
@@ -115,7 +113,9 @@ const PostVisibilitySelect = () => {
                 key={idx}
                 value={option}
                 isSelected={option === visibility}
-                onClick={() => handleSelect(option)}
+                onClick={() =>
+                  handleSelect(option as keyof typeof POST_VISIBILITY_MAP)
+                }
               >
                 {option}
               </Select.Option>
@@ -336,6 +336,7 @@ const TemporarySaveButton = ({
     }
 
     const formObj = useMarkingFormStore.getState();
+
     postTempMarkingData(
       { token, ...center, ...formObj },
       {
