@@ -62,14 +62,14 @@ const ContentItem = ({
           <button aria-label="마킹 좋아요">
             <LikeIcon />
           </button>
-          <span>{likeCount > 0 && likeCount}</span>
+          <span className="title-3">{likeCount > 0 && likeCount}</span>
         </div>
 
         <div className="flex gap-2 items-center text-grey-500">
           <button aria-label="마킹 저장하기">
             <BookmarkIcon />
           </button>
-          <span>{bookmarkCount > 0 && bookmarkCount}</span>
+          <span className="title-3">{bookmarkCount > 0 && bookmarkCount}</span>
         </div>
       </div>
 
