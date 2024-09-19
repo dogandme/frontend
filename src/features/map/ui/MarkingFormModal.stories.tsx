@@ -6,7 +6,6 @@ import { GoogleMaps } from "@/widgets/map/ui";
 import { useAuthStore } from "@/shared/store";
 import { GoogleMapsProvider, MobileLayout } from "@/app";
 import { markingModalHandlers } from "@/mocks/handler";
-import { MarkingModalText, MarkingModalLabel } from "../constants";
 import { useMarkingFormStore } from "../store/form";
 import { useMapStore } from "../store/map";
 import { MarkingFormModal } from "./MarkingFormModal";
@@ -56,25 +55,19 @@ export const Default: Story = {
     await step(
       "페이지가 view 모드에서 렌더링 되었을 때 마킹하기 버튼이 존재 한다.",
       async () => {
-        const $markingButton = await canvas.findByText(
-          MarkingModalText.markingEditButton,
-        );
+        const $markingButton = await canvas.findByText("마킹하기");
         expect($markingButton).toBeVisible();
       },
     );
 
     step("마킹하기 버튼이 눌리면 add 모드로 변경 된다.", async () => {
-      const $markingButton = await canvas.findByText(
-        MarkingModalText.markingEditButton,
-      );
+      const $markingButton = await canvas.findByText("마킹하기");
       await userEvent.click($markingButton);
 
-      const $markingModalTriggerButton = await canvas.findByText(
-        MarkingModalText.markingFormTriggerButton,
-      )!;
-      const $addModeExitButton = await canvas.findByLabelText(
-        MarkingModalLabel.exitEditButton,
-      )!;
+      const $markingModalTriggerButton =
+        await canvas.findByText(/여기에 마킹하기/)!;
+      const $addModeExitButton =
+        await canvas.findByLabelText("마커 추가 모드 종료하기")!;
       const $addModeSnackbar = canvas.getByText(
         "마킹 위치를 손가락으로 움직여서 선택해 주세요",
       );
@@ -85,18 +78,14 @@ export const Default: Story = {
     });
 
     await step("exit 버튼을 누르면 view 모드로 변경 된다.", async () => {
-      const $markingModalTriggerButton = await canvas.findByText(
-        MarkingModalText.markingFormTriggerButton,
-      )!;
-      const $addModeExitButton = await canvas.findByLabelText(
-        MarkingModalLabel.exitEditButton,
-      )!;
+      const $markingModalTriggerButton =
+        await canvas.findByText("여기에 마킹하기")!;
+      const $addModeExitButton =
+        await canvas.findByLabelText("마커 추가 모드 종료하기")!;
 
       await userEvent.click($addModeExitButton);
 
-      const $markingButton = await canvas.findByText(
-        MarkingModalText.markingEditButton,
-      );
+      const $markingButton = await canvas.findByText("마킹하기");
       expect($markingButton).toBeVisible();
       expect($markingModalTriggerButton).not.toBeInTheDocument();
       expect($addModeExitButton).not.toBeInTheDocument();
@@ -106,19 +95,14 @@ export const Default: Story = {
       "add 모드에서 여기에 마킹하기 버튼을 클릭하면 모달 폼이 나타난다.",
       async () => {
         // 마킹 모드 돌입
-        const $markingButton = await canvas.findByText(
-          MarkingModalText.markingEditButton,
-        );
+        const $markingButton = await canvas.findByText("마킹하기");
         await userEvent.click($markingButton);
 
-        const $markingModalTriggerButton = await canvas.findByText(
-          MarkingModalText.markingFormTriggerButton,
-        );
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기");
         await userEvent.click($markingModalTriggerButton);
 
-        const $markingFormSubmitButton = await canvas.findByText(
-          MarkingModalText.saveButton,
-        );
+        const $markingFormSubmitButton = await canvas.findByText("저장하기");
         expect($markingFormSubmitButton).toBeVisible();
       },
     );
@@ -135,32 +119,26 @@ export const Default: Story = {
       "마킹 모달 폼에서 현재 도로명 주소를 클릭하면 모달이 닫히고 add 모드가 유지 된다.",
       async () => {
         const $markingAddress = await canvas.findByText(STRING_ADDRESS);
-        const $markingFormSubmitButton = await canvas.findByText(
-          MarkingModalText.saveButton,
-        );
+        const $markingFormSubmitButton = await canvas.findByText("저장하기");
 
         await userEvent.click($markingAddress);
         expect($markingFormSubmitButton).not.toBeInTheDocument();
 
-        const $markingModalTriggerButton = await canvas.findByText(
-          MarkingModalText.markingFormTriggerButton,
-        );
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기");
         expect($markingModalTriggerButton).toBeVisible();
       },
     );
 
     await step("마킹 모달에 작성한 내용은 스토어에 잘 저장 된다.", async () => {
-      const $markingModalTriggerButton = await canvas.findByText(
-        MarkingModalText.markingFormTriggerButton,
-      );
+      const $markingModalTriggerButton =
+        await canvas.findByText("여기에 마킹하기");
       await userEvent.click($markingModalTriggerButton);
 
-      const $postVisibilityOpener = await canvas.findByText(
-        MarkingModalText.postVisibilityPlaceHolder,
-      );
-      const $textArea = await canvas.findByPlaceholderText(
-        MarkingModalText.markingTextAreaPlaceholder,
-      );
+      const $postVisibilityOpener =
+        await canvas.findByText(/공개 범위를 선택해주세요/);
+      const $textArea =
+        await canvas.findByPlaceholderText(/마킹에 대한 메모를 남겨주세요/);
       const $fileUploadInput = canvasElement.querySelector(
         "#images",
       ) as HTMLInputElement;
@@ -200,9 +178,8 @@ export const Default: Story = {
           "#images",
         )! as HTMLInputElement;
 
-        const $fileUploadButton = canvas.getByLabelText(
-          MarkingModalLabel.photoInputAddButton,
-        );
+        const $fileUploadButton =
+          canvas.getByLabelText("마킹 게시글에 사진 추가하기");
 
         const originalImagesLength =
           useMarkingFormStore.getState().images.length;
@@ -270,9 +247,8 @@ export const Default: Story = {
         const $markingAddress = await canvas.findByText(STRING_ADDRESS);
         await userEvent.click($markingAddress);
 
-        const $markingModalTriggerButton = await canvas.findByText(
-          MarkingModalText.markingFormTriggerButton,
-        );
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기");
         await userEvent.click($markingModalTriggerButton);
 
         expect(useMarkingFormStore.getState()).toEqual(originalState);
@@ -282,9 +258,8 @@ export const Default: Story = {
     await step(
       "나갈 때 view 모드로 나갈 경우엔 모달 내부 내용이 초기화 된다.",
       async () => {
-        const $exitButton = await canvas.findByLabelText(
-          MarkingModalLabel.confirmModalCloseButton,
-        );
+        const $exitButton =
+          await canvas.findByLabelText("작성중인 마킹 게시글 닫기");
         await userEvent.click($exitButton);
 
         const $confirmModal = await canvas.findByText("화면을 나가시겠습니까");
@@ -298,9 +273,7 @@ export const Default: Story = {
         expect(visibility).toBe("");
         expect(images).toHaveLength(0);
 
-        const $markingButton = await canvas.findByText(
-          MarkingModalText.markingEditButton,
-        );
+        const $markingButton = await canvas.findByText("마킹하기");
         expect($markingButton).toBeVisible();
       },
     );
@@ -308,14 +281,11 @@ export const Default: Story = {
     await step(
       "임시 저장이 성공하면 view 모드로 변경 되고 스낵 바가 나타난다.",
       async () => {
-        const $markingButton = await canvas.findByText(
-          MarkingModalText.markingEditButton,
-        );
+        const $markingButton = await canvas.findByText("마킹하기");
         await userEvent.click($markingButton);
 
-        const $markingModalTriggerButton = await canvas.findByText(
-          MarkingModalText.markingFormTriggerButton,
-        );
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기");
         await userEvent.click($markingModalTriggerButton);
 
         const $fileUploadInput = canvasElement.querySelector(
@@ -329,26 +299,20 @@ export const Default: Story = {
         ];
         await userEvent.upload($fileUploadInput, dummyFiles);
 
-        const $postVisibilityOpener = await canvas.findByText(
-          MarkingModalText.postVisibilityPlaceHolder,
-        );
+        const $postVisibilityOpener =
+          await canvas.findByText(/공개 범위를 선택해주세요/);
         await $postVisibilityOpener.click();
         const $publicVisibility = await canvas.findByText("전체 공개");
         await $publicVisibility.click();
 
-        const $textArea = await canvas.findByPlaceholderText(
-          MarkingModalText.markingTextAreaPlaceholder,
-        );
+        const $textArea =
+          await canvas.findByPlaceholderText(/마킹에 대한 메모를 남겨주세요/);
         await userEvent.type($textArea, "여기는 진짜 대박이긴 해요");
 
-        const $markingFormSubmitButton = await canvas.findByText(
-          MarkingModalText.tempSaveButton,
-        );
+        const $markingFormSubmitButton = await canvas.findByText("임시저장");
         await userEvent.click($markingFormSubmitButton);
 
-        const $snackBar = await canvas.findByText(
-          MarkingModalText.tempSaveSnackbar1,
-        );
+        const $snackBar = await canvas.findByText("임시저장 되었습니다");
         expect($snackBar).toBeVisible();
         expect(useMapStore.getState().mode).toBe("view");
 
@@ -362,14 +326,11 @@ export const Default: Story = {
     await step(
       "저장이 성공하면 view 모드로 변경 되고 스낵 바가 나타난다.",
       async () => {
-        const $markingButton = await canvas.findByText(
-          MarkingModalText.markingEditButton,
-        );
+        const $markingButton = await canvas.findByText("마킹하기");
         await userEvent.click($markingButton);
 
-        const $markingModalTriggerButton = await canvas.findByText(
-          MarkingModalText.markingFormTriggerButton,
-        );
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기");
         await userEvent.click($markingModalTriggerButton);
 
         const $fileUploadInput = canvasElement.querySelector(
@@ -383,26 +344,20 @@ export const Default: Story = {
         ];
         await userEvent.upload($fileUploadInput, dummyFiles);
 
-        const $postVisibilityOpener = await canvas.findByText(
-          MarkingModalText.postVisibilityPlaceHolder,
-        );
+        const $postVisibilityOpener =
+          await canvas.findByText(/공개 범위를 선택해주세요/);
         await $postVisibilityOpener.click();
         const $publicVisibility = await canvas.findByText("전체 공개");
         await $publicVisibility.click();
 
-        const $textArea = await canvas.findByPlaceholderText(
-          MarkingModalText.markingTextAreaPlaceholder,
-        );
+        const $textArea =
+          await canvas.findByPlaceholderText(/마킹에 대한 메모를 남겨주세요/);
         await userEvent.type($textArea, "여기는 진짜 대박이긴 해요");
 
-        const $markingFormSubmitButton = await canvas.findByText(
-          MarkingModalText.saveButton,
-        );
+        const $markingFormSubmitButton = await canvas.findByText("저장하기");
         await userEvent.click($markingFormSubmitButton);
 
-        const $snackBar = await canvas.findByText(
-          MarkingModalText.saveMarkingSnackbar,
-        );
+        const $snackBar = await canvas.findByText("내 마킹이 추가되었습니다.");
         expect($snackBar).toBeVisible();
         expect(useMapStore.getState().mode).toBe("view");
 

@@ -1,7 +1,6 @@
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
-import { MarkingModalText, MarkingModalLabel } from "../constants";
 import { useMapStore } from "../store";
 import { useMarkingFormStore } from "../store/form";
 
@@ -21,19 +20,17 @@ export const MarkingFormCloseModal = ({
     <Modal modalType="center">
       <section className="flex flex-col gap-8">
         <div className="flex justify-between">
-          <span className="title-1 text-grey-900">
-            {MarkingModalText.closeMarkingModalTitle}
-          </span>
+          <span className="title-1 text-grey-900">화면을 나가시겠습니까</span>
           <button
             onClick={onCloseExitModal}
-            aria-label={MarkingModalLabel.confirmModalCancelButton}
+            aria-label="게시글 나가기 확인창 닫기"
           >
             <CloseIcon />
           </button>
         </div>
         <div className="text-grey-700 body-2">
-          <p>{MarkingModalText.closeMarkingModalText1}</p>
-          <p>{MarkingModalText.closeMarkingModalText2}</p>
+          <p>화면을 나갈 경우 입력한 정보들이 모두 삭제 됩니다.</p>
+          <p>정말 화면을 나가시겠습니까?</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -44,7 +41,7 @@ export const MarkingFormCloseModal = ({
             className="flex-1"
             onClick={onCloseExitModal}
           >
-            {MarkingModalText.closeMarkingModalCancelButton}
+            취소
           </Button>
           <Button
             variant="text"
@@ -59,7 +56,7 @@ export const MarkingFormCloseModal = ({
             fullWidth={false}
             className="flex-1"
           >
-            {MarkingModalText.closeMarkingModalConfirmButton}
+            나가기
           </Button>
         </div>
       </section>

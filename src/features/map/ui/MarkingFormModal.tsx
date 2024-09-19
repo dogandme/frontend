@@ -13,11 +13,7 @@ import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../api";
 import { usePostMarkingForm, usePostTempMarkingForm } from "../api/form";
 import { POST_VISIBILITY_MAP } from "../constants";
-import {
-  MarkingModalText,
-  MarkingModalLabel,
-  MarkingModalError,
-} from "../constants";
+import { MarkingModalError } from "../constants";
 import { useMarkingFormStore } from "../store/form";
 import { useMapStore } from "../store/map";
 import { MarkingFormCloseModal } from "./MarkingFormCloseModal";
@@ -38,11 +34,8 @@ const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 
   return (
     <header className="flex justify-between">
-      <h1 className="title-1">{MarkingModalText.confirmModalTitle}</h1>
-      <button
-        onClick={onOpenExitModal}
-        aria-label={MarkingModalLabel.confirmModalCloseButton}
-      >
+      <h1 className="title-1">마킹하기</h1>
+      <button onClick={onOpenExitModal} aria-label="작성중인 마킹 게시글 닫기">
         <CloseIcon />
       </button>
     </header>
@@ -96,10 +89,10 @@ const PostVisibilitySelect = () => {
   return (
     <div className="relative">
       <SelectOpener
-        label={MarkingModalLabel.postVisibility}
+        label="보기권한 설정"
         essential
         onClick={() => setIsOpen(!isOpen)}
-        placeholder={MarkingModalText.postVisibilityPlaceHolder}
+        placeholder="공개 범위를 선택해주세요"
         value={visibility}
       />
 
@@ -193,9 +186,7 @@ const PhotoInput = () => {
       {/* label */}
       <label htmlFor="images">
         <div className="flex gap-1 pb-1">
-          <span className="title-3 text-grey-700">
-            {MarkingModalText.photoInputButton}
-          </span>
+          <span className="title-3 text-grey-700">사진 추가하기</span>
           <span>
             <Badge colorType="primary" />
           </span>
@@ -206,7 +197,7 @@ const PhotoInput = () => {
         {imageUrls.length < 5 && (
           <ImgSlider.Item
             onClick={handleOpenAlbum}
-            aria-label={MarkingModalLabel.photoInputAddButton}
+            aria-label="마킹 게시글에 사진 추가하기"
           >
             <PlusIcon />
           </ImgSlider.Item>
@@ -236,8 +227,8 @@ const MarkingTextArea = () => {
     <TextArea
       id="content"
       name="content"
-      label={MarkingModalLabel.markingTextArea}
-      placeholder={MarkingModalText.markingTextAreaPlaceholder}
+      label="메모하기"
+      placeholder="마킹에 대한 메모를 남겨주세요"
       defaultValue={content}
       onChange={handleChange}
     />
@@ -254,7 +245,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
       <MapSnackbar onClose={onCloseSnackbar}>
-        {MarkingModalText.saveMarkingSnackbar}
+        내 마킹이 추가되었습니다.
       </MapSnackbar>
     ),
   );
@@ -304,7 +295,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
       type="button"
       onClick={handleSave}
     >
-      {MarkingModalText.saveButton}
+      저장하기
     </Button>
   );
 };
@@ -320,8 +311,8 @@ const TemporarySaveButton = ({
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
       <MapSnackbar onClose={onCloseSnackbar}>
-        <p>{MarkingModalText.tempSaveSnackbar1}</p>
-        <p>{MarkingModalText.tempSaveSnackbar2}</p>
+        <p>임시저장 되었습니다</p>
+        <p>내 마킹에서 저장을 완료해 주세요</p>
       </MapSnackbar>
     ),
   );
@@ -361,7 +352,7 @@ const TemporarySaveButton = ({
       type="button"
       onClick={handleSave}
     >
-      {MarkingModalText.tempSaveButton}
+      임시저장
     </Button>
   );
 };
