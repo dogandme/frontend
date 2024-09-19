@@ -33,10 +33,20 @@ const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     ),
   );
 
+  const handleClose = () => {
+    const { visibility, images, content } = useMarkingFormStore.getState();
+
+    if (!visibility && images.length === 0 && !content) {
+      onCloseMarkingModal();
+      return;
+    }
+    onOpenExitModal();
+  };
+
   return (
     <header className="flex justify-between">
       <h1 className="title-1">마킹하기</h1>
-      <button onClick={onOpenExitModal} aria-label="작성중인 마킹 게시글 닫기">
+      <button onClick={handleClose} aria-label="작성중인 마킹 게시글 닫기">
         <CloseIcon />
       </button>
     </header>
@@ -275,6 +285,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     const center = map.getCenter();
 
     const { region, visibility, images } = formObj;
+
     const lat = center.lat();
     const lng = center.lng();
 
@@ -287,7 +298,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     }
 
     postMarkingData(
-      { token, lat, lng, ...formObj },
+      { token, lat, lng, ...formObj, visibility },
       {
         onSuccess: () => {
           onCloseMarkingModal();
