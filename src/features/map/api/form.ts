@@ -70,7 +70,9 @@ export const usePostMarkingForm = () => {
 const postMarkingFormDataTemporary = async ({
   token,
   ...formObj
-}: MarkingFormRequest) => {
+}: Omit<MarkingFormRequest, "visibility"> & {
+  visibility: keyof typeof POST_VISIBILITY_MAP | null;
+}) => {
   const { region, visibility, content, images, lat, lng } = formObj;
 
   if (!token) {
@@ -82,7 +84,7 @@ const postMarkingFormDataTemporary = async ({
     "markingAddDto",
     JSON.stringify({
       region,
-      visibility: POST_VISIBILITY_MAP[visibility],
+      visibility: visibility ? POST_VISIBILITY_MAP[visibility] : null,
       content,
       lat,
       lng,
