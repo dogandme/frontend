@@ -46,7 +46,7 @@ const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
   const center = map.getCenter();
-  const token = "token";
+  const token = "Bearer token";
   const lat = center.lat();
   const lng = center.lng();
 
@@ -247,7 +247,7 @@ const MarkingTextArea = () => {
 
 const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
-  const token = "token";
+  const token = "Bearer token";
   // const token = useAuthStore((state) => state.token);
 
   const setMode = useMapStore((state) => state.setMode);
@@ -319,7 +319,7 @@ const TemporarySaveButton = ({
   const map = useMap();
 
   // const token = useAuthStore((state) => state.token);
-  const token = "token";
+  const token = "Bearer token";
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
