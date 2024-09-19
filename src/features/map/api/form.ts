@@ -71,7 +71,7 @@ const postMarkingFormDataTemporary = async ({
   token,
   ...formObj
 }: Omit<MarkingFormRequest, "visibility"> & {
-  visibility: keyof typeof POST_VISIBILITY_MAP | null;
+  visibility: keyof typeof POST_VISIBILITY_MAP | "";
 }) => {
   const { region, visibility, content, images, lat, lng } = formObj;
 
