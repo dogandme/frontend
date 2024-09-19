@@ -13,7 +13,7 @@ import { useMapStore } from "../store";
 import { MarkingFormModal } from "./MarkingFormModal";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
-export const MarkingEditButton = () => {
+export const MarkingAddButton = () => {
   const setMode = useMapStore((state) => state.setMode);
 
   const { handleOpen, onClose } = useSnackBar(() => (
@@ -24,7 +24,7 @@ export const MarkingEditButton = () => {
 
   const handleClick = () => {
     handleOpen();
-    setMode("edit");
+    setMode("add");
   };
 
   return (
@@ -63,7 +63,7 @@ export const CollectionButton = () => {
   );
 };
 
-/* ----------edit mode 일 때 나타나는 버튼들입니다.---------- */
+/* ----------add mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingFormTriggerButton = () => {
   const { handleOpen, onClose: onCloseMarkingModal } = useModal(() => (
     <MarkingFormModal onCloseMarkingModal={onCloseMarkingModal} />
@@ -81,7 +81,7 @@ export const MarkingFormTriggerButton = () => {
   );
 };
 
-export const ExitEditModeButton = () => {
+export const ExitAddModeButton = () => {
   const setMode = useMapStore((state) => state.setMode);
   const handleClick = () => {
     setMode("view");

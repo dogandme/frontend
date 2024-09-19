@@ -71,9 +71,9 @@ export const ClusterMarker = () => {
   return clusterInfo.map((cluster, idx) => <Cluster {...cluster} key={idx} />);
 };
 
-/* 해당 컴포넌트는 edit mode 일 때 사용되는 마커입니다. AdvancedMarker 를 이용하지 않습니다.*/
+/* 해당 컴포넌트는 add mode 일 때 사용되는 마커입니다. AdvancedMarker 를 이용하지 않습니다.*/
 
-export const EditPin = () => {
+export const MarkingAddPin = () => {
   // TODO UserInfo API 나오면 유저 프로필 사진 붙이기
   const profileImage = "/public/default-image.png";
   const alt = "test";

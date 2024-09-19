@@ -63,7 +63,7 @@ export const Default: Story = {
       },
     );
 
-    step("마킹하기 버튼이 눌리면 edit 모드로 변경 된다.", async () => {
+    step("마킹하기 버튼이 눌리면 add 모드로 변경 된다.", async () => {
       const $markingButton = await canvas.findByText(
         MarkingModalText.markingEditButton,
       );
@@ -72,38 +72,38 @@ export const Default: Story = {
       const $markingModalTriggerButton = await canvas.findByText(
         MarkingModalText.markingFormTriggerButton,
       )!;
-      const $editModeExitButton = await canvas.findByLabelText(
+      const $addModeExitButton = await canvas.findByLabelText(
         MarkingModalLabel.exitEditButton,
       )!;
-      const $editModeSnackbar = canvas.getByText(
+      const $addModeSnackbar = canvas.getByText(
         "마킹 위치를 손가락으로 움직여서 선택해 주세요",
       );
 
       expect($markingModalTriggerButton).toBeVisible();
-      expect($editModeExitButton).toBeVisible();
-      expect($editModeSnackbar).toBeVisible();
+      expect($addModeExitButton).toBeVisible();
+      expect($addModeSnackbar).toBeVisible();
     });
 
     await step("exit 버튼을 누르면 view 모드로 변경 된다.", async () => {
       const $markingModalTriggerButton = await canvas.findByText(
         MarkingModalText.markingFormTriggerButton,
       )!;
-      const $editModeExitButton = await canvas.findByLabelText(
+      const $addModeExitButton = await canvas.findByLabelText(
         MarkingModalLabel.exitEditButton,
       )!;
 
-      await userEvent.click($editModeExitButton);
+      await userEvent.click($addModeExitButton);
 
       const $markingButton = await canvas.findByText(
         MarkingModalText.markingEditButton,
       );
       expect($markingButton).toBeVisible();
       expect($markingModalTriggerButton).not.toBeInTheDocument();
-      expect($editModeExitButton).not.toBeInTheDocument();
+      expect($addModeExitButton).not.toBeInTheDocument();
     });
 
     await step(
-      "edit 모드에서 여기에 마킹하기 버튼을 클릭하면 모달 폼이 나타난다.",
+      "add 모드에서 여기에 마킹하기 버튼을 클릭하면 모달 폼이 나타난다.",
       async () => {
         // 마킹 모드 돌입
         const $markingButton = await canvas.findByText(
@@ -132,7 +132,7 @@ export const Default: Story = {
     );
 
     await step(
-      "마킹 모달 폼에서 현재 도로명 주소를 클릭하면 모달이 닫히고 edit 모드가 유지 된다.",
+      "마킹 모달 폼에서 현재 도로명 주소를 클릭하면 모달이 닫히고 add 모드가 유지 된다.",
       async () => {
         const $markingAddress = await canvas.findByText(STRING_ADDRESS);
         const $markingFormSubmitButton = await canvas.findByText(
@@ -263,7 +263,7 @@ export const Default: Story = {
     });
 
     await step(
-      "edit 모드를 유지한 채로 나갔다가 다시 모달을 열어도 내용이 유지 된다.",
+      "add 모드를 유지한 채로 나갔다가 다시 모달을 열어도 내용이 유지 된다.",
       async () => {
         const originalState = useMarkingFormStore.getState();
 

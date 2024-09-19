@@ -4,7 +4,7 @@ import {
   PinMarker,
   MultiplePinMarker,
   ClusterMarker,
-  EditPin,
+  MarkingAddPin,
 } from "@/features/map/ui";
 
 export const MapMarkerWidget = () => {
@@ -20,15 +20,15 @@ export const MapMarkerWidget = () => {
       </>
     );
   }
-  if (mode === "edit") {
+  if (mode === "add") {
     return (
       <>
-        <EditPin />
+        <MarkingAddPin />
       </>
     );
   }
 
   throw new Error(
-    'MapMarkerWidget 컴포넌트는 "view" 또는 "edit" 모드만 지원합니다.',
+    'MapMarkerWidget 컴포넌트는 "view" 또는 "add" 모드만 지원합니다.',
   );
 };

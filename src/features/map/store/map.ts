@@ -23,7 +23,7 @@ export interface MapInfo {
   zoom: number;
 }
 
-type Mode = "view" | "edit";
+type Mode = "view" | "add";
 
 interface MapState {
   mapInfo: MapInfo;

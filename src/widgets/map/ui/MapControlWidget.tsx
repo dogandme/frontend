@@ -1,11 +1,11 @@
 import { useMapStore } from "@/features/map/store/map";
 import {
-  MarkingEditButton,
+  MarkingAddButton,
   MarkingFormTriggerButton,
   MyLocationButton,
   ShowOthersMarkingButton,
   CollectionButton,
-  ExitEditModeButton,
+  ExitAddModeButton,
 } from "@/features/map/ui";
 
 /**
@@ -29,17 +29,17 @@ export const MapControlWidget = () => {
         </div>
         {/* 마킹하기 버튼 */}
         <div className="absolute w-full px-4 bottom-[3.375rem]">
-          <MarkingEditButton />
+          <MarkingAddButton />
         </div>
       </>
     );
   }
 
-  if (mode === "edit") {
+  if (mode === "add") {
     return (
       <>
         <div className="absolute top-4 right-4">
-          <ExitEditModeButton />
+          <ExitAddModeButton />
         </div>
         <div className="absolute w-full px-4 bottom-[3.375rem]">
           <MarkingFormTriggerButton />
@@ -49,6 +49,6 @@ export const MapControlWidget = () => {
   }
 
   throw new Error(
-    'MapControlWidget 컴포넌트는 "view" 또는 "edit" 모드만 지원합니다.',
+    'MapControlWidget 컴포넌트는 "view" 또는 "add" 모드만 지원합니다.',
   );
 };
