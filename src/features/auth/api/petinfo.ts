@@ -27,38 +27,47 @@ const postPetInfo = async ({
   token,
   formObject,
 }: PostPetInfoArgs): Promise<PetInfoResponse> => {
-  const { name, personalities, description, profile } = formObject;
+  const { name, personalities, description, breed, profile } = formObject;
 
   const formData = new FormData();
 
   // 이미지 파일은 파일 이름과 확장자를 붙혀 보내야 합니다.
   if (profile) {
     const profileExtension = profile.type.split("/")[1];
-    formData.append("profile", profile, `${name}-profile.${profileExtension}`);
+    formData.append("image", profile, `${name}-profile.${profileExtension}`);
   } else {
-    formData.append("profile", "");
+    formData.append("image", "");
   }
 
-  formData.append("name", name);
-  formData.append("personalities", JSON.stringify(personalities));
-  formData.append("description", description);
+  formData.append(
+    "petSignUpDto",
+    JSON.stringify({
+      name,
+      personalities,
+      description,
+      breed,
+    }),
+  );
 
   const response = await fetch(SIGN_UP_END_POINT.PET_INFO, {
     method: "POST",
     headers: {
-      "Content-Type": "multipart/form-data",
       Authorization: token,
     },
     body: formData,
   });
 
+  const data = await response.json();
+
   if (!response.ok) {
-    throw new Error(
-      "예기치 못한 에러가 발생했습니다.잠시 후 다시 시도해주세요.",
-    );
+    if (response.status === 500) {
+      throw new Error(
+        "예기치 못한 에러가 발생했습니다.잠시 후 다시 시도해주세요.",
+      );
+    }
+    throw new Error(data.message);
   }
 
-  const data = await response.json();
   return data;
 };
 
