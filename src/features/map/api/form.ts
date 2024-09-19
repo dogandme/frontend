@@ -45,7 +45,6 @@ const postMarkingFormData = async ({
     method: "POST",
     headers: {
       Authorization: `${token}`,
-      "Content-Type": "multipart/form-data",
     },
     body: formData,
   });
@@ -100,7 +99,6 @@ const postMarkingFormDataTemporary = async ({
     method: "POST",
     headers: {
       Authorization: `${token}`,
-      "Content-Type": "multipart/form-data",
     },
     body: formData,
   });
