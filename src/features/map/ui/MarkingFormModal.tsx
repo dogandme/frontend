@@ -46,11 +46,11 @@ const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
   const center = map.getCenter();
-
+  const token = useAuthStore((state) => state.token);
   const lat = center.lat();
   const lng = center.lng();
 
-  const { token } = useAuthStore.getState();
+  console.log(lat, lng);
 
   if (!token) {
     throw new Error(MarkingModalError.unAuthorized);
@@ -110,10 +110,10 @@ const PostVisibilitySelect = () => {
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
-          {VISIBILITY_LIST.map((option, idx) => {
+          {VISIBILITY_LIST.map((option) => {
             return (
               <Select.Option
-                key={idx}
+                key={option}
                 value={option}
                 isSelected={option === visibility}
                 onClick={() =>
@@ -212,11 +212,11 @@ const PhotoInput = () => {
             <PlusIcon />
           </ImgSlider.Item>
         )}
-        {imageUrls.map(({ url, name, lastModified }, idx) => (
+        {imageUrls.map(({ url, name, lastModified }) => (
           <ImgSlider.ImgItem
             src={url}
             alt={name}
-            key={idx}
+            key={lastModified}
             onRemove={() => handleRemoveImage(lastModified)}
           />
         ))}
@@ -247,6 +247,7 @@ const MarkingTextArea = () => {
 
 const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
+  const token = useAuthStore((state) => state.token);
 
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
@@ -264,8 +265,6 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { mutate: postMarkingData } = usePostMarkingForm();
 
   const handleSave = () => {
-    const { token } = useAuthStore.getState();
-
     if (!token) {
       throw new Error(MarkingModalError.unAuthorized);
     }
@@ -318,6 +317,7 @@ const TemporarySaveButton = ({
 }: MarkingFormModalProps) => {
   const map = useMap();
 
+  const token = useAuthStore((state) => state.token);
   const setMode = useMapStore((state) => state.setMode);
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
@@ -335,8 +335,6 @@ const TemporarySaveButton = ({
   const { mutate: postTempMarkingData } = usePostTempMarkingForm();
 
   const handleSave = () => {
-    const { token } = useAuthStore.getState();
-
     if (!token) {
       throw new Error(MarkingModalError.unAuthorized);
     }
@@ -379,12 +377,6 @@ const TemporarySaveButton = ({
 export const MarkingFormModal = ({
   onCloseMarkingModal,
 }: MarkingFormModalProps) => {
-  const setToken = useAuthStore((state) => state.setToken);
-
-  useEffect(() => {
-    setToken("Bearer token");
-  }, []);
-
   return (
     <Modal modalType="center">
       <MarkingModalNav onCloseMarkingModal={onCloseMarkingModal} />
