@@ -163,12 +163,12 @@ const PhotoInput = () => {
 
     const _images = [...images];
     for (const newFile of newFiles) {
-      if (_images.length > 5) {
-        throw new Error(MarkingModalError.maxPhotoCount);
-      }
-
       if (!isImageAlreadyExist(newFile)) {
         _images.push(newFile);
+      }
+
+      if (_images.length > 5) {
+        throw new Error(MarkingModalError.maxPhotoCount);
       }
     }
 
