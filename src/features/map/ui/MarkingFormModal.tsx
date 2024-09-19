@@ -110,10 +110,10 @@ const PostVisibilitySelect = () => {
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
-          {VISIBILITY_LIST.map((option, idx) => {
+          {VISIBILITY_LIST.map((option) => {
             return (
               <Select.Option
-                key={idx}
+                key={option}
                 value={option}
                 isSelected={option === visibility}
                 onClick={() =>
@@ -212,11 +212,11 @@ const PhotoInput = () => {
             <PlusIcon />
           </ImgSlider.Item>
         )}
-        {imageUrls.map(({ url, name, lastModified }, idx) => (
+        {imageUrls.map(({ url, name, lastModified }) => (
           <ImgSlider.ImgItem
             src={url}
             alt={name}
-            key={idx}
+            key={lastModified}
             onRemove={() => handleRemoveImage(lastModified)}
           />
         ))}
