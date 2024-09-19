@@ -26,19 +26,19 @@ export const Default: Story = {
     <>
       <div>
         <h1>Default Pin</h1>
-        <Pin.Default imageUrl="/public/default-image.png" alt="기본 이미지" />
+        <Pin.Default imageUrl="/default-image.png" alt="기본 이미지" />
       </div>
       <div>
         <h1 className="title-1">Multiple Pin</h1>
         <p>MultiplePin 에서 markerCount의 최대값은 99입니다.</p>
         <div className="flex gap-4">
           <Pin.Multiple
-            imageUrl="/public/default-image.png"
+            imageUrl="/default-image.png"
             markerCount={2}
             alt="기본 이미지"
           />
           <Pin.Multiple
-            imageUrl="/public/default-image.png"
+            imageUrl="/default-image.png"
             markerCount={5000}
             alt="기본 이미지"
           />

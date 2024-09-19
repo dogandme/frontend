@@ -38,35 +38,35 @@ export const Default: Story = {
         button
       </ImgSlider.Item>
       <ImgSlider.ImgItem
-        src="/public/default-image.png"
+        src="/default-image.png"
         alt="landing-image"
         onRemove={() => {
           action("onRemove")();
         }}
       />
       <ImgSlider.ImgItem
-        src="/public/default-image.png"
+        src="/default-image.png"
         alt="landing-image"
         onRemove={() => {
           action("onRemove")();
         }}
       />
       <ImgSlider.ImgItem
-        src="/public/default-image.png"
+        src="/default-image.png"
         alt="landing-image"
         onRemove={() => {
           action("onRemove")();
         }}
       />
       <ImgSlider.ImgItem
-        src="/public/default-image.png"
+        src="/default-image.png"
         alt="landing-image"
         onRemove={() => {
           action("onRemove")();
         }}
       />
       <ImgSlider.ImgItem
-        src="/public/default-image.png"
+        src="/default-image.png"
         alt="landing-image"
         onRemove={() => console.log("remove")}
       />

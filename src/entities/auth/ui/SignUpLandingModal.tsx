@@ -34,7 +34,7 @@ export const SignUpLandingModal = ({
           <p>회원가입을 축하해요</p>
         </section>
         <div className="flex justify-center items-center">
-          <img src="/public/default-image.png" alt="landing-image" />
+          <img src="/default-image.png" alt="landing-image" />
         </div>
         <section className="body-1 text-grey-700 text-center">
           <p>반려동물을 등록하고</p>
