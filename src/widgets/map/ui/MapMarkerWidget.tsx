@@ -1,27 +1,34 @@
-import { User, Pin, MultiplePin, Cluster } from "@/entities/map/ui";
+import { useMapStore } from "@/features/map/store/map";
+import {
+  UserMarker,
+  PinMarker,
+  MultiplePinMarker,
+  ClusterMarker,
+  MarkingAddPin,
+} from "@/features/map/ui";
 
 export const MapMarkerWidget = () => {
-  return (
-    <>
-      <User position={{ lat: 37.5665, lng: 126.978 }} />
-      <Pin
-        alt="test"
-        position={{ lat: 37.56651, lng: 126.977 }}
-        imageUrl="/default-image.png"
-      />
-      <MultiplePin
-        position={{ lat: 37.5664, lng: 126.976 }}
-        imageUrl="/default-image.png"
-        alt="test"
-        markerCount={2}
-      />
-      <MultiplePin
-        position={{ lat: 37.5663, lng: 126.9765 }}
-        imageUrl="/default-image.png"
-        alt="test"
-        markerCount={500}
-      />
-      <Cluster position={{ lat: 37.5662, lng: 126.976 }} markerCount={16} />
-    </>
+  const mode = useMapStore((state) => state.mode);
+
+  if (mode === "view") {
+    return (
+      <>
+        <UserMarker />
+        <PinMarker />
+        <MultiplePinMarker />
+        <ClusterMarker />
+      </>
+    );
+  }
+  if (mode === "add") {
+    return (
+      <>
+        <MarkingAddPin />
+      </>
+    );
+  }
+
+  throw new Error(
+    'MapMarkerWidget 컴포넌트는 "view" 또는 "add" 모드만 지원합니다.',
   );
 };

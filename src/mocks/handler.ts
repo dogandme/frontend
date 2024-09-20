@@ -116,6 +116,50 @@ export const userInfoRegistrationHandlers = [
   }),
 ];
 
+export const markingModalHandlers = [
+  http.get<PathParams>(
+    "http://localhost/maps/reverse-geocode",
+    async ({ request }) => {
+      const requestUrl = new URL(request.url);
+      const lat = requestUrl.searchParams.get("lat");
+      const lng = requestUrl.searchParams.get("lng");
+
+      if (!lat || !lng) {
+        return HttpResponse.json(
+          {
+            code: 400,
+            menubar: "위경도 값을 입력해 주세요",
+          },
+          {
+            status: 400,
+            statusText: "Bad Request",
+          },
+        );
+      }
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          region: "서울특별시 강남구 역삼동 123-456",
+        },
+      });
+    },
+  ),
+  http.post<PathParams>("http://localhost/markings", async () => {
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+  http.post<PathParams>("http://localhost/markings/temp", async () => {
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,

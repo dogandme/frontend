@@ -11,7 +11,6 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   colorType: "primary" | "secondary" | "tertiary";
   variant: "filled" | "outlined" | "text";
   size: "xSmall" | "small" | "medium" | "large";
-  className?: string;
   fullWidth?: boolean;
   className?: string;
   children: ReactNode;
