@@ -82,6 +82,7 @@ const SearchRegionByGPSButton = () => {
         throw new Error(errorMessage.POSITION_UNAVAILABLE);
       case GeolocationPositionError.TIMEOUT:
         if (failureCount.current >= 3) {
+          failureCount.current = 0;
           throw new Error(errorMessage.POSITION_UNAVAILABLE);
         }
         failureCount.current += 1;

@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { FloatingButton } from "@/entities/map/ui";
 import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
@@ -41,14 +42,19 @@ export const MarkingAddButton = () => {
 
 export const MyLocationButton = () => {
   const map = useMap();
+
   const { hasLocationPermission } = useMapStore((state) => state.userInfo);
-  const setIsCenterOnMyLocation = useMapStore(
-    (state) => state.setIsCenterOnMyLocation,
-  );
   const isCenteredOnMyLocation = useMapStore(
     (state) => state.isCenterOnMyLocation,
   );
+
+  const setIsCenterOnMyLocation = useMapStore(
+    (state) => state.setIsCenterOnMyLocation,
+  );
   const setUserInfo = useMapStore((state) => state.setUserInfo);
+
+  const failureCount = useRef<number>(0);
+  const TIME_OUT = 1000;
 
   const handleClick = () => {
     if (!hasLocationPermission) {
@@ -79,10 +85,22 @@ export const MyLocationButton = () => {
           );
 
         case 2 /* POSITION_UNAVAILABLE */:
-          throw new Error(
-            "위치 정보를 사용할 수 없습니다\n잠시 후 다시 시도해주세요",
+          if (failureCount.current >= 3) {
+            failureCount.current = 0;
+            throw new Error(
+              "위치 정보를 가져오는데 문제가 발생했습니다\n잠시 후 다시 시도해주세요.",
+            );
+          }
+          window.navigator.geolocation.getCurrentPosition(
+            successCallback,
+            errorCallback,
+            {
+              ...options,
+              timeout: TIME_OUT + 2 ** failureCount.current * 100,
+              enableHighAccuracy: false,
+            },
           );
-
+          break;
         case 3 /* TIMEOUT */:
           throw new Error(
             "위치 정보를 가져오는데 시간이 너무 오래 걸립니다\n잠시 후 다시 시도해주세요.",
@@ -92,7 +110,7 @@ export const MyLocationButton = () => {
 
     const options: PositionOptions = {
       enableHighAccuracy: true,
-      timeout: 1000,
+      timeout: TIME_OUT,
       maximumAge: 0,
     };
 
