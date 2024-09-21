@@ -2,6 +2,7 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
 import { MapPage } from "@/pages/map";
+import { MyPage } from "@/pages/my-page";
 import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
@@ -86,5 +87,9 @@ export const router = createBrowserRouter([
         element: <PetInfoPage />,
       },
     ],
+  },
+  {
+    path: ROUTER_PATH.MY_PAGE,
+    element: <MyPage />,
   },
 ]);
