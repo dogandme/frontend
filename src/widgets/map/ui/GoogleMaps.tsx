@@ -17,6 +17,8 @@ interface GoogleMapProps {
  */
 export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const setMapInfo = useMapStore((state) => state.setMapInfo);
+  const setUserInfo = useMapStore((state) => state.setUserInfo);
+
   const DELAY_SET_MAP_INFO = 500;
   const handleMapChange = debounce(({ detail }: MapCameraChangedEvent) => {
     const { bounds, center, zoom } = detail;
@@ -40,6 +42,46 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
         clearInterval(interval);
       }
     }, 100);
+
+    // 첫 렌더링 이후 사용자의 위치 정보를 불러와 useMapStore의 userInfo에 저장합니다.
+    const successCallback = ({ coords }: GeolocationPosition) => {
+      const { latitude: lat, longitude: lng } = coords;
+      setUserInfo({
+        userLocation: { lat, lng },
+        hasLocationPermission: true,
+      });
+    };
+
+    const errorCallback = (error: GeolocationPositionError) => {
+      switch (error.code) {
+        case 1 /* PERMISSION_DENIED */:
+          throw new Error(
+            "내 위치 제공이 거부되었습니다\n내 위치 기반 서비스 이용에 제한이 있을 수 있습니다",
+          );
+
+        case 2 /* POSITION_UNAVAILABLE */:
+          throw new Error(
+            "위치 정보를 사용할 수 없습니다\n잠시 후 다시 시도해주세요",
+          );
+
+        case 3 /* TIMEOUT */:
+          throw new Error(
+            "위치 정보를 가져오는데 시간이 너무 오래 걸립니다\n잠시 후 다시 시도해주세요.",
+          );
+      }
+    };
+
+    const options: PositionOptions = {
+      enableHighAccuracy: true,
+      timeout: 1000,
+      maximumAge: 0,
+    };
+
+    window.navigator.geolocation.getCurrentPosition(
+      successCallback,
+      errorCallback,
+      options,
+    );
   }, []);
 
   return (
