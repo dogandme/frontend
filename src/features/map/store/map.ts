@@ -49,7 +49,7 @@ const mapStoreInitialState: MapState = {
   },
   userInfo: {
     currentLocation: MAP_INITIAL_CENTER,
-    hasLocationPermission: false,
+    hasLocationPermission: true,
   },
   mode: "view",
   isCenterOnMyLocation: false,

@@ -43,7 +43,6 @@ export const MarkingAddButton = () => {
 export const MyLocationButton = () => {
   const map = useMap();
 
-  const { hasLocationPermission } = useMapStore((state) => state.userInfo);
   const isCenteredOnMyLocation = useMapStore(
     (state) => state.isCenterOnMyLocation,
   );
@@ -57,12 +56,6 @@ export const MyLocationButton = () => {
   const TIME_OUT = 1000;
 
   const handleClick = () => {
-    if (!hasLocationPermission) {
-      throw new Error(
-        "위치 제공을 허용 한 후 사용 가능한 기능입니다\n내 위치 제공을 허용해주세요",
-      );
-    }
-
     const successCallback = ({ coords }: GeolocationPosition) => {
       const { latitude: lat, longitude: lng } = coords;
       map.setCenter({ lat, lng });
@@ -80,6 +73,10 @@ export const MyLocationButton = () => {
     const errorCallback = (error: GeolocationPositionError) => {
       switch (error.code) {
         case 1 /* PERMISSION_DENIED */:
+          setUserInfo({
+            currentLocation: { lat: 0, lng: 0 },
+            hasLocationPermission: false,
+          });
           throw new Error(
             "위치 제공을 허용 한 후 사용 가능한 기능입니다\n내 위치 제공을 허용해주세요",
           );
