@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 export * from "./cookie";
 export * from "./overlay";
+export * from "./debounce";
 
 // TODO refactoring 시 해당 훅 제거 하기
 /**
