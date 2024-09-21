@@ -41,7 +41,7 @@ export const MarkingAddButton = () => {
 
 export const MyLocationButton = () => {
   const map = useMap();
-  const { center: mapLocation } = useMapStore((state) => state.mapInfo);
+  const { center } = useMapStore((state) => state.mapInfo);
   const { userLocation, hasLocationPermission } = useMapStore(
     (state) => state.userInfo,
   );
@@ -97,7 +97,7 @@ export const MyLocationButton = () => {
 
   const isCenteredOnMyLocation =
     hasLocationPermission &&
-    JSON.stringify(mapLocation) === JSON.stringify(userLocation);
+    JSON.stringify(center) === JSON.stringify(userLocation);
 
   return (
     <FloatingButton
