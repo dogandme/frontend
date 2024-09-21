@@ -31,12 +31,14 @@ interface MapState {
   mapInfo: MapInfo;
   userInfo: UserInfo;
   mode: Mode;
+  isCenterOnMyLocation: boolean;
 }
 
 interface MapActions {
   setMapInfo: (mapInfo: MapInfo) => void;
   setUserInfo: (userInfo: UserInfo) => void;
   setMode: (mode: Mode) => void;
+  setIsCenterOnMyLocation: (isCenterOnMyLocation: boolean) => void;
 }
 
 const mapStoreInitialState: MapState = {
@@ -50,6 +52,7 @@ const mapStoreInitialState: MapState = {
     hasLocationPermission: false,
   },
   mode: "view",
+  isCenterOnMyLocation: false,
 };
 
 export const useMapStore = create<MapState & MapActions>((set) => ({
@@ -57,4 +60,6 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setMapInfo: (mapInfo) => set({ mapInfo }),
   setUserInfo: (userInfo) => set({ userInfo }),
   setMode: (mode) => set({ mode }),
+  setIsCenterOnMyLocation: (isCenterOnMyLocation) =>
+    set({ isCenterOnMyLocation }),
 }));

@@ -41,9 +41,12 @@ export const MarkingAddButton = () => {
 
 export const MyLocationButton = () => {
   const map = useMap();
-  const { center } = useMapStore((state) => state.mapInfo);
-  const { userLocation, hasLocationPermission } = useMapStore(
-    (state) => state.userInfo,
+  const { hasLocationPermission } = useMapStore((state) => state.userInfo);
+  const setIsCenterOnMyLocation = useMapStore(
+    (state) => state.setIsCenterOnMyLocation,
+  );
+  const isCenteredOnMyLocation = useMapStore(
+    (state) => state.isCenterOnMyLocation,
   );
   const setUserInfo = useMapStore((state) => state.setUserInfo);
 
@@ -61,6 +64,11 @@ export const MyLocationButton = () => {
         userLocation: { lat, lng },
         hasLocationPermission: true,
       });
+      // GoogleMap의 CameraChanged 이벤트가 발생한 후에 시행 될 수 있도록
+      // setIsCenterOnMyLocation 을 이벤트 루프로 보내줍니다.
+      setTimeout(() => {
+        setIsCenterOnMyLocation(true);
+      }, 0);
     };
 
     const errorCallback = (error: GeolocationPositionError) => {
@@ -94,10 +102,6 @@ export const MyLocationButton = () => {
       options,
     );
   };
-
-  const isCenteredOnMyLocation =
-    hasLocationPermission &&
-    JSON.stringify(center) === JSON.stringify(userLocation);
 
   return (
     <FloatingButton

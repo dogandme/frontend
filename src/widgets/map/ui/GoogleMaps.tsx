@@ -18,12 +18,24 @@ interface GoogleMapProps {
 export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const setMapInfo = useMapStore((state) => state.setMapInfo);
   const setUserInfo = useMapStore((state) => state.setUserInfo);
+  const setIsMapCenteredOnMyLocation = useMapStore(
+    (state) => state.setIsCenterOnMyLocation,
+  );
 
   const DELAY_SET_MAP_INFO = 500;
-  const handleMapChange = debounce(({ detail }: MapCameraChangedEvent) => {
-    const { bounds, center, zoom } = detail;
-    setMapInfo({ bounds, center, zoom });
-  }, DELAY_SET_MAP_INFO);
+
+  const debouncedUpdateMapInfo = debounce(
+    (detail: MapCameraChangedEvent["detail"]) => {
+      const { bounds, center, zoom } = detail;
+      setMapInfo({ bounds, center, zoom });
+    },
+    DELAY_SET_MAP_INFO,
+  );
+
+  const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
+    debouncedUpdateMapInfo(detail); // debounce 시켜 MapStore 의 mapInfo 를 변경합니다.
+    setIsMapCenteredOnMyLocation(false);
+  };
 
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.
   // 기본 outline에 해당하는 div 태그는 iframe 태그 다음에 존재하고 있습니다.
