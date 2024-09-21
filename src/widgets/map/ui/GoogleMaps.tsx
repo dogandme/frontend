@@ -82,7 +82,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       errorCallback,
       options,
     );
-  }, []);
+  }, [setUserInfo]);
 
   return (
     <Map
