@@ -15,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VITE_GOOGLE_MAPS_API_KEY: ${{secrets.VITE_GOOGLE_MAPS_API_KEY}}
-      VITE_GOOGLE_MAPS_ID: ${{secrets.GOOGLE_MAPS_ID}}
+      VITE_GOOGLE_MAPS_ID: ${{secrets.VITE_GOOGLE_MAPS_ID}}
+      VITE_API_BASE_URL: ${{secrets.STORYBOOK_VITE_API_BASE_URL}}
     steps:
       - uses: actions/checkout@v2
         with:

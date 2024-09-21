@@ -1,4 +1,6 @@
 import { http, HttpResponse, PathParams } from "msw";
+import { SIGN_UP_END_POINT } from "@/features/auth/constants";
+import { MAP_ENDPOINT } from "@/features/map/constants";
 
 export const signUpByEmailHandlers = [
   http.post<
@@ -6,7 +8,7 @@ export const signUpByEmailHandlers = [
     {
       email: string;
     }
-  >("http://localhost/users/auth", async ({ request }) => {
+  >(SIGN_UP_END_POINT.VERIFICATION_CODE, async ({ request }) => {
     const { email } = await request.json();
 
     const isDuplicateEmail = email === "hihihi@naver.com";
@@ -32,7 +34,7 @@ export const signUpByEmailHandlers = [
       email: string;
       authNum: string;
     }
-  >("http://localhost/users/auth/check", async ({ request }) => {
+  >(SIGN_UP_END_POINT.CHECK_VERIFICATION_CODE, async ({ request }) => {
     const { authNum } = await request.json();
 
     if (authNum === "1111111") {
@@ -50,7 +52,7 @@ export const signUpByEmailHandlers = [
       email: string;
       password: string;
     }
-  >("http://localhost/users", async ({ request }) => {
+  >(SIGN_UP_END_POINT.EMAIL, async ({ request }) => {
     const { email } = await request.json();
 
     if (email === "hihihi@naver.com") {
@@ -78,7 +80,7 @@ export const userInfoRegistrationHandlers = [
       region: string;
       marketingYn: boolean;
     }
-  >("http://localhost/users/additional-info", async ({ request }) => {
+  >(SIGN_UP_END_POINT.USER_INFO, async ({ request }) => {
     const { nickname } = await request.json();
 
     const isDuplicateNickname = nickname === "중복";
@@ -102,7 +104,7 @@ export const userInfoRegistrationHandlers = [
     {
       nickname: string;
     }
-  >("http://localhost/users/nickname", async ({ request }) => {
+  >(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, async ({ request }) => {
     const { nickname } = await request.json();
 
     if (nickname === "중복") {
@@ -118,7 +120,7 @@ export const userInfoRegistrationHandlers = [
 
 export const markingModalHandlers = [
   http.get<PathParams>(
-    "http://localhost/maps/reverse-geocode",
+    `${import.meta.env.VITE_API_BASE_URL}/maps/reverse-geocode`,
     async ({ request }) => {
       const requestUrl = new URL(request.url);
       const lat = requestUrl.searchParams.get("lat");
@@ -146,13 +148,13 @@ export const markingModalHandlers = [
       });
     },
   ),
-  http.post<PathParams>("http://localhost/markings", async () => {
+  http.post<PathParams>(MAP_ENDPOINT.MARKING_SAVE, async () => {
     return HttpResponse.json({
       code: 200,
       message: "success",
     });
   }),
-  http.post<PathParams>("http://localhost/markings/temp", async () => {
+  http.post<PathParams>(MAP_ENDPOINT.MARKING_TEMP_SAVE, async () => {
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -164,4 +166,5 @@ export const markingModalHandlers = [
 export const handlers = [
   ...signUpByEmailHandlers,
   ...userInfoRegistrationHandlers,
+  ...markingModalHandlers,
 ];

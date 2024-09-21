@@ -1,22 +1,23 @@
 // TODO BASEURL env 파일로 수정하기
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const LOGIN_END_POINT = {
-  GOOGLE: "http://localhost:80/oauth2/authorization/google",
-  NAVER: "http://localhost:80/oauth2/authorization/naver",
-  EMAIL: "http://localhost:80/login",
+  GOOGLE: `${API_BASE_URL}/oauth2/authorization/google`,
+  NAVER: `${API_BASE_URL}/oauth2/authorization/naver`,
+  EMAIL: `${API_BASE_URL}/login`,
 };
 
 export const SIGN_UP_END_POINT = {
-  EMAIL: "http://localhost:80/users",
-  VERIFICATION_CODE: "http://localhost:80/users/auth",
-  CHECK_VERIFICATION_CODE: "http://localhost:80/users/auth/check",
-  DUPLICATE_NICKNAME: "http://localhost:80/users/nickname",
-  USER_INFO: "http://localhost:80/users/additional-info",
-  PET_INFO: "http://localhost:80/pets",
+  EMAIL: `${API_BASE_URL}/users`,
+  VERIFICATION_CODE: `${API_BASE_URL}/users/auth`,
+  CHECK_VERIFICATION_CODE: `${API_BASE_URL}/users/auth/check`,
+  DUPLICATE_NICKNAME: `${API_BASE_URL}/users/nickname`,
+  USER_INFO: `${API_BASE_URL}/users/additional-info`,
+  PET_INFO: `${API_BASE_URL}/pets`,
 };
 
 export const ADDRESSES_END_POINT = {
   CURRENT_POSITION: ({ lat, lng }: { lat: number; lng: number }) =>
-    `http://localhost:80/addresses/search-by-location?lat=${lat}&lng=${lng}`,
-  ADDRESS: (keyword: string) =>
-    `http://localhost:80/addresses?keyword=${keyword}`,
+    `${API_BASE_URL}/addresses/search-by-location?lat=${lat}&lng=${lng}`,
+  ADDRESS: (keyword: string) => `${API_BASE_URL}/addresses?keyword=${keyword}`,
 };
