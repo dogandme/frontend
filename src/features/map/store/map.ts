@@ -22,13 +22,20 @@ export interface MapInfo {
 }
 type Mode = "view" | "add";
 
+interface UserInfo {
+  userLocation: LatLng;
+  hasLocationPermission: boolean;
+}
+
 interface MapState {
   mapInfo: MapInfo;
+  userInfo: UserInfo;
   mode: Mode;
 }
 
 interface MapActions {
   setMapInfo: (mapInfo: MapInfo) => void;
+  setUserInfo: (userInfo: UserInfo) => void;
   setMode: (mode: Mode) => void;
 }
 
@@ -38,11 +45,16 @@ const mapStoreInitialState: MapState = {
     zoom: MAP_INITIAL_ZOOM,
     bounds: MAP_INITIAL_BOUNDS,
   },
+  userInfo: {
+    userLocation: MAP_INITIAL_CENTER,
+    hasLocationPermission: false,
+  },
   mode: "view",
 };
 
 export const useMapStore = create<MapState & MapActions>((set) => ({
   ...mapStoreInitialState,
   setMapInfo: (mapInfo) => set({ mapInfo }),
+  setUserInfo: (userInfo) => set({ userInfo }),
   setMode: (mode) => set({ mode }),
 }));
