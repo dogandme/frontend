@@ -1,3 +1,4 @@
+import { useMap } from "@vis.gl/react-google-maps";
 import { FloatingButton } from "@/entities/map/ui";
 import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
@@ -39,8 +40,71 @@ export const MarkingAddButton = () => {
 };
 
 export const MyLocationButton = () => {
+  const map = useMap();
+  const { center: mapLocation } = useMapStore((state) => state.mapInfo);
+  const { userLocation, hasLocationPermission } = useMapStore(
+    (state) => state.userInfo,
+  );
+  const setUserInfo = useMapStore((state) => state.setUserInfo);
+
+  const handleClick = () => {
+    if (!hasLocationPermission) {
+      throw new Error(
+        "위치 제공을 허용 한 후 사용 가능한 기능입니다\n내 위치 제공을 허용해주세요",
+      );
+    }
+
+    const successCallback = ({ coords }: GeolocationPosition) => {
+      const { latitude: lat, longitude: lng } = coords;
+      map.setCenter({ lat, lng });
+      setUserInfo({
+        userLocation: { lat, lng },
+        hasLocationPermission: true,
+      });
+    };
+
+    const errorCallback = (error: GeolocationPositionError) => {
+      switch (error.code) {
+        case 1 /* PERMISSION_DENIED */:
+          throw new Error(
+            "위치 제공을 허용 한 후 사용 가능한 기능입니다\n내 위치 제공을 허용해주세요",
+          );
+
+        case 2 /* POSITION_UNAVAILABLE */:
+          throw new Error(
+            "위치 정보를 사용할 수 없습니다\n잠시 후 다시 시도해주세요",
+          );
+
+        case 3 /* TIMEOUT */:
+          throw new Error(
+            "위치 정보를 가져오는데 시간이 너무 오래 걸립니다\n잠시 후 다시 시도해주세요.",
+          );
+      }
+    };
+
+    const options: PositionOptions = {
+      enableHighAccuracy: true,
+      timeout: 1000,
+      maximumAge: 0,
+    };
+
+    window.navigator.geolocation.getCurrentPosition(
+      successCallback,
+      errorCallback,
+      options,
+    );
+  };
+
+  const isCenteredOnMyLocation =
+    hasLocationPermission &&
+    JSON.stringify(mapLocation) === JSON.stringify(userLocation);
+
   return (
-    <FloatingButton aria-label="지도의 중심을 현재 위치로 이동 시키기">
+    <FloatingButton
+      aria-label="지도의 중심을 현재 위치로 이동 시키기"
+      onClick={handleClick}
+      controlledIsActive={isCenteredOnMyLocation}
+    >
       <MyLocationIcon />
     </FloatingButton>
   );
