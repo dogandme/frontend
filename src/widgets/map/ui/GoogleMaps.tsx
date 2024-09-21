@@ -89,6 +89,16 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       maximumAge: 0,
     };
 
+    // 스토리북 환경에선 이하 코드를 실행하지 않습니다.
+    if (
+      (
+        window as Window &
+          typeof globalThis & { __STORYBOOK_ADDONS_CHANNEL__?: unknown }
+      ).__STORYBOOK_ADDONS_CHANNEL__
+    ) {
+      return;
+    }
+
     window.navigator.geolocation.getCurrentPosition(
       successCallback,
       errorCallback,
