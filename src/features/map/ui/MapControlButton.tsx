@@ -67,7 +67,7 @@ export const MyLocationButton = () => {
       const { latitude: lat, longitude: lng } = coords;
       map.setCenter({ lat, lng });
       setUserInfo({
-        userLocation: { lat, lng },
+        currentLocation: { lat, lng },
         hasLocationPermission: true,
       });
       // GoogleMap의 CameraChanged 이벤트가 발생한 후에 시행 될 수 있도록

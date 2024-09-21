@@ -23,7 +23,7 @@ export interface MapInfo {
 type Mode = "view" | "add";
 
 interface UserInfo {
-  userLocation: LatLng;
+  currentLocation: LatLng;
   hasLocationPermission: boolean;
 }
 
@@ -48,7 +48,7 @@ const mapStoreInitialState: MapState = {
     bounds: MAP_INITIAL_BOUNDS,
   },
   userInfo: {
-    userLocation: MAP_INITIAL_CENTER,
+    currentLocation: MAP_INITIAL_CENTER,
     hasLocationPermission: false,
   },
   mode: "view",

@@ -59,7 +59,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
     const successCallback = ({ coords }: GeolocationPosition) => {
       const { latitude: lat, longitude: lng } = coords;
       setUserInfo({
-        userLocation: { lat, lng },
+        currentLocation: { lat, lng },
         hasLocationPermission: true,
       });
     };
