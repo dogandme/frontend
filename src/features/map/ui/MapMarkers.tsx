@@ -1,11 +1,12 @@
 import { User, Pin, MultiplePin, Cluster } from "@/entities/map/ui";
+import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
 
 export const UserMarker = () => {
-  const position = { lat: 37.5665, lng: 126.978 };
+  const { currentLocation } = useMapStore((state) => state.userInfo);
 
-  return <User position={position} />;
+  return <User position={currentLocation} />;
 };
 
 export const PinMarker = () => {
