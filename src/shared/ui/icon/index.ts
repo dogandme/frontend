@@ -5,6 +5,7 @@ import Checkbox from "@/shared/assets/check-box.svg";
 import CloseSvg from "@/shared/assets/close.svg";
 import CommunitySVG from "@/shared/assets/community.svg";
 import CompassSVG from "@/shared/assets/compass.svg";
+import DropDownSVG from "@/shared/assets/drop-down.svg";
 import EditSvg from "@/shared/assets/edit.svg";
 // svg 파일 Import
 import EmailSvg from "@/shared/assets/email.svg";
@@ -49,4 +50,5 @@ export const CancelIcon = withIcon(CancelSVG);
 export const SearchIcon = withIcon(SearchSVG);
 export const PlusIcon = withIcon(PlusSVG);
 export const ExitIcon = withIcon(ExitSVG);
+export const DropDownIcon = withIcon(DropDownSVG);
 export const SettingIcon = withIcon(SettingSVG);
