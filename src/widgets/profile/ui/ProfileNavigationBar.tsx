@@ -4,7 +4,7 @@ import { useAuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
 import { NavigationBar } from "@/shared/ui/navigationbar";
 
-export const MyPageNavigationBar = () => {
+export const ProfileNavigationBar = () => {
   const role = useAuthStore((state) => state.role);
   const nickname = useAuthStore((state) => state.nickname);
 
