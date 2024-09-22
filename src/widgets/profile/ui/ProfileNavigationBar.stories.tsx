@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Meta, StoryObj } from "@storybook/react";
-import { Role, useAuthStore } from "@/shared/store";
+import { useAuthStore } from "@/shared/store";
 import { MyPageNavigationBar } from "./ProfileNavigationBar";
 
 const meta: Meta<typeof MyPageNavigationBar> = {
@@ -21,7 +21,7 @@ export default meta;
 
 type Story = StoryObj<typeof MyPageNavigationBar_>;
 
-const MyPageNavigationBar_ = ({ login }: { login: Role | null }) => {
+const MyPageNavigationBar_ = ({ login }: { login: string | null }) => {
   const setRole = useAuthStore((state) => state.setRole);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export const Default: Story = {
     login: null,
   },
 
-  render: (args: { login: Role | null }) => (
+  render: (args: { login: string | null }) => (
     <MyPageNavigationBar_ login={args.login} />
   ),
 };
