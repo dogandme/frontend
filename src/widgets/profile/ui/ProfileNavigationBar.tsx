@@ -14,7 +14,7 @@ export const ProfileNavigationBar = () => {
       label={
         role === null || role === "ROLE_NONE" ? (
           <Link to={ROUTER_PATH.LOGIN} className="text-grey-900 title-1">
-            로그인후 이용해 주세요
+            뽀송송님
           </Link>
         ) : (
           <h1 className="text-grey-900 title-1">{nickname}님</h1>

@@ -1,7 +1,8 @@
 import { ProfileNavigationBar } from "@/widgets/profile/ui";
 import { ProfileOverView } from "@/widgets/profile/ui";
-import { TemporaryMarkingBar } from "@/entities/profifle/ui";
-import { GalleryGrid } from "@/entities/profifle/ui/GalleryGrid";
+import { TemporaryMarkingBar } from "@/entities/profile/ui";
+import { GalleryGrid } from "@/entities/profile/ui/GalleryGrid";
+import { useAuthStore } from "@/shared/store";
 
 const exampleImages = [
   "/default-image.png",
@@ -17,6 +18,7 @@ const exampleImages = [
   "/default-image.png",
 ];
 
+// TODO MyPage API 요청 받아와 사용하기
 export const MyPage = () => {
   return (
     <div>
