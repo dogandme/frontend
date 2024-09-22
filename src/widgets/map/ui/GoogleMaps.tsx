@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Map } from "@vis.gl/react-google-maps";
 import { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
+import { useCurrentLocation } from "@/features/map/lib";
 import { useMapStore } from "@/features/map/store/map";
 import { debounce } from "@/shared/lib";
 import { mapOptions } from "../constants";
@@ -17,7 +18,6 @@ interface GoogleMapProps {
  */
 export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const setMapInfo = useMapStore((state) => state.setMapInfo);
-  const setUserInfo = useMapStore((state) => state.setUserInfo);
   const setIsMapCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
@@ -37,6 +37,8 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
     setIsMapCenteredOnMyLocation(false);
   };
 
+  const { setCurrentLocation } = useCurrentLocation();
+
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.
   // 기본 outline에 해당하는 div 태그는 iframe 태그 다음에 존재하고 있습니다.
   // iframe의 경우 기본 마운트보다 늦게 마운트 되기 때문에 interval을 이용해 iframe을 찾을 때 까지 비동기적으로 반복합니다.
@@ -55,56 +57,8 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       }
     }, 100);
 
-    // 첫 렌더링 이후 사용자의 위치 정보를 불러와 useMapStore의 userInfo에 저장합니다.
-    const successCallback = ({ coords }: GeolocationPosition) => {
-      const { latitude: lat, longitude: lng } = coords;
-      setUserInfo({
-        currentLocation: { lat, lng },
-        hasLocationPermission: true,
-      });
-    };
-
-    const errorCallback = (error: GeolocationPositionError) => {
-      switch (error.code) {
-        case 1 /* PERMISSION_DENIED */:
-          throw new Error(
-            "내 위치 제공이 거부되었습니다\n내 위치 기반 서비스 이용에 제한이 있을 수 있습니다",
-          );
-
-        case 2 /* POSITION_UNAVAILABLE */:
-          throw new Error(
-            "위치 정보를 사용할 수 없습니다\n잠시 후 다시 시도해주세요",
-          );
-
-        case 3 /* TIMEOUT */:
-          throw new Error(
-            "위치 정보를 가져오는데 시간이 너무 오래 걸립니다\n잠시 후 다시 시도해주세요.",
-          );
-      }
-    };
-
-    const options: PositionOptions = {
-      enableHighAccuracy: true,
-      timeout: 1000,
-      maximumAge: 0,
-    };
-
-    // 스토리북 환경에선 이하 코드를 실행하지 않습니다.
-    if (
-      (
-        window as Window &
-          typeof globalThis & { __STORYBOOK_ADDONS_CHANNEL__?: unknown }
-      ).__STORYBOOK_ADDONS_CHANNEL__
-    ) {
-      return;
-    }
-
-    window.navigator.geolocation.getCurrentPosition(
-      successCallback,
-      errorCallback,
-      options,
-    );
-  }, [setUserInfo]);
+    setCurrentLocation();
+  }, []);
 
   return (
     <Map
