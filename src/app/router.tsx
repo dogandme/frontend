@@ -29,8 +29,9 @@ export const router = createBrowserRouter([
         element: <div>community</div>, // 커뮤니티
       },
       {
+        // TODO GNB 빼기
         path: ROUTER_PATH.MY_PAGE,
-        element: <div>my page</div>, // 기록
+        element: <MyPage />,
       },
     ],
   },
@@ -75,9 +76,5 @@ export const router = createBrowserRouter([
         element: <PetInfoPage />,
       },
     ],
-  },
-  {
-    path: ROUTER_PATH.MY_PAGE,
-    element: <MyPage />,
   },
 ]);
