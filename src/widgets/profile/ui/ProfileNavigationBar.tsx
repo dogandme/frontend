@@ -10,25 +10,49 @@ export const ProfileNavigationBar = ({
   role,
   nickname,
 }: ProfileNavigationBarProps) => {
-  return (
-    <NavigationBar
-      componentType="buttonRight"
-      label={
-        role === null ? (
+  if (role === null) {
+    return (
+      <NavigationBar
+        componentType="buttonRight"
+        label={
           <Link to={ROUTER_PATH.LOGIN} className="text-grey-900 title-1">
             로그인 후 이용해 주세요
           </Link>
-        ) : role === "ROLE_NONE" ? (
+        }
+        button={
+          <button className="px-3 py-3 text-grey-500">
+            <SettingIcon />
+          </button>
+        }
+      />
+    );
+  }
+
+  if (role === "ROLE_NONE") {
+    return (
+      <NavigationBar
+        componentType="buttonRight"
+        label={
           <Link
             to={ROUTER_PATH.SIGN_UP_USER_INFO}
             className="text-grey-900 title-1"
           >
             기본 정보 입력 후 이용해 주세요
           </Link>
-        ) : (
-          <h1 className="text-grey-900 title-1">{nickname}님</h1>
-        )
-      }
+        }
+        button={
+          <button className="px-3 py-3 text-grey-500">
+            <SettingIcon />
+          </button>
+        }
+      />
+    );
+  }
+
+  return (
+    <NavigationBar
+      componentType="buttonRight"
+      label={<h1 className="text-grey-900 title-1">{nickname}님</h1>}
       button={
         <button className="px-3 py-3 text-grey-500">
           <SettingIcon />
