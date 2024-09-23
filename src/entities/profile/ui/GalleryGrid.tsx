@@ -16,7 +16,7 @@ export const GalleryGrid = ({
         <img
           src={profileImage}
           alt="profileImage"
-          className="w-16 h-16 rounded-[28px] flex-shrink-0 "
+          className="w-16 h-16 rounded-2xl flex-shrink-0 "
         />
         <div className="text-center body-2 text-grey-500">
           <p>함께 한 특별한 장소를 마킹하고</p>
