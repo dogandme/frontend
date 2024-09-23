@@ -14,7 +14,13 @@ import { GlobalNavigationBar, MainFooter } from "./layout";
 export const router = createBrowserRouter([
   {
     path: ROUTER_PATH.MAIN,
-    element: <MainLayout MainFooter={<MainFooter />} />,
+    element: (
+      <MainLayout
+        HistoryTracker={<HistoryTracker />}
+        OverlayPortal={<OverlayPortal />}
+        MainFooter={<MainFooter />}
+      />
+    ),
     children: [
       {
         index: true,
@@ -36,7 +42,12 @@ export const router = createBrowserRouter([
   },
   {
     path: ROUTER_PATH.LOGIN,
-    element: <LoginLayout />,
+    element: (
+      <LoginLayout
+        OverlayPortal={<OverlayPortal />}
+        HistoryTracker={<HistoryTracker />}
+      />
+    ),
     children: [
       {
         index: true,
