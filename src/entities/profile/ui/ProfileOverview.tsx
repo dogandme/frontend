@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { EditIcon, DropDownIcon } from "@/shared/ui/icon";
 
 // TODO alt 추가하기
@@ -46,25 +47,11 @@ export const ProfileEditButton = () => {
   );
 };
 
-interface PetCharacterChipProps {
-  value: string;
-}
-
-export const PetCharacterChip = ({ value }: PetCharacterChipProps) => (
-  <span className="h-8 px-3 flex items-center justify-center btn-3 text-grey-700 text-center rounded-2xl border border-grey-500">
-    {value}
-  </span>
-);
-
 interface PetIntroduceProps {
   introduce: string;
-  characterList: string[];
 }
 
-export const PetIntroduce = ({
-  introduce,
-  characterList,
-}: PetIntroduceProps) => {
+export const PetIntroduce = ({ introduce }: PetIntroduceProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
 
   const handleClick = () => setIsSummary((prev) => !prev);
@@ -72,14 +59,6 @@ export const PetIntroduce = ({
   const introduceClassName = isSummary
     ? "text-ellipsis overflow-hidden text-nowrap"
     : "";
-
-  // summary 상태 일 경우엔 characterList가 3개까지만 보이고 남은 성격은 남은 성격의 개수를 보여줍니다.
-  const characterListLength = characterList.length;
-  const visibleCharacterList = isSummary
-    ? characterList.slice(0, 3)
-    : characterList;
-  const remainingCharacterCount =
-    characterListLength - visibleCharacterList.length;
 
   return (
     <div className="flex flex-col gap-4">
@@ -90,17 +69,42 @@ export const PetIntroduce = ({
           <DropDownIcon />
         </button>
       </div>
-      <div className="flex gap-2 self-stretch flex-wrap items-center content-center">
-        {visibleCharacterList.map((character, index) => (
-          <PetCharacterChip key={index} value={character} />
-        ))}
-        {
-          // summary 상태 일 경우 남은 성격의 개수를 보여줍니다.
-          isSummary && remainingCharacterCount > 0 && (
-            <PetCharacterChip value={`+${remainingCharacterCount}`} />
-          )
-        }
-      </div>
     </div>
+  );
+};
+
+interface PetCharacterListProps {
+  characterList: string[];
+}
+export const PetCharacterList = ({ characterList }: PetCharacterListProps) => {
+  const [isSummary, setIsSummary] = useState<boolean>(true);
+  const visibleCharacterList = isSummary
+    ? characterList.slice(0, 3)
+    : characterList;
+  const remainingCharacterCount =
+    characterList.length - visibleCharacterList.length;
+
+  const handleClick = () => setIsSummary(false);
+
+  return (
+    <ul className="flex gap-2 self-stretch flex-wrap items-center content-center">
+      {visibleCharacterList.map((character, index) => (
+        <li key={index}>
+          <InfoChip size="small">{character}</InfoChip>
+        </li>
+      ))}
+      {
+        // summary 상태 일 경우 남은 성격의 개수를 보여줍니다.
+        isSummary && remainingCharacterCount > 0 && (
+          <li
+            key={characterList.length - remainingCharacterCount}
+            onClick={handleClick}
+            className="cursor-pointer"
+          >
+            <InfoChip size="small">+{remainingCharacterCount}</InfoChip>
+          </li>
+        )
+      }
+    </ul>
   );
 };

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import {
+  PetCharacterList,
   PetIntroduce,
   ProfileEditButton,
   ProfileImage,
@@ -37,7 +38,8 @@ export const ProfileOverView = ({
           <ProfileEditButton />
         </div>
         {/* 반려동물 소개와 성격 리스트 */}
-        <PetIntroduce introduce={introduce} characterList={characterList} />
+        <PetIntroduce introduce={introduce} />
+        <PetCharacterList characterList={characterList} />
       </section>
     );
   }
