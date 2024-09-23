@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { MAP_INITIAL_CENTER } from "../constants";
 import { useMapStore } from "../store";
 
 type SuccessCallback = (position: GeolocationPosition) => void;
@@ -40,7 +39,7 @@ export const useCurrentLocation = () => {
     setLoading(false);
 
     setUserInfo({
-      currentLocation: MAP_INITIAL_CENTER,
+      currentLocation: { lat: null, lng: null },
       hasLocationPermission: false,
     });
     errorCallback?.();

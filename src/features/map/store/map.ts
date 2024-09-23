@@ -13,7 +13,10 @@ type Mode = "view" | "add";
 
 // todo: currentLocation 위도 경도 타입 초기값 null로 설정
 interface UserInfo {
-  currentLocation: LatLng;
+  currentLocation: {
+    lat: number | null;
+    lng: number | null;
+  };
   hasLocationPermission: boolean;
 }
 
@@ -37,7 +40,7 @@ const mapStoreInitialState: MapState = {
     zoom: MAP_INITIAL_ZOOM,
   },
   userInfo: {
-    currentLocation: MAP_INITIAL_CENTER,
+    currentLocation: { lat: null, lng: null },
     hasLocationPermission: false,
   },
   mode: "view",
