@@ -16,3 +16,15 @@ export const actionChipStyles = {
   unSelected:
     "border-grey-500 bg-grey-0 text-grey-500  disabled:border-grey-100 disabled:text-grey-100 disabled:bg-grey-0",
 };
+
+export const infoChipStyles = {
+  base: "btn-3 inline-flex gap-1 items-center justify-center flex-shrink-0 border rounded-2xl border-grey-500 text-center text-grey-700",
+  padding: {
+    isTextOnly: "px-3",
+    isNotTextOnly: "pl-2 pr-3",
+  },
+  size: {
+    small: "h-6",
+    medium: "h-8",
+  },
+} as const;
