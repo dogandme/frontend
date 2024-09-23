@@ -76,8 +76,7 @@ const ContentItem = ({
         ))}
       </ImgSlider>
 
-      <div className="flex gap-4 flex-end">
-        <div className="flex items-center gap-1 flex-1">
+      {/* <div className="flex items-center gap-1 flex-1">
           <img className="w-8 h-8 rounded-2xl" src={petImage} alt={petName} />
           <span className="title-3 text-grey-700">{petName}</span>
           {!isOwner && (
@@ -90,8 +89,8 @@ const ContentItem = ({
               팔로우
             </Button>
           )}
-        </div>
-
+        </div> */}
+      <div className="flex justify-between">
         <div className="flex gap-2 items-center text-grey-500">
           <button
             className={isLiked ? "text-tangerine-500" : ""}
