@@ -4,6 +4,7 @@ import { InfoChip } from "./InfoChip";
 
 export default {
   title: "shared/InfoChip",
+  tags: ["autodocs"],
   component: InfoChip,
   parameters: {
     docs: {
@@ -21,8 +22,8 @@ export const Default: Story = {
   render: () => {
     return (
       <div className="flex flex-col gap-2 px-2 py-2">
-        <div>
-          <h1 className="title-1">Size = small</h1>
+        <div className="flex flex-col gap-2">
+          <h1 className="title-3">Size = small</h1>
           <div className="flex gap-2">
             <InfoChip size="small">label</InfoChip>
             <InfoChip size="small">
@@ -31,8 +32,8 @@ export const Default: Story = {
             </InfoChip>
           </div>
         </div>
-        <div>
-          <h1 className="title-1">Size = medium</h1>
+        <div className="flex flex-col gap-2">
+          <h1 className="title-3">Size = medium</h1>
           <div className="flex gap-2">
             <InfoChip size="medium">label</InfoChip>
             <InfoChip size="medium">
