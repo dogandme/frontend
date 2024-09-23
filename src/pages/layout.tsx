@@ -1,9 +1,9 @@
 import { Outlet } from "react-router-dom";
 
 interface MainLayoutProps {
-  MainFooter: React.ReactNode;
-  OverlayPortal: React.ReactNode;
-  HistoryTracker: React.ReactNode;
+  MainFooter: JSX.Element;
+  OverlayPortal: JSX.Element;
+  HistoryTracker: JSX.Element;
 }
 
 const MainLayout = ({

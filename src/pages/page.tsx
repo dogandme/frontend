@@ -1,5 +1,5 @@
 interface MainPageProps {
-  GlobalNavigationBar: React.ReactNode;
+  GlobalNavigationBar: JSX.Element;
 }
 
 const MainPage = ({ GlobalNavigationBar }: MainPageProps) => {
