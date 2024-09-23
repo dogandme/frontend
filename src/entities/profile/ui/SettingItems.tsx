@@ -111,7 +111,7 @@ const LogoutModal = ({
       nickname: null,
     });
     onCloseLogoutModal();
-    navigate("/");
+    navigate("/search");
   };
 
   return (
