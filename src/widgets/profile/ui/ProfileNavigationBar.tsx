@@ -12,9 +12,16 @@ export const ProfileNavigationBar = () => {
     <NavigationBar
       componentType="buttonRight"
       label={
-        role === null || role === "ROLE_NONE" ? (
+        role === null ? (
           <Link to={ROUTER_PATH.LOGIN} className="text-grey-900 title-1">
-            뽀송송님
+            로그인 후 이용해 주세요
+          </Link>
+        ) : role === "ROLE_NONE" ? (
+          <Link
+            to={ROUTER_PATH.SIGN_UP_USER_INFO}
+            className="text-grey-900 title-1"
+          >
+            기본 정보 입력 후 이용해 주세요
           </Link>
         ) : (
           <h1 className="text-grey-900 title-1">{nickname}님</h1>
