@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useMapStore } from "../store";
 
-type SuccessCallback = (position: GeolocationPosition) => void;
-type ErrorCallback = () => void;
+type OnSuccess = (position: GeolocationPosition) => void;
+type OnError = () => void;
 
 export const useCurrentLocation = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -16,10 +16,7 @@ export const useCurrentLocation = () => {
     maximumAge: 0,
   };
 
-  const successCb = (
-    position: GeolocationPosition,
-    successCallback?: SuccessCallback,
-  ) => {
+  const successCb = (position: GeolocationPosition, onSuccess?: OnSuccess) => {
     const { coords } = position;
     const { latitude: lat, longitude: lng } = coords;
 
@@ -29,20 +26,17 @@ export const useCurrentLocation = () => {
       currentLocation: { lat, lng },
       hasLocationPermission: true,
     });
-    successCallback?.(position);
+    onSuccess?.(position);
   };
 
-  const errorCb = (
-    error: GeolocationPositionError,
-    errorCallback?: ErrorCallback,
-  ) => {
+  const errorCb = (error: GeolocationPositionError, onError?: OnError) => {
     setLoading(false);
 
     setUserInfo({
       currentLocation: { lat: null, lng: null },
       hasLocationPermission: false,
     });
-    errorCallback?.();
+    onError?.();
 
     switch (error.code) {
       case 1 /* PERMISSION_DENIED */:
@@ -66,8 +60,8 @@ export const useCurrentLocation = () => {
     onSuccess,
     onError,
   }: {
-    onSuccess?: SuccessCallback;
-    onError?: ErrorCallback;
+    onSuccess?: OnSuccess;
+    onError?: OnError;
   }) => {
     // 스토리북 환경에선 이하 코드를 실행하지 않습니다.
     if (
