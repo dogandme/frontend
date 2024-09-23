@@ -39,7 +39,7 @@ export const ProfileInfo = ({
 export const ProfileEditButton = () => {
   return (
     <div className="flex flex-grow justify-end">
-      <button className="w-6 h-6">
+      <button className="w-6 h-6" aria-label="프로필 설정 수정 하기 버튼">
         <EditIcon />
       </button>
     </div>
