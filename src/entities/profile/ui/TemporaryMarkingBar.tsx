@@ -1,7 +1,7 @@
+import type { AuthStore } from "@/shared/store";
 import { ArrowRightIcon, InfoIcon } from "@/shared/ui/icon";
 
-interface TemporaryMarkingBarProps {
-  role: string | null;
+interface TemporaryMarkingBarProps extends Pick<AuthStore, "role"> {
   temporaryMarkingList: string[];
 }
 

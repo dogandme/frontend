@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
+import type { AuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
 import { NavigationBar } from "@/shared/ui/navigationbar";
 
-interface ProfileNavigationBarProps {
-  role: string | null;
-  nickname: string | null;
-}
+type ProfileNavigationBarProps = Pick<AuthStore, "role" | "nickname">;
 
 export const ProfileNavigationBar = ({
   role,

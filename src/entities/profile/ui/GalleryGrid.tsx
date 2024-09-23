@@ -1,5 +1,6 @@
-interface GalleryGridProps {
-  role: string | null;
+import type { AuthStore } from "@/shared/store";
+
+interface GalleryGridProps extends Pick<AuthStore, "role"> {
   images: string[];
   profileImage: string;
 }

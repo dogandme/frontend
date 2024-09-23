@@ -6,10 +6,10 @@ import {
   ProfileInfo,
 } from "@/entities/profile/ui";
 import { ROUTER_PATH } from "@/shared/constants";
+import type { AuthStore } from "@/shared/store";
 import { PlusIcon } from "@/shared/ui/icon";
 
-interface ProfileOverViewProps {
-  role: string | null;
+interface ProfileOverViewProps extends Pick<AuthStore, "role"> {
   profileImage: string;
   introduce: string;
   characterList: string[];
