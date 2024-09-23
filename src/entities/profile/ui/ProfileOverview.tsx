@@ -5,7 +5,9 @@ import { EditIcon, DropDownIcon } from "@/shared/ui/icon";
 
 // TODO alt 추가하기
 export const ProfileImage = ({ src }: { src: string }) => {
-  return <img src={src} alt="profile" className="w-16 h-16 rounded-[28px]" />;
+  return (
+    <img src={src} alt="profile" className="w-16 h-16 rounded-[1.75rem]" />
+  );
 };
 
 interface ProfileInfoProps {
