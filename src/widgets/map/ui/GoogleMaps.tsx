@@ -78,9 +78,58 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   }, []);
 
   useEffect(() => {
-    const hasLatLngParams = latParam && lngParam;
+    if (!map) return;
 
+    const hasLatLngParams =
+      typeof latParam === "string" && typeof lngParam === "string";
+
+    // map 인스턴스가 생기고 나서, 현재 위치를 가져옵니다.
+    setCurrentLocation({
+      onSuccess: ({ coords }) => {
+        const { latitude, longitude } = coords;
+
+        const currentLocationOfUser = { lat: latitude, lng: longitude };
+
+        // /map으로 접속했을 때, 현재 위치로 query string를 설정합니다.
+        if (!hasLatLngParams) {
+          setSearchParams({
+            lat: latitude.toString(),
+            lng: longitude.toString(),
+            zoom: MAP_INITIAL_ZOOM.toString(),
+          });
+
+          map.setCenter(currentLocationOfUser);
+          setMapInfo({
+            center: currentLocationOfUser,
+            zoom: MAP_INITIAL_ZOOM,
+          });
+        }
+      },
+      onError: () => {
+        // /map으로 접속했을 때, MAP_INITIAL_CENTER로 query string를 설정합니다.
+        // Map 컴포넌트의 default center가 MAP_INITIAL_CENTER이기 때문에 map을 이동시키지 않습니다.
+        if (!hasLatLngParams) {
+          setSearchParams({
+            lat: MAP_INITIAL_CENTER.lat.toString(),
+            lng: MAP_INITIAL_CENTER.lng.toString(),
+            zoom: MAP_INITIAL_ZOOM.toString(),
+          });
+        }
+      },
+    });
+
+    const lat = Number(latParam);
+    const lng = Number(lngParam);
+
+    // /map?lat&lng으로 접속했을 때 zoom을 설정하고, 해당 위치로 이동합니다.
     if (hasLatLngParams && !zoomParam) {
+      map.setCenter({ lat, lng });
+      map.setZoom(MAP_INITIAL_ZOOM);
+
+      setMapInfo({
+        center: { lat, lng },
+        zoom: MAP_INITIAL_ZOOM,
+      });
       setSearchParams({
         lat: latParam,
         lng: lngParam,
@@ -88,42 +137,16 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       });
     }
 
-    if (map) {
-      setCurrentLocation({
-        onSuccess: ({ coords }) => {
-          const { latitude, longitude } = coords;
+    // /map?lat&lng&zoom으로 접속했을 때, 해당 위치로 이동합니다.
+    if (hasLatLngParams && zoomParam) {
+      const zoom = Number(zoomParam);
 
-          const currentLocationOfUser = { lat: latitude, lng: longitude };
+      map.setCenter({ lat, lng });
+      map.setZoom(zoom);
 
-          if (!hasLatLngParams) {
-            setSearchParams({
-              lat: latitude.toString(),
-              lng: longitude.toString(),
-              zoom: MAP_INITIAL_ZOOM.toString(),
-            });
-
-            map.setCenter(currentLocationOfUser);
-            setMapInfo({
-              center: currentLocationOfUser,
-              zoom: MAP_INITIAL_ZOOM,
-            });
-          }
-        },
-        onError: () => {
-          if (!hasLatLngParams) {
-            setSearchParams({
-              lat: MAP_INITIAL_CENTER.lat.toString(),
-              lng: MAP_INITIAL_CENTER.lng.toString(),
-              zoom: MAP_INITIAL_ZOOM.toString(),
-            });
-          }
-        },
-      });
+      setMapInfo({ center: { lat, lng }, zoom });
     }
-
-    if (map && hasLatLngParams)
-      map.setCenter({ lat: Number(latParam), lng: Number(lngParam) });
-  }, [map, latParam, lngParam, zoomParam]);
+  }, [map]);
 
   return (
     <>
