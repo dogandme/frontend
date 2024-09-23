@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import { useAuthStore } from "@/shared/store";
-import { MyPageNavigationBar } from "./ProfileNavigationBar";
+import { ProfileNavigationBar } from "./ProfileNavigationBar";
 
-const meta: Meta<typeof MyPageNavigationBar> = {
+const meta: Meta<typeof ProfileNavigationBar> = {
   title: "widgets/profile/MyPageNavigationBar",
-  component: MyPageNavigationBar,
+  component: ProfileNavigationBar,
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -28,7 +28,7 @@ const MyPageNavigationBar_ = ({ login }: { login: string | null }) => {
     setRole(login);
   }, [login, setRole]);
 
-  return <MyPageNavigationBar />;
+  return <ProfileNavigationBar />;
 };
 
 export const Default: Story = {
