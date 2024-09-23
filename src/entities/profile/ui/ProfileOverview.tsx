@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRef } from "react";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { EditIcon, DropDownIcon } from "@/shared/ui/icon";
 
@@ -53,6 +54,8 @@ interface PetIntroduceProps {
 
 export const PetIntroduce = ({ introduce }: PetIntroduceProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
+  const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
+  const introduceRef = useRef<HTMLParagraphElement>(null);
 
   const handleClick = () => setIsSummary((prev) => !prev);
   // summary 상태 일 경우엔 introduce가 한 줄만 보이게 합니다.
@@ -60,14 +63,26 @@ export const PetIntroduce = ({ introduce }: PetIntroduceProps) => {
     ? "text-ellipsis overflow-hidden text-nowrap"
     : "";
 
+  useEffect(() => {
+    const $p = introduceRef.current!;
+    setIsEllipsis($p.scrollWidth > $p.clientWidth);
+  }, []);
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-4 self-stretch text-grey-500 body-2 w-full">
-        <p className={introduceClassName}>{introduce}</p>
-        {/* TODO 버튼 클릭 시 글 늘어나게  */}
-        <button className="w-4 h-4" onClick={handleClick}>
-          <DropDownIcon />
-        </button>
+      <div className="flex gap-4 self-stretch text-grey-500 body-2 w-full justify-between">
+        <p className={introduceClassName} ref={introduceRef}>
+          {introduce}
+        </p>
+        {isEllipsis && (
+          <button
+            className="w-4 h-4"
+            onClick={handleClick}
+            aria-label="강아지 소개 글 더 보기"
+          >
+            <DropDownIcon />
+          </button>
+        )}
       </div>
     </div>
   );
