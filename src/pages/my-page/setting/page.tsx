@@ -1,4 +1,3 @@
-import { LogoutButton } from "@/features/profile";
 import {
   AccountManagement,
   EditMyInfo,
@@ -7,6 +6,7 @@ import {
   TermsOfService,
   VersionInfo,
   Report,
+  LogoutButton,
 } from "@/entities/profile/ui";
 import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
