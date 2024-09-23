@@ -9,6 +9,35 @@ import {
 } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 
+interface CountData {
+  likedCount: number;
+  savedCount: number;
+}
+
+interface Pet {
+  petId: number;
+  name: string;
+  profile: string;
+}
+
+interface Image {
+  id: number;
+  imageUrl: string;
+  lank: number;
+  regDt: string;
+}
+
+interface CountData {
+  likedCount: number;
+  savedCount: number;
+}
+
+interface Pet {
+  petId: number;
+  name: string;
+  profile: string;
+}
+
 interface Image {
   id: number;
   imageUrl: string;
@@ -17,17 +46,20 @@ interface Image {
 }
 
 interface ContentItemProps {
-  address: string;
-  petName: string;
-  petImage: string;
-  images: Image[];
+  markingId: number;
+  region: string;
   content: string;
-  date: string;
-  isOwner?: boolean;
-  isLiked?: boolean;
-  isBookmarked?: boolean;
-  likeCount: number;
-  bookmarkCount: number;
+  isVisible: string;
+  regDt: string;
+  userId: number;
+  nickName: string;
+  isOwner: boolean;
+  isTempSaved: boolean; // 이 컴포넌트에서 사용하지 x
+  lat: number;
+  lng: number;
+  countData: CountData;
+  pet: Pet;
+  images: Image[];
 }
 
 function formatDate(dateString: string): string {
@@ -41,29 +73,46 @@ function formatDate(dateString: string): string {
 }
 
 const ContentItem = ({
-  address,
-  petName,
-  petImage,
+  region,
+  pet,
   images,
   content,
-  date,
+  regDt,
   isOwner = false,
-  isLiked = false,
-  isBookmarked = false,
-  likeCount,
-  bookmarkCount,
+  countData: { likedCount, savedCount },
 }: ContentItemProps) => {
+  const isLiked = false;
+  const isBookmarked = false;
+
   return (
     <li className="flex flex-col gap-2">
       <div className="flex justify-between items-center">
         <div className="flex pr-4 justify-center items-center gap-[.625rem] h-8 text-tangerine-500">
           <MyLocationIcon />
-          <h2 className="btn-2 text-grey-900">{address}</h2>
+          <h2 className="btn-2 text-grey-900">{region}</h2>
         </div>
 
-        <button className="text-grey-500" aria-label="마킹 수정 및 삭제하기">
-          <MoreIcon />
-        </button>
+        {isOwner && (
+          <button className="text-grey-500" aria-label="마킹 수정 및 삭제하기">
+            <MoreIcon />
+          </button>
+        )}
+      </div>
+
+      <div className="flex justify-between items-center gap-1 flex-1">
+        <img className="w-8 h-8 rounded-2xl" src={pet.profile} alt={pet.name} />
+        <span className="flex-1 title-3 text-grey-700">{pet.name}</span>
+
+        {!isOwner && (
+          <Button
+            colorType="tertiary"
+            size="xSmall"
+            variant="outlined"
+            fullWidth={false}
+          >
+            팔로우
+          </Button>
+        )}
       </div>
 
       <ImgSlider>
@@ -71,25 +120,11 @@ const ContentItem = ({
           <ImgSlider.ImgItem
             key={id}
             src={imageUrl}
-            alt={`${petName}-marking-image-${id}`}
+            alt={`${pet.name}-marking-image-${id}`}
           />
         ))}
       </ImgSlider>
 
-      {/* <div className="flex items-center gap-1 flex-1">
-          <img className="w-8 h-8 rounded-2xl" src={petImage} alt={petName} />
-          <span className="title-3 text-grey-700">{petName}</span>
-          {!isOwner && (
-            <Button
-              colorType="primary"
-              size="xSmall"
-              variant="outlined"
-              fullWidth={false}
-            >
-              팔로우
-            </Button>
-          )}
-        </div> */}
       <div className="flex justify-between">
         <div className="flex gap-2 items-center text-grey-500">
           <button
@@ -98,7 +133,7 @@ const ContentItem = ({
           >
             {isLiked ? <FilledLikeIcon /> : <LikeIcon />}
           </button>
-          <span className="title-3">{likeCount > 0 && likeCount}</span>
+          <span className="title-3">{likedCount > 0 && likedCount}</span>
         </div>
 
         <div className="flex gap-2 items-center text-grey-500">
@@ -108,13 +143,13 @@ const ContentItem = ({
           >
             {isBookmarked ? <FilledBookmarkIcon /> : <BookmarkIcon />}
           </button>
-          <span className="title-3">{bookmarkCount > 0 && bookmarkCount}</span>
+          <span className="title-3">{savedCount > 0 && savedCount}</span>
         </div>
       </div>
 
       <p className="text-grey-700 body-2 text-overflow">{content}</p>
 
-      <p className="body-3 text-grey-500">{formatDate(date)}</p>
+      <p className="body-3 text-grey-500">{formatDate(regDt)}</p>
     </li>
   );
 };
