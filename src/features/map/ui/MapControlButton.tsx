@@ -1,4 +1,5 @@
 import { useMap } from "@vis.gl/react-google-maps";
+import CurrentLocationLoading from "@/widgets/map/ui/CurrentLocationLoading";
 import { FloatingButton } from "@/entities/map/ui";
 import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
@@ -51,13 +52,15 @@ export const MyLocationButton = () => {
     (state) => state.setIsCenterOnMyLocation,
   );
 
-  const { setCurrentLocation } = useCurrentLocation(({ coords }) => {
-    const { latitude: lat, longitude: lng } = coords;
+  const { loading, setCurrentLocation } = useCurrentLocation({
+    successCallback: ({ coords }) => {
+      const { latitude: lat, longitude: lng } = coords;
 
-    map.setCenter({ lat, lng });
-    setTimeout(() => {
-      setIsCenterOnMyLocation(true);
-    }, 0);
+      map.setCenter({ lat, lng });
+      setTimeout(() => {
+        setIsCenterOnMyLocation(true);
+      }, 0);
+    },
   });
 
   const handleClick = () => {
@@ -65,13 +68,16 @@ export const MyLocationButton = () => {
   };
 
   return (
-    <FloatingButton
-      aria-label="지도의 중심을 현재 위치로 이동 시키기"
-      onClick={handleClick}
-      controlledIsActive={isCenteredOnMyLocation}
-    >
-      <MyLocationIcon />
-    </FloatingButton>
+    <>
+      {loading && <CurrentLocationLoading />}
+      <FloatingButton
+        aria-label="지도의 중심을 현재 위치로 이동 시키기"
+        onClick={handleClick}
+        controlledIsActive={isCenteredOnMyLocation}
+      >
+        <MyLocationIcon />
+      </FloatingButton>
+    </>
   );
 };
 

@@ -1,14 +1,19 @@
-import { useRef } from "react";
+import { useEffect, useState } from "react";
 import { MAP_INITIAL_CENTER } from "../constants";
 import { useMapStore } from "../store";
 
-// successCallback?: (position: GeolocationPosition) => void;
-export const useCurrentLocation = (
-  successCallback?: (position: GeolocationPosition) => void,
-) => {
+export const useCurrentLocation = ({
+  autoGet = false,
+  successCallback,
+  errorCallback,
+}: {
+  successCallback?: (position: GeolocationPosition) => void;
+  errorCallback?: () => void;
+  autoGet?: boolean;
+}) => {
+  const [loading, setLoading] = useState<boolean>(autoGet ?? false);
   const setUserInfo = useMapStore((state) => state.setUserInfo);
 
-  const failureCount = useRef<number>(0);
   const MAX_WAIT_TIME = 5000;
 
   const options: PositionOptions = {
@@ -21,21 +26,26 @@ export const useCurrentLocation = (
     const { coords } = position;
     const { latitude: lat, longitude: lng } = coords;
 
+    setLoading(false);
+
     setUserInfo({
       currentLocation: { lat, lng },
       hasLocationPermission: true,
     });
-
     successCallback?.(position);
   };
 
   const errorCb = (error: GeolocationPositionError) => {
+    setLoading(false);
+
+    setUserInfo({
+      currentLocation: MAP_INITIAL_CENTER,
+      hasLocationPermission: false,
+    });
+    errorCallback?.();
+
     switch (error.code) {
       case 1 /* PERMISSION_DENIED */:
-        setUserInfo({
-          currentLocation: MAP_INITIAL_CENTER,
-          hasLocationPermission: false,
-        });
         throw new Error(
           "위치 제공을 허용 한 후 사용 가능한 기능입니다\n내 위치 제공을 허용해주세요",
         );
@@ -46,18 +56,9 @@ export const useCurrentLocation = (
         );
 
       case 3 /* TIMEOUT */:
-        if (failureCount.current >= 3) {
-          failureCount.current = 0;
-          throw new Error(
-            "위치 정보를 가져오는데 시간이 너무 오래 걸립니다\n잠시 후 다시 시도해주세요.",
-          );
-        }
-
-        window.navigator.geolocation.getCurrentPosition(successCb, errorCb, {
-          ...options,
-          timeout: MAX_WAIT_TIME + 2 ** failureCount.current * 100,
-          enableHighAccuracy: false,
-        });
+        throw new Error(
+          "위치 정보를 가져오는데 시간이 너무 오래 걸립니다\n잠시 후 다시 시도해주세요.",
+        );
     }
   };
 
@@ -72,6 +73,8 @@ export const useCurrentLocation = (
       return;
     }
 
+    setLoading(true);
+
     window.navigator.geolocation.getCurrentPosition(
       successCb,
       errorCb,
@@ -79,5 +82,11 @@ export const useCurrentLocation = (
     );
   };
 
-  return { setCurrentLocation };
+  useEffect(() => {
+    if (autoGet) {
+      setCurrentLocation();
+    }
+  }, [autoGet]);
+
+  return { loading, setCurrentLocation };
 };
