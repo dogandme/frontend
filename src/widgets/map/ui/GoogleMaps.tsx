@@ -121,10 +121,9 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
     const lat = Number(latParam);
     const lng = Number(lngParam);
 
-    // /map?lat&lng으로 접속했을 때 zoom을 설정하고, 해당 위치로 이동합니다.
+    // /map?lat&lng으로 접속했을 때 query string에 zoom을 설정하고, 해당 위치로 이동합니다.
     if (hasLatLngParams && !zoomParam) {
       map.setCenter({ lat, lng });
-      map.setZoom(MAP_INITIAL_ZOOM);
 
       setMapInfo({
         center: { lat, lng },
