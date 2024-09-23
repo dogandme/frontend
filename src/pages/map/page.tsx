@@ -5,12 +5,18 @@ import {
 } from "@/widgets/map/ui";
 import { GoogleMaps } from "@/widgets/map/ui/GoogleMaps";
 
-export const MapPage = () => {
+interface MapPageProps {
+  GlobalNavigationBar: React.ReactNode;
+}
+export const MapPage = ({ GlobalNavigationBar }: MapPageProps) => {
   return (
-    <GoogleMaps>
-      <MapMarkerWidget />
-      <MapControlWidget />
-      <GoogleMapsCopyRight />
-    </GoogleMaps>
+    <>
+      {GlobalNavigationBar}
+      <GoogleMaps>
+        <MapMarkerWidget />
+        <MapControlWidget />
+        <GoogleMapsCopyRight />
+      </GoogleMaps>
+    </>
   );
 };

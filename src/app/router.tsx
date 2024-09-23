@@ -9,6 +9,7 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { MainLayout, MainPage } from "../pages";
 import { HistoryTracker } from "./HistoryTracker";
 import { OverlayPortal } from "./OverlayPortal";
+import { GlobalNavigationBar } from "./layout";
 
 export const router = createBrowserRouter([
   {
@@ -17,11 +18,11 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <MainPage />, // 탐색
+        element: <MainPage GlobalNavigationBar={<GlobalNavigationBar />} />, // 탐색
       },
       {
         path: ROUTER_PATH.MAP,
-        element: <MapPage />, // 지도
+        element: <MapPage GlobalNavigationBar={<GlobalNavigationBar />} />, // 지도
       },
       {
         path: ROUTER_PATH.COMMUNITY,
