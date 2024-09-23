@@ -52,19 +52,19 @@ export const MyLocationButton = () => {
     (state) => state.setIsCenterOnMyLocation,
   );
 
-  const { loading, setCurrentLocation } = useCurrentLocation({
-    successCallback: ({ coords }) => {
-      const { latitude: lat, longitude: lng } = coords;
-
-      map.setCenter({ lat, lng });
-      setTimeout(() => {
-        setIsCenterOnMyLocation(true);
-      }, 0);
-    },
-  });
+  const { loading, setCurrentLocation } = useCurrentLocation();
 
   const handleClick = () => {
-    setCurrentLocation();
+    setCurrentLocation({
+      onSuccess: ({ coords }) => {
+        const { latitude: lat, longitude: lng } = coords;
+
+        map.setCenter({ lat, lng });
+        setTimeout(() => {
+          setIsCenterOnMyLocation(true);
+        }, 0);
+      },
+    });
   };
 
   return (

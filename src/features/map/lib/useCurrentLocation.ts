@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MAP_INITIAL_CENTER } from "../constants";
 import { useMapStore } from "../store";
 
-export const useCurrentLocation = ({
-  autoGet = false,
-  successCallback,
-  errorCallback,
-}: {
-  successCallback?: (position: GeolocationPosition) => void;
-  errorCallback?: () => void;
-  autoGet?: boolean;
-}) => {
-  const [loading, setLoading] = useState<boolean>(autoGet ?? false);
+type SuccessCallback = (position: GeolocationPosition) => void;
+type ErrorCallback = () => void;
+
+export const useCurrentLocation = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const setUserInfo = useMapStore((state) => state.setUserInfo);
 
   const MAX_WAIT_TIME = 5000;
@@ -22,7 +17,10 @@ export const useCurrentLocation = ({
     maximumAge: 0,
   };
 
-  const successCb = (position: GeolocationPosition) => {
+  const successCb = (
+    position: GeolocationPosition,
+    successCallback?: SuccessCallback,
+  ) => {
     const { coords } = position;
     const { latitude: lat, longitude: lng } = coords;
 
@@ -35,7 +33,10 @@ export const useCurrentLocation = ({
     successCallback?.(position);
   };
 
-  const errorCb = (error: GeolocationPositionError) => {
+  const errorCb = (
+    error: GeolocationPositionError,
+    errorCallback?: ErrorCallback,
+  ) => {
     setLoading(false);
 
     setUserInfo({
@@ -62,7 +63,13 @@ export const useCurrentLocation = ({
     }
   };
 
-  const setCurrentLocation = () => {
+  const setCurrentLocation = ({
+    onSuccess,
+    onError,
+  }: {
+    onSuccess?: SuccessCallback;
+    onError?: ErrorCallback;
+  }) => {
     // 스토리북 환경에선 이하 코드를 실행하지 않습니다.
     if (
       (
@@ -76,17 +83,11 @@ export const useCurrentLocation = ({
     setLoading(true);
 
     window.navigator.geolocation.getCurrentPosition(
-      successCb,
-      errorCb,
+      (position) => successCb(position, onSuccess),
+      (position) => errorCb(position, onError),
       options,
     );
   };
-
-  useEffect(() => {
-    if (autoGet) {
-      setCurrentLocation();
-    }
-  }, [autoGet]);
 
   return { loading, setCurrentLocation };
 };

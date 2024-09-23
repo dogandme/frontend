@@ -47,29 +47,9 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
 
   const hasLatLngParams = latParam && lngParam;
 
-  const { loading } = useCurrentLocation({
-    autoGet: true,
-    successCallback: (position) => {
-      const { latitude, longitude } = position.coords;
-
-      if (!hasLatLngParams)
-        setSearchParams({
-          lat: latitude.toString(),
-          lng: longitude.toString(),
-          zoom: MAP_INITIAL_ZOOM.toString(),
-        });
-    },
-    errorCallback: () => {
-      if (!hasLatLngParams)
-        setSearchParams({
-          lat: MAP_INITIAL_CENTER.lat.toString(),
-          lng: MAP_INITIAL_CENTER.lng.toString(),
-          zoom: MAP_INITIAL_ZOOM.toString(),
-        });
-    },
-  });
-
   const map = useMap();
+
+  const { loading, setCurrentLocation } = useCurrentLocation();
 
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.
   // 기본 outline에 해당하는 div 태그는 iframe 태그 다음에 존재하고 있습니다.
@@ -96,6 +76,32 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
         lat: latParam,
         lng: lngParam,
         zoom: MAP_INITIAL_ZOOM.toString(),
+      });
+    }
+
+    if (map) {
+      setCurrentLocation({
+        onSuccess: (position) => {
+          const { latitude, longitude } = position.coords;
+
+          if (!hasLatLngParams) {
+            setSearchParams({
+              lat: latitude.toString(),
+              lng: longitude.toString(),
+              zoom: MAP_INITIAL_ZOOM.toString(),
+            });
+
+            map.setCenter({ lat: latitude, lng: longitude });
+          }
+        },
+        onError: () => {
+          if (!hasLatLngParams)
+            setSearchParams({
+              lat: MAP_INITIAL_CENTER.lat.toString(),
+              lng: MAP_INITIAL_CENTER.lng.toString(),
+              zoom: MAP_INITIAL_ZOOM.toString(),
+            });
+        },
       });
     }
 
