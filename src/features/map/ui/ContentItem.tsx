@@ -46,6 +46,7 @@ interface Image {
 }
 
 interface ContentItemProps {
+  showRegion?: boolean;
   markingId: number;
   region: string;
   content: string;
@@ -73,6 +74,7 @@ function formatDate(dateString: string): string {
 }
 
 const ContentItem = ({
+  showRegion = true,
   region,
   pet,
   images,
@@ -87,10 +89,12 @@ const ContentItem = ({
   return (
     <li className="flex flex-col gap-2">
       <div className="flex justify-between items-center">
-        <div className="flex pr-4 justify-center items-center gap-[.625rem] h-8 text-tangerine-500">
-          <MyLocationIcon />
-          <h2 className="btn-2 text-grey-900">{region}</h2>
-        </div>
+        {showRegion && (
+          <div className="flex pr-4 justify-center items-center gap-[.625rem] h-8 text-tangerine-500">
+            <MyLocationIcon />
+            <h2 className="btn-2 text-grey-900">{region}</h2>
+          </div>
+        )}
 
         {isOwner && (
           <button className="text-grey-500" aria-label="마킹 수정 및 삭제하기">

@@ -6,6 +6,10 @@ const meta: Meta<typeof ContentItem> = {
   component: ContentItem,
   tags: ["autodocs"],
   argTypes: {
+    showRegion: {
+      description: "주소를 보여줄지 여부를 나타냅니다.",
+      control: "boolean",
+    },
     markingId: {
       description: "마킹 id입니다.",
       control: "number",
