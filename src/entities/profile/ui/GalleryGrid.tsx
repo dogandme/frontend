@@ -1,19 +1,19 @@
-import { useAuthStore } from "@/shared/store";
-
 interface GalleryGridProps {
+  role: string | null;
   images: string[];
+  profileImage: string;
 }
 
-export const GalleryGrid = ({ images }: GalleryGridProps) => {
-  const role = useAuthStore((state) => state.role);
-  // TODO userInfo API 나오면 변경하기
-  const profileImg = "/default-image.png";
-
+export const GalleryGrid = ({
+  role,
+  images,
+  profileImage,
+}: GalleryGridProps) => {
   if (role !== "ROLE_USER" || images.length === 0) {
     return (
       <div className="px-4 py-4 flex items-center justify-center flex-col gap-4 w-full h-[20.5rem] rounded-2xl bg-grey-50">
         <img
-          src={profileImg}
+          src={profileImage}
           alt="profileImage"
           className="w-16 h-16 rounded-[28px] flex-shrink-0 "
         />

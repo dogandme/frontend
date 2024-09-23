@@ -7,17 +7,18 @@ export const ProfileImage = ({ src }: { src: string }) => {
 };
 
 interface ProfileInfoProps {
-  profileInfo: {
-    name: string;
-    breed: string;
-    follower: number;
-    following: number;
-  };
+  name: string;
+  breed: string;
+  follower: number;
+  following: number;
 }
 
-export const ProfileInfo = ({ profileInfo }: ProfileInfoProps) => {
-  const { name, breed, follower, following } = profileInfo;
-
+export const ProfileInfo = ({
+  name,
+  breed,
+  follower,
+  following,
+}: ProfileInfoProps) => {
   return (
     <div className="flex flex-col gap-1 items-start self-stretch">
       <h1 className="text-grey-900 title-2">{name}</h1>

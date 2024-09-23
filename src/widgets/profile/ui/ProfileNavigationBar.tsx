@@ -1,13 +1,17 @@
 import { Link } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useAuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
 import { NavigationBar } from "@/shared/ui/navigationbar";
 
-export const ProfileNavigationBar = () => {
-  const role = useAuthStore((state) => state.role);
-  const nickname = useAuthStore((state) => state.nickname);
+interface ProfileNavigationBarProps {
+  role: string | null;
+  nickname: string | null;
+}
 
+export const ProfileNavigationBar = ({
+  role,
+  nickname,
+}: ProfileNavigationBarProps) => {
   return (
     <NavigationBar
       componentType="buttonRight"

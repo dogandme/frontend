@@ -1,11 +1,14 @@
-import { useAuthStore } from "@/shared/store";
 import { ArrowRightIcon, InfoIcon } from "@/shared/ui/icon";
 
-export const TemporaryMarkingBar = () => {
-  const role = useAuthStore((state) => state.role);
-  // TODO API 로 불러오기
-  const temporaryMarkingList = ["path1", "path2", "path.3"];
+interface TemporaryMarkingBarProps {
+  role: string | null;
+  temporaryMarkingList: string[];
+}
 
+export const TemporaryMarkingBar = ({
+  role,
+  temporaryMarkingList,
+}: TemporaryMarkingBarProps) => {
   if (role !== "ROLE_USER" || temporaryMarkingList.length === 0) {
     return;
   }
