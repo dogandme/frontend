@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 
 const SettingClassName =
-  "py-2 flex justify-between w-full text-grey-700 title-2";
+  "py-2 flex justify-between w-full text-grey-700 title-2 hover:bg-grey-50 focus-visible:bg-grey-50 focus-visible:outline-none active:bg-grey-100";
 
 // 계정 관리 하는 컴포넌트
 export const AccountManagement = () => (
