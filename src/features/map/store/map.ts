@@ -1,27 +1,17 @@
 import { create } from "zustand";
-import {
-  MAP_INITIAL_CENTER,
-  MAP_INITIAL_BOUNDS,
-  MAP_INITIAL_ZOOM,
-} from "../constants";
+import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "../constants";
 
-export interface Bounds {
-  east: number;
-  north: number;
-  south: number;
-  west: number;
-}
 export interface LatLng {
   lat: number;
   lng: number;
 }
 export interface MapInfo {
-  bounds: Bounds;
   center: LatLng;
   zoom: number;
 }
 type Mode = "view" | "add";
 
+// todo: currentLocation 위도 경도 타입 초기값 null로 설정
 interface UserInfo {
   currentLocation: LatLng;
   hasLocationPermission: boolean;
@@ -45,11 +35,10 @@ const mapStoreInitialState: MapState = {
   mapInfo: {
     center: MAP_INITIAL_CENTER,
     zoom: MAP_INITIAL_ZOOM,
-    bounds: MAP_INITIAL_BOUNDS,
   },
   userInfo: {
     currentLocation: MAP_INITIAL_CENTER,
-    hasLocationPermission: true,
+    hasLocationPermission: false,
   },
   mode: "view",
   isCenterOnMyLocation: false,

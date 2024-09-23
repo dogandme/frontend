@@ -28,17 +28,26 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
 
   const DELAY_SET_MAP_INFO = 500;
 
+  const { userInfo } = useMapStore.getState();
+
   const debouncedUpdateMapInfo = debounce(
     (detail: MapCameraChangedEvent["detail"]) => {
-      const { bounds, center, zoom } = detail;
-      setMapInfo({ bounds, center, zoom });
+      const { center, zoom } = detail;
+      setMapInfo({ center, zoom });
     },
     DELAY_SET_MAP_INFO,
   );
 
   const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
     debouncedUpdateMapInfo(detail); // debounce 시켜 MapStore 의 mapInfo 를 변경합니다.
-    setIsMapCenteredOnMyLocation(false);
+
+    const { center } = detail;
+
+    const isMapCenteredOnMyLocation =
+      userInfo.currentLocation.lat === center.lat &&
+      userInfo.currentLocation.lng === center.lng;
+
+    setIsMapCenteredOnMyLocation(isMapCenteredOnMyLocation);
   };
 
   const latParam = searchParams.get("lat");
@@ -81,8 +90,10 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
 
     if (map) {
       setCurrentLocation({
-        onSuccess: (position) => {
-          const { latitude, longitude } = position.coords;
+        onSuccess: ({ coords }) => {
+          const { latitude, longitude } = coords;
+
+          const currentLocationOfUser = { lat: latitude, lng: longitude };
 
           if (!hasLatLngParams) {
             setSearchParams({
@@ -91,16 +102,21 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
               zoom: MAP_INITIAL_ZOOM.toString(),
             });
 
-            map.setCenter({ lat: latitude, lng: longitude });
+            map.setCenter(currentLocationOfUser);
+            setMapInfo({
+              center: currentLocationOfUser,
+              zoom: MAP_INITIAL_ZOOM,
+            });
           }
         },
         onError: () => {
-          if (!hasLatLngParams)
+          if (!hasLatLngParams) {
             setSearchParams({
               lat: MAP_INITIAL_CENTER.lat.toString(),
               lng: MAP_INITIAL_CENTER.lng.toString(),
               zoom: MAP_INITIAL_ZOOM.toString(),
             });
+          }
         },
       });
     }

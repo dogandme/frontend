@@ -48,10 +48,6 @@ export const MyLocationButton = () => {
     (state) => state.isCenterOnMyLocation,
   );
 
-  const setIsCenterOnMyLocation = useMapStore(
-    (state) => state.setIsCenterOnMyLocation,
-  );
-
   const { loading, setCurrentLocation } = useCurrentLocation();
 
   const handleClick = () => {
@@ -60,9 +56,6 @@ export const MyLocationButton = () => {
         const { latitude: lat, longitude: lng } = coords;
 
         map.setCenter({ lat, lng });
-        setTimeout(() => {
-          setIsCenterOnMyLocation(true);
-        }, 0);
       },
     });
   };
