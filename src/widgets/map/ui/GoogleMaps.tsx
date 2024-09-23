@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Map } from "@vis.gl/react-google-maps";
+import { Map, useMap } from "@vis.gl/react-google-maps";
 import { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
 import { useCurrentLocation } from "@/features/map/lib";
@@ -24,7 +24,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
     (state) => state.setIsCenterOnMyLocation,
   );
 
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const DELAY_SET_MAP_INFO = 500;
 
@@ -41,25 +41,34 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
     setIsMapCenteredOnMyLocation(false);
   };
 
+  const latParam = searchParams.get("lat");
+  const lngParam = searchParams.get("lng");
+
+  const hasLatLngParams = latParam && lngParam;
+
   const { loading } = useCurrentLocation({
     autoGet: true,
     successCallback: (position) => {
       const { latitude, longitude } = position.coords;
 
-      setSearchParams({
-        lat: latitude.toString(),
-        lng: longitude.toString(),
-        zoom: MAP_INITIAL_ZOOM.toString(),
-      });
+      if (!hasLatLngParams)
+        setSearchParams({
+          lat: latitude.toString(),
+          lng: longitude.toString(),
+          zoom: MAP_INITIAL_ZOOM.toString(),
+        });
     },
     errorCallback: () => {
-      setSearchParams({
-        lat: MAP_INITIAL_CENTER.lat.toString(),
-        lng: MAP_INITIAL_CENTER.lng.toString(),
-        zoom: MAP_INITIAL_ZOOM.toString(),
-      });
+      if (!hasLatLngParams)
+        setSearchParams({
+          lat: MAP_INITIAL_CENTER.lat.toString(),
+          lng: MAP_INITIAL_CENTER.lng.toString(),
+          zoom: MAP_INITIAL_ZOOM.toString(),
+        });
     },
   });
+
+  const map = useMap();
 
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.
   // 기본 outline에 해당하는 div 태그는 iframe 태그 다음에 존재하고 있습니다.
@@ -79,6 +88,11 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       }
     }, 100);
   }, []);
+
+  useEffect(() => {
+    if (map && hasLatLngParams)
+      map.setCenter({ lat: Number(latParam), lng: Number(lngParam) });
+  }, [map]);
 
   return (
     <>
