@@ -1,10 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
-import { CommunityIcon, CompassIcon, MapIcon } from "@/shared/ui/icon";
+import { useAuthStore } from "@/shared/store";
+import { CompassIcon, MapIcon } from "@/shared/ui/icon";
 import { mainFooterStyles } from "./MainFooter.style";
 
 export const MainFooter = () => {
   const { active, inactive, base } = mainFooterStyles;
+  // TODO API 에서 받아온 프로필 이미지 사용하기
+  const profileImage = "/default-image.png";
+  const nickname = useAuthStore((state) => state.nickname);
 
   return (
     <footer className="relative">
@@ -35,24 +39,21 @@ export const MainFooter = () => {
           </li>
           <li className="grow">
             <NavLink
-              to={ROUTER_PATH.COMMUNITY}
-              className={({ isActive }) =>
-                `${isActive ? active : inactive} ${base}`
-              }
-            >
-              <CommunityIcon />
-              커뮤니티
-            </NavLink>
-          </li>
-          <li className="grow">
-            <NavLink
               to={ROUTER_PATH.MY_PAGE}
               className={({ isActive }) =>
                 `${isActive ? active : inactive} ${base}`
               }
             >
-              <CommunityIcon />
-              기록
+              <img
+                src={profileImage}
+                alt={
+                  nickname
+                    ? `${nickname}님의 프로필 이미지`
+                    : "기본 프로필 이미지"
+                }
+                className="w-6 h-6 rounded-2xl flex-shrink-0"
+              />
+              My
             </NavLink>
           </li>
         </ul>
