@@ -43,6 +43,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
 
   const latParam = searchParams.get("lat");
   const lngParam = searchParams.get("lng");
+  const zoomParam = searchParams.get("zoom");
 
   const hasLatLngParams = latParam && lngParam;
 
@@ -90,6 +91,14 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   }, []);
 
   useEffect(() => {
+    if (hasLatLngParams && !zoomParam) {
+      setSearchParams({
+        lat: latParam,
+        lng: lngParam,
+        zoom: MAP_INITIAL_ZOOM.toString(),
+      });
+    }
+
     if (map && hasLatLngParams)
       map.setCenter({ lat: Number(latParam), lng: Number(lngParam) });
   }, [map]);
