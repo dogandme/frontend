@@ -9,12 +9,12 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { MainLayout, MainPage } from "../pages";
 import { HistoryTracker } from "./HistoryTracker";
 import { OverlayPortal } from "./OverlayPortal";
-import { GlobalNavigationBar } from "./layout";
+import { GlobalNavigationBar, MainFooter } from "./layout";
 
 export const router = createBrowserRouter([
   {
     path: ROUTER_PATH.MAIN,
-    element: <MainLayout />,
+    element: <MainLayout MainFooter={<MainFooter />} />,
     children: [
       {
         index: true,
