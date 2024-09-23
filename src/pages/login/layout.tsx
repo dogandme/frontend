@@ -1,12 +1,15 @@
 import { Outlet } from "react-router-dom";
-import { OverlayPortal } from "@/app/OverlayPortal";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
-import { HistoryTracker } from "@/app";
 
-const LoginLayout = () => (
+interface LoginLayoutProps {
+  OverlayPortal: JSX.Element;
+  HistoryTracker: JSX.Element;
+}
+
+const LoginLayout = ({ OverlayPortal, HistoryTracker }: LoginLayoutProps) => (
   <>
-    <OverlayPortal />
-    <HistoryTracker />
+    {OverlayPortal}
+    {HistoryTracker}
     <header>
       <BackwardNavigationBar />
     </header>
