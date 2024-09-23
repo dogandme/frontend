@@ -45,8 +45,6 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const lngParam = searchParams.get("lng");
   const zoomParam = searchParams.get("zoom");
 
-  const hasLatLngParams = latParam && lngParam;
-
   const map = useMap();
 
   const { loading, setCurrentLocation } = useCurrentLocation();
@@ -71,6 +69,8 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   }, []);
 
   useEffect(() => {
+    const hasLatLngParams = latParam && lngParam;
+
     if (hasLatLngParams && !zoomParam) {
       setSearchParams({
         lat: latParam,
@@ -107,7 +107,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
 
     if (map && hasLatLngParams)
       map.setCenter({ lat: Number(latParam), lng: Number(lngParam) });
-  }, [map]);
+  }, [map, latParam, lngParam, zoomParam]);
 
   return (
     <>
