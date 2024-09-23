@@ -3,7 +3,7 @@ import { within, userEvent, expect } from "@storybook/test";
 import { MainFooter } from "./MainFooter";
 
 const meta: Meta = {
-  title: "Widgets/map/Footer",
+  title: "app/layout/MainFooter",
   parameters: {
     docs: {
       description: {
