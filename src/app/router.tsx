@@ -36,7 +36,6 @@ export const router = createBrowserRouter([
         element: <div>community</div>, // 커뮤니티
       },
       {
-        // TODO GNB 빼기
         // TODO 바텀시트 빼기
         path: ROUTER_PATH.MY_PAGE,
         element: <MyPage />,
