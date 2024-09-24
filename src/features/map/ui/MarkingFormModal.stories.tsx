@@ -1,6 +1,8 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, within } from "@storybook/test";
+// ! 이 부분은 테스트를 위해 FSD 구조를 무시합니다. 실제 구현 시에는 app 레이어에 존재하는 컴포넌트를 import 하지 마세요
 import { OverlayPortal } from "@/app/OverlayPortal";
+import { GlobalNavigationBar } from "@/app/layout";
 import { MapPage } from "@/pages/map";
 import { GoogleMaps } from "@/widgets/map/ui";
 import { useAuthStore } from "@/shared/store";
@@ -46,7 +48,7 @@ export const Default: Story = {
     },
   },
 
-  render: () => <MapPage />,
+  render: () => <MapPage GlobalNavigationBar={<GlobalNavigationBar />} />,
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

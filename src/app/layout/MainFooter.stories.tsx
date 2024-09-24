@@ -3,7 +3,7 @@ import { within, userEvent, expect } from "@storybook/test";
 import { MainFooter } from "./MainFooter";
 
 const meta: Meta = {
-  title: "Widgets/map/Footer",
+  title: "app/layout/MainFooter",
   parameters: {
     docs: {
       description: {
@@ -37,8 +37,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const $search = canvas.getByText("발견");
     const $map = canvas.getByText("지도");
-    const $community = canvas.getByText("커뮤니티");
-    const $record = canvas.getByText("기록");
+    const $record = canvas.getByText("My");
 
     const activeNameClass = "text-tangerine-500";
     const inactiveNameClass = "text-grey-400";
@@ -48,7 +47,6 @@ export const Default: Story = {
       async () => {
         expect($search).toHaveClass(activeNameClass);
         expect($map).toHaveClass(inactiveNameClass);
-        expect($community).toHaveClass(inactiveNameClass);
         expect($record).toHaveClass(inactiveNameClass);
       },
     );
@@ -57,7 +55,6 @@ export const Default: Story = {
       await userEvent.click($map);
       expect($search).toHaveClass(inactiveNameClass);
       expect($map).toHaveClass(activeNameClass);
-      expect($community).toHaveClass(inactiveNameClass);
       expect($record).toHaveClass(inactiveNameClass);
     });
   },
