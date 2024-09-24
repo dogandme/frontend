@@ -16,7 +16,10 @@ export const useCurrentLocation = () => {
     maximumAge: 0,
   };
 
-  const successCb = (position: GeolocationPosition, onSuccess?: OnSuccess) => {
+  const successCallback = (
+    position: GeolocationPosition,
+    onSuccess?: OnSuccess,
+  ) => {
     const { coords } = position;
     const { latitude: lat, longitude: lng } = coords;
 
@@ -29,7 +32,10 @@ export const useCurrentLocation = () => {
     onSuccess?.(position);
   };
 
-  const errorCb = (error: GeolocationPositionError, onError?: OnError) => {
+  const errorCallback = (
+    error: GeolocationPositionError,
+    onError?: OnError,
+  ) => {
     setLoading(false);
 
     setUserInfo({
@@ -76,8 +82,8 @@ export const useCurrentLocation = () => {
     setLoading(true);
 
     window.navigator.geolocation.getCurrentPosition(
-      (position) => successCb(position, onSuccess),
-      (position) => errorCb(position, onError),
+      (position) => successCallback(position, onSuccess),
+      (position) => errorCallback(position, onError),
       options,
     );
   };
