@@ -14,6 +14,7 @@ declare module "*.svg" {
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
+  DEV: boolean;
   readonly VITE_APP_TITLE: string;
   readonly VITE_GOOGLE_MAPS_API_KEY: string;
   readonly VITE_GOOGLE_MAPS_ID: string;
