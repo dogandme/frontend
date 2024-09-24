@@ -53,7 +53,7 @@ const _LogoutConfirmModal = ({
   onCloseConfirmModal,
 }: {
   resolve: () => void | Promise<void>;
-  onCloseConfirmModal: () => void | Promise<void>;
+  onCloseConfirmModal: () => Promise<void>;
 }) => {
   const setLogout = () => {
     action("로그아웃 합니다!"); // Logout 내부에서 정의 된 비즈니스 로직
