@@ -1,4 +1,5 @@
 import { useModal } from "@/shared/lib";
+import { settingClassName } from "../constants";
 import { LogoutModal } from "./_LogoutModal";
 
 export const LogoutButton = () => {
@@ -7,10 +8,7 @@ export const LogoutButton = () => {
   ));
 
   return (
-    <button
-      className="py-2 flex justify-between w-full text-grey-700 title-2"
-      onClick={handleOpenLogoutModal}
-    >
+    <button className={settingClassName} onClick={handleOpenLogoutModal}>
       로그아웃
     </button>
   );

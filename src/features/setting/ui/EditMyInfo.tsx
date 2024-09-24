@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { SettingClassName } from "../constants";
+import { settingClassName } from "../constants";
 
 export const EditMyInfo = () => (
-  <Link to="." className={SettingClassName}>
+  <Link to="." className={settingClassName}>
     <p>내 정보 수정</p>
     <span className="text-grey-500">
       <ArrowRightIcon />

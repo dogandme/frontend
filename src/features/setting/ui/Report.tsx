@@ -1,6 +1,6 @@
 import { useSnackBar } from "@/shared/lib";
 import { Snackbar } from "@/shared/ui/snackbar";
-import { SettingClassName } from "../constants";
+import { settingClassName } from "../constants";
 
 // 문의/제안
 export const Report = () => {
@@ -23,7 +23,7 @@ export const Report = () => {
     }
   };
   return (
-    <button onClick={handleClick} className={SettingClassName}>
+    <button onClick={handleClick} className={settingClassName}>
       <p>문의/제안</p>
       <span className="text-grey-700 body-2">mungwithme@gmail.com</span>
     </button>
