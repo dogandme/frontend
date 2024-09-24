@@ -1,13 +1,3 @@
-// import {
-//   AccountManagement,
-//   EditMyInfo,
-//   MyActivity,
-//   Notification,
-//   TermsOfService,
-//   VersionInfo,
-//   Report,
-//   LogoutButton,
-// } from "@/entities/profile/ui";
 import {
   AccountManagement,
   EditMyInfo,
