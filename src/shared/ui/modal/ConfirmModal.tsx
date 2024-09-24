@@ -4,21 +4,21 @@ import { CloseIcon } from "../icon";
 import { Modal } from "./Modal";
 
 interface ConfirmModalProps {
-  resolve?: () => void | Promise<void>;
-  onCloseConfirmModal: ReturnType<typeof useOverlay>["onClose"];
+  onConfirm?: () => void | Promise<void>;
+  onClose: ReturnType<typeof useOverlay>["onClose"];
   children: React.ReactNode;
-  resolveText?: string;
-  rejectText?: string;
-  rejectAriaLabel?: string;
+  confirmText?: string;
+  closeText?: string;
+  closeIconAriaLabel?: string;
   title?: string;
 }
 
 export const ConfirmModal = ({
-  resolve,
-  onCloseConfirmModal,
-  rejectAriaLabel = "확인창 닫기",
-  resolveText = "확인",
-  rejectText = "취소",
+  onConfirm,
+  onClose,
+  closeIconAriaLabel = "확인창 닫기",
+  confirmText = "확인",
+  closeText = "취소",
   title = "",
   children,
 }: ConfirmModalProps) => {
@@ -28,7 +28,7 @@ export const ConfirmModal = ({
     <Modal modalType="center">
       <nav className={navClassName}>
         {title && <h1 className="title-1 text-grey-900">{title}</h1>}
-        <button aria-label={rejectAriaLabel} onClick={onCloseConfirmModal}>
+        <button aria-label={closeIconAriaLabel} onClick={onClose}>
           <CloseIcon />
         </button>
       </nav>
@@ -40,9 +40,9 @@ export const ConfirmModal = ({
           size="medium"
           fullWidth={false}
           className="flex-1"
-          onClick={onCloseConfirmModal}
+          onClick={onClose}
         >
-          {rejectText}
+          {closeText}
         </Button>
         <Button
           variant="text"
@@ -51,11 +51,11 @@ export const ConfirmModal = ({
           fullWidth={false}
           className="flex-1"
           onClick={async () => {
-            await resolve?.();
-            await onCloseConfirmModal();
+            await onConfirm?.();
+            await onClose();
           }}
         >
-          {resolveText}
+          {confirmText}
         </Button>
       </div>
     </Modal>
