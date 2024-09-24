@@ -49,9 +49,9 @@ export const ConfirmModal = ({
           size="medium"
           fullWidth={false}
           className="flex-1"
-          onClick={() => {
-            onCloseConfirmModal();
-            resolve?.();
+          onClick={async () => {
+            await resolve?.();
+            await onCloseConfirmModal();
           }}
         >
           {resolveText}
