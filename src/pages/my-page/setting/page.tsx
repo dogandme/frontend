@@ -1,13 +1,23 @@
+// import {
+//   AccountManagement,
+//   EditMyInfo,
+//   MyActivity,
+//   Notification,
+//   TermsOfService,
+//   VersionInfo,
+//   Report,
+//   LogoutButton,
+// } from "@/entities/profile/ui";
 import {
   AccountManagement,
   EditMyInfo,
   MyActivity,
   Notification,
   TermsOfService,
-  VersionInfo,
   Report,
   LogoutButton,
-} from "@/entities/profile/ui";
+} from "@/features/setting/ui";
+import { VersionInfo } from "@/entities/setting/ui";
 import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
