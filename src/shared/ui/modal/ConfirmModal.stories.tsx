@@ -13,7 +13,7 @@ export default {
     docs: {
       description: {
         component:
-          "ConfirmModal 입니다. 일어나는 인터릭센은 X, 취소 , 확인 버튼이 있습니다.",
+          "ConfirmModal 입니다. 일어나는 인터렉션은 X, 취소 , 확인 버튼이 있습니다. 필수적으로 받는 props 들은 onCloseConfirmModal와 children 입니다. onCloseConfirmModal 콜백 메소드는 말 그대로 ConfirmModal 을 닫기 위한 메소드입니다. 모든 오버레이에서 onClose 메소드를 받는 것과 동일 합니다. 선택적으로 받는 메소드 중 중요한 것은 resolve props 입니다. resolve 의 경우엔 ConfirmModal 을 호출 한 곳에서 필요한 비즈니스 로직을 props 로 넘겨줘 ConfirmModal 내부에서 onCloseConfirmModal 메소드와 함께 호출 되어 비즈니스 로직을 수행합니다. ",
       },
     },
   },
@@ -92,7 +92,7 @@ export const Default: Story = {
     (Story) => (
       <div id="root">
         <OverlayPortal />
-        <div className="w-96">
+        <div className="w-96 h-44">
           <Story />
         </div>
       </div>
