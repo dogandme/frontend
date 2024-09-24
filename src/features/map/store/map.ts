@@ -11,7 +11,6 @@ export interface MapInfo {
 }
 type Mode = "view" | "add";
 
-// todo: currentLocation 위도 경도 타입 초기값 null로 설정
 interface UserInfo {
   currentLocation: {
     lat: number | null;
