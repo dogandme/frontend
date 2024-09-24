@@ -10,7 +10,14 @@ export const DevTools = () => {
   const role = useAuthStore((state) => state.role);
 
   useEffect(() => {
-    console.log(`현재 권한 : ${role}`);
+    const { token, role, nickname } = useAuthStore.getState();
+    console.group("DevTools - AuthStore");
+    console.table({
+      token,
+      role,
+      nickname,
+    });
+    console.groupEnd();
   }, [role]);
 
   // 미디어 쿼리를 통해 max-width 가 1100px 이상일 경우에만 렌더링 되도록 합니다.
