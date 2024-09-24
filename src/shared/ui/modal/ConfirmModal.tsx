@@ -3,7 +3,7 @@ import { CloseIcon } from "../icon";
 import { Modal } from "./Modal";
 
 interface ConfirmModalProps {
-  resolve: () => void | Promise<void>;
+  resolve?: () => void | Promise<void>;
   onCloseConfirmModal: () => void | Promise<void>;
   children: React.ReactNode;
   resolveText?: string;
@@ -51,7 +51,7 @@ export const ConfirmModal = ({
           className="flex-1"
           onClick={() => {
             onCloseConfirmModal();
-            resolve();
+            resolve?.();
           }}
         >
           {resolveText}
