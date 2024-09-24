@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   AccountManagement,
   EditMyInfo,
@@ -8,10 +10,24 @@ import {
   LogoutButton,
 } from "@/features/setting/ui";
 import { VersionInfo } from "@/entities/setting/ui";
+import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const SettingPage = () => {
+  const navigate = useNavigate();
+  const role = useAuthStore((state) => state.role);
+
+  useEffect(() => {
+    if (role === null) {
+      navigate("/my-page");
+    }
+  }, [navigate, role]);
+
+  if (role === null) {
+    return null;
+  }
+
   return (
     <>
       <section>

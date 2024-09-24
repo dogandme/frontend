@@ -17,7 +17,7 @@ export const LogoutModal = ({
       nickname: null,
     });
     onCloseLogoutModal();
-    navigate("/search");
+    navigate("/");
   };
 
   return (
