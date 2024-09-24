@@ -28,7 +28,7 @@ const SomethingModal = ({
   onCloseSomethingModal: () => Promise<void>;
 }) => {
   const { handleOpen, onClose: onCloseLogoutConfirmModal } = useModal(() => (
-    <_LogoutConfirmModal
+    <_ConfirmLeaveModal
       resolve={onCloseSomethingModal}
       onCloseConfirmModal={onCloseLogoutConfirmModal}
     />
@@ -41,32 +41,32 @@ const SomethingModal = ({
         onClick={handleOpen}
         className="border border-tangerine-500 px-2 py-2 rounded-2xl"
       >
-        모달 닫기
+        저장 안하고 나가기
       </button>
     </Modal>
   );
 };
 
 // features 레이어에서 모달을 정의했다고 가정
-const _LogoutConfirmModal = ({
+const _ConfirmLeaveModal = ({
   resolve,
   onCloseConfirmModal,
 }: {
   resolve: () => void | Promise<void>;
   onCloseConfirmModal: () => Promise<void>;
 }) => {
-  const setLogout = () => {
-    action("로그아웃 합니다!"); // Logout 내부에서 정의 된 비즈니스 로직
+  const resetStore = () => {
+    action("스토어를 초기화 합니다 얍!")(); // Logout 내부에서 정의 된 비즈니스 로직
     resolve();
   };
 
   return (
     <ConfirmModal
-      resolve={setLogout}
+      resolve={resetStore}
       onCloseConfirmModal={onCloseConfirmModal}
       title="화면을 나가시겠습니까?"
     >
-      <p>화면을 나갈 경우 입력한 정보들이 모두 삭제 됩니다.</p>
+      <p>화면을 나갈 경우 입력한 정보들이 모두 삭제 됩니다</p>
       <p>정말 화면을 나가시겠습니까?</p>
     </ConfirmModal>
   );
