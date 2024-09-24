@@ -26,12 +26,12 @@ export const ConfirmModal = ({
 
   return (
     <Modal modalType="center">
-      <nav className={navClassName}>
+      <div className={navClassName}>
         {title && <h1 className="title-1 text-grey-900">{title}</h1>}
         <button aria-label={closeIconAriaLabel} onClick={onClose}>
           <CloseIcon />
         </button>
-      </nav>
+      </div>
       <section className="text-grey-700 body-2">{children}</section>
       <div className="flex gap-2">
         <Button
