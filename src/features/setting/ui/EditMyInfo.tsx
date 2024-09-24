@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { settingClassName } from "../constants";
+import { settingClassName } from "./setting.styles";
 
 export const EditMyInfo = () => (
   <Link to="." className={settingClassName}>

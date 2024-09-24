@@ -1,6 +1,6 @@
 import { useModal } from "@/shared/lib";
-import { settingClassName } from "../constants";
 import { LogoutModal } from "./_LogoutModal";
+import { settingClassName } from "./setting.styles";
 
 export const LogoutButton = () => {
   const { handleOpen: handleOpenLogoutModal, onClose } = useModal(() => (

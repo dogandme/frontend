@@ -1,6 +1,6 @@
 import { useSnackBar } from "@/shared/lib";
 import { Snackbar } from "@/shared/ui/snackbar";
-import { settingClassName } from "../constants";
+import { settingClassName } from "./setting.styles";
 
 // 문의/제안
 export const Report = () => {

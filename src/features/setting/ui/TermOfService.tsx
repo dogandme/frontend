@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { settingClassName } from "../constants";
+import { settingClassName } from "./setting.styles";
 
 // 이용 약관
 export const TermsOfService = () => (

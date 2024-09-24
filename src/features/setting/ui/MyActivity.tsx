@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { settingClassName } from "../constants";
+import { settingClassName } from "./setting.styles";
 
 // 내 활동 내역을 보는 컴포넌트
 export const MyActivity = () => (
