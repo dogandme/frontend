@@ -3,6 +3,7 @@ import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
 import { MapPage } from "@/pages/map";
 import { MyPage } from "@/pages/my-page";
+import { SettingPage } from "@/pages/my-page/setting";
 import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
         // TODO 바텀시트 빼기
         path: ROUTER_PATH.MY_PAGE,
         element: <MyPage />,
+      },
+      {
+        path: ROUTER_PATH.SETTING,
+        element: <SettingPage />,
       },
     ],
   },

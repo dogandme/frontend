@@ -20,12 +20,13 @@ export const ProfileNavigationBar = ({
           </Link>
         }
         button={
-          <button
+          <Link
+            to={ROUTER_PATH.LOGIN}
             className="px-3 py-3 text-grey-500"
-            aria-label="내 정보 설정하기"
+            aria-label="로그인 하기"
           >
             <SettingIcon />
-          </button>
+          </Link>
         }
       />
     );
@@ -44,12 +45,13 @@ export const ProfileNavigationBar = ({
           </Link>
         }
         button={
-          <button
+          <Link
+            to={ROUTER_PATH.SETTING}
             className="px-3 py-3 text-grey-500"
             aria-label="내 정보 설정하기"
           >
             <SettingIcon />
-          </button>
+          </Link>
         }
       />
     );
@@ -60,12 +62,13 @@ export const ProfileNavigationBar = ({
       componentType="buttonRight"
       label={<h1 className="text-grey-900 title-1">{nickname}님</h1>}
       button={
-        <button
+        <Link
+          to={ROUTER_PATH.SETTING}
           className="px-3 py-3 text-grey-500"
           aria-label="내 정보 설정하기"
         >
           <SettingIcon />
-        </button>
+        </Link>
       }
     />
   );

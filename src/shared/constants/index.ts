@@ -111,4 +111,5 @@ export const ROUTER_PATH = {
   MAP: "/map",
   COMMUNITY: "/community",
   MY_PAGE: "/my-page",
+  SETTING: "/my-page/setting",
 } as const;
