@@ -7,19 +7,6 @@ import { Button } from "@/shared/ui/button";
 // ! main.ts 파일에서 렌더링 되며 import.meta.DEV 를 통해 개발 환경인지 확인합니다.
 // ! 배포 시엔 해당 컴포넌트가 렌더링 되지 않지만 위험을 방지하기 위해 배포 시 해당 컴포넌트를 제거 해주세요
 export const DevTools = () => {
-  const role = useAuthStore((state) => state.role);
-
-  useEffect(() => {
-    const { token, role, nickname } = useAuthStore.getState();
-    console.group("DevTools - AuthStore");
-    console.table({
-      token,
-      role,
-      nickname,
-    });
-    console.groupEnd();
-  }, [role]);
-
   // 미디어 쿼리를 통해 max-width 가 1100px 이상일 경우에만 렌더링 되도록 합니다.
   // matchMedia(검사 할 문자열) 을 통해 미디어 쿼리를 검사하고 반환되는 이벤트의 matches 결과를 통해
   // 해당 미디어 쿼리가 맞는지 확인합니다.
