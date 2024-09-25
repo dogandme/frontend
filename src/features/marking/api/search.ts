@@ -105,7 +105,7 @@ export const useGetMarkingList = ({
   southLeftLng,
   northRightLng,
 }: MarkingListRequest) => {
-  return useQuery<MarkingListResponse, Error, MarkingListRequest>({
+  return useQuery<MarkingListResponse, Error, MarkingListResponse["content"]>({
     queryKey: [
       "markingList",
       southBottomLat,
@@ -121,5 +121,6 @@ export const useGetMarkingList = ({
         southLeftLng,
         northRightLng,
       }),
+    select: (data) => data.content,
   });
 };
