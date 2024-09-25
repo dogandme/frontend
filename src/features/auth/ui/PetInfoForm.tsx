@@ -53,6 +53,7 @@ export const ProfileInput = () => {
   // 바텀 시트를 조작하기 위한 상태값
   const [isOpen, setOpen] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [inputKey, setInputKey] = useState<number>(0);
 
   // 상태에 저장된 파일 객체가 존재하는 경우엔 파일 객체를 URL로 변경하여 사용합니다.
   // 만약 파일 객체가 존재하지 않는 경우 기본 이미지를 제공합니다.
@@ -74,6 +75,7 @@ export const ProfileInput = () => {
   // 사진을 삭제하는 핸들러
   const handleDelete = () => {
     setProfileImage(null);
+    setInputKey((prev) => prev + 1);
   };
 
   // 사진 선택하기 버튼을 클릭했을 때 input을 클릭하는 핸들기
@@ -92,6 +94,7 @@ export const ProfileInput = () => {
         aria-label="profile-image-button"
       >
         <input
+          key={inputKey}
           type="file"
           accept="image/jpeg, image/png, image/webp"
           className="sr-only"
