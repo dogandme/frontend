@@ -4,10 +4,7 @@ import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { ExitConfirmModal } from "@/shared/ui/modal";
-import {
-  initialPasswordChangeFormState,
-  usePasswordChangeFormStore,
-} from "../store";
+import { usePasswordChangeFormStore } from "../store";
 
 // TODO 사용 가능한 비밀 번호 시 statusText 변경
 
@@ -179,6 +176,9 @@ export const PasswordChangeModal = ({
 }: {
   onClose: () => Promise<void>;
 }) => {
+  const resetPasswordChangeForm = usePasswordChangeFormStore(
+    (state) => state.reset,
+  );
   // PasswordChangeModal X 아이콘이나 취소 버튼이 클릭 시 호출 되는 이벤트 핸들러
   const handleClose = () => {
     const { currentPassword, newPassword, confirmPassword } =
@@ -192,9 +192,7 @@ export const PasswordChangeModal = ({
 
   // ExitModal 이 Confirm 되면 발생 할 이벤트 핸들러
   const onExitPasswordChangeModal = () => {
-    usePasswordChangeFormStore.setState({
-      ...initialPasswordChangeFormState,
-    });
+    resetPasswordChangeForm();
     onClose();
   };
   const { handleOpen: handleOpenExitModal, onClose: onCloseExitModal } =

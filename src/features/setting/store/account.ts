@@ -27,6 +27,7 @@ interface PasswordChangeFormActions {
   setIsEmptyCurrentPassword: (isEmptyCurrentPassword: boolean) => void;
   setIsEmptyNewPassword: (isEmptyNewPassword: boolean) => void;
   setIsEmptyConfirmPassword: (isEmptyConfirmPassword: boolean) => void;
+  reset: () => void;
 }
 
 export const initialPasswordChangeFormState: PasswordChangeFormState = {
@@ -65,4 +66,5 @@ export const usePasswordChangeFormStore = create<
     set({ isEmptyNewPassword }),
   setIsEmptyConfirmPassword: (isEmptyConfirmPassword: boolean) =>
     set({ isEmptyConfirmPassword }),
+  reset: () => set({ ...initialPasswordChangeFormState }),
 }));
