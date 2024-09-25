@@ -1,29 +1,21 @@
 import { create } from "zustand";
-import {
-  MAP_INITIAL_CENTER,
-  MAP_INITIAL_BOUNDS,
-  MAP_INITIAL_ZOOM,
-} from "../constants";
+import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "../constants";
 
-export interface Bounds {
-  east: number;
-  north: number;
-  south: number;
-  west: number;
-}
 export interface LatLng {
   lat: number;
   lng: number;
 }
 export interface MapInfo {
-  bounds: Bounds;
   center: LatLng;
   zoom: number;
 }
 type Mode = "view" | "add";
 
 interface UserInfo {
-  currentLocation: LatLng;
+  currentLocation: {
+    lat: number | null;
+    lng: number | null;
+  };
   hasLocationPermission: boolean;
 }
 
@@ -45,11 +37,10 @@ const mapStoreInitialState: MapState = {
   mapInfo: {
     center: MAP_INITIAL_CENTER,
     zoom: MAP_INITIAL_ZOOM,
-    bounds: MAP_INITIAL_BOUNDS,
   },
   userInfo: {
-    currentLocation: MAP_INITIAL_CENTER,
-    hasLocationPermission: true,
+    currentLocation: { lat: null, lng: null },
+    hasLocationPermission: false,
   },
   mode: "view",
   isCenterOnMyLocation: false,

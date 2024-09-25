@@ -1,6 +1,7 @@
 import {
   GoogleMapsCopyRight,
   MapControlWidget,
+  MapInitializer,
   MapMarkerWidget,
 } from "@/widgets/map/ui";
 import { GoogleMaps } from "@/widgets/map/ui/GoogleMaps";
@@ -12,6 +13,7 @@ export const MapPage = ({ GlobalNavigationBar }: MapPageProps) => {
   return (
     <>
       {GlobalNavigationBar}
+      <MapInitializer />
       <GoogleMaps>
         <MapMarkerWidget />
         <MapControlWidget />

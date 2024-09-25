@@ -4,9 +4,14 @@ import { useMapStore } from "../store";
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
 
 export const UserMarker = () => {
-  const { currentLocation } = useMapStore((state) => state.userInfo);
+  const { currentLocation, hasLocationPermission } = useMapStore(
+    (state) => state.userInfo,
+  );
+  const { lat, lng } = currentLocation;
 
-  return <User position={currentLocation} />;
+  if (!hasLocationPermission || lat === null || lng === null) return null;
+
+  return <User position={{ lat, lng }} />;
 };
 
 export const PinMarker = () => {
