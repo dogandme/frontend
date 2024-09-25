@@ -68,3 +68,34 @@ export const usePasswordChangeFormStore = create<
     set({ isEmptyConfirmPassword }),
   reset: () => set({ ...initialPasswordChangeFormState }),
 }));
+
+interface AccountCancellationFormState {
+  password: string;
+  isValidPassword: boolean;
+  isEmptyPassword: boolean;
+}
+
+interface AccountCancellationFormActions {
+  setPassword: (password: string) => void;
+  setIsValidPassword: (isValidPassword: boolean) => void;
+  setIsEmptyPassword: (isEmptyPassword: boolean) => void;
+  reset: () => void;
+}
+
+export const initialAccountCancellationFormState: AccountCancellationFormState =
+  {
+    password: "",
+    isValidPassword: false,
+    isEmptyPassword: true,
+  };
+
+export const useAccountCancellationFormStore = create<
+  AccountCancellationFormState & AccountCancellationFormActions
+>((set) => ({
+  ...initialAccountCancellationFormState,
+
+  setPassword: (password: string) => set({ password }),
+  setIsValidPassword: (isValidPassword: boolean) => set({ isValidPassword }),
+  setIsEmptyPassword: (isEmptyPassword: boolean) => set({ isEmptyPassword }),
+  reset: () => set({ ...initialAccountCancellationFormState }),
+}));
