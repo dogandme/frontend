@@ -142,10 +142,11 @@ const PostVisibilitySelect = () => {
 };
 
 const PhotoInput = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
   const images = useMarkingFormStore((state) => state.images);
   const setImages = useMarkingFormStore((state) => state.setImages);
 
+  const [inputKey, setInputKey] = useState<number>(0);
+  const inputRef = useRef<HTMLInputElement>(null);
   // imageUrls 는 이미지 파일을 렌더링 하기 위해 사용되며 lastModified 는 images 내부 파일들을
   // 식별 하기 위한 식별자로 사용됩니다.
   const imageUrls = images.map((image) => ({
@@ -174,9 +175,11 @@ const PhotoInput = () => {
 
     const _images = [...images];
     for (const newFile of newFiles) {
-      if (!isImageAlreadyExist(newFile)) {
-        _images.push(newFile);
+      if (isImageAlreadyExist(newFile)) {
+        continue;
       }
+
+      _images.push(newFile);
 
       if (_images.length > 5) {
         throw new Error(MarkingModalError.maxPhotoCount);
@@ -188,12 +191,14 @@ const PhotoInput = () => {
 
   const handleRemoveImage = (lastModified: number) => {
     setImages(images.filter((image) => image.lastModified !== lastModified));
+    setInputKey((prev) => prev + 1);
   };
 
   return (
     <div>
       {/* 사진을 담을 input , sr-only로 실제 화면에 렌더링 되지 않음*/}
       <input
+        key={inputKey}
         type="file"
         accept=".jpeg,.jpg,.png,.webp"
         multiple
