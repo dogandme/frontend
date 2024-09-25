@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Map } from "@vis.gl/react-google-maps";
 import { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
@@ -16,6 +16,8 @@ interface GoogleMapProps {
  * 기본적으로 GoogleMaps 는 w-full h-full relative로 설정 되어 있습니다.
  */
 export const GoogleMaps = ({ children }: GoogleMapProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const setMapInfo = useMapStore((state) => state.setMapInfo);
   const setIsMapCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
@@ -32,16 +34,10 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   );
 
   const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
+    if (!isLoaded) return;
+
     debouncedUpdateMapInfo(detail); // debounce 시켜 MapStore 의 mapInfo 를 변경합니다.
-
-    const { center } = detail;
-    const { userInfo } = useMapStore.getState();
-
-    const isMapCenteredOnMyLocation =
-      userInfo.currentLocation.lat === center.lat &&
-      userInfo.currentLocation.lng === center.lng;
-
-    setIsMapCenteredOnMyLocation(isMapCenteredOnMyLocation);
+    setIsMapCenteredOnMyLocation(false);
   };
 
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.
@@ -73,6 +69,9 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       reuseMaps // Map 컴포넌트가 unmount 되었다가 다시 mount 될 때 기존의 map instance 를 재사용 하여 memory leak을 방지합니다.
       // debounce 를 이용하여 MapStore 의 mapInfo 를 변경합니다.
       onCameraChanged={handleMapChange}
+      onTilesLoaded={() => {
+        setIsLoaded(true);
+      }}
     >
       {children}
     </Map>

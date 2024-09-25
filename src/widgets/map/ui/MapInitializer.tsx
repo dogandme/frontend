@@ -12,6 +12,9 @@ export const MapInitializer = () => {
 
   const { loading, setCurrentLocation } = useCurrentLocation();
 
+  const setIsCenteredOnMyLocation = useMapStore(
+    (state) => state.setIsCenterOnMyLocation,
+  );
   const setMapInfo = useMapStore((state) => state.setMapInfo);
 
   useEffect(() => {
@@ -40,10 +43,11 @@ export const MapInitializer = () => {
           });
 
           map.setCenter(currentLocationOfUser);
-          setMapInfo({
-            center: currentLocationOfUser,
-            zoom: MAP_INITIAL_ZOOM,
-          });
+          setMapInfo({ center: currentLocationOfUser, zoom: MAP_INITIAL_ZOOM });
+
+          setTimeout(() => {
+            setIsCenteredOnMyLocation(true);
+          }, 0);
         }
       },
       onError: () => {
