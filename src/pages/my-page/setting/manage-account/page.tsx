@@ -1,12 +1,29 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   AccountCancellation,
   PasswordChangeButton,
 } from "@/features/setting/ui/Account";
 import { AccountEmail } from "@/entities/setting/ui";
+import { ROUTER_PATH } from "@/shared/constants";
+import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const AccountManagementPage = () => {
+  const navigate = useNavigate();
+  const role = useAuthStore((state) => state.role);
+
+  useEffect(() => {
+    if (!role) {
+      navigate(ROUTER_PATH.MY_PAGE);
+    }
+  }, [navigate, role]);
+
+  if (!role) {
+    return null;
+  }
+
   return (
     <>
       <BackwardNavigationBar
