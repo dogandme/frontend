@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Map } from "@vis.gl/react-google-maps";
 import { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
@@ -16,7 +16,7 @@ interface GoogleMapProps {
  * 기본적으로 GoogleMaps 는 w-full h-full relative로 설정 되어 있습니다.
  */
 export const GoogleMaps = ({ children }: GoogleMapProps) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const isLoadedRef = useRef<boolean>(false);
 
   const setMapInfo = useMapStore((state) => state.setMapInfo);
   const setIsMapCenteredOnMyLocation = useMapStore(
@@ -34,7 +34,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   );
 
   const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
-    if (!isLoaded) return;
+    if (!isLoadedRef.current) return;
 
     debouncedUpdateMapInfo(detail); // debounce 시켜 MapStore 의 mapInfo 를 변경합니다.
     setIsMapCenteredOnMyLocation(false);
@@ -70,7 +70,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       // debounce 를 이용하여 MapStore 의 mapInfo 를 변경합니다.
       onCameraChanged={handleMapChange}
       onTilesLoaded={() => {
-        setIsLoaded(true);
+        isLoadedRef.current = true;
       }}
     >
       {children}
