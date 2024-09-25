@@ -3,7 +3,7 @@ import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
-import { ExitConfirmModal } from "@/shared/ui/modal/ExitConfirmModal";
+import { ExitConfirmModal } from "@/shared/ui/modal";
 import {
   initialPasswordChangeFormState,
   usePasswordChangeFormStore,
