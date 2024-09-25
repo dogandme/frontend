@@ -1,0 +1,131 @@
+import { PasswordInput } from "@/entities/auth/ui";
+import { useModal } from "@/shared/lib";
+import { Button } from "@/shared/ui/button";
+import { CloseIcon, InfoIcon } from "@/shared/ui/icon";
+import { ExitConfirmModal, Modal } from "@/shared/ui/modal";
+import { Notice } from "@/shared/ui/notice";
+import { useAccountCancellationFormStore } from "../store";
+
+const validatePassword = (password: string) => {
+  // 조건
+  // 1. 영문, 숫자, 특수문자 3가지 조합 포함
+  // 2. 8~15자 이내
+  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+
+  return passwordRegex.test(password);
+};
+
+const CurrentPasswordInput = () => {
+  const isValidPassword = useAccountCancellationFormStore(
+    (state) => state.isValidPassword,
+  );
+  const isEmptyCurrentPassword = useAccountCancellationFormStore(
+    (state) => state.isEmptyPassword,
+  );
+
+  const setPassword = useAccountCancellationFormStore(
+    (state) => state.setPassword,
+  );
+  const setIsValidPassword = useAccountCancellationFormStore(
+    (state) => state.setIsValidPassword,
+  );
+  const setIsEmptyPassword = useAccountCancellationFormStore(
+    (state) => state.setIsEmptyPassword,
+  );
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = target;
+    setPassword(value);
+
+    const isValidPassword = validatePassword(value);
+    const isPasswordEmpty = value.length === 0;
+
+    setIsValidPassword(isValidPassword);
+    setIsEmptyPassword(isPasswordEmpty);
+  };
+
+  const statusText = isEmptyCurrentPassword
+    ? "비밀번호를 입력해 주세요"
+    : isValidPassword
+      ? ""
+      : "비밀번호 형식에 맞게 입력해 주세요";
+
+  return (
+    <PasswordInput
+      id="password"
+      label="현재 비밀번호"
+      statusText={statusText}
+      isError={!isEmptyCurrentPassword && !isValidPassword}
+      essential
+      onChange={handleChange}
+    />
+  );
+};
+
+export const CancellationCheckModal = ({
+  onClose,
+}: {
+  onClose: () => Promise<void>;
+}) => {
+  const resetCancellationForm = useAccountCancellationFormStore(
+    (state) => state.reset,
+  );
+
+  // CancellationCheckModal X 아이콘이나 취소 버튼이 클릭 시 호출 되는 이벤트 핸들러
+  const handleClose = () => {
+    const { password } = useAccountCancellationFormStore.getState();
+    if (password) {
+      handleOpen();
+      return;
+    }
+    onClose();
+  };
+
+  // ExitModal 이 Confirm 되면 발생 할 이벤트 핸들러
+  const onExitCancellationModal = () => {
+    resetCancellationForm();
+    onCloseExitModal();
+    onClose();
+  };
+
+  const { handleOpen, onClose: onCloseExitModal } = useModal(() => (
+    <ExitConfirmModal
+      onConfirm={onExitCancellationModal}
+      onClose={onCloseExitModal}
+    />
+  ));
+
+  return (
+    <Modal modalType="center">
+      {/* 상단 네비게이션 바 */}
+      <div className="flex self-stretch justify-between">
+        <h1 className="text-grey-900 title-1">비밀번호 확인</h1>
+        <button className="px-[0.3125rem]" onClick={handleClose}>
+          <CloseIcon />
+        </button>
+      </div>
+      <section className="flex flex-col gap-8">
+        {/* 알림창 */}
+        <Notice>
+          <InfoIcon width={20} height={20} />
+          <span>탈퇴 전 한번 더 비밀번호를 입력해 주세요</span>
+        </Notice>
+        {/* PasswordInput */}
+        <CurrentPasswordInput />
+      </section>
+      {/* 버튼들 */}
+      <div className="flex flex-col gap-2">
+        <Button colorType="primary" variant="filled" size="medium">
+          탈퇴하기
+        </Button>
+        <Button
+          colorType="tertiary"
+          variant="text"
+          size="medium"
+          onClick={handleClose}
+        >
+          취소
+        </Button>
+      </div>
+    </Modal>
+  );
+};
