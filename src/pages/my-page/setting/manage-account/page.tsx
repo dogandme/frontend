@@ -1,5 +1,9 @@
-import { ChangePassword } from "@/features/setting/ui/Account";
+import {
+  AccountCancellation,
+  PasswordChangeButton,
+} from "@/features/setting/ui/Account";
 import { AccountEmail } from "@/entities/setting/ui";
+import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const AccountManagementPage = () => {
@@ -10,7 +14,9 @@ export const AccountManagementPage = () => {
       />
       <section className="flex flex-col gap-4 px-4 py-4">
         <AccountEmail />
-        <ChangePassword />
+        <PasswordChangeButton />
+        <DividerLine axis="row" />
+        <AccountCancellation />
       </section>
     </>
   );
