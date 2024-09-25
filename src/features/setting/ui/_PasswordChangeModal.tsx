@@ -1,8 +1,13 @@
 import { PasswordInput } from "@/entities/auth/ui";
+import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
-import { usePasswordChangeFormStore } from "../store";
+import { ExitConfirmModal } from "@/shared/ui/modal/ExitConfirmModal";
+import {
+  initialPasswordChangeFormState,
+  usePasswordChangeFormStore,
+} from "../store";
 
 // TODO 사용 가능한 비밀 번호 시 statusText 변경
 
@@ -174,11 +179,37 @@ export const PasswordChangeModal = ({
 }: {
   onClose: () => Promise<void>;
 }) => {
+  // PasswordChangeModal X 아이콘이나 취소 버튼이 클릭 시 호출 되는 이벤트 핸들러
+  const handleClose = () => {
+    const { currentPassword, newPassword, confirmPassword } =
+      usePasswordChangeFormStore.getState();
+    if (currentPassword || newPassword || confirmPassword) {
+      handleOpenExitModal();
+      return;
+    }
+    onClose();
+  };
+
+  // ExitModal 이 Confirm 되면 발생 할 이벤트 핸들러
+  const onExitPasswordChangeModal = () => {
+    usePasswordChangeFormStore.setState({
+      ...initialPasswordChangeFormState,
+    });
+    onClose();
+  };
+  const { handleOpen: handleOpenExitModal, onClose: onCloseExitModal } =
+    useModal(() => (
+      <ExitConfirmModal
+        onClose={onCloseExitModal}
+        onConfirm={onExitPasswordChangeModal}
+      />
+    ));
+
   return (
     <Modal modalType="center">
       <section className="flex justify-between self-stretch">
         <h1 className="title-1 text-grey-900">비밀번호 변경</h1>
-        <button onClick={onClose}>
+        <button onClick={handleClose}>
           <CloseIcon />
         </button>
       </section>
@@ -201,7 +232,12 @@ export const PasswordChangeModal = ({
         <Button colorType="primary" variant="filled" size="medium">
           다음
         </Button>
-        <Button colorType="tertiary" variant="text" size="medium">
+        <Button
+          colorType="tertiary"
+          variant="text"
+          size="medium"
+          onClick={handleClose}
+        >
           취소
         </Button>
       </div>
