@@ -17,7 +17,7 @@ export const AccountCancellationModal = ({
     // TODO FormModal 생성 되면 적용하기
     <Modal modalType="fullPage">
       <CloseNavigationBar onClick={onClose} aria-label="회원 탈퇴 모달 닫기" />
-      <section className="flex flex-col gap-8">
+      <section className="flex flex-col gap-8 px-4">
         {/* 프로덕트 마스코트 */}
         <img src="/default-image.png" className="mx-auto" />
         {/* 탈퇴 안내 문구 */}
