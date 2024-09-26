@@ -16,7 +16,7 @@ import { usePostPetInfo } from "../api/petinfo";
 import { characterList, dogBreeds } from "../constants/form";
 import { usePetInfoStore } from "../store";
 
-const DEFAULT_PROFILE_IMAGE = "default-image.png";
+const DEFAULT_PROFILE_IMAGE = "/default-image.png";
 
 const TextCounter = ({
   text,
@@ -50,22 +50,20 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
 export const ProfileInput = () => {
   const profileImage = usePetInfoStore((state) => state.profileImage);
   const setProfileImage = usePetInfoStore((state) => state.setProfileImage);
-  // 바텀 시트를 조작하기 위한 상태값
+  // 바텀시트를 조작하기 위한 state
   const [isOpen, setOpen] = useState<boolean>(false);
+  // actual dom 의 input 태그를 조작하기 위한 ref , state
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputKey, setInputKey] = useState<number>(0);
+  // 프로필 이미지를 보여주기 위한 state
+  const [profileUrl, setProfileUrl] = useState(() =>
+    profileImage ? URL.createObjectURL(profileImage) : DEFAULT_PROFILE_IMAGE,
+  );
 
-  // 상태에 저장된 파일 객체가 존재하는 경우엔 파일 객체를 URL로 변경하여 사용합니다.
-  // 만약 파일 객체가 존재하지 않는 경우 기본 이미지를 제공합니다.
-  const profileUrl = profileImage
-    ? URL.createObjectURL(profileImage)
-    : `${window.location.origin}/${DEFAULT_PROFILE_IMAGE}`;
-
-  // type이 file인 input에게 파일이 존재하는 경우엔 Blob URL을 생성하여 프로필 이미지로 설정합니다.
-  // 만약 사진이 존재하지 않는 경우 기본 이미지를 제공합니다.
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setProfileImage(file || null);
+    setProfileImage(file!);
+    setProfileUrl(URL.createObjectURL(file!));
   };
 
   // 바텀 시트를 여닫는 핸들러
