@@ -1,5 +1,5 @@
 import { StoryObj } from "@storybook/react";
-import { CancellationCheckModal } from "./_CancellactionCheckModal";
+import { CancellationCheckModal } from "./_CancellationCheckModal";
 
 export default {
   title: "features/setting/CancellationCheckModal",
