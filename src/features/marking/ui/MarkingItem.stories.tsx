@@ -16,49 +16,13 @@ const meta: Meta<typeof MarkingItem> = {
     onRegionClick: {
       description: "주소를 클릭했을 때 실행할 함수입니다.",
     },
-    markingId: {
-      description: "마킹 id입니다.",
-      control: "number",
-    },
-    region: {
-      description: "주소를 나타냅니다.",
-      control: "text",
-    },
-    content: {
-      description: "내용을 나타냅니다.",
-      control: "text",
-    },
-    isVisible: {
-      description: "마킹의 공개 여부를 나타냅니다.",
-      control: "boolean",
-    },
-    regDt: {
-      description: "마킹을 기록한 날짜입니다.",
-      control: "text",
-    },
-    userId: {
-      description: "마킹 작성자의 id입니다.",
-      control: "number",
-    },
     nickName: {
       description: "마킹 작성자의 닉네임입니다.",
       control: "text",
     },
-    isOwner: {
-      description: "사용자가 마킹 작성자와 동일한지를 나타냅니다.",
-      control: "boolean",
-    },
-    lat: {
-      description: "위도입니다.",
-      control: "number",
-    },
-    lng: {
-      description: "경도입니다.",
-      control: "number",
-    },
-    countData: {
-      description: "좋아요 개수와 북마크 개수를 나타냅니다.",
-      control: "object",
+    region: {
+      description: "주소를 나타냅니다.",
+      control: "text",
     },
     pet: {
       description:
@@ -67,6 +31,22 @@ const meta: Meta<typeof MarkingItem> = {
     },
     images: {
       description: "마킹에 올린 이미지들을 나타냅니다.",
+    },
+    content: {
+      description: "내용을 나타냅니다.",
+      control: "text",
+    },
+    regDt: {
+      description: "마킹을 기록한 날짜입니다.",
+      control: "text",
+    },
+    isOwner: {
+      description: "사용자가 마킹 작성자와 동일한지를 나타냅니다.",
+      control: "boolean",
+    },
+    countData: {
+      description: "좋아요 개수와 북마크 개수를 나타냅니다.",
+      control: "object",
     },
   },
   args: {
