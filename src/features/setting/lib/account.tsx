@@ -10,8 +10,6 @@ export const useCancellationCheckModal = () => {
     (state) => state.reset,
   );
 
-  let beforeCloseRecursiveFlag = true;
-
   const {
     handleOpen: handleOpenExitConfirmModal,
     onClose: onCloseConfirmModal,
@@ -33,11 +31,6 @@ export const useCancellationCheckModal = () => {
     () => <CancellationCheckModal onClose={onCloseCancellationCheckModal} />,
     {
       beforeClose: () => {
-        if (!beforeCloseRecursiveFlag) {
-          return;
-        }
-        beforeCloseRecursiveFlag = false;
-
         const { password } = useAccountCancellationFormStore.getState();
         if (password) {
           handleOpenExitConfirmModal();
@@ -45,7 +38,6 @@ export const useCancellationCheckModal = () => {
             "입력 중인 패스워드가 존재하여 ConfirmModal을 열었습니다.",
           );
         }
-        onCloseCancellationCheckModal();
       },
     },
   );
@@ -56,8 +48,6 @@ export const useChangePasswordModal = () => {
   const resetPasswordChangeForm = usePasswordChangeFormStore(
     (state) => state.reset,
   );
-
-  let beforeCloseRecursiveFlag = true;
 
   const { handleOpen: handleOpenExitConfirmModal, onClose: onCloseExitModal } =
     useModal(() => (
@@ -78,11 +68,6 @@ export const useChangePasswordModal = () => {
     () => <PasswordChangeModal onClose={onClosePasswordChangeModal} />,
     {
       beforeClose: () => {
-        if (!beforeCloseRecursiveFlag) {
-          return;
-        }
-        beforeCloseRecursiveFlag = false;
-
         const { currentPassword, newPassword, confirmPassword } =
           usePasswordChangeFormStore.getState();
 
@@ -90,7 +75,6 @@ export const useChangePasswordModal = () => {
           handleOpenExitConfirmModal();
           throw new Error("입력 중인 폼이 존재하여 ConfirmModal을 열었습니다.");
         }
-        onClosePasswordChangeModal();
       },
     },
   );
