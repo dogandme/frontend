@@ -14,7 +14,7 @@ const ImgItem = ({
   return (
     <div className="relative w-[7.5rem] h-[7.5rem] bg-grey-200 rounded-2xl flex justify-center items-center text-grey-500 flex-shrink-0">
       <img
-        className="w-full h-full object-cover no-drag"
+        className="w-full h-full object-cover no-drag rounded-2xl"
         src={src}
         alt={alt}
         {...props}
