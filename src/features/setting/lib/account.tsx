@@ -1,14 +1,15 @@
 import { useModal } from "@/shared/lib";
 import { ExitConfirmModal } from "@/shared/ui/modal";
 import { useAccountCancellationFormStore } from "../store";
+import { usePasswordChangeFormStore } from "../store";
 import { CancellationCheckModal } from "../ui/_CancellationCheckModal";
+import { PasswordChangeModal } from "../ui/_PasswordChangeModal";
 
 export const useCancellationCheckModal = () => {
   const resetCancellationForm = useAccountCancellationFormStore(
     (state) => state.reset,
   );
 
-  // onCloseCancellationCheckModal에서 재귀적으로 beforeClose 를 호출하는 것을 방지하기 위한 flag
   let beforeCloseRecursiveFlag = true;
 
   const {
@@ -49,4 +50,50 @@ export const useCancellationCheckModal = () => {
     },
   );
   return handleOpenCancellationCheckModal;
+};
+
+export const useChangePasswordModal = () => {
+  const resetPasswordChangeForm = usePasswordChangeFormStore(
+    (state) => state.reset,
+  );
+
+  let beforeCloseRecursiveFlag = true;
+
+  const { handleOpen: handleOpenExitConfirmModal, onClose: onCloseExitModal } =
+    useModal(() => (
+      <ExitConfirmModal
+        onClose={onCloseExitModal}
+        onConfirm={() => {
+          resetPasswordChangeForm();
+          onCloseExitModal();
+          onClosePasswordChangeModal();
+        }}
+      />
+    ));
+
+  const {
+    handleOpen: handleOpenPasswordChangeModal,
+    onClose: onClosePasswordChangeModal,
+  } = useModal(
+    () => <PasswordChangeModal onClose={onClosePasswordChangeModal} />,
+    {
+      beforeClose: () => {
+        if (!beforeCloseRecursiveFlag) {
+          return;
+        }
+        beforeCloseRecursiveFlag = false;
+
+        const { currentPassword, newPassword, confirmPassword } =
+          usePasswordChangeFormStore.getState();
+
+        if (currentPassword || newPassword || confirmPassword) {
+          handleOpenExitConfirmModal();
+          throw new Error("입력 중인 폼이 존재하여 ConfirmModal을 열었습니다.");
+        }
+        onClosePasswordChangeModal();
+      },
+    },
+  );
+
+  return handleOpenPasswordChangeModal;
 };

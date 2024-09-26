@@ -1,9 +1,7 @@
 import { PasswordInput } from "@/entities/auth/ui";
-import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
-import { ExitConfirmModal } from "@/shared/ui/modal";
 import { usePasswordChangeFormStore } from "../store";
 
 // TODO 사용 가능한 비밀 번호 시 statusText 변경
@@ -176,40 +174,11 @@ export const PasswordChangeModal = ({
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const resetPasswordChangeForm = usePasswordChangeFormStore(
-    (state) => state.reset,
-  );
-
-  // ExitModal 이 Confirm 되면 발생 할 이벤트 핸들러
-  const handleExitPasswordChangeModal = () => {
-    resetPasswordChangeForm();
-    onClose();
-  };
-
-  const { handleOpen: handleOpenExitModal, onClose: onCloseExitModal } =
-    useModal(() => (
-      <ExitConfirmModal
-        onClose={onCloseExitModal}
-        onConfirm={handleExitPasswordChangeModal}
-      />
-    ));
-
-  // PasswordChangeModal X 아이콘이나 취소 버튼이 클릭 시 호출 되는 이벤트 핸들러
-  const handleClose = () => {
-    const { currentPassword, newPassword, confirmPassword } =
-      usePasswordChangeFormStore.getState();
-    if (currentPassword || newPassword || confirmPassword) {
-      handleOpenExitModal();
-      return;
-    }
-    onClose();
-  };
-
   return (
     <Modal modalType="center">
       <section className="flex justify-between self-stretch">
         <h1 className="title-1 text-grey-900">비밀번호 변경</h1>
-        <button onClick={handleClose}>
+        <button onClick={onClose}>
           <CloseIcon />
         </button>
       </section>
@@ -236,7 +205,7 @@ export const PasswordChangeModal = ({
           colorType="tertiary"
           variant="text"
           size="medium"
-          onClick={handleClose}
+          onClick={onClose}
         >
           취소
         </Button>
