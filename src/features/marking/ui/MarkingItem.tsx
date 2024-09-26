@@ -25,7 +25,7 @@ function formatDate(dateString: string): string {
 type MarkingItemProps = {
   showRegion?: boolean;
   onRegionClick?: () => void;
-} & Marking;
+} & Omit<Marking, "markingId" | "isVisible" | "isTempSaved" | "userId">;
 
 export const MarkingItem = ({
   showRegion = true,
