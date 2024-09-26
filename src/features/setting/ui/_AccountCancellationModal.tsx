@@ -1,17 +1,14 @@
-import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
-import { CancellationCheckModal } from "./_CancellactionCheckModal";
+import { useCancellationCheckModal } from "../lib";
 
 export const AccountCancellationModal = ({
   onClose,
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const { handleOpen, onClose: onCloseCancellationCheckModal } = useModal(
-    () => <CancellationCheckModal onClose={onCloseCancellationCheckModal} />,
-  );
+  const handleOpenCancellationCheckModal = useCancellationCheckModal();
 
   return (
     // TODO FormModal 생성 되면 적용하기
@@ -38,7 +35,7 @@ export const AccountCancellationModal = ({
             variant="filled"
             size="large"
             className="btn-2"
-            onClick={handleOpen}
+            onClick={handleOpenCancellationCheckModal}
           >
             다음
           </Button>

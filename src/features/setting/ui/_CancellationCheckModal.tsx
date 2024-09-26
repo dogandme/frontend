@@ -1,8 +1,7 @@
 import { PasswordInput } from "@/entities/auth/ui";
-import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon, InfoIcon } from "@/shared/ui/icon";
-import { ExitConfirmModal, Modal } from "@/shared/ui/modal";
+import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { useAccountCancellationFormStore } from "../store";
 
@@ -66,34 +65,6 @@ export const CancellationCheckModal = ({
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const resetCancellationForm = useAccountCancellationFormStore(
-    (state) => state.reset,
-  );
-
-  // ExitModal 이 Confirm 되면 발생 할 이벤트 핸들러
-  const handleExitCancellationModal = () => {
-    resetCancellationForm();
-    onCloseExitModal();
-    onClose();
-  };
-
-  const { handleOpen, onClose: onCloseExitModal } = useModal(() => (
-    <ExitConfirmModal
-      onConfirm={handleExitCancellationModal}
-      onClose={onCloseExitModal}
-    />
-  ));
-
-  // CancellationCheckModal X 아이콘이나 취소 버튼이 클릭 시 호출 되는 이벤트 핸들러
-  const handleClose = () => {
-    const { password } = useAccountCancellationFormStore.getState();
-    if (password) {
-      handleOpen();
-      return;
-    }
-    onClose();
-  };
-
   return (
     // TODO FormModal 생성 되면 적용하기
     <Modal modalType="center">
@@ -102,7 +73,7 @@ export const CancellationCheckModal = ({
         <h1 className="text-grey-900 title-1">비밀번호 확인</h1>
         <button
           className="px-[0.3125rem]"
-          onClick={handleClose}
+          onClick={onClose}
           aria-label="비밀번호 확인 모달 닫기"
         >
           <CloseIcon />
@@ -126,7 +97,7 @@ export const CancellationCheckModal = ({
           colorType="tertiary"
           variant="text"
           size="medium"
-          onClick={handleClose}
+          onClick={onClose}
         >
           취소
         </Button>
