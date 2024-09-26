@@ -70,6 +70,20 @@ export const CancellationCheckModal = ({
     (state) => state.reset,
   );
 
+  // ExitModal 이 Confirm 되면 발생 할 이벤트 핸들러
+  const handleExitCancellationModal = () => {
+    resetCancellationForm();
+    onCloseExitModal();
+    onClose();
+  };
+
+  const { handleOpen, onClose: onCloseExitModal } = useModal(() => (
+    <ExitConfirmModal
+      onConfirm={handleExitCancellationModal}
+      onClose={onCloseExitModal}
+    />
+  ));
+
   // CancellationCheckModal X 아이콘이나 취소 버튼이 클릭 시 호출 되는 이벤트 핸들러
   const handleClose = () => {
     const { password } = useAccountCancellationFormStore.getState();
@@ -79,20 +93,6 @@ export const CancellationCheckModal = ({
     }
     onClose();
   };
-
-  // ExitModal 이 Confirm 되면 발생 할 이벤트 핸들러
-  const onExitCancellationModal = () => {
-    resetCancellationForm();
-    onCloseExitModal();
-    onClose();
-  };
-
-  const { handleOpen, onClose: onCloseExitModal } = useModal(() => (
-    <ExitConfirmModal
-      onConfirm={onExitCancellationModal}
-      onClose={onCloseExitModal}
-    />
-  ));
 
   return (
     // TODO FormModal 생성 되면 적용하기

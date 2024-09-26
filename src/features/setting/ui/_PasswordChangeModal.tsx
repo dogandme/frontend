@@ -179,6 +179,21 @@ export const PasswordChangeModal = ({
   const resetPasswordChangeForm = usePasswordChangeFormStore(
     (state) => state.reset,
   );
+
+  // ExitModal 이 Confirm 되면 발생 할 이벤트 핸들러
+  const handleExitPasswordChangeModal = () => {
+    resetPasswordChangeForm();
+    onClose();
+  };
+
+  const { handleOpen: handleOpenExitModal, onClose: onCloseExitModal } =
+    useModal(() => (
+      <ExitConfirmModal
+        onClose={onCloseExitModal}
+        onConfirm={handleExitPasswordChangeModal}
+      />
+    ));
+
   // PasswordChangeModal X 아이콘이나 취소 버튼이 클릭 시 호출 되는 이벤트 핸들러
   const handleClose = () => {
     const { currentPassword, newPassword, confirmPassword } =
@@ -189,19 +204,6 @@ export const PasswordChangeModal = ({
     }
     onClose();
   };
-
-  // ExitModal 이 Confirm 되면 발생 할 이벤트 핸들러
-  const onExitPasswordChangeModal = () => {
-    resetPasswordChangeForm();
-    onClose();
-  };
-  const { handleOpen: handleOpenExitModal, onClose: onCloseExitModal } =
-    useModal(() => (
-      <ExitConfirmModal
-        onClose={onCloseExitModal}
-        onConfirm={onExitPasswordChangeModal}
-      />
-    ));
 
   return (
     <Modal modalType="center">
