@@ -1,6 +1,6 @@
 import { MarkingListRequest } from "../api";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const MARKING_REQUEST_URL = {
   SEARCH_MARKING: ({

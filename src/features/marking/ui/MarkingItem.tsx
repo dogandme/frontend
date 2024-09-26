@@ -10,6 +10,7 @@ import {
 } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Marking } from "../api";
+import { API_BASE_URL } from "../contants";
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -75,7 +76,11 @@ export const MarkingItem = ({
       )}
 
       <div className="flex justify-between items-center gap-1 flex-1">
-        <img className="w-8 h-8 rounded-2xl" src={pet.profile} alt={pet.name} />
+        <img
+          className="w-8 h-8 rounded-2xl"
+          src={`${API_BASE_URL}/${pet.profile}`}
+          alt={pet.name}
+        />
         <span className="title-3 text-grey-700">{nickName}</span>
         <DividerLine axis="col" />
         <span className="flex-1 body-2 text-grey-500">{pet.name}</span>
@@ -96,7 +101,7 @@ export const MarkingItem = ({
         {images.map(({ imageUrl, id }) => (
           <ImgSlider.ImgItem
             key={id}
-            src={imageUrl}
+            src={`${API_BASE_URL}/${imageUrl}`}
             alt={`${pet.name}-marking-image-${id}`}
           />
         ))}
