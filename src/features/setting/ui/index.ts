@@ -5,3 +5,4 @@ export * from "./Notification";
 export * from "./TermOfService";
 export * from "./Report";
 export * from "./LogoutButton";
+export * from "./Account";

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   AccountCancellation,
   PasswordChangeButton,
-} from "@/features/setting/ui/Account";
+} from "@/features/setting/ui";
 import { AccountEmail } from "@/entities/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
