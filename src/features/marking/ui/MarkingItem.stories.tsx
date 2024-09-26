@@ -71,7 +71,7 @@ const meta: Meta<typeof MarkingItem> = {
   },
   args: {
     pet: {
-      profile: "https://via.placeholder.com/150",
+      profile: "",
       name: "펫 이름",
       petId: 1,
     },
@@ -79,7 +79,7 @@ const meta: Meta<typeof MarkingItem> = {
     images: [
       {
         id: 1,
-        imageUrl: "https://via.placeholder.com/150",
+        imageUrl: "",
         lank: 1,
         regDt: "2024-09-12T08:20:18.087+00:00",
       },
@@ -100,26 +100,3 @@ export default meta;
 type Story = StoryObj<typeof MarkingItem>;
 
 export const Default: Story = {};
-
-export const WithMarkingList: Story = {
-  parameters: {
-    msw: [...markingModalHandlers],
-  },
-  render: () => {
-    /* eslint-disable*/
-    const { data } = useGetMarkingList({
-      southBottomLat: 35.520204401760736,
-      northTopLat: 35.545047500080756,
-      southLeftLng: 129.32615169340926,
-      northRightLng: 129.32615169340926,
-    });
-
-    return (
-      <MarkingList>
-        {data?.map((marking) => (
-          <MarkingItem key={marking.markingId} {...marking} />
-        ))}
-      </MarkingList>
-    );
-  },
-};
