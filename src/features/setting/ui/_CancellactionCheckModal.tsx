@@ -95,11 +95,16 @@ export const CancellationCheckModal = ({
   ));
 
   return (
+    // TODO FormModal 생성 되면 적용하기
     <Modal modalType="center">
       {/* 상단 네비게이션 바 */}
       <div className="flex self-stretch justify-between">
         <h1 className="text-grey-900 title-1">비밀번호 확인</h1>
-        <button className="px-[0.3125rem]" onClick={handleClose}>
+        <button
+          className="px-[0.3125rem]"
+          onClick={handleClose}
+          aria-label="비밀번호 확인 모달 닫기"
+        >
           <CloseIcon />
         </button>
       </div>
