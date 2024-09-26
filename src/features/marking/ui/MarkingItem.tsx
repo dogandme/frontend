@@ -79,7 +79,7 @@ export const MarkingItem = ({
         <img
           className="w-8 h-8 rounded-2xl"
           src={`${API_BASE_URL}/${pet.profile}`}
-          alt={pet.name}
+          alt={`${pet.name}-profile`}
         />
         <span className="title-3 text-grey-700">{nickName}</span>
         <DividerLine axis="col" />
