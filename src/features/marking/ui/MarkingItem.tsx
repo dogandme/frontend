@@ -98,13 +98,15 @@ export const MarkingItem = ({
       </div>
 
       <ImgSlider>
-        {images.map(({ imageUrl, id }) => (
-          <ImgSlider.ImgItem
-            key={id}
-            src={`${API_BASE_URL}/${imageUrl}`}
-            alt={`${pet.name}-marking-image-${id}`}
-          />
-        ))}
+        {images
+          .sort((a, b) => a.lank - b.lank)
+          .map(({ imageUrl, id }) => (
+            <ImgSlider.ImgItem
+              key={id}
+              src={`${API_BASE_URL}/${imageUrl}`}
+              alt={`${pet.name}-marking-image-${id}`}
+            />
+          ))}
       </ImgSlider>
 
       <div className="flex justify-between">
