@@ -122,5 +122,7 @@ export const useGetMarkingList = ({
         northRightLng,
       }),
     select: (data) => data.content,
+    enabled:
+      !!southBottomLat && !!northTopLat && !!southLeftLng && !!northRightLng,
   });
 };
