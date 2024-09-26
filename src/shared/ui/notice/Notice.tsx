@@ -1,5 +1,5 @@
 interface NoticeProps {
-  title?: React.ReactNode;
+  title?: string | JSX.Element;
   children: React.ReactNode | [React.ReactNode, React.ReactNode];
   className?: string;
 }
