@@ -1,6 +1,9 @@
 import { http, HttpResponse, PathParams } from "msw";
 import { SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MAP_ENDPOINT } from "@/features/map/constants";
+import { MarkingListRequest } from "@/features/marking/api";
+// data
+import markingListData from "./data/markingList.json";
 
 export const signUpByEmailHandlers = [
   http.post<
@@ -160,6 +163,35 @@ export const markingModalHandlers = [
       message: "success",
     });
   }),
+
+  http.get<{
+    [K in keyof Omit<MarkingListRequest, "token">]: string;
+  }>(
+    `${import.meta.env.VITE_API_BASE_URL}/markings/search`,
+    async ({ request }) => {
+      const token = request.headers.get("Authorization");
+
+      if (token) {
+        return HttpResponse.json(
+          {
+            code: 200,
+            message: "success",
+            content: markingListData.member,
+          },
+          { status: 200, statusText: "success" },
+        );
+      }
+
+      return HttpResponse.json(
+        {
+          code: 200,
+          message: "success",
+          content: markingListData.notMember,
+        },
+        { status: 200, statusText: "success" },
+      );
+    },
+  ),
 ];
 
 // * 나중에 msw 사용을 대비하여 만들었습니다.

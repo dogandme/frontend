@@ -1,0 +1,630 @@
+{
+  "notMember": [
+    {
+      "markingId": 27,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:34.734+00:00",
+      "userId": 2,
+      "nickName": "얏호",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 89,
+          "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:34.744+00:00"
+        },
+        {
+          "id": 150,
+          "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
+          "lank": 1,
+          "regDt": "2024-09-20T14:18:34.744+00:00"
+        },
+        {
+          "id": 151,
+          "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
+          "lank": 2,
+          "regDt": "2024-09-20T14:18:34.744+00:00"
+        },
+        {
+          "id": 152,
+          "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
+          "lank": 3,
+          "regDt": "2024-09-20T14:18:34.744+00:00"
+        },
+        {
+          "id": 153,
+          "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
+          "lank": 4,
+          "regDt": "2024-09-20T14:18:34.744+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 28,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:35.381+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 90,
+          "imageUrl": "703f4c0d-62a1-4620-a190-507b49ef74fc.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:35.387+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 29,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:35.912+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 91,
+          "imageUrl": "5914fad3-31ee-4030-aff1-e46f5886b7df.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:35.917+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 30,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:36.354+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 92,
+          "imageUrl": "52af8da9-8084-452f-8f98-db9f716f62b1.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:36.359+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 31,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:36.866+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 93,
+          "imageUrl": "3dd38af6-4ac8-4b10-9bf5-eb50494fb57c.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:36.874+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 32,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:37.293+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 94,
+          "imageUrl": "612ef915-acb8-47e1-8227-ed79fc224dd2.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:37.299+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 33,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:37.842+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 95,
+          "imageUrl": "a1cbddf0-0b49-49fb-b918-c3816bd0b66f.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:37.854+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 34,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:38.355+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 96,
+          "imageUrl": "66fca740-7958-482e-b8e2-f0ee97bda865.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:38.361+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 35,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:38.860+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 97,
+          "imageUrl": "e594aa32-278e-40d3-9bbe-e61d67e0da60.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:38.867+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 36,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:39.397+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 98,
+          "imageUrl": "44295ba4-16f7-48e5-883b-e84284769fd9.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:39.402+00:00"
+        }
+      ]
+    }
+  ],
+  "member": [
+    {
+      "markingId": 26,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:33.890+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 88,
+          "imageUrl": "2c077b5f-1983-46bf-ae0e-d8df37698488.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:33.970+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 27,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:34.734+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 89,
+          "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:34.744+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 28,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:35.381+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 90,
+          "imageUrl": "703f4c0d-62a1-4620-a190-507b49ef74fc.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:35.387+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 29,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:35.912+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 91,
+          "imageUrl": "5914fad3-31ee-4030-aff1-e46f5886b7df.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:35.917+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 30,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:36.354+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 92,
+          "imageUrl": "52af8da9-8084-452f-8f98-db9f716f62b1.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:36.359+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 31,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:36.866+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 93,
+          "imageUrl": "3dd38af6-4ac8-4b10-9bf5-eb50494fb57c.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:36.874+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 32,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:37.293+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 94,
+          "imageUrl": "612ef915-acb8-47e1-8227-ed79fc224dd2.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:37.299+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 33,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:37.842+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 95,
+          "imageUrl": "a1cbddf0-0b49-49fb-b918-c3816bd0b66f.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:37.854+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 34,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:38.355+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 96,
+          "imageUrl": "66fca740-7958-482e-b8e2-f0ee97bda865.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:38.361+00:00"
+        }
+      ]
+    },
+    {
+      "markingId": 35,
+      "region": "sky",
+      "content": "안녕하salgs;al;glsa세요",
+      "isVisible": "PUBLIC",
+      "regDt": "2024-09-20T14:18:38.860+00:00",
+      "userId": 2,
+      "nickName": "sky",
+      "isOwner": true,
+      "isTempSaved": false,
+      "lat": 35.520204401760736,
+      "lng": 129.32615169340926,
+      "countData": {
+        "likedCount": 0,
+        "savedCount": 0
+      },
+      "pet": {
+        "petId": 2,
+        "name": "test1",
+        "profile": "994512f3-811e-4a16-a0c4-70f858d42146.jpeg"
+      },
+      "images": [
+        {
+          "id": 97,
+          "imageUrl": "e594aa32-278e-40d3-9bbe-e61d67e0da60.jpeg",
+          "lank": 0,
+          "regDt": "2024-09-20T14:18:38.867+00:00"
+        }
+      ]
+    }
+  ]
+}
