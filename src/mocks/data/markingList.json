@@ -7,7 +7,7 @@
       "isVisible": "PUBLIC",
       "regDt": "2024-09-20T14:18:34.734+00:00",
       "userId": 2,
-      "nickName": "sky",
+      "nickName": "얏호",
       "isOwner": true,
       "isTempSaved": false,
       "lat": 35.520204401760736,
@@ -26,6 +26,30 @@
           "id": 89,
           "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
           "lank": 0,
+          "regDt": "2024-09-20T14:18:34.744+00:00"
+        },
+        {
+          "id": 150,
+          "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
+          "lank": 1,
+          "regDt": "2024-09-20T14:18:34.744+00:00"
+        },
+        {
+          "id": 151,
+          "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
+          "lank": 2,
+          "regDt": "2024-09-20T14:18:34.744+00:00"
+        },
+        {
+          "id": 152,
+          "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
+          "lank": 3,
+          "regDt": "2024-09-20T14:18:34.744+00:00"
+        },
+        {
+          "id": 153,
+          "imageUrl": "20d417cb-bc2d-4a3d-80d7-b372eeea5a0b.jpeg",
+          "lank": 4,
           "regDt": "2024-09-20T14:18:34.744+00:00"
         }
       ]
