@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  AccountCancellation,
+  AccountCancellationButton,
   PasswordChangeButton,
 } from "@/features/setting/ui";
 import { AccountEmail } from "@/entities/setting/ui";
@@ -33,7 +33,7 @@ export const AccountManagementPage = () => {
         <AccountEmail />
         <PasswordChangeButton />
         <DividerLine axis="row" />
-        <AccountCancellation />
+        <AccountCancellationButton />
       </section>
     </>
   );

@@ -24,7 +24,7 @@ export const PasswordChangeButton = () => {
 };
 
 // TODO 계정 탈퇴 기능은 기획 완성 후 추가하기
-export const AccountCancellation = () => {
+export const AccountCancellationButton = () => {
   const { handleOpen, onClose } = useModal(() => (
     <AccountCancellationModal onClose={onClose} />
   ));
