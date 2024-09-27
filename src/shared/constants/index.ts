@@ -115,3 +115,37 @@ export const ROUTER_PATH = {
   ACCOUNT: "/my-page/setting/manage-account",
   MODIFY_MY_INFO: "/my-page/setting/modify-userinfo",
 } as const;
+
+export const genderOptionList = [
+  {
+    value: "MALE",
+    name: "남자",
+  },
+  {
+    value: "FEMALE",
+    name: "여자",
+  },
+] as const;
+
+export const ageRangeOptionList = [
+  {
+    value: 10,
+    name: "10대",
+  },
+  {
+    value: 20,
+    name: "20~30대",
+  },
+  {
+    value: 30,
+    name: "30~40대",
+  },
+  {
+    value: 40,
+    name: "50~60대",
+  },
+  {
+    value: 50,
+    name: "60대 이상",
+  },
+] as const;

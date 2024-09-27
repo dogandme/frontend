@@ -13,40 +13,6 @@ export const characterList = [
   "까칠한",
 ] as const;
 
-export const genderOptionList = [
-  {
-    value: "MALE",
-    name: "남자",
-  },
-  {
-    value: "FEMALE",
-    name: "여자",
-  },
-] as const;
-
-export const ageRangeOptionList = [
-  {
-    value: 10,
-    name: "10대",
-  },
-  {
-    value: 20,
-    name: "20~30대",
-  },
-  {
-    value: 30,
-    name: "30~40대",
-  },
-  {
-    value: 40,
-    name: "50~60대",
-  },
-  {
-    value: 50,
-    name: "60대 이상",
-  },
-] as const;
-
 export const dogBreeds = [
   "해당하는 품종 없음",
   "가스콘 세인트 종",
