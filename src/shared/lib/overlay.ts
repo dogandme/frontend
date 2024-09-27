@@ -10,13 +10,15 @@ type UseOverlay = (
   isOpen: boolean;
 };
 
+const generateId = () => window.crypto.getRandomValues(new Uint32Array(1))[0];
+
 export const useOverlay: UseOverlay = (
   createOverlayComponent,
   options = {},
 ) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { disableInteraction = true, beforeClose, afterClose } = options;
-  const id = Math.random();
+  const id = generateId();
 
   const addOverlay = useOverlayStore((state) => state.addOverlay);
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
