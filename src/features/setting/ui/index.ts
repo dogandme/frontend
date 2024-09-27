@@ -1,4 +1,4 @@
-export * from "./EditMyInfo";
+export * from "./ModifyMyInfo";
 export * from "./AccountManagement";
 export * from "./MyActivity";
 export * from "./Notification";
