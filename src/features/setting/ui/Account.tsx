@@ -13,12 +13,9 @@ export const PasswordChangeButton = () => {
       onClick={handleOpenPasswordChangeModal}
     >
       <p>비밀번호 변경</p>
-      <div className="flex">
-        <span className="text-grey-700 body-2">●●●●●●●●</span>
-        <span className="text-grey-500">
-          <ArrowRightIcon />
-        </span>
-      </div>
+      <span className="text-grey-500">
+        <ArrowRightIcon />
+      </span>
     </button>
   );
 };
