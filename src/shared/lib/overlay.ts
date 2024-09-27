@@ -10,19 +10,24 @@ type UseOverlay = (
   isOpen: boolean;
 };
 
+const generateId = () => window.crypto.getRandomValues(new Uint32Array(1))[0];
+
 export const useOverlay: UseOverlay = (
   createOverlayComponent,
   options = {},
 ) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { disableInteraction = true, beforeClose, afterClose } = options;
-  const id = new Date().getTime(); // 커스텀 훅이 호출 될 때 마다 유일한 id를 생성합니다.
+  const id = generateId();
 
   const addOverlay = useOverlayStore((state) => state.addOverlay);
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
 
   const onClose = async () => {
-    await beforeClose?.();
+    const stopCloseFlag = await beforeClose?.();
+    if (stopCloseFlag) {
+      return;
+    }
     removeOverlay(id);
     setIsOpen(false);
     await afterClose?.();

@@ -3,7 +3,7 @@ import { Button } from "../button";
 import { CloseIcon } from "../icon";
 import { Modal } from "./Modal";
 
-interface ConfirmModalProps {
+export interface ConfirmModalProps {
   onConfirm?: () => void | Promise<void>;
   onClose: ReturnType<typeof useOverlay>["onClose"];
   children: React.ReactNode;

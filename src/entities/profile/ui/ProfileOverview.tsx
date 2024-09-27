@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
+import { DividerLine } from "@/shared/ui/divider";
 import { EditIcon, DropDownIcon } from "@/shared/ui/icon";
 
 // TODO alt 추가하기
@@ -31,7 +32,7 @@ export const ProfileInfo = ({
         <span>
           팔로워 <span className="text-grey-900">{follower}</span>
         </span>
-        <div className="w-[1px] h-3 bg-grey-200"></div>
+        <DividerLine axis="col" />
         <span>
           팔로잉 <span className="text-grey-900">{following}</span>
         </span>

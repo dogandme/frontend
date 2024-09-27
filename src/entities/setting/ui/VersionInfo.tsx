@@ -1,5 +1,4 @@
-const settingClassName =
-  "py-2 flex justify-between w-full text-grey-700 title-2";
+import { settingClassName } from "./setting.styles";
 
 // 버전 정보
 export const VersionInfo = () => (
