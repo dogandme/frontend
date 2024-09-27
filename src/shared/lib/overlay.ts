@@ -22,8 +22,8 @@ export const useOverlay: UseOverlay = (
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
 
   const onClose = async () => {
-    const flag = await beforeClose?.();
-    if (flag) {
+    const stopCloseFlag = await beforeClose?.();
+    if (stopCloseFlag) {
       return;
     }
     removeOverlay(id);
