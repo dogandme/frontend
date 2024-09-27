@@ -1,5 +1,8 @@
+import { useState } from "react";
+import { genderOptionList, ageRangeOptionList } from "@/shared/constants";
 import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon, CancelIcon } from "@/shared/ui/icon";
+import { Select } from "@/shared/ui/select";
 import { settingClassName } from "./setting.styles";
 
 export const ChangeNickNameButton = () => {
@@ -17,30 +20,94 @@ export const ChangeNickNameButton = () => {
 };
 
 export const ChangeGenderButton = () => {
+  // TODO userInfo Store 나오면 스토어에서 가져오기
+  const [gender, setGender] = useState("FEMALE");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const selectedName = genderOptionList.find(
+    ({ value }) => value === gender,
+  )?.name;
+
   return (
-    <button className={settingClassName}>
-      <p>성별 변경</p>
-      <p className="flex items-center">
-        <span className="text-grey-700">여자</span>
-        <span className="text-grey-500">
-          <ArrowRightIcon />
-        </span>
-      </p>
-    </button>
+    <>
+      <button className={settingClassName} onClick={() => setIsOpen(true)}>
+        <p>성별 변경</p>
+        <p className="flex items-center">
+          <span className="text-grey-700">{selectedName}</span>
+          <span className="text-grey-500">
+            <ArrowRightIcon />
+          </span>
+        </p>
+      </button>
+      <Select
+        id="gender-select"
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      >
+        <Select.BottomSheet>
+          <Select.OptionList>
+            {genderOptionList.map(({ value, name }) => {
+              return (
+                <Select.Option
+                  key={value}
+                  value={value}
+                  isSelected={value === gender}
+                  onClick={() => setGender(value)}
+                >
+                  {name}
+                </Select.Option>
+              );
+            })}
+          </Select.OptionList>
+        </Select.BottomSheet>
+      </Select>
+    </>
   );
 };
 
 export const ChangeAgeButton = () => {
+  // TODO store 나오면 변경하기
+  const [ageRange, setAgeRange] = useState(20);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const selectedName = ageRangeOptionList.find(
+    ({ value }) => value === ageRange,
+  )?.name;
+
   return (
-    <button className={settingClassName}>
-      <p>나이대 변경</p>
-      <p className="flex items-center">
-        <span className="text-grey-700">20대</span>
-        <span className="text-grey-500">
-          <ArrowRightIcon />
-        </span>
-      </p>
-    </button>
+    <>
+      <button className={settingClassName} onClick={() => setIsOpen(true)}>
+        <p>나이대 변경</p>
+        <p className="flex items-center">
+          <span className="text-grey-700">{selectedName}</span>
+          <span className="text-grey-500">
+            <ArrowRightIcon />
+          </span>
+        </p>
+      </button>
+      <Select
+        id="age-range-select"
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      >
+        <Select.BottomSheet>
+          <Select.OptionList>
+            {ageRangeOptionList.map(({ value, name }) => {
+              return (
+                <Select.Option
+                  key={value}
+                  value={value}
+                  isSelected={value === ageRange}
+                  onClick={() => setAgeRange(value)}
+                >
+                  {name}
+                </Select.Option>
+              );
+            })}
+          </Select.OptionList>
+        </Select.BottomSheet>
+      </Select>
+    </>
   );
 };
 
