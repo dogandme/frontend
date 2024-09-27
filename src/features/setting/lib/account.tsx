@@ -34,9 +34,7 @@ export const useCancellationCheckModal = () => {
         const { password } = useAccountCancellationFormStore.getState();
         if (password) {
           handleOpenExitConfirmModal();
-          throw new Error(
-            "입력 중인 패스워드가 존재하여 ConfirmModal을 열었습니다.",
-          );
+          return true;
         }
       },
     },
@@ -73,7 +71,7 @@ export const useChangePasswordModal = () => {
 
         if (currentPassword || newPassword || confirmPassword) {
           handleOpenExitConfirmModal();
-          throw new Error("입력 중인 폼이 존재하여 ConfirmModal을 열었습니다.");
+          return true;
         }
       },
     },

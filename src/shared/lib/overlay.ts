@@ -22,15 +22,13 @@ export const useOverlay: UseOverlay = (
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
 
   const onClose = async () => {
-    try {
-      await beforeClose?.();
-      removeOverlay(id);
-      setIsOpen(false);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      await afterClose?.();
+    const flag = await beforeClose?.();
+    if (flag) {
+      return;
     }
+    removeOverlay(id);
+    setIsOpen(false);
+    await afterClose?.();
   };
 
   const handleOpen = async () => {
