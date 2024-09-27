@@ -141,19 +141,26 @@ const PostVisibilitySelect = () => {
   );
 };
 
+interface ImageUrl {
+  url: string;
+  lastModified: number;
+  name: string;
+}
+
 const PhotoInput = () => {
   const images = useMarkingFormStore((state) => state.images);
   const setImages = useMarkingFormStore((state) => state.setImages);
 
   const [inputKey, setInputKey] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  // imageUrls 는 이미지 파일을 렌더링 하기 위해 사용되며 lastModified 는 images 내부 파일들을
-  // 식별 하기 위한 식별자로 사용됩니다.
-  const imageUrls = images.map((image) => ({
-    url: URL.createObjectURL(image),
-    lastModified: image.lastModified,
-    name: image.name,
-  }));
+
+  const [imageUrls, setImageUrls] = useState<ImageUrl[]>(() =>
+    images.map((image) => ({
+      url: URL.createObjectURL(image),
+      lastModified: image.lastModified,
+      name: image.name,
+    })),
+  );
 
   const handleOpenAlbum = () => {
     inputRef.current?.click();
@@ -174,12 +181,19 @@ const PhotoInput = () => {
     };
 
     const _images = [...images];
+    const _imageUrls = [...imageUrls];
+
     for (const newFile of newFiles) {
       if (isImageAlreadyExist(newFile)) {
         continue;
       }
 
       _images.push(newFile);
+      _imageUrls.push({
+        url: URL.createObjectURL(newFile),
+        lastModified: newFile.lastModified,
+        name: newFile.name,
+      });
 
       if (_images.length > 5) {
         throw new Error(MarkingModalError.maxPhotoCount);
@@ -187,10 +201,15 @@ const PhotoInput = () => {
     }
 
     setImages([..._images]);
+    setImageUrls([..._imageUrls]);
   };
 
   const handleRemoveImage = (lastModified: number) => {
     setImages(images.filter((image) => image.lastModified !== lastModified));
+    setImageUrls(
+      imageUrls.filter((image) => image.lastModified !== lastModified),
+    );
+
     setInputKey((prev) => prev + 1);
   };
 
