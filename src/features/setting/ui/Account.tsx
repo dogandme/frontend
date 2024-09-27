@@ -1,5 +1,7 @@
+import { useModal } from "@/shared/lib";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { useCancellationCheckModal, useChangePasswordModal } from "../lib";
+import { useChangePasswordModal } from "../lib";
+import { AccountCancellationModal } from "./_AccountCancellationModal";
 import { settingClassName } from "./setting.styles";
 
 export const PasswordChangeButton = () => {
@@ -23,13 +25,12 @@ export const PasswordChangeButton = () => {
 
 // TODO 계정 탈퇴 기능은 기획 완성 후 추가하기
 export const AccountCancellation = () => {
-  const handleOpenCancellationCheckModal = useCancellationCheckModal();
+  const { handleOpen, onClose } = useModal(() => (
+    <AccountCancellationModal onClose={onClose} />
+  ));
 
   return (
-    <button
-      className={settingClassName}
-      onClick={handleOpenCancellationCheckModal}
-    >
+    <button className={settingClassName} onClick={handleOpen}>
       탈퇴하기
     </button>
   );
