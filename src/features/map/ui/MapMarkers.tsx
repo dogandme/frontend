@@ -36,7 +36,7 @@ export const PinMarker = () => {
     northRightLng,
   });
 
-  if (!map || !markersInfo) return null;
+  if (!map || !markersInfo || !hasAllParams) return null;
 
   return markersInfo.map((markerInfo) => (
     <Pin
