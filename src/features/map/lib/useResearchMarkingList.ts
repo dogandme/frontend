@@ -30,9 +30,7 @@ export const useResearchMarkingList = () => {
       zoom: zoom.toString(),
     });
 
-    setTimeout(() => {
-      setIsLastSearchedLocation(true);
-    }, 0);
+    setIsLastSearchedLocation(true);
 
     queryClient.removeQueries({
       queryKey: ["markingList"],
