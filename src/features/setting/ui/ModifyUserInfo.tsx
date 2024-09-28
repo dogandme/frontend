@@ -35,6 +35,9 @@ export const ChangeNickNameButton = ({
   );
 };
 
+/**
+ * 바텀시트를 통해 store의 gender 값을 변경 합니다.
+ */
 export const ChangeGenderButton = ({
   store,
 }: {
@@ -82,6 +85,9 @@ export const ChangeGenderButton = ({
   );
 };
 
+/**
+ * 바텀시트를 통해 store의 age 값을 변경 합니다.
+ */
 export const ChangeAgeButton = ({
   store,
 }: {
@@ -129,6 +135,10 @@ export const ChangeAgeButton = ({
   );
 };
 
+/**
+ * RegionModal 을 통해 지역을 검색하고 외부에서 주입한 store 의 region 값을 추가하거나
+ * 해당 컴포넌트 내부에서 region 값을 삭제 합니다.
+ */
 export const ChangeRegionButton = ({
   store,
 }: {

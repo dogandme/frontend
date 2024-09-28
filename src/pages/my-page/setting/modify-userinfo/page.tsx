@@ -13,6 +13,7 @@ import { useAuthStore } from "@/shared/store";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const ModifyUserInfoPage = () => {
+  // 권한에 따라 사용자의 접근을 제한합니다.
   const role = useAuthStore((state) => state.role);
   const navigate = useNavigate();
   useEffect(() => {
@@ -39,7 +40,11 @@ export const ModifyUserInfoPage = () => {
     ],
   };
 
-  const store = createModifyUserInfoStore(initialState);
+  // modifyUserInfoFormStore 는 해당 페이지가 마운트 될 때 생성되는 store 입니다.
+  // userInfoStore에 저장된 상태 값을 초기 값으로 가지며 해당 페이지에서만 사용됩니다.
+  // 위와 같이 생성 한 이유는 해당 페이지에서만 form 의 역할로 사용되기 때문입니다.
+  // 페이지가 언마운트 될 시 가비지 컬렉터에 의해 메모리에서 제거 됩니다.
+  const modifyUserInfoFormStore = createModifyUserInfoStore(initialState);
 
   return (
     <>
@@ -47,10 +52,10 @@ export const ModifyUserInfoPage = () => {
         label={<h1 className="title-1 text-grey-900">내 정보 수정</h1>}
       />
       <section className="flex flex-col gap-4 px-4 py-4">
-        <ChangeNickNameButton store={store} />
-        <ChangeGenderButton store={store} />
-        <ChangeAgeButton store={store} />
-        <ChangeRegionButton store={store} />
+        <ChangeNickNameButton store={modifyUserInfoFormStore} />
+        <ChangeGenderButton store={modifyUserInfoFormStore} />
+        <ChangeAgeButton store={modifyUserInfoFormStore} />
+        <ChangeRegionButton store={modifyUserInfoFormStore} />
       </section>
     </>
   );
