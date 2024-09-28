@@ -5,7 +5,6 @@ import {
   SelectOpener,
   SignUpLandingModal,
 } from "@/entities/auth/ui";
-import { ageRangeOptionList, genderOptionList } from "@/shared/constants";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
 import { Badge } from "@/shared/ui/badge";
@@ -22,6 +21,7 @@ import {
   usePostDuplicateNickname,
   usePutUserInfoRegistration,
 } from "../api";
+import { ageRangeOptionList, genderOptionList } from "../constants";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
 import { RegionModal } from "./RegionModal";
