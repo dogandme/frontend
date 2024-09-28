@@ -10,7 +10,7 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const ModifyUserInfoPage = () => {
   // TODO userInfo Store 나오면 스토어에서 가져오기
-  const initialState: ModifyUserInfoFormState = {
+  const initialState: Omit<ModifyUserInfoFormState, "_nicknameInput"> = {
     nickname: "뽀송이",
     gender: "여자",
     age: "20대",

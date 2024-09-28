@@ -4,15 +4,20 @@ import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon, CancelIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { genderOptionList, ageRangeOptionList } from "../constants";
+import { useChangeNickNameModal } from "../lib/modifyUserInfi";
 import { useModifyUserInfoFormStore } from "../store";
 import { settingClassName } from "./setting.styles";
 
 export const ChangeNickNameButton = () => {
   const store = useModifyUserInfoFormStore();
   const nickname = useStore(store, (state) => state.nickname);
+  const handleOpenChangeNicknameModal = useChangeNickNameModal(store);
 
   return (
-    <button className={settingClassName}>
+    <button
+      className={settingClassName}
+      onClick={handleOpenChangeNicknameModal}
+    >
       <span>닉네임 변경</span>
       <span className="flex items-center">
         <span className="text-grey-700">{nickname}</span>
