@@ -1,16 +1,21 @@
 import { useState } from "react";
-import { genderOptionList, ageRangeOptionList } from "@/shared/constants";
+import { useStore } from "zustand";
 import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon, CancelIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
+import { genderOptionList, ageRangeOptionList } from "../constants";
+import { useModifyUserInfoFormStore } from "../store";
 import { settingClassName } from "./setting.styles";
 
 export const ChangeNickNameButton = () => {
+  const store = useModifyUserInfoFormStore();
+  const nickname = useStore(store, (state) => state.nickname);
+
   return (
     <button className={settingClassName}>
       <span>닉네임 변경</span>
       <span className="flex items-center">
-        <span className="text-grey-700">뽀송이</span>
+        <span className="text-grey-700">{nickname}</span>
         <span className="text-grey-500">
           <ArrowRightIcon />
         </span>
@@ -21,19 +26,18 @@ export const ChangeNickNameButton = () => {
 
 export const ChangeGenderButton = () => {
   // TODO userInfo Store 나오면 스토어에서 가져오기
-  const [gender, setGender] = useState("FEMALE");
-  const [isOpen, setIsOpen] = useState(false);
+  const store = useModifyUserInfoFormStore();
+  const gender = useStore(store, (state) => state.gender);
+  const setGender = useStore(store, (state) => state.setGender);
 
-  const selectedName = genderOptionList.find(
-    ({ value }) => value === gender,
-  )?.name;
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <button className={settingClassName} onClick={() => setIsOpen(true)}>
         <span>성별 변경</span>
         <span className="flex items-center">
-          <span className="text-grey-700">{selectedName}</span>
+          <span className="text-grey-700">{gender}</span>
           <span className="text-grey-500">
             <ArrowRightIcon />
           </span>
@@ -46,7 +50,7 @@ export const ChangeGenderButton = () => {
       >
         <Select.BottomSheet>
           <Select.OptionList>
-            {genderOptionList.map(({ value, name }) => {
+            {genderOptionList.map((value) => {
               return (
                 <Select.Option
                   key={value}
@@ -54,7 +58,7 @@ export const ChangeGenderButton = () => {
                   isSelected={value === gender}
                   onClick={() => setGender(value)}
                 >
-                  {name}
+                  {value}
                 </Select.Option>
               );
             })}
@@ -67,19 +71,18 @@ export const ChangeGenderButton = () => {
 
 export const ChangeAgeButton = () => {
   // TODO store 나오면 변경하기
-  const [ageRange, setAgeRange] = useState(20);
-  const [isOpen, setIsOpen] = useState(false);
+  const store = useModifyUserInfoFormStore();
+  const age = useStore(store, (state) => state.age);
+  const setAge = useStore(store, (state) => state.setAge);
 
-  const selectedName = ageRangeOptionList.find(
-    ({ value }) => value === ageRange,
-  )?.name;
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <button className={settingClassName} onClick={() => setIsOpen(true)}>
         <span>나이대 변경</span>
         <span className="flex items-center">
-          <span className="text-grey-700">{selectedName}</span>
+          <span className="text-grey-700">{age}</span>
           <span className="text-grey-500">
             <ArrowRightIcon />
           </span>
@@ -92,15 +95,15 @@ export const ChangeAgeButton = () => {
       >
         <Select.BottomSheet>
           <Select.OptionList>
-            {ageRangeOptionList.map(({ value, name }) => {
+            {ageRangeOptionList.map((value) => {
               return (
                 <Select.Option
                   key={value}
                   value={value}
-                  isSelected={value === ageRange}
-                  onClick={() => setAgeRange(value)}
+                  isSelected={value === age}
+                  onClick={() => setAge(value)}
                 >
-                  {name}
+                  {value}
                 </Select.Option>
               );
             })}
@@ -112,14 +115,8 @@ export const ChangeAgeButton = () => {
 };
 
 export const ChangeRegionButton = () => {
-  const address = [
-    "영등포동 2가",
-    "영등포동 3가",
-    "영등포동 4가",
-    "영등포동 5가",
-    "영등포동 6가",
-    "영등포동 7가",
-  ];
+  const store = useModifyUserInfoFormStore();
+  const regionList = useStore(store, (state) => state.regionList);
 
   return (
     <section>
@@ -130,14 +127,14 @@ export const ChangeRegionButton = () => {
         </span>
       </button>
       <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
-        {address.map((region) => (
-          <li className="flex flex-shrink-0" key={region}>
+        {regionList.map((value) => (
+          <li className="flex flex-shrink-0" key={value}>
             <ActionChip
               variant="outlined"
               trailingIcon={<CancelIcon width={20} height={20} />}
               isSelected={true}
             >
-              {region}
+              {value}
             </ActionChip>
           </li>
         ))}
