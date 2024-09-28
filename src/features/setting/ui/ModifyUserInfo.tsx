@@ -4,7 +4,7 @@ import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon, CancelIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { genderOptionList, ageRangeOptionList } from "../constants";
-import { useChangeNickNameModal } from "../lib/modifyUserInfi";
+import { useChangeNickNameModal } from "../lib/modal";
 import { useModifyUserInfoFormStore } from "../store";
 import { settingClassName } from "./setting.styles";
 

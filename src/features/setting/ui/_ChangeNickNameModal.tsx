@@ -1,4 +1,5 @@
 import { useStore } from "zustand";
+import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { FormModal } from "@/shared/ui/modal/FormModal";
 import type { ModifyUserInfoFormStore } from "../store";
@@ -31,15 +32,60 @@ const ChangeNickNameInput = ({
   );
 };
 
+const ChangeNickNameSave = ({ store, onClose }: ChangeNickNameModalProps) => {
+  const setNickname = useStore(store, (state) => state.setNickname);
+  const _isNickNameEmpty = useStore(store, (state) => state._isNickNameEmpty);
+  const _isNickNameValid = useStore(store, (state) => state._isNickNameValid);
+
+  const handleSave = async () => {
+    if (_isNickNameEmpty) {
+      throw new Error("닉네임을 입력해 주세요");
+    }
+    if (!_isNickNameValid) {
+      throw new Error("올바른 닉네임을 입력해 주세요");
+    }
+
+    setNickname(store.getState()._nicknameInput);
+    onClose();
+  };
+
+  return (
+    <Button
+      variant="filled"
+      colorType="primary"
+      size="medium"
+      onClick={handleSave}
+    >
+      저장
+    </Button>
+  );
+};
+
+const ChangeNickNameCancel = ({
+  onClose,
+}: Pick<ChangeNickNameModalProps, "onClose">) => (
+  <Button
+    colorType="tertiary"
+    size="medium"
+    variant="text"
+    type="button"
+    onClick={onClose}
+  >
+    취소
+  </Button>
+);
+
 export const ChangeNickNameModal = ({
   onClose,
   store,
 }: ChangeNickNameModalProps) => {
-  const setNickname = useStore(store, (state) => state.setNickname);
-  const handleConfirm = () => setNickname(store.getState()._nicknameInput);
-
   return (
-    <FormModal onClose={onClose} onConfirm={handleConfirm} title="닉네임 변경">
+    <FormModal
+      onClose={onClose}
+      title="닉네임 변경"
+      ConfirmButton={<ChangeNickNameSave store={store} onClose={onClose} />}
+      CloseButton={<ChangeNickNameCancel onClose={onClose} />}
+    >
       <ChangeNickNameInput store={store} />
     </FormModal>
   );
