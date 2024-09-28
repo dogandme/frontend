@@ -5,11 +5,14 @@ import { ArrowRightIcon, CancelIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { genderOptionList, ageRangeOptionList } from "../constants";
 import { useChangeNickNameModal } from "../lib/modal";
-import { useModifyUserInfoFormStore } from "../store";
+import { ModifyUserInfoFormStore } from "../store";
 import { settingClassName } from "./setting.styles";
 
-export const ChangeNickNameButton = () => {
-  const store = useModifyUserInfoFormStore();
+export const ChangeNickNameButton = ({
+  store,
+}: {
+  store: ModifyUserInfoFormStore;
+}) => {
   const nickname = useStore(store, (state) => state.nickname);
   const handleOpenChangeNicknameModal = useChangeNickNameModal(store);
 
@@ -29,9 +32,11 @@ export const ChangeNickNameButton = () => {
   );
 };
 
-export const ChangeGenderButton = () => {
-  // TODO userInfo Store 나오면 스토어에서 가져오기
-  const store = useModifyUserInfoFormStore();
+export const ChangeGenderButton = ({
+  store,
+}: {
+  store: ModifyUserInfoFormStore;
+}) => {
   const gender = useStore(store, (state) => state.gender);
   const setGender = useStore(store, (state) => state.setGender);
 
@@ -74,8 +79,11 @@ export const ChangeGenderButton = () => {
   );
 };
 
-export const ChangeAgeButton = () => {
-  const store = useModifyUserInfoFormStore();
+export const ChangeAgeButton = ({
+  store,
+}: {
+  store: ModifyUserInfoFormStore;
+}) => {
   const age = useStore(store, (state) => state.age);
   const setAge = useStore(store, (state) => state.setAge);
 
@@ -118,8 +126,11 @@ export const ChangeAgeButton = () => {
   );
 };
 
-export const ChangeRegionButton = () => {
-  const store = useModifyUserInfoFormStore();
+export const ChangeRegionButton = ({
+  store,
+}: {
+  store: ModifyUserInfoFormStore;
+}) => {
   const regionList = useStore(store, (state) => state.regionList);
 
   return (

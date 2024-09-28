@@ -1,4 +1,4 @@
-import { ModifyUserInfoFormStoreProvider } from "@/features/setting/store";
+import { createModifyUserInfoStore } from "@/features/setting/store";
 import type { ModifyUserInfoFormState } from "@/features/setting/store";
 import {
   ChangeAgeButton,
@@ -23,17 +23,19 @@ export const ModifyUserInfoPage = () => {
     ],
   };
 
+  const store = createModifyUserInfoStore(initialState);
+
   return (
-    <ModifyUserInfoFormStoreProvider initialState={initialState}>
+    <>
       <BackwardNavigationBar
         label={<h1 className="title-1 text-grey-900">내 정보 수정</h1>}
       />
       <section className="flex flex-col gap-4 px-4 py-4">
-        <ChangeNickNameButton />
-        <ChangeGenderButton />
-        <ChangeAgeButton />
-        <ChangeRegionButton />
+        <ChangeNickNameButton store={store} />
+        <ChangeGenderButton store={store} />
+        <ChangeAgeButton store={store} />
+        <ChangeRegionButton store={store} />
       </section>
-    </ModifyUserInfoFormStoreProvider>
+    </>
   );
 };
