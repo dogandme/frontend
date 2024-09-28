@@ -2,7 +2,7 @@ import { useStore } from "zustand";
 import { usePostDuplicateNickname } from "@/shared/api";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { FormModal } from "@/shared/ui/modal/FormModal";
+import { StackedButtonModal } from "@/shared/ui/modal/StackedButtonModal";
 import type { ModifyUserInfoFormStore } from "../store";
 
 interface ChangeNickNameModalProps {
@@ -116,13 +116,13 @@ export const ChangeNickNameModal = ({
   store,
 }: ChangeNickNameModalProps) => {
   return (
-    <FormModal
+    <StackedButtonModal
       onClose={onClose}
       title="닉네임 변경"
       ConfirmButton={<ChangeNickNameSave store={store} onClose={onClose} />}
       CloseButton={<ChangeNickNameCancel onClose={onClose} />}
     >
       <ChangeNickNameInput store={store} />
-    </FormModal>
+    </StackedButtonModal>
   );
 };
