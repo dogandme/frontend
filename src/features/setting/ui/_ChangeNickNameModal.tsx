@@ -15,6 +15,23 @@ const ChangeNickNameInput = ({
 }: Pick<ChangeNickNameModalProps, "store">) => {
   const _nicknameInput = useStore(store, (state) => state._nicknameInput);
   const _setNicknameInput = useStore(store, (state) => state._setNicknameInput);
+  const _setIsNickNameEmpty = useStore(
+    store,
+    (state) => state._setIsNickNameEmpty,
+  );
+  const _setIsNickNameValid = useStore(
+    store,
+    (state) => state._setIsNickNameValid,
+  );
+
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = target;
+    const regExp = /^[a-zA-Z0-9ㄱ-ㅎ가-힣]{1,20}$/;
+
+    _setNicknameInput(value);
+    _setIsNickNameEmpty(value === "");
+    _setIsNickNameValid(regExp.test(value));
+  };
 
   return (
     <Input
@@ -27,7 +44,7 @@ const ChangeNickNameInput = ({
       }
       maxLength={20}
       essential
-      onChange={(e) => _setNicknameInput(e.target.value)}
+      onChange={handleChange}
       value={_nicknameInput}
     />
   );
