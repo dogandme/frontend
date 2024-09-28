@@ -1,5 +1,8 @@
 import { useRef } from "react";
 import { StoreApi, useStore } from "zustand";
+import { useGetRegionByKeyword, useGetRegionByLatLng } from "@/shared/api";
+import { REGION_API_DEBOUNCE_DELAY, errorMessage } from "@/shared/constants";
+import { useRegionModalStore } from "@/shared/store";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
@@ -9,10 +12,6 @@ import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
-import { useGetRegionByKeyword, useGetRegionByLatLng } from "../../api/region";
-import { REGION_API_DEBOUNCE_DELAY } from "../../constants";
-import { errorMessage } from "../../constants";
-import { useRegionModalStore } from "../../store";
 
 interface Region {
   address: string;
