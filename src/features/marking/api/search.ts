@@ -104,10 +104,14 @@ export const useGetMarkingList = ({
   northTopLat,
   southLeftLng,
   northRightLng,
-}: MarkingListRequest) => {
+  hasAllParams,
+}: MarkingListRequest & {
+  hasAllParams: boolean;
+}) => {
   return useQuery<MarkingListResponse, Error, MarkingListResponse["content"]>({
     queryKey: [
       "markingList",
+      token,
       southBottomLat,
       northTopLat,
       southLeftLng,
@@ -123,6 +127,10 @@ export const useGetMarkingList = ({
       }),
     select: (data) => data.content,
     enabled:
-      !!southBottomLat && !!northTopLat && !!southLeftLng && !!northRightLng,
+      hasAllParams &&
+      !!southBottomLat &&
+      !!northTopLat &&
+      !!southLeftLng &&
+      !!northRightLng,
   });
 };
