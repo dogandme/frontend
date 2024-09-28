@@ -69,7 +69,7 @@ export const RegionModal = ({
             {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
             <SelectedRegionList externalFormStore={externalFormStore} />
             {/* 확인 버튼 */}
-            <RegionModalCloseButton
+            <RegionModalSaveButton
               onClose={handleRegionModalClose}
               externalFormStore={externalFormStore}
             />
@@ -338,7 +338,7 @@ const SelectedRegionList = ({
   );
 };
 
-const RegionModalCloseButton = ({
+const RegionModalSaveButton = ({
   onClose,
   externalFormStore,
 }: RegionModalProps) => {
