@@ -1,26 +1,23 @@
 import type { useOverlay } from "@/shared/lib";
-import { Button } from "../button";
 import { CloseIcon } from "../icon";
 import { Modal } from "./Modal";
 
 interface FormModalProps {
-  onConfirm?: () => void | Promise<void>;
   onClose: ReturnType<typeof useOverlay>["onClose"];
   children: React.ReactNode;
-  confirmText?: string;
-  closeText?: string;
   closeIconAriaLabel?: string;
   title?: string;
+  ConfirmButton: JSX.Element;
+  CloseButton?: JSX.Element;
 }
 
 export const FormModal = ({
-  onConfirm,
   onClose,
   closeIconAriaLabel = "확인창 닫기",
-  confirmText = "확인",
-  closeText = "취소",
   title = "",
   children,
+  ConfirmButton,
+  CloseButton,
 }: FormModalProps) => {
   const navClassName = title ? "flex justify-between" : "flex justify-end";
 
@@ -34,26 +31,8 @@ export const FormModal = ({
       </div>
       <section className="text-grey-700 body-2">{children}</section>
       <div className="flex flex-col gap-2 self-stretch">
-        <Button
-          variant="filled"
-          colorType="primary"
-          size="medium"
-          onClick={async () => {
-            await onConfirm?.();
-            await onClose();
-          }}
-        >
-          {confirmText}
-        </Button>
-        <Button
-          colorType="tertiary"
-          size="medium"
-          variant="text"
-          type="button"
-          onClick={onClose}
-        >
-          {closeText}
-        </Button>
+        {ConfirmButton}
+        {CloseButton}
       </div>
     </Modal>
   );
