@@ -8,13 +8,13 @@ import { settingClassName } from "./setting.styles";
 export const ChangeNickNameButton = () => {
   return (
     <button className={settingClassName}>
-      <p>닉네임 변경</p>
-      <p className="flex items-center">
+      <span>닉네임 변경</span>
+      <span className="flex items-center">
         <span className="text-grey-700">뽀송이</span>
         <span className="text-grey-500">
           <ArrowRightIcon />
         </span>
-      </p>
+      </span>
     </button>
   );
 };
@@ -31,13 +31,13 @@ export const ChangeGenderButton = () => {
   return (
     <>
       <button className={settingClassName} onClick={() => setIsOpen(true)}>
-        <p>성별 변경</p>
-        <p className="flex items-center">
+        <span>성별 변경</span>
+        <span className="flex items-center">
           <span className="text-grey-700">{selectedName}</span>
           <span className="text-grey-500">
             <ArrowRightIcon />
           </span>
-        </p>
+        </span>
       </button>
       <Select
         id="gender-select"
@@ -77,13 +77,13 @@ export const ChangeAgeButton = () => {
   return (
     <>
       <button className={settingClassName} onClick={() => setIsOpen(true)}>
-        <p>나이대 변경</p>
-        <p className="flex items-center">
+        <span>나이대 변경</span>
+        <span className="flex items-center">
           <span className="text-grey-700">{selectedName}</span>
           <span className="text-grey-500">
             <ArrowRightIcon />
           </span>
-        </p>
+        </span>
       </button>
       <Select
         id="age-range-select"
@@ -124,7 +124,7 @@ export const ChangeRegionButton = () => {
   return (
     <section>
       <button className={settingClassName}>
-        <p>동네 설정</p>
+        <span>동네 설정</span>
         <span className="text-grey-500">
           <ArrowRightIcon />
         </span>
