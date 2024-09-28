@@ -5,6 +5,11 @@ import {
   SelectOpener,
   SignUpLandingModal,
 } from "@/entities/auth/ui";
+import {
+  usePostDuplicateNickname,
+  DuplicateNicknameRequestData,
+  DuplicateNicknameResponse,
+} from "@/shared/api";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
 import { Badge } from "@/shared/ui/badge";
@@ -15,12 +20,7 @@ import { CancelIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
-import {
-  DuplicateNicknameRequestData,
-  DuplicateNicknameResponse,
-  usePostDuplicateNickname,
-  usePutUserInfoRegistration,
-} from "../api";
+import { usePutUserInfoRegistration } from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
