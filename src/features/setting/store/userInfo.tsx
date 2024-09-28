@@ -12,14 +12,8 @@ type AgeRange = "10대" | "20대" | "30대" | "40대" | "50대" | "60대 이상"
 type Region = string;
 type NickName = string;
 
-/**
- * _ 가 붙은 상태는 form 제출 시 사용되지 않는 상태 입니다.
- * _nicknameInput 은 ChangeNickName Modal 에서 지역적으로 사용되는 상태이지만
- * useModal 호출 당시 필요하기 때문에 전역 스토어로 관리 합니다.
- */
 export interface ModifyUserInfoFormState {
   nickname: NickName;
-  _nicknameInput: NickName;
   gender: Gender;
   age: AgeRange;
   regionList: Region[];
@@ -30,27 +24,50 @@ interface ModifyUserInfoFormAction {
   setGender: (gender: Gender) => void;
   setAge: (age: AgeRange) => void;
   setRegion: (region: Region[]) => void;
-  _setNicknameInput: (nickname: string) => void;
 }
+
+interface ChangeNickNameModalState {
+  _nicknameInput: NickName;
+  _isNickNameValid: boolean;
+  _isNickNameEmpty: boolean;
+}
+
+interface ChangeNickNameModalAction {
+  _setNicknameInput: (nickname: NickName) => void;
+  _setIsNickNameValid: (isValid: boolean) => void;
+  _setIsNickNameEmpty: (isEmpty: boolean) => void;
+}
+
+/**
+ * ModifyUserInfoFormState는 실제 서버 측으로 API 요청을 보낼 때 사용 되는 State 입니다.
+ * ChangeNickNameModalState는 닉네임 변경 모달에서 사용되는 State 입니다.
+ */
+type State = ModifyUserInfoFormState & ChangeNickNameModalState;
+type Action = ModifyUserInfoFormAction & ChangeNickNameModalAction;
 
 export type ModifyUserInfoFormStore = ReturnType<
   typeof createModifyUserInfoStore
 >;
 
-const createModifyUserInfoStore = (
-  initialState: Omit<ModifyUserInfoFormState, "_nicknameInput">,
-) => {
-  const store = createStore<
-    ModifyUserInfoFormState & ModifyUserInfoFormAction
-  >()((set) => ({
+const createModifyUserInfoStore = (initialState: ModifyUserInfoFormState) => {
+  const store = createStore<State & Action>()((set) => ({
     ...initialState,
+    // ChangeNickNameModal 에서 사용 할 state
     _nicknameInput: initialState.nickname,
+    _isNickNameEmpty: false,
+    _isNickNameValid: true,
 
     setNickname: (nickname: string) => set({ nickname }),
-    _setNicknameInput: (_nicknameInput: string) => set({ _nicknameInput }),
     setGender: (gender: Gender) => set({ gender }),
     setAge: (age: AgeRange) => set({ age }),
     setRegion: (regionList: Region[]) => set({ regionList }),
+
+    // ChangeNickNameModal 에서 사용 할 action
+    _setNicknameInput: (_nicknameInput: string) => set({ _nicknameInput }),
+    _setIsNickNameEmpty: (_isNickNameEmpty: boolean) =>
+      set({ _isNickNameEmpty }),
+    _setIsNickNameValid: (_isNickNameValid: boolean) =>
+      set({ _isNickNameValid }),
   }));
 
   return store;
@@ -68,7 +85,7 @@ export const ModifyUserInfoFormStoreProvider = ({
   initialState,
   children,
 }: {
-  initialState: Omit<ModifyUserInfoFormState, "_nicknameInput">;
+  initialState: ModifyUserInfoFormState;
   children: React.ReactNode;
 }) => {
   const store = createModifyUserInfoStore(initialState);

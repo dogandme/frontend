@@ -1,2 +1,2 @@
 export * from "./account";
-export * from "./modifyUserInfo";
+export * from "./userInfo";
