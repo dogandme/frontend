@@ -1,4 +1,5 @@
 import { useStore } from "zustand";
+import { usePostDuplicateNickname } from "@/shared/api";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { FormModal } from "@/shared/ui/modal/FormModal";
@@ -37,7 +38,15 @@ const ChangeNickNameSave = ({ store, onClose }: ChangeNickNameModalProps) => {
   const _isNickNameEmpty = useStore(store, (state) => state._isNickNameEmpty);
   const _isNickNameValid = useStore(store, (state) => state._isNickNameValid);
 
+  const { mutate: postDuplicateNickname } = usePostDuplicateNickname();
+
   const handleSave = async () => {
+    const { _nicknameInput, nickname } = store.getState();
+
+    if (_nicknameInput === nickname) {
+      onClose();
+      return;
+    }
     if (_isNickNameEmpty) {
       throw new Error("닉네임을 입력해 주세요");
     }
@@ -45,8 +54,18 @@ const ChangeNickNameSave = ({ store, onClose }: ChangeNickNameModalProps) => {
       throw new Error("올바른 닉네임을 입력해 주세요");
     }
 
-    setNickname(store.getState()._nicknameInput);
-    onClose();
+    postDuplicateNickname(
+      { nickname: _nicknameInput },
+      {
+        onSuccess: () => {
+          setNickname(_nicknameInput);
+          onClose();
+        },
+        onError: (error) => {
+          throw new Error(error.message);
+        },
+      },
+    );
   };
 
   return (

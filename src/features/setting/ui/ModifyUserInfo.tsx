@@ -75,7 +75,6 @@ export const ChangeGenderButton = () => {
 };
 
 export const ChangeAgeButton = () => {
-  // TODO store 나오면 변경하기
   const store = useModifyUserInfoFormStore();
   const age = useStore(store, (state) => state.age);
   const setAge = useStore(store, (state) => state.setAge);
