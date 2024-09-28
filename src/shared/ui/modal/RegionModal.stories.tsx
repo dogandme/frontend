@@ -1,13 +1,14 @@
 import { http, HttpResponse } from "msw";
 import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, within, spyOn, waitFor } from "@storybook/test";
+// ! TEST를 위해 FSD구조에서 벗어나 features 에 존재하는 store를 사용하고 있습니다.
+import { useUserInfoRegistrationFormStore } from "@/features/auth/store";
 import { useAuthStore } from "@/shared/store/auth";
-import { REGION_API_DEBOUNCE_DELAY } from "../constants";
-import { useUserInfoRegistrationFormStore } from "../store";
+import { REGION_API_DEBOUNCE_DELAY } from "../../constants";
 import { RegionModal } from "./RegionModal";
 
 const meta: Meta<typeof RegionModal> = {
-  title: "features/auth/RegionModal",
+  title: "shared/modal/RegionModal",
   tags: ["features", "auth"],
   parameters: {
     docs: {
@@ -212,7 +213,10 @@ export const Default: Story = {
     return (
       <div className="flex flex-col gap-10">
         <div className="w-[360px] px-2 py-2">
-          <RegionModal onClose={async () => {}} />
+          <RegionModal
+            onClose={async () => {}}
+            externalFormStore={useUserInfoRegistrationFormStore}
+          />
         </div>
       </div>
     );

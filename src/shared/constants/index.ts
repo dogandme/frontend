@@ -121,3 +121,7 @@ export const ROUTER_PATH = {
 export const API_END_POINT = {
   DUPLICATE_NICKNAME: `${API_BASE_URL}/users/nickname`,
 };
+
+export * from "./region";
+export * from "./message";
+export * from "./endpoint";

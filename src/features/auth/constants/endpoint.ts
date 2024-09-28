@@ -15,9 +15,3 @@ export const SIGN_UP_END_POINT = {
   USER_INFO: `${API_BASE_URL}/users/additional-info`,
   PET_INFO: `${API_BASE_URL}/pets`,
 };
-
-export const ADDRESSES_END_POINT = {
-  CURRENT_POSITION: ({ lat, lng }: { lat: number; lng: number }) =>
-    `${API_BASE_URL}/addresses/search-by-location?lat=${lat}&lng=${lng}`,
-  ADDRESS: (keyword: string) => `${API_BASE_URL}/addresses?keyword=${keyword}`,
-};

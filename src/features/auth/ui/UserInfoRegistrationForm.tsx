@@ -18,13 +18,13 @@ import { ActionChip } from "@/shared/ui/chip";
 import { MapLocationSearchingIcon } from "@/shared/ui/icon";
 import { CancelIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
+import { RegionModal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { usePutUserInfoRegistration } from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
-import { RegionModal } from "./RegionModal";
 
 const NicknameInput = () => {
   const nickname = useUserInfoRegistrationFormStore((state) => state.nickname);
@@ -189,7 +189,10 @@ const AgeRangeSelect = () => {
 
 const RegionSetting = () => {
   const { handleOpen, onClose } = useModal(() => (
-    <RegionModal onClose={onClose} />
+    <RegionModal
+      onClose={onClose}
+      externalFormStore={useUserInfoRegistrationFormStore}
+    />
   ));
 
   return (

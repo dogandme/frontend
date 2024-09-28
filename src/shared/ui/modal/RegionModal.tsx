@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { StoreApi, useStore } from "zustand";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
@@ -8,13 +9,77 @@ import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
-import { useGetRegionByKeyword, useGetRegionByLatLng } from "../api/region";
-import { REGION_API_DEBOUNCE_DELAY } from "../constants";
-import { errorMessage } from "../constants";
-import {
-  useRegionModalStore,
-  useUserInfoRegistrationFormStore,
-} from "../store";
+import { useGetRegionByKeyword, useGetRegionByLatLng } from "../../api/region";
+import { REGION_API_DEBOUNCE_DELAY } from "../../constants";
+import { errorMessage } from "../../constants";
+import { useRegionModalStore } from "../../store";
+
+interface Region {
+  address: string;
+  id: number;
+}
+
+/**
+ * ExternalFormStore 는 외부에서 주입 받아 사용 하는 store 입니다.
+ */
+type ExternalFormStore = StoreApi<{
+  region: Region[];
+  setRegion: (region: Region[]) => void;
+}>;
+
+interface RegionModalProps {
+  onClose: () => Promise<void>;
+  externalFormStore: ExternalFormStore;
+}
+
+export const RegionModal = ({
+  onClose,
+  externalFormStore,
+}: RegionModalProps) => {
+  const resetRegionModalStore = useRegionModalStore(
+    (state) => state.resetRegionModalStore,
+  );
+
+  const handleRegionModalClose = async () => {
+    await onClose();
+    resetRegionModalStore();
+  };
+
+  return (
+    <Modal modalType="fullPage">
+      {/* Header */}
+      <CloseNavigationBar onClick={handleRegionModalClose} />
+      <section
+        className="px-4 flex flex-col gap-8"
+        style={{
+          height: "calc(100% - 6rem)",
+        }}
+      >
+        <section className="flex flex-col gap-4">
+          {/* 검색창 */}
+          <RegionSearchInput />
+          {/* 현재 위치로 찾기 버튼 */}
+          <SearchRegionByGPSButton />
+        </section>
+        <section className="flex flex-col flex-grow justify-between ">
+          <div>
+            {/* API 검색 결과 리스트 */}
+            <SearchedRegionList externalFormStore={externalFormStore} />
+          </div>
+          <div className="flex flex-col gap-4 pb-8">
+            {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
+            <SelectedRegionList externalFormStore={externalFormStore} />
+            {/* 확인 버튼 */}
+            <RegionModalCloseButton
+              onClose={handleRegionModalClose}
+              externalFormStore={externalFormStore}
+            />
+          </div>
+        </section>
+      </section>
+    </Modal>
+  );
+};
 
 // TODO 에러 처리 , 로딩 처리 작업 추가 예정
 const RegionSearchInput = () => {
@@ -131,20 +196,21 @@ const SearchRegionByGPSButton = () => {
 };
 
 const SearchRegionControlList = ({
+  externalFormStore,
   province,
   cityCounty,
   subDistrict,
   id,
 }: {
+  externalFormStore: ExternalFormStore;
   province: string;
   cityCounty: string;
   subDistrict: string;
   id: number;
 }) => {
-  const region = useUserInfoRegistrationFormStore((state) => state.region);
-  const setRegion = useUserInfoRegistrationFormStore(
-    (state) => state.setRegion,
-  );
+  const region = useStore(externalFormStore, (state) => state.region);
+  const setRegion = useStore(externalFormStore, (state) => state.setRegion);
+
   const address = `${province} ${cityCounty} ${subDistrict}`;
 
   const handleRegion = () => {
@@ -171,7 +237,11 @@ const SearchRegionControlList = ({
   );
 };
 
-const SearchedRegionList = () => {
+const SearchedRegionList = ({
+  externalFormStore,
+}: {
+  externalFormStore: ExternalFormStore;
+}) => {
   const keyword = useRegionModalStore((state) => state.keyword);
   const position = useRegionModalStore((state) => state.position);
   const origin = useRegionModalStore((state) => state.origin);
@@ -218,6 +288,7 @@ const SearchedRegionList = () => {
       >
         {addressList.map(({ province, cityCounty, subDistrict, id }) => (
           <SearchRegionControlList
+            externalFormStore={externalFormStore}
             key={id}
             province={province}
             cityCounty={cityCounty}
@@ -230,11 +301,13 @@ const SearchedRegionList = () => {
   );
 };
 
-const SelectedRegionList = () => {
-  const region = useUserInfoRegistrationFormStore((state) => state.region);
-  const setRegion = useUserInfoRegistrationFormStore(
-    (state) => state.setRegion,
-  );
+const SelectedRegionList = ({
+  externalFormStore,
+}: {
+  externalFormStore: ExternalFormStore;
+}) => {
+  const region = useStore(externalFormStore, (state) => state.region);
+  const setRegion = useStore(externalFormStore, (state) => state.setRegion);
 
   if (region.length === 0) {
     return <section className="py-2 flex flex-col gap-4"></section>;
@@ -268,10 +341,10 @@ const SelectedRegionList = () => {
 
 const RegionModalCloseButton = ({
   onClose,
-}: {
-  onClose: () => Promise<void>;
-}) => {
-  const region = useUserInfoRegistrationFormStore((state) => state.region);
+  externalFormStore,
+}: RegionModalProps) => {
+  const region = useStore(externalFormStore, (state) => state.region);
+
   const resetRegionModalStore = useRegionModalStore(
     (state) => state.resetRegionModalStore,
   );
@@ -293,47 +366,5 @@ const RegionModalCloseButton = ({
     >
       확인
     </Button>
-  );
-};
-
-export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
-  const resetRegionModalStore = useRegionModalStore(
-    (state) => state.resetRegionModalStore,
-  );
-
-  const handleRegionModalClose = async () => {
-    await onClose();
-    resetRegionModalStore();
-  };
-  return (
-    <Modal modalType="fullPage">
-      {/* Header */}
-      <CloseNavigationBar onClick={handleRegionModalClose} />
-      <section
-        className="px-4 flex flex-col gap-8"
-        style={{
-          height: "calc(100% - 6rem)",
-        }}
-      >
-        <section className="flex flex-col gap-4">
-          {/* 검색창 */}
-          <RegionSearchInput />
-          {/* 현재 위치로 찾기 버튼 */}
-          <SearchRegionByGPSButton />
-        </section>
-        <section className="flex flex-col flex-grow justify-between ">
-          <div>
-            {/* API 검색 결과 리스트 */}
-            <SearchedRegionList />
-          </div>
-          <div className="flex flex-col gap-4 pb-8">
-            {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
-            <SelectedRegionList />
-            {/* 확인 버튼 */}
-            <RegionModalCloseButton onClose={handleRegionModalClose} />
-          </div>
-        </section>
-      </section>
-    </Modal>
   );
 };
