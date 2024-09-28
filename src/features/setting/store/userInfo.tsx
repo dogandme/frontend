@@ -8,14 +8,14 @@ import { createStore } from "zustand";
 // TODO userInfo API 명세서에 따라 달라지기
 type Gender = "여자" | "남자";
 type AgeRange = "10대" | "20대" | "30대" | "40대" | "50대" | "60대 이상";
-type Region = string;
+type Region = { id: number; address: string };
 type NickName = string;
 
 export interface ModifyUserInfoFormState {
   nickname: NickName;
   gender: Gender;
   age: AgeRange;
-  regionList: Region[];
+  region: Region[];
 }
 
 interface ModifyUserInfoFormAction {
@@ -61,7 +61,7 @@ export const createModifyUserInfoStore = (
     setNickname: (nickname: string) => set({ nickname }),
     setGender: (gender: Gender) => set({ gender }),
     setAge: (age: AgeRange) => set({ age }),
-    setRegion: (regionList: Region[]) => set({ regionList }),
+    setRegion: (region: Region[]) => set({ region }),
 
     // ChangeNickNameModal 에서 사용 할 action
     _setNicknameInput: (_nicknameInput: string) => set({ _nicknameInput }),

@@ -30,12 +30,12 @@ export const ModifyUserInfoPage = () => {
     nickname: "뽀송이",
     gender: "여자",
     age: "20대",
-    regionList: [
-      "영등포동 1가",
-      "영등포동 2가",
-      "영등포동 3가",
-      "영등포동 4가",
-      "영등포동 5가",
+    region: [
+      { id: 1, address: "영등포동 1가" },
+      { id: 2, address: "영등포동 2가" },
+      { id: 3, address: "영등포동 3가" },
+      { id: 4, address: "영등포동 4가" },
+      { id: 5, address: "영등포동 5가" },
     ],
   };
 

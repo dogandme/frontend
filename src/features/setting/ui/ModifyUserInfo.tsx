@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useStore } from "zustand";
+import { Region } from "@/shared/api";
+import { useModal } from "@/shared/lib";
 import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon, CancelIcon } from "@/shared/ui/icon";
+import { RegionModal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { genderOptionList, ageRangeOptionList } from "../constants";
 import { useChangeNickNameModal } from "../lib/modal";
@@ -131,25 +134,35 @@ export const ChangeRegionButton = ({
 }: {
   store: ModifyUserInfoFormStore;
 }) => {
-  const regionList = useStore(store, (state) => state.regionList);
+  const region = useStore(store, (state) => state.region);
+  const setRegion = useStore(store, (state) => state.setRegion);
+
+  const { handleOpen, onClose } = useModal(() => (
+    <RegionModal onClose={onClose} externalFormStore={store} />
+  ));
+
+  const handleRemove = (id: Region["id"]) => {
+    setRegion(region.filter((region) => region.id !== id));
+  };
 
   return (
     <section>
-      <button className={settingClassName}>
+      <button className={settingClassName} onClick={handleOpen}>
         <span>동네 설정</span>
         <span className="text-grey-500">
           <ArrowRightIcon />
         </span>
       </button>
       <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
-        {regionList.map((value) => (
-          <li className="flex flex-shrink-0" key={value}>
+        {region.map(({ id, address }) => (
+          <li className="flex flex-shrink-0" key={id}>
             <ActionChip
               variant="outlined"
               trailingIcon={<CancelIcon width={20} height={20} />}
               isSelected={true}
+              onClick={() => handleRemove(id)}
             >
-              {value}
+              {address}
             </ActionChip>
           </li>
         ))}
