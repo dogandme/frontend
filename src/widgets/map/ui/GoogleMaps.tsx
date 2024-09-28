@@ -22,6 +22,9 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const setIsMapCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
+  const setIsLastSearchedLocation = useMapStore(
+    (state) => state.setIsLastSearchedLocation,
+  );
 
   const DELAY_SET_MAP_INFO = 500;
 
@@ -36,6 +39,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
     if (!isLoadedRef.current) return;
 
+    setIsLastSearchedLocation(false);
     debouncedUpdateMapInfo(detail); // debounce 시켜 MapStore 의 mapInfo 를 변경합니다.
     setIsMapCenteredOnMyLocation(false);
   };

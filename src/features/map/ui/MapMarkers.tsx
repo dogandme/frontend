@@ -1,4 +1,8 @@
+import { useMap } from "@vis.gl/react-google-maps";
+import { useGetMarkingList } from "@/features/marking/api";
 import { User, Pin, MultiplePin, Cluster } from "@/entities/map/ui";
+import { useAuthStore } from "@/shared/store";
+import { useResearchMarkingList } from "../lib";
 import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
@@ -15,27 +19,35 @@ export const UserMarker = () => {
 };
 
 export const PinMarker = () => {
-  // TODO API 요청으로 가져오기
-  const markersInfo = [
-    {
-      alt: "test",
-      position: { lat: 37.56651, lng: 126.977 },
-      imageUrl: "/public/default-image.png",
-    },
-    {
-      alt: "test",
-      position: { lat: 37.56652, lng: 126.975 },
-      imageUrl: "/public/default-image.png",
-    },
-    {
-      alt: "test",
-      position: { lat: 37.56653, lng: 126.973 },
-      imageUrl: "/public/default-image.png",
-    },
-  ];
+  const token = useAuthStore.getState().token ?? undefined;
 
-  return markersInfo.map((markerInfo, idx) => (
-    <Pin {...markerInfo} key={idx} />
+  const map = useMap();
+
+  const { hasAllParams, lastSearchedBounds } = useResearchMarkingList();
+  const { southBottomLat, northTopLat, southLeftLng, northRightLng } =
+    lastSearchedBounds;
+
+  const { data: markersInfo } = useGetMarkingList({
+    token,
+    hasAllParams,
+    southBottomLat,
+    northTopLat,
+    southLeftLng,
+    northRightLng,
+  });
+
+  if (!map || !markersInfo) return null;
+
+  return markersInfo.map((markerInfo) => (
+    <Pin
+      key={markerInfo.markingId}
+      position={{
+        lat: markerInfo.lat,
+        lng: markerInfo.lng,
+      }}
+      imageUrl={markerInfo.images[0].imageUrl}
+      alt={markerInfo.images[0].id.toString()}
+    />
   ));
 };
 

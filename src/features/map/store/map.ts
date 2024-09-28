@@ -24,6 +24,7 @@ interface MapState {
   userInfo: UserInfo;
   mode: Mode;
   isCenterOnMyLocation: boolean;
+  isLastSearchedLocation: boolean;
 }
 
 interface MapActions {
@@ -31,6 +32,7 @@ interface MapActions {
   setUserInfo: (userInfo: UserInfo) => void;
   setMode: (mode: Mode) => void;
   setIsCenterOnMyLocation: (isCenterOnMyLocation: boolean) => void;
+  setIsLastSearchedLocation: (isLastSearchedLocation: boolean) => void;
 }
 
 const mapStoreInitialState: MapState = {
@@ -44,6 +46,7 @@ const mapStoreInitialState: MapState = {
   },
   mode: "view",
   isCenterOnMyLocation: false,
+  isLastSearchedLocation: true,
 };
 
 export const useMapStore = create<MapState & MapActions>((set) => ({
@@ -53,4 +56,6 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setMode: (mode) => set({ mode }),
   setIsCenterOnMyLocation: (isCenterOnMyLocation) =>
     set({ isCenterOnMyLocation }),
+  setIsLastSearchedLocation: (isLastSearchedLocation) =>
+    set({ isLastSearchedLocation }),
 }));
