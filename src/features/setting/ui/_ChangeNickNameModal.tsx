@@ -97,20 +97,6 @@ const ChangeNickNameSave = ({ store, onClose }: ChangeNickNameModalProps) => {
   );
 };
 
-const ChangeNickNameCancel = ({
-  onClose,
-}: Pick<ChangeNickNameModalProps, "onClose">) => (
-  <Button
-    colorType="tertiary"
-    size="medium"
-    variant="text"
-    type="button"
-    onClick={onClose}
-  >
-    취소
-  </Button>
-);
-
 export const ChangeNickNameModal = ({
   onClose,
   store,
@@ -120,7 +106,6 @@ export const ChangeNickNameModal = ({
       onClose={onClose}
       title="닉네임 변경"
       ConfirmButton={<ChangeNickNameSave store={store} onClose={onClose} />}
-      CloseButton={<ChangeNickNameCancel onClose={onClose} />}
     >
       <ChangeNickNameInput store={store} />
     </StackedButtonModal>
