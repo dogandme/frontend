@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { createModifyUserInfoStore } from "@/features/setting/store";
 import type { ModifyUserInfoFormState } from "@/features/setting/store";
 import {
@@ -6,9 +8,23 @@ import {
   ChangeNickNameButton,
   ChangeRegionButton,
 } from "@/features/setting/ui/ModifyUserInfo";
+import { ROUTER_PATH } from "@/shared/constants";
+import { useAuthStore } from "@/shared/store";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const ModifyUserInfoPage = () => {
+  const role = useAuthStore((state) => state.role);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!role || role === "ROLE_NONE") {
+      navigate(ROUTER_PATH.MY_PAGE);
+    }
+  }, [role, navigate]);
+
+  if (!role || role === "ROLE_NONE") {
+    return;
+  }
+
   // TODO userInfo Store 나오면 스토어에서 가져오기
   const initialState: Omit<ModifyUserInfoFormState, "_nicknameInput"> = {
     nickname: "뽀송이",
