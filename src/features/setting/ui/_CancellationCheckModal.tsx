@@ -1,6 +1,6 @@
 import { PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
-import { CloseIcon, InfoIcon } from "@/shared/ui/icon";
+import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { useAccountCancellationFormStore } from "../store";
@@ -82,7 +82,6 @@ export const CancellationCheckModal = ({
       <section className="flex flex-col gap-8">
         {/* 알림창 */}
         <Notice>
-          <InfoIcon width={20} height={20} />
           <span>탈퇴 전 한번 더 비밀번호를 입력해 주세요</span>
         </Notice>
         {/* PasswordInput */}

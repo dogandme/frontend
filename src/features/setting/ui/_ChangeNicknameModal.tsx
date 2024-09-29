@@ -3,6 +3,7 @@ import { usePostDuplicateNickname } from "@/shared/api";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { StackedButtonModal } from "@/shared/ui/modal";
+import { Notice } from "@/shared/ui/notice";
 import type { ModifyUserInfoFormStore } from "../store";
 
 interface ChangeNicknameModalProps {
@@ -121,7 +122,12 @@ export const ChangeNicknameModal = ({
         <ChangeNicknameSaveButton store={store} onClose={onClose} />
       )}
     >
-      <ChangeNicknameInput store={store} />
+      <section className="flex flex-col gap-4">
+        <Notice>
+          <span>닉네임은 한 달 기준 1회 변경 할 수 있습니다</span>
+        </Notice>
+        <ChangeNicknameInput store={store} />
+      </section>
     </StackedButtonModal>
   );
 };
