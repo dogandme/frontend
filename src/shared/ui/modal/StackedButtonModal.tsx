@@ -15,7 +15,7 @@ interface StackedButtonModalProps<
   title?: string;
   ConfirmButton?: T;
   CloseButton?: K;
-  onConfirm?: T extends StackedButton ? never : () => void;
+  onConfirm?: T extends StackedButton ? never : () => void | Promise<void>;
   confirmText?: T extends StackedButton ? never : string;
   closeText?: K extends StackedButton ? never : string;
 }
