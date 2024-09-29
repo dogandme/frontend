@@ -25,7 +25,7 @@ const DefaultConfirmButton = ({
   confirmText,
 }: {
   onConfirm: () => Promise<void>;
-  confirmText?: string;
+  confirmText: string;
 }) => {
   return (
     <Button
@@ -44,7 +44,7 @@ const DefaultCloseButton = ({
   closeText,
 }: {
   onClose: () => void;
-  closeText?: string;
+  closeText: string;
 }) => {
   return (
     <Button
