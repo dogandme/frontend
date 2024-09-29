@@ -1,8 +1,5 @@
-import { useMap } from "@vis.gl/react-google-maps";
 import { useGetMarkingList } from "@/features/marking/api";
 import { User, Pin, MultiplePin, Cluster } from "@/entities/map/ui";
-import { useAuthStore } from "@/shared/store";
-import { useResearchMarkingList } from "../lib";
 import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
@@ -19,26 +16,9 @@ export const UserMarker = () => {
 };
 
 export const PinMarker = () => {
-  const token = useAuthStore.getState().token ?? undefined;
+  const { data: markersInfo } = useGetMarkingList();
 
-  const map = useMap();
-
-  const { hasAllParams, lastSearchedBounds } = useResearchMarkingList();
-  const { southBottomLat, northTopLat, southLeftLng, northRightLng } =
-    lastSearchedBounds;
-
-  const { data: markersInfo } = useGetMarkingList({
-    token,
-    hasAllParams,
-    southBottomLat,
-    northTopLat,
-    southLeftLng,
-    northRightLng,
-  });
-
-  if (!map || !markersInfo || !hasAllParams) return null;
-
-  return markersInfo.map((markerInfo) => (
+  return markersInfo?.map((markerInfo) => (
     <Pin
       key={markerInfo.markingId}
       position={{

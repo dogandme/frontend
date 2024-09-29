@@ -13,21 +13,28 @@ export const useResearchMarkingList = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const researchMarkingList = ({
-    lat,
-    lng,
-    zoom,
-  }: {
-    lat: number;
-    lng: number;
-    zoom: number;
-  }) => {
+  const researchMarkingList = () => {
     if (!map) return;
 
+    const bounds = map.getBounds();
+
+    if (!bounds) return;
+
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
+
+    if (!northEast || !southWest) return;
+
+    const northEastLat = northEast.lat();
+    const northEastLng = northEast.lng();
+    const southWestLat = southWest.lat();
+    const southWestLng = southWest.lng();
+
     setSearchParams({
-      lat: lat.toString(),
-      lng: lng.toString(),
-      zoom: zoom.toString(),
+      boundsNELat: northEastLat.toString(),
+      boundsNELng: northEastLng.toString(),
+      boundsSWLat: southWestLat.toString(),
+      boundsSWLng: southWestLng.toString(),
     });
 
     setIsLastSearchedLocation(true);
@@ -35,32 +42,37 @@ export const useResearchMarkingList = () => {
     queryClient.removeQueries({
       queryKey: ["markingList"],
     });
-    queryClient.invalidateQueries({
-      queryKey: ["markingList"],
-    });
   };
 
-  const lastSearchedBounds = map?.getBounds();
-  const northEast = lastSearchedBounds?.getNorthEast();
-  const southWest = lastSearchedBounds?.getSouthWest();
-  const southBottomLat = southWest?.lat();
-  const northTopLat = northEast?.lat();
-  const southLeftLng = southWest?.lng();
-  const northRightLng = northEast?.lng();
+  const northEastLat =
+    typeof searchParams.get("boundsNELat") === "string"
+      ? Number(searchParams.get("boundsNELat"))
+      : null;
+  const northEastLng =
+    typeof searchParams.get("boundsNELng") === "string"
+      ? Number(searchParams.get("boundsNELng"))
+      : null;
+  const southWestLat =
+    typeof searchParams.get("boundsSWLat") === "string"
+      ? Number(searchParams.get("boundsSWLat"))
+      : null;
+  const southWestLng =
+    typeof searchParams.get("boundsSWLng") === "string"
+      ? Number(searchParams.get("boundsSWLng"))
+      : null;
 
-  const hasAllParams =
-    searchParams.has("lat") &&
-    searchParams.has("lng") &&
-    searchParams.has("zoom");
+  const hasBoundsParams =
+    northEastLat && northEastLng && southWestLat && southWestLng;
+
+  const bounds = hasBoundsParams
+    ? {
+        northEast: { lat: northEastLat, lng: northEastLng },
+        southWest: { lat: southWestLat, lng: southWestLng },
+      }
+    : null;
 
   return {
-    hasAllParams,
+    bounds,
     researchMarkingList,
-    lastSearchedBounds: {
-      southBottomLat,
-      northTopLat,
-      southLeftLng,
-      northRightLng,
-    },
   };
 };
