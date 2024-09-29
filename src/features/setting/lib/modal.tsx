@@ -34,7 +34,7 @@ export const useChangeNickNameModal = (store: ModifyUserInfoFormStore) => {
     {
       beforeClose: () => {
         const { _nicknameInput, nickname } = store.getState();
-        if (_nicknameInput !== nickname) {
+        if (_nicknameInput && _nicknameInput !== nickname) {
           handleOpenExitConfirmModal();
           return true;
         }
