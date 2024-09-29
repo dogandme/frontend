@@ -117,9 +117,9 @@ export const ChangeNicknameModal = ({
     <StackedButtonModal
       onClose={onClose}
       title="닉네임 변경"
-      ConfirmButton={
+      ConfirmButton={() => (
         <ChangeNicknameSaveButton store={store} onClose={onClose} />
-      }
+      )}
     >
       <ChangeNicknameInput store={store} />
     </StackedButtonModal>

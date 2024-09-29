@@ -3,7 +3,7 @@ import { EmailInput } from "@/entities/auth/ui";
 import { StackedButtonModal } from "./StackedButtonModal";
 
 export default {
-  title: "shared/modal/FormModal",
+  title: "shared/modal/StackedButtonModal",
   component: StackedButtonModal,
   tags: ["autodocs"],
 
@@ -31,20 +31,21 @@ export default {
     },
     ConfirmButton: {
       description:
-        "확인 버튼에 특별을 커스텀하여 사용 합니다. 내부 기본 텍스트는 저장하기 이며 클릭 시 onClose 함수를 실행합니다. 만약 UI를 유지 한 채로 비즈니스 로직을 주입하고 싶다면 onConfirm 메소드를 건내줘 사용 가능 합니다.",
+        "확인 버튼에 특별을 커스텀하여 사용 합니다. 만약 주입되지 않은 경우엔 DefaultConfirmButton을 사용합니다.",
     },
     CloseButton: {
       description:
-        "취소 버튼에 특별을 커스텀하여 사용 합니다. 내부 기본 텍스트는 취소 이며 클릭 시 onClose 함수를 실행합니다.",
+        "취소 버튼에 특별을 커스텀하여 사용 합니다. 만약 주입되지 않은 경우엔 DefaultCloseButton을 사용합니다.",
     },
     onConfirm: {
-      description: "ConfirmButton의 버튼 클릭 시 실행할 함수를 받습니다.",
+      description:
+        "DefaultConfirmButton의 버튼 클릭 시 실행할 함수를 받습니다. ConfirmButton 이 주입되지 않았을 경우에만 전달 가능 합니다.",
     },
     closeText: {
-      description: "CloseButton의 텍스트를 설정합니다.",
+      description: "DefaultCloseButton의 텍스트를 설정합니다.",
     },
     confirmText: {
-      description: "ConfirmButton의 텍스트를 설정합니다.",
+      description: "DefaultConfirmButton의 텍스트를 설정합니다.",
     },
   },
 };
