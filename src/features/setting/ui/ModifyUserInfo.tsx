@@ -7,17 +7,17 @@ import { ArrowRightIcon, CancelIcon } from "@/shared/ui/icon";
 import { RegionModal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { genderOptionList, ageRangeOptionList } from "../constants";
-import { useChangeNickNameModal } from "../lib/modal";
+import { useChangeNicknameModal } from "../lib/modal";
 import { ModifyUserInfoFormStore } from "../store";
 import { settingClassName } from "./setting.styles";
 
-export const ChangeNickNameButton = ({
+export const ChangeNicknameButton = ({
   store,
 }: {
   store: ModifyUserInfoFormStore;
 }) => {
   const nickname = useStore(store, (state) => state.nickname);
-  const handleOpenChangeNicknameModal = useChangeNickNameModal(store);
+  const handleOpenChangeNicknameModal = useChangeNicknameModal(store);
 
   return (
     <button

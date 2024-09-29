@@ -5,23 +5,23 @@ import { Input } from "@/shared/ui/input";
 import { StackedButtonModal } from "@/shared/ui/modal/StackedButtonModal";
 import type { ModifyUserInfoFormStore } from "../store";
 
-interface ChangeNickNameModalProps {
+interface ChangeNicknameModalProps {
   onClose: () => Promise<void>;
   store: ModifyUserInfoFormStore;
 }
 
-const ChangeNickNameInput = ({
+const ChangeNicknameInput = ({
   store,
-}: Pick<ChangeNickNameModalProps, "store">) => {
+}: Pick<ChangeNicknameModalProps, "store">) => {
   const _nicknameInput = useStore(store, (state) => state._nicknameInput);
   const _setNicknameInput = useStore(store, (state) => state._setNicknameInput);
-  const _setIsNickNameEmpty = useStore(
+  const _setIsNicknameEmpty = useStore(
     store,
-    (state) => state._setIsNickNameEmpty,
+    (state) => state._setIsNicknameEmpty,
   );
-  const _setIsNickNameValid = useStore(
+  const _setIsNicknameValid = useStore(
     store,
-    (state) => state._setIsNickNameValid,
+    (state) => state._setIsNicknameValid,
   );
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,8 +29,8 @@ const ChangeNickNameInput = ({
     const regExp = /^[a-zA-Z0-9ㄱ-ㅎ가-힣]{1,20}$/;
 
     _setNicknameInput(value);
-    _setIsNickNameEmpty(value === "");
-    _setIsNickNameValid(regExp.test(value));
+    _setIsNicknameEmpty(value === "");
+    _setIsNicknameValid(regExp.test(value));
   };
 
   return (
@@ -50,10 +50,10 @@ const ChangeNickNameInput = ({
   );
 };
 
-const ChangeNickNameSave = ({ store, onClose }: ChangeNickNameModalProps) => {
+const ChangeNicknameSave = ({ store, onClose }: ChangeNicknameModalProps) => {
   const setNickname = useStore(store, (state) => state.setNickname);
-  const _isNickNameEmpty = useStore(store, (state) => state._isNickNameEmpty);
-  const _isNickNameValid = useStore(store, (state) => state._isNickNameValid);
+  const _isNicknameEmpty = useStore(store, (state) => state._isNicknameEmpty);
+  const _isNicknameValid = useStore(store, (state) => state._isNicknameValid);
 
   const { mutate: postDuplicateNickname } = usePostDuplicateNickname();
 
@@ -64,10 +64,10 @@ const ChangeNickNameSave = ({ store, onClose }: ChangeNickNameModalProps) => {
       onClose();
       return;
     }
-    if (_isNickNameEmpty) {
+    if (_isNicknameEmpty) {
       throw new Error("닉네임을 입력해 주세요");
     }
-    if (!_isNickNameValid) {
+    if (!_isNicknameValid) {
       throw new Error("올바른 닉네임을 입력해 주세요");
     }
 
@@ -97,17 +97,17 @@ const ChangeNickNameSave = ({ store, onClose }: ChangeNickNameModalProps) => {
   );
 };
 
-export const ChangeNickNameModal = ({
+export const ChangeNicknameModal = ({
   onClose,
   store,
-}: ChangeNickNameModalProps) => {
+}: ChangeNicknameModalProps) => {
   return (
     <StackedButtonModal
       onClose={onClose}
       title="닉네임 변경"
-      ConfirmButton={<ChangeNickNameSave store={store} onClose={onClose} />}
+      ConfirmButton={<ChangeNicknameSave store={store} onClose={onClose} />}
     >
-      <ChangeNickNameInput store={store} />
+      <ChangeNicknameInput store={store} />
     </StackedButtonModal>
   );
 };

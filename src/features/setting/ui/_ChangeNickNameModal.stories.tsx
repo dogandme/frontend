@@ -1,10 +1,10 @@
 import { StoryObj } from "@storybook/react";
 import { createModifyUserInfoStore } from "../store";
-import { ChangeNickNameModal } from "./_ChangeNickNameModal";
+import { ChangeNicknameModal } from "./_ChangeNicknameModal";
 
 export default {
-  title: "features/setting/ChangeNickNameModal",
-  component: ChangeNickNameModal,
+  title: "features/setting/ChangeNicknameModal",
+  component: ChangeNicknameModal,
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -15,7 +15,7 @@ export default {
   },
 };
 
-type Story = StoryObj<typeof ChangeNickNameModal>;
+type Story = StoryObj<typeof ChangeNicknameModal>;
 
 export const Default: Story = {
   decorators: [
@@ -27,18 +27,18 @@ export const Default: Story = {
   ],
 
   render: () => (
-    <ChangeNickNameModal
+    <ChangeNicknameModal
       onClose={async () => {}}
       store={createModifyUserInfoStore({
         nickname: "뽀송이",
         gender: "여자",
         age: "20대",
-        regionList: [
-          "영등포동 1가",
-          "영등포동 2가",
-          "영등포동 3가",
-          "영등포동 4가",
-          "영등포동 5가",
+        region: [
+          { id: 1, address: "영등포동 1가" },
+          { id: 2, address: "영등포동 2가" },
+          { id: 3, address: "영등포동 3가" },
+          { id: 4, address: "영등포동 4가" },
+          { id: 5, address: "영등포동 5가" },
         ],
       })}
     />

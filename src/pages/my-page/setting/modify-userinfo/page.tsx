@@ -5,7 +5,7 @@ import type { ModifyUserInfoFormState } from "@/features/setting/store";
 import {
   ChangeAgeButton,
   ChangeGenderButton,
-  ChangeNickNameButton,
+  ChangeNicknameButton,
   ChangeRegionButton,
 } from "@/features/setting/ui/ModifyUserInfo";
 import { ROUTER_PATH } from "@/shared/constants";
@@ -52,7 +52,7 @@ export const ModifyUserInfoPage = () => {
         label={<h1 className="title-1 text-grey-900">내 정보 수정</h1>}
       />
       <section className="flex flex-col gap-4 px-4 py-4">
-        <ChangeNickNameButton store={modifyUserInfoFormStore} />
+        <ChangeNicknameButton store={modifyUserInfoFormStore} />
         <ChangeGenderButton store={modifyUserInfoFormStore} />
         <ChangeAgeButton store={modifyUserInfoFormStore} />
         <ChangeRegionButton store={modifyUserInfoFormStore} />
