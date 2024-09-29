@@ -50,7 +50,10 @@ const ChangeNicknameInput = ({
   );
 };
 
-const ChangeNicknameSave = ({ store, onClose }: ChangeNicknameModalProps) => {
+const ChangeNicknameSaveButton = ({
+  store,
+  onClose,
+}: ChangeNicknameModalProps) => {
   const setNickname = useStore(store, (state) => state.setNickname);
   const _isNicknameEmpty = useStore(store, (state) => state._isNicknameEmpty);
   const _isNicknameValid = useStore(store, (state) => state._isNicknameValid);
@@ -105,7 +108,9 @@ export const ChangeNicknameModal = ({
     <StackedButtonModal
       onClose={onClose}
       title="닉네임 변경"
-      ConfirmButton={<ChangeNicknameSave store={store} onClose={onClose} />}
+      ConfirmButton={
+        <ChangeNicknameSaveButton store={store} onClose={onClose} />
+      }
     >
       <ChangeNicknameInput store={store} />
     </StackedButtonModal>
