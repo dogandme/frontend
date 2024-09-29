@@ -2,7 +2,7 @@ import { useStore } from "zustand";
 import { usePostDuplicateNickname } from "@/shared/api";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { StackedButtonModal } from "@/shared/ui/modal/StackedButtonModal";
+import { StackedButtonModal } from "@/shared/ui/modal";
 import type { ModifyUserInfoFormStore } from "../store";
 
 interface ChangeNicknameModalProps {
