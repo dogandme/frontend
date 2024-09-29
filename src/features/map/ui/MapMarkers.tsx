@@ -1,3 +1,4 @@
+import { useGetMarkingList } from "@/features/marking/api";
 import { User, Pin, MultiplePin, Cluster } from "@/entities/map/ui";
 import { useMapStore } from "../store";
 
@@ -15,27 +16,18 @@ export const UserMarker = () => {
 };
 
 export const PinMarker = () => {
-  // TODO API 요청으로 가져오기
-  const markersInfo = [
-    {
-      alt: "test",
-      position: { lat: 37.56651, lng: 126.977 },
-      imageUrl: "/public/default-image.png",
-    },
-    {
-      alt: "test",
-      position: { lat: 37.56652, lng: 126.975 },
-      imageUrl: "/public/default-image.png",
-    },
-    {
-      alt: "test",
-      position: { lat: 37.56653, lng: 126.973 },
-      imageUrl: "/public/default-image.png",
-    },
-  ];
+  const { data: markersInfo } = useGetMarkingList();
 
-  return markersInfo.map((markerInfo, idx) => (
-    <Pin {...markerInfo} key={idx} />
+  return markersInfo?.map((markerInfo) => (
+    <Pin
+      key={markerInfo.markingId}
+      position={{
+        lat: markerInfo.lat,
+        lng: markerInfo.lng,
+      }}
+      imageUrl={markerInfo.images[0].imageUrl}
+      alt={markerInfo.images[0].id.toString()}
+    />
   ));
 };
 

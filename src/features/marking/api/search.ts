@@ -1,4 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { useResearchMarkingList } from "@/features/map/lib";
+import { useAuthStore } from "@/shared/store";
 import { MARKING_REQUEST_URL } from "../contants/requestUrl";
 
 interface Pet {
@@ -50,11 +52,11 @@ export interface Marking {
 }
 
 export interface MarkingListRequest {
-  token?: string;
-  southBottomLat: number;
-  northTopLat: number;
-  southLeftLng: number;
-  northRightLng: number;
+  token: string | null;
+  southWestLat: number;
+  southWestLng: number;
+  northEastLat: number;
+  northEastLng: number;
 }
 
 interface MarkingListResponse {
@@ -65,10 +67,10 @@ interface MarkingListResponse {
 
 const getMarkingList = async ({
   token,
-  southBottomLat,
-  northTopLat,
-  southLeftLng,
-  northRightLng,
+  southWestLat,
+  southWestLng,
+  northEastLat,
+  northEastLng,
 }: MarkingListRequest) => {
   const options: RequestInit = {
     method: "GET",
@@ -81,10 +83,10 @@ const getMarkingList = async ({
   }
   const response = await fetch(
     MARKING_REQUEST_URL.SEARCH_MARKING({
-      southBottomLat,
-      northTopLat,
-      southLeftLng,
-      northRightLng,
+      southWestLat,
+      southWestLng,
+      northEastLat,
+      northEastLng,
     }),
     options,
   );
@@ -98,31 +100,40 @@ const getMarkingList = async ({
   return data;
 };
 
-export const useGetMarkingList = ({
-  token,
-  southBottomLat,
-  northTopLat,
-  southLeftLng,
-  northRightLng,
-}: MarkingListRequest) => {
+export const useGetMarkingList = () => {
+  const token = useAuthStore((state) => state.token);
+
+  const { bounds } = useResearchMarkingList();
+
+  const southWestLat = bounds?.southWest.lat;
+  const southWestLng = bounds?.southWest.lng;
+  const northEastLat = bounds?.northEast.lat;
+  const northEastLng = bounds?.northEast.lng;
+
   return useQuery<MarkingListResponse, Error, MarkingListResponse["content"]>({
     queryKey: [
       "markingList",
-      southBottomLat,
-      northTopLat,
-      southLeftLng,
-      northRightLng,
+      token,
+      southWestLat,
+      southWestLng,
+      northEastLat,
+      northEastLng,
     ],
     queryFn: () =>
       getMarkingList({
         token,
-        southBottomLat,
-        northTopLat,
-        southLeftLng,
-        northRightLng,
+        southWestLat: southWestLat!,
+        southWestLng: southWestLng!,
+        northEastLat: northEastLat!,
+        northEastLng: northEastLng!,
       }),
     select: (data) => data.content,
     enabled:
-      !!southBottomLat && !!northTopLat && !!southLeftLng && !!northRightLng,
+      !!bounds &&
+      !!southWestLat &&
+      !!southWestLng &&
+      !!northEastLat &&
+      !!northEastLng,
+    refetchOnWindowFocus: false,
   });
 };
