@@ -21,12 +21,10 @@ interface StackedButtonModalProps<
 }
 
 const DefaultConfirmButton = ({
-  onClose,
   onConfirm,
   confirmText,
 }: {
-  onClose: () => void;
-  onConfirm?: () => void;
+  onConfirm: () => Promise<void>;
   confirmText?: string;
 }) => {
   return (
@@ -34,10 +32,7 @@ const DefaultConfirmButton = ({
       variant="filled"
       colorType="primary"
       size="medium"
-      onClick={async () => {
-        onConfirm?.();
-        onClose();
-      }}
+      onClick={onConfirm}
     >
       {confirmText}
     </Button>
@@ -94,8 +89,10 @@ export const StackedButtonModal = <
           ConfirmButton(onClose)
         ) : (
           <DefaultConfirmButton
-            onClose={onClose}
-            onConfirm={onConfirm}
+            onConfirm={async () => {
+              await onConfirm?.();
+              onClose();
+            }}
             confirmText={confirmText || "저장"}
           />
         )}
