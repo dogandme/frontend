@@ -69,7 +69,7 @@ const ChangeNicknameSaveButton = ({
 
   const { mutate: postDuplicateNickname } = usePostDuplicateNickname();
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const { _nicknameInput, nickname } = store.getState();
 
     if (_nicknameInput === nickname) {
