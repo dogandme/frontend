@@ -1,4 +1,4 @@
-export const errorMessage = {
+export const ERROR_MESSAGE = {
   PERMISSION_DENIED: "위치 정보를 요청 할 수 있도록 권한을 허용해주세요",
   POSITION_UNAVAILABLE:
     "현재 위치 정보를 사용 할 수 없습니다. 다시 시도해주세요",
