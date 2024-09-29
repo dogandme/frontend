@@ -305,5 +305,3 @@ export const ageRangeOptionList = [
     name: "60대 이상",
   },
 ] as const;
-
-export const REGION_API_DEBOUNCE_DELAY = 500;
