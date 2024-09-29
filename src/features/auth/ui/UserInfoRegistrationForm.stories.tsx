@@ -2,9 +2,9 @@ import { http, HttpResponse } from "msw";
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
+import { REGION_API_DEBOUNCE_DELAY } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store/auth";
 import { userInfoRegistrationHandlers } from "@/mocks/handler";
-import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { useUserInfoRegistrationFormStore } from "../store";
 import UserInfoRegistrationForm from "./UserInfoRegistrationForm";
 
