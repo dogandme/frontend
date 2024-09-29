@@ -53,7 +53,7 @@ const DefaultCloseButton = ({
 };
 
 export const StackedButtonModal = ({
-  closeIconAriaLabel = "확인창 닫기",
+  closeIconAriaLabel = "모달 닫기",
   title = "",
   onClose,
   onConfirm = () => {},
