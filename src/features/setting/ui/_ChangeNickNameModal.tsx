@@ -14,6 +14,9 @@ const ChangeNicknameInput = ({
   store,
 }: Pick<ChangeNicknameModalProps, "store">) => {
   const _nicknameInput = useStore(store, (state) => state._nicknameInput);
+  const _isNicknameEmpty = useStore(store, (state) => state._isNicknameEmpty);
+  const _isNicknameValid = useStore(store, (state) => state._isNicknameValid);
+
   const _setNicknameInput = useStore(store, (state) => state._setNicknameInput);
   const _setIsNicknameEmpty = useStore(
     store,
@@ -33,6 +36,11 @@ const ChangeNicknameInput = ({
     _setIsNicknameValid(regExp.test(value));
   };
 
+  const statusText =
+    _isNicknameEmpty || !_isNicknameValid
+      ? "20자 이내의 한글 영어 숫자만 사용 가능합니다."
+      : "";
+
   return (
     <Input
       id="change-nickname"
@@ -46,6 +54,7 @@ const ChangeNicknameInput = ({
       essential
       onChange={handleChange}
       value={_nicknameInput}
+      statusText={statusText}
     />
   );
 };
