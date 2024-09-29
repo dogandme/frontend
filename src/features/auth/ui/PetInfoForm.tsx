@@ -253,6 +253,7 @@ export const SubmitButton = () => {
    */
   const navigate = useNavigate();
   const setRole = useAuthStore((state) => state.setRole);
+  const setToken = useAuthStore((state) => state.setToken);
   const { mutate: postPetInfo } = usePostPetInfo();
 
   // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
@@ -294,10 +295,11 @@ export const SubmitButton = () => {
       },
       {
         onSuccess: (data) => {
-          const { role } = data.content;
+          const { role, authorization } = data.content;
           const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
 
           setRole(role);
+          setToken(authorization);
           navigate(lastNoneAuthRoute);
         },
         // TODO 에러 바운더리 생성되면 로직 변경하기

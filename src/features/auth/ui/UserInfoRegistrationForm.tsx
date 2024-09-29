@@ -340,6 +340,7 @@ const UserInfoRegistrationForm = () => {
   const token = useAuthStore((state) => state.token);
   const setNickname = useAuthStore((state) => state.setNickname);
   const setRole = useAuthStore((state) => state.setRole);
+  const setToken = useAuthStore((state) => state.setToken);
 
   const { mutate: putUserInfoRegistration } = usePutUserInfoRegistration();
 
@@ -414,11 +415,12 @@ const UserInfoRegistrationForm = () => {
       {
         onSuccess: (data) => {
           const {
-            content: { nickname, role },
+            content: { nickname, role, authorization },
           } = data;
 
           setNickname(nickname);
           setRole(role);
+          setToken(authorization);
 
           openLandingModal();
         },
