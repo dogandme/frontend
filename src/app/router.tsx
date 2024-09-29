@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
         element: <AccountManagementPage />,
       },
       {
-        path: ROUTER_PATH.MODIFY_MY_INFO,
+        path: ROUTER_PATH.MODIFY_USER_INFO,
         element: <ModifyUserInfoPage />,
       },
     ],

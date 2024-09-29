@@ -115,7 +115,7 @@ export const ROUTER_PATH = {
   MY_PAGE: "/my-page",
   SETTING: "/my-page/setting",
   ACCOUNT: "/my-page/setting/manage-account",
-  MODIFY_MY_INFO: "/my-page/setting/modify-userinfo",
+  MODIFY_USER_INFO: "/my-page/setting/modify-userinfo",
 } as const;
 
 export const API_END_POINT = {
