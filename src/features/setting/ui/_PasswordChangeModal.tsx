@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
@@ -174,6 +175,14 @@ export const PasswordChangeModal = ({
 }: {
   onClose: () => Promise<void>;
 }) => {
+  const resetPasswordChangeForm = usePasswordChangeFormStore(
+    (state) => state.reset,
+  );
+
+  useEffect(() => {
+    return () => resetPasswordChangeForm();
+  }, [resetPasswordChangeForm]);
+
   return (
     <Modal modalType="center">
       <section className="flex justify-between self-stretch">
