@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useLocation } from "react-router-dom";
 import { useOverlayStore } from "@/shared/store/overlay";
 import type { OverlayInfo } from "@/shared/store/overlay";
 
@@ -37,9 +38,13 @@ const OverlayWrapper = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
  * OverlayPortal 컴포넌트는 오버레이를 렌더링합니다.
  * overlay들이 렌더링 되는 영역은 뷰포트 크기를 가진 div 입니다.
  * 따라서 overlay들은 뷰포트를 기준으로 하여 top, left, right, bottom 값으로 위치를 조정합니다.
+ *
+ * 오버레이가 열린 채로 라우팅이 일어나면 모든 오버레이를 제거 합니다.
  */
 export const OverlayPortal = () => {
+  const { pathname, search } = useLocation();
   const overlays = useOverlayStore((state) => state.overlays);
+  const resetOverlays = useOverlayStore((state) => state.resetOverlays);
 
   const shouldDisableInteraction = overlays.some(
     ({ options: { disableInteraction } }) => disableInteraction === true,
@@ -55,6 +60,11 @@ export const OverlayPortal = () => {
       document.body.style.overflow = "auto";
     };
   }, [shouldDisableInteraction]);
+
+  // 페이지 이동 시 모든 오버레이를 제거합니다.
+  useEffect(() => {
+    resetOverlays();
+  }, [pathname, search, resetOverlays]);
 
   const overlayAreaBackground = shouldDisableInteraction ? "h-screen" : "";
 

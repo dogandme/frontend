@@ -301,9 +301,12 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
     (state) => state.resetRegionModalStore,
   );
 
+  useEffect(() => {
+    return () => resetRegionModalStore();
+  }, [resetRegionModalStore]);
+
   const handleRegionModalClose = async () => {
     await onClose();
-    resetRegionModalStore();
   };
   return (
     <Modal modalType="fullPage">

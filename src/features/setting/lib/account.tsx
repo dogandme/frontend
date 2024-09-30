@@ -6,7 +6,7 @@ import { CancellationCheckModal } from "../ui/_CancellationCheckModal";
 import { PasswordChangeModal } from "../ui/_PasswordChangeModal";
 
 export const useCancellationCheckModal = () => {
-  const resetCancellationForm = useAccountCancellationFormStore(
+  const resetAccountCancellationForm = useAccountCancellationFormStore(
     (state) => state.reset,
   );
 
@@ -16,8 +16,7 @@ export const useCancellationCheckModal = () => {
   } = useModal(() => (
     <ExitConfirmModal
       onConfirm={() => {
-        resetCancellationForm();
-        onCloseConfirmModal();
+        resetAccountCancellationForm();
         onCloseCancellationCheckModal();
       }}
       onClose={onCloseConfirmModal}
@@ -53,7 +52,6 @@ export const useChangePasswordModal = () => {
         onClose={onCloseExitModal}
         onConfirm={() => {
           resetPasswordChangeForm();
-          onCloseExitModal();
           onClosePasswordChangeModal();
         }}
       />

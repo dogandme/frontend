@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon, InfoIcon } from "@/shared/ui/icon";
@@ -65,6 +66,14 @@ export const CancellationCheckModal = ({
 }: {
   onClose: () => Promise<void>;
 }) => {
+  const resetAccountCancellationForm = useAccountCancellationFormStore(
+    (state) => state.reset,
+  );
+
+  useEffect(() => {
+    return () => resetAccountCancellationForm();
+  }, [resetAccountCancellationForm]);
+
   return (
     // TODO FormModal 생성 되면 적용하기
     <Modal modalType="center">

@@ -21,6 +21,7 @@ interface OverlayStore {
   overlays: OverlayInfo[];
   addOverlay: (newOverlay: OverlayInfo) => void;
   removeOverlay: (id: number) => void;
+  resetOverlays: () => void;
 }
 
 export const useOverlayStore = create<OverlayStore>((set) => ({
@@ -35,4 +36,6 @@ export const useOverlayStore = create<OverlayStore>((set) => ({
     set(({ overlays }) => ({
       overlays: overlays.filter((overlay) => overlay.id !== id),
     })),
+
+  resetOverlays: () => set({ overlays: [] }),
 }));
