@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { CurrentLocationLoading, FloatingButton } from "@/entities/map/ui";
 import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
+import { DividerLine } from "@/shared/ui/divider";
 import {
+  BookmarkIcon,
+  DogFootIcon,
   ExitIcon,
-  LocationIcon,
   MyLocationIcon,
-  StarIcon,
 } from "@/shared/ui/icon";
 import { useCurrentLocation } from "../lib";
 import { useMapStore } from "../store";
@@ -80,17 +82,46 @@ export const MyLocationButton = () => {
 };
 
 export const ShowOthersMarkingButton = () => {
+  const buttonBaseStyles = "border-none outline-none h-14 px-[.875rem]";
+
+  // todo 상태 전역으로 관리하기
+  const [isMyMarkingVisible, setIsMyMarkingVisible] = useState<boolean>(false);
+
   return (
-    <FloatingButton aria-label="현재 보고 있는 지도의 마킹을 나타내기">
-      <LocationIcon />
-    </FloatingButton>
+    <div className="flex flex-col rounded-2xl shadow-custom-1">
+      <Button
+        type="button"
+        variant={isMyMarkingVisible ? "filled" : "outlined"}
+        colorType={isMyMarkingVisible ? "primary" : "tertiary"}
+        size="medium"
+        className={`${buttonBaseStyles} rounded-b-none`}
+        aria-label="내 마킹만 보기"
+        onClick={() => setIsMyMarkingVisible(true)}
+      >
+        <img src="/public/default-image.png" className="w-7 h-7 rounded-full" />
+      </Button>
+
+      <DividerLine axis="row" />
+
+      <Button
+        type="button"
+        variant={!isMyMarkingVisible ? "filled" : "outlined"}
+        colorType={!isMyMarkingVisible ? "primary" : "tertiary"}
+        size="medium"
+        className={`${buttonBaseStyles} rounded-t-none`}
+        aria-label="주변 마킹 보기"
+        onClick={() => setIsMyMarkingVisible(false)}
+      >
+        <DogFootIcon />
+      </Button>
+    </div>
   );
 };
 
 export const CollectionButton = () => {
   return (
     <FloatingButton aria-label="좋아요 버튼을 눌렀거나 저장한 마킹들 나타내기">
-      <StarIcon />
+      <BookmarkIcon />
     </FloatingButton>
   );
 };

@@ -26,9 +26,9 @@ export const MapControlWidget = () => {
           <MyLocationButton />
         </div>
         <div className="flex flex-col gap-2 absolute bottom-[6.875rem] right-4">
-          {/* TODO UserInfo API 나오면 유저 프로필 사진 붙이기 */}
-          <MyLocationButton />
           <ShowOthersMarkingButton />
+        </div>
+        <div className="absolute top-4 left-4">
           <CollectionButton />
         </div>
         {/* 마킹하기 버튼 */}
