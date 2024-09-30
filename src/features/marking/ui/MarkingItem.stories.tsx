@@ -87,12 +87,7 @@ export const WithMarkingList: Story = {
   },
   render: () => {
     /* eslint-disable*/
-    const { data } = useGetMarkingList({
-      southBottomLat: 35.520204401760736,
-      northTopLat: 35.545047500080756,
-      southLeftLng: 129.32615169340926,
-      northRightLng: 129.32615169340926,
-    });
+    const { data } = useGetMarkingList();
 
     return (
       <MarkingList>
