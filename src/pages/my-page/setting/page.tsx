@@ -1,24 +1,15 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useSettingPermission } from "@/features/setting/lib";
 import { Report, LogoutButton } from "@/features/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const SettingPage = () => {
-  const navigate = useNavigate();
-  const role = useAuthStore((state) => state.role);
+  const hasPermission = useSettingPermission("NONE");
 
-  useEffect(() => {
-    if (role === null) {
-      navigate("/my-page");
-    }
-  }, [navigate, role]);
-
-  if (role === null) {
+  if (!hasPermission) {
     return null;
   }
 
