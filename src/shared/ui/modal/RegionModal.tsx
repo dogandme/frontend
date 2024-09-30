@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useEffect } from "react";
 import { StoreApi, useStore } from "zustand";
 import { useGetRegionByKeyword, useGetRegionByLatLng } from "@/shared/api";
 import {
@@ -42,15 +43,14 @@ export const RegionModal = ({
     (state) => state.resetRegionModalStore,
   );
 
-  const handleRegionModalClose = async () => {
-    await onClose();
-    resetRegionModalStore();
-  };
+  useEffect(() => {
+    return () => resetRegionModalStore();
+  }, [resetRegionModalStore]);
 
   return (
     <Modal modalType="fullPage">
       {/* Header */}
-      <CloseNavigationBar onClick={handleRegionModalClose} />
+      <CloseNavigationBar onClick={onClose} />
       <section
         className="px-4 flex flex-col gap-8"
         style={{
@@ -73,7 +73,7 @@ export const RegionModal = ({
             <SelectedRegionList externalFormStore={externalFormStore} />
             {/* 확인 버튼 */}
             <RegionModalSaveButton
-              onClose={handleRegionModalClose}
+              onClose={onClose}
               externalFormStore={externalFormStore}
             />
           </div>
