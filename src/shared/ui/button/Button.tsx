@@ -88,10 +88,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       hasTextFirst,
     });
 
+    const isTouchDevice =
+      "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    const canHover = !isTouchDevice;
+
     return (
       <button
         ref={ref}
-        className={`${fullWidth && "w-full"} ${baseStyles} ${colorStyles.enabled} ${colorStyles.focus} ${colorStyles.hover} ${colorStyles.active} ${colorStyles.disabled} ${sizeStyles} ${className}`}
+        className={`${fullWidth && "w-full"} ${baseStyles} ${colorStyles.enabled} ${colorStyles.focus} ${canHover && colorStyles.hover} ${colorStyles.active} ${colorStyles.disabled} ${sizeStyles} ${className}`}
         {...props}
       >
         {children}
