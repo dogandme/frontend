@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { Sheet, SheetRef } from "react-modal-sheet";
 import { NavLink, useLocation } from "react-router-dom";
+import { useMapStore } from "@/features/map/store";
 import { useGetMarkingList } from "@/features/marking/api";
 import { MarkingItem } from "@/features/marking/ui";
 import { MarkingList } from "@/entities/marking/ui";
@@ -28,11 +29,13 @@ export const MainFooter = () => {
 
   const { data: markingList } = useGetMarkingList();
 
+  const mapMode = useMapStore((state) => state.mode);
+
   return (
     <footer ref={ref} className="relative">
       <Sheet
         ref={sheetRef}
-        isOpen={location.pathname === "/map"}
+        isOpen={location.pathname === "/map" && mapMode === "view"}
         onClose={() => {
           const isSheetTop = snapPointRef.current === 0;
 
