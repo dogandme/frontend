@@ -29,12 +29,14 @@ interface ChangeNicknameModalState {
   _nicknameInput: Nickname;
   _isNicknameValid: boolean;
   _isNicknameEmpty: boolean;
+  _isNicknameDuplicated: boolean;
 }
 
 interface ChangeNicknameModalAction {
   _setNicknameInput: (nickname: Nickname) => void;
   _setIsNicknameValid: (isValid: boolean) => void;
   _setIsNicknameEmpty: (isEmpty: boolean) => void;
+  _setIsNicknameDuplicated: (isDuplicated: boolean) => void;
 }
 
 /**
@@ -57,6 +59,7 @@ export const createModifyUserInfoStore = (
     _nicknameInput: initialState.nickname,
     _isNicknameEmpty: false,
     _isNicknameValid: true,
+    _isNicknameDuplicated: true,
 
     setNickname: (nickname: string) => set({ nickname }),
     setGender: (gender: Gender) => set({ gender }),
@@ -69,6 +72,8 @@ export const createModifyUserInfoStore = (
       set({ _isNicknameEmpty }),
     _setIsNicknameValid: (_isNicknameValid: boolean) =>
       set({ _isNicknameValid }),
+    _setIsNicknameDuplicated: (_isNicknameDuplicated: boolean) =>
+      set({ _isNicknameDuplicated }),
   }));
 
   return store;
