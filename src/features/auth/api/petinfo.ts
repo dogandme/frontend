@@ -7,6 +7,7 @@ export interface PetInfoResponse {
   message: string;
   content: {
     role: string;
+    authorization: string;
   };
 }
 
