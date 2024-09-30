@@ -34,9 +34,9 @@ export const MainFooter = () => {
         ref={sheetRef}
         isOpen={location.pathname === "/map"}
         onClose={() => {
-          const isBottomSheetTop = snapPointRef.current === 0;
+          const isSheetTop = snapPointRef.current === 0;
 
-          if (isBottomSheetTop) {
+          if (isSheetTop) {
             snapTo(snapPointRef.current - 1);
             return;
           }
