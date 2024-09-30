@@ -23,7 +23,9 @@ interface ProfileResponse {
   };
 }
 
-const getProfile = async (nickname: string): Promise<ProfileResponse> => {
+export const getProfile = async (
+  nickname: string,
+): Promise<ProfileResponse> => {
   const response = await fetch(END_POINT.PROFILE(nickname));
   const data: ProfileResponse = await response.json();
 
