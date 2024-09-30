@@ -3,11 +3,13 @@ import {
   MarkingAddButton,
   MarkingFormTriggerButton,
   MyLocationButton,
-  ShowOthersMarkingButton,
   CollectionButton,
   ExitAddModeButton,
   MarkingResearchButton,
+  ShowMyMarkingButton,
+  ShowAroundMarkingButton,
 } from "@/features/map/ui";
+import { DividerLine } from "@/shared/ui/divider";
 
 /**
  * MapControlWidget 컴포넌트는 사용자가 사용중인 모드에 따라 서로 다른 컨트롤 버튼들을 렌더링 해야 합니다.
@@ -25,8 +27,10 @@ export const MapControlWidget = () => {
         <div className="absolute bottom-[6.875rem] left-4">
           <MyLocationButton />
         </div>
-        <div className="flex flex-col gap-2 absolute bottom-[6.875rem] right-4">
-          <ShowOthersMarkingButton />
+        <div className="flex flex-col absolute bottom-[6.875rem] right-4 rounded-2xl shadow-custom-1">
+          <ShowMyMarkingButton />
+          <DividerLine axis="row" />
+          <ShowAroundMarkingButton />
         </div>
         <div className="absolute top-4 left-4">
           <CollectionButton />

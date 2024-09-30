@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { CurrentLocationLoading, FloatingButton } from "@/entities/map/ui";
 import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
-import { DividerLine } from "@/shared/ui/divider";
 import {
   BookmarkIcon,
   DogFootIcon,
@@ -81,40 +79,47 @@ export const MyLocationButton = () => {
   );
 };
 
-export const ShowOthersMarkingButton = () => {
-  const buttonBaseStyles = "border-none outline-none h-14 px-[.875rem]";
+const buttonBaseStyles = "border-none outline-none h-14 px-[.875rem]";
 
+export const ShowMyMarkingButton = () => {
   // todo 상태 전역으로 관리하기
-  const [isMyMarkingVisible, setIsMyMarkingVisible] = useState<boolean>(false);
+  const shouldShowMyMarking = false;
 
   return (
-    <div className="flex flex-col rounded-2xl shadow-custom-1">
-      <Button
-        type="button"
-        variant={isMyMarkingVisible ? "filled" : "outlined"}
-        colorType={isMyMarkingVisible ? "primary" : "tertiary"}
-        size="medium"
-        className={`${buttonBaseStyles} rounded-b-none`}
-        aria-label="내 마킹만 보기"
-        onClick={() => setIsMyMarkingVisible(true)}
-      >
-        <img src="/public/default-image.png" className="w-7 h-7 rounded-full" />
-      </Button>
+    <Button
+      type="button"
+      variant={shouldShowMyMarking ? "filled" : "outlined"}
+      colorType={shouldShowMyMarking ? "primary" : "tertiary"}
+      size="medium"
+      className={`${buttonBaseStyles} rounded-b-none`}
+      aria-label="내 마킹만 보기"
+      onClick={() => {
+        // todo 내 마킹 보기로 상태 변경
+      }}
+    >
+      <img src="/public/default-image.png" className="w-7 h-7 rounded-full" />
+    </Button>
+  );
+};
 
-      <DividerLine axis="row" />
+export const ShowAroundMarkingButton = () => {
+  // todo 상태 전역으로 관리하기
+  const shouldShowAroundMarking = false;
 
-      <Button
-        type="button"
-        variant={!isMyMarkingVisible ? "filled" : "outlined"}
-        colorType={!isMyMarkingVisible ? "primary" : "tertiary"}
-        size="medium"
-        className={`${buttonBaseStyles} rounded-t-none`}
-        aria-label="주변 마킹 보기"
-        onClick={() => setIsMyMarkingVisible(false)}
-      >
-        <DogFootIcon />
-      </Button>
-    </div>
+  return (
+    <Button
+      type="button"
+      variant={shouldShowAroundMarking ? "filled" : "outlined"}
+      colorType={shouldShowAroundMarking ? "primary" : "tertiary"}
+      size="medium"
+      className={`${buttonBaseStyles} rounded-t-none`}
+      aria-label="주변 마킹 보기"
+      onClick={() => {
+        // todo 주변 마킹 보기로 상태 변경
+      }}
+    >
+      <DogFootIcon />
+    </Button>
   );
 };
 
