@@ -11,7 +11,6 @@ export const SIGN_UP_END_POINT = {
   EMAIL: `${API_BASE_URL}/users`,
   VERIFICATION_CODE: `${API_BASE_URL}/users/auth`,
   CHECK_VERIFICATION_CODE: `${API_BASE_URL}/users/auth/check`,
-  DUPLICATE_NICKNAME: `${API_BASE_URL}/users/nickname`,
   USER_INFO: `${API_BASE_URL}/users/additional-info`,
   PET_INFO: `${API_BASE_URL}/pets`,
 };

@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { LatLng } from "@/features/auth/api/region";
 import {
   MAP_ENDPOINT,
   MarkingModalError,
   POST_VISIBILITY_MAP,
 } from "../constants";
+import { LatLng } from "../store";
 
 // Marking Form 저장 API
 export interface MarkingFormRequest extends LatLng {

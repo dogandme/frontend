@@ -1,5 +1,3 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 export const colors = {
   grey: {
     0: "#FFFFFF",
@@ -117,10 +115,6 @@ export const ROUTER_PATH = {
   ACCOUNT: "/my-page/setting/manage-account",
   MODIFY_USER_INFO: "/my-page/setting/modify-userinfo",
 } as const;
-
-export const API_END_POINT = {
-  DUPLICATE_NICKNAME: `${API_BASE_URL}/users/nickname`,
-};
 
 export * from "./region";
 export * from "./message";

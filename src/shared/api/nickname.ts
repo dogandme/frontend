@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { API_END_POINT } from "../constants";
+import { NICKNAME_END_POINT } from "../constants";
 
 export interface DuplicateNicknameRequestData {
   nickname: string;
@@ -13,7 +13,7 @@ export interface DuplicateNicknameResponse {
 const postDuplicateNickname = async ({
   nickname,
 }: DuplicateNicknameRequestData) => {
-  const response = await fetch(API_END_POINT.DUPLICATE_NICKNAME, {
+  const response = await fetch(NICKNAME_END_POINT.DUPLICATE, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

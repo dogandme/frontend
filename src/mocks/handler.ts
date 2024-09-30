@@ -2,6 +2,7 @@ import { http, HttpResponse, PathParams } from "msw";
 import { SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MAP_ENDPOINT } from "@/features/map/constants";
 import { MarkingListRequest } from "@/features/marking/api";
+import { NICKNAME_END_POINT } from "@/shared/constants";
 // data
 import markingListData from "./data/markingList.json";
 
@@ -107,7 +108,7 @@ export const userInfoRegistrationHandlers = [
     {
       nickname: string;
     }
-  >(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, async ({ request }) => {
+  >(NICKNAME_END_POINT.DUPLICATE, async ({ request }) => {
     const { nickname } = await request.json();
 
     if (nickname === "중복") {
