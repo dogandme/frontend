@@ -55,6 +55,7 @@ const ChangeNicknameInput = ({
       essential
       onChange={handleChange}
       value={_nicknameInput}
+      isError={!_isNicknameEmpty && !_isNicknameValid}
       statusText={statusText}
     />
   );
