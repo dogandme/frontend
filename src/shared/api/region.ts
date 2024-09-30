@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ADDRESSES_END_POINT } from "../constants";
-import { ERROR_MESSAGE } from "../constants";
+import { REGION_ERROR_MESSAGE } from "../constants";
 
 export interface LatLng {
   lat: number;
@@ -32,7 +32,7 @@ const getRegionByKeyword = async (
 
   // TODO 에러 바운더리로 처리하기
   if (!response.ok) {
-    throw new Error(ERROR_MESSAGE.UNKNOWN);
+    throw new Error(REGION_ERROR_MESSAGE.UNKNOWN);
   }
   const data = await response.json();
   // TODO 백엔드와 데이터 처리 어떻게 할지 살펴보기
@@ -77,7 +77,7 @@ const getRegionByLatLng = async ({
 
   // TODO 에러 바운더리로 처리하기
   if (!response.ok) {
-    throw new Error(ERROR_MESSAGE.UNKNOWN);
+    throw new Error(REGION_ERROR_MESSAGE.UNKNOWN);
   }
   const data = await response.json();
   // TODO 백엔드와 데이터 처리 어떻게 할지 살펴보기

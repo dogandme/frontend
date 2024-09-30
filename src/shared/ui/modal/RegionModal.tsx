@@ -1,7 +1,10 @@
 import { useRef } from "react";
 import { StoreApi, useStore } from "zustand";
 import { useGetRegionByKeyword, useGetRegionByLatLng } from "@/shared/api";
-import { REGION_API_DEBOUNCE_DELAY, ERROR_MESSAGE } from "@/shared/constants";
+import {
+  REGION_API_DEBOUNCE_DELAY,
+  REGION_ERROR_MESSAGE,
+} from "@/shared/constants";
 import { useRegionModalStore } from "@/shared/store";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
@@ -141,13 +144,13 @@ const SearchRegionByGPSButton = () => {
   const errorCallback = (error: GeolocationPositionError) => {
     switch (error.code) {
       case GeolocationPositionError.PERMISSION_DENIED:
-        throw new Error(ERROR_MESSAGE.PERMISSION_DENIED);
+        throw new Error(REGION_ERROR_MESSAGE.PERMISSION_DENIED);
       case GeolocationPositionError.POSITION_UNAVAILABLE:
-        throw new Error(ERROR_MESSAGE.POSITION_UNAVAILABLE);
+        throw new Error(REGION_ERROR_MESSAGE.POSITION_UNAVAILABLE);
       case GeolocationPositionError.TIMEOUT:
         if (failureCount.current >= 3) {
           failureCount.current = 0;
-          throw new Error(ERROR_MESSAGE.POSITION_UNAVAILABLE);
+          throw new Error(REGION_ERROR_MESSAGE.POSITION_UNAVAILABLE);
         }
         failureCount.current += 1;
         window.navigator.geolocation.getCurrentPosition(
@@ -161,7 +164,7 @@ const SearchRegionByGPSButton = () => {
         );
         break;
       default:
-        throw new Error(ERROR_MESSAGE.UNKNOWN);
+        throw new Error(REGION_ERROR_MESSAGE.UNKNOWN);
     }
   };
 
@@ -350,7 +353,7 @@ const RegionModalSaveButton = ({
 
   const handleCloseRegionModal = async () => {
     if (region.length === 0) {
-      throw new Error(ERROR_MESSAGE.NON_SELECTED_ADDRESS);
+      throw new Error(REGION_ERROR_MESSAGE.NON_SELECTED_ADDRESS);
     }
     await onClose();
     resetRegionModalStore();
