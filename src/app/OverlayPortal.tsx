@@ -42,7 +42,7 @@ const OverlayWrapper = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
  * 오버레이가 열린 채로 라우팅이 일어나면 모든 오버레이를 제거 합니다.
  */
 export const OverlayPortal = () => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const overlays = useOverlayStore((state) => state.overlays);
   const resetOverlays = useOverlayStore((state) => state.resetOverlays);
 
@@ -64,7 +64,7 @@ export const OverlayPortal = () => {
   // 페이지 이동 시 모든 오버레이를 제거합니다.
   useEffect(() => {
     resetOverlays();
-  }, [pathname, resetOverlays]);
+  }, [pathname, search, resetOverlays]);
 
   const overlayAreaBackground = shouldDisableInteraction ? "h-screen" : "";
 
