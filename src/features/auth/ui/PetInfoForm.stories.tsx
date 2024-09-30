@@ -34,7 +34,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
             code: 200,
             message: "success",
             content: {
-              role: "USER_USER",
+              role: "ROLE_USER",
+              authorization: "Bearer token ROLE_USER",
             },
           });
         }),
@@ -427,8 +428,9 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
 
         await userEvent.click($submit);
 
-        const { role } = useAuthStore.getState();
-        expect(role).toBe("USER_USER");
+        const { role, token } = useAuthStore.getState();
+        expect(role).toBe("ROLE_USER");
+        expect(token).toBe("Bearer token ROLE_USER");
       },
     );
   },

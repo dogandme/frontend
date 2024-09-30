@@ -149,6 +149,7 @@ interface UserInfoRegistrationResponse {
   content: {
     role: string;
     nickname: string;
+    authorization: string;
   };
 }
 
