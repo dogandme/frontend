@@ -57,9 +57,7 @@ export const EmailLoginHyperLink = () => (
 export const OAuthLoginHyperLinks = () => {
   const navigate = useNavigate();
 
-  const token = useAuthStore((state) => state.token);
   const role = useAuthStore((state) => state.role);
-  const nickname = useAuthStore((state) => state.nickname);
 
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
@@ -80,51 +78,61 @@ export const OAuthLoginHyperLinks = () => {
   useEffect(() => {
     const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
 
-    // 쿠키에서 토큰, 권한, 닉네임을 가져옵니다.
+    // 로그인을 한 상태로 로그인 페이지에 접근 하는 행위를 방지 합니다.
+    if (role === "ROLE_NONE") {
+      navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
+      return;
+    }
+    if (role) {
+      navigate(lastNoneAuthRoute);
+      return;
+    }
+
+    // 해당 코드들은 소셜 로그인을 시행 한 후 쿠키에 저장된 인증 정보를 이용하는 코드 들입니다.
     const tokenOnCookie = getCookie("authorization");
     const roleOnCookie = getCookie("role");
     const nicknameOnCookie = getCookie("nickname");
 
-    // 쿠키로 받은 소셜 로그인 결과에서 닉네임이 존재한다면 해당 닉네임으로 프로필 정보를 prefetch 합니다.
+    // 만약 페이지 진입 시 쿠키에 토큰과 권한이 없다면 아무것도 하지 않습니다.
+    if (!tokenOnCookie || !roleOnCookie) {
+      return;
+    }
+
+    setToken(tokenOnCookie);
+    setRole(roleOnCookie);
+
+    // 쿠키로 받은 소셜 로그인 결과에서 닉네임이 존재한다면 해당 닉네임으로 프로필 정보를 prefetch 하고 토큰을 저장 합니다.
     if (nicknameOnCookie) {
       queryClient.prefetchQuery({
         queryKey: ["profile", nicknameOnCookie],
         queryFn: () => getProfile(nicknameOnCookie),
       });
-    }
 
-    if (tokenOnCookie && roleOnCookie && nicknameOnCookie) {
-      setToken(tokenOnCookie);
-      setRole(roleOnCookie);
       setNickname(nicknameOnCookie);
-      navigate(lastNoneAuthRoute);
     }
 
+    // 사용자가 추가 정보를 입력하지 않은 경우엔 추가 정보 입력 페이지로 이동 시킵니다.
+    if (roleOnCookie === "ROLE_NONE") {
+      navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
+      return;
+    }
+    navigate(lastNoneAuthRoute);
+
+    // 로그인에 성공하여 리다이렉션 될 때 해당 경로에서 쿠키를 제거 합니다.
     return () => {
-      if (tokenOnCookie && roleOnCookie && nicknameOnCookie) {
-        deleteCookie({
-          name: "authorization",
-          value: tokenOnCookie,
-          path: "/login",
-        });
-        deleteCookie({ name: "role", value: roleOnCookie, path: "/login" });
-        deleteCookie({
-          name: "nickname",
-          value: nicknameOnCookie,
-          path: "/login",
-        });
-      }
+      const cookies = [
+        { value: tokenOnCookie, name: "authorization" },
+        { value: roleOnCookie, name: "role" },
+        { value: nicknameOnCookie, name: "nickname" },
+      ];
+
+      cookies.forEach(({ value, name }) => {
+        if (value) {
+          deleteCookie({ name, value, path: "/login" });
+        }
+      });
     };
-  }, [
-    navigate,
-    token,
-    role,
-    nickname,
-    setToken,
-    setRole,
-    setNickname,
-    queryClient,
-  ]);
+  }, [navigate, role, setToken, setRole, setNickname, queryClient]);
 
   return (
     <>
