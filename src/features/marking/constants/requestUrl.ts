@@ -10,4 +10,6 @@ export const MARKING_REQUEST_URL = {
     northEastLng,
   }: Omit<MarkingListRequest, "token">) =>
     `${API_BASE_URL}/markings/search?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}`,
+  ADD: `${API_BASE_URL}/markings`,
+  SAVE_TEMP: `${API_BASE_URL}/markings/temp`,
 };
