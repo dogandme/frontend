@@ -1,5 +1,5 @@
 import { StoryObj } from "@storybook/react";
-import { AccountCancellationModal } from "./_AccountCancellationModal";
+import { AccountCancellationModal } from "./accountCancellationModal";
 
 export default {
   title: "features/setting/AccountCancellationModal",

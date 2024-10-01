@@ -1,6 +1,6 @@
 import { StoryObj } from "@storybook/react";
 import { expect, userEvent } from "@storybook/test";
-import { PasswordChangeModal } from "./_PasswordChangeModal";
+import { PasswordChangeModal } from "./passwordChangeModal";
 
 export default {
   title: "features/setting/PasswordChangeModal",

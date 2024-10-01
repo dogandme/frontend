@@ -52,6 +52,10 @@ body {
   }
 }
 
+.setting-item {
+  @apply title-2 flex w-full justify-between py-2 text-grey-700 hover:bg-grey-50 focus-visible:bg-grey-50 focus-visible:outline-none active:bg-grey-100;
+}
+
 /* input[type=date]의 기존 indicator를 제거하기 위한 스타일
   TODO 가은님에게 input[type=date] 어떤 식으로 스타일 사용 하실지 물어보고 수정하기
 */

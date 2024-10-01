@@ -1,8 +1,12 @@
+/**
+ * 해당 파일은 /my-page/setting 에서 사용 되는 컴포넌트를 모아둔 파일입니다.
+ * page 레이어에서 정의 되기엔 비즈니스 로직이나 도메인 로직이 존재하는 컴포넌트 들을 모아뒀습니다.
+ */
 import { useSnackBar } from "@/shared/lib";
+import { useModal } from "@/shared/lib";
 import { Snackbar } from "@/shared/ui/snackbar";
-import { settingClassName } from "./setting.styles";
+import { LogoutModal } from "./logoutModal";
 
-// 문의/제안
 export const Report = () => {
   const officialEmail = "mungwithme@gmail.com";
 
@@ -23,9 +27,21 @@ export const Report = () => {
     }
   };
   return (
-    <button onClick={handleClick} className={settingClassName}>
+    <button onClick={handleClick} className="setting-item">
       <p>문의/제안</p>
       <span className="text-grey-700 body-2">mungwithme@gmail.com</span>
+    </button>
+  );
+};
+
+export const LogoutButton = () => {
+  const { handleOpen: handleOpenLogoutModal, onClose } = useModal(() => (
+    <LogoutModal onCloseLogoutModal={onClose} />
+  ));
+
+  return (
+    <button className="setting-item" onClick={handleOpenLogoutModal}>
+      로그아웃
     </button>
   );
 };
