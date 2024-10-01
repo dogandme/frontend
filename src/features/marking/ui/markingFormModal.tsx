@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
-import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
+import { MapSnackbar } from "@/entities/map/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -12,10 +12,9 @@ import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../../map/api";
-import { usePostMarkingForm, usePostTempMarkingForm } from "../../map/api/form";
-import { POST_VISIBILITY_MAP } from "../../map/constants";
-import { MarkingModalError } from "../../map/constants";
 import { useMapStore } from "../../map/store/map";
+import { usePostMarkingForm, usePostTempMarkingForm } from "../api";
+import { MARKING_ADD_ERROR_MESSAGE, POST_VISIBILITY_MAP } from "../constants";
 import { useMarkingFormStore } from "../store";
 import { MarkingFormCloseModal } from "./markingFormCloseModal";
 
@@ -88,7 +87,7 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { token } = useAuthStore.getState();
 
   if (!token) {
-    throw new Error(MarkingModalError.unAuthorized);
+    throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
   }
 
   const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng, token });
@@ -221,7 +220,7 @@ const PhotoInput = () => {
       });
 
       if (_images.length > 5) {
-        throw new Error(MarkingModalError.maxPhotoCount);
+        throw new Error(MARKING_ADD_ERROR_MESSAGE.MAX_PHOTO_COUNT);
       }
     }
 
@@ -327,7 +326,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     const { token } = useAuthStore.getState();
 
     if (!token) {
-      throw new Error(MarkingModalError.unAuthorized);
+      throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     }
 
     const formObj = useMarkingFormStore.getState();
@@ -339,11 +338,11 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     const lng = center.lng();
 
     if (!region) {
-      throw new Error(MarkingModalError.regionNotFound);
+      throw new Error(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
     }
 
     if (!visibility || images.length === 0) {
-      throw new Error(MarkingModalError.missingRequiredFields);
+      throw new Error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
     }
 
     postMarkingData(
@@ -399,7 +398,7 @@ const TemporarySaveButton = ({
     const { token } = useAuthStore.getState();
 
     if (!token) {
-      throw new Error(MarkingModalError.unAuthorized);
+      throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     }
 
     const formObj = useMarkingFormStore.getState();

@@ -65,14 +65,4 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const MAP_ENDPOINT = {
   REVERSE_GEOCODING: ({ lat, lng }: { lat: number; lng: number }) =>
     `${API_BASE_URL}/maps/reverse-geocode?lat=${lat}&lng=${lng}`,
-  MARKING_SAVE: `${API_BASE_URL}/markings`,
-  MARKING_TEMP_SAVE: `${API_BASE_URL}/markings/temp`,
 };
-
-export const POST_VISIBILITY_MAP = {
-  "전체 공개": "PUBLIC",
-  "팔로우 공개": "FOLLOWERS_ONLY",
-  "나만 보기": "PRIVATE",
-} as const;
-
-export * from "./message";

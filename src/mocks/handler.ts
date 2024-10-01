@@ -1,7 +1,7 @@
 import { http, HttpResponse, PathParams } from "msw";
 import { SIGN_UP_END_POINT } from "@/features/auth/constants";
-import { MAP_ENDPOINT } from "@/features/map/constants";
 import { MarkingListRequest } from "@/features/marking/api";
+import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 // data
 import markingListData from "./data/markingList.json";
 
@@ -151,13 +151,13 @@ export const markingModalHandlers = [
       });
     },
   ),
-  http.post<PathParams>(MAP_ENDPOINT.MARKING_SAVE, async () => {
+  http.post<PathParams>(MARKING_REQUEST_URL.ADD, async () => {
     return HttpResponse.json({
       code: 200,
       message: "success",
     });
   }),
-  http.post<PathParams>(MAP_ENDPOINT.MARKING_TEMP_SAVE, async () => {
+  http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async () => {
     return HttpResponse.json({
       code: 200,
       message: "success",

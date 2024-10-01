@@ -10,7 +10,7 @@ import {
 } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Marking } from "../api";
-import { API_BASE_URL } from "../contants";
+import { API_BASE_URL } from "../constants";
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
