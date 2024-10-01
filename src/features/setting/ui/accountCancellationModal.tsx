@@ -1,14 +1,14 @@
 import { Button } from "@/shared/ui/button";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
-import { useCancellationCheckModal } from "../lib";
+import { usePasswordCheckModal } from "../hooks";
 
 export const AccountCancellationModal = ({
   onClose,
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const handleOpenCancellationCheckModal = useCancellationCheckModal();
+  const handleOpenCancellationCheckModal = usePasswordCheckModal();
 
   return (
     // TODO FormModal 생성 되면 적용하기

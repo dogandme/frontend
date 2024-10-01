@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useChangePasswordModal } from "@/features/setting/lib";
+import { usePasswordChangeModal } from "@/features/setting/hooks";
 import { AccountCancellationModal } from "@/features/setting/ui";
 import { AccountEmail } from "@/entities/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
@@ -40,7 +40,7 @@ export const AccountManagementPage = () => {
 };
 
 const PasswordChangeButton = () => {
-  const handleOpenPasswordChangeModal = useChangePasswordModal();
+  const handleOpenPasswordChangeModal = usePasswordChangeModal();
 
   return (
     <button className="setting-item" onClick={handleOpenPasswordChangeModal}>

@@ -4,7 +4,7 @@ import { Button } from "@/shared/ui/button";
 import { CloseIcon, InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
-import { useAccountCancellationFormStore } from "../store";
+import { usePasswordCheckFormStore } from "../store";
 
 const validatePassword = (password: string) => {
   // 조건
@@ -16,20 +16,18 @@ const validatePassword = (password: string) => {
 };
 
 const CurrentPasswordInput = () => {
-  const isValidPassword = useAccountCancellationFormStore(
+  const isValidPassword = usePasswordCheckFormStore(
     (state) => state.isValidPassword,
   );
-  const isEmptyCurrentPassword = useAccountCancellationFormStore(
+  const isEmptyCurrentPassword = usePasswordCheckFormStore(
     (state) => state.isEmptyPassword,
   );
 
-  const setPassword = useAccountCancellationFormStore(
-    (state) => state.setPassword,
-  );
-  const setIsValidPassword = useAccountCancellationFormStore(
+  const setPassword = usePasswordCheckFormStore((state) => state.setPassword);
+  const setIsValidPassword = usePasswordCheckFormStore(
     (state) => state.setIsValidPassword,
   );
-  const setIsEmptyPassword = useAccountCancellationFormStore(
+  const setIsEmptyPassword = usePasswordCheckFormStore(
     (state) => state.setIsEmptyPassword,
   );
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +64,7 @@ export const PasswordCheckModal = ({
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const resetAccountCancellationForm = useAccountCancellationFormStore(
+  const resetAccountCancellationForm = usePasswordCheckFormStore(
     (state) => state.reset,
   );
 

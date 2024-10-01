@@ -19,7 +19,7 @@ export const initialPasswordCheckFormState: PasswordCheckFormState = {
   isEmptyPassword: true,
 };
 
-export const useAccountCancellationFormStore = create<
+export const usePasswordCheckFormStore = create<
   PasswordCheckFormState & PasswordCheckFormAction
 >((set) => ({
   ...initialPasswordCheckFormState,
