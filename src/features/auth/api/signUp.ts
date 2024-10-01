@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { ROUTER_PATH } from "@/shared/constants";
+import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
 interface VerificationCodeRequestData {
@@ -129,8 +132,24 @@ const postSignUpByEmail = async ({
 };
 
 export const usePostSignUpByEmail = () => {
+  const navigate = useNavigate();
+  const setToken = useAuthStore((state) => state.setToken);
+  const setRole = useAuthStore((state) => state.setRole);
+
   return useMutation<SignUpByEmailResponse, Error, SignUpByEmailRequestData>({
     mutationFn: postSignUpByEmail,
+    onSuccess: ({ content }) => {
+      const { authorization, role } = content;
+
+      setToken(authorization);
+      setRole(role);
+
+      navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
+    },
+    onError: (error) => {
+      // todo: snackbar 띄우기
+      alert(error.message);
+    },
   });
 };
 

@@ -1,10 +1,7 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { MutationState, useMutationState } from "@tanstack/react-query";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { ROUTER_PATH } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib/overlay";
-import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Snackbar } from "@/shared/ui/snackbar";
@@ -297,11 +294,7 @@ const PasswordConfirm = () => {
 };
 
 const SignUpByEmailForm = () => {
-  const navigate = useNavigate();
-
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
-  const setToken = useAuthStore((state) => state.setToken);
-  const setRole = useAuthStore((state) => state.setRole);
 
   const checkCodeResponseCacheArr = useMutationState<
     MutationState<
@@ -366,24 +359,7 @@ const SignUpByEmailForm = () => {
       isMatchedPassword &&
       isVerificationCodeCorrect;
 
-    if (canSignUp)
-      postSignUpByEmail(
-        { email, password },
-        {
-          onSuccess: ({ content }) => {
-            const { authorization, role } = content;
-
-            setToken(authorization);
-            setRole(role);
-
-            navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
-          },
-          onError: (error) => {
-            // todo: snackbar 띄우기
-            alert(error.message);
-          },
-        },
-      );
+    if (canSignUp) postSignUpByEmail({ email, password });
   };
 
   return (
