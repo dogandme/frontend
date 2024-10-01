@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { LatLng } from "@/features/auth/api/region";
 import {
   MAP_ENDPOINT,
-  MarkingModalError,
+  MARKING_ADD_ERROR_MESSAGE,
   POST_VISIBILITY_MAP,
 } from "../constants";
 
@@ -22,7 +22,7 @@ const postMarkingFormData = async ({
   const { visibility, images, ...rest } = formObj;
 
   if (!token) {
-    throw new Error(MarkingModalError.unAuthorized);
+    throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
   }
 
   const formData = new FormData();
@@ -52,7 +52,7 @@ const postMarkingFormData = async ({
 
   if (!response.ok) {
     if (response.status === 500) {
-      throw new Error(MarkingModalError.failToFetch);
+      throw new Error(MARKING_ADD_ERROR_MESSAGE.FAIL_TO_FETCH);
     }
     throw new Error(data.message);
   }
@@ -76,7 +76,7 @@ const postMarkingFormDataTemporary = async ({
   const { region, visibility, content, images, lat, lng } = formObj;
 
   if (!token) {
-    throw new Error(MarkingModalError.unAuthorized);
+    throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
   }
 
   const formData = new FormData();
@@ -108,7 +108,7 @@ const postMarkingFormDataTemporary = async ({
 
   if (!response.ok) {
     if (response.status === 500) {
-      throw new Error(MarkingModalError.failToFetch);
+      throw new Error(MARKING_ADD_ERROR_MESSAGE.FAIL_TO_FETCH);
     }
     throw new Error(data.message);
   }
