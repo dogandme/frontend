@@ -1,17 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  AccountManagement,
-  EditMyInfo,
-  MyActivity,
-  Notification,
-  TermsOfService,
-  Report,
-  LogoutButton,
-} from "@/features/setting/ui";
-import { VersionInfo } from "@/entities/setting/ui";
+import { Link } from "react-router-dom";
+import { Report, LogoutButton } from "@/features/setting/ui";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
+import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const SettingPage = () => {
@@ -51,3 +45,61 @@ export const SettingPage = () => {
     </>
   );
 };
+
+const settingClassName =
+  "py-2 flex justify-between w-full text-grey-700 title-2 hover:bg-grey-50 focus-visible:bg-grey-50 focus-visible:outline-none active:bg-grey-100";
+
+const AccountManagement = () => (
+  <Link to={ROUTER_PATH.ACCOUNT} className={settingClassName}>
+    <p>계정관리</p>
+    <span className="text-grey-500">
+      <ArrowRightIcon />
+    </span>
+  </Link>
+);
+
+const EditMyInfo = () => (
+  <Link to="." className={settingClassName}>
+    <p>내 정보 수정</p>
+    <span className="text-grey-500">
+      <ArrowRightIcon />
+    </span>
+  </Link>
+);
+
+// 내 활동 내역을 보는 컴포넌트
+const MyActivity = () => (
+  <Link to="." className={settingClassName}>
+    <p>내 활동</p>
+    <span className="text-grey-500">
+      <ArrowRightIcon />
+    </span>
+  </Link>
+);
+
+// 알림
+const Notification = () => (
+  <Link to="." className={settingClassName}>
+    <p>알림</p>
+    <span className="text-grey-500">
+      <ArrowRightIcon />
+    </span>
+  </Link>
+);
+
+// 이용 약관
+const TermsOfService = () => (
+  <Link to="." className={settingClassName}>
+    <p>이용 약관</p>
+    <span className="text-grey-500">
+      <ArrowRightIcon />
+    </span>
+  </Link>
+);
+// 버전 정보
+const VersionInfo = () => (
+  <div className={settingClassName}>
+    <p>버전 정보</p>
+    <span className="text-grey-700 body-2">v0.1</span>
+  </div>
+);
