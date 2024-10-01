@@ -8,9 +8,9 @@ import { GoogleMaps } from "@/widgets/map/ui";
 import { useAuthStore } from "@/shared/store";
 import { GoogleMapsProvider, MobileLayout } from "@/app";
 import { markingModalHandlers } from "@/mocks/handler";
-import { useMarkingFormStore } from "../store/form";
-import { useMapStore } from "../store/map";
-import { MarkingFormModal } from "./MarkingFormModal";
+import { useMapStore } from "../../map/store";
+import { useMarkingFormStore } from "../store";
+import { MarkingFormModal } from "./markingFormModal";
 
 const meta: Meta<typeof MarkingFormModal> = {
   title: "features/map/MarkingFormModal",

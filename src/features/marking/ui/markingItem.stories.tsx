@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import { MarkingList } from "@/entities/marking/ui";
 import { markingModalHandlers } from "@/mocks/handler";
 import { useGetMarkingList } from "../api";
-import { MarkingItem } from "./MarkingItem";
+import { MarkingItem } from "./markingItem";
 
 const meta: Meta<typeof MarkingItem> = {
   title: "features/marking/MarkingItem",

@@ -11,19 +11,44 @@ import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
-import { useGetAddressFromLatLng } from "../api";
-import { usePostMarkingForm, usePostTempMarkingForm } from "../api/form";
-import { POST_VISIBILITY_MAP } from "../constants";
-import { MarkingModalError } from "../constants";
-import { useMarkingFormStore } from "../store/form";
-import { useMapStore } from "../store/map";
-import { MarkingFormCloseModal } from "./MarkingFormCloseModal";
+import { useGetAddressFromLatLng } from "../../map/api";
+import { usePostMarkingForm, usePostTempMarkingForm } from "../../map/api/form";
+import { POST_VISIBILITY_MAP } from "../../map/constants";
+import { MarkingModalError } from "../../map/constants";
+import { useMapStore } from "../../map/store/map";
+import { useMarkingFormStore } from "../store";
+import { MarkingFormCloseModal } from "./markingFormCloseModal";
 
 interface MarkingFormModalProps {
   onCloseMarkingModal: () => Promise<void>;
 }
 
-const MarkingModalNav = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
+export const MarkingFormModal = ({
+  onCloseMarkingModal,
+}: MarkingFormModalProps) => {
+  return (
+    <Modal modalType="center">
+      <MarkingModalHeader onCloseMarkingModal={onCloseMarkingModal} />
+      <section className="flex flex-col gap-8">
+        {/* 사용자 현재 위치 */}
+        <CurrentLocation onCloseMarkingModal={onCloseMarkingModal} />
+        {/* 보기 권한 설정 */}
+        <PostVisibilitySelect />
+        {/* 사진 추가하기 */}
+        <PhotoInput />
+        {/* 메모하기 */}
+        <MarkingTextArea />
+        {/* 제출 버튼들 */}
+        <div className="flex flex-col gap-2">
+          <SaveButton onCloseMarkingModal={onCloseMarkingModal} />
+          <TemporarySaveButton onCloseMarkingModal={onCloseMarkingModal} />
+        </div>
+      </section>
+    </Modal>
+  );
+};
+
+const MarkingModalHeader = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const { onClose: onCloseExitModal, handleOpen: onOpenExitModal } = useModal(
     () => (
       <MarkingFormCloseModal
@@ -409,30 +434,5 @@ const TemporarySaveButton = ({
     >
       임시저장
     </Button>
-  );
-};
-
-export const MarkingFormModal = ({
-  onCloseMarkingModal,
-}: MarkingFormModalProps) => {
-  return (
-    <Modal modalType="center">
-      <MarkingModalNav onCloseMarkingModal={onCloseMarkingModal} />
-      <section className="flex flex-col gap-8">
-        {/* 사용자 현재 위치 */}
-        <CurrentLocation onCloseMarkingModal={onCloseMarkingModal} />
-        {/* 보기 권한 설정 */}
-        <PostVisibilitySelect />
-        {/* 사진 추가하기 */}
-        <PhotoInput />
-        {/* 메모하기 */}
-        <MarkingTextArea />
-        {/* 제출 버튼들 */}
-        <div className="flex flex-col gap-2">
-          <SaveButton onCloseMarkingModal={onCloseMarkingModal} />
-          <TemporarySaveButton onCloseMarkingModal={onCloseMarkingModal} />
-        </div>
-      </section>
-    </Modal>
   );
 };
