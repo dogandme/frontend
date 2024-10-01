@@ -97,6 +97,7 @@ export const userInfoRegistrationHandlers = [
       message: "success",
       content: {
         nickname,
+        authorization: "Bearer token-for-role-guest",
         role: "ROLE_GUEST",
       },
     });
