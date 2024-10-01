@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { POST_VISIBILITY_MAP } from "../../map/constants";
+import { POST_VISIBILITY_MAP } from "../constants";
 
 interface MarkingFormState {
   region: string;
