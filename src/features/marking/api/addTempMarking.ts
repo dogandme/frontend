@@ -1,10 +1,12 @@
 // Marking Form 임시 저장 API
 import { useMutation } from "@tanstack/react-query";
+import { useMapStore } from "@/features/map/store";
 import {
   MARKING_ADD_ERROR_MESSAGE,
   MARKING_REQUEST_URL,
   POST_VISIBILITY_MAP,
 } from "../constants";
+import { useMarkingFormStore } from "../store";
 import { MarkingFormRequest } from "./addMarking";
 
 const postMarkingFormDataTemporary = async ({
@@ -55,8 +57,25 @@ const postMarkingFormDataTemporary = async ({
   return data;
 };
 
-export const usePostTempMarkingForm = () => {
+export const usePostTempMarkingForm = ({
+  onSuccess,
+}: {
+  onSuccess: () => void;
+}) => {
+  const resetMarkingFormStore = useMarkingFormStore(
+    (state) => state.resetMarkingFormStore,
+  );
+  const setMode = useMapStore((state) => state.setMode);
+
   return useMutation({
     mutationFn: postMarkingFormDataTemporary,
+    onSuccess: () => {
+      onSuccess();
+      resetMarkingFormStore();
+      setMode("view");
+    },
+    onError: (error) => {
+      throw new Error(error.message);
+    },
   });
 };
