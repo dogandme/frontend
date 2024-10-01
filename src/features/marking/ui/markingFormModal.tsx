@@ -12,10 +12,9 @@ import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../../map/api";
-import { usePostMarkingForm, usePostTempMarkingForm } from "../../map/api/form";
-import { POST_VISIBILITY_MAP } from "../../map/constants";
-import { MARKING_ADD_ERROR_MESSAGE } from "../../map/constants";
 import { useMapStore } from "../../map/store/map";
+import { usePostMarkingForm, usePostTempMarkingForm } from "../api";
+import { MARKING_ADD_ERROR_MESSAGE, POST_VISIBILITY_MAP } from "../constants";
 import { useMarkingFormStore } from "../store";
 import { MarkingFormCloseModal } from "./markingFormCloseModal";
 
