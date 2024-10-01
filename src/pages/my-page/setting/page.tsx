@@ -46,11 +46,8 @@ export const SettingPage = () => {
   );
 };
 
-const settingClassName =
-  "py-2 flex justify-between w-full text-grey-700 title-2 hover:bg-grey-50 focus-visible:bg-grey-50 focus-visible:outline-none active:bg-grey-100";
-
 const AccountManagement = () => (
-  <Link to={ROUTER_PATH.ACCOUNT} className={settingClassName}>
+  <Link to={ROUTER_PATH.ACCOUNT} className="setting-item">
     <p>계정관리</p>
     <span className="text-grey-500">
       <ArrowRightIcon />
@@ -59,7 +56,7 @@ const AccountManagement = () => (
 );
 
 const EditMyInfo = () => (
-  <Link to="." className={settingClassName}>
+  <Link to="." className="setting-item">
     <p>내 정보 수정</p>
     <span className="text-grey-500">
       <ArrowRightIcon />
@@ -69,7 +66,7 @@ const EditMyInfo = () => (
 
 // 내 활동 내역을 보는 컴포넌트
 const MyActivity = () => (
-  <Link to="." className={settingClassName}>
+  <Link to="." className="setting-item">
     <p>내 활동</p>
     <span className="text-grey-500">
       <ArrowRightIcon />
@@ -79,7 +76,7 @@ const MyActivity = () => (
 
 // 알림
 const Notification = () => (
-  <Link to="." className={settingClassName}>
+  <Link to="." className="setting-item">
     <p>알림</p>
     <span className="text-grey-500">
       <ArrowRightIcon />
@@ -89,7 +86,7 @@ const Notification = () => (
 
 // 이용 약관
 const TermsOfService = () => (
-  <Link to="." className={settingClassName}>
+  <Link to="." className="setting-item">
     <p>이용 약관</p>
     <span className="text-grey-500">
       <ArrowRightIcon />
@@ -98,7 +95,7 @@ const TermsOfService = () => (
 );
 // 버전 정보
 const VersionInfo = () => (
-  <div className={settingClassName}>
+  <div className="setting-item">
     <p>버전 정보</p>
     <span className="text-grey-700 body-2">v0.1</span>
   </div>

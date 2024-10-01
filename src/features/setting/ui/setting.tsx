@@ -6,7 +6,6 @@ import { useSnackBar } from "@/shared/lib";
 import { useModal } from "@/shared/lib";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { LogoutModal } from "./_LogoutModal";
-import { settingClassName } from "./setting.styles";
 
 export const Report = () => {
   const officialEmail = "mungwithme@gmail.com";
@@ -28,7 +27,7 @@ export const Report = () => {
     }
   };
   return (
-    <button onClick={handleClick} className={settingClassName}>
+    <button onClick={handleClick} className="setting-item">
       <p>문의/제안</p>
       <span className="text-grey-700 body-2">mungwithme@gmail.com</span>
     </button>
@@ -41,7 +40,7 @@ export const LogoutButton = () => {
   ));
 
   return (
-    <button className={settingClassName} onClick={handleOpenLogoutModal}>
+    <button className="setting-item" onClick={handleOpenLogoutModal}>
       로그아웃
     </button>
   );

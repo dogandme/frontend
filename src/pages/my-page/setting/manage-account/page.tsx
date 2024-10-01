@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChangePasswordModal } from "@/features/setting/lib";
 import { AccountCancellationModal } from "@/features/setting/ui/_AccountCancellationModal";
-import { settingClassName } from "@/features/setting/ui/setting.styles";
 import { AccountEmail } from "@/entities/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useModal } from "@/shared/lib";
@@ -44,10 +43,7 @@ const PasswordChangeButton = () => {
   const handleOpenPasswordChangeModal = useChangePasswordModal();
 
   return (
-    <button
-      className={settingClassName}
-      onClick={handleOpenPasswordChangeModal}
-    >
+    <button className="setting-item" onClick={handleOpenPasswordChangeModal}>
       <p>비밀번호 변경</p>
       <span className="text-grey-500">
         <ArrowRightIcon />
@@ -62,7 +58,7 @@ const AccountCancellationButton = () => {
   ));
 
   return (
-    <button className={settingClassName} onClick={handleOpen}>
+    <button className="setting-item" onClick={handleOpen}>
       탈퇴하기
     </button>
   );

@@ -1,5 +1,3 @@
-import { settingClassName } from "./setting.styles";
-
 export const AccountEmail = () => {
   // TODO API 요청이나 userInfo 에서 가져오기
   const signUpMethod: "email" | "naver" | "google" = "email";
@@ -15,7 +13,7 @@ export const AccountEmail = () => {
         : "구글";
 
   return (
-    <div className={settingClassName}>
+    <div className="setting-item">
       <p>{emailFromText} 계정</p>
       <span className="text-grey-700 body-2">{email}</span>
     </div>
