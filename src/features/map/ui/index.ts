@@ -1,3 +1,3 @@
 export * from "./mapControlButton";
 export * from "./mapMarkers";
-export * from "./MarkingResearchButton";
+export * from "./markingResearchButton";
