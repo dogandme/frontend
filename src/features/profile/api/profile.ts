@@ -41,5 +41,6 @@ export const useGetProfile = (nickname: string) => {
     queryFn: () => getProfile(nickname),
 
     enabled: !!nickname,
+    select: (data) => data?.content,
   });
 };
