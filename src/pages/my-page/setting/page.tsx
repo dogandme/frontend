@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useSettingPermission } from "@/features/setting/lib";
+import { useSettingPermission } from "@/features/setting/hooks";
 import { Report, LogoutButton } from "@/features/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { DividerLine } from "@/shared/ui/divider";

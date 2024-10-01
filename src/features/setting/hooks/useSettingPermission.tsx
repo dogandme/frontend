@@ -28,10 +28,11 @@ export const useSettingPermission = (boundary: Role = "NONE") => {
       break;
     case "GUEST":
       hasPermission =
-        role !== null && role !== "ROLE_NONE" && nickname === urlNickname;
+        (role === "ROLE_GUEST" || role === "ROLE_USER") &&
+        nickname === urlNickname;
       break;
     case "USER":
-      // TODO user 도 어떻게 처리하기
+      hasPermission = role === "ROLE_USER" && nickname === urlNickname;
       break;
     default:
       hasPermission = false;
