@@ -1,8 +1,8 @@
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
-import { useMapStore } from "../store";
-import { useMarkingFormStore } from "../store/form";
+import { useMapStore } from "../../map/store";
+import { useMarkingFormStore } from "../store";
 
 export const MarkingFormCloseModal = ({
   onCloseExitModal,
