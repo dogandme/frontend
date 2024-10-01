@@ -320,7 +320,12 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     ),
   );
 
-  const { mutate: postMarkingData } = usePostMarkingForm();
+  const { mutate: postMarkingData } = usePostMarkingForm({
+    onSuccess: () => {
+      onCloseMarkingModal();
+      onOpenSnackbar();
+    },
+  });
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
@@ -378,11 +383,6 @@ const TemporarySaveButton = ({
 }: MarkingFormModalProps) => {
   const map = useMap();
 
-  const setMode = useMapStore((state) => state.setMode);
-  const resetMarkingFormStore = useMarkingFormStore(
-    (state) => state.resetMarkingFormStore,
-  );
-
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
       <MapSnackbar onClose={onCloseSnackbar}>
@@ -392,7 +392,12 @@ const TemporarySaveButton = ({
     ),
   );
 
-  const { mutate: postTempMarkingData } = usePostTempMarkingForm();
+  const { mutate: postTempMarkingData } = usePostTempMarkingForm({
+    onSuccess: () => {
+      onCloseMarkingModal();
+      onOpenSnackbar();
+    },
+  });
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
@@ -407,20 +412,7 @@ const TemporarySaveButton = ({
     const lat = center.lat();
     const lng = center.lng();
 
-    postTempMarkingData(
-      { token, lat, lng, ...formObj },
-      {
-        onSuccess: () => {
-          onCloseMarkingModal();
-          resetMarkingFormStore();
-          setMode("view");
-          onOpenSnackbar();
-        },
-        onError: (error) => {
-          throw new Error(error.message);
-        },
-      },
-    );
+    postTempMarkingData({ token, lat, lng, ...formObj });
   };
 
   return (

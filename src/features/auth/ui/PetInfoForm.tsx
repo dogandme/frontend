@@ -1,9 +1,7 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { SelectOpener } from "@/entities/auth/ui";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
-import { useRouteHistoryStore } from "@/shared/store/history";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { SelectChip } from "@/shared/ui/chip";
@@ -251,9 +249,6 @@ export const SubmitButton = () => {
    * getState() 는 호출 시점의 store 를 가져오기 떄문에 클릭이 일어난 시점의 상태 값들을 가져 올 수 있습니다.
    * getState() 로 인해 반환되는 store 자체는 불변하기 때문에 store 내부 상태들이 변경되어도 리렌더링이 일어나지 않습니다.
    */
-  const navigate = useNavigate();
-  const setRole = useAuthStore((state) => state.setRole);
-  const setToken = useAuthStore((state) => state.setToken);
   const { mutate: postPetInfo } = usePostPetInfo();
 
   // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
@@ -282,32 +277,16 @@ export const SubmitButton = () => {
       );
     }
 
-    postPetInfo(
-      {
-        token,
-        formObject: {
-          name,
-          breed,
-          personalities: characterList,
-          description: introduce,
-          profile: profileImage,
-        },
+    postPetInfo({
+      token,
+      formObject: {
+        name,
+        breed,
+        personalities: characterList,
+        description: introduce,
+        profile: profileImage,
       },
-      {
-        onSuccess: (data) => {
-          const { role, authorization } = data.content;
-          const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
-
-          setRole(role);
-          setToken(authorization);
-          navigate(lastNoneAuthRoute);
-        },
-        // TODO 에러 바운더리 생성되면 로직 변경하기
-        onError: (error) => {
-          throw new Error(error.message);
-        },
-      },
-    );
+    });
   };
   return (
     <Button

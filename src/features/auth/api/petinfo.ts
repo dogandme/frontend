@@ -1,5 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import type { AuthStore } from "@/shared/store/auth";
+import { useAuthStore, AuthStore } from "@/shared/store/auth";
+import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";
 
 export interface PetInfoResponse {
@@ -73,7 +75,23 @@ const postPetInfo = async ({
 };
 
 export const usePostPetInfo = () => {
+  const setRole = useAuthStore((state) => state.setRole);
+  const setToken = useAuthStore((state) => state.setToken);
+  const navigate = useNavigate();
+
   return useMutation<PetInfoResponse, Error, PostPetInfoArgs>({
     mutationFn: postPetInfo,
+    onSuccess: (data) => {
+      const { role, authorization } = data.content;
+      const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
+
+      setRole(role);
+      setToken(authorization);
+      navigate(lastNoneAuthRoute);
+    },
+    // TODO 에러 바운더리 생성되면 로직 변경하기
+    onError: (error) => {
+      throw new Error(error.message);
+    },
   });
 };

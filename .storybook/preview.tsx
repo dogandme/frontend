@@ -1,14 +1,13 @@
-import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MemoryRouter } from "react-router-dom";
 import { initialize, mswLoader } from "msw-storybook-addon";
+import React from "react";
+import { MemoryRouter } from "react-router-dom";
+import type { Preview } from "@storybook/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "../src/global.css";
 
 initialize();
 
 const queryClient = new QueryClient();
-
-import "../src/global.css";
-import type { Preview } from "@storybook/react";
 
 const withProviders = (Story, context) => {
   const { initialEntries, initialIndex } =

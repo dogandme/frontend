@@ -1,5 +1,5 @@
 import { http, HttpResponse, PathParams } from "msw";
-import { SIGN_UP_END_POINT } from "@/features/auth/constants";
+import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 // data
@@ -194,9 +194,47 @@ export const markingModalHandlers = [
   ),
 ];
 
+export const loginHandlers = [
+  http.post<
+    PathParams,
+    {
+      email: string;
+      password: string;
+    }
+  >(LOGIN_END_POINT.EMAIL, async ({ request }) => {
+    const { email, password } = (await request.json()) as {
+      email: string;
+      password: string;
+    };
+
+    if (email === "user123@naver.com" && password === "password") {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          authorization: "Bearer token",
+          role: "USER_USER",
+          nickname: "뽀송이",
+          userId: 1234,
+        },
+      });
+    }
+    return HttpResponse.json(
+      {
+        code: 401,
+        message: "아이디 또는 비밀번호를 다시 확인해 주세요",
+      },
+      {
+        status: 401,
+      },
+    );
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
   ...userInfoRegistrationHandlers,
   ...markingModalHandlers,
+  ...loginHandlers,
 ];

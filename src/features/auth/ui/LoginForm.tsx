@@ -1,7 +1,4 @@
-import { useNavigate } from "react-router-dom";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { useAuthStore } from "@/shared/store/auth";
-import { useRouteHistoryStore } from "@/shared/store/history";
 import { Button } from "@/shared/ui/button";
 import { usePostLoginForm } from "../api";
 import { useLoginFormStore } from "../store";
@@ -100,11 +97,7 @@ export const PersistLogin = () => {
 };
 
 export const SubmitButton = () => {
-  const navigate = useNavigate();
   const { mutate: postLoginForm } = usePostLoginForm();
-  const setToken = useAuthStore((state) => state.setToken);
-  const setRole = useAuthStore((state) => state.setRole);
-  const setNickname = useAuthStore((state) => state.setNickname);
 
   const handleSubmit = () => {
     const { email, password, isValidEmail, persistLogin } =
@@ -118,30 +111,7 @@ export const SubmitButton = () => {
       // TODO : 유효성을 만족하지 않는 경우의 메시지를 디자이너와 상담하여 생성하기
       return;
     }
-    postLoginForm(
-      { email, password, persistLogin },
-      {
-        onSuccess: (data) => {
-          const { authorization, role, nickname } = data.content;
-          setToken(authorization);
-          setRole(role);
-          setNickname(nickname);
-
-          const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
-          navigate(lastNoneAuthRoute);
-        },
-        onError: (error) => {
-          if (error instanceof Error) {
-            // TODO : alert 창 모달로 변경하기
-            alert(error.message);
-          }
-          // 만약 alert 창이 아닌 콘솔 에러에서 에러 메시지가 표시되는 경우에는
-          // 현재 우리가 컨트롤하고 있지 않은 에러 객체가 발생한 것입니다.
-          // 에러를 보고 코드에 문제가 없는지 확인해봐야 합니다.
-          console.error(error);
-        },
-      },
-    );
+    postLoginForm({ email, password, persistLogin });
   };
 
   return (
