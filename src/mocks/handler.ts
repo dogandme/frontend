@@ -1,5 +1,5 @@
 import { http, HttpResponse, PathParams } from "msw";
-import { SIGN_UP_END_POINT } from "@/features/auth/constants";
+import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 // data
@@ -201,7 +201,7 @@ export const loginHandlers = [
       email: string;
       password: string;
     }
-  >(`${import.meta.env.VITE_API_BASE_URL}/login`, async ({ request }) => {
+  >(LOGIN_END_POINT.EMAIL, async ({ request }) => {
     const { email, password } = (await request.json()) as {
       email: string;
       password: string;
