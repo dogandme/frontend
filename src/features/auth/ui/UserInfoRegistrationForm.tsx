@@ -338,11 +338,12 @@ const UserInfoRegistrationForm = () => {
     useModal(() => <SignUpLandingModal onClose={onCloseLandingModal} />);
 
   const token = useAuthStore((state) => state.token);
-  const setNickname = useAuthStore((state) => state.setNickname);
-  const setRole = useAuthStore((state) => state.setRole);
-  const setToken = useAuthStore((state) => state.setToken);
 
-  const { mutate: putUserInfoRegistration } = usePutUserInfoRegistration();
+  const { mutate: putUserInfoRegistration } = usePutUserInfoRegistration({
+    onSuccess: () => {
+      openLandingModal();
+    },
+  });
 
   const duplicateNicknameResponseCacheArr = useMutationState<
     MutationState<
@@ -403,32 +404,14 @@ const UserInfoRegistrationForm = () => {
     }
 
     // todo: region 수정
-    putUserInfoRegistration(
-      {
-        token,
-        nickname,
-        gender,
-        age: ageRange,
-        region: region.map(({ id }) => id),
-        marketingYn: checkList[2],
-      },
-      {
-        onSuccess: (data) => {
-          const {
-            content: { nickname, role, authorization },
-          } = data;
-
-          setNickname(nickname);
-          setRole(role);
-          setToken(authorization);
-
-          openLandingModal();
-        },
-        onError: (error) => {
-          throw new Error(error.message);
-        },
-      },
-    );
+    putUserInfoRegistration({
+      token,
+      nickname,
+      gender,
+      age: ageRange,
+      region: region.map(({ id }) => id),
+      marketingYn: checkList[2],
+    });
   };
 
   return (

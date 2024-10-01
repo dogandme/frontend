@@ -393,7 +393,14 @@ const TemporarySaveButton = ({
     ),
   );
 
-  const { mutate: postTempMarkingData } = usePostTempMarkingForm();
+  const { mutate: postTempMarkingData } = usePostTempMarkingForm({
+    onSuccess: () => {
+      onCloseMarkingModal();
+      resetMarkingFormStore();
+      setMode("view");
+      onOpenSnackbar();
+    },
+  });
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
@@ -408,20 +415,7 @@ const TemporarySaveButton = ({
     const lat = center.lat();
     const lng = center.lng();
 
-    postTempMarkingData(
-      { token, lat, lng, ...formObj },
-      {
-        onSuccess: () => {
-          onCloseMarkingModal();
-          resetMarkingFormStore();
-          setMode("view");
-          onOpenSnackbar();
-        },
-        onError: (error) => {
-          throw new Error(error.message);
-        },
-      },
-    );
+    postTempMarkingData({ token, lat, lng, ...formObj });
   };
 
   return (

@@ -240,12 +240,31 @@ const putUserInfoRegister = async ({
   return data;
 };
 
-export const usePutUserInfoRegistration = () => {
+export const usePutUserInfoRegistration = ({
+  onSuccess,
+}: {
+  onSuccess: () => void;
+}) => {
+  const setNickname = useAuthStore((state) => state.setNickname);
+  const setToken = useAuthStore((state) => state.setToken);
+  const setRole = useAuthStore((state) => state.setRole);
+
   return useMutation<
     UserInfoRegistrationResponse,
     Error,
     UserInfoRegistrationRequest
   >({
     mutationFn: putUserInfoRegister,
+    onSuccess: (data) => {
+      const { role, nickname, authorization } = data.content;
+
+      setRole(role);
+      setNickname(nickname);
+      setToken(authorization);
+      onSuccess();
+    },
+    onError: (error) => {
+      throw new Error(error.message);
+    },
   });
 };

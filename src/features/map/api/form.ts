@@ -115,8 +115,18 @@ const postMarkingFormDataTemporary = async ({
   return data;
 };
 
-export const usePostTempMarkingForm = () => {
+export const usePostTempMarkingForm = ({
+  onSuccess,
+}: {
+  onSuccess: () => void;
+}) => {
   return useMutation({
     mutationFn: postMarkingFormDataTemporary,
+    onSuccess: () => {
+      onSuccess();
+    },
+    onError: (error) => {
+      throw new Error(error.message);
+    },
   });
 };
