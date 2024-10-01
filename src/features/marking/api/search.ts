@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useResearchMarkingList } from "@/features/map/lib";
+import { useResearchMarkingList } from "@/features/map/hooks";
 import { useAuthStore } from "@/shared/store";
 import { MARKING_REQUEST_URL } from "../contants/requestUrl";
 
