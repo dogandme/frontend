@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
-import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
+import { MapSnackbar } from "@/entities/map/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";

@@ -1,6 +1,6 @@
 import { useMap } from "@vis.gl/react-google-maps";
 import { CurrentLocationLoading } from "@/entities/map/ui";
-import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
+import { MapSnackbar } from "@/entities/map/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
 import {
