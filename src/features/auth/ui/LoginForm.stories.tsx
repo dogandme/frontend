@@ -1,7 +1,7 @@
-import { http, HttpResponse } from "msw";
 import { Meta, StoryObj } from "@storybook/react";
 import { within, userEvent, expect } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
+import { handlers } from "@/mocks/handler";
 import { LoginForm } from ".";
 
 const meta: Meta<typeof LoginForm> = {
@@ -18,6 +18,12 @@ const meta: Meta<typeof LoginForm> = {
 export default meta;
 
 export const Default: StoryObj<typeof LoginForm> = {
+  parameters: {
+    msw: {
+      handlers: [...handlers],
+    },
+  },
+
   render: () => (
     <LoginForm.Form>
       <LoginForm.Email />
@@ -123,22 +129,7 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
   },
   render: () => <ApiTestComponent />,
   parameters: {
-    msw: {
-      handlers: [
-        http.post("http://localhost/login", () => {
-          return HttpResponse.json({
-            code: 200,
-            message: "success",
-            content: {
-              authorization: "Bearer token",
-              role: "USER_USER",
-              nickname: "뽀송이",
-              userId: 1234,
-            },
-          });
-        }),
-      ],
-    },
+    ...Default.parameters,
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -153,7 +144,7 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
       expect(nickname).toBe(null);
     });
 
-    await userEvent.type($input, "abcd123@naver.com");
+    await userEvent.type($input, "user123@naver.com");
     await userEvent.type($password, "password");
     await userEvent.click($submit);
 
@@ -180,27 +171,7 @@ export const APIFailedTest: StoryObj<typeof LoginForm> = {
   },
   render: () => <ApiTestComponent />,
   parameters: {
-    msw: {
-      handlers: [
-        http.post("http://localhost/login", () => {
-          return HttpResponse.json(
-            {
-              code: 401,
-              message: "아이디 또는 비밀번호를 다시 확인해 주세요",
-              content: {
-                authorization: null,
-                role: null,
-                nickname: null,
-                userId: null,
-              },
-            },
-            {
-              status: 401,
-            },
-          );
-        }),
-      ],
-    },
+    ...Default.parameters,
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -216,7 +187,7 @@ export const APIFailedTest: StoryObj<typeof LoginForm> = {
     });
 
     await step("API 요청이 실패한 경우엔 상태가 변경되지 않는다.", async () => {
-      await userEvent.type($input, "abcd123@naver.com");
+      await userEvent.type($input, "wrongUser@naver.com");
       await userEvent.type($password, "password");
       await userEvent.click($submit);
       // 목업된 API 데이터를 받기 위한 딜레이 설정

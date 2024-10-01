@@ -194,9 +194,60 @@ export const markingModalHandlers = [
   ),
 ];
 
+export const loginHandlers = [
+  http.post<
+    PathParams,
+    {
+      email: string;
+      password: string;
+    }
+  >(`${import.meta.env.VITE_API_BASE_URL}/login`, async ({ request }) => {
+    const { email, password } = (await request.json()) as {
+      email: string;
+      password: string;
+    };
+
+    if (password !== "password") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "아이디 또는 비밀번호를 다시 확인해 주세요",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    if (email === "user123@naver.com") {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          authorization: "Bearer token",
+          role: "USER_USER",
+          nickname: "뽀송이",
+          userId: 1234,
+        },
+      });
+    }
+
+    return HttpResponse.json(
+      {
+        code: 401,
+        message: "아이디 또는 비밀번호를 다시 확인해 주세요",
+      },
+      {
+        status: 401,
+      },
+    );
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
   ...userInfoRegistrationHandlers,
   ...markingModalHandlers,
+  ...loginHandlers,
 ];
