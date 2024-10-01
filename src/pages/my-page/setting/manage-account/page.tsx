@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  AccountCancellationButton,
-  PasswordChangeButton,
-} from "@/features/setting/ui";
+import { useChangePasswordModal } from "@/features/setting/lib";
+import { AccountCancellationModal } from "@/features/setting/ui/_AccountCancellationModal";
+import { settingClassName } from "@/features/setting/ui/setting.styles";
 import { AccountEmail } from "@/entities/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
+import { useModal } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
+import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const AccountManagementPage = () => {
@@ -36,5 +37,33 @@ export const AccountManagementPage = () => {
         <AccountCancellationButton />
       </section>
     </>
+  );
+};
+
+const PasswordChangeButton = () => {
+  const handleOpenPasswordChangeModal = useChangePasswordModal();
+
+  return (
+    <button
+      className={settingClassName}
+      onClick={handleOpenPasswordChangeModal}
+    >
+      <p>비밀번호 변경</p>
+      <span className="text-grey-500">
+        <ArrowRightIcon />
+      </span>
+    </button>
+  );
+};
+
+const AccountCancellationButton = () => {
+  const { handleOpen, onClose } = useModal(() => (
+    <AccountCancellationModal onClose={onClose} />
+  ));
+
+  return (
+    <button className={settingClassName} onClick={handleOpen}>
+      탈퇴하기
+    </button>
   );
 };
