@@ -207,19 +207,7 @@ export const loginHandlers = [
       password: string;
     };
 
-    if (password !== "password") {
-      return HttpResponse.json(
-        {
-          code: 401,
-          message: "아이디 또는 비밀번호를 다시 확인해 주세요",
-        },
-        {
-          status: 401,
-        },
-      );
-    }
-
-    if (email === "user123@naver.com") {
+    if (email === "user123@naver.com" && password === "password") {
       return HttpResponse.json({
         code: 200,
         message: "success",
@@ -231,7 +219,6 @@ export const loginHandlers = [
         },
       });
     }
-
     return HttpResponse.json(
       {
         code: 401,
