@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { useAuthStore } from "@/shared/store";
+import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
 
 export interface LoginResponse {
@@ -40,8 +43,26 @@ const postLogin = async (
 
 // TODO 리액트 쿼리를 활용하여 최적화 하기
 export const usePostLoginForm = () => {
+  const navigate = useNavigate();
+  const setToken = useAuthStore((state) => state.setToken);
+  const setRole = useAuthStore((state) => state.setRole);
+  const setNickname = useAuthStore((state) => state.setNickname);
+
   const mutate = useMutation<LoginResponse, Error, EmailLoginFormData>({
     mutationFn: postLogin,
+    onSuccess: (data) => {
+      const { authorization, role, nickname } = data.content;
+      setToken(authorization);
+      setRole(role);
+      setNickname(nickname);
+
+      const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
+      navigate(lastNoneAuthRoute);
+    },
+    onError: (error) => {
+      // TODO 에러 처리 로직 추가하기
+      throw new Error(error.message);
+    },
   });
 
   return mutate;
