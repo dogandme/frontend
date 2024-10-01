@@ -1,2 +1,2 @@
 export * from "./CustomMarker";
-export * from "./CurrentLocationLoading";
+export * from "./currentLocationLoading";
