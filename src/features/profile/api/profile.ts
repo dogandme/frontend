@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { END_POINT } from "../constants";
+import { PROFILE_END_POINT } from "../constants";
 
 interface PetInformation {
   name: string;
@@ -26,7 +26,7 @@ interface ProfileResponse {
 export const getProfile = async (
   nickname: string,
 ): Promise<ProfileResponse> => {
-  const response = await fetch(END_POINT.PROFILE(nickname));
+  const response = await fetch(PROFILE_END_POINT.PROFILE(nickname));
   const data: ProfileResponse = await response.json();
 
   if (!response.ok) {
