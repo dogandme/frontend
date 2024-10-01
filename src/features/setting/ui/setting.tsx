@@ -5,7 +5,7 @@
 import { useSnackBar } from "@/shared/lib";
 import { useModal } from "@/shared/lib";
 import { Snackbar } from "@/shared/ui/snackbar";
-import { LogoutModal } from "./_LogoutModal";
+import { LogoutModal } from "./logoutModal";
 
 export const Report = () => {
   const officialEmail = "mungwithme@gmail.com";

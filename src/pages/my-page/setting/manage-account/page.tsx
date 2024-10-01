@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChangePasswordModal } from "@/features/setting/lib";
-import { AccountCancellationModal } from "@/features/setting/ui/_AccountCancellationModal";
+import { AccountCancellationModal } from "@/features/setting/ui";
 import { AccountEmail } from "@/entities/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useModal } from "@/shared/lib";

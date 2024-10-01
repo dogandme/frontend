@@ -61,7 +61,7 @@ const CurrentPasswordInput = () => {
   );
 };
 
-export const CancellationCheckModal = ({
+export const PasswordCheckModal = ({
   onClose,
 }: {
   onClose: () => Promise<void>;

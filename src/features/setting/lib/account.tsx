@@ -2,8 +2,7 @@ import { useModal } from "@/shared/lib";
 import { ExitConfirmModal } from "@/shared/ui/modal";
 import { useAccountCancellationFormStore } from "../store";
 import { usePasswordChangeFormStore } from "../store";
-import { CancellationCheckModal } from "../ui/_CancellationCheckModal";
-import { PasswordChangeModal } from "../ui/_PasswordChangeModal";
+import { PasswordChangeModal, PasswordCheckModal } from "../ui";
 
 export const useCancellationCheckModal = () => {
   const resetAccountCancellationForm = useAccountCancellationFormStore(
@@ -27,7 +26,7 @@ export const useCancellationCheckModal = () => {
     handleOpen: handleOpenCancellationCheckModal,
     onClose: onCloseCancellationCheckModal,
   } = useModal(
-    () => <CancellationCheckModal onClose={onCloseCancellationCheckModal} />,
+    () => <PasswordCheckModal onClose={onCloseCancellationCheckModal} />,
     {
       beforeClose: () => {
         const { password } = useAccountCancellationFormStore.getState();
