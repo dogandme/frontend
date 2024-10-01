@@ -5,6 +5,29 @@ import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 // data
 import markingListData from "./data/markingList.json";
 
+interface UserInfo {
+  nickname: string;
+  pet: {
+    name: string;
+    breed: string;
+    description: string;
+    personalities: string[];
+    profile: string;
+  } | null;
+  followers: number[];
+  followings: number[];
+  likes: number[];
+  bookmarks: number[];
+  tempCnt: number;
+  markings: { id: number; image: string }[];
+}
+
+interface UserDB {
+  [key: string]: UserInfo;
+}
+
+const userDB: UserDB = {};
+
 export const signUpByEmailHandlers = [
   http.post<
     PathParams,
@@ -92,6 +115,17 @@ export const userInfoRegistrationHandlers = [
       return new HttpResponse(null, { status: 409 });
     }
 
+    userDB[nickname] = {
+      nickname,
+      pet: null,
+      followers: [],
+      followings: [],
+      likes: [],
+      bookmarks: [],
+      tempCnt: 0,
+      markings: [],
+    };
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -111,7 +145,7 @@ export const userInfoRegistrationHandlers = [
   >(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, async ({ request }) => {
     const { nickname } = await request.json();
 
-    if (nickname === "중복") {
+    if (nickname === "중복" || userDB[nickname]) {
       return new HttpResponse(null, { status: 409 });
     }
 
@@ -252,41 +286,21 @@ export const profileHandlers = [
       const requestUrl = new URL(request.url);
       const nickname = requestUrl.searchParams.get("nickname");
 
-      // UserInfoRegistrationForm 에서 사용 될 핸들러 입니다.
-      if (nickname === "hihi") {
-        return HttpResponse.json({
-          code: 200,
-          message: "success",
-          content: {
-            nickname: "hihi",
-            pet: null,
-            followers: [],
-            followings: [],
-            likes: [],
-            bookmarks: [],
-            tempCnt: 0,
+      const userInfo = userDB[nickname as string];
+      if (!userInfo) {
+        return HttpResponse.json(
+          {
+            code: 404,
+            message: "해당하는 유저를 찾을 수 없습니다.",
           },
-        });
+          {
+            status: 404,
+            statusText: "Not Found",
+          },
+        );
       }
 
-      // PetInfoForm 에서 사용 될 핸들러 입니다.
-      if (nickname === "뽀송송") {
-        return HttpResponse.json({
-          code: 200,
-          message: "success",
-          content: {
-            nickname: "뽀송송",
-            pet: {
-              name: "초코",
-              breed: "푸들",
-              description: "안녕하세요 너무 귀여운 강아지 입니다.",
-              personalities: ["호기심 많은", "애착이 강한"],
-              profile:
-                "https://images.unsplash.com/photo-1551316679-9c6ae9dec224",
-            },
-          },
-        });
-      }
+      return HttpResponse.json(userInfo);
     },
   ),
 ];
@@ -460,6 +474,63 @@ export const addressHandlers = [
   }),
 ];
 
+/**
+ * 실제 서버에선 액세스 토큰에 존재하는 userToken 을 이용해 사용자를 조회합니다.
+ * 테스트 환경에서 userToken 을 사용하지 않으니 저흰 테스트 시 항상 닉네임을 뽀송송으로 하기로 약속 합니다.
+ */
+export const petInfoFormHandlers = [
+  http.post<
+    PathParams,
+    {
+      petSignUpDto: {
+        name: string;
+        breed: string;
+        description: string;
+        personalities: string[];
+      };
+      image: string;
+    }
+  >(SIGN_UP_END_POINT.PET_INFO, async ({ request }) => {
+    const formData = await request.formData();
+
+    const petSignUpDto = JSON.parse(formData.get("petSignUpDto") as string);
+    const image = formData.get("image") as File;
+
+    const userInfo = userDB["뽀송송"];
+
+    if (!userInfo) {
+      return HttpResponse.json(
+        {
+          code: 404,
+          message: "해당하는 유저를 찾을 수 없습니다.",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    const newData = {
+      ...userInfo,
+      pet: {
+        ...petSignUpDto,
+        profile: URL.createObjectURL(image),
+      },
+    };
+
+    userDB["뽀송송"] = newData;
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        role: "ROLE_USER",
+        authorization: "Bearer token for ROLE_USER",
+      },
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -468,4 +539,5 @@ export const handlers = [
   ...loginHandlers,
   ...profileHandlers,
   ...addressHandlers,
+  ...petInfoFormHandlers,
 ];
