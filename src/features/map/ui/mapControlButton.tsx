@@ -1,6 +1,5 @@
 import { useMap } from "@vis.gl/react-google-maps";
-import { CurrentLocationLoading } from "@/entities/map/ui";
-import { MapSnackbar } from "@/entities/map/ui/MapSnackbar";
+import { CurrentLocationLoading, MapSnackbar } from "@/entities/map/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
 import {
@@ -10,7 +9,7 @@ import {
   MyLocationIcon,
 } from "@/shared/ui/icon";
 import { MarkingFormModal } from "../../marking/ui";
-import { useCurrentLocation } from "../lib";
+import { useCurrentLocation } from "../hooks";
 import { useMapStore } from "../store";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */

@@ -1,6 +1,6 @@
 import { AdvancedMarker } from "@vis.gl/react-google-maps";
-import * as _Pin from "./Pin";
-import type { PinProps } from "./Pin";
+import * as _Pin from "./pin";
+import type { PinProps } from "./pin";
 
 interface MarkerProps {
   position: {

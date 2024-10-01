@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import * as Pin from "./Pin";
+import * as Pin from "./pin";
 
 const meta: Meta<typeof Pin.Default> = {
   title: "entities/map/Pin",

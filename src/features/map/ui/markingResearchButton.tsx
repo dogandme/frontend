@@ -1,5 +1,5 @@
 import { ResetIcon } from "@/shared/ui/icon";
-import { useResearchMarkingList } from "../lib";
+import { useResearchMarkingList } from "../hooks";
 import { useMapStore } from "../store";
 
 export const MarkingResearchButton = () => {

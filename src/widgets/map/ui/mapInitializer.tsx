@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_ZOOM } from "@/features/map/constants";
-import { useCurrentLocation } from "@/features/map/lib";
-import { useResearchMarkingList } from "@/features/map/lib";
+import { useCurrentLocation } from "@/features/map/hooks";
+import { useResearchMarkingList } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 
