@@ -231,10 +231,57 @@ export const loginHandlers = [
   }),
 ];
 
+export const profileHandlers = [
+  http.get(
+    `${import.meta.env.VITE_API_BASE_URL}/profile`,
+    async ({ request }) => {
+      const requestUrl = new URL(request.url);
+      const nickname = requestUrl.searchParams.get("nickname");
+
+      // UserInfoRegistrationForm 에서 사용 될 핸들러 입니다.
+      if (nickname === "hihi") {
+        return HttpResponse.json({
+          code: 200,
+          message: "success",
+          content: {
+            nickname: "hihi",
+            pet: null,
+            followers: [],
+            followings: [],
+            likes: [],
+            bookmarks: [],
+            tempCnt: 0,
+          },
+        });
+      }
+
+      // PetInfoForm 에서 사용 될 핸들러 입니다.
+      if (nickname === "뽀송송") {
+        return HttpResponse.json({
+          code: 200,
+          message: "success",
+          content: {
+            nickname: "뽀송송",
+            pet: {
+              name: "초코",
+              breed: "푸들",
+              description: "안녕하세요 너무 귀여운 강아지 입니다.",
+              personalities: ["호기심 많은", "애착이 강한"],
+              profile:
+                "https://images.unsplash.com/photo-1551316679-9c6ae9dec224",
+            },
+          },
+        });
+      }
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
   ...userInfoRegistrationHandlers,
   ...markingModalHandlers,
   ...loginHandlers,
+  ...profileHandlers,
 ];
