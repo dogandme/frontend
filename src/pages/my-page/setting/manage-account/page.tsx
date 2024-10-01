@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePasswordChangeModal } from "@/features/setting/hooks";
 import { AccountCancellationModal } from "@/features/setting/ui";
-import { AccountEmail } from "@/entities/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useModal } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -36,6 +35,28 @@ export const AccountManagementPage = () => {
         <AccountCancellationButton />
       </section>
     </>
+  );
+};
+
+const AccountEmail = () => {
+  // TODO API 요청이나 userInfo 에서 가져오기
+  const signUpMethod: "email" | "naver" | "google" = "email";
+  const email = "gaeun1234@gmail.com";
+
+  // 회원가입 시 사용 한 방법에 따라 결정되는 문구
+  // 이메일 회원 가입 시엔 이메일,  구글이나 네이버를 이용한 OAuth 의 경우엔 해당 서비스명이 표시됨
+  const emailFromText =
+    signUpMethod === "email"
+      ? "이메일"
+      : signUpMethod === "naver"
+        ? "네이버"
+        : "구글";
+
+  return (
+    <div className="setting-item">
+      <p>{emailFromText} 계정</p>
+      <span className="text-grey-700 body-2">{email}</span>
+    </div>
   );
 };
 
