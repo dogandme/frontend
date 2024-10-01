@@ -3,8 +3,8 @@ import {
   MapControlWidget,
   MapInitializer,
   MapMarkerWidget,
+  GoogleMaps,
 } from "@/widgets/map/ui";
-import { GoogleMaps } from "@/widgets/map/ui/GoogleMaps";
 
 interface MapPageProps {
   GlobalNavigationBar: JSX.Element;
