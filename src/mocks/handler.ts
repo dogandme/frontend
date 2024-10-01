@@ -1,5 +1,6 @@
 import { http, HttpResponse, PathParams } from "msw";
 import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
+import { validateNickname } from "@/features/auth/lib";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 // data
@@ -219,6 +220,19 @@ export const loginHandlers = [
         },
       });
     }
+
+    if (email === "userNone123@naver.com" && password === "password") {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          authorization: "Bearer token",
+          role: "ROLE_NONE",
+          nickname: null,
+        },
+      });
+    }
+
     return HttpResponse.json(
       {
         code: 401,
