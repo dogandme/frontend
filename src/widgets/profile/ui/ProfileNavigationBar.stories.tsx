@@ -22,13 +22,7 @@ export default meta;
 type Story = StoryObj<typeof MyPageNavigationBar_>;
 
 const MyPageNavigationBar_ = ({ login }: { login: string | null }) => {
-  const setRole = useAuthStore((state) => state.setRole);
-
-  useEffect(() => {
-    setRole(login);
-  }, [login, setRole]);
-
-  return <ProfileNavigationBar />;
+  return <ProfileNavigationBar role={login} nickname="뽀송송" />;
 };
 
 export const Default: Story = {
