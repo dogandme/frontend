@@ -1,8 +1,7 @@
 import { TempCnt } from "@/features/profile/api";
-import type { AuthStore } from "@/shared/store";
 import { ArrowRightIcon, InfoIcon } from "@/shared/ui/icon";
 
-interface TemporaryMarkingBarProps extends Pick<AuthStore, "role"> {
+interface TemporaryMarkingBarProps {
   temporaryMarkingCount: TempCnt;
 }
 
