@@ -13,6 +13,33 @@ export default {
       },
     },
   },
+  argTypes: {
+    pet: {
+      description: "강아지의 정보 객체입니다.",
+      control: {
+        type: "object",
+      },
+      defaultValue: {
+        profile: "/default-image.png",
+        personalities: [
+          "온순한",
+          "애정이 많은",
+          "사람을 좋아하는",
+          "애교가 많은",
+        ],
+        name: "뽀송이",
+        description:
+          "안녕하세요 뽀송이입니다. 너무나도 귀엽죠 ? 푸항항항 반갑습니다",
+        breed: "비숑프리제",
+      },
+    },
+    followers: {
+      description: "팔로워 리스트 입니다.",
+    },
+    followings: {
+      description: "팔로잉 리스트 입니다.",
+    },
+  },
 } as Meta;
 
 type Story = StoryObj<typeof ProfileOverView>;
@@ -25,45 +52,28 @@ export const Default: Story = {
       </div>
     ),
   ],
-
-  argTypes: {
-    profile: {
-      description: "강아지 정보를 등록한 경우 저장되는 이미지의 url 입니다.",
-    },
-    description: {
-      description: "강아지의 소개글 입니다.",
-    },
-    personalities: {
-      description: "강아지의 성격 리스트 입니다.",
-    },
-    name: {
-      description: "강아지의 이름 입니다.",
-    },
-    breed: {
-      description: "강아지의 품종 입니다.",
-    },
-    followers: {
-      description: "팔로워 리스트 입니다.",
-    },
-    followings: {
-      description: "팔로잉 리스트 입니다.",
-    },
-  },
-
-  render: () => (
-    <ProfileOverView
-      profile="/default-image.png"
-      personalities={[
+  args: {
+    petInfo: {
+      profile: "/default-image.png",
+      personalities: [
         "온순한",
         "애정이 많은",
         "사람을 좋아하는",
         "애교가 많은",
-      ]}
-      name="뽀송이"
-      description="안녕하세요 뽀송이입니다. 너무나도 귀엽죠 ? 푸항항항 반갑습니다"
-      breed="비숑프리제"
-      followers={Array.from({ length: 100 }, (_, i) => i)}
-      followings={Array.from({ length: 100 }, (_, i) => i)}
+      ],
+      name: "뽀송이",
+      description:
+        "안녕하세요 뽀송이입니다. 너무나도 귀엽죠 ? 푸항항항 반갑습니다",
+      breed: "비숑프리제",
+    },
+    followers: Array.from({ length: 100 }, (_, i) => i),
+    followings: Array.from({ length: 100 }, (_, i) => i),
+  },
+  render: (args) => (
+    <ProfileOverView
+      petInfo={args.petInfo}
+      followers={args.followers}
+      followings={args.followings}
     />
   ),
 };

@@ -34,7 +34,7 @@ export const MyPage = () => {
         <ProfileOverView
           followers={followers}
           followings={followings}
-          {...pet}
+          petInfo={pet}
         />
         <div className="flex flex-col items-start gap-2 w-full ">
           <h3 className="text-grey-900 text-center title-2">내 마킹</h3>

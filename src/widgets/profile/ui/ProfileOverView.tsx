@@ -1,13 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  Breed,
-  Description,
-  Followers,
-  Followings,
-  Personalities,
-  PetName,
-  ProfileImageUrl,
-} from "@/features/profile/api";
+import { Followers, Followings, PetInfo } from "@/features/profile/api";
 import {
   PetCharacterList,
   PetIntroduce,
@@ -19,24 +11,17 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { PlusIcon } from "@/shared/ui/icon";
 
 interface ProfileOverViewProps {
-  profile: ProfileImageUrl;
-  description: Description;
-  personalities: Personalities;
-  name: PetName;
-  breed: Breed;
   followers: Followers;
   followings: Followings;
+  petInfo: PetInfo;
 }
 
 export const ProfileOverView = ({
-  profile,
-  description,
-  personalities,
-  name,
-  breed,
   followers,
   followings,
+  petInfo,
 }: ProfileOverViewProps) => {
+  const { profile, name, breed, description, personalities } = petInfo;
   return (
     <section className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full">
       <div className="flex gap-4 self-stretch">
