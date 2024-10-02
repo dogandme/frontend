@@ -300,7 +300,11 @@ export const profileHandlers = [
         );
       }
 
-      return HttpResponse.json(userInfo);
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: userInfo,
+      });
     },
   ),
 ];
