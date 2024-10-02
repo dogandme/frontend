@@ -22,7 +22,7 @@ export const MyPage = () => {
   }
 
   if (role !== "ROLE_USER") {
-    return <GuestMyPage role={role} nickname={nickname} />;
+    return <NotUserMyPage role={role} nickname={nickname} />;
   }
 
   const { pet, followers, followings, tempCnt, markings } = data!;
@@ -41,17 +41,14 @@ export const MyPage = () => {
           {tempCnt > 0 && (
             <TemporaryMarkingBar temporaryMarkingCount={tempCnt} />
           )}
-          <GalleryGrid
-            markings={markings}
-            profile={pet.profile ?? "/default-image.png"}
-          />
+          <GalleryGrid markings={markings} profile={pet.profile} />
         </div>
       </section>
     </div>
   );
 };
 
-const GuestMyPage = ({
+const NotUserMyPage = ({
   role,
   nickname,
 }: {
