@@ -17,7 +17,7 @@ export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
       src={
         profile
           ? `${import.meta.env.VITE_API_BASE_URL}/${profile}`
-          : "/default-profile.png"
+          : "/default-image.png"
       }
       alt={`${nickname} 의 프로필 사진`}
       className="w-16 h-16 rounded-[1.75rem]"
