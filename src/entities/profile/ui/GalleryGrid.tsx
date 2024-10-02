@@ -1,16 +1,20 @@
+import type {
+  MarkingPreviewData,
+  ProfileImageUrl,
+} from "@/features/profile/api";
 import type { AuthStore } from "@/shared/store";
 
 interface GalleryGridProps extends Pick<AuthStore, "role"> {
-  images: string[];
-  profileImage: string;
+  markings: MarkingPreviewData[];
+  profileImage: ProfileImageUrl;
 }
 
 export const GalleryGrid = ({
   role,
-  images,
+  markings,
   profileImage,
 }: GalleryGridProps) => {
-  if (role !== "ROLE_USER" || images.length === 0) {
+  if (role !== "ROLE_USER" || markings.length === 0) {
     return (
       <div className="px-4 py-4 flex items-center justify-center flex-col gap-4 w-full h-[20.5rem] rounded-2xl bg-grey-50">
         <img
@@ -29,10 +33,10 @@ export const GalleryGrid = ({
   return (
     <div className="grid grid-cols-3 gap-2 w-full">
       {/* TODO alt 추가하기 */}
-      {images.map((src, index) => (
+      {markings.map(({ id, image }) => (
         <img
-          src={src}
-          key={index}
+          src={image}
+          key={id}
           className="w-full h-full object-cover rounded-lg aspect-square"
         />
       ))}

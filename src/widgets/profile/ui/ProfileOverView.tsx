@@ -1,5 +1,14 @@
 import { Link } from "react-router-dom";
 import {
+  Breed,
+  Description,
+  Followers,
+  Followings,
+  Personalities,
+  PetName,
+  ProfileImageUrl,
+} from "@/features/profile/api";
+import {
   PetCharacterList,
   PetIntroduce,
   ProfileEditButton,
@@ -11,20 +20,20 @@ import type { AuthStore } from "@/shared/store";
 import { PlusIcon } from "@/shared/ui/icon";
 
 interface ProfileOverViewProps extends Pick<AuthStore, "role"> {
-  profileImage: string;
-  introduce: string;
-  characterList: string[];
-  name: string;
-  breed: string;
-  follower: number;
-  following: number;
+  profile: ProfileImageUrl;
+  description: Description;
+  personalities: Personalities;
+  name: PetName;
+  breed: Breed;
+  followers: Followers;
+  followings: Followings;
 }
 
 export const ProfileOverView = ({
   role,
-  profileImage,
-  introduce,
-  characterList,
+  profile,
+  description,
+  personalities,
   ...profileInfo
 }: ProfileOverViewProps) => {
   if (role === "ROLE_USER") {
@@ -32,14 +41,14 @@ export const ProfileOverView = ({
       <section className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full">
         <div className="flex gap-4 self-stretch">
           {/* 프로필 이미지 */}
-          <ProfileImage src={profileImage} />
+          <ProfileImage src={profile} />
           {/* 프로필 정보 */}
           <ProfileInfo {...profileInfo} />
           <ProfileEditButton />
         </div>
         {/* 반려동물 소개와 성격 리스트 */}
-        <PetIntroduce introduce={introduce} />
-        <PetCharacterList characterList={characterList} />
+        <PetIntroduce introduce={description} />
+        <PetCharacterList characterList={personalities} />
       </section>
     );
   }

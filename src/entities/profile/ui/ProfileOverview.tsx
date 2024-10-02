@@ -14,15 +14,15 @@ export const ProfileImage = ({ src }: { src: string }) => {
 interface ProfileInfoProps {
   name: string;
   breed: string;
-  follower: number;
-  following: number;
+  followers: number[];
+  followings: number[];
 }
 
 export const ProfileInfo = ({
   name,
   breed,
-  follower,
-  following,
+  followers,
+  followings,
 }: ProfileInfoProps) => {
   return (
     <div className="flex flex-col gap-1 items-start self-stretch">
@@ -30,11 +30,11 @@ export const ProfileInfo = ({
       <h2 className="text-grey-500 body-3">{breed}</h2>
       <p className="text-grey-700 body-3 flex gap-2 items-center">
         <span>
-          팔로워 <span className="text-grey-900">{follower}</span>
+          팔로워 <span className="text-grey-900">{followers.length}</span>
         </span>
         <DividerLine axis="col" />
         <span>
-          팔로잉 <span className="text-grey-900">{following}</span>
+          팔로잉 <span className="text-grey-900">{followings.length}</span>
         </span>
       </p>
     </div>
