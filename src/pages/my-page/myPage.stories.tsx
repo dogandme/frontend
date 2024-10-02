@@ -2,7 +2,7 @@ import { Meta } from "@storybook/react";
 import { NotRoleUserMyPage, RoleUserMyPage } from "./page";
 
 export default {
-  title: "Pages/MyPage",
+  title: "Pages/my-page",
   tags: ["autodocs"],
   parameters: {
     docs: {
