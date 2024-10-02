@@ -2,6 +2,7 @@ import { http, HttpResponse, PathParams } from "msw";
 import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
+import addressListData from "./data/addressList.json";
 // data
 import markingListData from "./data/markingList.json";
 
@@ -322,57 +323,7 @@ export const addressHandlers = [
       return HttpResponse.json({
         code: 200,
         message: "good",
-        content: [
-          {
-            id: 0,
-            province: "서울특별시",
-            cityCounty: "강남구",
-            subDistrict: "역삼1동",
-            district: "123-45",
-          },
-          {
-            id: 1,
-            province: "서울특별시",
-            cityCounty: "강남구",
-            subDistrict: "역삼2동",
-            district: "123-45",
-          },
-          {
-            id: 2,
-            province: "서울특별시",
-            cityCounty: "강남구",
-            subDistrict: "역삼3동",
-            district: "123-45",
-          },
-          {
-            id: 3,
-            province: "서울특별시",
-            cityCounty: "강남구",
-            subDistrict: "역삼4동",
-            district: "123-45",
-          },
-          {
-            id: 4,
-            province: "서울특별시",
-            cityCounty: "강남구",
-            subDistrict: "역삼5동",
-            district: "123-45",
-          },
-          {
-            id: 5,
-            province: "서울특별시",
-            cityCounty: "강남구",
-            subDistrict: "역삼6동",
-            district: "123-45",
-          },
-          {
-            id: 6,
-            province: "서울특별시",
-            cityCounty: "강남구",
-            subDistrict: "역삼7동",
-            district: "123-45",
-          },
-        ],
+        content: addressListData["GANG-NAM"],
       });
     }
 
@@ -380,100 +331,20 @@ export const addressHandlers = [
       return HttpResponse.json({
         code: 200,
         message: "good",
-        content: [
-          {
-            id: 0,
-            province: "서울특별시",
-            cityCounty: "도봉구",
-            subDistrict: "도봉1동",
-            district: "123-45",
-          },
-          {
-            id: 1,
-            province: "서울특별시",
-            cityCounty: "도봉구",
-            subDistrict: "도봉2동",
-            district: "123-45",
-          },
-          {
-            id: 2,
-            province: "서울특별시",
-            cityCounty: "도봉구",
-            subDistrict: "도봉3동",
-            district: "123-45",
-          },
-          {
-            id: 3,
-            province: "서울특별시",
-            cityCounty: "도봉구",
-            subDistrict: "도봉4동",
-            district: "123-45",
-          },
-        ],
+        content: addressListData["DOBONG"],
       });
     }
 
     return HttpResponse.json({
       code: 204, // 검색 결과 없을 시를 가정
-      message: "bad",
-      content: [],
+      message: "입력하신 주소가 없습니다",
     });
   }),
   http.get("http://localhost/addresses/search-by-location", () => {
     return HttpResponse.json({
       code: 200,
       message: "good",
-      content: [
-        {
-          id: 0,
-          province: "서울특별시",
-          cityCounty: "영등포구",
-          subDistrict: "영등포 1가",
-          district: "123-45",
-        },
-        {
-          id: 1,
-          province: "서울특별시",
-          cityCounty: "영등포구",
-          subDistrict: "영등포 2가",
-          district: "123-45",
-        },
-        {
-          id: 2,
-          province: "서울특별시",
-          cityCounty: "영등포구",
-          subDistrict: "영등포 3가",
-          district: "123-45",
-        },
-        {
-          id: 3,
-          province: "서울특별시",
-          cityCounty: "영등포구",
-          subDistrict: "영등포 4가",
-          district: "123-45",
-        },
-        {
-          id: 4,
-          province: "서울특별시",
-          cityCounty: "영등포구",
-          subDistrict: "영등포 5가",
-          district: "123-45",
-        },
-        {
-          id: 5,
-          province: "서울특별시",
-          cityCounty: "영등포구",
-          subDistrict: "영등포 6가",
-          district: "123-45",
-        },
-        {
-          id: 6,
-          province: "서울특별시",
-          cityCounty: "영등포구",
-          subDistrict: "영등포 7가",
-          district: "123-45",
-        },
-      ],
+      content: addressListData["CURRENT_LOCATION"],
     });
   }),
 ];
