@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Followers, Followings, PetInfo } from "@/features/profile/api";
+import { Followers, Followings, PetInfo } from "@/entities/profile/api";
 import {
   PetCharacterList,
   PetIntroduce,

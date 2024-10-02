@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getProfile } from "@/features/profile/api";
+import { getProfile } from "@/entities/profile/api";
 import { useAuthStore, AuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";

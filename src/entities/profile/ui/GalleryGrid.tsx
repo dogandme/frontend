@@ -1,7 +1,7 @@
 import type {
   MarkingPreviewData,
   ProfileImageUrl,
-} from "@/features/profile/api";
+} from "@/entities/profile/api";
 
 interface GalleryGridProps {
   markings: MarkingPreviewData[];

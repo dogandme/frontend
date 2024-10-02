@@ -3,7 +3,7 @@ import {
   ProfileNavigationBar,
 } from "@/widgets/profile/ui";
 import { ProfileOverView } from "@/widgets/profile/ui";
-import { useGetProfile, UserNickname } from "@/features/profile/api";
+import { useGetProfile, UserNickname } from "@/entities/profile/api";
 import { TemporaryMarkingBar } from "@/entities/profile/ui";
 import {
   EmptyGalleryGrid,

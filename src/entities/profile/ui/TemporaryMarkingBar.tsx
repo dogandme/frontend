@@ -1,4 +1,4 @@
-import { TempCnt } from "@/features/profile/api";
+import { TempCnt } from "@/entities/profile/api";
 import { ArrowRightIcon, InfoIcon } from "@/shared/ui/icon";
 
 interface TemporaryMarkingBarProps {

@@ -1,8 +1,8 @@
 import { HTMLAttributes, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { getProfile } from "@/features/profile/api";
 import { NaverIcon, GoogleIcon } from "@/entities/auth/assets";
+import { getProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { deleteCookie, getCookie } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store/auth";
