@@ -30,8 +30,8 @@ export interface MarkingPreviewData {
 }
 
 export interface UserInfo {
-  nickname: UserNickname;
-  pet: PetInfo;
+  nickname: UserNickname | null;
+  pet: PetInfo | null;
   followers: Followers;
   followings: Followings;
   likes: Likes;
