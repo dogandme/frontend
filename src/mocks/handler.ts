@@ -518,7 +518,7 @@ export const petInfoFormHandlers = [
       ...userInfo,
       pet: {
         ...petSignUpDto,
-        profile: URL.createObjectURL(image),
+        profile: image ? URL.createObjectURL(image) : "/default-image.png",
       },
     };
 
