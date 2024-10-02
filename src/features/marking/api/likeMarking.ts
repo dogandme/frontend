@@ -33,3 +33,26 @@ export const useLikeMarking = () => {
     },
   });
 };
+
+const unlikeMarking = async ({ token, markingId }: LikeMarkingRequest) => {
+  const response = await fetch(MARKING_REQUEST_URL.LIKE(markingId), {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  });
+
+  const data: LikeMarkingResponse = await response.json();
+
+  return data;
+};
+
+export const useUnlikeMarking = () => {
+  return useMutation<LikeMarkingResponse, Error, LikeMarkingRequest>({
+    mutationFn: unlikeMarking,
+    onSuccess: () => {
+      // todo 캐시된 데이터 수정
+    },
+  });
+};

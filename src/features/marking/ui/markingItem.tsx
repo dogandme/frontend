@@ -12,7 +12,7 @@ import {
 } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
-import { Marking, useLikeMarking } from "../api";
+import { Marking, useLikeMarking, useUnlikeMarking } from "../api";
 import { useDeleteMarking } from "../api";
 import { API_BASE_URL } from "../constants";
 
@@ -113,6 +113,7 @@ export const MarkingItem = ({
   const isBookmarked = false;
 
   const { mutate: likeMarking } = useLikeMarking();
+  const { mutate: unlikeMarking } = useUnlikeMarking();
 
   return (
     <li className="flex flex-col gap-2">
@@ -175,6 +176,7 @@ export const MarkingItem = ({
               if (!token || role === "ROLE_NONE" || role === null) return;
 
               if (!isLiked) likeMarking({ markingId, token });
+              else unlikeMarking({ markingId, token });
             }}
           >
             {isLiked ? <FilledLikeIcon /> : <LikeIcon />}
