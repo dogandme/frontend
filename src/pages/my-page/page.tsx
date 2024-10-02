@@ -108,8 +108,8 @@ const MyPageNavigationBar = ({ role, nickname }: MyPageNavigationBarProps) => {
 
 /**
  * 이하 컴포넌트들은 MyPage 에서만 사용 되는 컴포넌트 입니다.
- * RoleNotUserMyPage 는 ROLE_NONE, ROLE_GUEST, ROLE_NULL 일 경우 렌더링 됩니다.
- * RoleUserMyPage 는 ROLE_USER 이상의 권한을 가진 사용자에게 렌더링 됩니다.
+ * RoleNotUserMyPage 는 ROLE_NONE, ROLE_GUEST, null 일 경우 렌더링 됩니다.
+ * NotRoleUser 는 ROLE_USER 이상의 권한을 가진 사용자에게 렌더링 됩니다.
  * MyProfileNavigationBar 는 MyPage 에서만 사용되는 NavigationBar로 role , nickname 에 따라 다른 라우팅 경로와 UI 를 렌더링 합니다.
  */
 
