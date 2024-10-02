@@ -28,18 +28,8 @@ export const MyPage = () => {
     return <RoleNotUserMyPage role={role} nickname={nickname} />;
   }
 
-  const { pet, followers, followings, tempCnt, markings } = data;
-
   return (
-    <RoleUserMyPage
-      role={role}
-      nickname={nickname}
-      pet={pet}
-      followers={followers}
-      followings={followings}
-      tempCnt={tempCnt}
-      markings={markings}
-    />
+    <RoleUserMyPage {...data} role={role} nickname={nickname} pet={data.pet} />
   );
 };
 
