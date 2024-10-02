@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
 import {
@@ -12,6 +13,7 @@ import {
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
 import { Marking } from "../api";
+import { useDeleteMarking } from "../api";
 import { API_BASE_URL } from "../constants";
 
 function formatDate(dateString: string): string {
@@ -27,9 +29,11 @@ function formatDate(dateString: string): string {
 // todo onRegionClick을 필수 props로 타입 변경
 type MarkingItemProps = {
   onRegionClick?: () => void;
-} & Omit<Marking, "markingId" | "isVisible" | "isTempSaved" | "userId">;
+} & Omit<Marking, "isVisible" | "isTempSaved" | "userId">;
 
-const MarkingManageButton = () => {
+const MarkingManageButton = ({
+  markingId,
+}: Pick<MarkingItemProps, "markingId">) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -50,6 +54,22 @@ const MarkingManageButton = () => {
     };
   }, []);
 
+  const { mutate: deleteMarking } = useDeleteMarking();
+
+  const handleDeleteMarking = () => {
+    const { token, role } = useAuthStore.getState();
+
+    if (token && role === "ROLE_USER") {
+      deleteMarking({ token, markingId });
+    }
+
+    setIsOpen(false);
+  };
+
+  const handleModifyMarking = () => {
+    setIsOpen(false);
+  };
+
   return (
     <div className="relative h-fit flex" ref={ref}>
       <button
@@ -65,24 +85,10 @@ const MarkingManageButton = () => {
       <List
         className={`${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] right-0 bg-grey-0 w-[11.625rem] p-4`}
       >
-        <List.Item
-          style={{
-            height: "3rem",
-          }}
-          onClick={() => {
-            setIsOpen(false);
-          }}
-        >
+        <List.Item style={{ height: "3rem" }} onClick={handleModifyMarking}>
           수정하기
         </List.Item>
-        <List.Item
-          style={{
-            height: "3rem",
-          }}
-          onClick={() => {
-            setIsOpen(false);
-          }}
-        >
+        <List.Item style={{ height: "3rem" }} onClick={handleDeleteMarking}>
           삭제하기
         </List.Item>
       </List>
@@ -91,6 +97,7 @@ const MarkingManageButton = () => {
 };
 
 export const MarkingItem = ({
+  markingId,
   onRegionClick,
   nickName,
   region,
@@ -118,7 +125,7 @@ export const MarkingItem = ({
           <h2 className="btn-2 text-grey-900">{region}</h2>
         </div>
 
-        {isOwner && <MarkingManageButton />}
+        {isOwner && <MarkingManageButton markingId={markingId} />}
       </div>
 
       <div className="flex justify-between items-center gap-1 flex-1">

@@ -9,6 +9,10 @@ const meta: Meta<typeof MarkingItem> = {
   component: MarkingItem,
   tags: ["autodocs"],
   argTypes: {
+    markingId: {
+      description: "마킹 id입니다.",
+      control: "number",
+    },
     onRegionClick: {
       description: "주소를 클릭했을 때 실행할 함수입니다.",
     },
