@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
 import {
@@ -9,6 +10,7 @@ import {
   MyLocationIcon,
 } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
+import { List } from "@/shared/ui/list";
 import { Marking } from "../api";
 import { API_BASE_URL } from "../constants";
 
@@ -26,6 +28,67 @@ function formatDate(dateString: string): string {
 type MarkingItemProps = {
   onRegionClick?: () => void;
 } & Omit<Marking, "markingId" | "isVisible" | "isTempSaved" | "userId">;
+
+const MarkingManageButton = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (e: MouseEvent) => {
+    const isClickedOutside =
+      ref.current && !ref.current.contains(e.target as Node);
+
+    if (isClickedOutside) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div className="relative h-fit flex" ref={ref}>
+      <button
+        className="text-grey-500"
+        aria-label="마킹 수정 및 삭제하기 모달을 여는 버튼"
+        onClick={() => {
+          setIsOpen((prev) => !prev);
+        }}
+      >
+        <MoreIcon />
+      </button>
+
+      <List
+        className={`${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] right-0 bg-grey-0 w-[11.625rem] p-4`}
+      >
+        <List.Item
+          style={{
+            height: "3rem",
+          }}
+          onClick={() => {
+            setIsOpen(false);
+          }}
+        >
+          수정하기
+        </List.Item>
+        <List.Item
+          style={{
+            height: "3rem",
+          }}
+          onClick={() => {
+            setIsOpen(false);
+          }}
+        >
+          삭제하기
+        </List.Item>
+      </List>
+    </div>
+  );
+};
 
 export const MarkingItem = ({
   onRegionClick,
@@ -55,11 +118,7 @@ export const MarkingItem = ({
           <h2 className="btn-2 text-grey-900">{region}</h2>
         </div>
 
-        {isOwner && (
-          <button className="text-grey-500" aria-label="마킹 수정 및 삭제하기">
-            <MoreIcon />
-          </button>
-        )}
+        {isOwner && <MarkingManageButton />}
       </div>
 
       <div className="flex justify-between items-center gap-1 flex-1">
