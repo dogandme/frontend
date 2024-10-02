@@ -28,5 +28,5 @@ export const AuthNavigationBar = ({
     return <CloseNavigationBar onClick={handleClick} />;
   }
 
-  return <BackwardNavigationBar onClick={handleClick}></BackwardNavigationBar>;
+  return <BackwardNavigationBar onClick={handleClick} />;
 };
