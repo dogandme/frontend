@@ -3,38 +3,52 @@ import { useRef } from "react";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { DividerLine } from "@/shared/ui/divider";
 import { EditIcon, DropDownIcon } from "@/shared/ui/icon";
+import { PetInfo, UserInfo } from "../api";
 
-// TODO alt 추가하기
-export const ProfileImage = ({ src }: { src: string }) => {
+type ProfileImageProps = Pick<PetInfo, "profile"> & Pick<UserInfo, "nickname">;
+type ProfileHeadingProps = Pick<PetInfo, "name" | "breed"> &
+  Pick<UserInfo, "followers" | "followings">;
+type PetIntroduceProps = Pick<PetInfo, "description">;
+type PetCharacterListProps = Pick<PetInfo, "personalities">;
+
+export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
   return (
-    <img src={src} alt="profile" className="w-16 h-16 rounded-[1.75rem]" />
+    <img
+      src={
+        profile
+          ? `${import.meta.env.VITE_API_BASE_URL}/${profile}`
+          : "/default-image.png"
+      }
+      alt={`${nickname} 의 프로필 사진`}
+      className="w-16 h-16 rounded-[1.75rem]"
+    />
   );
 };
 
-interface ProfileInfoProps {
-  name: string;
-  breed: string;
-  follower: number;
-  following: number;
-}
-
-export const ProfileInfo = ({
+export const ProfileHeading = ({
   name,
   breed,
-  follower,
-  following,
-}: ProfileInfoProps) => {
+  followers,
+  followings,
+}: ProfileHeadingProps) => {
+  console.table({
+    name,
+    breed,
+    followers,
+    followings,
+  });
+
   return (
     <div className="flex flex-col gap-1 items-start self-stretch">
       <h1 className="text-grey-900 title-2">{name}</h1>
       <h2 className="text-grey-500 body-3">{breed}</h2>
       <p className="text-grey-700 body-3 flex gap-2 items-center">
         <span>
-          팔로워 <span className="text-grey-900">{follower}</span>
+          팔로워 <span className="text-grey-900">{followers.length}</span>
         </span>
         <DividerLine axis="col" />
         <span>
-          팔로잉 <span className="text-grey-900">{following}</span>
+          팔로잉 <span className="text-grey-900">{followings.length}</span>
         </span>
       </p>
     </div>
@@ -51,31 +65,29 @@ export const ProfileEditButton = () => {
   );
 };
 
-interface PetIntroduceProps {
-  introduce: string;
-}
-
-export const PetIntroduce = ({ introduce }: PetIntroduceProps) => {
+export const PetDescription = ({ description }: PetIntroduceProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
   const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
-  const introduceRef = useRef<HTMLParagraphElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const $p = descriptionRef.current!;
+    setIsEllipsis($p.scrollWidth > $p.clientWidth);
+  }, []);
 
   const handleClick = () => setIsSummary((prev) => !prev);
   // summary 상태 일 경우엔 introduce가 한 줄만 보이게 합니다.
-  const introduceClassName = isSummary
-    ? "text-ellipsis overflow-hidden text-nowrap"
-    : "";
-
-  useEffect(() => {
-    const $p = introduceRef.current!;
-    setIsEllipsis($p.scrollWidth > $p.clientWidth);
-  }, []);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4 self-stretch text-grey-500 body-2 w-full justify-between">
-        <p className={introduceClassName} ref={introduceRef}>
-          {introduce}
+        <p
+          className={
+            isSummary ? "text-ellipsis overflow-hidden text-nowrap" : ""
+          }
+          ref={descriptionRef}
+        >
+          {description}
         </p>
         {isEllipsis && (
           <button
@@ -91,31 +103,31 @@ export const PetIntroduce = ({ introduce }: PetIntroduceProps) => {
   );
 };
 
-interface PetCharacterListProps {
-  characterList: string[];
-}
-export const PetCharacterList = ({ characterList }: PetCharacterListProps) => {
+export const PetPersonalityList = ({
+  personalities,
+}: PetCharacterListProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
-  const visibleCharacterList = isSummary
-    ? characterList.slice(0, 3)
-    : characterList;
+
+  const visiblePersonalities = isSummary
+    ? personalities.slice(0, 3)
+    : personalities;
   const remainingCharacterCount =
-    characterList.length - visibleCharacterList.length;
+    personalities.length - visiblePersonalities.length;
 
   const handleClick = () => setIsSummary(false);
 
   return (
     <ul className="flex gap-2 self-stretch flex-wrap items-center content-center">
-      {visibleCharacterList.map((character, index) => (
+      {visiblePersonalities.map((personality, index) => (
         <li key={index}>
-          <InfoChip size="small">{character}</InfoChip>
+          <InfoChip size="small">{personality}</InfoChip>
         </li>
       ))}
       {
         // summary 상태 일 경우 남은 성격의 개수를 보여줍니다.
         isSummary && remainingCharacterCount > 0 && (
           <li
-            key={characterList.length - remainingCharacterCount}
+            key={personalities.length - remainingCharacterCount}
             onClick={handleClick}
             className="cursor-pointer"
           >

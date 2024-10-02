@@ -1,0 +1,48 @@
+{
+  "ROLE_GUEST": {
+    "code": 200,
+    "message": "success",
+    "content": {
+      "nickname": "뽀송송",
+      "pet": null,
+      "followers": [],
+      "followings": [],
+      "likes": [],
+      "bookmarks": [],
+      "tempCnt": 0,
+      "markings": []
+    }
+  },
+
+  "ROLE_USER": {
+    "code": 200,
+    "message": "success",
+    "content": {
+      "nickname": "뽀송송",
+      "pet": {
+        "name": "뽀송이",
+        "breed": "비숑 프리제",
+        "description": "안녕하세요 저는 3살 뽀송이 입니다. 귀여운 이름과 생김새와 다르게 사람을 별로 좋아하지 않아요. 그런데 엄마는 좋아해요. 나머지 사람들은 접근 금지입니다 포항항",
+        "personalities": [
+          "온화한",
+          "애교가 많은",
+          "사람을 좋아하는",
+          "귀여운",
+          "장난기가 많은"
+        ],
+        "profile": null
+      },
+      "followers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "followings": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      "likes": [],
+      "bookmarks": [],
+      "tempCnt": 0,
+      "markings": [
+        { "id": 1, "image": "/default-image.png" },
+        { "id": 2, "image": "/default-image.png" },
+        { "id": 3, "image": "/default-image.png" },
+        { "id": 4, "image": "/default-image.png" }
+      ]
+    }
+  }
+}

@@ -22,15 +22,14 @@ const BackWardButton = (props: React.HTMLAttributes<HTMLButtonElement>) => {
   );
 };
 
-interface BackwardNavigationBarProps
-  extends Partial<Pick<NavigationBarProps, "label">> {
-  rest?: React.HTMLAttributes<HTMLButtonElement>;
-}
+type BackwardNavigationBarProps = Omit<
+  NavigationBarProps,
+  "componentType" | "button"
+>;
 
-export const BackwardNavigationBar = ({
-  label,
-  rest,
-}: BackwardNavigationBarProps) => {
+export const BackwardNavigationBar = (props: BackwardNavigationBarProps) => {
+  const { label, ...rest } = props;
+
   return (
     <NavigationBar
       componentType="buttonLeft"

@@ -3,7 +3,7 @@ import { OverlayPortal } from "@/app";
 import { SettingPage } from "./page";
 
 export default {
-  title: "pages/MyPage/setting",
+  title: "pages/my-page/setting",
   component: SettingPage,
 } as Meta;
 

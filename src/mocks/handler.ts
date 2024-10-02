@@ -2,8 +2,32 @@ import { http, HttpResponse, PathParams } from "msw";
 import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
+import addressListData from "./data/addressList.json";
 // data
 import markingListData from "./data/markingList.json";
+
+interface UserInfo {
+  nickname: string;
+  pet: {
+    name: string;
+    breed: string;
+    description: string;
+    personalities: string[];
+    profile: string;
+  } | null;
+  followers: number[];
+  followings: number[];
+  likes: number[];
+  bookmarks: number[];
+  tempCnt: number;
+  markings: { id: number; image: string }[];
+}
+
+interface UserDB {
+  [key: string]: UserInfo;
+}
+
+const userDB: UserDB = {};
 
 export const signUpByEmailHandlers = [
   http.post<
@@ -92,11 +116,23 @@ export const userInfoRegistrationHandlers = [
       return new HttpResponse(null, { status: 409 });
     }
 
+    userDB[nickname] = {
+      nickname,
+      pet: null,
+      followers: [],
+      followings: [],
+      likes: [],
+      bookmarks: [],
+      tempCnt: 0,
+      markings: [],
+    };
+
     return HttpResponse.json({
       code: 200,
       message: "success",
       content: {
         nickname,
+        authorization: "Bearer token-for-role-guest",
         role: "ROLE_GUEST",
       },
     });
@@ -110,7 +146,7 @@ export const userInfoRegistrationHandlers = [
   >(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, async ({ request }) => {
     const { nickname } = await request.json();
 
-    if (nickname === "중복") {
+    if (nickname === "중복" || userDB[nickname]) {
       return new HttpResponse(null, { status: 409 });
     }
 
@@ -219,6 +255,19 @@ export const loginHandlers = [
         },
       });
     }
+
+    if (email === "userNone123@naver.com" && password === "password") {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          authorization: "Bearer token",
+          role: "ROLE_NONE",
+          nickname: null,
+        },
+      });
+    }
+
     return HttpResponse.json(
       {
         code: 401,
@@ -231,10 +280,142 @@ export const loginHandlers = [
   }),
 ];
 
+export const profileHandlers = [
+  http.get(
+    `${import.meta.env.VITE_API_BASE_URL}/profile`,
+    async ({ request }) => {
+      const requestUrl = new URL(request.url);
+      const nickname = requestUrl.searchParams.get("nickname");
+
+      const userInfo = userDB[nickname as string];
+      if (!userInfo) {
+        return HttpResponse.json(
+          {
+            code: 404,
+            message: "해당하는 유저를 찾을 수 없습니다.",
+          },
+          {
+            status: 404,
+            statusText: "Not Found",
+          },
+        );
+      }
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: userInfo,
+      });
+    },
+  ),
+];
+
+export const addressHandlers = [
+  http.get(`${import.meta.env.VITE_API_BASE_URL}/addresses`, (req) => {
+    const {
+      request: { url },
+    } = req;
+
+    const URLObject = new URL(url);
+    const keyword = URLObject.searchParams.get("keyword");
+
+    if (keyword === "강남구 역삼동") {
+      return HttpResponse.json({
+        code: 200,
+        message: "good",
+        content: addressListData["GANG-NAM"],
+      });
+    }
+
+    if (keyword === "도봉구 도봉동") {
+      return HttpResponse.json({
+        code: 200,
+        message: "good",
+        content: addressListData["DOBONG"],
+      });
+    }
+
+    return HttpResponse.json({
+      code: 204, // 검색 결과 없을 시를 가정
+      message: "입력하신 주소가 없습니다",
+    });
+  }),
+  http.get(
+    `${import.meta.env.VITE_API_BASE_URL}/addresses/search-by-location`,
+    () => {
+      return HttpResponse.json({
+        code: 200,
+        message: "good",
+        content: addressListData["CURRENT_LOCATION"],
+      });
+    },
+  ),
+];
+
+/**
+ * 실제 서버에선 액세스 토큰에 존재하는 userToken 을 이용해 사용자를 조회합니다.
+ * 테스트 환경에서 userToken 을 사용하지 않으니 저흰 테스트 시 항상 닉네임을 뽀송송으로 하기로 약속 합니다.
+ */
+export const petInfoFormHandlers = [
+  http.post<
+    PathParams,
+    {
+      petSignUpDto: {
+        name: string;
+        breed: string;
+        description: string;
+        personalities: string[];
+      };
+      image: string;
+    }
+  >(SIGN_UP_END_POINT.PET_INFO, async ({ request }) => {
+    const formData = await request.formData();
+
+    const petSignUpDto = JSON.parse(formData.get("petSignUpDto") as string);
+    const image = formData.get("image") as File;
+
+    const userInfo = userDB["뽀송송"];
+
+    if (!userInfo) {
+      return HttpResponse.json(
+        {
+          code: 404,
+          message: "해당하는 유저를 찾을 수 없습니다.",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    const newData = {
+      ...userInfo,
+      pet: {
+        ...petSignUpDto,
+        profile: image ? URL.createObjectURL(image) : "/default-image.png",
+      },
+    };
+
+    userDB["뽀송송"] = newData;
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        role: "ROLE_USER",
+        authorization: "Bearer token for ROLE_USER",
+      },
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
   ...userInfoRegistrationHandlers,
   ...markingModalHandlers,
   ...loginHandlers,
+  ...profileHandlers,
+  ...addressHandlers,
+  ...petInfoFormHandlers,
 ];

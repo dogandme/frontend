@@ -1,25 +1,14 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { usePasswordChangeModal } from "@/features/setting/hooks";
+import { useSettingPermission } from "@/features/setting/hooks";
 import { AccountCancellationModal } from "@/features/setting/ui";
-import { ROUTER_PATH } from "@/shared/constants";
 import { useModal } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const AccountManagementPage = () => {
-  const navigate = useNavigate();
-  const role = useAuthStore((state) => state.role);
-
-  useEffect(() => {
-    if (!role) {
-      navigate(ROUTER_PATH.MY_PAGE);
-    }
-  }, [navigate, role]);
-
-  if (!role) {
+  const hasPermission = useSettingPermission("NONE");
+  if (!hasPermission) {
     return null;
   }
 

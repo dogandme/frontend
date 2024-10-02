@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { getProfile } from "@/entities/profile/api";
 import { useAuthStore, AuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";
@@ -79,17 +80,25 @@ export const usePostPetInfo = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
+
   return useMutation<PetInfoResponse, Error, PostPetInfoArgs>({
     mutationFn: postPetInfo,
     onSuccess: (data) => {
       const { role, authorization } = data.content;
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
+      const { nickname } = useAuthStore.getState();
 
       setRole(role);
       setToken(authorization);
       navigate(lastNoneAuthRoute);
+
+      queryClient.prefetchQuery({
+        queryKey: ["profile", nickname],
+        queryFn: () => getProfile(nickname as string),
+      });
     },
-    // TODO 에러 바운더리 생성되면 로직 변경하기
+
     onError: (error) => {
       throw new Error(error.message);
     },

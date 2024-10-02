@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
@@ -50,11 +51,16 @@ export const usePostLoginForm = () => {
 
   const mutate = useMutation<LoginResponse, Error, EmailLoginFormData>({
     mutationFn: postLogin,
-    onSuccess: (data) => {
-      const { authorization, role, nickname } = data.content;
+    onSuccess: ({ content }) => {
+      const { authorization, role, nickname } = content;
       setToken(authorization);
       setRole(role);
       setNickname(nickname);
+
+      if (role === "ROLE_NONE") {
+        navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
+        return;
+      }
 
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
       navigate(lastNoneAuthRoute);
