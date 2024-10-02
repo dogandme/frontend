@@ -12,7 +12,7 @@ import {
 } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
-import { Marking } from "../api";
+import { Marking, useLikeMarking } from "../api";
 import { useDeleteMarking } from "../api";
 import { API_BASE_URL } from "../constants";
 
@@ -112,6 +112,8 @@ export const MarkingItem = ({
   const isLiked = false;
   const isBookmarked = false;
 
+  const { mutate: likeMarking } = useLikeMarking();
+
   return (
     <li className="flex flex-col gap-2">
       <div className="flex justify-between items-center">
@@ -167,6 +169,13 @@ export const MarkingItem = ({
           <button
             className={isLiked ? "text-tangerine-500" : ""}
             aria-label="마킹 좋아요"
+            onClick={() => {
+              const { token, role } = useAuthStore.getState();
+
+              if (!token || role === "ROLE_NONE" || role === null) return;
+
+              if (!isLiked) likeMarking({ markingId, token });
+            }}
           >
             {isLiked ? <FilledLikeIcon /> : <LikeIcon />}
           </button>
