@@ -1,5 +1,5 @@
 import { Meta } from "@storybook/react";
-import { RoleNotUserMyPage, RoleUserMyPage } from "./page";
+import { NotRoleUserMyPage, RoleUserMyPage } from "./page";
 
 export default {
   title: "Pages/MyPage",
@@ -19,7 +19,7 @@ export const Default = {
     return (
       <div className="flex gap-4">
         <div className="w-96 border border-grey-200">
-          <RoleNotUserMyPage role={null} nickname={null} />
+          <NotRoleUserMyPage role={null} nickname={null} />
         </div>
         <div className="w-96 border border-grey-200">
           <RoleUserMyPage
