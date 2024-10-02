@@ -265,9 +265,20 @@ export const usePutUserInfoRegistration = ({
       setNickname(nickname);
       setToken(authorization);
 
-      queryClient.prefetchQuery({
-        queryKey: ["profile", nickname],
-        queryFn: () => getProfile(nickname),
+      queryClient.setQueryData(["profile", nickname], {
+        code: 200,
+        message: "success",
+        content: {
+          nickname,
+          role,
+          pet: null,
+          followers: [],
+          followings: [],
+          likes: [],
+          bookmarks: [],
+          tempCnt: 0,
+          markings: [],
+        },
       });
 
       onSuccess();
