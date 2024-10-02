@@ -5,7 +5,7 @@ import {
   MarkingThumbnailGrid,
   TemporaryMarkingBar,
 } from "@/entities/marking/ui";
-import { useGetProfile, UserNickname, UserInfo } from "@/entities/profile/api";
+import { useGetProfile, UserInfo } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore, AuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
@@ -118,7 +118,7 @@ export const NotRoleUserMyPage = ({
   nickname,
 }: {
   role: string | null;
-  nickname: UserNickname | null;
+  nickname: UserInfo["nickname"] | null;
 }) => {
   return (
     <div>
@@ -157,9 +157,7 @@ export const RoleUserMyPage = ({
         />
         <div className="flex flex-col items-start gap-2 w-full ">
           <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
-          {tempCnt > 0 && (
-            <TemporaryMarkingBar temporaryMarkingCount={tempCnt} />
-          )}
+          {tempCnt > 0 && <TemporaryMarkingBar tempCnt={tempCnt} />}
           <MarkingThumbnailGrid markings={markings} profile={pet.profile} />
         </div>
       </section>

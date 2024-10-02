@@ -2,19 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 import { PROFILE_END_POINT } from "../constants";
 
 // 유저 정보
-export type UserNickname = string;
-export type Followers = number[];
-export type Followings = number[];
-export type Likes = number[];
-export type Bookmarks = number[];
-export type TempCnt = number;
+type UserNickname = string;
+type Followers = number[];
+type Followings = number[];
+type Likes = number[];
+type Bookmarks = number[];
+type TempCnt = number;
 
 // 펫 프로필 정보
-export type PetName = string;
-export type Breed = string;
-export type PetDescription = string;
-export type Personalities = string[];
-export type ProfileImageUrl = string;
+type PetName = string;
+type Breed = string;
+type PetDescription = string;
+type Personalities = string[];
+type ProfileImageUrl = string;
 
 export interface PetInfo {
   name: PetName;
