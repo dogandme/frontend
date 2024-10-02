@@ -65,7 +65,7 @@ export const ProfileEditButton = () => {
   );
 };
 
-export const PetIntroduce = ({ description }: PetIntroduceProps) => {
+export const PetDescription = ({ description }: PetIntroduceProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
   const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
@@ -103,7 +103,9 @@ export const PetIntroduce = ({ description }: PetIntroduceProps) => {
   );
 };
 
-export const PetCharacterList = ({ personalities }: PetCharacterListProps) => {
+export const PetPersonalityList = ({
+  personalities,
+}: PetCharacterListProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
 
   const visiblePersonalities = isSummary

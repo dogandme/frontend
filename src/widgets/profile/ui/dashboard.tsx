@@ -1,7 +1,7 @@
 import { UserInfo } from "@/entities/profile/api";
 import {
-  PetCharacterList,
-  PetIntroduce,
+  PetPersonalityList,
+  PetDescription,
   ProfileEditButton,
   ProfileHeading,
   ProfileImage,
@@ -42,8 +42,8 @@ export const ProfileOverView = ({
         <ProfileEditButton />
       </div>
       {/* 반려동물 소개와 성격 리스트 */}
-      <PetIntroduce description={description} />
-      <PetCharacterList personalities={personalities} />
+      <PetDescription description={description} />
+      <PetPersonalityList personalities={personalities} />
     </section>
   );
 };
