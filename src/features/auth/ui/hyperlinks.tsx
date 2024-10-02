@@ -73,7 +73,7 @@ export const OAuthLoginHyperLinks = () => {
    * - 리다이렉션 될 때 클린업 함수로 인해 쿠키에 저장되어있던 인증 정보를 제거합니다.
    *
    * 2024.09.30 업데이트
-   * - OAuth Login 을 하고 나면 해당 사용자의 프로필 정보를 refetch 합니다.
+   * - OAuth Login 을 하고 나면 해당 사용자의 프로필 정보를 prefetch 합니다.
    */
   useEffect(() => {
     const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
@@ -101,21 +101,35 @@ export const OAuthLoginHyperLinks = () => {
     setToken(tokenOnCookie);
     setRole(roleOnCookie);
 
-    // 쿠키로 받은 소셜 로그인 결과에서 닉네임이 존재한다면 해당 닉네임으로 프로필 정보를 prefetch 하고 토큰을 저장 합니다.
-    if (nicknameOnCookie) {
-      queryClient.prefetchQuery({
-        queryKey: ["profile", nicknameOnCookie],
-        queryFn: () => getProfile(nicknameOnCookie),
-      });
-
-      setNickname(nicknameOnCookie);
-    }
-
     // 사용자가 추가 정보를 입력하지 않은 경우엔 추가 정보 입력 페이지로 이동 시킵니다.
-    if (roleOnCookie === "ROLE_NONE") {
+    if (!nicknameOnCookie) {
       navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
       return;
     }
+
+    // 사용자의 정보가 닉네임밖에 없다면 setQueryData 를 통해 프로필 정보를 설정합니다.
+    if (roleOnCookie === "ROLE_GUEST") {
+      queryClient.setQueryData(["profile", nicknameOnCookie], {
+        nickname: nicknameOnCookie,
+        pet: null,
+        followers: [],
+        followings: [],
+        likes: [],
+        bookmarks: [],
+        tempCnt: 0,
+        markings: [],
+      });
+      setNickname(nicknameOnCookie);
+      navigate(lastNoneAuthRoute);
+      return;
+    }
+
+    // 사용자의 정보가 닉네임 이외에 다른 정보가 있다면 해당 정보를 prefetch 합니다.
+    queryClient.prefetchQuery({
+      queryKey: ["profile", nicknameOnCookie],
+      queryFn: () => getProfile(nicknameOnCookie),
+    });
+    setNickname(nicknameOnCookie);
     navigate(lastNoneAuthRoute);
 
     // 로그인에 성공하여 리다이렉션 될 때 해당 경로에서 쿠키를 제거 합니다.
