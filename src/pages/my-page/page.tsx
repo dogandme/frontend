@@ -127,7 +127,7 @@ export const NotRoleUserMyPage = ({
         <EmptyMyProfileOverView role={role} />
         <div className="flex flex-col items-start gap-2 w-full ">
           <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
-          <MarkingThumbnailGrid markings={[]} profile="/default-image.png" />
+          <MarkingThumbnailGrid markings={[]} />
         </div>
       </section>
     </div>
@@ -158,7 +158,7 @@ export const RoleUserMyPage = ({
         <div className="flex flex-col items-start gap-2 w-full ">
           <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
           {tempCnt > 0 && <TemporaryMarkingBar tempCnt={tempCnt} />}
-          <MarkingThumbnailGrid markings={markings} profile={pet.profile} />
+          <MarkingThumbnailGrid markings={markings} />
         </div>
       </section>
     </div>

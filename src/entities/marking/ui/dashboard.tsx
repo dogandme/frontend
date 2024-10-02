@@ -1,4 +1,4 @@
-import type { PetInfo, UserInfo } from "@/entities/profile/api";
+import type { UserInfo } from "@/entities/profile/api";
 import { ArrowRightIcon, InfoIcon } from "@/shared/ui/icon";
 
 /**
@@ -6,10 +6,9 @@ import { ArrowRightIcon, InfoIcon } from "@/shared/ui/icon";
  */
 export const MarkingThumbnailGrid = ({
   markings,
-  profile = "/default-profile.png",
-}: Pick<PetInfo, "profile"> & Pick<UserInfo, "markings">) => {
+}: Pick<UserInfo, "markings">) => {
   if (markings.length === 0) {
-    return <EmptyGalleryGrid profile={profile} />;
+    return <EmptyGalleryGrid />;
   }
 
   return (
@@ -43,10 +42,10 @@ export const TemporaryMarkingBar = ({ tempCnt }: Pick<UserInfo, "tempCnt">) => {
   );
 };
 
-const EmptyGalleryGrid = ({ profile }: Pick<PetInfo, "profile">) => (
+const EmptyGalleryGrid = () => (
   <div className="px-4 py-4 flex items-center justify-center flex-col gap-4 w-full h-[20.5rem] rounded-2xl bg-grey-50">
     <img
-      src={profile}
+      src="/default-image.png"
       alt="profileImage"
       className="w-16 h-16 rounded-2xl flex-shrink-0 "
     />
