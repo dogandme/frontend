@@ -113,7 +113,7 @@ const MyPageNavigationBar = ({ role, nickname }: MyPageNavigationBarProps) => {
  * MyProfileNavigationBar 는 MyPage 에서만 사용되는 NavigationBar로 role , nickname 에 따라 다른 라우팅 경로와 UI 를 렌더링 합니다.
  */
 
-const RoleNotUserMyPage = ({
+export const RoleNotUserMyPage = ({
   role,
   nickname,
 }: {
@@ -134,7 +134,7 @@ const RoleNotUserMyPage = ({
   );
 };
 
-const RoleUserMyPage = ({
+export const RoleUserMyPage = ({
   role,
   nickname,
   followers,

@@ -53,7 +53,7 @@ export const Default: Story = {
     ),
   ],
   args: {
-    petInfo: {
+    pet: {
       profile: "/default-image.png",
       personalities: [
         "온순한",
@@ -71,7 +71,8 @@ export const Default: Story = {
   },
   render: (args) => (
     <ProfileOverView
-      petInfo={args.petInfo}
+      nickname="뽀송송"
+      pet={args.pet}
       followers={args.followers}
       followings={args.followings}
     />
