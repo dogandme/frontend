@@ -57,23 +57,25 @@ export const ProfileEditButton = () => {
 export const PetIntroduce = ({ description }: PetIntroduceProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
   const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
-  const introduceRef = useRef<HTMLParagraphElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    const $p = introduceRef.current!;
+    const $p = descriptionRef.current!;
     setIsEllipsis($p.scrollWidth > $p.clientWidth);
   }, []);
 
   const handleClick = () => setIsSummary((prev) => !prev);
   // summary 상태 일 경우엔 introduce가 한 줄만 보이게 합니다.
-  const introduceClassName = isSummary
-    ? "text-ellipsis overflow-hidden text-nowrap"
-    : "";
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4 self-stretch text-grey-500 body-2 w-full justify-between">
-        <p className={introduceClassName} ref={introduceRef}>
+        <p
+          className={
+            isSummary ? "text-ellipsis overflow-hidden text-nowrap" : ""
+          }
+          ref={descriptionRef}
+        >
           {description}
         </p>
         {isEllipsis && (
@@ -93,19 +95,19 @@ export const PetIntroduce = ({ description }: PetIntroduceProps) => {
 export const PetCharacterList = ({ personalities }: PetCharacterListProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
 
-  const visibleCharacterList = isSummary
+  const visiblePersonalities = isSummary
     ? personalities.slice(0, 3)
     : personalities;
   const remainingCharacterCount =
-    personalities.length - visibleCharacterList.length;
+    personalities.length - visiblePersonalities.length;
 
   const handleClick = () => setIsSummary(false);
 
   return (
     <ul className="flex gap-2 self-stretch flex-wrap items-center content-center">
-      {visibleCharacterList.map((character, index) => (
+      {visiblePersonalities.map((personality, index) => (
         <li key={index}>
-          <InfoChip size="small">{character}</InfoChip>
+          <InfoChip size="small">{personality}</InfoChip>
         </li>
       ))}
       {
