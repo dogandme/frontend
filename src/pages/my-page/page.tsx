@@ -36,7 +36,7 @@ export const MyPage = () => {
           <GalleryGrid
             role={role}
             markings={markings}
-            profileImage={pet.profile}
+            profileImage={pet?.profile ?? "/default-image.png"}
           />
         </div>
       </section>
