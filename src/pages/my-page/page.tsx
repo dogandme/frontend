@@ -1,18 +1,15 @@
 import { Link } from "react-router-dom";
-import { EmptyMyProfileOverView } from "@/widgets/profile/ui";
 import { ProfileOverView } from "@/widgets/profile/ui";
 import type { ProfileOverViewProps } from "@/widgets/profile/ui";
-import { useGetProfile, UserNickname } from "@/entities/profile/api";
-import type { UserInfo } from "@/entities/profile/api";
-import { TemporaryMarkingBar } from "@/entities/profile/ui";
 import {
-  EmptyGalleryGrid,
-  GalleryGrid,
-} from "@/entities/profile/ui/GalleryGrid";
+  MarkingThumbnailGrid,
+  TemporaryMarkingBar,
+} from "@/entities/marking/ui";
+import { useGetProfile, UserNickname, UserInfo } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useAuthStore } from "@/shared/store";
-import type { AuthStore } from "@/shared/store";
+import { useAuthStore, AuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
+import { PlusIcon } from "@/shared/ui/icon";
 import { NavigationBar } from "@/shared/ui/navigationbar";
 
 /**
@@ -43,72 +40,8 @@ export const MyPage = () => {
   );
 };
 
-/**
- * 이하 컴포넌트들은 MyPage 에서만 사용 되는 컴포넌트 입니다.
- * RoleNotUserMyPage 는 ROLE_NONE, ROLE_GUEST, ROLE_NULL 일 경우 렌더링 됩니다.
- * RoleUserMyPage 는 ROLE_USER 이상의 권한을 가진 사용자에게 렌더링 됩니다.
- * MyProfileNavigationBar 는 MyPage 에서만 사용되는 NavigationBar로 role , nickname 에 따라 다른 라우팅 경로와 UI 를 렌더링 합니다.
- */
-
-const RoleNotUserMyPage = ({
-  role,
-  nickname,
-}: {
-  role: string | null;
-  nickname: UserNickname | null;
-}) => {
-  return (
-    <div>
-      <MyPageNavigationBar role={role} nickname={nickname} />
-      <section className="px-4 flex flex-col items-start gap-8">
-        <EmptyMyProfileOverView role={role} />
-        <div className="flex flex-col items-start gap-2 w-full ">
-          <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
-          <EmptyGalleryGrid profile="/default-image.png" />
-        </div>
-      </section>
-    </div>
-  );
-};
-
-const RoleUserMyPage = ({
-  role,
-  nickname,
-  followers,
-  followings,
-  pet,
-  tempCnt,
-  markings,
-}: ProfileOverViewProps &
-  Pick<AuthStore, "role"> &
-  Pick<UserInfo, "tempCnt" | "markings">) => {
-  return (
-    <div>
-      <MyPageNavigationBar role={role} nickname={nickname} />
-      <section className="px-4 flex flex-col items-start gap-8">
-        <ProfileOverView
-          nickname={nickname}
-          followers={followers}
-          followings={followings}
-          pet={pet}
-        />
-        <div className="flex flex-col items-start gap-2 w-full ">
-          <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
-          {tempCnt > 0 && (
-            <TemporaryMarkingBar temporaryMarkingCount={tempCnt} />
-          )}
-          <GalleryGrid markings={markings} profile={pet.profile} />
-        </div>
-      </section>
-    </div>
-  );
-};
-
 type MyPageNavigationBarProps = Pick<AuthStore, "role" | "nickname">;
-export const MyPageNavigationBar = ({
-  role,
-  nickname,
-}: MyPageNavigationBarProps) => {
+const MyPageNavigationBar = ({ role, nickname }: MyPageNavigationBarProps) => {
   if (role === null) {
     return (
       <NavigationBar
@@ -170,5 +103,89 @@ export const MyPageNavigationBar = ({
         </Link>
       }
     />
+  );
+};
+
+/**
+ * 이하 컴포넌트들은 MyPage 에서만 사용 되는 컴포넌트 입니다.
+ * RoleNotUserMyPage 는 ROLE_NONE, ROLE_GUEST, ROLE_NULL 일 경우 렌더링 됩니다.
+ * RoleUserMyPage 는 ROLE_USER 이상의 권한을 가진 사용자에게 렌더링 됩니다.
+ * MyProfileNavigationBar 는 MyPage 에서만 사용되는 NavigationBar로 role , nickname 에 따라 다른 라우팅 경로와 UI 를 렌더링 합니다.
+ */
+
+const RoleNotUserMyPage = ({
+  role,
+  nickname,
+}: {
+  role: string | null;
+  nickname: UserNickname | null;
+}) => {
+  return (
+    <div>
+      <MyPageNavigationBar role={role} nickname={nickname} />
+      <section className="px-4 flex flex-col items-start gap-8">
+        <EmptyMyProfileOverView role={role} />
+        <div className="flex flex-col items-start gap-2 w-full ">
+          <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
+          <MarkingThumbnailGrid markings={[]} profile="/default-image.png" />
+        </div>
+      </section>
+    </div>
+  );
+};
+
+const RoleUserMyPage = ({
+  role,
+  nickname,
+  followers,
+  followings,
+  pet,
+  tempCnt,
+  markings,
+}: ProfileOverViewProps &
+  Pick<AuthStore, "role"> &
+  Pick<UserInfo, "tempCnt" | "markings">) => {
+  return (
+    <div>
+      <MyPageNavigationBar role={role} nickname={nickname} />
+      <section className="px-4 flex flex-col items-start gap-8">
+        <ProfileOverView
+          nickname={nickname}
+          followers={followers}
+          followings={followings}
+          pet={pet}
+        />
+        <div className="flex flex-col items-start gap-2 w-full ">
+          <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
+          {tempCnt > 0 && (
+            <TemporaryMarkingBar temporaryMarkingCount={tempCnt} />
+          )}
+          <MarkingThumbnailGrid markings={markings} profile={pet.profile} />
+        </div>
+      </section>
+    </div>
+  );
+};
+
+/**
+ * 해당 컴포넌트는 사용자가 반려동물을 등록하지 않았을 때 MyPage에서 나타나는 컴포넌트 입니다.
+ * 사용자 권한에 따라 라우팅 경로가 달라집니다.
+ */
+export const EmptyMyProfileOverView = ({ role }: { role: string | null }) => {
+  const navigatePath =
+    role === null
+      ? ROUTER_PATH.LOGIN
+      : role === "ROLE_NONE"
+        ? ROUTER_PATH.SIGN_UP_USER_INFO
+        : ROUTER_PATH.SIGN_UP_PET_INFO;
+
+  return (
+    <Link
+      to={navigatePath}
+      className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full items-center text-grey-500"
+    >
+      <PlusIcon />
+      <p className="title-3">반려동물을 등록해 주세요</p>
+    </Link>
   );
 };

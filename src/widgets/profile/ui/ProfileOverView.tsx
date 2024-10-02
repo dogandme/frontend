@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { UserInfo } from "@/entities/profile/api";
 import {
   PetCharacterList,
@@ -7,8 +6,6 @@ import {
   ProfileHeading,
   ProfileImage,
 } from "@/entities/profile/ui";
-import { ROUTER_PATH } from "@/shared/constants";
-import { PlusIcon } from "@/shared/ui/icon";
 
 /**
  * ProfileOverView는 NonNullable 한 useGetProfile의 반환값을 받아서 렌더링 됩니다.
@@ -48,28 +45,5 @@ export const ProfileOverView = ({
       <PetIntroduce description={description} />
       <PetCharacterList personalities={personalities} />
     </section>
-  );
-};
-
-/**
- * 해당 컴포넌트는 사용자가 반려동물을 등록하지 않았을 때 MyPage에서 나타나는 컴포넌트 입니다.
- * 사용자 권한에 따라 라우팅 경로가 달라집니다.
- */
-export const EmptyMyProfileOverView = ({ role }: { role: string | null }) => {
-  const navigatePath =
-    role === null
-      ? ROUTER_PATH.LOGIN
-      : role === "ROLE_NONE"
-        ? ROUTER_PATH.SIGN_UP_USER_INFO
-        : ROUTER_PATH.SIGN_UP_PET_INFO;
-
-  return (
-    <Link
-      to={navigatePath}
-      className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full items-center text-grey-500"
-    >
-      <PlusIcon />
-      <p className="title-3">반려동물을 등록해 주세요</p>
-    </Link>
   );
 };
