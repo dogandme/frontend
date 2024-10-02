@@ -166,8 +166,10 @@ const SearchRegionControlList = ({
         justifyContent: "start",
       }}
       onClick={handleRegion}
-      additionalClassName="title-3"
-    >{`${province} ${cityCounty} ${subDistrict}`}</List.Item>
+      className="title-3"
+    >
+      {`${province} ${cityCounty} ${subDistrict}`}
+    </List.Item>
   );
 };
 
@@ -209,13 +211,7 @@ const SearchedRegionList = () => {
       <h1 className="title-2 text-grey-900">
         {isOriginFromKeyword ? keyword : "현재 위치"} 동네 검색 결과
       </h1>
-      <List
-        style={{
-          maxHeight: "18rem",
-          overflowY: "auto",
-          justifyContent: "start",
-        }}
-      >
+      <List className="max-h-[18rem] overflow-y-auto justify-start">
         {addressList.map(({ province, cityCounty, subDistrict, id }) => (
           <SearchRegionControlList
             key={id}

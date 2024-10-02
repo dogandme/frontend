@@ -3,7 +3,7 @@ import { listItemStyles } from "./list.styles";
 
 interface ItemProps extends LiHTMLAttributes<HTMLLIElement> {
   disabled?: boolean;
-  additionalClassName?: string;
+  className?: string;
 }
 
 export const Item = forwardRef<HTMLLIElement, ItemProps>(
@@ -33,11 +33,16 @@ export const Item = forwardRef<HTMLLIElement, ItemProps>(
   },
 );
 
-type ListProps = HTMLAttributes<HTMLUListElement>;
+interface ListProps extends HTMLAttributes<HTMLUListElement> {
+  className?: string;
+}
 
-const ListMain = ({ children, ...props }: ListProps) => {
+const ListMain = ({ children, className, ...props }: ListProps) => {
   return (
-    <ul className="flex w-full flex-col justify-center" {...props}>
+    <ul
+      className={`flex w-full flex-col justify-center ${className}`}
+      {...props}
+    >
       {children}
     </ul>
   );
