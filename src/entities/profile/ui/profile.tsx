@@ -3,27 +3,30 @@ import { useRef } from "react";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { DividerLine } from "@/shared/ui/divider";
 import { EditIcon, DropDownIcon } from "@/shared/ui/icon";
+import { PetInfo, UserInfo } from "../api";
 
-// TODO alt 추가하기
-export const ProfileImage = ({ src }: { src: string }) => {
+type ProfileImageProps = Pick<PetInfo, "profile"> & Pick<UserInfo, "nickname">;
+type ProfileHeadingProps = Pick<PetInfo, "name" | "breed"> &
+  Pick<UserInfo, "followers" | "followings">;
+type PetIntroduceProps = Pick<PetInfo, "description">;
+type PetCharacterListProps = Pick<PetInfo, "personalities">;
+
+export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
   return (
-    <img src={src} alt="profile" className="w-16 h-16 rounded-[1.75rem]" />
+    <img
+      src={profile}
+      alt={`${nickname} 의 프로필 사진`}
+      className="w-16 h-16 rounded-[1.75rem]"
+    />
   );
 };
 
-interface ProfileInfoProps {
-  name: string;
-  breed: string;
-  followers: number[];
-  followings: number[];
-}
-
-export const ProfileInfo = ({
+export const ProfileHeading = ({
   name,
   breed,
   followers,
   followings,
-}: ProfileInfoProps) => {
+}: ProfileHeadingProps) => {
   return (
     <div className="flex flex-col gap-1 items-start self-stretch">
       <h1 className="text-grey-900 title-2">{name}</h1>
@@ -51,14 +54,15 @@ export const ProfileEditButton = () => {
   );
 };
 
-interface PetIntroduceProps {
-  introduce: string;
-}
-
-export const PetIntroduce = ({ introduce }: PetIntroduceProps) => {
+export const PetIntroduce = ({ description }: PetIntroduceProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
   const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
   const introduceRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const $p = introduceRef.current!;
+    setIsEllipsis($p.scrollWidth > $p.clientWidth);
+  }, []);
 
   const handleClick = () => setIsSummary((prev) => !prev);
   // summary 상태 일 경우엔 introduce가 한 줄만 보이게 합니다.
@@ -66,16 +70,11 @@ export const PetIntroduce = ({ introduce }: PetIntroduceProps) => {
     ? "text-ellipsis overflow-hidden text-nowrap"
     : "";
 
-  useEffect(() => {
-    const $p = introduceRef.current!;
-    setIsEllipsis($p.scrollWidth > $p.clientWidth);
-  }, []);
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4 self-stretch text-grey-500 body-2 w-full justify-between">
         <p className={introduceClassName} ref={introduceRef}>
-          {introduce}
+          {description}
         </p>
         {isEllipsis && (
           <button
@@ -91,16 +90,14 @@ export const PetIntroduce = ({ introduce }: PetIntroduceProps) => {
   );
 };
 
-interface PetCharacterListProps {
-  characterList: string[];
-}
-export const PetCharacterList = ({ characterList }: PetCharacterListProps) => {
+export const PetCharacterList = ({ personalities }: PetCharacterListProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
+
   const visibleCharacterList = isSummary
-    ? characterList.slice(0, 3)
-    : characterList;
+    ? personalities.slice(0, 3)
+    : personalities;
   const remainingCharacterCount =
-    characterList.length - visibleCharacterList.length;
+    personalities.length - visibleCharacterList.length;
 
   const handleClick = () => setIsSummary(false);
 
@@ -115,7 +112,7 @@ export const PetCharacterList = ({ characterList }: PetCharacterListProps) => {
         // summary 상태 일 경우 남은 성격의 개수를 보여줍니다.
         isSummary && remainingCharacterCount > 0 && (
           <li
-            key={characterList.length - remainingCharacterCount}
+            key={personalities.length - remainingCharacterCount}
             onClick={handleClick}
             className="cursor-pointer"
           >

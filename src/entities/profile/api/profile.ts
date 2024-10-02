@@ -12,14 +12,14 @@ export type TempCnt = number;
 // 펫 프로필 정보
 export type PetName = string;
 export type Breed = string;
-export type Description = string;
+export type PetDescription = string;
 export type Personalities = string[];
 export type ProfileImageUrl = string;
 
 export interface PetInfo {
   name: PetName;
   breed: Breed;
-  description: Description;
+  description: PetDescription;
   personalities: Personalities;
   profile: ProfileImageUrl;
 }
@@ -30,7 +30,7 @@ export interface MarkingPreviewData {
 }
 
 export interface UserInfo {
-  nickname: UserNickname | null;
+  nickname: UserNickname;
   pet: PetInfo | null;
   followers: Followers;
   followings: Followings;
