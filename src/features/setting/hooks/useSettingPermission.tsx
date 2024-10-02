@@ -42,7 +42,7 @@ export const useSettingPermission = (boundary: Role = "NONE") => {
     if (!hasPermission) {
       navigate(ROUTER_PATH.MY_PAGE);
     }
-  }, [hasPermission, nickname, navigate]);
+  }, [hasPermission, navigate]);
 
   return hasPermission;
 };
