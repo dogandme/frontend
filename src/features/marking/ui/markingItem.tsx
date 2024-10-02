@@ -22,13 +22,12 @@ function formatDate(dateString: string): string {
   return `${year}.${month}.${day}`;
 }
 
+// todo onRegionClick을 필수 props로 타입 변경
 type MarkingItemProps = {
-  showRegion?: boolean;
   onRegionClick?: () => void;
 } & Omit<Marking, "markingId" | "isVisible" | "isTempSaved" | "userId">;
 
 export const MarkingItem = ({
-  showRegion = true,
   onRegionClick,
   nickName,
   region,
@@ -43,37 +42,25 @@ export const MarkingItem = ({
   const isLiked = false;
   const isBookmarked = false;
 
-  const isRegionClickable = !!onRegionClick;
-
-  const regionStyles = `flex pr-4 justify-center items-center gap-[.625rem] h-8 text-tangerine-500 ${isRegionClickable && "cursor-pointer"}`;
-  const regionTextStyles = isRegionClickable
-    ? "btn-2 text-grey-900"
-    : "body-2 text-grey-500";
-
   return (
     <li className="flex flex-col gap-2">
-      {showRegion && (
-        <div className="flex justify-between items-center">
-          <div
-            className={regionStyles}
-            onClick={() => {
-              onRegionClick?.();
-            }}
-          >
-            <MyLocationIcon />
-            <h2 className={regionTextStyles}>{region}</h2>
-          </div>
-
-          {isOwner && (
-            <button
-              className="text-grey-500"
-              aria-label="마킹 수정 및 삭제하기"
-            >
-              <MoreIcon />
-            </button>
-          )}
+      <div className="flex justify-between items-center">
+        <div
+          className="flex pr-4 justify-center items-center gap-[.625rem] h-8 text-tangerine-500 cursor-pointer"
+          onClick={() => {
+            onRegionClick?.();
+          }}
+        >
+          <MyLocationIcon />
+          <h2 className="btn-2 text-grey-900">{region}</h2>
         </div>
-      )}
+
+        {isOwner && (
+          <button className="text-grey-500" aria-label="마킹 수정 및 삭제하기">
+            <MoreIcon />
+          </button>
+        )}
+      </div>
 
       <div className="flex justify-between items-center gap-1 flex-1">
         <img

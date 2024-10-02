@@ -9,10 +9,6 @@ const meta: Meta<typeof MarkingItem> = {
   component: MarkingItem,
   tags: ["autodocs"],
   argTypes: {
-    showRegion: {
-      description: "주소를 보여줄지 여부를 나타냅니다.",
-      control: "boolean",
-    },
     onRegionClick: {
       description: "주소를 클릭했을 때 실행할 함수입니다.",
     },
