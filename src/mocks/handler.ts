@@ -311,7 +311,7 @@ export const profileHandlers = [
 ];
 
 export const addressHandlers = [
-  http.get("http://localhost/addresses", (req) => {
+  http.get(`${import.meta.env.VITE_API_BASE_URL}/addresses`, (req) => {
     const {
       request: { url },
     } = req;
@@ -340,13 +340,16 @@ export const addressHandlers = [
       message: "입력하신 주소가 없습니다",
     });
   }),
-  http.get("http://localhost/addresses/search-by-location", () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "good",
-      content: addressListData["CURRENT_LOCATION"],
-    });
-  }),
+  http.get(
+    `${import.meta.env.VITE_API_BASE_URL}/addresses/search-by-location`,
+    () => {
+      return HttpResponse.json({
+        code: 200,
+        message: "good",
+        content: addressListData["CURRENT_LOCATION"],
+      });
+    },
+  ),
 ];
 
 /**
