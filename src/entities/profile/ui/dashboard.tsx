@@ -31,6 +31,13 @@ export const ProfileHeading = ({
   followers,
   followings,
 }: ProfileHeadingProps) => {
+  console.table({
+    name,
+    breed,
+    followers,
+    followings,
+  });
+
   return (
     <div className="flex flex-col gap-1 items-start self-stretch">
       <h1 className="text-grey-900 title-2">{name}</h1>

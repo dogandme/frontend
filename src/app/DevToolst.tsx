@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
+import USER from "@/mocks/data/user.json";
 
 // ! TODO
 // ! 해당 컴포넌트는 개발 환경에서만 사용 되는 컴포넌트 입니다.
@@ -13,6 +15,9 @@ export const DevTools = () => {
   const [isWideEnough, setIsWideEnough] = useState(
     window.matchMedia("(min-width: 1100px)").matches,
   );
+
+  const nickname = "뽀송송";
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 1100px)");
@@ -39,6 +44,7 @@ export const DevTools = () => {
           role: null,
           nickname: null,
         });
+        queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
         break;
       case "ROLE_NONE":
         useAuthStore.setState({
@@ -46,20 +52,23 @@ export const DevTools = () => {
           role: "ROLE_NONE",
           nickname: null,
         });
+        queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
         break;
       case "ROLE_GUEST":
         useAuthStore.setState({
           token: "Bearer token",
           role: "ROLE_GUEST",
-          nickname: "뽀송송",
+          nickname,
         });
+        queryClient.setQueryData(["profile", nickname], USER.ROLE_GUEST);
         break;
       default:
         useAuthStore.setState({
           token: "Bearer token",
           role: "ROLE_USER",
-          nickname: "뽀송송",
+          nickname,
         });
+        queryClient.setQueryData(["profile", nickname], USER.ROLE_USER);
     }
   };
 
