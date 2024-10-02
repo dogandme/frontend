@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import { useAuthStore } from "@/shared/store";
 import { ProfileNavigationBar } from "./ProfileNavigationBar";

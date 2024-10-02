@@ -16,13 +16,13 @@ export const MyPage = () => {
   const nickname = useAuthStore((state) => state.nickname);
   const { data, isLoading } = useGetProfile(nickname);
 
+  if (role !== "ROLE_USER") {
+    return <NotUserMyPage role={role} nickname={nickname} />;
+  }
+
   // TODO 로딩 처리 하기
   if (isLoading) {
     return <div> 로딩즁 ..</div>;
-  }
-
-  if (role !== "ROLE_USER") {
-    return <NotUserMyPage role={role} nickname={nickname} />;
   }
 
   const { pet, followers, followings, tempCnt, markings } = data!;
