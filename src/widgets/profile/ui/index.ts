@@ -1,1 +1,1 @@
-export * from "./ProfileOverView";
+export * from "./dashboard";

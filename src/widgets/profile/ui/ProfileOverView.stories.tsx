@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { ProfileOverView } from "./ProfileOverView";
+import { ProfileOverView } from "./dashboard";
 
 export default {
   title: "Widgets/Profile/ProfileOverView",
