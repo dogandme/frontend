@@ -121,8 +121,26 @@ export const MarkingItem = ({
   const { mutate: postLikeMarking } = usePostLikeMarking();
   const { mutate: deleteLikeMarking } = useDeleteLikeMarking();
 
+  const handleLike = () => {
+    const { token, role } = useAuthStore.getState();
+
+    if (!token || role === "ROLE_NONE" || role === null) return;
+
+    if (isLiked) deleteLikeMarking({ markingId, token });
+    else postLikeMarking({ markingId, token });
+  };
+
   const { mutate: postSavedMarking } = usePostSavedMarking();
   const { mutate: deleteSavedMarking } = useDeleteSavedMarking();
+
+  const handleSave = () => {
+    const { token, role } = useAuthStore.getState();
+
+    if (!token || role === "ROLE_NONE" || role === null) return;
+
+    if (isBookmarked) deleteSavedMarking({ markingId, token });
+    else postSavedMarking({ markingId, token });
+  };
 
   return (
     <li className="flex flex-col gap-2">
@@ -163,15 +181,13 @@ export const MarkingItem = ({
       </div>
 
       <ImgSlider>
-        {images
-          .sort((a, b) => a.lank - b.lank)
-          .map(({ imageUrl, id }) => (
-            <ImgSlider.ImgItem
-              key={id}
-              src={`${API_BASE_URL}/${imageUrl}`}
-              alt={`${pet.name}-marking-image-${id}`}
-            />
-          ))}
+        {images.map(({ imageUrl, id }) => (
+          <ImgSlider.ImgItem
+            key={id}
+            src={`${API_BASE_URL}/${imageUrl}`}
+            alt={`${pet.name}-marking-image-${id}`}
+          />
+        ))}
       </ImgSlider>
 
       <div className="flex justify-between">
@@ -179,14 +195,7 @@ export const MarkingItem = ({
           <button
             className={isLiked ? "text-tangerine-500" : ""}
             aria-label="마킹 좋아요"
-            onClick={() => {
-              const { token, role } = useAuthStore.getState();
-
-              if (!token || role === "ROLE_NONE" || role === null) return;
-
-              if (!isLiked) postLikeMarking({ markingId, token });
-              else deleteLikeMarking({ markingId, token });
-            }}
+            onClick={handleLike}
           >
             {isLiked ? <FilledLikeIcon /> : <LikeIcon />}
           </button>
@@ -197,14 +206,7 @@ export const MarkingItem = ({
           <button
             className={isBookmarked ? "text-tangerine-500" : ""}
             aria-label="마킹 저장하기"
-            onClick={() => {
-              const { token, role } = useAuthStore.getState();
-
-              if (!token || role === "ROLE_NONE" || role === null) return;
-
-              if (!isBookmarked) postSavedMarking({ markingId, token });
-              else deleteSavedMarking({ markingId, token });
-            }}
+            onClick={handleSave}
           >
             {isBookmarked ? <FilledBookmarkIcon /> : <BookmarkIcon />}
           </button>
