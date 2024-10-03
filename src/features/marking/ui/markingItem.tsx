@@ -15,9 +15,9 @@ import { List } from "@/shared/ui/list";
 import {
   Marking,
   useDeleteSavedMarking,
-  useLikeMarking,
+  usePostLikeMarking,
   usePostSavedMarking,
-  useUnlikeMarking,
+  useDeleteLikeMarking,
 } from "../api";
 import { useDeleteMarking } from "../api";
 import { API_BASE_URL } from "../constants";
@@ -118,8 +118,8 @@ export const MarkingItem = ({
   const isLiked = false;
   const isBookmarked = false;
 
-  const { mutate: likeMarking } = useLikeMarking();
-  const { mutate: unlikeMarking } = useUnlikeMarking();
+  const { mutate: postLikeMarking } = usePostLikeMarking();
+  const { mutate: deleteLikeMarking } = useDeleteLikeMarking();
 
   const { mutate: postSavedMarking } = usePostSavedMarking();
   const { mutate: deleteSavedMarking } = useDeleteSavedMarking();
@@ -184,8 +184,8 @@ export const MarkingItem = ({
 
               if (!token || role === "ROLE_NONE" || role === null) return;
 
-              if (!isLiked) likeMarking({ markingId, token });
-              else unlikeMarking({ markingId, token });
+              if (!isLiked) postLikeMarking({ markingId, token });
+              else deleteLikeMarking({ markingId, token });
             }}
           >
             {isLiked ? <FilledLikeIcon /> : <LikeIcon />}

@@ -7,7 +7,7 @@ import {
   POST_VISIBILITY_MAP,
 } from "../constants";
 import { useMarkingFormStore } from "../store";
-import { MarkingFormRequest } from "./addMarking";
+import { MarkingFormRequest } from "./postMarkingForm";
 
 const postMarkingFormDataTemporary = async ({
   token,

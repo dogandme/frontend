@@ -11,7 +11,7 @@ export interface LikeMarkingRequest {
   token: string;
 }
 
-const likeMarking = async ({ token, markingId }: LikeMarkingRequest) => {
+const postLikeMarking = async ({ token, markingId }: LikeMarkingRequest) => {
   const response = await fetch(MARKING_REQUEST_URL.LIKE(markingId), {
     method: "POST",
     headers: {
@@ -25,16 +25,16 @@ const likeMarking = async ({ token, markingId }: LikeMarkingRequest) => {
   return data;
 };
 
-export const useLikeMarking = () => {
+export const usePostLikeMarking = () => {
   return useMutation<LikeMarkingResponse, Error, LikeMarkingRequest>({
-    mutationFn: likeMarking,
+    mutationFn: postLikeMarking,
     onSuccess: () => {
       // todo 캐시된 데이터 수정
     },
   });
 };
 
-const unlikeMarking = async ({ token, markingId }: LikeMarkingRequest) => {
+const deleteLikeMarking = async ({ token, markingId }: LikeMarkingRequest) => {
   const response = await fetch(MARKING_REQUEST_URL.LIKE(markingId), {
     method: "DELETE",
     headers: {
@@ -48,9 +48,9 @@ const unlikeMarking = async ({ token, markingId }: LikeMarkingRequest) => {
   return data;
 };
 
-export const useUnlikeMarking = () => {
+export const useDeleteLikeMarking = () => {
   return useMutation<LikeMarkingResponse, Error, LikeMarkingRequest>({
-    mutationFn: unlikeMarking,
+    mutationFn: deleteLikeMarking,
     onSuccess: () => {
       // todo 캐시된 데이터 수정
     },
