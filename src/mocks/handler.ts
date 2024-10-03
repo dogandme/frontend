@@ -353,6 +353,31 @@ export const addressHandlers = [
 ];
 
 /**
+ * 404 에러인 회원을 찾을 수 없습니다는 토큰에서 유저 정보를 조회하는 로직이 msw 에서 구현하기 힘들어 제외했습니다.
+ */
+export const postLogoutHandlers = [
+  http.post(`${import.meta.env.VITE_API_BASE_URL}/logout`, ({ request }) => {
+    const token = request.headers.get("Authorization");
+    if (!token) {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "토큰 검증에 실패 했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+];
+
+/**
  * 실제 서버에선 액세스 토큰에 존재하는 userToken 을 이용해 사용자를 조회합니다.
  * 테스트 환경에서 userToken 을 사용하지 않으니 저흰 테스트 시 항상 닉네임을 뽀송송으로 하기로 약속 합니다.
  */
@@ -418,4 +443,5 @@ export const handlers = [
   ...profileHandlers,
   ...addressHandlers,
   ...petInfoFormHandlers,
+  ...postLogoutHandlers,
 ];
