@@ -200,7 +200,7 @@ interface UserInfoRegistrationRequest {
   token: string;
   nickname: string;
   gender: "FEMALE" | "MALE";
-  age: 10 | 20 | 30 | 40 | 50;
+  age: 10 | 20 | 30 | 40 | 50 | 60;
   region: number[];
   marketingYn: boolean;
 }

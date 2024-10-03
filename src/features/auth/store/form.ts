@@ -79,7 +79,7 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
 }));
 
 type Gender = "FEMALE" | "MALE" | null;
-type AgeRange = 10 | 20 | 30 | 40 | 50 | null;
+type AgeRange = 10 | 20 | 30 | 40 | 50 | 60 | null;
 type CheckedList = boolean[];
 type Region = { address: string; id: number };
 
