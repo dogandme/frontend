@@ -6,18 +6,12 @@ import { SETTING_END_POINT } from "../constants";
  * @param token - useAuthStore 에 담긴 토큰 값 입니다.
  * @returns - 로그아웃 요청에 대한 응답을 반환합니다.
  */
-const postLogout = async (token: AuthStore["token"]) => {
-  if (!token) {
-    throw new Error("로그인 후 이용해 주세요");
-  }
-
+const postLogout = async (token: NonNullable<AuthStore["token"]>) => {
   const response = await fetch(SETTING_END_POINT.LOGOUT, {
     method: "POST",
     headers: {
       Authorization: token,
-      application: "application/json",
     },
-    body: JSON.stringify({}),
   });
 
   const data = await response.json();

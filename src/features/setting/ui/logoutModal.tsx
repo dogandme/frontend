@@ -28,6 +28,9 @@ export const LogoutModal = ({
 
   const handleLogout = () => {
     const { token } = useAuthStore.getState();
+    if (!token) {
+      throw new Error("로그인 후 이용해 주세요");
+    }
     postLogout(token);
   };
 
