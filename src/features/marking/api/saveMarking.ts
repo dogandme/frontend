@@ -15,7 +15,6 @@ const postSavedMarking = async ({ token, markingId }: SaveMarkingRequest) => {
   const response = await fetch(MARKING_REQUEST_URL.SAVE(markingId), {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: token,
     },
   });
@@ -38,7 +37,6 @@ const deleteSavedMarking = async ({ token, markingId }: SaveMarkingRequest) => {
   const response = await fetch(MARKING_REQUEST_URL.LIKE(markingId), {
     method: "DELETE",
     headers: {
-      "Content-Type": "application/json",
       Authorization: token,
     },
   });

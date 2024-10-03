@@ -15,7 +15,6 @@ const postLikeMarking = async ({ token, markingId }: LikeMarkingRequest) => {
   const response = await fetch(MARKING_REQUEST_URL.LIKE(markingId), {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: token,
     },
   });
@@ -38,7 +37,6 @@ const deleteLikeMarking = async ({ token, markingId }: LikeMarkingRequest) => {
   const response = await fetch(MARKING_REQUEST_URL.LIKE(markingId), {
     method: "DELETE",
     headers: {
-      "Content-Type": "application/json",
       Authorization: token,
     },
   });
