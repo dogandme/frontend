@@ -2,6 +2,7 @@ import { http, HttpResponse, PathParams } from "msw";
 import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
+import { SETTING_END_POINT } from "@/features/setting/constants";
 import addressListData from "./data/addressList.json";
 // data
 import markingListData from "./data/markingList.json";
@@ -356,7 +357,7 @@ export const addressHandlers = [
  * 404 에러인 회원을 찾을 수 없습니다는 토큰에서 유저 정보를 조회하는 로직이 msw 에서 구현하기 힘들어 제외했습니다.
  */
 export const postLogoutHandlers = [
-  http.post(`${import.meta.env.VITE_API_BASE_URL}/logout`, ({ request }) => {
+  http.post(SETTING_END_POINT.LOGOUT, ({ request }) => {
     const token = request.headers.get("Authorization");
     if (!token) {
       return HttpResponse.json(
