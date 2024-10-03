@@ -22,7 +22,7 @@ export const LogoutModal = ({
     onMutate: () => {
       onCloseLogoutModal();
       navigate(ROUTER_PATH.MAIN);
-      handleOpenSnackbar();
+      setTimeout(handleOpenSnackbar, 0);
     },
   });
 
