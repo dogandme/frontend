@@ -1,7 +1,11 @@
 import { useNavigate } from "react-router-dom";
+import { ROUTER_PATH } from "@/shared/constants";
+import { useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
+import { Snackbar } from "@/shared/ui/snackbar";
+import { usePostLogout } from "../api";
 
 export const LogoutModal = ({
   onCloseLogoutModal,
@@ -9,15 +13,22 @@ export const LogoutModal = ({
   onCloseLogoutModal: () => Promise<void>;
 }) => {
   const navigate = useNavigate();
+  const { handleOpen: handleOpenSnackbar, onClose: onCloseSnackbar } =
+    useSnackBar(() => (
+      <Snackbar onClose={onCloseSnackbar}>로그아웃이 완료되었습니다</Snackbar>
+    ));
+
+  const { mutate: postLogout } = usePostLogout({
+    onMutate: () => {
+      onCloseLogoutModal();
+      navigate(ROUTER_PATH.MAIN);
+      handleOpenSnackbar();
+    },
+  });
 
   const handleLogout = () => {
-    useAuthStore.setState({
-      token: "",
-      role: null,
-      nickname: null,
-    });
-    onCloseLogoutModal();
-    navigate("/");
+    const { token } = useAuthStore.getState();
+    postLogout(token);
   };
 
   return (
