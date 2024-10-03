@@ -31,18 +31,22 @@ export const ageRangeOptionList = [
   },
   {
     value: 20,
-    name: "20~30대",
+    name: "20대",
   },
   {
     value: 30,
-    name: "30~40대",
+    name: "30대",
   },
   {
     value: 40,
-    name: "50~60대",
+    name: "40대",
   },
   {
     value: 50,
+    name: "50대",
+  },
+  {
+    value: 60,
     name: "60대 이상",
   },
 ] as const;
