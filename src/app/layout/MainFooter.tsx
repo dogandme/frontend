@@ -76,7 +76,11 @@ export const MainFooter = () => {
               <div className="px-4">
                 <MarkingList>
                   {markingList?.map((marking) => (
-                    <MarkingItem key={marking.markingId} {...marking} />
+                    <MarkingItem
+                      key={marking.markingId}
+                      {...marking}
+                      onRegionClick={() => {}}
+                    />
                   ))}
                 </MarkingList>
               </div>

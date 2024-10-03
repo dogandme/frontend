@@ -32,9 +32,8 @@ function formatDate(dateString: string): string {
   return `${year}.${month}.${day}`;
 }
 
-// todo onRegionClick을 필수 props로 타입 변경
 type MarkingItemProps = {
-  onRegionClick?: () => void;
+  onRegionClick: () => void;
 } & Omit<Marking, "isVisible" | "isTempSaved" | "userId">;
 
 const MarkingManageButton = ({

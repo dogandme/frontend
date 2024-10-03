@@ -92,7 +92,11 @@ export const WithMarkingList: Story = {
     return (
       <MarkingList>
         {data?.map((marking) => (
-          <MarkingItem key={marking.markingId} {...marking} />
+          <MarkingItem
+            key={marking.markingId}
+            onRegionClick={() => {}}
+            {...marking}
+          />
         ))}
       </MarkingList>
     );
