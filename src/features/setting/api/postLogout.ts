@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AuthStore, useAuthStore } from "@/shared/store";
-import { SETTING_END_POINT } from "../constatns";
+import { SETTING_END_POINT } from "../constants";
 
 /**
  * @param token - useAuthStore 에 담긴 토큰 값 입니다.
