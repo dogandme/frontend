@@ -193,13 +193,6 @@ export const markingModalHandlers = [
       message: "success",
     });
   }),
-  http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
-  }),
-
   http.get<{
     [K in keyof Omit<MarkingListRequest, "token">]: string;
   }>(
@@ -228,6 +221,36 @@ export const markingModalHandlers = [
       );
     },
   ),
+  http.delete<PathParams>(MARKING_REQUEST_URL.DELETE, () => {
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+  http.post<PathParams>(
+    `${import.meta.env.VITE_API_BASE_URL}/markings/like`,
+    () => {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+  http.delete<PathParams>(
+    `${import.meta.env.VITE_API_BASE_URL}/markings/like`,
+    () => {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+  http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async () => {
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
 ];
 
 export const loginHandlers = [
