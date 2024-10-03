@@ -89,7 +89,10 @@ const MarkingManageButton = ({
       </button>
 
       <List
-        className={`${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] right-0 bg-grey-0 w-[11.625rem] p-4`}
+        className={`${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] right-0 bg-grey-0 p-4`}
+        style={{
+          width: "11.625rem",
+        }}
       >
         <List.Item style={{ height: "3rem" }} onClick={handleModifyMarking}>
           수정하기
