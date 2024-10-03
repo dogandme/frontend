@@ -245,6 +245,24 @@ export const markingModalHandlers = [
       });
     },
   ),
+  http.post<PathParams>(
+    `${import.meta.env.VITE_API_BASE_URL}/markings/saves`,
+    () => {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+  http.delete<PathParams>(
+    `${import.meta.env.VITE_API_BASE_URL}/markings/saves`,
+    () => {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
   http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async () => {
     return HttpResponse.json({
       code: 200,
