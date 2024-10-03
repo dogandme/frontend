@@ -12,7 +12,13 @@ import {
 } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
-import { Marking, useLikeMarking, useUnlikeMarking } from "../api";
+import {
+  Marking,
+  useDeleteSavedMarking,
+  useLikeMarking,
+  usePostSavedMarking,
+  useUnlikeMarking,
+} from "../api";
 import { useDeleteMarking } from "../api";
 import { API_BASE_URL } from "../constants";
 
@@ -115,6 +121,9 @@ export const MarkingItem = ({
   const { mutate: likeMarking } = useLikeMarking();
   const { mutate: unlikeMarking } = useUnlikeMarking();
 
+  const { mutate: postSavedMarking } = usePostSavedMarking();
+  const { mutate: deleteSavedMarking } = useDeleteSavedMarking();
+
   return (
     <li className="flex flex-col gap-2">
       <div className="flex justify-between items-center">
@@ -188,6 +197,14 @@ export const MarkingItem = ({
           <button
             className={isBookmarked ? "text-tangerine-500" : ""}
             aria-label="마킹 저장하기"
+            onClick={() => {
+              const { token, role } = useAuthStore.getState();
+
+              if (!token || role === "ROLE_NONE" || role === null) return;
+
+              if (!isBookmarked) postSavedMarking({ markingId, token });
+              else deleteSavedMarking({ markingId, token });
+            }}
           >
             {isBookmarked ? <FilledBookmarkIcon /> : <BookmarkIcon />}
           </button>

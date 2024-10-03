@@ -16,4 +16,6 @@ export const MARKING_REQUEST_URL = {
   DELETE: `${API_BASE_URL}/markings`,
   LIKE: (markingId: LikeMarkingRequest["markingId"]) =>
     `${API_BASE_URL}/markings/like/${markingId}`,
+  SAVE: (markingId: LikeMarkingRequest["markingId"]) =>
+    `${API_BASE_URL}/markings/saves/${markingId}`,
 };
