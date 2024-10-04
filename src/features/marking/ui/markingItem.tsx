@@ -187,7 +187,7 @@ export const MarkingItem = ({
           <ImgSlider.ImgItem
             key={id}
             src={`${API_BASE_URL}/${imageUrl}`}
-            alt={`${pet.name}-marking-image-${id}`}
+            alt={`${pet.name}의 마킹 이미지`}
           />
         ))}
       </ImgSlider>
