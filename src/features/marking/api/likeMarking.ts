@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { AuthStore } from "@/shared/store";
 import { MARKING_REQUEST_URL } from "../constants";
 
 interface LikeMarkingResponse {
@@ -8,7 +9,7 @@ interface LikeMarkingResponse {
 
 export interface LikeMarkingRequest {
   markingId: number;
-  token: string;
+  token: NonNullable<AuthStore["token"]>;
 }
 
 const postLikeMarking = async ({ token, markingId }: LikeMarkingRequest) => {

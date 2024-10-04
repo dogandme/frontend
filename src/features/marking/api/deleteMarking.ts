@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { AuthStore } from "@/shared/store";
 import { MARKING_REQUEST_URL } from "../constants";
 
 interface DeleteMarkingResponse {
@@ -8,7 +9,7 @@ interface DeleteMarkingResponse {
 
 type DeleteMarkingRequest = {
   markingId: number;
-  token: string;
+  token: NonNullable<AuthStore["token"]>;
 };
 
 const deleteMarking = async ({ token, markingId }: DeleteMarkingRequest) => {

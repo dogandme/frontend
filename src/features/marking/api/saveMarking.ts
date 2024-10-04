@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { AuthStore } from "@/shared/store";
 import { MARKING_REQUEST_URL } from "../constants";
 
 interface SaveMarkingResponse {
@@ -8,7 +9,7 @@ interface SaveMarkingResponse {
 
 export interface SaveMarkingRequest {
   markingId: number;
-  token: string;
+  token: NonNullable<AuthStore["token"]>;
 }
 
 const postSavedMarking = async ({ token, markingId }: SaveMarkingRequest) => {

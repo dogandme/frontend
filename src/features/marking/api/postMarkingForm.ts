@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { LatLng } from "@/features/auth/api/region";
 import { useMapStore } from "@/features/map/store";
+import { AuthStore } from "@/shared/store";
 import {
   MARKING_ADD_ERROR_MESSAGE,
   MARKING_REQUEST_URL,
@@ -10,7 +11,7 @@ import { useMarkingFormStore } from "../store";
 
 // Marking Form 저장 API
 export interface MarkingFormRequest extends LatLng {
-  token: string;
+  token: NonNullable<AuthStore["token"]>;
   region: string;
   visibility: keyof typeof POST_VISIBILITY_MAP;
   content: string;

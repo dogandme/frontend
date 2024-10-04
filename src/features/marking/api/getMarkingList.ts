@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useResearchMarkingList } from "@/features/map/hooks";
-import { useAuthStore } from "@/shared/store";
+import { AuthStore, useAuthStore } from "@/shared/store";
 import { MARKING_REQUEST_URL } from "../constants/requestUrl";
 
 interface Pet {
@@ -52,7 +52,7 @@ export interface Marking {
 }
 
 export interface MarkingListRequest {
-  token: string | null;
+  token: AuthStore["token"];
   southWestLat: number;
   southWestLng: number;
   northEastLat: number;
