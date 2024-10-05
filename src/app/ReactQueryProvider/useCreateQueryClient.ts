@@ -1,7 +1,13 @@
 import { useRef } from "react";
 import { QueryClient, QueryCache } from "@tanstack/react-query";
+import { useAuthStore } from "@/shared/store";
+import { ERROR_MESSAGE } from "./constants";
+import { getNewAccessToken } from "./errorHandlers";
 
 export const useCreateQueryClient = () => {
+  const setToken = useAuthStore((state) => state.setToken);
+  const resetAuthStore = useAuthStore((state) => state.reset);
+
   const queryClient = useRef(
     new QueryClient({
       defaultOptions: {
@@ -24,7 +30,20 @@ export const useCreateQueryClient = () => {
       },
 
       queryCache: new QueryCache({
-        onError: async (error, query) => {},
+        onError: async (error, query) => {
+          switch (error.message) {
+            case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
+              await getNewAccessToken({
+                query,
+                setterMethods: { setToken, resetAuthStore },
+                queryClient,
+              });
+              break;
+            }
+            default:
+              throw error;
+          }
+        },
       }),
     }),
   ).current;
