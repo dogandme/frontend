@@ -67,7 +67,7 @@ const getMyProfileHandler = [
   http.get(`${import.meta.env.VITE_API_BASE_URL}/profile`, ({ request }) => {
     const token = request.headers.get("Authorization");
 
-    if (token === "stale token") {
+    if (token === "staleToken") {
       return HttpResponse.json(
         {
           code: 401,
@@ -81,10 +81,35 @@ const getMyProfileHandler = [
   }),
 ];
 
+const getNewAccessTokenHandler = [
+  http.get(`${import.meta.env.VITE_API_BASE_URL}/auth`, ({ cookies }) => {
+    const refreshToken = cookies["refreshToken"];
+
+    if (refreshToken !== "freshRefreshToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "RefreshToken 검증에 실패했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        authorization: "freshAccessToken",
+      },
+    });
+  }),
+];
+
 export const AccessTokenTest: StoryObj<typeof MyPage> = {
   parameters: {
     msw: {
-      handlers: [...getMyProfileHandler],
+      handlers: [...getMyProfileHandler, ...getNewAccessTokenHandler],
     },
   },
 
@@ -94,7 +119,7 @@ export const AccessTokenTest: StoryObj<typeof MyPage> = {
       useAuthStore.setState({
         role: "ROLE_USER",
         nickname: "뽀송송",
-        token: "stale token",
+        token: "staleToken",
       });
 
       return <Story />;
