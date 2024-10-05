@@ -42,68 +42,66 @@ export const Default: Story = {
     };
 
     await step("이메일 input 형식 검사", async () => {
-      const emailStatusText = "이메일 형식으로 입력해 주세요";
-
       await step(
-        '이메일 입력 필드를 focus하면, "이메일 형식으로 입력해 주세요" 안내 문구가 뜬다.',
+        'input을 클릭하면, "이메일 형식으로 입력해 주세요" 안내 문구가 뜬다.',
         async () => {
           await userEvent.click($emailInput);
 
-          const $statusText = canvas.getByText(emailStatusText);
+          const defaultStatusText = "이메일 형식으로 입력해 주세요";
+          const $statusText = canvas.getByText(defaultStatusText);
 
           expect($statusText).toBeInTheDocument();
           expect($statusText).toHaveClass(statusTextColor.valid);
         },
       );
 
-      await step("이메일 형식에 맞지 않게 입력할 경우,", async () => {
-        await userEvent.type($emailInput, invalidEmail);
+      await step("이메일 형식에 맞을 경우", async () => {
+        await userEvent.type($emailInput, validEmail);
 
-        const $statusText = canvas.getByText(emailStatusText);
+        await step("코드 전송 버튼이 활성화된다.", async () => {
+          const $sendConfirmCodeButton = canvas.getByText("코드전송");
+          expect($sendConfirmCodeButton).toBeEnabled();
+        });
 
-        await step("안내 문구가 핑크색으로 표시된다.", () => {
-          expect($statusText).toHaveClass(statusTextColor.invalid);
+        const isValidEmailStatusText = "올바른 이메일 형식입니다";
+        const $statusText = canvas.queryByText(isValidEmailStatusText);
+
+        await step('"올바른 이메일 형식입니다" 안내 문구가 뜬다.', async () => {
+          expect($statusText).toBeInTheDocument();
+          expect($statusText).toHaveClass(statusTextColor.valid);
         });
 
         await step(
-          "outfocus되도, 안내 문구를 핑크색으로 표시한다.",
+          'outfocus돼도, "올바른 이메일 형식입니다" 안내 문구는 사라지지 않는다.',
           async () => {
             await userEvent.tab();
-            expect($statusText).toHaveClass(statusTextColor.invalid);
+
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.valid);
           },
         );
       });
 
-      await step(
-        "이메일 형식에 맞게 입력한 경우, 안내 문구가 기본색으로 표시된다.",
-        async () => {
-          await userEvent.clear($emailInput);
-          await userEvent.type($emailInput, validEmail);
+      await userEvent.clear($emailInput);
 
-          const $statusText = canvas.getByText(emailStatusText);
+      await step("이메일 형식에 맞지 않게 입력할 경우,", async () => {
+        await userEvent.type($emailInput, invalidEmail);
 
-          expect($statusText).toHaveClass(statusTextColor.valid);
-        },
-      );
+        const errorStatusText = "이메일 형식으로 입력해 주세요";
+        const $statusText = canvas.getByText(errorStatusText);
 
-      await step(
-        "이메일 형식에 맞게 입력한 상태에서 outfocus되면, 안내 문구가 사라진다.",
-        async () => {
+        await step(
+          '"이메일 형식으로 입력해 주세요" 경고 문구가 표시된다.',
+          () => {
+            expect($statusText).toHaveClass(statusTextColor.invalid);
+          },
+        );
+
+        await step("outfocus돼도, 경고 문구가 사라지지 않는다.", async () => {
           await userEvent.tab();
-
-          const $statusText = canvas.queryByText(emailStatusText);
-
-          expect($statusText).not.toBeInTheDocument();
-        },
-      );
-
-      await step(
-        "이메일 형식에 맞게 입력한 상태에서 [코드전송] 버튼을 클릭할 수 있다.",
-        async () => {
-          const $sendConfirmCodeButton = canvas.getByText("코드전송");
-          expect($sendConfirmCodeButton).toBeEnabled();
-        },
-      );
+          expect($statusText).toHaveClass(statusTextColor.invalid);
+        });
+      });
     });
 
     await userEvent.clear($emailInput);
