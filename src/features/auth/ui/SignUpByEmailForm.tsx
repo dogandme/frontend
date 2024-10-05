@@ -78,6 +78,7 @@ const Email = () => {
           variant="filled"
           size="medium"
           fullWidth={false}
+          className="w-[6.5rem]"
           disabled={!isValidEmail || isEmailEmpty || isDuplicateEmail}
           onClick={() => {
             handleOpen();
@@ -183,6 +184,7 @@ const VerificationCode = () => {
           variant="filled"
           size="medium"
           fullWidth={false}
+          className="w-[6.5rem]"
           onClick={handleCheckButtonClick}
           disabled={
             !isValidEmail ||
