@@ -94,8 +94,8 @@ export const usePostPetInfo = () => {
       navigate(lastNoneAuthRoute);
 
       queryClient.prefetchQuery({
-        queryKey: ["profile", nickname],
-        queryFn: () => getProfile(nickname as string),
+        queryKey: ["profile", { nickname, token: authorization }],
+        queryFn: () => getProfile({ nickname, token: authorization }),
       });
     },
 
