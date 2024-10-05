@@ -1,5 +1,8 @@
-import { Meta } from "@storybook/react";
-import { NotRoleUserMyPage, RoleUserMyPage } from "./page";
+import { http, HttpResponse } from "msw";
+import { Meta, StoryObj } from "@storybook/react";
+import { useAuthStore } from "@/shared/store";
+import User from "../../mocks/data/user.json";
+import { MyPage, NotRoleUserMyPage, RoleUserMyPage } from "./page";
 
 export default {
   title: "Pages/my-page",
@@ -53,4 +56,50 @@ export const Default = {
       </div>
     );
   },
+};
+
+/**
+ * msw 폴더가 리팩토링 예정이기 때문에 핸들러를 스토리북 내부에서 정의 하도록 합니다.
+ * 2024/10/05 기준으로 현재 핸들러들엔 stale ,fresh token 에 따른 로직이 존재하지 않습니다.
+ * 이에 스토리북에서 따로 stale token 에 대한 핸들러를 정의하도록 합니다.
+ */
+const getMyProfileHandler = [
+  http.get(`${import.meta.env.VITE_API_BASE_URL}/profile`, ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (token === "stale token") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "토큰 검증에 실패했습니다.",
+        },
+        { status: 401 },
+      );
+    }
+
+    return HttpResponse.json(User.ROLE_USER);
+  }),
+];
+
+export const AccessTokenTest: StoryObj<typeof MyPage> = {
+  parameters: {
+    msw: {
+      handlers: [...getMyProfileHandler],
+    },
+  },
+
+  decorators: [
+    (Story) => {
+      // 로그인 해뒀지만 토큰이 만료된 경우를 가정
+      useAuthStore.setState({
+        role: "ROLE_USER",
+        nickname: "뽀송송",
+        token: "stale token",
+      });
+
+      return <Story />;
+    },
+  ],
+
+  render: () => <MyPage />,
 };
