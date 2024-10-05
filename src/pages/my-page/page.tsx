@@ -24,7 +24,12 @@ import { NavigationBar } from "@/shared/ui/navigationbar";
 export const MyPage = () => {
   const role = useAuthStore((state) => state.role);
   const nickname = useAuthStore((state) => state.nickname);
-  const { data, isLoading } = useGetProfile(nickname);
+  const token = useAuthStore((state) => state.token);
+
+  const { data, isLoading } = useGetProfile({
+    nickname: nickname,
+    token: token,
+  });
 
   // TODO 로딩 처리 하기
   if (isLoading) {
