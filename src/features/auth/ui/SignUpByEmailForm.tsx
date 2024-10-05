@@ -256,7 +256,8 @@ const VerificationCode = () => {
             !isValidEmail ||
             isErrorSendCode ||
             isSuccess ||
-            verificationCode.length < CODE_LENGTH
+            verificationCode.length < CODE_LENGTH ||
+            (isError && verificationCode === variables?.authNum)
           }
         >
           확인
