@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignUpByEmailFormStore } from "@/features/auth/store";
 import { SignUpByEmailForm } from "@/features/auth/ui";
@@ -81,6 +82,10 @@ const SignUpPage = () => {
 
     handleOpen();
   };
+
+  useEffect(() => {
+    resetSignUpByEmailFormStore();
+  }, [resetSignUpByEmailFormStore]);
 
   return (
     <div className="pb-32">
