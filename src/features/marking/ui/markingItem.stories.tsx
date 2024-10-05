@@ -9,9 +9,9 @@ const meta: Meta<typeof MarkingItem> = {
   component: MarkingItem,
   tags: ["autodocs"],
   argTypes: {
-    showRegion: {
-      description: "주소를 보여줄지 여부를 나타냅니다.",
-      control: "boolean",
+    markingId: {
+      description: "마킹 id입니다.",
+      control: "number",
     },
     onRegionClick: {
       description: "주소를 클릭했을 때 실행할 함수입니다.",
@@ -92,7 +92,11 @@ export const WithMarkingList: Story = {
     return (
       <MarkingList>
         {data?.map((marking) => (
-          <MarkingItem key={marking.markingId} {...marking} />
+          <MarkingItem
+            key={marking.markingId}
+            onRegionClick={() => {}}
+            {...marking}
+          />
         ))}
       </MarkingList>
     );

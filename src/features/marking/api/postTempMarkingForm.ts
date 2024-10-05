@@ -1,5 +1,5 @@
+// Marking Form 임시 저장 API
 import { useMutation } from "@tanstack/react-query";
-import { LatLng } from "@/features/auth/api/region";
 import { useMapStore } from "@/features/map/store";
 import {
   MARKING_ADD_ERROR_MESSAGE,
@@ -7,33 +7,29 @@ import {
   POST_VISIBILITY_MAP,
 } from "../constants";
 import { useMarkingFormStore } from "../store";
+import { MarkingFormRequest } from "./postMarkingForm";
 
-// Marking Form 저장 API
-export interface MarkingFormRequest extends LatLng {
-  token: string;
-  region: string;
-  visibility: keyof typeof POST_VISIBILITY_MAP;
-  content: string;
-  images: File[];
-}
-
-const postMarkingFormData = async ({
+const postMarkingFormDataTemporary = async ({
   token,
   ...formObj
-}: MarkingFormRequest) => {
-  const { visibility, images, ...rest } = formObj;
+}: Omit<MarkingFormRequest, "visibility"> & {
+  visibility: keyof typeof POST_VISIBILITY_MAP | "";
+}) => {
+  const { region, visibility, content, images, lat, lng } = formObj;
 
   if (!token) {
     throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
   }
 
   const formData = new FormData();
-
   formData.append(
     "markingAddDto",
     JSON.stringify({
-      visibility: POST_VISIBILITY_MAP[visibility],
-      ...rest,
+      region,
+      visibility: visibility ? POST_VISIBILITY_MAP[visibility] : null,
+      content,
+      lat,
+      lng,
     }),
   );
 
@@ -42,7 +38,7 @@ const postMarkingFormData = async ({
     formData.append("images", image, fileName);
   });
 
-  const response = await fetch(MARKING_REQUEST_URL.ADD, {
+  const response = await fetch(MARKING_REQUEST_URL.SAVE_TEMP, {
     method: "POST",
     headers: {
       Authorization: `${token}`,
@@ -61,7 +57,7 @@ const postMarkingFormData = async ({
   return data;
 };
 
-export const usePostMarkingForm = ({
+export const usePostTempMarkingForm = ({
   onSuccess,
 }: {
   onSuccess: () => void;
@@ -72,11 +68,14 @@ export const usePostMarkingForm = ({
   const setMode = useMapStore((state) => state.setMode);
 
   return useMutation({
-    mutationFn: postMarkingFormData,
+    mutationFn: postMarkingFormDataTemporary,
     onSuccess: () => {
       onSuccess();
       resetMarkingFormStore();
       setMode("view");
+    },
+    onError: (error) => {
+      throw new Error(error.message);
     },
   });
 };
