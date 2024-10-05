@@ -4,6 +4,7 @@ import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import { SETTING_END_POINT } from "@/features/setting/constants";
+import User from "../mocks/data/user.json";
 import addressListData from "./data/addressList.json";
 // data
 import markingListData from "./data/markingList.json";
@@ -342,12 +343,8 @@ export const getProfileHandlers = [
           },
         );
       }
-      if (token === "freshToken" && nickname === "뽀송송") {
-        return HttpResponse.json({
-          code: 200,
-          message: "success",
-          content: userDB["뽀송송"],
-        });
+      if (token === "freshAccessToken" && nickname === "뽀송송") {
+        return HttpResponse.json(User["ROLE_USER"]);
       }
 
       const userInfo = userDB[nickname as string];
