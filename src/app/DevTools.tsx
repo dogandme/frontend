@@ -79,7 +79,9 @@ export const DevTools = () => {
 
   const setStaleATandStaleRT = () => {
     useAuthStore.setState({
+      role: "ROLE_USER",
       token: "staleToken",
+      nickname,
     });
     document.cookie =
       "Authorization-refresh=staleRefreshToken; path=/; max-age=3600";
@@ -90,10 +92,13 @@ export const DevTools = () => {
 
   const setStaleATandFreshRT = () => {
     useAuthStore.setState({
-      token: "staleToken", // stale AT & fresh RT
+      role: "ROLE_USER",
+      token: "staleToken",
+      nickname,
     });
     document.cookie =
       "Authorization-refresh=freshRefreshToken; path=/; max-age=3600";
+
     queryClient.cancelQueries({ queryKey: ["profile", nickname] });
     queryClient.clear();
     queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
