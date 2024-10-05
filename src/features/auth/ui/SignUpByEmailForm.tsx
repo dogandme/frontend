@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MutationState, useMutationState } from "@tanstack/react-query";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { useSnackBar } from "@/shared/lib/overlay";
@@ -44,6 +44,7 @@ const Email = () => {
   const {
     mutate: postVerificationCode,
     isError,
+    isSuccess,
     variables,
   } = usePostVerificationCode();
 
@@ -68,6 +69,10 @@ const Email = () => {
       ? "이미 가입된 이메일 입니다"
       : "올바른 이메일 형식입니다";
 
+  const canResendVerificationCode = useSignUpByEmailFormStore(
+    (state) => state.canResendVerificationCode,
+  );
+
   return (
     <div>
       <div className="flex items-end justify-between gap-2">
@@ -90,13 +95,18 @@ const Email = () => {
           size="medium"
           fullWidth={false}
           className="w-[6.5rem]"
-          disabled={!isValidEmail || isEmailEmpty || isDuplicateEmail}
+          disabled={
+            !isValidEmail ||
+            isEmailEmpty ||
+            isDuplicateEmail ||
+            (isSuccess && !canResendVerificationCode)
+          }
           onClick={() => {
             handleOpen();
             postVerificationCode({ email });
           }}
         >
-          코드전송
+          {isSuccess ? "재전송" : "코드전송"}
         </Button>
       </div>
       {shouldShowEmailStatusText && (
@@ -168,9 +178,43 @@ const VerificationCode = () => {
     },
   });
 
-  const isErrorSendCode =
-    sendCodeResponseCacheArr[sendCodeResponseCacheArr.length - 1]?.status ===
-    "error";
+  const setCanResendVerificationCode = useSignUpByEmailFormStore(
+    (state) => state.setCanResendVerificationCode,
+  );
+
+  const INTERVAL = 1000;
+  const [timeLeft, setTimeLeft] = useState<number>(1000 * 60 * 3);
+
+  const sendCodeStatus =
+    sendCodeResponseCacheArr[sendCodeResponseCacheArr.length - 1]?.status;
+  const isErrorSendCode = sendCodeStatus === "error";
+  const isSuccessSendCode = sendCodeStatus === "success";
+
+  useEffect(() => {
+    if (!isSuccessSendCode) return;
+
+    if (timeLeft === 1000 * 60) {
+      setCanResendVerificationCode(true);
+    }
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - INTERVAL);
+    }, INTERVAL);
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [timeLeft, isSuccessSendCode]);
+
+  const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
+    2,
+    "0",
+  );
+  const second = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
 
   return (
     <div>
@@ -188,6 +232,13 @@ const VerificationCode = () => {
           onChange={handleChange}
           isError={isError}
           disabled={!isValidEmail || isErrorSendCode || isSuccess}
+          trailingNode={
+            isSuccessSendCode && (
+              <span className="body-2 text-grey-700">
+                {minutes}:{second}
+              </span>
+            )
+          }
         />
         <Button
           type="button"

@@ -28,6 +28,36 @@ export default meta;
 type Story = StoryObj<typeof SignUpByEmailForm>;
 
 export const Default: Story = {
+  decorators: (Story) => {
+    useAuthStore.setState({
+      token: null,
+      role: null,
+      nickname: null,
+    });
+
+    return <Story />;
+  },
+
+  render: () => <SignUpByEmailForm />,
+};
+
+export const Test: Story = {
+  decorators: (Story) => {
+    useAuthStore.setState({
+      token: null,
+      role: null,
+      nickname: null,
+    });
+
+    return <Story />;
+  },
+
+  parameters: {
+    msw: {
+      handlers: signUpByEmailHandlers,
+    },
+  },
+
   render: () => <SignUpByEmailForm />,
 
   play: async ({ canvasElement, step }) => {
@@ -40,6 +70,10 @@ export const Default: Story = {
       valid: "text-grey-500",
       invalid: "text-pink-500",
     };
+
+    const $sendConfirmCodeButton = canvas.getByText("코드전송");
+    const $confirmCodeInput =
+      canvasElement.querySelector("#verification-code")!;
 
     await step("이메일 input 형식 검사", async () => {
       await step(
@@ -58,8 +92,7 @@ export const Default: Story = {
       await step("이메일 형식에 맞을 경우", async () => {
         await userEvent.type($emailInput, validEmail);
 
-        await step("코드 전송 버튼이 활성화된다.", async () => {
-          const $sendConfirmCodeButton = canvas.getByText("코드전송");
+        await step("[코드전송] 버튼이 활성화된다.", async () => {
           expect($sendConfirmCodeButton).toBeEnabled();
         });
 
@@ -90,6 +123,10 @@ export const Default: Story = {
         const errorStatusText = "이메일 형식으로 입력해 주세요";
         const $statusText = canvas.getByText(errorStatusText);
 
+        await step("[코드전송] 버튼이 비활성화된다.", async () => {
+          expect($sendConfirmCodeButton).toBeDisabled();
+        });
+
         await step(
           '"이메일 형식으로 입력해 주세요" 경고 문구가 표시된다.',
           () => {
@@ -110,42 +147,104 @@ export const Default: Story = {
 
     await step("[코드 전송] 버튼", async () => {
       await step(
-        "입력한 이메일이 형식에 맞지 않을 경우, 버튼은 비활성화된다.",
+        "중복되는 이메일을 입력한 상태에서 [코드전송]을 클릭하면",
         async () => {
-          await userEvent.type($emailInput, invalidEmail);
-          expect($codeSendButton).toBeDisabled();
+          const duplicatedEmail = "hihihi@naver.com";
+
+          await userEvent.type($emailInput, duplicatedEmail);
+          await userEvent.click($codeSendButton);
+
+          const $statusText =
+            await canvas.findByText("이미 가입된 이메일 입니다");
+
+          await step(
+            '"이미 가입된 이메일 입니다" 에러 문구를 표시한다.',
+            async () => {
+              expect($statusText).toBeInTheDocument();
+              expect($statusText).toHaveClass(statusTextColor.invalid);
+            },
+          );
+
+          await step("버튼은 비활성화된다.", async () => {
+            expect($codeSendButton).toBeDisabled();
+          });
         },
       );
 
       await userEvent.clear($emailInput);
 
+      // todo
+      // 동시에 [코드전송]은 [재전송]으로 문구가 수정되어 보여진다.
+      // [재전송]은 기본으로 비활성화 상태로 노출되며 1분이 지나는 시점으로 활성화된다.
+      // 1분 이내에 [코드전송]을 다시 누르는 경우, "1분 이후에 재전송 해주세요"라는 snackbar가 노출된다.
+
       await step(
-        "입력한 이메일 값이 유효할 경우, 버튼은 활성화된다.",
+        "중복되지 않는 이메일을 입력한 상태에서 [코드전송]을 클릭하면",
         async () => {
           await userEvent.type($emailInput, validEmail);
-          expect($codeSendButton).toBeEnabled();
+          await userEvent.click($codeSendButton);
+
+          await step("인증 코드 input이 활성화된다.", async () => {
+            expect($confirmCodeInput).toBeEnabled();
+          });
+
+          await step(
+            "인증코드 인풋이 활성화 되는 시점을 기점으로 3분 타이머가 시작된다.",
+            async () => {
+              const $timer = await canvas.findByText(/\d\d:\d\d/);
+
+              expect($timer).toBeInTheDocument();
+            },
+          );
+
+          await step(
+            "메일로 인증코드가 전송되었습니다 스낵바가 노출된다.",
+            async () => {
+              const $snackbar =
+                await canvas.findByText("메일로 인증코드가 전송되었습니다");
+
+              expect($snackbar).toBeInTheDocument();
+            },
+          );
+
+          await step(
+            "동시에 [코드전송]은 [재전송]으로 문구가 수정되어 보여진다.",
+            async () => {
+              expect($codeSendButton).toHaveTextContent("재전송");
+            },
+          );
+
+          // ? 어떻게 테스트하지?
+          // await step(
+          //   "[재전송]은 기본으로 비활성화 상태로 노출되며 1분이 지나는 시점으로 활성화된다.",
+          //   async () => {
+          //     expect($codeSendButton).toBeDisabled();
+
+          //     await waitFor(() => {
+          //       expect($codeSendButton).toBeEnabled();
+          //     });
+          //   },
+          // );
         },
       );
     });
 
-    const $codeInput = canvasElement.querySelector("#verification-code")!;
-
     await step("인증 코드 검사", async () => {
       await step("숫자만 입력할 수 있다.", async () => {
-        await userEvent.type($codeInput, "a123b4567");
+        await userEvent.type($confirmCodeInput, "a123b4567");
 
-        expect($codeInput).toHaveValue("1234567");
+        expect($confirmCodeInput).toHaveValue("1234567");
       });
 
-      await userEvent.clear($codeInput);
+      await userEvent.clear($confirmCodeInput);
 
       await step("7자리 이상 입력할 수 없다.", async () => {
-        await userEvent.type($codeInput, "12345678");
+        await userEvent.type($confirmCodeInput, "12345678");
 
-        expect($codeInput).toHaveValue("1234567");
+        expect($confirmCodeInput).toHaveValue("1234567");
       });
 
-      await userEvent.clear($codeInput);
+      await userEvent.clear($confirmCodeInput);
 
       await step(
         "입력한 인증 코드가 7자리일 경우, [확인] 버튼이 활성화 상태로 변한다.",
@@ -153,7 +252,7 @@ export const Default: Story = {
           const $confirmButton = canvas.getByText("확인");
           expect($confirmButton).toBeDisabled();
 
-          await userEvent.type($codeInput, "1234567");
+          await userEvent.type($confirmCodeInput, "1234567");
           expect($confirmButton).toBeEnabled();
         },
       );
