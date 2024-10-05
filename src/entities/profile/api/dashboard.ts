@@ -74,7 +74,7 @@ export const getProfile = async ({
 
 export const useGetProfile = ({ nickname, token }: ProfileRequest) => {
   return useQuery({
-    queryKey: ["profile", nickname],
+    queryKey: ["profile", nickname, token],
     queryFn: () => getProfile({ nickname, token }),
 
     enabled: !!nickname,
