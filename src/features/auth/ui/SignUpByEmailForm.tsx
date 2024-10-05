@@ -161,11 +161,16 @@ const VerificationCode = () => {
     );
   };
 
+  const [timeLeft, setTimeLeft] = useState<number>(1000 * 60 * 3);
+
   const isValidEmail = validateEmail(email);
   const isEmailChanged = variables?.email !== email;
 
   const isSuccess = isSuccessCheckCode && !isEmailChanged;
-  const isError = isErrorCheckCode || (isSuccessCheckCode && isEmailChanged);
+  const isError =
+    isErrorCheckCode ||
+    (isSuccessCheckCode && isEmailChanged) ||
+    timeLeft === 0;
 
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -173,6 +178,8 @@ const VerificationCode = () => {
 
   if (isSuccess) statusText = "인증되었습니다";
   if (isError) statusText = "인증코드를 다시 확인해 주세요";
+  if (timeLeft === 0)
+    statusText = "인증시간이 만료되었습니다 재전송 버튼을 눌러주세요";
 
   const sendCodeResponseCacheArr = useMutationState({
     filters: {
@@ -185,7 +192,6 @@ const VerificationCode = () => {
   );
 
   const INTERVAL = 1000;
-  const [timeLeft, setTimeLeft] = useState<number>(1000 * 60 * 3);
 
   const sendCodeStatus =
     sendCodeResponseCacheArr[sendCodeResponseCacheArr.length - 1]?.status;
@@ -203,14 +209,14 @@ const VerificationCode = () => {
       setTimeLeft((prev) => prev - INTERVAL);
     }, INTERVAL);
 
-    if (timeLeft <= 0) {
+    if (timeLeft <= 0 || isSuccessCheckCode) {
       clearInterval(timer);
     }
 
     return () => {
       clearInterval(timer);
     };
-  }, [timeLeft, isSuccessSendCode]);
+  }, [timeLeft, isSuccessSendCode, isSuccessCheckCode]);
 
   const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
     2,
@@ -237,8 +243,11 @@ const VerificationCode = () => {
           isError={isError}
           disabled={!isValidEmail || isErrorSendCode || isSuccess}
           trailingNode={
-            isSuccessSendCode && (
-              <span className="body-2 text-grey-700">
+            isSuccessSendCode &&
+            !isSuccessCheckCode && (
+              <span
+                className={`body-2 ${timeLeft === 0 ? "text-pink-500" : "text-grey-700"}`}
+              >
                 {minutes}:{second}
               </span>
             )
@@ -257,7 +266,8 @@ const VerificationCode = () => {
             isErrorSendCode ||
             isSuccess ||
             verificationCode.length < CODE_LENGTH ||
-            (isError && verificationCode === variables?.authNum)
+            (isError && verificationCode === variables?.authNum) ||
+            timeLeft === 0
           }
         >
           확인
@@ -266,7 +276,7 @@ const VerificationCode = () => {
       <p
         className={`body-3 pl-1 pr-3 pt-1 h-6 ${isError ? "text-pink-500" : "text-grey-500"}`}
       >
-        {isFocused && statusText}
+        {(isFocused || timeLeft === 0) && statusText}
       </p>
     </div>
   );
