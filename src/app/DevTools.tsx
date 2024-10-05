@@ -28,6 +28,7 @@ export const DevTools = () => {
     mediaQuery.addEventListener("change", handleMediaChange);
     return () => {
       mediaQuery.removeEventListener("change", handleMediaChange);
+      document.cookie = "Authorization-refresh=; path=/; max-age=0";
     };
   }, []);
 
@@ -62,14 +63,40 @@ export const DevTools = () => {
         });
         queryClient.setQueryData(["profile", nickname], USER.ROLE_GUEST);
         break;
-      default:
+      case "ROLE_USER": {
         useAuthStore.setState({
           token: "Bearer token",
           role: "ROLE_USER",
           nickname,
         });
         queryClient.setQueryData(["profile", nickname], USER.ROLE_USER);
+        break;
+      }
+      default:
+        return;
     }
+  };
+
+  const setStaleATandStaleRT = () => {
+    useAuthStore.setState({
+      token: "staleToken",
+    });
+    document.cookie =
+      "Authorization-refresh=staleRefreshToken; path=/; max-age=3600";
+    queryClient.cancelQueries({ queryKey: ["profile", nickname] });
+    queryClient.clear();
+    queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
+  };
+
+  const setStaleATandFreshRT = () => {
+    useAuthStore.setState({
+      token: "staleToken", // stale AT & fresh RT
+    });
+    document.cookie =
+      "Authorization-refresh=freshRefreshToken; path=/; max-age=3600";
+    queryClient.cancelQueries({ queryKey: ["profile", nickname] });
+    queryClient.clear();
+    queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
   };
 
   // TODO 권한에 따라서 ProfileInfo 에 대한 useQuery InitialData 를 변경해야 합니다.
@@ -109,6 +136,29 @@ export const DevTools = () => {
           onClick={() => setAuthStore("ROLE_USER")}
         >
           SET ROLE_USER
+        </Button>
+        {/* 2014/10/05 refresh , access token 로직 추가 */}
+        <Button
+          colorType="primary"
+          variant="filled"
+          size="small"
+          onClick={setStaleATandFreshRT}
+        >
+          <p className="flex flex-col">
+            <span>ROLE_USER</span>
+            <span>stale AT & fresh RT</span>
+          </p>
+        </Button>
+        <Button
+          colorType="primary"
+          variant="filled"
+          size="small"
+          onClick={setStaleATandStaleRT}
+        >
+          <p className="flex flex-col">
+            <span>ROLE_USER</span>
+            <span>stale AT & stale RT</span>
+          </p>
         </Button>
       </div>
     </div>

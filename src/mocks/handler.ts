@@ -498,6 +498,31 @@ export const petInfoFormHandlers = [
   }),
 ];
 
+const getNewAccessTokenHandler = [
+  http.get(`${import.meta.env.VITE_API_BASE_URL}/auth`, ({ cookies }) => {
+    const refreshToken = cookies["Authorization-refresh"];
+
+    if (refreshToken !== "freshRefreshToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "RefreshToken 검증에 실패했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        authorization: "freshAccessToken",
+      },
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -508,4 +533,5 @@ export const handlers = [
   ...addressHandlers,
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
+  ...getNewAccessTokenHandler,
 ];
