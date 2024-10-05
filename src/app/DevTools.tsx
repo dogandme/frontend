@@ -80,7 +80,7 @@ export const DevTools = () => {
   const setStaleATandStaleRT = () => {
     useAuthStore.setState({
       role: "ROLE_USER",
-      token: "staleToken",
+      token: "staleAccessToken",
       nickname,
     });
     document.cookie =
@@ -93,7 +93,7 @@ export const DevTools = () => {
   const setStaleATandFreshRT = () => {
     useAuthStore.setState({
       role: "ROLE_USER",
-      token: "staleToken",
+      token: "staleAccessToken",
       nickname,
     });
     document.cookie =

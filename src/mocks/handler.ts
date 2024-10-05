@@ -332,7 +332,7 @@ export const getProfileHandlers = [
       const nickname = requestUrl.searchParams.get("nickname");
       // 2024/10/05 AccessToken 검증 로직을 추가 합니다.
       const token = request.headers.get("Authorization");
-      if (token === "staleToken") {
+      if (token === "staleAccessToken") {
         return HttpResponse.json(
           {
             code: 401,
