@@ -16,21 +16,29 @@ import { validateEmail, validatePassword } from "../lib";
 import { useSignUpByEmailFormStore } from "../store";
 
 const Email = () => {
-  const [isFocusedEmailInput, setIsFocusedEmailInput] =
-    useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   // ! email.length = 0이면 [코드 전송] 버튼 비활성화해야 하기 때문에, email 구독
   const email = useSignUpByEmailFormStore((state) => state.email);
   const setEmail = useSignUpByEmailFormStore((state) => state.setEmail);
+  const setIsEmailEmpty = useSignUpByEmailFormStore(
+    (state) => state.setIsEmailEmpty,
+  );
+  const setIsValidEmail = useSignUpByEmailFormStore(
+    (state) => state.setIsValidEmail,
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: email } = e.target;
 
     setEmail(email);
+
+    setIsEmailEmpty(email.length === 0);
+    setIsValidEmail(validateEmail(email));
   };
 
-  const isEmailEmpty = email.length === 0;
-  const isValidEmail = validateEmail(email);
+  const isEmailEmpty = useSignUpByEmailFormStore((state) => state.isEmailEmpty);
+  const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
 
   // todo: error code에 따라 status text 변경
   const {
@@ -42,7 +50,7 @@ const Email = () => {
   const isDuplicateEmail = isError && variables?.email === email;
 
   const shouldShowEmailStatusText =
-    isFocusedEmailInput || (!isValidEmail && !isEmailEmpty) || isDuplicateEmail;
+    isFocused || isValidEmail || isDuplicateEmail;
 
   const { handleOpen, onClose } = useSnackBar(() => (
     <Snackbar onClose={onClose}>메일로 인증코드가 전송되었습니다</Snackbar>
@@ -53,9 +61,12 @@ const Email = () => {
     : isValidEmail || isEmailEmpty
       ? "text-grey-500"
       : "text-pink-500";
-  const statusText = isDuplicateEmail
-    ? "이미 가입된 이메일 입니다"
-    : "이메일 형식으로 입력해 주세요";
+
+  const statusText = !isValidEmail
+    ? "이메일 형식으로 입력해 주세요"
+    : isDuplicateEmail
+      ? "이미 가입된 이메일 입니다"
+      : "올바른 이메일 형식입니다";
 
   return (
     <div>
@@ -69,8 +80,8 @@ const Email = () => {
           statusText={undefined}
           essential
           onChange={handleChange}
-          onFocus={() => setIsFocusedEmailInput(true)}
-          onBlur={() => setIsFocusedEmailInput(false)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
         <Button
           type="button"

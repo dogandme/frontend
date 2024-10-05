@@ -149,6 +149,9 @@ export const useRegionModalStore = create<
 
 interface SignUpByEmailFormState {
   email: string;
+  isEmailEmpty: boolean;
+  isValidEmail: boolean;
+
   verificationCode: string;
   password: string;
   passwordConfirm: string;
@@ -156,6 +159,9 @@ interface SignUpByEmailFormState {
 
 interface SignUpByEmailFormActions {
   setEmail: (email: string) => void;
+  setIsEmailEmpty: (isEmailEmpty: boolean) => void;
+  setIsValidEmail: (isEmailValid: boolean) => void;
+
   setVerificationCode: (verificationCode: string) => void;
   setPassword: (password: string) => void;
   setPasswordConfirm: (passwordConfirm: string) => void;
@@ -164,6 +170,9 @@ interface SignUpByEmailFormActions {
 
 const initSignUpByEmailFormStore: SignUpByEmailFormState = {
   email: "",
+  isEmailEmpty: true,
+  isValidEmail: false,
+
   verificationCode: "",
   password: "",
   passwordConfirm: "",
@@ -175,6 +184,9 @@ export const useSignUpByEmailFormStore = create<
   ...initSignUpByEmailFormStore,
 
   setEmail: (email) => set({ email }),
+  setIsEmailEmpty: (isEmailEmpty) => set({ isEmailEmpty }),
+  setIsValidEmail: (isEmailValid) => set({ isValidEmail: isEmailValid }),
+
   setVerificationCode: (verificationCode) => set({ verificationCode }),
   setPassword: (password) => set({ password }),
   setPasswordConfirm: (passwordConfirm) => set({ passwordConfirm }),
