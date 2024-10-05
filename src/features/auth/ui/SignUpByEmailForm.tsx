@@ -167,7 +167,9 @@ const VerificationCode = () => {
   const isSuccess = isSuccessCheckCode && !isEmailChanged;
   const isError = isErrorCheckCode || (isSuccessCheckCode && isEmailChanged);
 
-  let statusText = "";
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  let statusText = "인증코드 7자리를 입력해 주세요";
 
   if (isSuccess) statusText = "인증되었습니다";
   if (isError) statusText = "인증코드를 다시 확인해 주세요";
@@ -230,6 +232,8 @@ const VerificationCode = () => {
           maxLength={CODE_LENGTH}
           value={verificationCode}
           onChange={handleChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           isError={isError}
           disabled={!isValidEmail || isErrorSendCode || isSuccess}
           trailingNode={
@@ -261,7 +265,7 @@ const VerificationCode = () => {
       <p
         className={`body-3 pl-1 pr-3 pt-1 h-6 ${isError ? "text-pink-500" : "text-grey-500"}`}
       >
-        {statusText}
+        {isFocused && statusText}
       </p>
     </div>
   );
