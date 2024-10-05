@@ -1,4 +1,5 @@
 import { http, HttpResponse, PathParams } from "msw";
+import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
 import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
@@ -323,12 +324,32 @@ export const loginHandlers = [
   }),
 ];
 
-export const profileHandlers = [
+export const getProfileHandlers = [
   http.get(
     `${import.meta.env.VITE_API_BASE_URL}/profile`,
     async ({ request }) => {
       const requestUrl = new URL(request.url);
       const nickname = requestUrl.searchParams.get("nickname");
+      // 2024/10/05 AccessToken 검증 로직을 추가 합니다.
+      const token = request.headers.get("Authorization");
+      if (token === "staleToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+      if (token === "freshToken" && nickname === "뽀송송") {
+        return HttpResponse.json({
+          code: 200,
+          message: "success",
+          content: userDB["뽀송송"],
+        });
+      }
 
       const userInfo = userDB[nickname as string];
       if (!userInfo) {
@@ -483,7 +504,7 @@ export const handlers = [
   ...userInfoRegistrationHandlers,
   ...markingModalHandlers,
   ...loginHandlers,
-  ...profileHandlers,
+  ...getProfileHandlers,
   ...addressHandlers,
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
