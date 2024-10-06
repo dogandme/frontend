@@ -10,7 +10,7 @@ import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
-import { usePostPetInfo } from "../api/petinfo";
+import { usePostPetInfo } from "../api";
 import { characterList, dogBreeds } from "../constants/form";
 import { usePetInfoStore } from "../store";
 
