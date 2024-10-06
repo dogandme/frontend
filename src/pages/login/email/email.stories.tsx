@@ -1,6 +1,6 @@
-import { Routes, Route } from "react-router-dom";
-import { Meta, StoryObj } from "@storybook/react";
-import MainLayout from "@/pages/layout";
+// import { Routes, Route } from "react-router-dom";
+import { Meta } from "@storybook/react";
+// import MainLayout from "@/pages/layout";
 import EmailLoginPage from "./page";
 
 const meta: Meta<typeof EmailLoginPage> = {
@@ -18,14 +18,14 @@ const meta: Meta<typeof EmailLoginPage> = {
 
 export default meta;
 
-type Story = StoryObj<typeof EmailLoginPage>;
+// type Story = StoryObj<typeof EmailLoginPage>;
 
-export const Default: Story = {
-  render: () => (
-    <Routes>
-      <Route element={<MainLayout />}>
-        <Route index element={<EmailLoginPage />} />
-      </Route>
-    </Routes>
-  ),
-};
+// export const Default: Story = {
+//   render: () => (
+//     // <Routes>
+//     //   <Route element={<MainLayout />}>
+//     //     <Route index element={<EmailLoginPage />} />
+//     //   </Route>
+//     // </Routes>
+//   )
+// };

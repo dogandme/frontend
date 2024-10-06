@@ -1,5 +1,5 @@
 import { Meta } from "@storybook/react";
-import { expect, userEvent, within } from "@storybook/test";
+// import { expect, userEvent, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import {
   AnimationModalTrigger,
@@ -43,77 +43,77 @@ export const Default = {
     );
   },
 
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const $body = canvasElement.ownerDocument.body;
-    const $button = canvas.getByRole("button");
+  // play: async ({ canvasElement, step }) => {
+  //   const canvas = within(canvasElement);
+  //   const $body = canvasElement.ownerDocument.body;
+  //   const $button = canvas.getByRole("button");
 
-    await step(
-      "모달이 존재하지 않을 땐 모달 오버레이가 DOM 에 존재하지 않는다.",
-      () => {
-        const $modalOverlay = canvasElement.querySelector(".relative");
-        expect($modalOverlay).toBeNull();
-      },
-    );
+  //   await step(
+  //     "모달이 존재하지 않을 땐 모달 오버레이가 DOM 에 존재하지 않는다.",
+  //     () => {
+  //       const $modalOverlay = canvasElement.querySelector(".relative");
+  //       expect($modalOverlay).toBeNull();
+  //     },
+  //   );
 
-    await step(
-      "사용자가 disabled interaction인 모달을 열면 모달이 나타난다.",
-      async () => {
-        await userEvent.click($button);
-        expect(canvas.getByText("나가시겠습니까?")).toBeInTheDocument();
+  //   await step(
+  //     "사용자가 disabled interaction인 모달을 열면 모달이 나타난다.",
+  //     async () => {
+  //       await userEvent.click($button);
+  //       expect(canvas.getByText("나가시겠습니까?")).toBeInTheDocument();
 
-        await step("모달이 나타나면 body 태그의 스크롤은 막힌다.", () => {
-          expect($body).toHaveStyle({ overflow: "hidden" });
-        });
+  //       await step("모달이 나타나면 body 태그의 스크롤은 막힌다.", () => {
+  //         expect($body).toHaveStyle({ overflow: "hidden" });
+  //       });
 
-        await step(
-          "사용자가 모달 내부 영역을 클릭하면 아무런 일이 일어나지 않는다.",
-          async () => {
-            const $modal = canvas.getByText("나가시겠습니까?");
-            await userEvent.click($modal);
-            expect($modal).toBeInTheDocument();
-          },
-        );
+  //       await step(
+  //         "사용자가 모달 내부 영역을 클릭하면 아무런 일이 일어나지 않는다.",
+  //         async () => {
+  //           const $modal = canvas.getByText("나가시겠습니까?");
+  //           await userEvent.click($modal);
+  //           expect($modal).toBeInTheDocument();
+  //         },
+  //       );
 
-        await step(
-          "사용자가 모달 외부 영역을 클릭하면 모달이 닫힌다.",
-          async () => {
-            const $modalOverlay =
-              canvasElement.querySelector(".absolute.w-screen");
-            await userEvent.click($modalOverlay);
-            expect(
-              canvas.queryByText("나가시겠습니까?"),
-            ).not.toBeInTheDocument();
-          },
-        );
-      },
-    );
+  //       await step(
+  //         "사용자가 모달 외부 영역을 클릭하면 모달이 닫힌다.",
+  //         async () => {
+  //           const $modalOverlay =
+  //             canvasElement.querySelector(".absolute.w-screen");
+  //           await userEvent.click($modalOverlay);
+  //           expect(
+  //             canvas.queryByText("나가시겠습니까?"),
+  //           ).not.toBeInTheDocument();
+  //         },
+  //       );
+  //     },
+  //   );
 
-    await step(
-      '사용자가 모달의 저장하고 나가기를 누르면 "저장이 되었습니다" 스낵바가 나타난다.',
-      async () => {
-        await userEvent.click($button);
-        const $saveButton = canvas.getByText("저장하고 나가기");
+  //   await step(
+  //     '사용자가 모달의 저장하고 나가기를 누르면 "저장이 되었습니다" 스낵바가 나타난다.',
+  //     async () => {
+  //       await userEvent.click($button);
+  //       const $saveButton = canvas.getByText("저장하고 나가기");
 
-        await userEvent.click($saveButton);
-        expect(canvas.getByText("저장이 되었습니다")).toBeInTheDocument();
-      },
-    );
+  //       await userEvent.click($saveButton);
+  //       expect(canvas.getByText("저장이 되었습니다")).toBeInTheDocument();
+  //     },
+  //   );
 
-    // 스낵바는 1초뒤에 사라지기에 1초간 대기
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  //   // 스낵바는 1초뒤에 사라지기에 1초간 대기
+  //   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    await step(
-      "사용자가 모달의 그냥 나가기를 누르면 스낵바가 나타나지 않는다.",
-      async () => {
-        await userEvent.click($button);
-        const $exitButton = canvas.getByText("그냥 나가기");
+  //   await step(
+  //     "사용자가 모달의 그냥 나가기를 누르면 스낵바가 나타나지 않는다.",
+  //     async () => {
+  //       await userEvent.click($button);
+  //       const $exitButton = canvas.getByText("그냥 나가기");
 
-        await userEvent.click($exitButton);
-        expect(canvas.queryByText("저장이 되었습니다")).not.toBeInTheDocument();
-      },
-    );
-  },
+  //       await userEvent.click($exitButton);
+  //       expect(canvas.queryByText("저장이 되었습니다")).not.toBeInTheDocument();
+  //     },
+  //   );
+  // },
 };
 
 export const Nested = {

@@ -135,7 +135,7 @@ export const userInfoRegistrationHandlers = [
         nickname,
         authorization: "Bearer token-for-role-guest",
         role: "ROLE_GUEST",
-        authorization: "Bearer token for ROLE_GUEST",
+        // authorization: "Bearer token for ROLE_GUEST",
       },
     });
   }),
