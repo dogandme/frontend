@@ -228,6 +228,7 @@ const putUserInfoRegister = async ({
       "Content-Type": "application/json",
       Authorization: token,
     },
+    credentials: "same-origin",
     body: JSON.stringify(userInfo),
   });
 
