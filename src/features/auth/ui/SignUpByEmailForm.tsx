@@ -396,6 +396,15 @@ const SignUpByEmailForm = () => {
     },
   });
 
+  const {
+    handleOpen: handleEmptyFieldsSnackBar,
+    onClose: onCloseEmptyFieldsSnackBar,
+  } = useSnackBar(() => (
+    <Snackbar onClose={onCloseEmptyFieldsSnackBar}>
+      이메일과 비밀번호를 모두 입력해 주세요
+    </Snackbar>
+  ));
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -408,7 +417,7 @@ const SignUpByEmailForm = () => {
 
     if (isEmailEmpty || isPasswordEmpty || isPasswordConfirmEmpty) {
       // todo: snackbar 띄우기
-      alert("이메일 또는 비밀번호를 입력해 주세요");
+      handleEmptyFieldsSnackBar();
       return;
     }
 
