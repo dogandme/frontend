@@ -26,7 +26,7 @@ const postMarkingFormDataTemporary = async ({
     "markingAddDto",
     JSON.stringify({
       region,
-      visibility: visibility ? POST_VISIBILITY_MAP[visibility] : null,
+      isVisible: visibility ? POST_VISIBILITY_MAP[visibility] : null,
       content,
       lat,
       lng,

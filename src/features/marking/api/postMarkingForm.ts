@@ -33,7 +33,7 @@ const postMarkingFormData = async ({
   formData.append(
     "markingAddDto",
     JSON.stringify({
-      visibility: POST_VISIBILITY_MAP[visibility],
+      isVisible: POST_VISIBILITY_MAP[visibility],
       ...rest,
     }),
   );
