@@ -58,6 +58,7 @@ const postPetInfo = async ({
     headers: {
       Authorization: token,
     },
+    credentials: "same-origin",
     body: formData,
   });
 
