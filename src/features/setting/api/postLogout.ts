@@ -12,6 +12,7 @@ const postLogout = async (token: NonNullable<AuthStore["token"]>) => {
     headers: {
       Authorization: token,
     },
+    credentials: "same-origin",
   });
 
   const data = await response.json();
