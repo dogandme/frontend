@@ -53,10 +53,18 @@ export const signUpByEmailHandlers = [
       );
     }
 
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
+    return HttpResponse.json(
+      {
+        code: 200,
+        message: "success",
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Set-Cookie": "Authorization-refresh=ROLE_NONE; Path=/; Max-Age=60",
+        },
+      },
+    );
   }),
   http.post<
     PathParams,
@@ -139,6 +147,23 @@ export const userInfoRegistrationHandlers = [
         role: "ROLE_GUEST",
       },
     });
+    return HttpResponse.json(
+      {
+        code: 200,
+        message: "success",
+        content: {
+          nickname,
+          authorization: "Bearer token-for-role-guest",
+          role: "ROLE_GUEST",
+        },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Set-Cookie": "Authorization-refresh=ROLE_GUEST; Path=/; Max-Age=60",
+        },
+      },
+    );
   }),
 
   http.post<
@@ -483,14 +508,22 @@ export const petInfoFormHandlers = [
 
     userDB["뽀송송"] = newData;
 
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-      content: {
-        role: "ROLE_USER",
-        authorization: "Bearer token for ROLE_USER",
+    return HttpResponse.json(
+      {
+        code: 200,
+        message: "success",
+        content: {
+          role: "ROLE_USER",
+          authorization: "Bearer token for ROLE_USER",
+        },
       },
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Set-Cookie": "Authorization-refresh=ROLE_USER; Path=/; Max-Age=60",
+        },
+      },
+    );
   }),
 ];
 
