@@ -153,6 +153,8 @@ interface SignUpByEmailFormState {
   isValidEmail: boolean;
 
   verificationCode: string;
+
+  timeLeft: number;
   canResendVerificationCode: boolean;
 
   password: string;
@@ -165,6 +167,8 @@ interface SignUpByEmailFormActions {
   setIsValidEmail: (isEmailValid: boolean) => void;
 
   setVerificationCode: (verificationCode: string) => void;
+
+  setTimeLeft: (timer: number) => void;
   setCanResendVerificationCode: (canResendVerificationCode: boolean) => void;
 
   setPassword: (password: string) => void;
@@ -178,6 +182,8 @@ const initSignUpByEmailFormStore: SignUpByEmailFormState = {
   isValidEmail: false,
 
   verificationCode: "",
+
+  timeLeft: 0,
   canResendVerificationCode: false,
 
   password: "",
@@ -194,6 +200,8 @@ export const useSignUpByEmailFormStore = create<
   setIsValidEmail: (isEmailValid) => set({ isValidEmail: isEmailValid }),
 
   setVerificationCode: (verificationCode) => set({ verificationCode }),
+
+  setTimeLeft: (timer) => set({ timeLeft: timer }),
   setCanResendVerificationCode: (canResendVerificationCode) =>
     set({ canResendVerificationCode }),
 
