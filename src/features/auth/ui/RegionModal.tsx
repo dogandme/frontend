@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
+import { DividerLine } from "@/shared/ui/divider";
 import { CancelIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";
 import { SearchIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
@@ -174,6 +175,7 @@ const SearchRegionControlList = ({
 };
 
 const SearchedRegionList = () => {
+  const region = useUserInfoRegistrationFormStore((state) => state.region);
   const keyword = useRegionModalStore((state) => state.keyword);
   const position = useRegionModalStore((state) => state.position);
   const origin = useRegionModalStore((state) => state.origin);
@@ -211,7 +213,12 @@ const SearchedRegionList = () => {
       <h1 className="title-2 text-grey-900">
         {isOriginFromKeyword ? keyword : "현재 위치"} 동네 검색 결과
       </h1>
-      <List className="max-h-[18rem] overflow-y-auto justify-start">
+      <List
+        className={`overflow-y-auto ${region.length > 0 ? "max-h-[18.125rem]" : ""}`}
+        style={{
+          justifyContent: "start",
+        }}
+      >
         {addressList.map(({ province, cityCounty, subDistrict, id }) => (
           <SearchRegionControlList
             key={id}
@@ -260,6 +267,14 @@ const SelectedRegionList = () => {
       </ul>
     </section>
   );
+};
+
+const RegionModalDividerLine = () => {
+  const region = useUserInfoRegistrationFormStore((state) => state.region);
+  if (region.length <= 0) {
+    return null;
+  }
+  return <DividerLine axis="row" />;
 };
 
 const RegionModalCloseButton = ({
@@ -320,11 +335,10 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
           {/* 현재 위치로 찾기 버튼 */}
           <SearchRegionByGPSButton />
         </section>
-        <section className="flex flex-col flex-grow justify-between ">
-          <div>
-            {/* API 검색 결과 리스트 */}
-            <SearchedRegionList />
-          </div>
+        <section className="flex flex-col flex-grow justify-between">
+          {/* API 검색 결과 리스트 */}
+          <SearchedRegionList />
+          <RegionModalDividerLine />
           <div className="flex flex-col gap-4 pb-8">
             {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
             <SelectedRegionList />
