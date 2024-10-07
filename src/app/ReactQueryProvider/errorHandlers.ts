@@ -20,15 +20,9 @@ export const getNewAccessToken = async ({
   // 해당 try-catch 문은 access token 을 refresh token 을 이용해 재발급 받는 로직입니다.
   try {
     const response = await fetch(END_POINT.REFRESH_ACCESS_TOKEN, {
-      /**
-       * 개발 모드일 경우에만 쿠키를 같은 origin 으로만 전송합니다.
-       * 그 이유는 개발 모드에서는 서버와 클라이언트가 다른 포트에서 동작하기 때문입니다.
-       * 이로 인해 쿠키가 전송되지 않아 인증이 되지 않는 문제가 발생합니다.
-       * 쿠키를 다른 origin 에게도 전송하게 되면 쿠키가 탈취되어 보안에 취약해질 수 있습니다.
-       */
-      credentials:
-        process.env.NODE_ENV === "development" ? "include" : "same-origin",
+      credentials: "same-origin",
     });
+
     const data = await response.json();
 
     if (!response.ok) {
