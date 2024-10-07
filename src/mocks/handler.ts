@@ -216,7 +216,23 @@ export const markingModalHandlers = [
       });
     },
   ),
-  http.post<PathParams>(MARKING_REQUEST_URL.ADD, async () => {
+  http.post<PathParams>(MARKING_REQUEST_URL.ADD, async ({ request }) => {
+    /**
+     * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
+     */
+    const token = request.headers.get("Authorization");
+    if (token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -292,7 +308,22 @@ export const markingModalHandlers = [
       });
     },
   ),
-  http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async () => {
+  http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async ({ request }) => {
+    /**
+     * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
+     */
+    const token = request.headers.get("Authorization");
+    if (token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
     return HttpResponse.json({
       code: 200,
       message: "success",
