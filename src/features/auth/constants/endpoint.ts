@@ -1,5 +1,4 @@
-// TODO BASEURL env 파일로 수정하기
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { API_BASE_URL } from "@/shared/constants";
 
 export const LOGIN_END_POINT = {
   GOOGLE: `${API_BASE_URL}/oauth2/authorization/google`,
