@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery } from "@tanstack/react-query";
 import { AuthStore } from "@/shared/store";
 import { PROFILE_END_POINT } from "../constants";
 
@@ -54,11 +54,10 @@ interface ProfileRequest extends Pick<AuthStore, "token"> {
 export const getProfile = async ({
   nickname,
   token,
-}: ProfileRequest): Promise<ProfileResponse | null> => {
-  if (!nickname) {
-    return null;
-  }
-
+}: {
+  nickname: string;
+  token: string | null;
+}): Promise<ProfileResponse> => {
   const response = await fetch(PROFILE_END_POINT.PROFILE(nickname), {
     headers: {
       Authorization: token ?? "",
@@ -75,7 +74,7 @@ export const getProfile = async ({
 export const useGetProfile = ({ nickname, token }: ProfileRequest) => {
   return useQuery({
     queryKey: ["profile", nickname, token],
-    queryFn: () => getProfile({ nickname, token }),
+    queryFn: nickname ? () => getProfile({ nickname, token }) : skipToken,
 
     enabled: !!nickname,
     staleTime: 1000 * 60 * 10, // 10분간 데이터는 캐시된 상태로 사용
