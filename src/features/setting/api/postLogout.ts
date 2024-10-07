@@ -12,7 +12,8 @@ const postLogout = async (token: NonNullable<AuthStore["token"]>) => {
     headers: {
       Authorization: token,
     },
-    credentials: "same-origin",
+    credentials:
+      process.env.NODE_ENV === "development" ? "include" : "same-origin",
   });
 
   const data = await response.json();

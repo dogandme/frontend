@@ -58,7 +58,8 @@ const postPetInfo = async ({
     headers: {
       Authorization: token,
     },
-    credentials: "same-origin",
+    credentials:
+      process.env.NODE_ENV === "development" ? "include" : "same-origin",
     body: formData,
   });
 
