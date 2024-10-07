@@ -1,5 +1,6 @@
 import { http, HttpResponse, PathParams } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
+import { APP_END_POINT } from "@/app/ReactQueryProvider/constants";
 import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
@@ -528,7 +529,7 @@ export const petInfoFormHandlers = [
 ];
 
 const getNewAccessTokenHandler = [
-  http.get(`${import.meta.env.VITE_API_BASE_URL}/auth`, ({ cookies }) => {
+  http.get(APP_END_POINT.REFRESH_ACCESS_TOKEN, ({ cookies }) => {
     const refreshToken = cookies["Authorization-refresh"];
 
     if (refreshToken !== "freshRefreshToken") {
