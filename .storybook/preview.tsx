@@ -9,8 +9,6 @@ import "../src/global.css";
 initialize();
 
 const WithProviders = (Story, context) => {
-  // const navigate = useNavigate();
-
   const queryClient = useCreateQueryClient();
 
   const { initialEntries, initialIndex } =
