@@ -1,5 +1,8 @@
 import { StoryObj } from "@storybook/react";
 import { EmailInput } from "@/entities/auth/ui";
+import { useModal } from "@/shared/lib";
+import { OverlayPortal } from "@/app";
+import { ConfirmModal } from "./ConfirmModal";
 import { StackedButtonModal } from "./StackedButtonModal";
 
 export default {
@@ -45,7 +48,8 @@ type Story = StoryObj<typeof StackedButtonModal>;
 export const Default: Story = {
   decorators: [
     (Story) => (
-      <div className="w-96 h-96">
+      <div className="w-96 h-96" id="root">
+        <OverlayPortal />
         <Story />
       </div>
     ),
@@ -55,4 +59,65 @@ export const Default: Story = {
       <EmailInput id="." label="이메일 입력하기" essential />
     </StackedButtonModal>
   ),
+};
+
+const WithConfirmFlagTemplate = ({
+  onClose,
+}: {
+  onClose: () => Promise<void>;
+}) => {
+  const handleConfirm = () => {
+    alert("서버로 요청을 보냈습니다!");
+    onClose();
+  };
+
+  const { onClose: onCloseConfirmModal, handleOpen: handleOpenConfirmModal } =
+    useModal(() => (
+      <ConfirmModal
+        onClose={onCloseConfirmModal}
+        confirmText="진짜 저장"
+        onConfirm={handleConfirm}
+        title="onClose를 중지 시키고 나타난 ConfirmModal"
+      >
+        닉네임 변경 후 한 달간은 재변경이 불가능합니다. 정말 변경하시겠습니까?
+      </ConfirmModal>
+    ));
+
+  return (
+    <StackedButtonModal
+      onClose={onClose}
+      onConfirm={() => {
+        handleOpenConfirmModal();
+        return true;
+      }}
+      title="이메일 변경"
+    >
+      <EmailInput
+        id="."
+        label="이메일 입력하기"
+        essential
+        defaultValue="example@naver.com"
+      />
+    </StackedButtonModal>
+  );
+};
+
+export const WithConfirmFlag: Story = {
+  decorators: Default.decorators,
+  render: () => {
+    /* eslint-disable */
+    const { handleOpen, onClose } = useModal(() => (
+      <WithConfirmFlagTemplate onClose={onClose} />
+    ));
+
+    return (
+      <button
+        className="btn-3 bg-tangerine-200 px-2 py-2 roudned-2xl"
+        onClick={handleOpen}
+      >
+        {" "}
+        모달 열기 !
+      </button>
+    );
+  },
 };
