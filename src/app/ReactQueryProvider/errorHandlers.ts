@@ -1,20 +1,17 @@
-import type { Query, QueryClient, QueryKey } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import { AuthStore } from "@/shared/store";
 import { APP_END_POINT, ERROR_MESSAGE } from "./constants";
 
 export const getNewAccessToken = async ({
-  query,
   setterMethods,
   queryClient,
 }: {
-  query: Query<unknown, unknown, unknown, QueryKey>;
   setterMethods: {
     setToken: AuthStore["setToken"];
     resetAuthStore: AuthStore["reset"];
   };
   queryClient: QueryClient;
 }) => {
-  const { queryKey } = query;
   const { setToken, resetAuthStore } = setterMethods;
 
   // 해당 try-catch 문은 access token 을 refresh token 을 이용해 재발급 받는 로직입니다.
@@ -41,11 +38,9 @@ export const getNewAccessToken = async ({
       /**
        * refresh 토큰이 유효하지 않다면 다음과 같은 일들을 처리 합니다.
        * 1. AuthStore 의 token, role, nickname 을 초기화 합니다.
-       * 2. queryClient 의 queryKey 를 통해 해당 쿼리를 취소합니다. 리소스를 절약하고 잘못된 데이터가 저장되는 행위를 방지하기 위함입니다.
-       * 3. 캐싱 된 쿼리를 모두 초기화 합니다.
+       * 2. 캐싱 된 쿼리를 모두 초기화 합니다.
        */
       resetAuthStore();
-      queryClient.cancelQueries({ queryKey: queryKey });
       queryClient.clear();
 
       // 스토리북 환경의 경우엔 이하 코드를 실행 시키지 않습니다.

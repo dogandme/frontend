@@ -30,11 +30,10 @@ export const useCreateQueryClient = () => {
       },
 
       queryCache: new QueryCache({
-        onError: async (error, query) => {
+        onError: async (error) => {
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getNewAccessToken({
-                query,
                 setterMethods: { setToken, resetAuthStore },
                 queryClient,
               });
