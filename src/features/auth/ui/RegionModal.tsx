@@ -150,7 +150,8 @@ const SearchRegionControlItem = ({
   const handleSelectRegion = () => {
     // TODO 에러 바운더리 나오면 에러 던지기
     if (region.length >= 5) {
-      throw new Error("동네는 최대 5개까지 선택할 수 있습니다.");
+      // throw new Error("동네는 최대 5개까지 선택할 수 있습니다.");
+      return;
     }
 
     if (region.some((data) => data.address === address)) {
