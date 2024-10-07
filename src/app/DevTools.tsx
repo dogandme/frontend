@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
-import USER from "@/mocks/data/user.json";
 
 // ! TODO
 // ! 해당 컴포넌트는 개발 환경에서만 사용 되는 컴포넌트 입니다.
@@ -17,7 +15,6 @@ export const DevTools = () => {
   );
 
   const nickname = "뽀송송";
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 1100px)");
@@ -45,7 +42,6 @@ export const DevTools = () => {
           role: null,
           nickname: null,
         });
-        queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
         break;
       case "ROLE_NONE":
         useAuthStore.setState({
@@ -53,7 +49,6 @@ export const DevTools = () => {
           role: "ROLE_NONE",
           nickname: null,
         });
-        queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
         break;
       case "ROLE_GUEST":
         useAuthStore.setState({
@@ -61,7 +56,6 @@ export const DevTools = () => {
           role: "ROLE_GUEST",
           nickname,
         });
-        queryClient.setQueryData(["profile", nickname], USER.ROLE_GUEST);
         break;
       case "ROLE_USER": {
         useAuthStore.setState({
@@ -69,7 +63,6 @@ export const DevTools = () => {
           role: "ROLE_USER",
           nickname,
         });
-        queryClient.setQueryData(["profile", nickname], USER.ROLE_USER);
         break;
       }
       default:
@@ -85,8 +78,6 @@ export const DevTools = () => {
     });
     document.cookie =
       "Authorization-refresh=staleRefreshToken; path=/; max-age=3600";
-    queryClient.cancelQueries({ queryKey: ["profile", nickname] });
-    queryClient.clear();
   };
 
   const setStaleATandFreshRT = () => {
@@ -97,9 +88,6 @@ export const DevTools = () => {
     });
     document.cookie =
       "Authorization-refresh=freshRefreshToken; path=/; max-age=3600";
-
-    queryClient.cancelQueries({ queryKey: ["profile", nickname] });
-    queryClient.clear();
   };
 
   // TODO 권한에 따라서 ProfileInfo 에 대한 useQuery InitialData 를 변경해야 합니다.
