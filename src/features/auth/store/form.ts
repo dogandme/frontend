@@ -130,7 +130,7 @@ interface RegionModalActions {
   resetRegionModalStore: () => void;
 }
 
-const addressModalInitialState: RegionModalState = {
+const regionModalInitialState: RegionModalState = {
   keyword: "",
   position: { lat: 0, lng: 0 },
   origin: "keyword",
@@ -139,12 +139,12 @@ const addressModalInitialState: RegionModalState = {
 export const useRegionModalStore = create<
   RegionModalState & RegionModalActions
 >((set) => ({
-  ...addressModalInitialState,
+  ...regionModalInitialState,
 
   setKeyword: (keyword) => set({ keyword }),
   setPosition: (position) => set({ position }),
   setOrigin: (origin) => set({ origin }),
-  resetRegionModalStore: () => set(addressModalInitialState),
+  resetRegionModalStore: () => set(regionModalInitialState),
 }));
 
 interface SignUpByEmailFormState {
