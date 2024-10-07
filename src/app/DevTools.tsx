@@ -87,7 +87,6 @@ export const DevTools = () => {
       "Authorization-refresh=staleRefreshToken; path=/; max-age=3600";
     queryClient.cancelQueries({ queryKey: ["profile", nickname] });
     queryClient.clear();
-    queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
   };
 
   const setStaleATandFreshRT = () => {
@@ -101,7 +100,6 @@ export const DevTools = () => {
 
     queryClient.cancelQueries({ queryKey: ["profile", nickname] });
     queryClient.clear();
-    queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
   };
 
   // TODO 권한에 따라서 ProfileInfo 에 대한 useQuery InitialData 를 변경해야 합니다.
