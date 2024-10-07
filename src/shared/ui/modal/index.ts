@@ -1,3 +1,4 @@
 export * from "./Modal";
 export * from "./ConfirmModal";
 export * from "./ExitConfirmModal";
+export * from "./StackedButtonModal";
