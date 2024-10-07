@@ -56,13 +56,16 @@ export const getProfile = async ({
   token,
 }: {
   nickname: string;
-  token: string | null;
+  token: AuthStore["token"];
 }): Promise<ProfileResponse> => {
+  const headers = new Headers();
+  if (token) {
+    headers.append("Authorization", token);
+  }
   const response = await fetch(PROFILE_END_POINT.PROFILE(nickname), {
-    headers: {
-      Authorization: token ?? "",
-    },
+    headers,
   });
+
   const data: ProfileResponse = await response.json();
 
   if (!response.ok) {
