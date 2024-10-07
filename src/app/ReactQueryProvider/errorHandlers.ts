@@ -1,6 +1,6 @@
 import type { Query, QueryClient, QueryKey } from "@tanstack/react-query";
 import { AuthStore } from "@/shared/store";
-import { END_POINT, ERROR_MESSAGE } from "./constants";
+import { APP_END_POINT, ERROR_MESSAGE } from "./constants";
 
 export const getNewAccessToken = async ({
   query,
@@ -19,7 +19,7 @@ export const getNewAccessToken = async ({
 
   // 해당 try-catch 문은 access token 을 refresh token 을 이용해 재발급 받는 로직입니다.
   try {
-    const response = await fetch(END_POINT.REFRESH_ACCESS_TOKEN, {
+    const response = await fetch(APP_END_POINT.REFRESH_ACCESS_TOKEN, {
       credentials: "same-origin",
     });
 
