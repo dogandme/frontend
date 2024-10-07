@@ -3,6 +3,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
+import { getProfileHandlers } from "@/mocks/handler";
 import { usePetInfoStore } from "../store";
 import * as PetInfoForm from "./PetInfoForm";
 
@@ -29,16 +30,19 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
   parameters: {
     msw: {
       handlers: [
-        http.post("http://localhost/pets", async () => {
-          return HttpResponse.json({
-            code: 200,
-            message: "success",
-            content: {
-              role: "ROLE_USER",
-              authorization: "Bearer token ROLE_USER",
-            },
-          });
-        }),
+        [
+          http.post("http://localhost/pets", async () => {
+            return HttpResponse.json({
+              code: 200,
+              message: "success",
+              content: {
+                role: "ROLE_USER",
+                authorization: "freshAccessToken",
+              },
+            });
+          }),
+        ],
+        getProfileHandlers,
       ],
     },
   },
@@ -53,7 +57,9 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     });
 
     useAuthStore.setState({
+      nickname: "뽀송송",
       token: "Bearer token",
+      role: "ROLE_GUEST",
     });
 
     return (
@@ -430,7 +436,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
 
         const { role, token } = useAuthStore.getState();
         expect(role).toBe("ROLE_USER");
-        expect(token).toBe("Bearer token ROLE_USER");
+        expect(token).toBe("freshAccessToken");
       },
     );
   },
