@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
-import { DividerLine } from "@/shared/ui/divider";
 import { CancelIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";
 import { SearchIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
@@ -247,7 +246,7 @@ const SelectedRegionList = () => {
   };
 
   return (
-    <section className="py-2 flex flex-col gap-4">
+    <section className="pb-2 py-[2.5rem] flex flex-col gap-4 border-grey-200 border-t-[0.0625rem]">
       <p className="title-2">선택된 동네</p>
       <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
         {region.map(({ address, id }) => (
@@ -266,14 +265,6 @@ const SelectedRegionList = () => {
       </ul>
     </section>
   );
-};
-
-const RegionModalDividerLine = () => {
-  const region = useUserInfoRegistrationFormStore((state) => state.region);
-  if (region.length <= 0) {
-    return null;
-  }
-  return <DividerLine axis="row" />;
 };
 
 const RegionModalCloseButton = ({
@@ -334,10 +325,9 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
           {/* 현재 위치로 찾기 버튼 */}
           <SearchRegionByGPSButton />
         </section>
-        <section className="flex flex-col flex-grow justify-between">
+        <section className="flex flex-col gap-8 flex-grow justify-between">
           {/* API 검색 결과 리스트 */}
           <SearchedRegionList />
-          <RegionModalDividerLine />
           <div className="flex flex-col gap-4 pb-8">
             {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
             <SelectedRegionList />
