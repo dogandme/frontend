@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
+import { API_BASE_URL } from "@/shared/constants";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { DividerLine } from "@/shared/ui/divider";
 import { EditIcon, DropDownIcon } from "@/shared/ui/icon";
@@ -15,9 +16,7 @@ export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
   return (
     <img
       src={
-        profile
-          ? `${import.meta.env.VITE_API_BASE_URL}/${profile}`
-          : "/default-image.png"
+        profile ? `${API_BASE_URL}/pets/image/${profile}` : "/default-image.png"
       }
       alt={`${nickname} 의 프로필 사진`}
       className="w-16 h-16 rounded-[1.75rem]"
