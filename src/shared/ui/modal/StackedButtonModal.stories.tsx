@@ -28,27 +28,20 @@ export default {
     title: {
       description: "모달의 제목을 설정합니다.",
     },
-    ConfirmButton: {
-      description:
-        "확인 버튼에 특별을 커스텀하여 사용 합니다. 만약 주입되지 않은 경우엔 DefaultConfirmButton을 사용합니다.",
-    },
-    CloseButton: {
-      description:
-        "취소 버튼에 특별을 커스텀하여 사용 합니다. 만약 주입되지 않은 경우엔 DefaultCloseButton을 사용합니다.",
-    },
     onConfirm: {
       description:
-        "DefaultConfirmButton의 버튼 클릭 시 실행할 함수를 받습니다. ConfirmButton 이 주입되지 않았을 경우에만 전달 가능 합니다.",
+        "DefaultConfirmButton의 버튼 클릭 시 실행할 함수를 받습니다. onConfirm 의 경우 반환 값으로 truthy 값을 반환하는 경우 onClose 메소드의 실행을 중지 시킬 수 있습니다.",
     },
     closeText: {
-      description: "DefaultCloseButton의 텍스트를 설정합니다.",
+      description: "취소 버튼의 텍스트를 설정합니다. 기본 값은 취소 입니다.",
     },
     confirmText: {
-      description: "DefaultConfirmButton의 텍스트를 설정합니다.",
+      description: "저장 버튼의 텍스트를 설정합니다. 기본 값은 저장 입니다.",
     },
   },
 };
 type Story = StoryObj<typeof StackedButtonModal>;
+
 export const Default: Story = {
   decorators: [
     (Story) => (

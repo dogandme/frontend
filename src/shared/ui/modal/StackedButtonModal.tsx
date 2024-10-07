@@ -3,21 +3,16 @@ import { Button } from "../button";
 import { CloseIcon } from "../icon";
 import { Modal } from "./Modal";
 
-type StackedButton = (onClose: () => Promise<void>) => JSX.Element;
-interface StackedButtonModalProps<
-  T extends StackedButton | undefined,
-  K extends StackedButton | undefined,
-> {
+interface StackedButtonModalProps {
   onClose: ReturnType<typeof useOverlay>["onClose"];
   children: React.ReactNode;
   closeIconAriaLabel?: string;
   title?: string;
-  ConfirmButton?: T;
-  CloseButton?: K;
-  onConfirm?: T extends StackedButton ? never : () => void | Promise<void>;
-  confirmText?: T extends StackedButton ? never : string;
-  closeText?: K extends StackedButton ? never : string;
+  onConfirm?: () => unknown | Promise<unknown>;
+  confirmText?: string;
+  closeText?: string;
 }
+
 const DefaultConfirmButton = ({
   onConfirm,
   confirmText,
@@ -55,20 +50,16 @@ const DefaultCloseButton = ({
     </Button>
   );
 };
-export const StackedButtonModal = <
-  T extends StackedButton | undefined,
-  K extends StackedButton | undefined,
->({
+
+export const StackedButtonModal = ({
   closeIconAriaLabel = "모달창 닫기",
   title = "",
   onClose,
   children,
-  confirmText,
-  closeText,
+  confirmText = "저장",
+  closeText = "취소",
   onConfirm,
-  ConfirmButton,
-  CloseButton,
-}: StackedButtonModalProps<T, K>) => {
+}: StackedButtonModalProps) => {
   const navClassName = title ? "flex justify-between" : "flex justify-end";
   return (
     <Modal modalType="center">
@@ -80,25 +71,17 @@ export const StackedButtonModal = <
       </div>
       <section className="text-grey-700 body-2">{children}</section>
       <div className="flex flex-col gap-2 self-stretch">
-        {ConfirmButton ? (
-          ConfirmButton(onClose)
-        ) : (
-          <DefaultConfirmButton
-            onConfirm={async () => {
-              await onConfirm?.();
-              onClose();
-            }}
-            confirmText={confirmText || "저장"}
-          />
-        )}
-        {CloseButton ? (
-          CloseButton(onClose)
-        ) : (
-          <DefaultCloseButton
-            onClose={onClose}
-            closeText={closeText || "취소"}
-          />
-        )}
+        <DefaultConfirmButton
+          onConfirm={async () => {
+            const confirmFlag = await onConfirm?.();
+            if (confirmFlag) {
+              return;
+            }
+            onClose();
+          }}
+          confirmText={confirmText}
+        />
+        <DefaultCloseButton onClose={onClose} closeText={closeText} />
       </div>
     </Modal>
   );
