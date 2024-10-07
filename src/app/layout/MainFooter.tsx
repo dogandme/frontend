@@ -14,7 +14,11 @@ import { mainFooterStyles } from "./MainFooter.style";
 export const MainFooter = () => {
   const { active, inactive, base } = mainFooterStyles;
   const nickname = useAuthStore((state) => state.nickname);
-  const { data } = useGetProfile(nickname);
+  const token = useAuthStore((state) => state.token);
+  const { data } = useGetProfile({
+    nickname,
+    token,
+  });
   // TODO API 에서 받아온 프로필 이미지 사용하기
   const profileImageUrl = data?.pet?.profile
     ? `${import.meta.env.VITE_API_BASE_URL}/${data.pet.profile}`

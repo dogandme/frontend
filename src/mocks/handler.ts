@@ -1,8 +1,11 @@
 import { http, HttpResponse, PathParams } from "msw";
+import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
+import { APP_END_POINT } from "@/app/ReactQueryProvider/constants";
 import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import { SETTING_END_POINT } from "@/features/setting/constants";
+import User from "../mocks/data/user.json";
 import addressListData from "./data/addressList.json";
 // data
 import markingListData from "./data/markingList.json";
@@ -136,6 +139,15 @@ export const userInfoRegistrationHandlers = [
       markings: [],
     };
 
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        nickname,
+        authorization: "Bearer token-for-role-guest",
+        role: "ROLE_GUEST",
+      },
+    });
     return HttpResponse.json(
       {
         code: 200,
@@ -144,7 +156,6 @@ export const userInfoRegistrationHandlers = [
           nickname,
           authorization: "Bearer token-for-role-guest",
           role: "ROLE_GUEST",
-          authorization: "Bearer token for ROLE_GUEST",
         },
       },
       {
@@ -339,12 +350,28 @@ export const loginHandlers = [
   }),
 ];
 
-export const profileHandlers = [
+export const getProfileHandlers = [
   http.get(
     `${import.meta.env.VITE_API_BASE_URL}/profile`,
     async ({ request }) => {
       const requestUrl = new URL(request.url);
       const nickname = requestUrl.searchParams.get("nickname");
+      // 2024/10/05 AccessToken 검증 로직을 추가 합니다.
+      const token = request.headers.get("Authorization");
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+      if (token === "freshAccessToken" && nickname === "뽀송송") {
+        return HttpResponse.json(User["ROLE_USER"]);
+      }
 
       const userInfo = userDB[nickname as string];
       if (!userInfo) {
@@ -501,14 +528,40 @@ export const petInfoFormHandlers = [
   }),
 ];
 
+const getNewAccessTokenHandler = [
+  http.get(APP_END_POINT.REFRESH_ACCESS_TOKEN, ({ cookies }) => {
+    const refreshToken = cookies["Authorization-refresh"];
+
+    if (refreshToken !== "freshRefreshToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "RefreshToken 검증에 실패했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        authorization: "freshAccessToken",
+      },
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
   ...userInfoRegistrationHandlers,
   ...markingModalHandlers,
   ...loginHandlers,
-  ...profileHandlers,
+  ...getProfileHandlers,
   ...addressHandlers,
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
+  ...getNewAccessTokenHandler,
 ];

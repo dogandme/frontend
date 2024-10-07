@@ -1,6 +1,6 @@
 export * from "./HistoryTracker";
 export * from "./MobileLayout";
-export * from "./QueryClient";
+export * from "./ReactQueryProvider";
 export * from "./router";
 export * from "./GoogleMapsProvider";
 export * from "./OverlayPortal";
