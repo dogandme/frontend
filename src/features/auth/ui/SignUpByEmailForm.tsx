@@ -57,7 +57,7 @@ const Email = () => {
       { email },
       {
         onSuccess: () => {
-          setTimeLeft(1000 * 60);
+          setTimeLeft(1000 * 60 * 3);
         },
       },
     );
