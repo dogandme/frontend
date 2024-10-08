@@ -170,6 +170,10 @@ export const Test: Story = {
           await step("버튼은 비활성화된다.", async () => {
             expect($codeSendButton).toBeDisabled();
           });
+
+          await step("인증 코드 input은 비활성화된다.", async () => {
+            expect($codeInput).toBeDisabled();
+          });
         },
       );
 
@@ -214,6 +218,10 @@ export const Test: Story = {
               expect($codeSendButton).toHaveTextContent("재전송");
             },
           );
+
+          await step("인증 코드 input은 활성화된다.", async () => {
+            expect($codeInput).toBeEnabled();
+          });
 
           // ? 어떻게 테스트하지?
           // await step(
