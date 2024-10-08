@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { MapSnackbar } from "@/entities/map/ui";
+import { compressFileArray } from "@/shared/lib";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -14,7 +15,11 @@ import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../../map/api";
 import { useMapStore } from "../../map/store/map";
 import { usePostMarkingForm, usePostTempMarkingForm } from "../api";
-import { MARKING_ADD_ERROR_MESSAGE, POST_VISIBILITY_MAP } from "../constants";
+import {
+  MARKING_ADD_ERROR_MESSAGE,
+  MAX_IMAGE_LENGTH,
+  POST_VISIBILITY_MAP,
+} from "../constants";
 import { useMarkingFormStore } from "../store";
 import { MarkingFormCloseModal } from "./markingFormCloseModal";
 
@@ -188,39 +193,40 @@ const PhotoInput = () => {
     inputRef.current?.click();
   };
 
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
     const { files: newFiles } = target;
+
     if (!newFiles) {
       return;
     }
 
-    // TODO 이미지 파일 최적화 위해 용량 줄이기
-
-    const isImageAlreadyExist = (newFile: File) => {
-      return images.some((image) => image === newFile);
-    };
-
-    const _images = [...images];
-    const _imageUrls = [...imageUrls];
-
-    for (const newFile of newFiles) {
-      if (isImageAlreadyExist(newFile)) {
-        continue;
-      }
-
-      _images.push(newFile);
-      _imageUrls.push({
-        url: URL.createObjectURL(newFile),
-        name: newFile.name,
-      });
-
-      if (_images.length > 5) {
-        throw new Error(MARKING_ADD_ERROR_MESSAGE.MAX_PHOTO_COUNT);
-      }
+    if (images.length + newFiles.length > MAX_IMAGE_LENGTH) {
+      // TODO 에러 바운더리에서 처리 하기
+      // throw new Error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
+      console.error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
     }
 
-    setImages([..._images]);
-    setImageUrls([..._imageUrls]);
+    /**
+     * 프로필 인풋에 새로운 사진이 추가 되었을 때
+     * 기존 이미지와 중복되지 않는 새로운 파일만 필터링 하고 제출 가능한 이미지들을  낙관적으로 렌더링 합니다.
+     */
+    const AvailableNewFileArray = [...newFiles]
+      .filter((newFile) => !images.some((image) => image.name === newFile.name))
+      .slice(0, MAX_IMAGE_LENGTH - images.length);
+
+    setImageUrls([
+      ...imageUrls,
+      ...AvailableNewFileArray.map((file) => ({
+        url: URL.createObjectURL(file),
+        name: file.name,
+      })),
+    ]);
+
+    /* ref 를 통해 race-condition 문제를 방지합니다. */
+    const compressedNewFiles = await compressFileArray(AvailableNewFileArray);
+    setImages([...images, ...compressedNewFiles]);
   };
 
   const handleRemoveImage = (name: string) => {
