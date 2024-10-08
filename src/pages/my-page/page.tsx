@@ -126,7 +126,7 @@ export const NotRoleUserMyPage = ({
   nickname: UserInfo["nickname"] | null;
 }) => {
   return (
-    <div>
+    <>
       <MyPageNavigationBar role={role} nickname={nickname} />
       <section className="px-4 flex flex-col items-start gap-8">
         <EmptyMyProfileOverView role={role} />
@@ -135,7 +135,7 @@ export const NotRoleUserMyPage = ({
           <MarkingThumbnailGrid markings={[]} />
         </div>
       </section>
-    </div>
+    </>
   );
 };
 
@@ -151,7 +151,7 @@ export const RoleUserMyPage = ({
   Pick<AuthStore, "role"> &
   Pick<UserInfo, "tempCnt" | "markings">) => {
   return (
-    <div>
+    <>
       <MyPageNavigationBar role={role} nickname={nickname} />
       <section className="px-4 flex flex-col items-start gap-8">
         <ProfileOverView
@@ -166,7 +166,7 @@ export const RoleUserMyPage = ({
           <MarkingThumbnailGrid markings={markings} />
         </div>
       </section>
-    </div>
+    </>
   );
 };
 
