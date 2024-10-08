@@ -199,9 +199,7 @@ const PhotoInput = () => {
     // TODO 이미지 파일 최적화 위해 용량 줄이기
 
     const isImageAlreadyExist = (newFile: File) => {
-      return images.some(
-        (image) => image.lastModified === newFile.lastModified,
-      );
+      return images.some((image) => image === newFile);
     };
 
     const _images = [...images];
