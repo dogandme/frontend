@@ -46,10 +46,22 @@ const Email = () => {
     (state) => state.isTimeLeftLessThanOneMinute,
   );
 
-  const isEmailChanged = variables && variables.email !== email;
-  const isDuplicateEmail = isError && !isEmailChanged;
+  // 서버에 인증 코드 요청했을 때 보낸 email과 현재 입력된 email이 다를 경우
+  // [코드전송] 버튼을 누른 이후, email을 변경했을 때 고려
+  const hasEmailChangedSinceCodeRequest =
+    variables && variables.email !== email;
+
+  // todo 에러 코드나 메세지에 따라 중복된 이메일인지 판단
+  // [코드전송] 버튼 누른 이후 이메일 입력값을 변경하지 않는다는 가정하에, 에러 응답이 오면 중복된 이메일로 판단
+  const isDuplicateEmail = isError && !hasEmailChangedSinceCodeRequest;
+
+  // [재전송] 버튼을 누를 수 없는 경우 (사용자에게 인증 코드가 성공적으로 전송됐다는 가정)
+  // 1. 코드 인증까지 1분 넘게 남은 경우
+  // 2. 사용자에게 코드 전송 후, 이메일 입력값을 수정하지 않은 경우
   const canNotResendCode =
-    isSuccess && !isTimeLeftLessThanOneMinute && !isEmailChanged;
+    isSuccess &&
+    !isTimeLeftLessThanOneMinute &&
+    !hasEmailChangedSinceCodeRequest;
 
   const handleSendVerificationCode = () => {
     handleOpen();
@@ -88,7 +100,7 @@ const Email = () => {
           id="email"
           name="email"
           label="이메일"
-          isError={!isEmailEmpty && !isValidEmail}
+          isError={(!isEmailEmpty && !isValidEmail) || isDuplicateEmail}
           placeholder="이메일을 입력해 주세요"
           statusText={undefined}
           essential
@@ -96,23 +108,33 @@ const Email = () => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
-        <Button
-          type="button"
-          colorType="secondary"
-          variant="filled"
-          size="medium"
-          fullWidth={false}
-          className="w-[6.5rem]"
-          onClick={handleSendVerificationCode}
-          disabled={
-            isEmailEmpty ||
-            !isValidEmail ||
-            isDuplicateEmail ||
-            canNotResendCode
-          }
-        >
-          {isSuccess ? "재전송" : "코드전송"}
-        </Button>
+        {isSuccess ? (
+          <Button
+            type="button"
+            colorType="secondary"
+            variant="filled"
+            size="medium"
+            fullWidth={false}
+            className="w-[6.5rem]"
+            onClick={handleSendVerificationCode}
+            disabled={!isValidEmail || isDuplicateEmail || canNotResendCode}
+          >
+            재전송
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            colorType="secondary"
+            variant="filled"
+            size="medium"
+            fullWidth={false}
+            className="w-[6.5rem]"
+            onClick={handleSendVerificationCode}
+            disabled={!isValidEmail || isDuplicateEmail}
+          >
+            코드전송
+          </Button>
+        )}
       </div>
       {shouldShowEmailStatusText && (
         <p className={`body-3 pl-1 pr-3 pt-1 h-6 ${statusTextColorStyle}`}>
