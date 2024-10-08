@@ -167,7 +167,6 @@ const PostVisibilitySelect = () => {
 
 interface ImageUrl {
   url: string;
-  lastModified: number;
   name: string;
 }
 
@@ -181,7 +180,6 @@ const PhotoInput = () => {
   const [imageUrls, setImageUrls] = useState<ImageUrl[]>(() =>
     images.map((image) => ({
       url: URL.createObjectURL(image),
-      lastModified: image.lastModified,
       name: image.name,
     })),
   );
@@ -213,7 +211,6 @@ const PhotoInput = () => {
       _images.push(newFile);
       _imageUrls.push({
         url: URL.createObjectURL(newFile),
-        lastModified: newFile.lastModified,
         name: newFile.name,
       });
 
@@ -226,11 +223,9 @@ const PhotoInput = () => {
     setImageUrls([..._imageUrls]);
   };
 
-  const handleRemoveImage = (lastModified: number) => {
-    setImages(images.filter((image) => image.lastModified !== lastModified));
-    setImageUrls(
-      imageUrls.filter((image) => image.lastModified !== lastModified),
-    );
+  const handleRemoveImage = (name: string) => {
+    setImages(images.filter((image) => image.name !== name));
+    setImageUrls(imageUrls.filter((image) => image.name !== name));
 
     setInputKey((prev) => prev + 1);
   };
@@ -269,12 +264,12 @@ const PhotoInput = () => {
             <PlusIcon />
           </ImgSlider.Item>
         )}
-        {imageUrls.map(({ url, name, lastModified }) => (
+        {imageUrls.map(({ url, name }) => (
           <ImgSlider.ImgItem
             src={url}
             alt={name}
-            key={lastModified}
-            onRemove={() => handleRemoveImage(lastModified)}
+            key={name}
+            onRemove={() => handleRemoveImage(name)}
           />
         ))}
       </ImgSlider>
