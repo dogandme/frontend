@@ -471,7 +471,7 @@ export const Test: Story = {
   },
 };
 
-export const ApiTest: Story = {
+export const SubmitTest: Story = {
   decorators: (Story) => {
     useAuthStore.setState({
       token: null,
@@ -492,109 +492,88 @@ export const ApiTest: Story = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-
     const $emailInput = canvasElement.querySelector("#email")!;
+    const $sendCodeButton = canvas.getByText("코드전송");
     const $codeInput = canvasElement.querySelector("#verification-code")!;
+    const $checkCodeButton = canvas.getByText("확인");
     const $passwordInput = canvasElement.querySelector("#password")!;
     const $passwordConfirmInput =
       canvasElement.querySelector("#password-confirm")!;
-    const $nextButton = canvas.getByText("다음");
+    const $submitButton = canvas.getByText("다음");
 
-    const validEmail = "hihihihihi@naver.com";
-    const duplicatedEmail = "hihihi@naver.com";
-
-    const $sendConfirmCodeButton = canvas.getByText("코드전송");
-
-    const statusTextColor = {
-      valid: "text-grey-500",
-      invalid: "text-pink-500",
-    };
-
-    const clearAll = async () => {
-      await userEvent.clear($emailInput);
-      await userEvent.clear($passwordInput);
-      await userEvent.clear($passwordConfirmInput);
-    };
-
-    await clearAll();
+    const validEmail = "hi@example.com";
+    const validPassword = "abcd1234!";
 
     await step(
-      "이미 가입된 이메일을 입력하고 [코드 전송] 버튼을 클릭할 경우,",
+      '이메일을 입력하지 않은 상태에서 [다음] 버튼 클릭할 경우, "이메일과 비밀번호를 모두 입력해 주세요" 스낵바가 노출된다.',
       async () => {
-        await userEvent.type($emailInput, duplicatedEmail);
-        await userEvent.click($sendConfirmCodeButton);
+        await userEvent.type($passwordInput, validPassword);
+        await userEvent.type($passwordConfirmInput, validPassword);
+        await userEvent.click($submitButton);
 
-        await step(
-          '"이미 가입된 이메일 입니다" 안내 문구가 핑크색으로 표시됩니다.',
-          async () => {
-            const $statusText =
-              await canvas.findByText("이미 가입된 이메일 입니다");
-
-            expect($statusText).toBeInTheDocument();
-            expect($statusText).toHaveClass(statusTextColor.invalid);
-          },
+        const $snackbar = await canvas.findByText(
+          "이메일과 비밀번호를 모두 입력해 주세요",
         );
-        await step("버튼은 비활성화된다.", async () => {
-          expect($sendConfirmCodeButton).toBeDisabled();
-        });
-      },
-    );
 
-    await userEvent.clear($emailInput);
-
-    await step(
-      "이메일을 올바르게 입력하고 [코드 전송] 버튼을 클릭하면, snackbar가 노출된다.",
-      async () => {
-        await userEvent.type($emailInput, validEmail);
-        await userEvent.click($sendConfirmCodeButton);
-
-        const $snackbar =
-          await canvas.findByText("메일로 인증코드가 전송되었습니다");
         expect($snackbar).toBeInTheDocument();
       },
     );
 
-    const validCode = "1111111";
-    const invalidCode = "7654321";
-
-    const $codeConfirmButton = canvas.getByText("확인");
+    await userEvent.clear($passwordInput);
+    await userEvent.clear($passwordConfirmInput);
 
     await step(
-      "인증 코드를 입력하고 [확인] 버튼을 클릭하면, 인증 코드가 검증된다.",
+      '비밀번호를 입력하지 않은 상태에서 [다음] 버튼 클릭할 경우, "이메일과 비밀번호를 모두 입력해 주세요" 스낵바가 노출된다.',
       async () => {
-        await step("인증 코드가 일치하지 않을 경우", async () => {
-          await userEvent.clear($codeInput);
-          await userEvent.type($codeInput, invalidCode);
-          await userEvent.click($codeConfirmButton);
+        await userEvent.type($emailInput, validEmail);
+        await userEvent.type($passwordConfirmInput, validPassword);
+        await userEvent.click($submitButton);
 
-          const $snackbar =
-            await canvas.findByText("인증코드를 다시 확인해 주세요");
-          expect($snackbar).toBeInTheDocument();
-        });
+        const $snackbar = await canvas.findByText(
+          "이메일과 비밀번호를 모두 입력해 주세요",
+        );
 
-        await step("인증 코드가 일치할 경우", async () => {
-          await userEvent.clear($codeInput);
-          await userEvent.type($codeInput, validCode);
-          await userEvent.click($codeConfirmButton);
-
-          const $snackbar = await canvas.findByText("인증되었습니다");
-          expect($snackbar).toBeInTheDocument();
-        });
+        expect($snackbar).toBeInTheDocument();
       },
     );
 
-    const validPassword = "abcd1234!";
+    await userEvent.clear($emailInput);
+    await userEvent.clear($passwordConfirmInput);
 
     await step(
-      "비밀번호와 비밀번호 재확인 Input에 올바르게 입력한 상태에서 [다음] 버튼을 누르면, auth store에 token과 role이 저장된다.",
+      '비밀번호 확인을 입력하지 않은 상태에서 [다음] 버튼 클릭할 경우, "이메일과 비밀번호를 모두 입력해 주세요" 스낵바가 노출된다.',
       async () => {
+        await userEvent.type($emailInput, validEmail);
+        await userEvent.type($passwordInput, validPassword);
+        await userEvent.click($submitButton);
+
+        const $snackbar = await canvas.findByText(
+          "이메일과 비밀번호를 모두 입력해 주세요",
+        );
+
+        expect($snackbar).toBeInTheDocument();
+      },
+    );
+
+    await userEvent.clear($emailInput);
+    await userEvent.clear($passwordInput);
+
+    await step(
+      "모든 input 값이 유효한 상태에서 [다음] 버튼 클릭 시, auth store에 token과 role이 저장된다.",
+      async () => {
+        await userEvent.type($emailInput, validEmail);
+        await userEvent.click($sendCodeButton);
+        await userEvent.type($codeInput, "1111111");
+        await userEvent.click($checkCodeButton);
+
         await userEvent.type($passwordInput, validPassword);
         await userEvent.type($passwordConfirmInput, validPassword);
 
-        await userEvent.click($nextButton);
+        await userEvent.click($submitButton);
 
         await waitFor(() => {
           const { token, role } = useAuthStore.getState();
+
           expect(token).toBe("token");
           expect(role).toBe("ROLE_NONE");
         });
