@@ -15,7 +15,7 @@ import { OverlayPortal } from "./OverlayPortal";
 
 export const router = createBrowserRouter([
   {
-    path: ROUTER_PATH.MAIN,
+    path: ROUTER_VALUE.MAIN,
     element: <MainLayout />,
     children: [
       {
@@ -48,28 +48,19 @@ export const router = createBrowserRouter([
           },
         ],
       },
-    ],
-  },
-  {
-    path: ROUTER_PATH.LOGIN,
-    element: (
-      <LoginLayout
-        OverlayPortal={<OverlayPortal />}
-        HistoryTracker={<HistoryTracker />}
-      />
-    ),
-    children: [
       {
-        index: true,
-        element: <LoginPage />,
-      },
-      {
-        path: ROUTER_PATH.LOGIN_BY_EMAIL,
-        element: <EmailLoginPage />,
-      },
-      {
-        path: ROUTER_PATH.FORGET_PASSWORD,
-        element: <div>forgot-password</div>,
+        path: ROUTER_VALUE.LOGIN,
+        element: <LoginLayout />,
+        children: [
+          {
+            index: true,
+            element: <LoginPage />,
+          },
+          {
+            path: ROUTER_VALUE.LOGIN_BY_EMAIL,
+            element: <EmailLoginPage />,
+          },
+        ],
       },
     ],
   },
