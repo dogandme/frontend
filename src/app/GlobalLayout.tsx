@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import { MainFooter } from "@/app/layout";
 import { DevTools } from "./DevTools";
+import { FooterNavigationBar } from "./FooterNavigationBar";
 import { HistoryTracker } from "./HistoryTracker";
 import { MobileLayout } from "./MobileLayout";
 import { OverlayPortal } from "./OverlayPortal";
@@ -23,7 +23,7 @@ const GlobalLayout = () => {
         <main className="flex grow flex-col overflow-y-scroll">
           <Outlet />
         </main>
-        <MainFooter />
+        <FooterNavigationBar />
       </ReactQueryProvider>
     </MobileLayout>
   );

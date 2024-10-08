@@ -9,10 +9,15 @@ import { useGetProfile } from "@/entities/profile/api";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
 import { CompassIcon, MapIcon } from "@/shared/ui/icon";
-import { mainFooterStyles } from "./MainFooter.style";
 
-export const MainFooter = () => {
-  const { active, inactive, base } = mainFooterStyles;
+const footerNavigationBarStyles = {
+  active: "text-tangerine-500",
+  inactive: "text-grey-400",
+  base: "body-3 text-center flex flex-col items-center justify-center gap-1",
+};
+
+export const FooterNavigationBar = () => {
+  const { active, inactive, base } = footerNavigationBarStyles;
   const nickname = useAuthStore((state) => state.nickname);
   const token = useAuthStore((state) => state.token);
   const { data } = useGetProfile({
