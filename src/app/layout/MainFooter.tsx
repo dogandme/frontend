@@ -97,7 +97,7 @@ export const MainFooter = () => {
         <ul className="flex justify-between items-center gap-2 bg-grey-0 px-2 h-20">
           <li className="grow">
             <NavLink
-              to={ROUTER_PATH.SEARCH}
+              to={ROUTER_PATH.MAIN}
               className={({ isActive }) =>
                 `${isActive ? active : inactive} ${base}`
               }
