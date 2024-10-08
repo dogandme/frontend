@@ -98,20 +98,39 @@ export const colors = {
   },
 } as const;
 
+export const ROUTER_VALUE = {
+  MAIN: "/",
+  MAP: "map", // 1 depth
+  SEARCH: "search", // 1 depth
+
+  MY_PAGE: "my-page", // 1 depth
+  SETTING: "setting", // 2 depth
+  MANAGE_ACCOUNT: "manage-account", // 3 depth
+
+  LOGIN: "login", // 1 depth
+  LOGIN_BY_EMAIL: "email", // 2 depth
+  FORGET_PASSWORD: "forgot-password", // 2depth
+
+  SIGN_UP: "sign-up", // 1 depth
+  SIGN_UP_USER_INFO: "user-info", // 2 depth
+  SIGN_UP_PET_INFO: "pet-info", // 2 depth
+} as const;
+
 export const ROUTER_PATH = {
   MAIN: "/",
-  LOGIN: "/login",
-  LOGIN_BY_EMAIL: "/login/email",
-  FORGET_PASSWORD: "/login/forgot-password",
-  SIGN_UP: "/sign-up",
-  SIGN_UP_USER_INFO: "/sign-up/user-info",
-  SIGN_UP_PET_INFO: "/sign-up/pet-info",
-  // TODO 라우팅 경로 이름 변경하기
-  SEARCH: "/",
-  MAP: "/map",
-  MY_PAGE: "/my-page",
-  SETTING: "/my-page/setting",
-  ACCOUNT: "/my-page/setting/manage-account",
+  MAP: `/${ROUTER_VALUE.MAP}`,
+
+  MY_PAGE: `/${ROUTER_VALUE.MY_PAGE}`,
+  SETTING: `/${ROUTER_VALUE.MY_PAGE}/${ROUTER_VALUE.SETTING}`,
+  ACCOUNT: `/${ROUTER_VALUE.MY_PAGE}/${ROUTER_VALUE.SETTING}/${ROUTER_VALUE.MANAGE_ACCOUNT}`,
+
+  LOGIN: `/${ROUTER_VALUE.LOGIN}`,
+  LOGIN_BY_EMAIL: `/${ROUTER_VALUE.LOGIN}/${ROUTER_VALUE.LOGIN_BY_EMAIL}`,
+  FORGET_PASSWORD: `/${ROUTER_VALUE.LOGIN}/${ROUTER_VALUE.FORGET_PASSWORD}`,
+
+  SIGN_UP: `/${ROUTER_VALUE.SIGN_UP}`,
+  SIGN_UP_USER_INFO: `/${ROUTER_VALUE.SIGN_UP}/${ROUTER_VALUE.SIGN_UP_USER_INFO}`,
+  SIGN_UP_PET_INFO: `/${ROUTER_VALUE.SIGN_UP}/${ROUTER_VALUE.SIGN_UP_PET_INFO}`,
 } as const;
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;

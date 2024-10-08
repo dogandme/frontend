@@ -8,7 +8,7 @@ import { AccountManagementPage } from "@/pages/my-page/setting/manage-account";
 import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
-import { ROUTER_PATH } from "@/shared/constants";
+import { ROUTER_PATH, ROUTER_VALUE } from "@/shared/constants";
 import { MainLayout, MainPage } from "../pages";
 import { HistoryTracker } from "./HistoryTracker";
 import { OverlayPortal } from "./OverlayPortal";
@@ -23,21 +23,30 @@ export const router = createBrowserRouter([
         element: <MainPage />, // 탐색
       },
       {
-        path: ROUTER_PATH.MAP,
+        path: ROUTER_VALUE.MAP,
         element: <MapPage />, // 지도
       },
       {
-        // TODO 바텀시트 빼기
-        path: ROUTER_PATH.MY_PAGE,
-        element: <MyPage />,
-      },
-      {
-        path: ROUTER_PATH.SETTING,
-        element: <SettingPage />,
-      },
-      {
-        path: ROUTER_PATH.ACCOUNT,
-        element: <AccountManagementPage />,
+        path: ROUTER_VALUE.MY_PAGE,
+        children: [
+          {
+            index: true,
+            element: <MyPage />,
+          },
+          {
+            path: ROUTER_VALUE.SETTING,
+            children: [
+              {
+                index: true,
+                element: <SettingPage />,
+              },
+              {
+                path: ROUTER_VALUE.MANAGE_ACCOUNT,
+                element: <AccountManagementPage />,
+              },
+            ],
+          },
+        ],
       },
     ],
   },
