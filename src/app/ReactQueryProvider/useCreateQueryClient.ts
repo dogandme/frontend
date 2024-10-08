@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { QueryClient, QueryCache } from "@tanstack/react-query";
+import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
 import { useAuthStore } from "@/shared/store";
 import { ERROR_MESSAGE } from "./constants";
 import { getNewAccessToken } from "./errorHandlers";
@@ -30,14 +30,44 @@ export const useCreateQueryClient = () => {
       },
 
       queryCache: new QueryCache({
-        onError: async (error, query) => {
+        onError: async (error) => {
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getNewAccessToken({
-                query,
                 setterMethods: { setToken, resetAuthStore },
                 queryClient,
               });
+              break;
+            }
+            default:
+              throw error;
+          }
+        },
+      }),
+      mutationCache: new MutationCache({
+        onError: async (error, variables, context, mutation) => {
+          switch (error.message) {
+            case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
+              await getNewAccessToken({
+                setterMethods: { setToken, resetAuthStore },
+                queryClient,
+              });
+
+              const { options, state } = mutation;
+
+              /**
+               * 이전에 시도 했던 mutationFn 을 업데이트 된 액세스 토큰을 이용해 다시 시도합니다.
+               * options.mutationFn 으로 재시도 하는 mutation의 경우엔 onSuccess, onError를 자동으로 호출하지 않습니다.
+               * 이에 try,catch 문을 이용해 onSuccess, onError 를 수동으로 호출합니다.
+               */
+              try {
+                const { token } = useAuthStore.getState();
+                const updatedVariables = { ...(variables as object), token };
+                await options.mutationFn?.(updatedVariables);
+                options.onSuccess?.(state.data, updatedVariables, context);
+              } catch (error) {
+                options.onError?.(error, variables, context);
+              }
               break;
             }
             default:
