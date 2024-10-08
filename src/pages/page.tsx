@@ -1,11 +1,9 @@
-interface MainPageProps {
-  GlobalNavigationBar: JSX.Element;
-}
+import { NotificationNavigationBar } from "@/widgets/notification/ui";
 
-const MainPage = ({ GlobalNavigationBar }: MainPageProps) => {
+const MainPage = () => {
   return (
     <>
-      {GlobalNavigationBar}
+      <NotificationNavigationBar />
       <div>메인 페이지</div>
     </>
   );

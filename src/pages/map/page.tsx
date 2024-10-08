@@ -5,14 +5,12 @@ import {
   MapMarkerWidget,
   GoogleMaps,
 } from "@/widgets/map/ui";
+import { NotificationNavigationBar } from "@/widgets/notification/ui";
 
-interface MapPageProps {
-  GlobalNavigationBar: JSX.Element;
-}
-export const MapPage = ({ GlobalNavigationBar }: MapPageProps) => {
+export const MapPage = () => {
   return (
     <>
-      {GlobalNavigationBar}
+      <NotificationNavigationBar />
       <MapInitializer />
       <GoogleMaps>
         <MapMarkerWidget />

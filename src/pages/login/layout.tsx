@@ -1,15 +1,8 @@
 import { Outlet } from "react-router-dom";
 import { AuthNavigationBar } from "@/features/auth/ui";
 
-interface LoginLayoutProps {
-  OverlayPortal: JSX.Element;
-  HistoryTracker: JSX.Element;
-}
-
-const LoginLayout = ({ OverlayPortal, HistoryTracker }: LoginLayoutProps) => (
+const LoginLayout = () => (
   <>
-    {OverlayPortal}
-    {HistoryTracker}
     <header>
       <AuthNavigationBar />
     </header>

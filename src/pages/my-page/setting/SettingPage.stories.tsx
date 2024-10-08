@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { OverlayPortal } from "@/app";
+import { OverlayPortal } from "@/app/OverlayPortal";
 import { SettingPage } from "./page";
 
 export default {
