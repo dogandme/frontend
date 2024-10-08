@@ -98,39 +98,21 @@ export const colors = {
   },
 } as const;
 
-export const ROUTER_VALUE = {
-  MAIN: "/",
-  MAP: "map", // 1 depth
-  SEARCH: "search", // 1 depth
-
-  MY_PAGE: "my-page", // 1 depth
-  SETTING: "setting", // 2 depth
-  MANAGE_ACCOUNT: "manage-account", // 3 depth
-
-  LOGIN: "login", // 1 depth
-  LOGIN_BY_EMAIL: "email", // 2 depth
-  FORGET_PASSWORD: "forgot-password", // 2depth
-
-  SIGN_UP: "sign-up", // 1 depth
-  SIGN_UP_USER_INFO: "user-info", // 2 depth
-  SIGN_UP_PET_INFO: "pet-info", // 2 depth
-} as const;
-
 export const ROUTER_PATH = {
   MAIN: "/",
-  MAP: `/${ROUTER_VALUE.MAP}`,
+  MAP: `/map`,
 
-  MY_PAGE: `/${ROUTER_VALUE.MY_PAGE}`,
-  SETTING: `/${ROUTER_VALUE.MY_PAGE}/${ROUTER_VALUE.SETTING}`,
-  ACCOUNT: `/${ROUTER_VALUE.MY_PAGE}/${ROUTER_VALUE.SETTING}/${ROUTER_VALUE.MANAGE_ACCOUNT}`,
+  MY_PAGE: `/my-page`,
+  SETTING: `/my-page/setting`,
+  MANAGE_ACCOUNT: `/my-page/setting/manage-account`,
 
-  LOGIN: `/${ROUTER_VALUE.LOGIN}`,
-  LOGIN_BY_EMAIL: `/${ROUTER_VALUE.LOGIN}/${ROUTER_VALUE.LOGIN_BY_EMAIL}`,
-  FORGET_PASSWORD: `/${ROUTER_VALUE.LOGIN}/${ROUTER_VALUE.FORGET_PASSWORD}`,
+  LOGIN: `/login`,
+  LOGIN_BY_EMAIL: `/login/email`,
+  FORGET_PASSWORD: `/login/forget-password`,
 
-  SIGN_UP: `/${ROUTER_VALUE.SIGN_UP}`,
-  SIGN_UP_USER_INFO: `/${ROUTER_VALUE.SIGN_UP}/${ROUTER_VALUE.SIGN_UP_USER_INFO}`,
-  SIGN_UP_PET_INFO: `/${ROUTER_VALUE.SIGN_UP}/${ROUTER_VALUE.SIGN_UP_PET_INFO}`,
+  SIGN_UP: `/sign-up`,
+  SIGN_UP_USER_INFO: `/sign-up/user-info`,
+  SIGN_UP_PET_INFO: `/sign-up/pet-info`,
 } as const;
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;

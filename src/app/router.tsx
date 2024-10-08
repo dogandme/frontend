@@ -8,12 +8,12 @@ import { AccountManagementPage } from "@/pages/my-page/setting/manage-account";
 import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
-import { ROUTER_VALUE } from "@/shared/constants";
+import { ROUTER_PATH } from "@/shared/constants";
 import { MainLayout, MainPage } from "../pages";
 
 export const router = createBrowserRouter([
   {
-    path: ROUTER_VALUE.MAIN,
+    path: ROUTER_PATH.MAIN,
     element: <MainLayout />,
     children: [
       {
@@ -21,25 +21,25 @@ export const router = createBrowserRouter([
         element: <MainPage />, // 탐색
       },
       {
-        path: ROUTER_VALUE.MAP,
+        path: ROUTER_PATH.MAP,
         element: <MapPage />, // 지도
       },
       {
-        path: ROUTER_VALUE.MY_PAGE,
+        path: ROUTER_PATH.MY_PAGE,
         children: [
           {
             index: true,
             element: <MyPage />,
           },
           {
-            path: ROUTER_VALUE.SETTING,
+            path: ROUTER_PATH.SETTING,
             children: [
               {
                 index: true,
                 element: <SettingPage />,
               },
               {
-                path: ROUTER_VALUE.MANAGE_ACCOUNT,
+                path: ROUTER_PATH.MANAGE_ACCOUNT,
                 element: <AccountManagementPage />,
               },
             ],
@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTER_VALUE.LOGIN,
+        path: ROUTER_PATH.LOGIN,
         element: <LoginLayout />,
         children: [
           {
@@ -55,24 +55,24 @@ export const router = createBrowserRouter([
             element: <LoginPage />,
           },
           {
-            path: ROUTER_VALUE.LOGIN_BY_EMAIL,
+            path: ROUTER_PATH.LOGIN_BY_EMAIL,
             element: <EmailLoginPage />,
           },
         ],
       },
       {
-        path: ROUTER_VALUE.SIGN_UP,
+        path: ROUTER_PATH.SIGN_UP,
         children: [
           {
             index: true,
             element: <SignUpPage />,
           },
           {
-            path: ROUTER_VALUE.SIGN_UP_USER_INFO,
+            path: ROUTER_PATH.SIGN_UP_USER_INFO,
             element: <UserInfoRegistrationPage />,
           },
           {
-            path: ROUTER_VALUE.SIGN_UP_PET_INFO,
+            path: ROUTER_PATH.SIGN_UP_PET_INFO,
             element: <PetInfoPage />,
           },
         ],
