@@ -27,10 +27,6 @@ export const router = createBrowserRouter([
         element: <MapPage />, // 지도
       },
       {
-        path: ROUTER_PATH.COMMUNITY,
-        element: <div>community</div>, // 커뮤니티
-      },
-      {
         // TODO 바텀시트 빼기
         path: ROUTER_PATH.MY_PAGE,
         element: <MyPage />,

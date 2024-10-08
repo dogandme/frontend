@@ -109,7 +109,6 @@ export const ROUTER_PATH = {
   // TODO 라우팅 경로 이름 변경하기
   SEARCH: "/",
   MAP: "/map",
-  COMMUNITY: "/community",
   MY_PAGE: "/my-page",
   SETTING: "/my-page/setting",
   ACCOUNT: "/my-page/setting/manage-account",
