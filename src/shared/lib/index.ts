@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export * from "./cookie";
 export * from "./overlay";
 export * from "./debounce";
-
+export * from "./image";
 // TODO refactoring 시 해당 훅 제거 하기
 /**
  * useDebounce 훅은 입력된 콜백 함수를 지연시간만큼 지연시킨 후 실행합니다.
