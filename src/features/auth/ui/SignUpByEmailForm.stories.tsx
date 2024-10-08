@@ -67,6 +67,8 @@ export const Test: Story = {
     const $codeInput = canvasElement.querySelector("#verification-code")!;
     const $checkCodeButton = canvas.getByText("확인");
     const $passwordInput = canvasElement.querySelector("#password")!;
+    const $passwordConfirmInput =
+      canvasElement.querySelector("#password-confirm")!;
 
     const validEmail = "hi@example.com";
     const invalidEmail = "invalid-email";
@@ -331,6 +333,9 @@ export const Test: Story = {
       );
     });
 
+    const validPassword = "abcd1234!";
+    const invalidPassword = "1234";
+
     await step("비밀번호 input 검사", async () => {
       await step(
         '값을 입력하지 않은 상태에서 focus될 경우, "비밀번호를 입력해 주세요" 안내 문구가 뜬다.',
@@ -343,9 +348,6 @@ export const Test: Story = {
           expect($statusText).toHaveClass(statusTextColor.valid);
         },
       );
-
-      const validPassword = "abcd1234!";
-      const invalidPassword = "1234";
 
       await step(
         "비밀번호 형식에 맞게 입력한 상태에서 outfocus한 경우, 안내 문구가 사라진다.",
@@ -380,6 +382,91 @@ export const Test: Story = {
           expect($statusText).toHaveClass(statusTextColor.invalid);
         },
       );
+    });
+
+    await step("비밀번호 확인 input 검사", async () => {
+      await step("비밀번호 input 값이 유효하지 않은 상태에서", async () => {
+        await userEvent.clear($passwordInput);
+
+        await step(
+          '비밀번호 input 값과 입력값이 동일하지 않다면, outfocus 여부와 상관 없이 "비밀번호가 서로 일치하지 않습니다" 경고 문구가 뜬다.',
+          async () => {
+            await userEvent.type($passwordInput, invalidEmail);
+            await userEvent.type($passwordConfirmInput, validEmail);
+
+            const $statusText =
+              await canvas.findByText("비밀번호가 서로 일치하지 않습니다");
+
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.invalid);
+
+            await userEvent.tab();
+            await userEvent.tab();
+
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.invalid);
+          },
+        );
+
+        await userEvent.clear($passwordInput);
+        await userEvent.clear($passwordConfirmInput);
+
+        // ? status text 요소를 어떻게 찾아서 테스트할지 고민해보기
+        // await step(
+        //   "비밀번호 input 값과 입력값이 동일하면, 안내 문구를 표시하지 않는다.",
+        //   async () => {
+        //     await userEvent.type($passwordInput, invalidEmail);
+        //     await userEvent.type($passwordConfirmInput, invalidEmail);
+        //   },
+        // );
+      });
+
+      await step("비밀번호 input 값이 유효한 상태에서", async () => {
+        await userEvent.clear($passwordInput);
+
+        await step(
+          '비밀번호 input 값과 입력값이 동일하지 않다면, outfocus 여부와 상관 없이 "비밀번호가 서로 일치하지 않습니다" 경고 문구가 뜬다.',
+          async () => {
+            await userEvent.type($passwordInput, validPassword);
+            await userEvent.type($passwordConfirmInput, invalidPassword);
+
+            const $statusText =
+              await canvas.findByText("비밀번호가 서로 일치하지 않습니다");
+
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.invalid);
+
+            await userEvent.tab();
+            await userEvent.tab();
+
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.invalid);
+          },
+        );
+
+        await userEvent.clear($passwordInput);
+        await userEvent.clear($passwordConfirmInput);
+
+        await step(
+          '비밀번호 input 값과 입력값이 동일하면, outfocus 여부와 상관 없이 "사용가능한 비밀번호 입니다" 안내 문구가 뜬다.',
+          async () => {
+            await userEvent.type($passwordInput, validPassword);
+            await userEvent.type($passwordConfirmInput, validPassword);
+
+            const $statusText =
+              await canvas.findByText("사용가능한 비밀번호 입니다");
+
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.valid);
+
+            await userEvent.tab();
+            await userEvent.tab();
+
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.valid);
+          },
+        );
+      });
     });
   },
 };
