@@ -10,12 +10,12 @@ import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { ROUTER_PATH } from "@/shared/constants";
 import { MainPage } from "../pages";
-import GlobalLayout from "./GlobalLayout";
+import { AppProviderLayout } from "./AppProviderLayout";
 
 export const router = createBrowserRouter([
   {
     path: ROUTER_PATH.MAIN,
-    element: <GlobalLayout />,
+    element: <AppProviderLayout />,
     children: [
       {
         index: true,
