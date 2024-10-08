@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
+import { compressFile } from "@/shared/lib";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
@@ -57,16 +58,23 @@ export const ProfileInput = () => {
   const [profileUrl, setProfileUrl] = useState(() =>
     profileImage ? URL.createObjectURL(profileImage) : DEFAULT_PROFILE_IMAGE,
   );
+  // compressFile 의 race-condition 을 방지하기 위한 ref
+  const compressedFileRef = useRef<File | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (!file) {
       return;
     }
+    // compressFile 이 시행되는 동안 발생 할 수 있는 race-condition 문제를 방지하기 위한 로직
+    compressedFileRef.current = file;
+    const compressedFile = await compressFile(file);
+    if (file !== compressedFileRef.current) {
+      return;
+    }
 
-    setProfileImage(file);
-    setProfileUrl(URL.createObjectURL(file));
+    setProfileImage(compressedFile);
+    setProfileUrl(URL.createObjectURL(compressedFile));
   };
 
   // 바텀 시트를 여닫는 핸들러
