@@ -9,13 +9,14 @@ import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { ROUTER_PATH } from "@/shared/constants";
-import { MainLayout, MainPage } from "../pages";
+import { MainPage } from "../pages";
+import GlobalLayout from "./GlobalLayout";
 import { GoogleMapsProvider } from "./GoogleMapsProvider";
 
 export const router = createBrowserRouter([
   {
     path: ROUTER_PATH.MAIN,
-    element: <MainLayout />,
+    element: <GlobalLayout />,
     children: [
       {
         index: true,

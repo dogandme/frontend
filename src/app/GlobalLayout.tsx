@@ -1,14 +1,12 @@
 import { Outlet } from "react-router-dom";
 import { MainFooter } from "@/app/layout";
-import {
-  OverlayPortal,
-  HistoryTracker,
-  MobileLayout,
-  ReactQueryProvider,
-  DevTools,
-} from "@/app";
+import { DevTools } from "./DevTools";
+import { HistoryTracker } from "./HistoryTracker";
+import { MobileLayout } from "./MobileLayout";
+import { OverlayPortal } from "./OverlayPortal";
+import { ReactQueryProvider } from "./ReactQueryProvider";
 
-const MainLayout = () => {
+const GlobalLayout = () => {
   return (
     // TODO 레이아웃 범위 디자이너와 상의 후 픽스하기
     <MobileLayout>
@@ -31,4 +29,4 @@ const MainLayout = () => {
   );
 };
 
-export default MainLayout;
+export default GlobalLayout;
