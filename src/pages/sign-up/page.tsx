@@ -65,15 +65,19 @@ const SignUpPage = () => {
   };
 
   const handleCloseButtonClick = () => {
-    const { email, password, passwordConfirm } =
-      useSignUpByEmailFormStore.getState();
+    const {
+      isEmailEmpty,
+      isPasswordEmpty,
+      isConfirmPasswordEmpty,
+      verificationCode,
+    } = useSignUpByEmailFormStore.getState();
 
-    const isEmailEmpty = email.length === 0;
-    const isPasswordEmpty = password.length === 0;
-    const isPasswordConfirmEmpty = passwordConfirm.length === 0;
-
+    const isVerificationCodeEmpty = verificationCode === "";
     const shouldOpenModal =
-      !isEmailEmpty || !isPasswordEmpty || !isPasswordConfirmEmpty;
+      !isEmailEmpty ||
+      !isVerificationCodeEmpty ||
+      !isPasswordEmpty ||
+      !isConfirmPasswordEmpty;
 
     if (!shouldOpenModal) {
       goOutsideCurrentPage();
