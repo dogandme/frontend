@@ -175,12 +175,14 @@ const VerificationCode = () => {
       mutationKey: ["sendVerificationCode"],
     },
   });
+
   const sendCodeStatus =
     sendCodeResponseCacheArr[sendCodeResponseCacheArr.length - 1]?.status;
+  const isCodeNotSent = !sendCodeStatus;
   const isErrorSendCode = sendCodeStatus === "error";
   const isSuccessSendCode = sendCodeStatus === "success";
 
-  const hasEmailChangedSinceCodeRequest = variables?.email !== email;
+  const hasEmailChangedSinceCodeCheckRequest = variables?.email !== email;
   const hasCodeChangedSinceCodeCheckRequest =
     variables?.authNum !== verificationCode;
 
@@ -194,7 +196,7 @@ const VerificationCode = () => {
   // 인증 코드가 일치하는 경우 (단, 인증 코드 체크 이후 이메일과 인증 코드를 바꾸지 않아야 함)
   const isSuccess =
     isSuccessCheckCode &&
-    !hasEmailChangedSinceCodeRequest &&
+    !hasEmailChangedSinceCodeCheckRequest &&
     !hasCodeChangedSinceCodeCheckRequest;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -271,7 +273,7 @@ const VerificationCode = () => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           isError={isError}
-          disabled={!isValidEmail || isErrorSendCode}
+          disabled={!isValidEmail || isErrorSendCode || isCodeNotSent}
           trailingNode={
             isSuccessSendCode &&
             !isSuccessCheckCode && (
