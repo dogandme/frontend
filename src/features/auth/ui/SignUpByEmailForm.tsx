@@ -57,7 +57,7 @@ const Email = () => {
       { email },
       {
         onSuccess: () => {
-          setTimeLeft(1000 * 60);
+          setTimeLeft(1000 * 60 * 3);
         },
       },
     );
@@ -165,7 +165,7 @@ const VerificationCode = () => {
   const isTimeOver = timeLeft === 0 && isSuccessSendCode;
   // 인증 코드가 일치하지 않을 경우
   const isCodeNotMatched = isErrorCheckCode && !isCodeChanged;
-  const isError = isTimeOver || isCodeNotMatched || isErrorSendCode;
+  const isError = isTimeOver || isCodeNotMatched;
 
   const isSuccess = isSuccessCheckCode && !isEmailChanged && !isCodeChanged;
 
@@ -235,7 +235,7 @@ const VerificationCode = () => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           isError={isError}
-          disabled={!isValidEmail}
+          disabled={!isValidEmail || isErrorSendCode}
           trailingNode={
             isSuccessSendCode &&
             !isSuccessCheckCode && (
