@@ -6,7 +6,7 @@ import { useGetMarkingList } from "@/features/marking/api";
 import { MarkingItem } from "@/features/marking/ui";
 import { MarkingList } from "@/entities/marking/ui";
 import { useGetProfile } from "@/entities/profile/api";
-import { ROUTER_PATH } from "@/shared/constants";
+import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
 import { CompassIcon, MapIcon } from "@/shared/ui/icon";
 import { mainFooterStyles } from "./MainFooter.style";
@@ -21,7 +21,7 @@ export const MainFooter = () => {
   });
   // TODO API 에서 받아온 프로필 이미지 사용하기
   const profileImageUrl = data?.pet?.profile
-    ? `${import.meta.env.VITE_API_BASE_URL}/${data.pet.profile}`
+    ? `${API_BASE_URL}/pets/image/${data.pet.profile}`
     : "/default-image.png";
 
   const location = useLocation();

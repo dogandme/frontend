@@ -114,3 +114,5 @@ export const ROUTER_PATH = {
   SETTING: "/my-page/setting",
   ACCOUNT: "/my-page/setting/manage-account",
 } as const;
+
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
