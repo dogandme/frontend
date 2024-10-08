@@ -57,14 +57,17 @@ const Email = () => {
       { email },
       {
         onSuccess: () => {
-          setTimeLeft(1000 * 60 * 3);
+          setTimeLeft(1000 * 60);
         },
       },
     );
   };
 
   const shouldShowEmailStatusText =
-    isFocused || isValidEmail || !isValidEmail || isDuplicateEmail;
+    isFocused ||
+    isValidEmail ||
+    (!isValidEmail && !isEmailEmpty) ||
+    isDuplicateEmail;
 
   const statusTextColorStyle = isDuplicateEmail
     ? "text-pink-500"
