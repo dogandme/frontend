@@ -71,9 +71,9 @@ export const Test: Story = {
       invalid: "text-pink-500",
     };
 
-    const $sendConfirmCodeButton = canvas.getByText("코드전송");
-    const $confirmCodeInput =
-      canvasElement.querySelector("#verification-code")!;
+    const $sendCodeButton = canvas.getByText("코드전송");
+    const $codeInput = canvasElement.querySelector("#verification-code")!;
+    const $checkCodeButton = canvas.getByText("확인");
 
     await step("이메일 input 형식 검사", async () => {
       await step(
@@ -93,7 +93,7 @@ export const Test: Story = {
         await userEvent.type($emailInput, validEmail);
 
         await step("[코드전송] 버튼이 활성화된다.", async () => {
-          expect($sendConfirmCodeButton).toBeEnabled();
+          expect($sendCodeButton).toBeEnabled();
         });
 
         const isValidEmailStatusText = "올바른 이메일 형식입니다";
@@ -124,7 +124,7 @@ export const Test: Story = {
         const $statusText = canvas.getByText(errorStatusText);
 
         await step("[코드전송] 버튼이 비활성화된다.", async () => {
-          expect($sendConfirmCodeButton).toBeDisabled();
+          expect($sendCodeButton).toBeDisabled();
         });
 
         await step(
@@ -174,7 +174,6 @@ export const Test: Story = {
       await userEvent.clear($emailInput);
 
       // todo
-      // 동시에 [코드전송]은 [재전송]으로 문구가 수정되어 보여진다.
       // [재전송]은 기본으로 비활성화 상태로 노출되며 1분이 지나는 시점으로 활성화된다.
       // 1분 이내에 [코드전송]을 다시 누르는 경우, "1분 이후에 재전송 해주세요"라는 snackbar가 노출된다.
 
@@ -185,7 +184,7 @@ export const Test: Story = {
           await userEvent.click($codeSendButton);
 
           await step("인증 코드 input이 활성화된다.", async () => {
-            expect($confirmCodeInput).toBeEnabled();
+            expect($codeInput).toBeEnabled();
           });
 
           await step(
@@ -231,29 +230,101 @@ export const Test: Story = {
 
     await step("인증 코드 검사", async () => {
       await step("숫자만 입력할 수 있다.", async () => {
-        await userEvent.type($confirmCodeInput, "a123b4567");
+        await userEvent.type($codeInput, "a123b4567");
+        expect($codeInput).toHaveValue("1234567");
 
-        expect($confirmCodeInput).toHaveValue("1234567");
+        await userEvent.clear($codeInput);
+
+        await userEvent.type($codeInput, "아나진짜루1234567");
+        expect($codeInput).toHaveValue("1234567");
+
+        await userEvent.clear($codeInput);
+
+        await userEvent.type($codeInput, "!@#12!@#$!@#34%^&*%(*&(()567");
+        expect($codeInput).toHaveValue("1234567");
+
+        await userEvent.clear($codeInput);
       });
 
-      await userEvent.clear($confirmCodeInput);
+      await userEvent.clear($codeInput);
 
       await step("7자리 이상 입력할 수 없다.", async () => {
-        await userEvent.type($confirmCodeInput, "12345678");
+        await userEvent.type($codeInput, "12345678");
 
-        expect($confirmCodeInput).toHaveValue("1234567");
+        expect($codeInput).toHaveValue("1234567");
       });
 
-      await userEvent.clear($confirmCodeInput);
+      await userEvent.clear($codeInput);
 
       await step(
-        "입력한 인증 코드가 7자리일 경우, [확인] 버튼이 활성화 상태로 변한다.",
+        '인증 input을 클릭하면, "인증코드 7자리를 입력해 주세요" 안내 문구를 띄운다.',
         async () => {
-          const $confirmButton = canvas.getByText("확인");
-          expect($confirmButton).toBeDisabled();
+          await userEvent.click($codeInput);
 
-          await userEvent.type($confirmCodeInput, "1234567");
-          expect($confirmButton).toBeEnabled();
+          const $statusText =
+            canvas.getByText("인증코드 7자리를 입력해 주세요");
+
+          expect($statusText).toBeInTheDocument();
+          expect($statusText).toHaveClass(statusTextColor.valid);
+        },
+      );
+
+      await step(
+        "만료 시간 전, 인증 코드 7자리 입력시 [확인]이 활성화 된다.",
+        async () => {
+          expect($checkCodeButton).toBeDisabled();
+
+          await userEvent.type($codeInput, "1234567");
+          expect($checkCodeButton).toBeEnabled();
+        },
+      );
+
+      await userEvent.clear($codeInput);
+
+      // ? 인증시간이 만료될 경우 테스트 작성 (인증 시간 만료된 경우를 어떻게 테스트하지)
+      //  인증시간이 만료되었습니다 재전송 버튼을 눌러주세요 에러 문구를 띄운다.
+      //  타이머도 빨간색으로 표시한다.
+      //  입력값을 모두 삭제한다.
+      //  [확인] 버튼이 비활성화된다.
+
+      await step("인증 코드가 일치하지 않을 경우", async () => {
+        await userEvent.type($codeInput, "7654321");
+        await userEvent.click($checkCodeButton);
+
+        await step(
+          '"인증 코드를 다시 확인해 주세요" 에러 문구를 표시한다.',
+          async () => {
+            const $statusText =
+              await canvas.findByText("인증코드를 다시 확인해 주세요");
+
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.invalid);
+          },
+        );
+
+        await step("[확인] 버튼은 비활성화된다.", async () => {
+          expect($checkCodeButton).toBeDisabled();
+        });
+      });
+
+      await userEvent.clear($codeInput);
+
+      await step(
+        "올바른 인증 코드를 입력하고 [확인] 버튼 클릭 시, [확인] 버튼은 비활성화 된다.",
+        async () => {
+          await userEvent.type($codeInput, "1111111");
+          await userEvent.click($checkCodeButton);
+
+          await step("[확인] 버튼은 비활성화 된다.", async () => {
+            expect($checkCodeButton).toBeDisabled();
+          });
+
+          await step('"인증되었습니다" 안내 문구를 띄운다.', async () => {
+            const $statusText = await canvas.findByText("인증되었습니다");
+
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.valid);
+          });
         },
       );
     });
