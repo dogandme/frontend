@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { API_BASE_URL } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
@@ -20,7 +21,6 @@ import {
   useDeleteLikeMarking,
 } from "../api";
 import { useDeleteMarking } from "../api";
-import { API_BASE_URL } from "../constants";
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);

@@ -1,7 +1,6 @@
+import { API_BASE_URL } from "@/shared/constants";
 import { MarkingListRequest } from "../api";
 import { LikeMarkingRequest } from "../api/likeMarking";
-
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const MARKING_REQUEST_URL = {
   SEARCH_MARKING: ({
