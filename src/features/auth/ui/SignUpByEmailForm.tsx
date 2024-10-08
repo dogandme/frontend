@@ -161,8 +161,7 @@ const VerificationCode = () => {
   // 인증 코드 입력 시간이 만료되었을 경우
   const isTimeOver = timeLeft === 0 && isSuccessSendCode;
   // 인증 코드가 일치하지 않을 경우
-  const isCodeNotMatched =
-    isErrorCheckCode && verificationCode === variables?.authNum;
+  const isCodeNotMatched = isErrorCheckCode && !isCodeChanged;
   const isError = isTimeOver || isCodeNotMatched || isErrorSendCode;
 
   const isSuccess = isSuccessCheckCode && !isEmailChanged && !isCodeChanged;
