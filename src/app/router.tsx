@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
 import { MapPage } from "@/pages/map";
@@ -8,10 +8,8 @@ import { AccountManagementPage } from "@/pages/my-page/setting/manage-account";
 import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
-import { ROUTER_PATH, ROUTER_VALUE } from "@/shared/constants";
+import { ROUTER_VALUE } from "@/shared/constants";
 import { MainLayout, MainPage } from "../pages";
-import { HistoryTracker } from "./HistoryTracker";
-import { OverlayPortal } from "./OverlayPortal";
 
 export const router = createBrowserRouter([
   {
@@ -62,29 +60,22 @@ export const router = createBrowserRouter([
           },
         ],
       },
-    ],
-  },
-  {
-    path: ROUTER_PATH.SIGN_UP,
-    element: (
-      <>
-        <OverlayPortal />
-        <HistoryTracker />
-        <Outlet />
-      </>
-    ),
-    children: [
       {
-        index: true,
-        element: <SignUpPage />,
-      },
-      {
-        path: ROUTER_PATH.SIGN_UP_USER_INFO,
-        element: <UserInfoRegistrationPage />,
-      },
-      {
-        path: ROUTER_PATH.SIGN_UP_PET_INFO,
-        element: <PetInfoPage />,
+        path: ROUTER_VALUE.SIGN_UP,
+        children: [
+          {
+            index: true,
+            element: <SignUpPage />,
+          },
+          {
+            path: ROUTER_VALUE.SIGN_UP_USER_INFO,
+            element: <UserInfoRegistrationPage />,
+          },
+          {
+            path: ROUTER_VALUE.SIGN_UP_PET_INFO,
+            element: <PetInfoPage />,
+          },
+        ],
       },
     ],
   },
