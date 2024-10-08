@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { DevTools } from "./DevTools";
 import { FooterNavigationBar } from "./FooterNavigationBar";
+import { GoogleMapsProvider } from "./GoogleMapsProvider";
 import { HistoryTracker } from "./HistoryTracker";
 import { MobileLayout } from "./MobileLayout";
 import { OverlayPortal } from "./OverlayPortal";
@@ -20,10 +21,12 @@ const GlobalLayout = () => {
         {import.meta.env.DEV && <DevTools />}
         <HistoryTracker />
         <OverlayPortal />
-        <main className="flex grow flex-col overflow-y-scroll">
-          <Outlet />
-        </main>
-        <FooterNavigationBar />
+        <GoogleMapsProvider>
+          <main className="flex grow flex-col overflow-y-scroll">
+            <Outlet />
+          </main>
+          <FooterNavigationBar />
+        </GoogleMapsProvider>
       </ReactQueryProvider>
     </MobileLayout>
   );

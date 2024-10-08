@@ -11,7 +11,6 @@ import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { ROUTER_PATH } from "@/shared/constants";
 import { MainPage } from "../pages";
 import GlobalLayout from "./GlobalLayout";
-import { GoogleMapsProvider } from "./GoogleMapsProvider";
 
 export const router = createBrowserRouter([
   {
@@ -24,11 +23,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTER_PATH.MAP,
-        element: (
-          <GoogleMapsProvider>
-            <MapPage />
-          </GoogleMapsProvider>
-        ), // 지도
+        element: <MapPage />, // 지도
       },
       {
         path: ROUTER_PATH.MY_PAGE,
