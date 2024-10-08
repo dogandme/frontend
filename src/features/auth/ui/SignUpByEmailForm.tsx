@@ -12,7 +12,6 @@ import {
   usePostSignUpByEmail,
   usePostVerificationCode,
 } from "../api";
-import { validateEmail, validatePassword } from "../lib";
 import { useSignUpByEmailFormStore } from "../store";
 
 const Email = () => {
@@ -310,7 +309,6 @@ const Password = () => {
 };
 
 const PasswordConfirm = () => {
-  const password = useSignUpByEmailFormStore((state) => state.password);
   const passwordConfirm = useSignUpByEmailFormStore(
     (state) => state.confirmPassword,
   );
@@ -322,7 +320,9 @@ const PasswordConfirm = () => {
     (state) => state.isConfirmPasswordEmpty,
   );
 
-  const isValidPassword = validatePassword(password);
+  const isValidPassword = useSignUpByEmailFormStore(
+    (state) => state.isValidPassword,
+  );
   const isValidConfirmPassword = useSignUpByEmailFormStore(
     (state) => state.isValidConfirmPassword,
   );
@@ -405,22 +405,24 @@ const SignUpByEmailForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { email, password, confirmPassword } =
-      useSignUpByEmailFormStore.getState();
+    const {
+      email,
+      password,
+      isEmailEmpty,
+      isPasswordEmpty,
+      isConfirmPasswordEmpty,
+      isValidEmail,
+      isValidPassword,
+      isValidConfirmPassword,
+    } = useSignUpByEmailFormStore.getState();
 
-    const isEmailEmpty = email.length === 0;
-    const isPasswordEmpty = password.length === 0;
-    const isPasswordConfirmEmpty = confirmPassword.length === 0;
-
-    if (isEmailEmpty || isPasswordEmpty || isPasswordConfirmEmpty) {
+    if (isEmailEmpty || isPasswordEmpty || isConfirmPasswordEmpty) {
       handleEmptyFieldsSnackBar();
       return;
     }
 
-    const isMatchedPassword = password === confirmPassword;
-
     const isValidEmailAndPassword =
-      validateEmail(email) && validatePassword(password) && isMatchedPassword;
+      isValidEmail && isValidPassword && isValidConfirmPassword;
 
     if (!isValidEmailAndPassword) {
       handleValidFieldsSnackBar();
@@ -446,9 +448,9 @@ const SignUpByEmailForm = () => {
     }
 
     const canSignUp =
-      validateEmail(email) &&
-      validatePassword(password) &&
-      isMatchedPassword &&
+      isValidEmail &&
+      isValidPassword &&
+      isValidConfirmPassword &&
       isVerificationCodeCorrect;
 
     if (canSignUp) postSignUpByEmail({ email, password });
