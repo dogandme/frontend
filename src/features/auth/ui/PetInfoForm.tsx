@@ -60,8 +60,13 @@ export const ProfileInput = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setProfileImage(file!);
-    setProfileUrl(URL.createObjectURL(file!));
+
+    if (!file) {
+      return;
+    }
+
+    setProfileImage(file);
+    setProfileUrl(URL.createObjectURL(file));
   };
 
   // 바텀 시트를 여닫는 핸들러
