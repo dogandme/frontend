@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { LatLng } from "../api/region";
+import { validateEmail, validatePassword } from "../lib";
 
 interface PetInfoStore {
   profileImage: File | null;
@@ -155,24 +156,24 @@ interface SignUpByEmailFormState {
   verificationCode: string;
 
   timeLeft: number;
-  canResendVerificationCode: boolean;
+  isTimeLeftLessThanOneMinute: boolean;
 
   password: string;
-  passwordConfirm: string;
+  isPasswordEmpty: boolean;
+  isValidPassword: boolean;
+
+  confirmPassword: string;
+  isConfirmPasswordEmpty: boolean;
+  isValidConfirmPassword: boolean;
 }
 
 interface SignUpByEmailFormActions {
   setEmail: (email: string) => void;
-  setIsEmailEmpty: (isEmailEmpty: boolean) => void;
-  setIsValidEmail: (isEmailValid: boolean) => void;
-
   setVerificationCode: (verificationCode: string) => void;
-
   setTimeLeft: (timer: number) => void;
-  setCanResendVerificationCode: (canResendVerificationCode: boolean) => void;
 
   setPassword: (password: string) => void;
-  setPasswordConfirm: (passwordConfirm: string) => void;
+  setConfirmPassword: (passwordConfirm: string) => void;
   resetSignUpByEmailFormStore: () => void;
 }
 
@@ -184,28 +185,51 @@ const initSignUpByEmailFormStore: SignUpByEmailFormState = {
   verificationCode: "",
 
   timeLeft: 0,
-  canResendVerificationCode: false,
+  isTimeLeftLessThanOneMinute: true,
 
   password: "",
-  passwordConfirm: "",
+  isPasswordEmpty: true,
+  isValidPassword: false,
+
+  confirmPassword: "",
+  isConfirmPasswordEmpty: true,
+
+  // 비밀번호 확인이 비밀번호와 일치하는지 여부
+  isValidConfirmPassword: false,
 };
 
 export const useSignUpByEmailFormStore = create<
   SignUpByEmailFormState & SignUpByEmailFormActions
->((set) => ({
+>((set, get) => ({
   ...initSignUpByEmailFormStore,
 
-  setEmail: (email) => set({ email }),
-  setIsEmailEmpty: (isEmailEmpty) => set({ isEmailEmpty }),
-  setIsValidEmail: (isEmailValid) => set({ isValidEmail: isEmailValid }),
-
+  setEmail: (email) =>
+    set({
+      email,
+      isEmailEmpty: email === "",
+      isValidEmail: validateEmail(email),
+    }),
   setVerificationCode: (verificationCode) => set({ verificationCode }),
+  setTimeLeft: (timer) =>
+    set({ timeLeft: timer, isTimeLeftLessThanOneMinute: timer <= 1000 * 60 }),
+  setPassword: (password) => {
+    const { confirmPassword } = get();
 
-  setTimeLeft: (timer) => set({ timeLeft: timer }),
-  setCanResendVerificationCode: (canResendVerificationCode) =>
-    set({ canResendVerificationCode }),
+    set({
+      password,
+      isPasswordEmpty: password === "",
+      isValidPassword: validatePassword(password),
+      isValidConfirmPassword: password === confirmPassword,
+    });
+  },
+  setConfirmPassword: (passwordConfirm) => {
+    const { password } = get();
 
-  setPassword: (password) => set({ password }),
-  setPasswordConfirm: (passwordConfirm) => set({ passwordConfirm }),
+    set({
+      confirmPassword: passwordConfirm,
+      isConfirmPasswordEmpty: passwordConfirm === "",
+      isValidConfirmPassword: password === passwordConfirm,
+    });
+  },
   resetSignUpByEmailFormStore: () => set({ ...initSignUpByEmailFormStore }),
 }));
