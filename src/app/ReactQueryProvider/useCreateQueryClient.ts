@@ -54,9 +54,7 @@ export const useCreateQueryClient = () => {
               });
 
               const { options, state } = mutation;
-              if (!options?.mutationFn) {
-                return;
-              }
+
               /**
                * 이전에 시도 했던 mutationFn 을 업데이트 된 액세스 토큰을 이용해 다시 시도합니다.
                * options.mutationFn 으로 재시도 하는 mutation의 경우엔 onSuccess, onError를 자동으로 호출하지 않습니다.
@@ -65,7 +63,7 @@ export const useCreateQueryClient = () => {
               try {
                 const { token } = useAuthStore.getState();
                 const updatedVariables = { ...(variables as object), token };
-                await options.mutationFn(updatedVariables);
+                await options.mutationFn?.(updatedVariables);
                 options.onSuccess?.(state.data, updatedVariables, context);
               } catch (error) {
                 options.onError?.(error, variables, context);
