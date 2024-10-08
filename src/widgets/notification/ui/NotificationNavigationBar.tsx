@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { NotificationIcon } from "@/shared/ui/icon";
 
-export const GlobalNavigationBar = () => {
+export const NotificationNavigationBar = () => {
   return (
     <header>
       <nav className="bg-tangerine-500">

@@ -1,4 +1,3 @@
-import { GlobalNavigationBar } from "@/app/layout";
 import {
   GoogleMapsCopyRight,
   MapControlWidget,
@@ -6,11 +5,12 @@ import {
   MapMarkerWidget,
   GoogleMaps,
 } from "@/widgets/map/ui";
+import { NotificationNavigationBar } from "@/widgets/notification/ui";
 
 export const MapPage = () => {
   return (
     <>
-      <GlobalNavigationBar />
+      <NotificationNavigationBar />
       <MapInitializer />
       <GoogleMaps>
         <MapMarkerWidget />
