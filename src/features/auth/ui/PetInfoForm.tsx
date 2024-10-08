@@ -84,6 +84,7 @@ export const ProfileInput = () => {
   // 사진을 삭제하는 핸들러
   const handleDelete = () => {
     setProfileImage(null);
+    setProfileUrl(DEFAULT_PROFILE_IMAGE);
     setInputKey((prev) => prev + 1);
   };
 
