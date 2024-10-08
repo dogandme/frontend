@@ -1,3 +1,4 @@
+import { GlobalNavigationBar } from "@/app/layout";
 import {
   GoogleMapsCopyRight,
   MapControlWidget,
@@ -6,13 +7,10 @@ import {
   GoogleMaps,
 } from "@/widgets/map/ui";
 
-interface MapPageProps {
-  GlobalNavigationBar: JSX.Element;
-}
-export const MapPage = ({ GlobalNavigationBar }: MapPageProps) => {
+export const MapPage = () => {
   return (
     <>
-      {GlobalNavigationBar}
+      <GlobalNavigationBar />
       <MapInitializer />
       <GoogleMaps>
         <MapMarkerWidget />

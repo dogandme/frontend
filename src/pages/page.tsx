@@ -1,11 +1,9 @@
-interface MainPageProps {
-  GlobalNavigationBar: JSX.Element;
-}
+import { GlobalNavigationBar } from "@/app/layout";
 
-const MainPage = ({ GlobalNavigationBar }: MainPageProps) => {
+const MainPage = () => {
   return (
     <>
-      {GlobalNavigationBar}
+      <GlobalNavigationBar />
       <div>메인 페이지</div>
     </>
   );

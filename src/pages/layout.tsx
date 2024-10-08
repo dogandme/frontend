@@ -1,25 +1,18 @@
 import { Outlet } from "react-router-dom";
+import { MainFooter } from "@/app/layout";
+import { OverlayPortal } from "@/app";
+import { HistoryTracker } from "@/app";
 
-interface MainLayoutProps {
-  MainFooter: JSX.Element;
-  OverlayPortal: JSX.Element;
-  HistoryTracker: JSX.Element;
-}
-
-const MainLayout = ({
-  MainFooter,
-  OverlayPortal,
-  HistoryTracker,
-}: MainLayoutProps) => {
+const MainLayout = () => {
   return (
     // TODO 레이아웃 범위 디자이너와 상의 후 픽스하기
     <>
-      {HistoryTracker}
-      {OverlayPortal}
+      <HistoryTracker />
+      <OverlayPortal />
       <main className="flex grow flex-col overflow-y-scroll">
         <Outlet />
       </main>
-      {MainFooter}
+      <MainFooter />
     </>
   );
 };
