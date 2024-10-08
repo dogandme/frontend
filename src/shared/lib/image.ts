@@ -9,6 +9,13 @@ type CompressFile = (
   options?: CompressFileOptions,
 ) => Promise<File>;
 
+const defaultCompressOptions: CompressFileOptions = {
+  maxSize: 2 ** 20, // 최대 파일 크기 1MB
+  compactSize: 2 ** 10 * 100, // 압축 후 최대 파일 크기 100KB
+  quality: 0.7,
+  extension: "webp",
+};
+
 /**
  * compressFile 은 File 객체를 options 에 설정된 maxSize 보다 작은 크기로 압축합니다.
  * 파일 압축은 JPEG 포맷으로만 가능합니다.
@@ -18,10 +25,7 @@ type CompressFile = (
  */
 export const compressFile: CompressFile = async (file, options) => {
   const { maxSize, compactSize, quality, extension } = {
-    maxSize: 2 ** 20, // 최대 파일 크기 1MB
-    compactSize: 2 ** 10 * 100, // 압축 후 최대 파일 크기 100KB
-    quality: 0.7,
-    extension: "webp",
+    ...defaultCompressOptions,
     ...options,
   };
 
@@ -88,4 +92,20 @@ export const compressFile: CompressFile = async (file, options) => {
   });
 
   return compressedFile;
+};
+
+type CompressFileArray = (
+  files: File[],
+  options?: CompressFileOptions,
+) => Promise<File[]>;
+
+export const compressFileArray: CompressFileArray = (files, options) => {
+  return Promise.all(
+    files.map((file) =>
+      compressFile(file, {
+        ...defaultCompressOptions,
+        ...options,
+      }),
+    ),
+  );
 };
