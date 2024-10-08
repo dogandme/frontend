@@ -63,6 +63,10 @@ export const Test: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const $emailInput = canvasElement.querySelector("#email")!;
+    const $sendCodeButton = canvas.getByText("코드전송");
+    const $codeInput = canvasElement.querySelector("#verification-code")!;
+    const $checkCodeButton = canvas.getByText("확인");
+    const $passwordInput = canvasElement.querySelector("#password")!;
 
     const validEmail = "hi@example.com";
     const invalidEmail = "invalid-email";
@@ -70,10 +74,6 @@ export const Test: Story = {
       valid: "text-grey-500",
       invalid: "text-pink-500",
     };
-
-    const $sendCodeButton = canvas.getByText("코드전송");
-    const $codeInput = canvasElement.querySelector("#verification-code")!;
-    const $checkCodeButton = canvas.getByText("확인");
 
     await step("이메일 input 형식 검사", async () => {
       await step(
@@ -315,6 +315,8 @@ export const Test: Story = {
           await userEvent.type($codeInput, "1111111");
           await userEvent.click($checkCodeButton);
 
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
           await step("[확인] 버튼은 비활성화 된다.", async () => {
             expect($checkCodeButton).toBeDisabled();
           });
@@ -325,6 +327,57 @@ export const Test: Story = {
             expect($statusText).toBeInTheDocument();
             expect($statusText).toHaveClass(statusTextColor.valid);
           });
+        },
+      );
+    });
+
+    await step("비밀번호 input 검사", async () => {
+      await step(
+        '값을 입력하지 않은 상태에서 focus될 경우, "비밀번호를 입력해 주세요" 안내 문구가 뜬다.',
+        async () => {
+          await userEvent.click($passwordInput);
+
+          const $statusText = canvas.getByText("비밀번호를 입력해 주세요");
+
+          expect($statusText).toBeInTheDocument();
+          expect($statusText).toHaveClass(statusTextColor.valid);
+        },
+      );
+
+      const validPassword = "abcd1234!";
+      const invalidPassword = "1234";
+
+      await step(
+        "비밀번호 형식에 맞게 입력한 상태에서 outfocus한 경우, 안내 문구가 사라진다.",
+        async () => {
+          await userEvent.type($passwordInput, validPassword);
+          await userEvent.tab();
+          await userEvent.tab();
+
+          const $statusText = canvas.queryByText("비밀번호를 입력해 주세요");
+
+          expect($statusText).not.toBeInTheDocument();
+        },
+      );
+
+      await step(
+        '비밀번호 형식에 맞지 않을 경우, outfocus 여부와 상관없이 "비밀번호 형식에 맞게 입력해 주세요" 경고 문구가 뜬다.',
+        async () => {
+          await userEvent.clear($passwordInput);
+          await userEvent.type($passwordInput, invalidPassword);
+
+          const $statusText = await canvas.findByText(
+            "비밀번호 형식에 맞게 입력해 주세요",
+          );
+
+          expect($statusText).toBeInTheDocument();
+          expect($statusText).toHaveClass(statusTextColor.invalid);
+
+          await userEvent.tab();
+          await userEvent.tab();
+
+          expect($statusText).toBeInTheDocument();
+          expect($statusText).toHaveClass(statusTextColor.invalid);
         },
       );
     });
