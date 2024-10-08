@@ -57,7 +57,7 @@ const Email = () => {
       { email },
       {
         onSuccess: () => {
-          setTimeLeft(1000 * 60 * 3);
+          setTimeLeft(1000 * 60);
         },
       },
     );
@@ -198,13 +198,21 @@ const VerificationCode = () => {
     }, INTERVAL);
 
     if (isTimeOver) {
+      setVerificationCode("");
       clearInterval(timer);
     }
 
     return () => {
       clearInterval(timer);
     };
-  }, [timeLeft, setTimeLeft, isSuccessSendCode, isTimeOver, isSuccess]);
+  }, [
+    timeLeft,
+    setTimeLeft,
+    isSuccessSendCode,
+    setVerificationCode,
+    isTimeOver,
+    isSuccess,
+  ]);
 
   const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
     2,
