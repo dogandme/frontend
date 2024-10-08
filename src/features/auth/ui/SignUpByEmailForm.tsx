@@ -180,16 +180,22 @@ const VerificationCode = () => {
   const isErrorSendCode = sendCodeStatus === "error";
   const isSuccessSendCode = sendCodeStatus === "success";
 
-  const isEmailChanged = variables?.email !== email;
-  const isCodeChanged = variables?.authNum !== verificationCode;
+  const hasEmailChangedSinceCodeRequest = variables?.email !== email;
+  const hasCodeChangedSinceCodeCheckRequest =
+    variables?.authNum !== verificationCode;
 
-  // 인증 코드 입력 시간이 만료되었을 경우
+  // 인증 코드 입력 시간이 만료되었을 경우 (= 코드 전송 후, timeLeft가 0이 되었을 때)
   const isTimeOver = timeLeft === 0 && isSuccessSendCode;
   // 인증 코드가 일치하지 않을 경우
-  const isCodeNotMatched = isErrorCheckCode && !isCodeChanged;
+  const isCodeNotMatched =
+    isErrorCheckCode && !hasCodeChangedSinceCodeCheckRequest;
   const isError = isTimeOver || isCodeNotMatched;
 
-  const isSuccess = isSuccessCheckCode && !isEmailChanged && !isCodeChanged;
+  // 인증 코드가 일치하는 경우 (단, 인증 코드 체크 이후 이메일과 인증 코드를 바꾸지 않아야 함)
+  const isSuccess =
+    isSuccessCheckCode &&
+    !hasEmailChangedSinceCodeRequest &&
+    !hasCodeChangedSinceCodeCheckRequest;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: verificationCode } = e.target;
@@ -461,11 +467,13 @@ const SignUpByEmailForm = () => {
       return;
     }
 
+    // 인증 코드 확인 요청에 대한 마지막 응답
     const lastCheckCodeResponse =
       checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1];
-    const isEmailChanged = lastCheckCodeResponse.variables?.email !== email;
+    const hasEmailChangedSinceCodeCheckRequest =
+      lastCheckCodeResponse.variables?.email !== email;
 
-    if (isEmailChanged) {
+    if (hasEmailChangedSinceCodeCheckRequest) {
       alert("인증코드를 확인해 주세요");
       return;
     }
