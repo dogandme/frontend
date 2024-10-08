@@ -66,7 +66,11 @@ export const ProfileInput = () => {
     if (!file) {
       return;
     }
-    // compressFile 이 시행되는 동안 발생 할 수 있는 race-condition 문제를 방지하기 위한 로직
+    /**
+     * 압축 과정 동안 이미지가 변경되지 않는 것을 방지하기 위해 낙관적 업데이트를 사용합니다.
+     */
+    setProfileUrl(URL.createObjectURL(file));
+    /* compressFile 이 시행되는 동안 발생 할 수 있는 race-condition 문제를 방지하기 위한 로직 */
     compressedFileRef.current = file;
     const compressedFile = await compressFile(file);
     if (file !== compressedFileRef.current) {
@@ -74,7 +78,6 @@ export const ProfileInput = () => {
     }
 
     setProfileImage(compressedFile);
-    setProfileUrl(URL.createObjectURL(compressedFile));
   };
 
   // 바텀 시트를 여닫는 핸들러
