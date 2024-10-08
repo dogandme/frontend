@@ -10,6 +10,7 @@ import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { ROUTER_PATH } from "@/shared/constants";
 import { MainLayout, MainPage } from "../pages";
+import { GoogleMapsProvider } from "./GoogleMapsProvider";
 
 export const router = createBrowserRouter([
   {
@@ -22,7 +23,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTER_PATH.MAP,
-        element: <MapPage />, // 지도
+        element: (
+          <GoogleMapsProvider>
+            <MapPage />
+          </GoogleMapsProvider>
+        ), // 지도
       },
       {
         path: ROUTER_PATH.MY_PAGE,
