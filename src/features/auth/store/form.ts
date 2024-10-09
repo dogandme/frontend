@@ -2,14 +2,20 @@ import { create } from "zustand";
 import type { PetInfoFormData } from "../api";
 import type { LatLng } from "../api/region";
 
+export interface FileInfo {
+  name: string;
+  url: string;
+  file: Promise<File | null>;
+}
+
 interface PetInfoFormStates extends Omit<PetInfoFormData, "profile"> {
   isValidName: boolean;
-  profile: Promise<File | null>;
+  profile: FileInfo;
   isCompressing: boolean;
 }
 
 interface PetInfoFormActions {
-  setProfile: (profile: Promise<File | null>) => void;
+  setProfile: (profile: FileInfo) => void;
   setName: (name: string) => void;
   setIsValidName: (name: string) => void;
   setBreed: (breed: string) => void;
@@ -18,7 +24,7 @@ interface PetInfoFormActions {
 }
 
 const petInfoFormInitialState: PetInfoFormStates = {
-  profile: Promise.resolve(null),
+  profile: { name: "", url: "/default-image.png", file: Promise.resolve(null) },
   name: "",
   isValidName: true,
   breed: "",
@@ -35,9 +41,9 @@ export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
   (set) => ({
     ...petInfoFormInitialState,
 
-    setProfile: (profile: Promise<File | null>) => {
+    setProfile: (profile: FileInfo) => {
       set({ profile, isCompressing: true });
-      profile.then(() => set({ isCompressing: false }));
+      profile.file.then(() => set({ isCompressing: false }));
     },
     setName: (name: string) => set({ name }),
     setIsValidName: (name: string) =>

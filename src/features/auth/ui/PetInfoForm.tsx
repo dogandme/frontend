@@ -47,14 +47,13 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const ProfileInput = () => {
+  const profile = usePetInfoStore((state) => state.profile);
   const setProfile = usePetInfoStore((state) => state.setProfile);
   // 바텀시트를 조작하기 위한 state
   const [isOpen, setOpen] = useState<boolean>(false);
   // actual dom 의 input 태그를 조작하기 위한 ref , state
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputKey, setInputKey] = useState<number>(0);
-  // 프로필 이미지를 보여주기 위한 optimistic image Url state
-  const [optimisticUrl, setOptimisticUrl] = useState(DEFAULT_PROFILE_IMAGE);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -64,10 +63,11 @@ export const ProfileInput = () => {
     /**
      * 압축 과정 동안 이미지가 변경되지 않는 것을 방지하기 위해 낙관적 업데이트를 사용합니다.
      */
-    setOptimisticUrl(URL.createObjectURL(file));
-    const compressedFile = compressFile(file);
-
-    setProfile(compressedFile);
+    setProfile({
+      file: compressFile(file),
+      name: file.name,
+      url: URL.createObjectURL(file),
+    });
   };
 
   // 바텀 시트를 여닫는 핸들러
@@ -76,8 +76,11 @@ export const ProfileInput = () => {
 
   // 사진을 삭제하는 핸들러
   const handleDelete = () => {
-    setProfile(Promise.resolve(null));
-    setOptimisticUrl(DEFAULT_PROFILE_IMAGE);
+    setProfile({
+      file: Promise.resolve(null),
+      name: "",
+      url: DEFAULT_PROFILE_IMAGE,
+    });
     setInputKey((prev) => prev + 1);
   };
 
@@ -91,7 +94,7 @@ export const ProfileInput = () => {
       <button
         className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(${optimisticUrl})`,
+          backgroundImage: `url(${profile.url})`,
         }}
         onClick={onOpen}
         aria-label="profile-image-button"
@@ -117,7 +120,7 @@ export const ProfileInput = () => {
             </Select.Option>
             <Select.Option
               onClick={handleDelete}
-              disabled={optimisticUrl === DEFAULT_PROFILE_IMAGE}
+              disabled={profile.url === DEFAULT_PROFILE_IMAGE}
             >
               삭제 하기
             </Select.Option>
@@ -281,7 +284,7 @@ export const SubmitButton = () => {
       return;
     }
 
-    const resolvedProfile = await profile;
+    const resolvedProfile = await profile.file;
     const { token } = useAuthStore.getState();
 
     const isNameEmpty = name.length === 0;
