@@ -189,18 +189,12 @@ export const Test: Story = {
           await userEvent.type($emailInput, validEmail);
           await userEvent.click($codeSendButton);
 
+          // 코드 전송 시간 고려하여 0.1초 대기
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
           await step("인증 코드 input이 활성화된다.", async () => {
             expect($codeInput).toBeEnabled();
           });
-
-          await step(
-            "인증코드 인풋이 활성화 되는 시점을 기점으로 3분 타이머가 시작된다.",
-            async () => {
-              const $timer = await canvas.findByText(/\d\d:\d\d/);
-
-              expect($timer).toBeInTheDocument();
-            },
-          );
 
           await step(
             "메일로 인증코드가 전송되었습니다 스낵바가 노출된다.",
@@ -209,6 +203,15 @@ export const Test: Story = {
                 await canvas.findByText("메일로 인증코드가 전송되었습니다");
 
               expect($snackbar).toBeInTheDocument();
+            },
+          );
+
+          await step(
+            "인증코드 인풋이 활성화 되는 시점을 기점으로 3분 타이머가 시작된다.",
+            async () => {
+              const $timer = await canvas.findByText(/\d\d:\d\d/);
+
+              expect($timer).toBeInTheDocument();
             },
           );
 
@@ -327,6 +330,15 @@ export const Test: Story = {
 
           await new Promise((resolve) => setTimeout(resolve, 1000));
 
+          await step("이메일 input은 비활성화 된다.", async () => {
+            expect($emailInput).toBeDisabled();
+          });
+          await step("[재전송] 버튼은 비활성화 된다.", async () => {
+            expect($codeSendButton).toBeDisabled();
+          });
+          await step("인증 코드 input은 비활성화 된다.", async () => {
+            expect($codeInput).toBeDisabled();
+          });
           await step("[확인] 버튼은 비활성화 된다.", async () => {
             expect($checkCodeButton).toBeDisabled();
           });
