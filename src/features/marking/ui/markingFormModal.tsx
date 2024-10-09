@@ -182,12 +182,7 @@ const PhotoInput = () => {
   const [inputKey, setInputKey] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [optimisticUrls, setOptimisticUrl] = useState<ImageUrl[]>(() =>
-    images.map((image) => ({
-      url: URL.createObjectURL(image),
-      name: image.name,
-    })),
-  );
+  const [optimisticUrls, setOptimisticUrl] = useState<ImageUrl[]>([]);
 
   const handleOpenAlbum = () => {
     inputRef.current?.click();
@@ -213,7 +208,7 @@ const PhotoInput = () => {
      * 기존 이미지와 중복되지 않는 새로운 파일만 필터링 하고 제출 가능한 이미지들을  낙관적으로 렌더링 합니다.
      */
     const AvailableNewFileArray = [...newFiles]
-      .filter((newFile) => !images.some((image) => image.name === newFile.name))
+      .filter((newFile) => !images.some(({ name }) => name === newFile.name))
       .slice(0, MAX_IMAGE_LENGTH - images.length);
 
     setOptimisticUrl([
@@ -224,8 +219,7 @@ const PhotoInput = () => {
       })),
     ]);
 
-    /* ref 를 통해 race-condition 문제를 방지합니다. */
-    const compressedNewFiles = await compressFileArray(AvailableNewFileArray);
+    const compressedNewFiles = compressFileArray(AvailableNewFileArray);
     setImages([...images, ...compressedNewFiles]);
   };
 
@@ -310,7 +304,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
   );
-
+  const isCompressing = useMarkingFormStore((state) => state.isCompressing);
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
       <MapSnackbar onClose={onCloseSnackbar}>
@@ -326,17 +320,27 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     },
   });
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const { token } = useAuthStore.getState();
 
     if (!token) {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     }
 
-    const formObj = useMarkingFormStore.getState();
+    const { region, visibility, images, content } =
+      useMarkingFormStore.getState();
+
+    if (isCompressing) {
+      // TODO 에러 바운더리 생성되면 로직 변경하기
+      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      return;
+    }
+
     const center = map.getCenter();
 
-    const { region, visibility, images } = formObj;
+    const compressedFiles = await Promise.all(
+      images.map((image) => image.file),
+    );
 
     const lat = center.lat();
     const lng = center.lng();
@@ -350,7 +354,15 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     }
 
     postMarkingData(
-      { token, lat, lng, ...formObj, visibility },
+      {
+        token,
+        lat,
+        lng,
+        region,
+        visibility,
+        images: compressedFiles,
+        content,
+      },
       {
         onSuccess: () => {
           onCloseMarkingModal();
@@ -381,6 +393,7 @@ const TemporarySaveButton = ({
   onCloseMarkingModal,
 }: MarkingFormModalProps) => {
   const map = useMap();
+  const isCompressing = useMarkingFormStore((state) => state.isCompressing);
 
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
@@ -398,20 +411,39 @@ const TemporarySaveButton = ({
     },
   });
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const { token } = useAuthStore.getState();
+    const { region, visibility, images, content } =
+      useMarkingFormStore.getState();
 
     if (!token) {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     }
 
-    const formObj = useMarkingFormStore.getState();
+    if (isCompressing) {
+      // TODO 에러 바운더리 생성되면 로직 변경하기
+      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      return;
+    }
+
+    const compressedFiles = await Promise.all(
+      images.map((image) => image.file),
+    );
+
     const center = map.getCenter();
 
     const lat = center.lat();
     const lng = center.lng();
 
-    postTempMarkingData({ token, lat, lng, ...formObj });
+    postTempMarkingData({
+      token,
+      lat,
+      lng,
+      region,
+      visibility,
+      images: compressedFiles,
+      content,
+    });
   };
 
   return (

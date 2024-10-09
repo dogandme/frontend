@@ -97,15 +97,11 @@ export const compressFile: CompressFile = async (file, options) => {
 type CompressFileArray = (
   files: File[],
   options?: CompressFileOptions,
-) => Promise<File[]>;
+) => { name: string; file: Promise<File> }[];
 
 export const compressFileArray: CompressFileArray = (files, options) => {
-  return Promise.all(
-    files.map((file) =>
-      compressFile(file, {
-        ...defaultCompressOptions,
-        ...options,
-      }),
-    ),
-  );
+  return files.map((file) => ({
+    name: file.name,
+    file: compressFile(file, options),
+  }));
 };
