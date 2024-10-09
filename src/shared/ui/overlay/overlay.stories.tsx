@@ -9,6 +9,7 @@ import {
 
 export default {
   title: "shared/overlay",
+  component: OverlayPortal,
 } as Meta;
 
 /**
@@ -43,7 +44,13 @@ export const Default = {
     );
   },
 
-  play: async ({ canvasElement, step }) => {
+  play: async ({
+    canvasElement,
+    step,
+  }: {
+    canvasElement: HTMLElement;
+    step: (description: string, action: () => void) => Promise<void>;
+  }) => {
     const canvas = within(canvasElement);
     const $body = canvasElement.ownerDocument.body;
     const $button = canvas.getByRole("button");
@@ -80,7 +87,7 @@ export const Default = {
           async () => {
             const $modalOverlay =
               canvasElement.querySelector(".absolute.w-screen");
-            await userEvent.click($modalOverlay);
+            await userEvent.click($modalOverlay!);
             expect(
               canvas.queryByText("나가시겠습니까?"),
             ).not.toBeInTheDocument();
