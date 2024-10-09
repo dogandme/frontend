@@ -188,7 +188,6 @@ const initSignUpByEmailFormStore: SignUpByEmailFormState = {
   email: "",
   isEmailEmpty: true,
   isValidEmail: false,
-  hasEmailChangedSinceSendCodeRequest: false,
 
   verificationCode: "",
 
@@ -201,9 +200,9 @@ const initSignUpByEmailFormStore: SignUpByEmailFormState = {
 
   confirmPassword: "",
   isConfirmPasswordEmpty: true,
-
-  // 비밀번호 확인이 비밀번호와 일치하는지 여부
   isValidConfirmPassword: false,
+
+  hasEmailChangedSinceSendCodeRequest: false,
 };
 
 export const useSignUpByEmailFormStore = create<

@@ -11,6 +11,8 @@ import {
   usePostCheckVerificationCode,
   usePostSignUpByEmail,
   usePostVerificationCode,
+  VerificationCodeRequestData,
+  VerificationCodeResponse,
 } from "../api";
 import { useSignUpByEmailFormStore } from "../store";
 
@@ -43,13 +45,20 @@ const Email = () => {
     variables,
   } = usePostVerificationCode();
 
-  const checkCodeResponseCacheArr = useMutationState({
+  const checkCodeResponseCacheArr = useMutationState<
+    MutationState<
+      CheckVerificationCodeResponse,
+      Error,
+      CheckVerificationCodeRequestData
+    >
+  >({
     filters: {
       mutationKey: ["checkVerificationCode"],
     },
   });
-  const checkCodeStatus =
-    checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1]?.status;
+  const lastCheckCodeResponse =
+    checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1];
+  const checkCodeStatus = lastCheckCodeResponse?.status;
   const isSuccessCheckCode = checkCodeStatus === "success";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,7 +170,10 @@ const Email = () => {
 };
 
 const VerificationCode = () => {
-  const email = useSignUpByEmailFormStore((state) => state.email);
+  const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
+  const hasEmailChangedSinceSendCodeRequest = useSignUpByEmailFormStore(
+    (state) => state.hasEmailChangedSinceSendCodeRequest,
+  );
   const verificationCode = useSignUpByEmailFormStore(
     (state) => state.verificationCode,
   );
@@ -170,10 +182,10 @@ const VerificationCode = () => {
   );
   const timeLeft = useSignUpByEmailFormStore((state) => state.timeLeft);
   const setTimeLeft = useSignUpByEmailFormStore((state) => state.setTimeLeft);
-  const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
 
+  const verificationCodeRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const ref = useRef<HTMLInputElement>(null);
+
   const CODE_LENGTH = 7;
   const INTERVAL = 1000;
 
@@ -184,65 +196,62 @@ const VerificationCode = () => {
     variables,
   } = usePostCheckVerificationCode();
 
+  const hasCodeChangedSinceCheckCodeRequest =
+    typeof variables !== "undefined" && variables.authNum !== verificationCode;
+
   // 인증 코드 전송 요청에 대한 응답 캐시
-  const sendCodeResponseCacheArr = useMutationState({
+  const sendCodeResponseCacheArr = useMutationState<
+    MutationState<VerificationCodeResponse, Error, VerificationCodeRequestData>
+  >({
     filters: {
       mutationKey: ["sendVerificationCode"],
     },
   });
 
-  const sendCodeStatus =
-    sendCodeResponseCacheArr[sendCodeResponseCacheArr.length - 1]?.status;
-  const isCodeNotSent = !sendCodeStatus;
+  const lastSendCodeResponse =
+    sendCodeResponseCacheArr[sendCodeResponseCacheArr.length - 1];
+  const sendCodeStatus = lastSendCodeResponse?.status;
   const isErrorSendCode = sendCodeStatus === "error";
   const isSuccessSendCode = sendCodeStatus === "success";
+  const hasSentCode = !!lastSendCodeResponse?.data;
 
-  const hasEmailChangedSinceCodeCheckRequest = variables?.email !== email;
-  const hasCodeChangedSinceCodeCheckRequest =
-    variables?.authNum !== verificationCode;
-
-  // 인증 코드 입력 시간이 만료되었을 경우 (= 코드 전송 후, timeLeft가 0이 되었을 때)
   const isTimeOver = timeLeft === 0 && isSuccessSendCode;
-  // 인증 코드가 일치하지 않을 경우
-  const isCodeNotMatched =
-    isErrorCheckCode && !hasCodeChangedSinceCodeCheckRequest;
-  const isError = isTimeOver || isCodeNotMatched;
 
-  // 인증 코드가 일치하는 경우 (단, 인증 코드 체크 이후 이메일과 인증 코드를 바꾸지 않아야 함)
-  const isSuccess =
-    isSuccessCheckCode &&
-    !hasEmailChangedSinceCodeCheckRequest &&
-    !hasCodeChangedSinceCodeCheckRequest;
+  const isCodeNotMatched =
+    isErrorCheckCode &&
+    !hasEmailChangedSinceSendCodeRequest &&
+    !hasCodeChangedSinceCheckCodeRequest;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: verificationCode } = e.target;
 
-    const isNumber = /^[0-9]*$/.test(verificationCode);
+    const onlyNumbers = verificationCode.replace(/[^0-9]/g, "");
 
-    if (isNumber) {
-      setVerificationCode(verificationCode);
-    }
+    setVerificationCode(onlyNumbers);
   };
 
   const handleCheckButtonClick = () => {
+    const { email, verificationCode } = useSignUpByEmailFormStore.getState();
+
     postCheckCode(
       { email, authNum: verificationCode },
       {
+        onSuccess: () => {},
         onError: () => {
-          ref.current?.focus();
+          verificationCodeRef.current?.focus();
         },
       },
     );
   };
 
   useEffect(() => {
-    if (!isSuccessSendCode || isSuccess) return;
+    if (!isSuccessSendCode || isSuccessCheckCode) return;
 
     const timer = setInterval(() => {
       setTimeLeft(timeLeft - INTERVAL);
     }, INTERVAL);
 
-    if (isTimeOver) {
+    if (isTimeOver || hasEmailChangedSinceSendCodeRequest) {
       setVerificationCode("");
       clearInterval(timer);
     }
@@ -256,7 +265,8 @@ const VerificationCode = () => {
     isSuccessSendCode,
     setVerificationCode,
     isTimeOver,
-    isSuccess,
+    hasEmailChangedSinceSendCodeRequest,
+    isSuccessCheckCode,
   ]);
 
   const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
@@ -266,7 +276,7 @@ const VerificationCode = () => {
   const seconds = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
 
   let statusText = "인증코드 7자리를 입력해 주세요";
-  if (isSuccess) statusText = "인증되었습니다";
+  if (isSuccessCheckCode) statusText = "인증되었습니다";
   if (isCodeNotMatched) statusText = "인증코드를 다시 확인해 주세요";
   if (isTimeOver)
     statusText = "인증시간이 만료되었습니다. 재전송 버튼을 눌러주세요";
@@ -275,7 +285,7 @@ const VerificationCode = () => {
     <div>
       <div className="flex items-end justify-between gap-2">
         <Input
-          ref={ref}
+          ref={verificationCodeRef}
           componentType="outlinedText"
           id="verification-code"
           name="verificationCode"
@@ -287,10 +297,17 @@ const VerificationCode = () => {
           onChange={handleChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          isError={isError}
-          disabled={!isValidEmail || isErrorSendCode || isCodeNotSent}
+          isError={isTimeOver || isCodeNotMatched}
+          disabled={
+            !isValidEmail ||
+            !hasSentCode ||
+            isErrorSendCode ||
+            (isSuccessSendCode && hasEmailChangedSinceSendCodeRequest) ||
+            isSuccessCheckCode
+          }
           trailingNode={
             isSuccessSendCode &&
+            !hasEmailChangedSinceSendCodeRequest &&
             !isSuccessCheckCode && (
               <span
                 className={`body-2 ${isTimeOver ? "text-pink-500" : "text-grey-700"}`}
@@ -310,18 +327,22 @@ const VerificationCode = () => {
           onClick={handleCheckButtonClick}
           disabled={
             !isValidEmail ||
-            isError ||
+            isErrorSendCode ||
+            !hasSentCode ||
+            isCodeNotMatched ||
+            isTimeOver ||
             verificationCode.length < CODE_LENGTH ||
-            isSuccess
+            isSuccessCheckCode
           }
         >
           확인
         </Button>
       </div>
       <p
-        className={`body-3 pl-1 pr-3 pt-1 h-6 ${isError ? "text-pink-500" : "text-grey-500"}`}
+        className={`body-3 pl-1 pr-3 pt-1 h-6 ${isTimeOver || isCodeNotMatched ? "text-pink-500" : "text-grey-500"}`}
       >
-        {(isFocused || isSuccess || isError) && statusText}
+        {(isFocused || isSuccessCheckCode || isTimeOver || isCodeNotMatched) &&
+          statusText}
       </p>
     </div>
   );
