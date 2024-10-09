@@ -8,18 +8,24 @@ import "../src/global.css";
 
 initialize();
 
-const WithProviders = (Story, context) => {
+const ReactQueryProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = useCreateQueryClient();
 
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+};
+
+const WithProviders = (Story, context) => {
   const { initialEntries, initialIndex } =
     context.parameters.memoryRouter || {};
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={initialEntries} initialIndex={initialIndex}>
+    <MemoryRouter initialEntries={initialEntries} initialIndex={initialIndex}>
+      <ReactQueryProvider>
         <Story />
-      </MemoryRouter>
-    </QueryClientProvider>
+      </ReactQueryProvider>
+    </MemoryRouter>
   );
 };
 
