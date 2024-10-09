@@ -449,18 +449,6 @@ const PasswordConfirm = () => {
 const SignUpByEmailForm = () => {
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
 
-  const checkCodeResponseCacheArr = useMutationState<
-    MutationState<
-      CheckVerificationCodeResponse,
-      Error,
-      CheckVerificationCodeRequestData
-    >
-  >({
-    filters: {
-      mutationKey: ["checkVerificationCode"],
-    },
-  });
-
   const {
     handleOpen: handleEmptyFieldsSnackBar,
     onClose: onCloseEmptyFieldsSnackBar,
@@ -505,31 +493,7 @@ const SignUpByEmailForm = () => {
       return;
     }
 
-    // 인증 코드 확인 요청에 대한 마지막 응답
-    const lastCheckCodeResponse =
-      checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1];
-    const hasEmailChangedSinceCodeCheckRequest =
-      lastCheckCodeResponse.variables?.email !== email;
-
-    if (hasEmailChangedSinceCodeCheckRequest) {
-      alert("인증코드를 확인해 주세요");
-      return;
-    }
-
-    const isVerificationCodeCorrect =
-      lastCheckCodeResponse.status === "success";
-
-    if (!isVerificationCodeCorrect) {
-      // todo: snackbar 띄우기
-      alert("인증코드를 확인해 주세요");
-      return;
-    }
-
-    const canSignUp =
-      isValidEmail &&
-      isValidPassword &&
-      isValidConfirmPassword &&
-      isVerificationCodeCorrect;
+    const canSignUp = isValidEmail && isValidPassword && isValidConfirmPassword;
 
     if (canSignUp) postSignUpByEmail({ email, password });
   };
