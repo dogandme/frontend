@@ -108,12 +108,7 @@ export const useUserInfoRegistrationFormStore =
     setNickname: (nickname) => set({ nickname }),
     setGender: (gender) => set({ gender }),
     setAgeRange: (birth) => set({ ageRange: birth }),
-    setRegion: (region) =>
-      set({
-        region: region.sort((prev, cur) =>
-          prev.address.localeCompare(cur.address),
-        ),
-      }),
+    setRegion: (region) => set({ region }),
     setCheckList: (checkList) => set({ checkList }),
   }));
 
