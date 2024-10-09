@@ -238,7 +238,6 @@ const PhotoInput = () => {
         type="file"
         accept=".jpeg,.jpg,.png,.webp"
         multiple
-        max={5}
         className="sr-only"
         ref={inputRef}
         id="images"
