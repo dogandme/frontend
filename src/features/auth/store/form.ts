@@ -1,54 +1,59 @@
 import { create } from "zustand";
+import type { PetInfoFormData } from "../api";
 import type { LatLng } from "../api/region";
 
-interface PetInfoStore {
-  profileImage: File | null;
-  name: string;
+interface PetInfoFormStates extends Omit<PetInfoFormData, "profile"> {
   isValidName: boolean;
-  breed: string;
-  characterList: string[];
-  introduce: string;
+  profile: Promise<File | null>;
+}
 
-  setProfileImage: (profileImage: File | null) => void;
+interface PetInfoFormActions {
+  setProfile: (profile: Promise<File | null>) => void;
   setName: (name: string) => void;
   setIsValidName: (name: string) => void;
-  setBreed: (greed: string) => void;
-  setCharacterList: (character: string) => void;
-  setIntroduce: (introduce: string) => void;
+  setBreed: (breed: string) => void;
+  setPersonalities: (personality: string) => void;
+  setDescription: (description: string) => void;
 }
+
+const petInfoFormInitialState: PetInfoFormStates = {
+  profile: Promise.resolve(null),
+  name: "",
+  isValidName: true,
+  breed: "",
+  personalities: [],
+  description: "",
+};
 
 /**
  * public 폴더에 존재하는 기본 프로필 이미지를 사용합니다.
  * origin/{파일명} 을 통해 public 폴더에 접근하는 파일에 접근 할 수 있습니다.
  */
-export const usePetInfoStore = create<PetInfoStore>((set) => ({
-  profileImage: null,
-  name: "",
-  isValidName: true,
-  breed: "",
-  characterList: [],
-  introduce: "",
+export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
+  (set) => ({
+    ...petInfoFormInitialState,
 
-  setProfileImage: (profileImage: File | null) => set({ profileImage }),
-  setName: (name: string) => set({ name }),
-  setIsValidName: (name: string) =>
-    set(() => {
-      const isValidName = new RegExp("^[가-힣a-zA-Z]{1,20}$").test(name);
-      return { isValidName };
-    }),
-  setBreed: (breed: string) => set({ breed }),
-  setCharacterList: (character: string) =>
-    set((state) => {
-      // 배열에 character 값이 존재 할 경우 제거하고, 존재하지 않을 경우 추가합니다.
-      const isAlreadySelected = state.characterList.includes(character);
+    setProfile: (profile: Promise<File | null>) => set({ profile }),
+    setName: (name: string) => set({ name }),
+    setIsValidName: (name: string) =>
+      set(() => {
+        const isValidName = new RegExp("^[가-힣a-zA-Z]{1,20}$").test(name);
+        return { isValidName };
+      }),
+    setBreed: (breed: string) => set({ breed }),
+    setPersonalities: (character: string) =>
+      set((state) => {
+        // 배열에 character 값이 존재 할 경우 제거하고, 존재하지 않을 경우 추가합니다.
+        const isAlreadySelected = state.personalities.includes(character);
 
-      const newCharacter = isAlreadySelected
-        ? state.characterList.filter((c) => c !== character)
-        : [...state.characterList, character];
-      return { characterList: newCharacter };
-    }),
-  setIntroduce: (introduce: string) => set({ introduce }),
-}));
+        const newCharacter = isAlreadySelected
+          ? state.personalities.filter((c) => c !== character)
+          : [...state.personalities, character];
+        return { personalities: newCharacter };
+      }),
+    setDescription: (description: string) => set({ description }),
+  }),
+);
 
 interface LoginFormStore {
   email: string;

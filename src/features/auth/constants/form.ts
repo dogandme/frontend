@@ -1,4 +1,4 @@
-export const characterList = [
+export const personalities = [
   "호기심 많은",
   "활동적인",
   "사교적인",

@@ -12,7 +12,7 @@ import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
 import { usePostPetInfo } from "../api";
-import { characterList, dogBreeds } from "../constants/form";
+import { personalities, dogBreeds } from "../constants/form";
 import { usePetInfoStore } from "../store";
 
 const DEFAULT_PROFILE_IMAGE = "/default-image.png";
@@ -47,21 +47,16 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const ProfileInput = () => {
-  const profileImage = usePetInfoStore((state) => state.profileImage);
-  const setProfileImage = usePetInfoStore((state) => state.setProfileImage);
+  const setProfile = usePetInfoStore((state) => state.setProfile);
   // 바텀시트를 조작하기 위한 state
   const [isOpen, setOpen] = useState<boolean>(false);
   // actual dom 의 input 태그를 조작하기 위한 ref , state
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputKey, setInputKey] = useState<number>(0);
   // 프로필 이미지를 보여주기 위한 optimistic image Url state
-  const [optimisticUrl, setOptimisticUrl] = useState(() =>
-    profileImage ? URL.createObjectURL(profileImage) : DEFAULT_PROFILE_IMAGE,
-  );
-  // compressFile 의 race-condition 을 방지하기 위한 ref
-  const compressedFileRef = useRef<File | null>(null);
+  const [optimisticUrl, setOptimisticUrl] = useState(DEFAULT_PROFILE_IMAGE);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
       return;
@@ -70,14 +65,9 @@ export const ProfileInput = () => {
      * 압축 과정 동안 이미지가 변경되지 않는 것을 방지하기 위해 낙관적 업데이트를 사용합니다.
      */
     setOptimisticUrl(URL.createObjectURL(file));
-    /* compressFile 이 시행되는 동안 발생 할 수 있는 race-condition 문제를 방지하기 위한 로직 */
-    compressedFileRef.current = file;
-    const compressedFile = await compressFile(file);
-    if (file !== compressedFileRef.current) {
-      return;
-    }
+    const compressedFile = compressFile(file);
 
-    setProfileImage(compressedFile);
+    setProfile(compressedFile);
   };
 
   // 바텀 시트를 여닫는 핸들러
@@ -86,7 +76,7 @@ export const ProfileInput = () => {
 
   // 사진을 삭제하는 핸들러
   const handleDelete = () => {
-    setProfileImage(null);
+    setProfile(Promise.resolve(null));
     setOptimisticUrl(DEFAULT_PROFILE_IMAGE);
     setInputKey((prev) => prev + 1);
   };
@@ -127,7 +117,7 @@ export const ProfileInput = () => {
             </Select.Option>
             <Select.Option
               onClick={handleDelete}
-              disabled={profileImage === null}
+              disabled={optimisticUrl === DEFAULT_PROFILE_IMAGE}
             >
               삭제 하기
             </Select.Option>
@@ -229,17 +219,17 @@ export const BreedInput = () => {
 };
 
 export const CharacterInput = () => {
-  const setCharacterList = usePetInfoStore((state) => state.setCharacterList);
+  const setPersonalities = usePetInfoStore((state) => state.setPersonalities);
 
   return (
     <div>
       <p className="title-3 pb-2 text-grey-700">어떤 아이인가요?</p>
       <div className="flex flex-wrap content-center items-center gap-2 self-stretch">
-        {characterList.map((character, idx) => (
+        {personalities.map((personality, idx) => (
           <SelectChip
             key={idx}
-            label={character}
-            onClick={() => setCharacterList(character)}
+            label={personality}
+            onClick={() => setPersonalities(personality)}
           />
         ))}
       </div>
@@ -248,14 +238,14 @@ export const CharacterInput = () => {
 };
 
 export const IntroduceTextArea = () => {
-  const setIntroduce = usePetInfoStore((state) => state.setIntroduce);
+  const setDescription = usePetInfoStore((state) => state.setDescription);
   return (
     <TextArea
       id="introduce"
       label="간단히 소개해 주세요"
       placeholder="우리 댕댕이를 간단히 소개해주세요"
       statusText=""
-      onChange={(e) => setIntroduce(e.target.value)}
+      onChange={(e) => setDescription(e.target.value)}
     />
   );
 };
@@ -273,10 +263,11 @@ export const SubmitButton = () => {
     <Snackbar onClose={onClose}>필수 항목을 모두 입력해 주세요</Snackbar>
   ));
 
-  const handleClick = () => {
+  const handleClick = async () => {
     const petInfoForm = usePetInfoStore.getState();
-    const { isValidName, name, breed, characterList, introduce, profileImage } =
+    const { isValidName, name, breed, personalities, description, profile } =
       petInfoForm;
+    const resolvedProfile = await profile;
     const { token } = useAuthStore.getState();
 
     const isNameEmpty = name.length === 0;
@@ -299,9 +290,9 @@ export const SubmitButton = () => {
       formObject: {
         name,
         breed,
-        personalities: characterList,
-        description: introduce,
-        profile: profileImage,
+        personalities,
+        description,
+        profile: resolvedProfile,
       },
     });
   };
