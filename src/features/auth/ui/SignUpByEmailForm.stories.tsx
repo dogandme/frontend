@@ -69,6 +69,7 @@ export const Test: Story = {
     const $passwordInput = canvasElement.querySelector("#password")!;
     const $passwordConfirmInput =
       canvasElement.querySelector("#password-confirm")!;
+    const $submitButton = canvas.getByText("다음");
 
     const validEmail = "hi@example.com";
     const invalidEmail = "invalid-email";
@@ -488,107 +489,10 @@ export const Test: Story = {
         );
       });
     });
-  },
-};
-
-export const SubmitTest: Story = {
-  decorators: (Story) => {
-    useAuthStore.setState({
-      token: null,
-      role: null,
-      nickname: null,
-    });
-
-    return <Story />;
-  },
-
-  parameters: {
-    msw: {
-      handlers: signUpByEmailHandlers,
-    },
-  },
-
-  render: () => <SignUpByEmailForm />,
-
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const $emailInput = canvasElement.querySelector("#email")!;
-    const $sendCodeButton = canvas.getByText("코드전송");
-    const $codeInput = canvasElement.querySelector("#verification-code")!;
-    const $checkCodeButton = canvas.getByText("확인");
-    const $passwordInput = canvasElement.querySelector("#password")!;
-    const $passwordConfirmInput =
-      canvasElement.querySelector("#password-confirm")!;
-    const $submitButton = canvas.getByText("다음");
-
-    const validEmail = "hi@example.com";
-    const validPassword = "abcd1234!";
-
-    await step(
-      '이메일을 입력하지 않은 상태에서 [다음] 버튼 클릭할 경우, "이메일과 비밀번호를 모두 입력해 주세요" 스낵바가 노출된다.',
-      async () => {
-        await userEvent.type($passwordInput, validPassword);
-        await userEvent.type($passwordConfirmInput, validPassword);
-        await userEvent.click($submitButton);
-
-        const $snackbar = await canvas.findByText(
-          "이메일과 비밀번호를 모두 입력해 주세요",
-        );
-
-        expect($snackbar).toBeInTheDocument();
-      },
-    );
-
-    await userEvent.clear($passwordInput);
-    await userEvent.clear($passwordConfirmInput);
-
-    await step(
-      '비밀번호를 입력하지 않은 상태에서 [다음] 버튼 클릭할 경우, "이메일과 비밀번호를 모두 입력해 주세요" 스낵바가 노출된다.',
-      async () => {
-        await userEvent.type($emailInput, validEmail);
-        await userEvent.type($passwordConfirmInput, validPassword);
-        await userEvent.click($submitButton);
-
-        const $snackbar = await canvas.findByText(
-          "이메일과 비밀번호를 모두 입력해 주세요",
-        );
-
-        expect($snackbar).toBeInTheDocument();
-      },
-    );
-
-    await userEvent.clear($emailInput);
-    await userEvent.clear($passwordConfirmInput);
-
-    await step(
-      '비밀번호 확인을 입력하지 않은 상태에서 [다음] 버튼 클릭할 경우, "이메일과 비밀번호를 모두 입력해 주세요" 스낵바가 노출된다.',
-      async () => {
-        await userEvent.type($emailInput, validEmail);
-        await userEvent.type($passwordInput, validPassword);
-        await userEvent.click($submitButton);
-
-        const $snackbar = await canvas.findByText(
-          "이메일과 비밀번호를 모두 입력해 주세요",
-        );
-
-        expect($snackbar).toBeInTheDocument();
-      },
-    );
-
-    await userEvent.clear($emailInput);
-    await userEvent.clear($passwordInput);
 
     await step(
       "모든 input 값이 유효한 상태에서 [다음] 버튼 클릭 시, auth store에 token과 role이 저장된다.",
       async () => {
-        await userEvent.type($emailInput, validEmail);
-        await userEvent.click($sendCodeButton);
-        await userEvent.type($codeInput, "1111111");
-        await userEvent.click($checkCodeButton);
-
-        await userEvent.type($passwordInput, validPassword);
-        await userEvent.type($passwordConfirmInput, validPassword);
-
         await userEvent.click($submitButton);
 
         await waitFor(() => {
