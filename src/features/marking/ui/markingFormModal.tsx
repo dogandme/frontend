@@ -322,20 +322,20 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 
     const center = map.getCenter();
 
+    if (!region) {
+      throw new Error(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
+    }
+
+    if (!visibility || images.length === 0) {
+      throw new Error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
+    }
+
     const compressedFiles = await Promise.all(
       images.map((image) => image.file),
     );
 
     const lat = center.lat();
     const lng = center.lng();
-
-    if (!region) {
-      throw new Error(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
-    }
-
-    if (!visibility || compressedFiles.length === 0) {
-      throw new Error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
-    }
 
     postMarkingData(
       {
