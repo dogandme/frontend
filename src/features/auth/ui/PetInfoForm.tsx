@@ -265,8 +265,22 @@ export const SubmitButton = () => {
 
   const handleClick = async () => {
     const petInfoForm = usePetInfoStore.getState();
-    const { isValidName, name, breed, personalities, description, profile } =
-      petInfoForm;
+    const {
+      isValidName,
+      name,
+      breed,
+      personalities,
+      description,
+      profile,
+      isCompressing,
+    } = petInfoForm;
+
+    if (isCompressing) {
+      // TODO 에러 바운더리 생성되면 로직 변경하기
+      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      return;
+    }
+
     const resolvedProfile = await profile;
     const { token } = useAuthStore.getState();
 

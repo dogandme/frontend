@@ -5,6 +5,7 @@ import type { LatLng } from "../api/region";
 interface PetInfoFormStates extends Omit<PetInfoFormData, "profile"> {
   isValidName: boolean;
   profile: Promise<File | null>;
+  isCompressing: boolean;
 }
 
 interface PetInfoFormActions {
@@ -23,6 +24,7 @@ const petInfoFormInitialState: PetInfoFormStates = {
   breed: "",
   personalities: [],
   description: "",
+  isCompressing: false,
 };
 
 /**
@@ -33,7 +35,10 @@ export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
   (set) => ({
     ...petInfoFormInitialState,
 
-    setProfile: (profile: Promise<File | null>) => set({ profile }),
+    setProfile: (profile: Promise<File | null>) => {
+      set({ profile, isCompressing: true });
+      profile.then(() => set({ isCompressing: false }));
+    },
     setName: (name: string) => set({ name }),
     setIsValidName: (name: string) =>
       set(() => {
