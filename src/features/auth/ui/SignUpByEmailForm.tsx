@@ -21,55 +21,64 @@ const Email = () => {
 
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  const email = useSignUpByEmailFormStore((state) => state.email);
+  const isEmailEmpty = useSignUpByEmailFormStore((state) => state.isEmailEmpty);
+  const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
+  const hasEmailChangedSinceSendCodeRequest = useSignUpByEmailFormStore(
+    (state) => state.hasEmailChangedSinceSendCodeRequest,
+  );
+  const isTimeLeftLessThanOneMinute = useSignUpByEmailFormStore(
+    (state) => state.isTimeLeftLessThanOneMinute,
+  );
   const setEmail = useSignUpByEmailFormStore((state) => state.setEmail);
+  const setHasEmailChangedSinceCodeRequest = useSignUpByEmailFormStore(
+    (state) => state.setHasEmailChangedSinceSendCodeRequest,
+  );
+  const setTimeLeft = useSignUpByEmailFormStore((state) => state.setTimeLeft);
+
+  const {
+    mutate: postVerificationCode,
+    isError: isErrorSendCode,
+    isSuccess: isSuccessSendCode,
+    isIdle: isIdleSendCode,
+    variables,
+  } = usePostVerificationCode();
+
+  const checkCodeResponseCacheArr = useMutationState({
+    filters: {
+      mutationKey: ["checkVerificationCode"],
+    },
+  });
+  const checkCodeStatus =
+    checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1]?.status;
+  const isSuccessCheckCode = checkCodeStatus === "success";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: email } = e.target;
 
     setEmail(email);
+    setHasEmailChangedSinceCodeRequest(
+      typeof variables !== "undefined" && variables.email !== email,
+    );
   };
 
-  const isEmailEmpty = useSignUpByEmailFormStore((state) => state.isEmailEmpty);
-  const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
+  const isDuplicateEmail =
+    isErrorSendCode && !hasEmailChangedSinceSendCodeRequest;
 
-  // todo: error code에 따라 status text 변경
-  const {
-    mutate: postVerificationCode,
-    isError,
-    isSuccess,
-    variables,
-  } = usePostVerificationCode();
-
-  const setTimeLeft = useSignUpByEmailFormStore((state) => state.setTimeLeft);
-  const isTimeLeftLessThanOneMinute = useSignUpByEmailFormStore(
-    (state) => state.isTimeLeftLessThanOneMinute,
-  );
-
-  // 서버에 인증 코드 요청했을 때 보낸 email과 현재 입력된 email이 다를 경우
-  // [코드전송] 버튼을 누른 이후, email을 변경했을 때 고려
-  const hasEmailChangedSinceCodeRequest =
-    variables && variables.email !== email;
-
-  // todo 에러 코드나 메세지에 따라 중복된 이메일인지 판단
-  // [코드전송] 버튼 누른 이후 이메일 입력값을 변경하지 않는다는 가정하에, 에러 응답이 오면 중복된 이메일로 판단
-  const isDuplicateEmail = isError && !hasEmailChangedSinceCodeRequest;
-
-  // [재전송] 버튼을 누를 수 없는 경우 (사용자에게 인증 코드가 성공적으로 전송됐다는 가정)
-  // 1. 코드 인증까지 1분 넘게 남은 경우
-  // 2. 사용자에게 코드 전송 후, 이메일 입력값을 수정하지 않은 경우
   const canNotResendCode =
-    isSuccess &&
-    !isTimeLeftLessThanOneMinute &&
-    !hasEmailChangedSinceCodeRequest;
+    isSuccessSendCode &&
+    !hasEmailChangedSinceSendCodeRequest &&
+    (!isTimeLeftLessThanOneMinute || isSuccessCheckCode);
 
   const handleSendVerificationCode = () => {
+    const { email } = useSignUpByEmailFormStore.getState();
+
     handleOpen();
     postVerificationCode(
       { email },
       {
         onSuccess: () => {
           setTimeLeft(1000 * 60 * 3);
+          setHasEmailChangedSinceCodeRequest(false);
         },
       },
     );
@@ -100,6 +109,7 @@ const Email = () => {
           id="email"
           name="email"
           label="이메일"
+          disabled={isSuccessCheckCode}
           isError={(!isEmailEmpty && !isValidEmail) || isDuplicateEmail}
           placeholder="이메일을 입력해 주세요"
           statusText={undefined}
@@ -108,7 +118,7 @@ const Email = () => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
-        {isSuccess ? (
+        {isIdleSendCode ? (
           <Button
             type="button"
             colorType="secondary"
@@ -117,9 +127,9 @@ const Email = () => {
             fullWidth={false}
             className="w-[6.5rem]"
             onClick={handleSendVerificationCode}
-            disabled={!isValidEmail || isDuplicateEmail || canNotResendCode}
+            disabled={!isValidEmail || isDuplicateEmail || isSuccessCheckCode}
           >
-            재전송
+            코드전송
           </Button>
         ) : (
           <Button
@@ -130,9 +140,14 @@ const Email = () => {
             fullWidth={false}
             className="w-[6.5rem]"
             onClick={handleSendVerificationCode}
-            disabled={!isValidEmail || isDuplicateEmail}
+            disabled={
+              !isValidEmail ||
+              isDuplicateEmail ||
+              isSuccessCheckCode ||
+              canNotResendCode
+            }
           >
-            코드전송
+            재전송
           </Button>
         )}
       </div>
