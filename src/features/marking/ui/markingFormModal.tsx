@@ -182,7 +182,7 @@ const PhotoInput = () => {
   const [inputKey, setInputKey] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [imageUrls, setImageUrls] = useState<ImageUrl[]>(() =>
+  const [optimisticUrls, setOptimisticUrl] = useState<ImageUrl[]>(() =>
     images.map((image) => ({
       url: URL.createObjectURL(image),
       name: image.name,
@@ -216,8 +216,8 @@ const PhotoInput = () => {
       .filter((newFile) => !images.some((image) => image.name === newFile.name))
       .slice(0, MAX_IMAGE_LENGTH - images.length);
 
-    setImageUrls([
-      ...imageUrls,
+    setOptimisticUrl([
+      ...optimisticUrls,
       ...AvailableNewFileArray.map((file) => ({
         url: URL.createObjectURL(file),
         name: file.name,
@@ -231,7 +231,7 @@ const PhotoInput = () => {
 
   const handleRemoveImage = (name: string) => {
     setImages(images.filter((image) => image.name !== name));
-    setImageUrls(imageUrls.filter((image) => image.name !== name));
+    setOptimisticUrl(optimisticUrls.filter((image) => image.name !== name));
 
     setInputKey((prev) => prev + 1);
   };
@@ -262,7 +262,7 @@ const PhotoInput = () => {
       </label>
       {/* 담긴 사진들 */}
       <ImgSlider>
-        {imageUrls.length < 5 && (
+        {optimisticUrls.length < 5 && (
           <ImgSlider.Item
             onClick={handleOpenAlbum}
             aria-label="마킹 게시글에 사진 추가하기"
@@ -270,7 +270,7 @@ const PhotoInput = () => {
             <PlusIcon />
           </ImgSlider.Item>
         )}
-        {imageUrls.map(({ url, name }) => (
+        {optimisticUrls.map(({ url, name }) => (
           <ImgSlider.ImgItem
             src={url}
             alt={name}
