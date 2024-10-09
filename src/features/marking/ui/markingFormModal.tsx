@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { MapSnackbar } from "@/entities/map/ui";
-import { compressFileArray } from "@/shared/lib";
+import { compressFile } from "@/shared/lib";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -170,19 +170,12 @@ const PostVisibilitySelect = () => {
   );
 };
 
-interface ImageUrl {
-  url: string;
-  name: string;
-}
-
 const PhotoInput = () => {
   const images = useMarkingFormStore((state) => state.images);
   const setImages = useMarkingFormStore((state) => state.setImages);
 
   const [inputKey, setInputKey] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const [optimisticUrls, setOptimisticUrl] = useState<ImageUrl[]>([]);
 
   const handleOpenAlbum = () => {
     inputRef.current?.click();
@@ -203,30 +196,22 @@ const PhotoInput = () => {
       console.error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
     }
 
-    /**
-     * 프로필 인풋에 새로운 사진이 추가 되었을 때
-     * 기존 이미지와 중복되지 않는 새로운 파일만 필터링 하고 제출 가능한 이미지들을  낙관적으로 렌더링 합니다.
-     */
     const AvailableNewFileArray = [...newFiles]
       .filter((newFile) => !images.some(({ name }) => name === newFile.name))
       .slice(0, MAX_IMAGE_LENGTH - images.length);
 
-    setOptimisticUrl([
-      ...optimisticUrls,
+    setImages([
+      ...images,
       ...AvailableNewFileArray.map((file) => ({
-        url: URL.createObjectURL(file),
         name: file.name,
+        url: URL.createObjectURL(file),
+        file: compressFile(file),
       })),
     ]);
-
-    const compressedNewFiles = compressFileArray(AvailableNewFileArray);
-    setImages([...images, ...compressedNewFiles]);
   };
 
   const handleRemoveImage = (name: string) => {
     setImages(images.filter((image) => image.name !== name));
-    setOptimisticUrl(optimisticUrls.filter((image) => image.name !== name));
-
     setInputKey((prev) => prev + 1);
   };
 
@@ -255,7 +240,7 @@ const PhotoInput = () => {
       </label>
       {/* 담긴 사진들 */}
       <ImgSlider>
-        {optimisticUrls.length < 5 && (
+        {images.length < 5 && (
           <ImgSlider.Item
             onClick={handleOpenAlbum}
             aria-label="마킹 게시글에 사진 추가하기"
@@ -263,7 +248,7 @@ const PhotoInput = () => {
             <PlusIcon />
           </ImgSlider.Item>
         )}
-        {optimisticUrls.map(({ url, name }) => (
+        {images.map(({ url, name }) => (
           <ImgSlider.ImgItem
             src={url}
             alt={name}
@@ -348,7 +333,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
     }
 
-    if (!visibility || images.length === 0) {
+    if (!visibility || compressedFiles.length === 0) {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
     }
 
