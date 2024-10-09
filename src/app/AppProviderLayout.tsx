@@ -10,8 +10,8 @@ export const AppProviderLayout = () => {
   return (
     // TODO 레이아웃 범위 디자이너와 상의 후 픽스하기
     <ReactQueryProvider>
-      <MainLayout>
-        <GoogleMapsProvider>
+      <GoogleMapsProvider>
+        <MainLayout>
           {/* 
       // ! TODO
       // ! 해당 컴포넌트는 개발 환경에서만 사용 되는 컴포넌트 입니다.
@@ -22,8 +22,8 @@ export const AppProviderLayout = () => {
           <HistoryTracker />
           <OverlayPortal />
           <Outlet />
-        </GoogleMapsProvider>
-      </MainLayout>
+        </MainLayout>
+      </GoogleMapsProvider>
     </ReactQueryProvider>
   );
 };
