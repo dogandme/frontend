@@ -54,8 +54,8 @@ export const ProfileInput = () => {
   // actual dom 의 input 태그를 조작하기 위한 ref , state
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputKey, setInputKey] = useState<number>(0);
-  // 프로필 이미지를 보여주기 위한 state
-  const [profileUrl, setProfileUrl] = useState(() =>
+  // 프로필 이미지를 보여주기 위한 optimistic image Url state
+  const [optimisticUrl, setOptimisticUrl] = useState(() =>
     profileImage ? URL.createObjectURL(profileImage) : DEFAULT_PROFILE_IMAGE,
   );
   // compressFile 의 race-condition 을 방지하기 위한 ref
@@ -69,7 +69,7 @@ export const ProfileInput = () => {
     /**
      * 압축 과정 동안 이미지가 변경되지 않는 것을 방지하기 위해 낙관적 업데이트를 사용합니다.
      */
-    setProfileUrl(URL.createObjectURL(file));
+    setOptimisticUrl(URL.createObjectURL(file));
     /* compressFile 이 시행되는 동안 발생 할 수 있는 race-condition 문제를 방지하기 위한 로직 */
     compressedFileRef.current = file;
     const compressedFile = await compressFile(file);
@@ -87,7 +87,7 @@ export const ProfileInput = () => {
   // 사진을 삭제하는 핸들러
   const handleDelete = () => {
     setProfileImage(null);
-    setProfileUrl(DEFAULT_PROFILE_IMAGE);
+    setOptimisticUrl(DEFAULT_PROFILE_IMAGE);
     setInputKey((prev) => prev + 1);
   };
 
@@ -101,7 +101,7 @@ export const ProfileInput = () => {
       <button
         className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(${profileUrl})`,
+          backgroundImage: `url(${optimisticUrl})`,
         }}
         onClick={onOpen}
         aria-label="profile-image-button"
