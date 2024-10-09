@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import { DevTools } from "./DevTools";
-import { FooterNavigationBar } from "./FooterNavigationBar";
 import { GoogleMapsProvider } from "./GoogleMapsProvider";
 import { HistoryTracker } from "./HistoryTracker";
 import { MainLayout } from "./MainLayout";
@@ -24,7 +23,6 @@ export const AppProviderLayout = () => {
         <MainLayout>
           <Outlet />
         </MainLayout>
-        <FooterNavigationBar />
       </GoogleMapsProvider>
     </ReactQueryProvider>
   );
