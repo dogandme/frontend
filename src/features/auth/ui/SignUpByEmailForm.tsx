@@ -98,10 +98,7 @@ const Email = () => {
   };
 
   const shouldShowEmailStatusText =
-    isFocused ||
-    isValidEmail ||
-    (!isValidEmail && !isEmailEmpty) ||
-    isDuplicateEmail;
+    isFocused || isValidEmail || !isEmailEmpty || isDuplicateEmail;
 
   const statusTextColorStyle = isDuplicateEmail
     ? "text-pink-500"
@@ -308,7 +305,6 @@ const VerificationCode = () => {
           }
           trailingNode={
             isSuccessSendCode &&
-            !hasEmailChangedSinceSendCodeRequest &&
             !isSuccessCheckCode && (
               <span
                 className={`body-2 ${isTimeOver ? "text-pink-500" : "text-grey-700"}`}
