@@ -2,19 +2,10 @@ import { initialize, mswLoader } from "msw-storybook-addon";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import type { Preview } from "@storybook/react";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { useCreateQueryClient } from "../src/app/ReactQueryProvider/useCreateQueryClient";
+import { ReactQueryProvider } from "../src/app/ReactQueryProvider/ReactQueryProvider";
 import "../src/global.css";
 
 initialize();
-
-const ReactQueryProvider = ({ children }: { children: React.ReactNode }) => {
-  const queryClient = useCreateQueryClient();
-
-  return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
-};
 
 const WithProviders = (Story, context) => {
   const { initialEntries, initialIndex } =
