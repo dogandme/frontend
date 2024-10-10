@@ -174,7 +174,6 @@ const Email = () => {
 };
 
 const VerificationCode = () => {
-  const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
   const hasEmailChangedSinceSendCodeRequest = useSignUpByEmailFormStore(
     (state) => state.hasEmailChangedSinceSendCodeRequest,
   );
@@ -302,7 +301,6 @@ const VerificationCode = () => {
           onBlur={() => setIsFocused(false)}
           isError={isTimeOver || isCodeNotMatched}
           disabled={
-            !isValidEmail ||
             !hasSentCode ||
             isErrorSendCode ||
             (isSuccessSendCode && hasEmailChangedSinceSendCodeRequest) ||
@@ -329,9 +327,6 @@ const VerificationCode = () => {
           className="w-[6.5rem]"
           onClick={handleCheckButtonClick}
           disabled={
-            !isValidEmail ||
-            isErrorSendCode ||
-            !hasSentCode ||
             isCodeNotMatched ||
             isTimeOver ||
             verificationCode.length < CODE_LENGTH ||
