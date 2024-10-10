@@ -82,11 +82,11 @@ const Email = () => {
   const handleSendVerificationCode = () => {
     const { email } = useSignUpByEmailFormStore.getState();
 
-    handleOpen();
     postVerificationCode(
       { email },
       {
         onSuccess: () => {
+          handleOpen();
           setTimeLeft(1000 * 60 * 3);
           setHasEmailChangedSinceCodeRequest(false);
         },
