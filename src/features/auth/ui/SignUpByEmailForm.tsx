@@ -198,7 +198,7 @@ const VerificationCode = () => {
   } = usePostCheckVerificationCode();
 
   const hasCodeChangedSinceCheckCodeRequest =
-    typeof variables !== "undefined" && variables.authNum !== verificationCode;
+    variables?.authNum !== verificationCode;
 
   // 인증 코드 전송 요청에 대한 응답 캐시
   const sendCodeResponseCacheArr = useMutationState<
