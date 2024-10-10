@@ -47,23 +47,19 @@ interface ProfileResponse {
   content: UserInfo;
 }
 
-interface ProfileRequest extends Pick<AuthStore, "token"> {
-  nickname: string | null;
+interface ProfileRequest {
+  token: NonNullable<AuthStore["token"]>;
+  nickname: NonNullable<AuthStore["nickname"]>;
 }
 
 export const getProfile = async ({
   nickname,
   token,
-}: {
-  nickname: string;
-  token: AuthStore["token"];
-}): Promise<ProfileResponse> => {
-  const headers = new Headers();
-  if (token) {
-    headers.append("Authorization", token);
-  }
+}: ProfileRequest): Promise<ProfileResponse> => {
   const response = await fetch(PROFILE_END_POINT.PROFILE(nickname), {
-    headers,
+    headers: {
+      Authorization: token,
+    },
   });
 
   const data: ProfileResponse = await response.json();
@@ -74,12 +70,14 @@ export const getProfile = async ({
   return data;
 };
 
-export const useGetProfile = ({ nickname, token }: ProfileRequest) => {
+export const useGetProfile = ({
+  nickname,
+  token,
+}: Pick<AuthStore, "nickname" | "token">) => {
   return useQuery({
     queryKey: ["profile", nickname, token],
-    queryFn: nickname ? () => getProfile({ nickname, token }) : skipToken,
-
-    enabled: !!nickname,
+    queryFn:
+      nickname && token ? () => getProfile({ nickname, token }) : skipToken,
     staleTime: 1000 * 60 * 10, // 10분간 데이터는 캐시된 상태로 사용
     select: (data) => data?.content,
   });
