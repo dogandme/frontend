@@ -236,7 +236,6 @@ const VerificationCode = () => {
     postCheckCode(
       { email, authNum: verificationCode },
       {
-        onSuccess: () => {},
         onError: () => {
           verificationCodeRef.current?.focus();
         },
