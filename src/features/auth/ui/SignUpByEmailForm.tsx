@@ -90,6 +90,9 @@ const Email = () => {
           setTimeLeft(1000 * 60 * 3);
           setHasEmailChangedSinceCodeRequest(false);
         },
+        onError: () => {
+          setHasEmailChangedSinceCodeRequest(false);
+        },
       },
     );
   };
