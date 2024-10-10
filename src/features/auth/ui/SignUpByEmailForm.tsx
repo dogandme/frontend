@@ -65,9 +65,10 @@ const Email = () => {
     const { value: email } = e.target;
 
     setEmail(email);
-    setHasEmailChangedSinceCodeRequest(
-      typeof variables !== "undefined" && variables.email !== email,
-    );
+
+    if (typeof variables !== "undefined") {
+      setHasEmailChangedSinceCodeRequest(variables.email !== email);
+    }
   };
 
   const isDuplicateEmail =
