@@ -172,7 +172,7 @@ interface SignUpByEmailFormState {
 interface SignUpByEmailFormActions {
   setEmail: (email: string) => void;
   setVerificationCode: (verificationCode: string) => void;
-  setTimeLeft: (timer: number) => void;
+  setTimeLeft: (timeLeft: number) => void;
 
   setPassword: (password: string) => void;
   setConfirmPassword: (passwordConfirm: string) => void;
@@ -217,8 +217,8 @@ export const useSignUpByEmailFormStore = create<
       isValidEmail: validateEmail(email),
     }),
   setVerificationCode: (verificationCode) => set({ verificationCode }),
-  setTimeLeft: (timer) =>
-    set({ timeLeft: timer, isTimeLeftLessThanOneMinute: timer <= 1000 * 60 }),
+  setTimeLeft: (timeLeft) =>
+    set({ timeLeft, isTimeLeftLessThanOneMinute: timeLeft <= 1000 * 60 }),
   setPassword: (password) => {
     const { confirmPassword } = get();
 
