@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
+import { compressFile } from "@/shared/lib";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
@@ -11,7 +12,7 @@ import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
 import { usePostPetInfo } from "../api";
-import { characterList, dogBreeds } from "../constants/form";
+import { personalities, dogBreeds } from "../constants/form";
 import { usePetInfoStore } from "../store";
 
 const DEFAULT_PROFILE_IMAGE = "/default-image.png";
@@ -46,22 +47,27 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const ProfileInput = () => {
-  const profileImage = usePetInfoStore((state) => state.profileImage);
-  const setProfileImage = usePetInfoStore((state) => state.setProfileImage);
+  const profile = usePetInfoStore((state) => state.profile);
+  const setProfile = usePetInfoStore((state) => state.setProfile);
   // 바텀시트를 조작하기 위한 state
   const [isOpen, setOpen] = useState<boolean>(false);
   // actual dom 의 input 태그를 조작하기 위한 ref , state
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputKey, setInputKey] = useState<number>(0);
-  // 프로필 이미지를 보여주기 위한 state
-  const [profileUrl, setProfileUrl] = useState(() =>
-    profileImage ? URL.createObjectURL(profileImage) : DEFAULT_PROFILE_IMAGE,
-  );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setProfileImage(file!);
-    setProfileUrl(URL.createObjectURL(file!));
+    if (!file) {
+      return;
+    }
+    /**
+     * 압축 과정 동안 이미지가 변경되지 않는 것을 방지하기 위해 낙관적 업데이트를 사용합니다.
+     */
+    setProfile({
+      file: compressFile(file),
+      name: file.name,
+      url: URL.createObjectURL(file),
+    });
   };
 
   // 바텀 시트를 여닫는 핸들러
@@ -70,7 +76,11 @@ export const ProfileInput = () => {
 
   // 사진을 삭제하는 핸들러
   const handleDelete = () => {
-    setProfileImage(null);
+    setProfile({
+      file: Promise.resolve(null),
+      name: "",
+      url: DEFAULT_PROFILE_IMAGE,
+    });
     setInputKey((prev) => prev + 1);
   };
 
@@ -84,7 +94,7 @@ export const ProfileInput = () => {
       <button
         className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(${profileUrl})`,
+          backgroundImage: `url(${profile.url})`,
         }}
         onClick={onOpen}
         aria-label="profile-image-button"
@@ -110,7 +120,7 @@ export const ProfileInput = () => {
             </Select.Option>
             <Select.Option
               onClick={handleDelete}
-              disabled={profileImage === null}
+              disabled={profile.url === DEFAULT_PROFILE_IMAGE}
             >
               삭제 하기
             </Select.Option>
@@ -212,17 +222,17 @@ export const BreedInput = () => {
 };
 
 export const CharacterInput = () => {
-  const setCharacterList = usePetInfoStore((state) => state.setCharacterList);
+  const setPersonalities = usePetInfoStore((state) => state.setPersonalities);
 
   return (
     <div>
       <p className="title-3 pb-2 text-grey-700">어떤 아이인가요?</p>
       <div className="flex flex-wrap content-center items-center gap-2 self-stretch">
-        {characterList.map((character, idx) => (
+        {personalities.map((personality, idx) => (
           <SelectChip
             key={idx}
-            label={character}
-            onClick={() => setCharacterList(character)}
+            label={personality}
+            onClick={() => setPersonalities(personality)}
           />
         ))}
       </div>
@@ -231,14 +241,14 @@ export const CharacterInput = () => {
 };
 
 export const IntroduceTextArea = () => {
-  const setIntroduce = usePetInfoStore((state) => state.setIntroduce);
+  const setDescription = usePetInfoStore((state) => state.setDescription);
   return (
     <TextArea
       id="introduce"
       label="간단히 소개해 주세요"
       placeholder="우리 댕댕이를 간단히 소개해주세요"
       statusText=""
-      onChange={(e) => setIntroduce(e.target.value)}
+      onChange={(e) => setDescription(e.target.value)}
     />
   );
 };
@@ -256,10 +266,25 @@ export const SubmitButton = () => {
     <Snackbar onClose={onClose}>필수 항목을 모두 입력해 주세요</Snackbar>
   ));
 
-  const handleClick = () => {
+  const handleClick = async () => {
     const petInfoForm = usePetInfoStore.getState();
-    const { isValidName, name, breed, characterList, introduce, profileImage } =
-      petInfoForm;
+    const {
+      isValidName,
+      name,
+      breed,
+      personalities,
+      description,
+      profile,
+      isCompressing,
+    } = petInfoForm;
+
+    if (isCompressing) {
+      // TODO 에러 바운더리 생성되면 로직 변경하기
+      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      return;
+    }
+
+    const resolvedProfile = await profile.file;
     const { token } = useAuthStore.getState();
 
     const isNameEmpty = name.length === 0;
@@ -282,9 +307,9 @@ export const SubmitButton = () => {
       formObject: {
         name,
         breed,
-        personalities: characterList,
-        description: introduce,
-        profile: profileImage,
+        personalities,
+        description,
+        profile: resolvedProfile,
       },
     });
   };

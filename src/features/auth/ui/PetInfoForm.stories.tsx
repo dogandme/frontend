@@ -52,8 +52,8 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       name: "",
       isValidName: true,
       breed: "",
-      characterList: [],
-      introduce: "",
+      personalities: [],
+      description: "",
     });
 
     useAuthStore.setState({
@@ -101,12 +101,12 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       await userEvent.clear($name);
       await userEvent.clear($textarea);
 
-      const { characterList } = usePetInfoStore.getState();
-      characterList.forEach((character) => {
-        if (character === "호기심 많은") {
+      const { personalities } = usePetInfoStore.getState();
+      personalities.forEach((personality) => {
+        if (personality === "호기심 많은") {
           userEvent.click($characterButton1!);
         }
-        if (character === "애착이 강한") {
+        if (personality === "애착이 강한") {
           userEvent.click($characterButton2!);
         }
       });
@@ -370,11 +370,11 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           );
           await userEvent.click($submit);
 
-          const { name, breed, introduce } = usePetInfoStore.getState();
+          const { name, breed, description } = usePetInfoStore.getState();
 
           expect(name).toBe("초코");
           expect(breed).toBe("푸들");
-          expect(introduce).toBe("안녕하세요 너무 귀여운 강아지 입니다.");
+          expect(description).toBe("안녕하세요 너무 귀여운 강아지 입니다.");
         },
       );
 
@@ -389,26 +389,26 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
       await step(
         "성격란을 클릭하지 않았을 때 상태에는 아무런 값도 저장되지 않는다.",
         async () => {
-          const { characterList } = usePetInfoStore.getState();
-          expect(characterList).toEqual([]);
+          const { personalities } = usePetInfoStore.getState();
+          expect(personalities).toEqual([]);
         },
       );
 
       await step("성격란을 클릭하면 상태엔 값이 적절히 저장된다.", async () => {
         await userEvent.click($characterButton1!);
 
-        await expect(usePetInfoStore.getState().characterList[0]).toEqual(
+        await expect(usePetInfoStore.getState().personalities[0]).toEqual(
           "호기심 많은",
         );
 
         await userEvent.click($characterButton2!);
-        await expect(usePetInfoStore.getState().characterList[1]).toEqual(
+        await expect(usePetInfoStore.getState().personalities[1]).toEqual(
           "애착이 강한",
         );
 
         // 이미 있는 것을 클릭 한 경우엔 폼에서 해당 값이 사라진다.
         await userEvent.click($characterButton1!);
-        await expect(usePetInfoStore.getState().characterList).toEqual([
+        await expect(usePetInfoStore.getState().personalities).toEqual([
           "애착이 강한",
         ]);
 
