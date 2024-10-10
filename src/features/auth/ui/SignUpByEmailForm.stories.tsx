@@ -38,6 +38,12 @@ export const Default: Story = {
     return <Story />;
   },
 
+  parameters: {
+    msw: {
+      handlers: signUpByEmailHandlers,
+    },
+  },
+
   render: () => <SignUpByEmailForm />,
 };
 
