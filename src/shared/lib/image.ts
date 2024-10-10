@@ -17,8 +17,7 @@ const defaultCompressOptions: CompressFileOptions = {
 };
 
 /**
- * compressFile 은 File 객체를 options 에 설정된 maxSize 보다 작은 크기로 압축합니다.
- * 파일 압축은 JPEG 포맷으로만 가능합니다.
+ * compressFile 은 File 객체를 options 에 설정된 maxSize 보다 작은 크기로 압축하고 extension 확장자로 변환하여 저장합니다.
  * canvas 를 이용해 이미지를 압축하며 , 파일의 너비와 높이를 원 사이즈 / compactSize 만큼의 비율로 크기를 줄입니다.
  * @param file 압축할 파일
  * @param options maxSize: 압축할 파일의 최대 크기, compactSize: 압축된 파일의 최소 크기 , quality: 압축 품질, extension: 압축할 파일의 확장자
@@ -47,8 +46,8 @@ export const compressFile: CompressFile = async (file, options) => {
    * result 는 reader 가 읽은 데이터를 base64 로 인코딩한 문자열 입니다.
    */
   const result = await new Promise<string>((resolve) => {
-    reader.onload = () => resolve(reader.result as string);
     reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
   });
   /**
    * 이미지의 src 를 base64 로 인코딩된 문자열로 설정합니다.
