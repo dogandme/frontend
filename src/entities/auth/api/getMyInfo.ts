@@ -1,5 +1,6 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
-import { MY_INFO_END_POINT } from "../constants";
+import { AuthStore } from "@/shared/store";
+import { MY_INFO_END_POINT, SOCIAL_TYPE } from "../constants";
 
 interface Region {
   id: number;
@@ -9,20 +10,20 @@ interface Region {
   subDistrict: string;
 }
 
-interface UserInfo {
+export interface MyInfo {
   email: string;
   gender: "MALE" | "FEMALE";
   age: 10 | 20 | 30 | 40 | 50 | 60;
   regions: Region[];
   nickLastModDt: string | null;
-  socialType: "NAVER" | "GOOGLE" | "EMAIL";
+  socialType: keyof typeof SOCIAL_TYPE;
   isPasswordSet: boolean;
 }
 
 interface UserInfoResponse {
   code: number;
   message: string;
-  content: UserInfo;
+  content: MyInfo;
 }
 
 const getMyInfo = async ({ token }: { token: string }) => {
@@ -39,12 +40,13 @@ const getMyInfo = async ({ token }: { token: string }) => {
     throw new Error(data.message);
   }
 
-  return response.json();
+  return data;
 };
 
-export const useGetMyInfo = ({ token }: { token?: string }) => {
-  return useQuery<UserInfoResponse, Error>({
+export const useGetMyInfo = ({ token }: Pick<AuthStore, "token">) => {
+  return useQuery({
     queryKey: ["myInfo"],
-    queryFn: token ? () => getMyInfo({ token }) : skipToken,
+    queryFn: typeof token === "string" ? () => getMyInfo({ token }) : skipToken,
+    select: (data) => data.content,
   });
 };
