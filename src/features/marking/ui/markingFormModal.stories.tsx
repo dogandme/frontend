@@ -176,10 +176,6 @@ export const Default: Story = {
     await step(
       "이미지 파일 업로드는 다음과 같은 결과들을 만족 해야 한다.",
       async () => {
-        const $fileUploadInput = canvasElement.querySelector(
-          "#images",
-        )! as HTMLInputElement;
-
         const $fileUploadButton =
           canvas.getByLabelText("마킹 게시글에 사진 추가하기");
 
@@ -194,10 +190,14 @@ export const Default: Story = {
         );
 
         await step("중복된 이미지 파일은 업로드 되지 않는다.", async () => {
+          const $fileUploadInput = canvasElement.querySelector(
+            "#images",
+          )! as HTMLInputElement;
+
           await userEvent.upload(
             $fileUploadInput,
             new File([""], "test3.jpg", {
-              type: "image/jpeg",
+              type: "image/jpg",
               lastModified: 3,
             }),
           );
@@ -208,7 +208,12 @@ export const Default: Story = {
 
         await step(
           "새로운 파일을 추가로 업로드 하여도 기존 이미지 파일들은 존재 한다.",
+
           async () => {
+            const $fileUploadInput = canvasElement.querySelector(
+              "#images",
+            )! as HTMLInputElement;
+
             const dummyFiles = [
               new File([""], "test5.jpg", {
                 type: "image/jpg",
