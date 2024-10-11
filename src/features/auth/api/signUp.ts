@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
@@ -249,8 +249,6 @@ export const usePutUserInfoRegistration = ({
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
 
-  const queryClient = useQueryClient();
-
   return useMutation<
     UserInfoRegistrationResponse,
     Error,
@@ -263,22 +261,6 @@ export const usePutUserInfoRegistration = ({
       setRole(role);
       setNickname(nickname);
       setToken(authorization);
-
-      queryClient.setQueryData(["profile", nickname], {
-        code: 200,
-        message: "success",
-        content: {
-          nickname,
-          role,
-          pet: null,
-          followers: [],
-          followings: [],
-          likes: [],
-          bookmarks: [],
-          tempCnt: 0,
-          markings: [],
-        },
-      });
 
       onSuccess();
     },

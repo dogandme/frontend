@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { skipToken, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getProfile } from "@/entities/profile/api";
+import { useMutation } from "@tanstack/react-query";
 import { useAuthStore, AuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";
@@ -82,23 +81,15 @@ export const usePostPetInfo = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
-  const queryClient = useQueryClient();
-
   return useMutation<PetInfoResponse, Error, PostPetInfoArgs>({
     mutationFn: postPetInfo,
     onSuccess: (data) => {
       const { role, authorization: token } = data.content;
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
-      const { nickname } = useAuthStore.getState();
 
       setRole(role);
       setToken(token);
       navigate(lastNoneAuthRoute);
-
-      queryClient.prefetchQuery({
-        queryKey: ["profile", nickname, token],
-        queryFn: nickname ? () => getProfile({ nickname, token }) : skipToken,
-      });
     },
 
     onError: (error) => {
