@@ -196,7 +196,7 @@ export const Default: Story = {
         await step("중복된 이미지 파일은 업로드 되지 않는다.", async () => {
           await userEvent.upload(
             $fileUploadInput,
-            new File([""], "test3.jpg", {
+            new File([""], "test3.jpeg", {
               type: "image/jpeg",
               lastModified: 3,
             }),
