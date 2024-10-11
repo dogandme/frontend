@@ -12,6 +12,7 @@ interface PetInfoFormStates extends Omit<PetInfoFormData, "profile"> {
   isValidName: boolean;
   profile: FileInfo;
   isCompressing: boolean;
+  inputKey: number;
 }
 
 interface PetInfoFormActions {
@@ -31,6 +32,7 @@ const petInfoFormInitialState: PetInfoFormStates = {
   personalities: [],
   description: "",
   isCompressing: false,
+  inputKey: 0,
 };
 
 export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
@@ -43,7 +45,7 @@ export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
      */
     setProfile: (profile: FileInfo) => {
       const { profile: prevProfile } = get();
-      set({ profile, isCompressing: true });
+      set({ profile, isCompressing: true, inputKey: get().inputKey + 1 });
 
       profile.file
         .catch((error) => {
@@ -52,6 +54,7 @@ export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
           set(() => ({
             profile: prevProfile,
             isCompressing: false,
+            inputKey: get().inputKey + 1,
           }));
         })
         .finally(() => set(() => ({ isCompressing: false })));

@@ -49,11 +49,11 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
 export const ProfileInput = () => {
   const profile = usePetInfoStore((state) => state.profile);
   const setProfile = usePetInfoStore((state) => state.setProfile);
+  const inputKey = usePetInfoStore((state) => state.inputKey);
   // 바텀시트를 조작하기 위한 state
   const [isOpen, setOpen] = useState<boolean>(false);
   // actual dom 의 input 태그를 조작하기 위한 ref , state
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [inputKey, setInputKey] = useState<number>(0);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -81,7 +81,6 @@ export const ProfileInput = () => {
       name: "",
       url: DEFAULT_PROFILE_IMAGE,
     });
-    setInputKey((prev) => prev + 1);
   };
 
   // 사진 선택하기 버튼을 클릭했을 때 input을 클릭하는 핸들기
