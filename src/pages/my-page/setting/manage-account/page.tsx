@@ -1,16 +1,30 @@
 import { usePasswordChangeModal } from "@/features/setting/hooks";
 import { useSettingPermission } from "@/features/setting/hooks";
 import { AccountCancellationModal } from "@/features/setting/ui";
+import type { MyInfo } from "@/entities/auth/api";
+import { useGetMyInfo } from "@/entities/auth/api";
+import { SOCIAL_TYPE } from "@/entities/auth/constants";
 import { useModal } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const AccountManagementPage = () => {
   const hasPermission = useSettingPermission("NONE");
+
+  const token = useAuthStore((state) => state.token);
+  const { data: userInfo } = useGetMyInfo({ token });
+
+  if (!userInfo) {
+    return null;
+  }
+
   if (!hasPermission) {
     return null;
   }
+
+  const { email, socialType, isPasswordSet } = userInfo;
 
   return (
     <>
@@ -18,8 +32,8 @@ export const AccountManagementPage = () => {
         label={<h1 className="title-1 text-grey-700">계정 관리</h1>}
       />
       <section className="flex flex-col gap-4 px-4 py-4">
-        <AccountEmail />
-        <PasswordChangeButton />
+        <AccountEmail email={email} socialType={socialType} />
+        <PasswordChangeButton isPasswordSet={isPasswordSet} />
         <DividerLine axis="row" />
         <AccountCancellationButton />
       </section>
@@ -27,37 +41,32 @@ export const AccountManagementPage = () => {
   );
 };
 
-const AccountEmail = () => {
-  // TODO API 요청이나 userInfo 에서 가져오기
-  const signUpMethod: "email" | "naver" | "google" = "email";
-  const email = "gaeun1234@gmail.com";
-
-  // 회원가입 시 사용 한 방법에 따라 결정되는 문구
-  // 이메일 회원 가입 시엔 이메일,  구글이나 네이버를 이용한 OAuth 의 경우엔 해당 서비스명이 표시됨
-  const emailFromText =
-    signUpMethod === "email"
-      ? "이메일"
-      : signUpMethod === "naver"
-        ? "네이버"
-        : "구글";
-
+const AccountEmail = ({
+  socialType,
+  email,
+}: Pick<MyInfo, "socialType" | "email">) => {
   return (
     <div className="setting-item">
-      <p>{emailFromText} 계정</p>
+      <p>{SOCIAL_TYPE[socialType]} 계정</p>
       <span className="text-grey-700 body-2">{email}</span>
     </div>
   );
 };
 
-const PasswordChangeButton = () => {
+const PasswordChangeButton = ({
+  isPasswordSet,
+}: Pick<MyInfo, "isPasswordSet">) => {
   const handleOpenPasswordChangeModal = usePasswordChangeModal();
 
   return (
     <button className="setting-item" onClick={handleOpenPasswordChangeModal}>
       <p>비밀번호 변경</p>
-      <span className="text-grey-500">
+      <div className="flex items-center text-grey-500">
+        <span className="body-2">
+          {isPasswordSet ? "●●●●●●●●" : "비밀번호를 설정해 주세요"}
+        </span>
         <ArrowRightIcon />
-      </span>
+      </div>
     </button>
   );
 };
