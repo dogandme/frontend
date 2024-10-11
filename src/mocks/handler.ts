@@ -9,9 +9,9 @@ import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
 // data
-import addressListData from "./data/addressList.json";
 import markingListData from "./data/markingList.json";
 import userInfoData from "./data/myInfo.json";
+import regionListData from "./data/regionList.json";
 
 interface UserInfo {
   nickname: string;
@@ -463,16 +463,13 @@ export const addressHandlers = [
       message: "입력하신 주소가 없습니다",
     });
   }),
-  http.get(
-    `${import.meta.env.VITE_API_BASE_URL}/addresses/search-by-location`,
-    () => {
-      return HttpResponse.json({
-        code: 200,
-        message: "good",
-        content: regionListData["CURRENT_LOCATION"],
-      });
-    },
-  ),
+  http.get(`${API_BASE_URL}/addresses/search-by-location`, () => {
+    return HttpResponse.json({
+      code: 200,
+      message: "good",
+      content: regionListData["CURRENT_LOCATION"],
+    });
+  }),
 ];
 
 /**
