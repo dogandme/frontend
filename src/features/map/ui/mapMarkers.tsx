@@ -1,5 +1,6 @@
 import { useGetMarkingList } from "@/features/marking/api";
 import { User, Pin, MultiplePin, Cluster } from "@/entities/map/ui";
+import { API_BASE_URL } from "@/shared/constants";
 import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
@@ -18,15 +19,15 @@ export const UserMarker = () => {
 export const PinMarker = () => {
   const { data: markersInfo } = useGetMarkingList();
 
-  return markersInfo?.map((markerInfo) => (
+  return markersInfo?.map(({ markingId, lat, lng, images }) => (
     <Pin
-      key={markerInfo.markingId}
+      key={markingId}
       position={{
-        lat: markerInfo.lat,
-        lng: markerInfo.lng,
+        lat: lat,
+        lng: lng,
       }}
-      imageUrl={markerInfo.images[0].imageUrl}
-      alt={markerInfo.images[0].id.toString()}
+      imageUrl={`${API_BASE_URL}/markings/image/${markingId}/${images[0]}`}
+      alt={images[0].id.toString()}
     />
   ));
 };
