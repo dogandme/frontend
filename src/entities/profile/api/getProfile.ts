@@ -1,4 +1,4 @@
-import { skipToken, useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AuthStore } from "@/shared/store";
 import { PROFILE_END_POINT } from "../constants";
 
@@ -74,11 +74,20 @@ export const useGetProfile = ({
   nickname,
   token,
 }: Pick<AuthStore, "nickname" | "token">) => {
+  const queryClient = useQueryClient();
+
   return useQuery({
     queryKey: ["profile", nickname, token],
     queryFn:
       nickname && token ? () => getProfile({ nickname, token }) : skipToken,
-    staleTime: 1000 * 60 * 10, // 10분간 데이터는 캐시된 상태로 사용
+    placeholderData: () => {
+      const cachedData = queryClient.getQueryData<ProfileResponse>([
+        "profile",
+        nickname,
+        token,
+      ]);
+      return cachedData;
+    },
     select: (data) => data?.content,
   });
 };
