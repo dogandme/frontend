@@ -24,21 +24,19 @@ export const SignUpLandingModal = ({
   return (
     <Modal modalType="fullPage">
       <Modal.Header onClick={() => handleNavigate(lastNoneAuthRoute)} />
-      <Modal.Content>
-        <section className="flex flex-col px-4 py-8 pb-32 gap-8">
-          <section className="flex px-4 flex-col justify-center items-center gap-2 self-stretch headline-3">
-            <h1>
-              <span className="text-tangerine-500">{nickname}</span>님
-            </h1>
-            <p>회원가입을 축하해요</p>
-          </section>
-          <div className="flex justify-center items-center">
-            <img src="/default-image.png" alt="landing-image" />
-          </div>
-          <section className="body-1 text-grey-700 text-center">
-            <p>반려동물을 등록하고</p>
-            <p>더 많은 혜택을 받아보세요</p>
-          </section>
+      <Modal.Content className="pb-32">
+        <section className="flex px-4 flex-col justify-center items-center gap-2 self-stretch headline-3">
+          <h1>
+            <span className="text-tangerine-500">{nickname}</span>님
+          </h1>
+          <p>회원가입을 축하해요</p>
+        </section>
+        <div className="flex justify-center items-center">
+          <img src="/default-image.png" alt="landing-image" />
+        </div>
+        <section className="body-1 text-grey-700 text-center">
+          <p>반려동물을 등록하고</p>
+          <p>더 많은 혜택을 받아보세요</p>
         </section>
       </Modal.Content>
       <Modal.Footer axis="col">
