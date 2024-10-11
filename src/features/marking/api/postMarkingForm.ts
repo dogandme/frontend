@@ -32,10 +32,15 @@ const postMarkingFormData = async ({
 
   formData.append(
     "markingAddDto",
-    JSON.stringify({
-      visibility: POST_VISIBILITY_MAP[visibility],
-      ...rest,
-    }),
+    new Blob(
+      [
+        JSON.stringify({
+          isVisible: POST_VISIBILITY_MAP[visibility],
+          ...rest,
+        }),
+      ],
+      { type: "application/json" },
+    ),
   );
 
   images.forEach((image) => {
