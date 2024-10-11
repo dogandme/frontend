@@ -109,12 +109,7 @@ export const useUserInfoRegistrationFormStore =
     setNickname: (nickname) => set({ nickname }),
     setGender: (gender) => set({ gender }),
     setAgeRange: (birth) => set({ ageRange: birth }),
-    setRegion: (region) =>
-      set({
-        region: region.sort((prev, cur) =>
-          prev.address.localeCompare(cur.address),
-        ),
-      }),
+    setRegion: (region) => set({ region }),
     setCheckList: (checkList) => set({ checkList }),
   }));
 
@@ -131,7 +126,7 @@ interface RegionModalActions {
   resetRegionModalStore: () => void;
 }
 
-const addressModalInitialState: RegionModalState = {
+const regionModalInitialState: RegionModalState = {
   keyword: "",
   position: { lat: 0, lng: 0 },
   origin: "keyword",
@@ -140,12 +135,12 @@ const addressModalInitialState: RegionModalState = {
 export const useRegionModalStore = create<
   RegionModalState & RegionModalActions
 >((set) => ({
-  ...addressModalInitialState,
+  ...regionModalInitialState,
 
   setKeyword: (keyword) => set({ keyword }),
   setPosition: (position) => set({ position }),
   setOrigin: (origin) => set({ origin }),
-  resetRegionModalStore: () => set(addressModalInitialState),
+  resetRegionModalStore: () => set(regionModalInitialState),
 }));
 
 interface SignUpByEmailFormState {

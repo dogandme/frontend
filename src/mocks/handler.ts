@@ -157,7 +157,6 @@ export const userInfoRegistrationHandlers = [
         message: "success",
         content: {
           nickname,
-          authorization: "Bearer token-for-role-guest",
           role: "ROLE_GUEST",
         },
       },
@@ -447,7 +446,7 @@ export const addressHandlers = [
       return HttpResponse.json({
         code: 200,
         message: "good",
-        content: addressListData["GANG-NAM"],
+        content: regionListData["GANG-NAM"],
       });
     }
 
@@ -455,7 +454,7 @@ export const addressHandlers = [
       return HttpResponse.json({
         code: 200,
         message: "good",
-        content: addressListData["DOBONG"],
+        content: regionListData["DOBONG"],
       });
     }
 
@@ -464,13 +463,16 @@ export const addressHandlers = [
       message: "입력하신 주소가 없습니다",
     });
   }),
-  http.get(`${API_BASE_URL}/addresses/search-by-location`, () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "good",
-      content: addressListData["CURRENT_LOCATION"],
-    });
-  }),
+  http.get(
+    `${import.meta.env.VITE_API_BASE_URL}/addresses/search-by-location`,
+    () => {
+      return HttpResponse.json({
+        code: 200,
+        message: "good",
+        content: regionListData["CURRENT_LOCATION"],
+      });
+    },
+  ),
 ];
 
 /**
