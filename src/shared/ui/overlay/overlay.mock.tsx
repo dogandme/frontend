@@ -44,7 +44,7 @@ const ConfirmModal = ({ onClose }: ModalProps) => {
         </div>
       </Modal.Content>
       <Modal.Footer axis="row">
-        <Modal.TextButton onClick={handleExit}>나가기</Modal.TextButton>
+        <Modal.TextButton onClick={handleExit}>취소</Modal.TextButton>
         <Modal.FilledButton onClick={handleSave}>저장</Modal.FilledButton>
       </Modal.Footer>
     </Modal>

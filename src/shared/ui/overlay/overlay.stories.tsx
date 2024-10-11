@@ -90,10 +90,10 @@ export const Default: StoryObj<typeof OverlayPortal> = {
     );
 
     await step(
-      '사용자가 모달의 저장하고 나가기를 누르면 "저장이 되었습니다" 스낵바가 나타난다.',
+      '사용자가 모달의 저장하기를 누르면 "저장이 되었습니다" 스낵바가 나타난다.',
       async () => {
         await userEvent.click($button);
-        const $saveButton = canvas.getByText("저장하고 나가기");
+        const $saveButton = canvas.getByText("저장");
 
         await userEvent.click($saveButton);
         expect(canvas.getByText("저장이 되었습니다")).toBeInTheDocument();
@@ -104,10 +104,10 @@ export const Default: StoryObj<typeof OverlayPortal> = {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     await step(
-      "사용자가 모달의 그냥 나가기를 누르면 스낵바가 나타나지 않는다.",
+      "사용자가 모달의 취소를 누르면 스낵바가 나타나지 않는다.",
       async () => {
         await userEvent.click($button);
-        const $exitButton = canvas.getByText("그냥 나가기");
+        const $exitButton = canvas.getByText("취소");
 
         await userEvent.click($exitButton);
         expect(canvas.queryByText("저장이 되었습니다")).not.toBeInTheDocument();
