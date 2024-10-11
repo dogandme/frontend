@@ -7,9 +7,9 @@ import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
-import addressListData from "./data/addressList.json";
 // data
 import markingListData from "./data/markingList.json";
+import regionListData from "./data/regionList.json";
 
 interface UserInfo {
   nickname: string;
@@ -155,7 +155,6 @@ export const userInfoRegistrationHandlers = [
         message: "success",
         content: {
           nickname,
-          authorization: "Bearer token-for-role-guest",
           role: "ROLE_GUEST",
         },
       },
@@ -423,7 +422,7 @@ export const addressHandlers = [
       return HttpResponse.json({
         code: 200,
         message: "good",
-        content: addressListData["GANG-NAM"],
+        content: regionListData["GANG-NAM"],
       });
     }
 
@@ -431,7 +430,7 @@ export const addressHandlers = [
       return HttpResponse.json({
         code: 200,
         message: "good",
-        content: addressListData["DOBONG"],
+        content: regionListData["DOBONG"],
       });
     }
 
@@ -440,13 +439,16 @@ export const addressHandlers = [
       message: "입력하신 주소가 없습니다",
     });
   }),
-  http.get(`${API_BASE_URL}/addresses/search-by-location`, () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "good",
-      content: addressListData["CURRENT_LOCATION"],
-    });
-  }),
+  http.get(
+    `${import.meta.env.VITE_API_BASE_URL}/addresses/search-by-location`,
+    () => {
+      return HttpResponse.json({
+        code: 200,
+        message: "good",
+        content: regionListData["CURRENT_LOCATION"],
+      });
+    },
+  ),
 ];
 
 /**

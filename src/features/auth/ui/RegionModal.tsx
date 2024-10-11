@@ -130,7 +130,7 @@ const SearchRegionByGPSButton = () => {
   );
 };
 
-const SearchRegionControlList = ({
+const SearchRegionControlItem = ({
   province,
   cityCounty,
   subDistrict,
@@ -147,7 +147,7 @@ const SearchRegionControlList = ({
   );
   const address = `${province} ${cityCounty} ${subDistrict}`;
 
-  const handleRegion = () => {
+  const handleSelectRegion = () => {
     // TODO 에러 바운더리 나오면 에러 던지기
     if (region.length >= 5) {
       // throw new Error("동네는 최대 5개까지 선택할 수 있습니다.");
@@ -165,7 +165,7 @@ const SearchRegionControlList = ({
       style={{
         justifyContent: "start",
       }}
-      onClick={handleRegion}
+      onClick={handleSelectRegion}
       className="title-3"
     >
       {`${province} ${cityCounty} ${subDistrict}`}
@@ -174,6 +174,7 @@ const SearchRegionControlList = ({
 };
 
 const SearchedRegionList = () => {
+  const region = useUserInfoRegistrationFormStore((state) => state.region);
   const keyword = useRegionModalStore((state) => state.keyword);
   const position = useRegionModalStore((state) => state.position);
   const origin = useRegionModalStore((state) => state.origin);
@@ -186,23 +187,23 @@ const SearchedRegionList = () => {
 
   const isOriginFromKeyword = origin === "keyword";
 
-  const { data: addressListByKeyword } = useGetRegionByKeyword({
+  const { data: regionListByKeyword } = useGetRegionByKeyword({
     keyword,
     token,
     enabled: keyword.length > 0 && isOriginFromKeyword,
   });
 
-  const { data: addressListByLatLng } = useGetRegionByLatLng({
+  const { data: regionListByLatLng } = useGetRegionByLatLng({
     ...position,
     token,
     enabled: !isOriginFromKeyword,
   });
 
-  const addressList = isOriginFromKeyword
-    ? addressListByKeyword
-    : addressListByLatLng;
+  const regionList = isOriginFromKeyword
+    ? regionListByKeyword
+    : regionListByLatLng;
 
-  if (!addressList || addressList.length === 0) {
+  if (!regionList || regionList.length === 0) {
     return <section className="flex flex-col gap-4"></section>;
   }
 
@@ -211,9 +212,14 @@ const SearchedRegionList = () => {
       <h1 className="title-2 text-grey-900">
         {isOriginFromKeyword ? keyword : "현재 위치"} 동네 검색 결과
       </h1>
-      <List className="max-h-[18rem] overflow-y-auto justify-start">
-        {addressList.map(({ province, cityCounty, subDistrict, id }) => (
-          <SearchRegionControlList
+      <List
+        className={`overflow-y-auto ${region.length > 0 ? "max-h-[18.125rem]" : ""}`}
+        style={{
+          justifyContent: "start",
+        }}
+      >
+        {regionList.map(({ province, cityCounty, subDistrict, id }) => (
+          <SearchRegionControlItem
             key={id}
             province={province}
             cityCounty={cityCounty}
@@ -241,7 +247,7 @@ const SelectedRegionList = () => {
   };
 
   return (
-    <section className="py-2 flex flex-col gap-4">
+    <section className="pb-2 py-[2.5rem] flex flex-col gap-4 border-grey-200 border-t-[0.0625rem]">
       <p className="title-2">선택된 동네</p>
       <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
         {region.map(({ address, id }) => (
@@ -320,11 +326,9 @@ export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
           {/* 현재 위치로 찾기 버튼 */}
           <SearchRegionByGPSButton />
         </section>
-        <section className="flex flex-col flex-grow justify-between ">
-          <div>
-            {/* API 검색 결과 리스트 */}
-            <SearchedRegionList />
-          </div>
+        <section className="flex flex-col gap-8 flex-grow justify-between">
+          {/* API 검색 결과 리스트 */}
+          <SearchedRegionList />
           <div className="flex flex-col gap-4 pb-8">
             {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
             <SelectedRegionList />
