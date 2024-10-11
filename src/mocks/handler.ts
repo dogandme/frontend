@@ -7,7 +7,6 @@ import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
-
 // data
 import markingListData from "./data/markingList.json";
 import regionListData from "./data/regionList.json";
@@ -449,6 +448,7 @@ export const addressHandlers = [
         content: regionListData["CURRENT_LOCATION"],
       });
     },
+  ),
 ];
 
 /**
