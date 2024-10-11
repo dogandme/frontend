@@ -50,7 +50,7 @@ const Content = ({
   children,
   className = "",
 }: Omit<ModalProps, "modalType">) => (
-  <section className={`"flex flex-col gap-8" ${className}`}>{children}</section>
+  <section className={`flex flex-col gap-8 ${className}`}>{children}</section>
 );
 
 const Footer = ({
