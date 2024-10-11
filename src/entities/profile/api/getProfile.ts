@@ -49,7 +49,7 @@ interface ProfileResponse {
 
 interface ProfileRequest {
   token: NonNullable<AuthStore["token"]>;
-  nickname: NonNullable<AuthStore["nickname"]>;
+  nickname: UserNickname;
 }
 
 export const getProfile = async ({
