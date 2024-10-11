@@ -5,11 +5,13 @@ import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import { SETTING_END_POINT } from "@/features/setting/constants";
+import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
-import addressListData from "./data/addressList.json";
 // data
+import addressListData from "./data/addressList.json";
 import markingListData from "./data/markingList.json";
+import userInfoData from "./data/myInfo.json";
 
 interface UserInfo {
   nickname: string;
@@ -183,6 +185,28 @@ export const userInfoRegistrationHandlers = [
     return HttpResponse.json({
       code: 200,
       message: "success",
+    });
+  }),
+
+  http.get(MY_INFO_END_POINT, async ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: userInfoData,
     });
   }),
 ];
