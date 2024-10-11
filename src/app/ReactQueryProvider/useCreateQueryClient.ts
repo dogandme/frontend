@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
 import { useAuthStore } from "@/shared/store";
 import { ERROR_MESSAGE } from "./constants";
@@ -7,6 +8,7 @@ import { getNewAccessToken } from "./errorHandlers";
 export const useCreateQueryClient = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const resetAuthStore = useAuthStore((state) => state.reset);
+  const navigate = useNavigate();
 
   const queryClient = useRef(
     new QueryClient({
@@ -34,8 +36,8 @@ export const useCreateQueryClient = () => {
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getNewAccessToken({
-                setterMethods: { setToken, resetAuthStore },
                 queryClient,
+                callbackFunctions: { setToken, resetAuthStore, navigate },
               });
               break;
             }
@@ -49,8 +51,8 @@ export const useCreateQueryClient = () => {
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getNewAccessToken({
-                setterMethods: { setToken, resetAuthStore },
                 queryClient,
+                callbackFunctions: { setToken, resetAuthStore, navigate },
               });
 
               const { options, state } = mutation;

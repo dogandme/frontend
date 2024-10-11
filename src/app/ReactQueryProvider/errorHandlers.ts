@@ -1,18 +1,21 @@
+import { NavigateFunction } from "react-router-dom";
 import type { QueryClient } from "@tanstack/react-query";
+import { ROUTER_PATH } from "@/shared/constants";
 import { AuthStore } from "@/shared/store";
 import { APP_END_POINT, ERROR_MESSAGE } from "./constants";
 
 export const getNewAccessToken = async ({
-  setterMethods,
   queryClient,
+  callbackFunctions,
 }: {
-  setterMethods: {
+  queryClient: QueryClient;
+  callbackFunctions: {
     setToken: AuthStore["setToken"];
     resetAuthStore: AuthStore["reset"];
+    navigate: NavigateFunction;
   };
-  queryClient: QueryClient;
 }) => {
-  const { setToken, resetAuthStore } = setterMethods;
+  const { setToken, resetAuthStore, navigate } = callbackFunctions;
 
   // 해당 try-catch 문은 access token 을 refresh token 을 이용해 재발급 받는 로직입니다.
   try {
@@ -54,9 +57,7 @@ export const getNewAccessToken = async ({
         return;
       }
 
-      // 현재 ReactQueryProvider 는 ReactRouterDom 내부에 존재하지 않기에 window 를 이용해 직접 라우팅 시킵니다.
-      // TODO : 추후 ReactQueryProvider 를 ReactRouterDom 내부로 이동시키고, useNavigate 를 이용해 라우팅 시키도록 수정합니다.
-      // window.location.href = ROUTER_PATH.LOGIN;
+      navigate(ROUTER_PATH.LOGIN);
       return;
     }
 
