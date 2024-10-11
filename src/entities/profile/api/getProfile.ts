@@ -27,7 +27,7 @@ export interface PetInfo {
 
 export interface MarkingPreviewData {
   id: number;
-  image: string;
+  images: string;
 }
 
 export interface UserInfo {
