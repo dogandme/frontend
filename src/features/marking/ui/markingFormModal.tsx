@@ -173,8 +173,8 @@ const PostVisibilitySelect = () => {
 const PhotoInput = () => {
   const images = useMarkingFormStore((state) => state.images);
   const setImages = useMarkingFormStore((state) => state.setImages);
+  const inputKey = useMarkingFormStore((state) => state.inputKey);
 
-  const [inputKey, setInputKey] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleOpenAlbum = () => {
@@ -212,7 +212,6 @@ const PhotoInput = () => {
 
   const handleRemoveImage = (name: string) => {
     setImages(images.filter((image) => image.name !== name));
-    setInputKey((prev) => prev + 1);
   };
 
   return (
