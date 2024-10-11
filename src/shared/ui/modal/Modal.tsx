@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../button";
+import { ButtonProps } from "../button/Button";
 import { CloseIcon } from "../icon";
 import { modalStyles } from "./Modal.styles";
 
@@ -45,8 +46,11 @@ const Header = ({
   );
 };
 
-const Content = ({ children }: { children: React.ReactNode }) => (
-  <section className="flex flex-col gap-8">{children}</section>
+const Content = ({
+  children,
+  className = "",
+}: Omit<ModalProps, "modalType">) => (
+  <section className={`"flex flex-col gap-8" ${className}`}>{children}</section>
 );
 
 const Footer = ({
@@ -59,18 +63,20 @@ const Footer = ({
 
 const FilledButton = ({
   onClick,
+  colorType = "primary",
+  size = "medium",
+  className = "",
   children,
-}: {
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
-  children: React.ReactNode;
-}) => (
+  ...rest
+}: Partial<Omit<ButtonProps, "variant">> & { children: React.ReactNode }) => (
   <Button
-    size="medium"
     variant="filled"
-    colorType="primary"
+    colorType={colorType}
+    size={size}
     onClick={onClick}
     fullWidth={false}
-    className="flex-grow"
+    {...rest}
+    className={`flex-grow ${className}`}
   >
     {children}
   </Button>
@@ -78,18 +84,20 @@ const FilledButton = ({
 
 const TextButton = ({
   onClick,
+  colorType = "primary",
+  size = "medium",
+  className = "",
   children,
-}: {
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
-  children: React.ReactNode;
-}) => (
+  ...rest
+}: Partial<Omit<ButtonProps, "variant">> & { children: React.ReactNode }) => (
   <Button
-    size="medium"
     variant="text"
-    colorType="tertiary"
+    colorType={colorType}
+    size={size}
     onClick={onClick}
     fullWidth={false}
-    className="flex-grow"
+    className={`flex-grow ${className}`}
+    {...rest}
   >
     {children}
   </Button>

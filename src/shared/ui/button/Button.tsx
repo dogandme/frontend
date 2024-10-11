@@ -7,7 +7,7 @@ import {
 } from "react";
 import { colors, getSizeStyles } from "./button.styles";
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   colorType: "primary" | "secondary" | "tertiary";
   variant: "filled" | "outlined" | "text";
   size: "xSmall" | "small" | "medium" | "large";
