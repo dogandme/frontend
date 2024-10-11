@@ -76,7 +76,7 @@ const FilledButton = ({
     onClick={onClick}
     fullWidth={false}
     {...rest}
-    className={`flex-grow ${className}`}
+    className={`flex flex-1 ${className}`}
   >
     {children}
   </Button>
@@ -96,7 +96,7 @@ const TextButton = ({
     size={size}
     onClick={onClick}
     fullWidth={false}
-    className={`flex-grow ${className}`}
+    className={`flex flex-1 ${className}`}
     {...rest}
   >
     {children}
