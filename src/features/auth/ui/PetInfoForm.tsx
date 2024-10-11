@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
-import { compressFileImage } from "@/shared/lib";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
@@ -64,7 +63,7 @@ export const ProfileInput = () => {
      * 압축 과정 동안 이미지가 변경되지 않는 것을 방지하기 위해 낙관적 업데이트를 사용합니다.
      */
     setProfile({
-      file: compressFileImage(file),
+      file,
       name: file.name,
       url: URL.createObjectURL(file),
     });
@@ -77,7 +76,7 @@ export const ProfileInput = () => {
   // 사진을 삭제하는 핸들러
   const handleDelete = () => {
     setProfile({
-      file: Promise.resolve(null),
+      file: null,
       name: "",
       url: DEFAULT_PROFILE_IMAGE,
     });
@@ -260,7 +259,7 @@ export const SubmitButton = () => {
     <Snackbar onClose={onClose}>필수 항목을 모두 입력해 주세요</Snackbar>
   ));
 
-  const handleClick = async () => {
+  const handleClick = () => {
     const petInfoForm = usePetInfoStore.getState();
     const {
       isValidName,
@@ -289,8 +288,6 @@ export const SubmitButton = () => {
       return;
     }
 
-    const resolvedProfile = await profile.file;
-
     postPetInfo({
       token: token!,
       formObject: {
@@ -298,7 +295,7 @@ export const SubmitButton = () => {
         breed,
         personalities,
         description,
-        profile: resolvedProfile,
+        profile: profile.file,
       },
     });
   };

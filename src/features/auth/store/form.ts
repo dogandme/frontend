@@ -1,11 +1,12 @@
 import { create } from "zustand";
+import { compressFileImage } from "@/shared/lib";
 import type { PetInfoFormData } from "../api";
 import type { LatLng } from "../api/region";
 
 export interface FileInfo {
   name: string;
   url: string;
-  file: Promise<File | null>;
+  file: File | null;
 }
 
 interface PetInfoFormStates extends Omit<PetInfoFormData, "profile"> {
@@ -25,7 +26,7 @@ interface PetInfoFormActions {
 }
 
 const petInfoFormInitialState: PetInfoFormStates = {
-  profile: { name: "", url: "/default-image.png", file: Promise.resolve(null) },
+  profile: { name: "", url: "/default-image.png", file: null },
   name: "",
   isValidName: true,
   breed: "",
@@ -43,21 +44,30 @@ export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
      * profile 을 설정하던 중 압축 과정이 진행 중일 경우 isCompressing 을 true, 종료 시 false 로 변경 합니다.
      * 이 때 profile의 압축이 실패한 경우엔 실패한 profile이 아닌 기존 존재하던 profile 로 변경합니다.
      */
-    setProfile: (profile: FileInfo) => {
+    setProfile: async (profile: FileInfo) => {
       const { profile: prevProfile } = get();
       set({ profile, isCompressing: true, inputKey: get().inputKey + 1 });
 
-      profile.file
-        .catch((error) => {
-          // TODO 에러 바운더리 로직 나오면 변경하기
-          console.error(error);
-          set(() => ({
-            profile: prevProfile,
-            isCompressing: false,
-            inputKey: get().inputKey + 1,
-          }));
-        })
-        .finally(() => set(() => ({ isCompressing: false })));
+      try {
+        if (!profile.file) {
+          set({ isCompressing: false });
+          return;
+        }
+        const compressedImage = await compressFileImage(profile.file);
+        set({ profile: { ...profile, file: compressedImage } });
+      } catch (error) {
+        // TODO 에러 바운더리 로직 나오면 변경하기
+        console.error(`
+          ${profile.name}을 압축하는데 실패했습니다.
+          ${error}`);
+
+        set({
+          profile: prevProfile,
+          inputKey: get().inputKey + 1,
+        });
+      } finally {
+        set({ isCompressing: false });
+      }
     },
     setName: (name: string) => set({ name }),
     setIsValidName: (name: string) =>

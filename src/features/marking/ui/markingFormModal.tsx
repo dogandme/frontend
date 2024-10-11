@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { MapSnackbar } from "@/entities/map/ui";
-import { compressFileImage } from "@/shared/lib";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -205,7 +204,7 @@ const PhotoInput = () => {
       ...AvailableNewFileArray.map((file) => ({
         name: file.name,
         url: URL.createObjectURL(file),
-        file: compressFileImage(file),
+        file,
       })),
     ]);
   };
@@ -329,10 +328,6 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
     }
 
-    const compressedFiles = await Promise.all(
-      images.map((image) => image.file),
-    );
-
     const lat = center.lat();
     const lng = center.lng();
 
@@ -343,7 +338,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
         lng,
         region,
         visibility,
-        images: compressedFiles,
+        images: images.map((image) => image.file),
         content,
       },
       {
@@ -394,7 +389,7 @@ const TemporarySaveButton = ({
     },
   });
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const { token } = useAuthStore.getState();
     const { region, visibility, images, content } =
       useMarkingFormStore.getState();
@@ -409,9 +404,7 @@ const TemporarySaveButton = ({
       return;
     }
 
-    const compressedFiles = await Promise.all(
-      images.map((image) => image.file),
-    );
+    const compressedFiles = images.map((image) => image.file);
 
     const center = map.getCenter();
 
