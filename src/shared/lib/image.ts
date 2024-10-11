@@ -36,14 +36,6 @@ export const compressFileImage: compressFileImage = async (file, options) => {
     return file;
   }
   const image = new Image();
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
-
-  /* 만약 canvas 를 사용 못하는 환경이라면 원본 파일을 반환 합니다. */
-  if (!context) {
-    return file;
-  }
-
   const reader = new FileReader();
   /**
    * FileReader 는 비동기적으로 load 되고 비동기적으로 데이터를 읽습니다.
@@ -55,6 +47,14 @@ export const compressFileImage: compressFileImage = async (file, options) => {
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
+
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+
+  /* 만약 canvas 를 사용 못하는 환경이라면 원본 파일을 반환 합니다. */
+  if (!context) {
+    return file;
+  }
 
   /**
    * 이미지의 src 를 base64 로 인코딩된 문자열로 설정합니다.
