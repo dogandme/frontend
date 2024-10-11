@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useOverlay } from "@/shared/lib/overlay";
+import { Modal } from "../modal";
 
 /**
  * 사용법 예시
@@ -34,15 +35,19 @@ const ConfirmModal = ({ onClose }: ModalProps) => {
   };
 
   return (
-    <div className="absolute left-1/2 top-1/2 w-80 -translate-x-1/2 -translate-y-1/2 transform bg-grey-100 px-12 py-12">
-      <p>나가시겠습니까?</p>
-      <div className="mt-2 flex justify-between border-tangerine-50 px-2 py-2">
-        <button onClick={handleSave} className="text-tangerine-500">
-          저장하고 나가기
-        </button>
-        <button onClick={handleExit}>그냥 나가기</button>
-      </div>
-    </div>
+    <Modal modalType="center">
+      <Modal.Header onClick={onClose}>화면을 나가시겠습니까?</Modal.Header>
+      <Modal.Content>
+        <div className="text-grey-700 body-2">
+          <p>화면을 나갈 경우 입력한 정보들이 모두 삭제 됩니다.</p>
+          <p>정말 화면을 나가시겠습니까?</p>
+        </div>
+      </Modal.Content>
+      <Modal.Footer axis="row">
+        <Modal.TextButton onClick={handleExit}>나가기</Modal.TextButton>
+        <Modal.FilledButton onClick={handleSave}>저장하기</Modal.FilledButton>
+      </Modal.Footer>
+    </Modal>
   );
 };
 
