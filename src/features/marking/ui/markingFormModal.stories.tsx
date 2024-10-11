@@ -154,9 +154,9 @@ export const Default: Story = {
 
       const dummyFiles = [
         new File([""], "test1.jpg", { type: "image/jpg", lastModified: 1 }),
-        new File([""], "test2.jpg", { type: "image/png", lastModified: 2 }),
-        new File([""], "test3.jpg", { type: "image/jpeg", lastModified: 3 }),
-        new File([""], "test4.jpg", { type: "image/webp", lastModified: 4 }),
+        new File([""], "test2.png", { type: "image/png", lastModified: 2 }),
+        new File([""], "test3.jpeg", { type: "image/jpeg", lastModified: 3 }),
+        new File([""], "test4.webp", { type: "image/webp", lastModified: 4 }),
       ];
 
       await userEvent.upload($fileUploadInput, dummyFiles);
@@ -196,8 +196,8 @@ export const Default: Story = {
 
           await userEvent.upload(
             $fileUploadInput,
-            new File([""], "test3.jpg", {
-              type: "image/jpg",
+            new File([""], "test3.jpeg", {
+              type: "image/jpeg",
               lastModified: 3,
             }),
           );
