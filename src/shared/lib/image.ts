@@ -43,6 +43,11 @@ export const compressFileImage: compressFileImage = async (file, options) => {
    * 2024/10/11 에러 시 reject 처리 추가
    */
   const result = await new Promise<string>((resolve, reject) => {
+    // 테스트용 reject
+    if (Math.random() > 0.5) {
+      reject(new Error("파일이 너무 큽니다."));
+    }
+
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
