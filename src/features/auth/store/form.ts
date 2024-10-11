@@ -46,13 +46,19 @@ export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
      */
     setProfile: async (profile: FileInfo) => {
       const { profile: prevProfile } = get();
+
+      if (!profile.file) {
+        set({
+          profile: prevProfile,
+          isCompressing: false,
+          inputKey: get().inputKey + 1,
+        });
+        return;
+      }
+
       set({ profile, isCompressing: true, inputKey: get().inputKey + 1 });
 
       try {
-        if (!profile.file) {
-          set({ isCompressing: false });
-          return;
-        }
         const compressedImage = await compressFileImage(profile.file);
         set({ profile: { ...profile, file: compressedImage } });
       } catch (error) {
