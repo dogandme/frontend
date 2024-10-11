@@ -254,11 +254,6 @@ export const IntroduceTextArea = () => {
 };
 
 export const SubmitButton = () => {
-  /**
-   * 유효성 검사를 위해 form 데이터에 존재하는 상태를 객체 형태로 가져옵니다.
-   * getState() 는 호출 시점의 store 를 가져오기 떄문에 클릭이 일어난 시점의 상태 값들을 가져 올 수 있습니다.
-   * getState() 로 인해 반환되는 store 자체는 불변하기 때문에 store 내부 상태들이 변경되어도 리렌더링이 일어나지 않습니다.
-   */
   const { mutate: postPetInfo } = usePostPetInfo();
 
   // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
@@ -284,7 +279,6 @@ export const SubmitButton = () => {
       return;
     }
 
-    const resolvedProfile = await profile.file;
     const { token } = useAuthStore.getState();
 
     const isNameEmpty = name.length === 0;
@@ -296,14 +290,10 @@ export const SubmitButton = () => {
       return;
     }
 
-    if (!token) {
-      throw new Error(
-        "토큰이 없다면 해당 페이지에 접근할 수 없습니다. 토큰이 존재하는지 확인해주세요",
-      );
-    }
+    const resolvedProfile = await profile.file;
 
     postPetInfo({
-      token,
+      token: token!,
       formObject: {
         name,
         breed,
