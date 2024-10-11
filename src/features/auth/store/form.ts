@@ -33,17 +33,28 @@ const petInfoFormInitialState: PetInfoFormStates = {
   isCompressing: false,
 };
 
-/**
- * public 폴더에 존재하는 기본 프로필 이미지를 사용합니다.
- * origin/{파일명} 을 통해 public 폴더에 접근하는 파일에 접근 할 수 있습니다.
- */
 export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
-  (set) => ({
+  (set, get) => ({
     ...petInfoFormInitialState,
 
+    /**
+     * profile 을 설정하던 중 압축 과정이 진행 중일 경우 isCompressing 을 true, 종료 시 false 로 변경 합니다.
+     * 이 때 profile의 압축이 실패한 경우엔 실패한 profile이 아닌 기존 존재하던 profile 로 변경합니다.
+     */
     setProfile: (profile: FileInfo) => {
+      const { profile: prevProfile } = get();
       set({ profile, isCompressing: true });
-      profile.file.then(() => set({ isCompressing: false }));
+
+      profile.file
+        .catch((error) => {
+          // TODO 에러 바운더리 로직 나오면 변경하기
+          console.error(error);
+          set(() => ({
+            profile: prevProfile,
+            isCompressing: false,
+          }));
+        })
+        .finally(() => set(() => ({ isCompressing: false })));
     },
     setName: (name: string) => set({ name }),
     setIsValidName: (name: string) =>
