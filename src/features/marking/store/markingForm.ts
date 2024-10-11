@@ -49,13 +49,15 @@ export const useMarkingFormStore = create<
    * actual DOM의 input을 새로 마운트 시킴으로서 액츄얼 돔의 input이 업데이트 된 이미지를 정상적으로 바라 볼 수 있도록 합니다.
    */
   setImages: async (images) => {
-    /* 동기적으로 압축 예정인 이미지 파일을 업데이트 합니다. */
-    set({ images, isCompressing: true, inputKey: get().inputKey + 1 });
-
-    if (images.length === 0) {
-      set({ isCompressing: false });
+    /**
+     * 사진이 추가되지 않고  사진이 삭제 된 경우엔 압축을 시작하지 않고 종료합니다.
+     */
+    if (images.length < get().images.length) {
+      set({ isCompressing: false, inputKey: get().inputKey + 1 });
       return;
     }
+    /* 동기적으로 압축 예정인 이미지 파일을 업데이트 합니다. */
+    set({ images, isCompressing: true, inputKey: get().inputKey + 1 });
 
     const compressedFiles = await Promise.allSettled(
       images.map(({ file }) => compressFileImage(file)),
