@@ -57,8 +57,6 @@ export const getNewAccessToken = async ({
         return;
       }
 
-      // 현재 ReactQueryProvider 는 ReactRouterDom 내부에 존재하지 않기에 window 를 이용해 직접 라우팅 시킵니다.
-      // TODO : 추후 ReactQueryProvider 를 ReactRouterDom 내부로 이동시키고, useNavigate 를 이용해 라우팅 시키도록 수정합니다.
       navigate(ROUTER_PATH.LOGIN);
       return;
     }
