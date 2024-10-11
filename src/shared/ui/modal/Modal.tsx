@@ -11,8 +11,6 @@ interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-// TODO 모든 컴포넌트를 리팩트링 하면 해당 컴포넌트는 지워져야 합니다.
-// 현재는 해당 컴포넌트를 사용하는 곳이 많아서 지우지 못하고 있습니다.
 const ModalWrapper = ({
   modalType,
   className = "",
