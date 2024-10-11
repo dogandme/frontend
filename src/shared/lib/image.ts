@@ -1,15 +1,15 @@
-interface CompressFileOptions {
+interface compressFileImageOptions {
   maxSize: number;
   compactSize: number;
   quality: number;
   extension: "jpeg" | "webp" | "png";
 }
-type CompressFile = (
+type compressFileImage = (
   file: File,
-  options?: CompressFileOptions,
+  options?: compressFileImageOptions,
 ) => Promise<File>;
 
-const defaultCompressOptions: CompressFileOptions = {
+const defaultCompressOptions: compressFileImageOptions = {
   maxSize: 2 ** 20, // 최대 파일 크기 1MB
   compactSize: 2 ** 10 * 100, // 압축 후 최대 파일 크기 100KB
   quality: 0.7,
@@ -17,12 +17,12 @@ const defaultCompressOptions: CompressFileOptions = {
 };
 
 /**
- * compressFile 은 File 객체를 options 에 설정된 maxSize 보다 작은 크기로 압축하고 extension 확장자로 변환하여 저장합니다.
+ * compressFileImage 은 File 객체를 options 에 설정된 maxSize 보다 작은 크기로 압축하고 extension 확장자로 변환하여 저장합니다.
  * canvas 를 이용해 이미지를 압축하며 , 파일의 너비와 높이를 원 사이즈 / compactSize 만큼의 비율로 크기를 줄입니다.
  * @param file 압축할 파일
  * @param options maxSize: 압축할 파일의 최대 크기, compactSize: 압축된 파일의 최소 크기 , quality: 압축 품질, extension: 압축할 파일의 확장자
  */
-export const compressFile: CompressFile = async (file, options) => {
+export const compressFileImage: compressFileImage = async (file, options) => {
   const { maxSize, compactSize, quality, extension } = {
     ...defaultCompressOptions,
     ...options,

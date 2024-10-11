@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { MapSnackbar } from "@/entities/map/ui";
-import { compressFile } from "@/shared/lib";
+import { compressFileImage } from "@/shared/lib";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -205,7 +205,7 @@ const PhotoInput = () => {
       ...AvailableNewFileArray.map((file) => ({
         name: file.name,
         url: URL.createObjectURL(file),
-        file: compressFile(file),
+        file: compressFileImage(file),
       })),
     ]);
   };
