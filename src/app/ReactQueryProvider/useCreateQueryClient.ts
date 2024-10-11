@@ -36,9 +36,8 @@ export const useCreateQueryClient = () => {
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getNewAccessToken({
-                setterMethods: { setToken, resetAuthStore },
-                navigateMethod: { navigate },
                 queryClient,
+                callbackFunctions: { setToken, resetAuthStore, navigate },
               });
               break;
             }
@@ -52,9 +51,8 @@ export const useCreateQueryClient = () => {
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getNewAccessToken({
-                setterMethods: { setToken, resetAuthStore },
-                navigateMethod: { navigate },
                 queryClient,
+                callbackFunctions: { setToken, resetAuthStore, navigate },
               });
 
               const { options, state } = mutation;

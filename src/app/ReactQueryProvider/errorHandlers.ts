@@ -6,20 +6,16 @@ import { APP_END_POINT, ERROR_MESSAGE } from "./constants";
 
 export const getNewAccessToken = async ({
   queryClient,
-  setterMethods,
-  navigateMethod,
+  callbackFunctions,
 }: {
-  setterMethods: {
+  queryClient: QueryClient;
+  callbackFunctions: {
     setToken: AuthStore["setToken"];
     resetAuthStore: AuthStore["reset"];
-  };
-  navigateMethod: {
     navigate: NavigateFunction;
   };
-  queryClient: QueryClient;
 }) => {
-  const { setToken, resetAuthStore } = setterMethods;
-  const { navigate } = navigateMethod;
+  const { setToken, resetAuthStore, navigate } = callbackFunctions;
 
   // 해당 try-catch 문은 access token 을 refresh token 을 이용해 재발급 받는 로직입니다.
   try {
