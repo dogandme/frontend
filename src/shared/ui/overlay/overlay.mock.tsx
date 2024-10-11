@@ -45,7 +45,7 @@ const ConfirmModal = ({ onClose }: ModalProps) => {
       </Modal.Content>
       <Modal.Footer axis="row">
         <Modal.TextButton onClick={handleExit}>나가기</Modal.TextButton>
-        <Modal.FilledButton onClick={handleSave}>저장하기</Modal.FilledButton>
+        <Modal.FilledButton onClick={handleSave}>저장</Modal.FilledButton>
       </Modal.Footer>
     </Modal>
   );
@@ -89,8 +89,8 @@ export const ModalTrigger = () => {
  */
 
 const FirstNestedModal = ({ onClose }: ModalProps) => {
-  const { onClose: secondonClose, handleOpen } = useOverlay(() => (
-    <SecondNestedModal onClose={secondonClose} />
+  const { onClose: secondClose, handleOpen } = useOverlay(() => (
+    <SecondNestedModal onClose={secondClose} />
   ));
 
   return (

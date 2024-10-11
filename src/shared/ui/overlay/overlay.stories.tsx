@@ -1,4 +1,4 @@
-import { Meta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import {
@@ -16,7 +16,7 @@ export default {
  * Modal 은 disabledInteraction 옵션을 통해 외부 클릭을 막으며 모달을 제외한 영역을 클릭하면 모달이 닫힙니다.
  * Snackbar는 disabledInteraction 옵션이 존재하지 않습니다. 이에 스낵바가 뜬 채로 인터렉션을 할 수 있습니다.
  */
-export const Default = {
+export const Default: StoryObj<typeof OverlayPortal> = {
   render: () => {
     return (
       <div>
@@ -60,7 +60,7 @@ export const Default = {
       "사용자가 disabled interaction인 모달을 열면 모달이 나타난다.",
       async () => {
         await userEvent.click($button);
-        expect(canvas.getByText("나가시겠습니까?")).toBeInTheDocument();
+        expect(canvas.getByText("화면을 나가시겠습니까?")).toBeInTheDocument();
 
         await step("모달이 나타나면 body 태그의 스크롤은 막힌다.", () => {
           expect($body).toHaveStyle({ overflow: "hidden" });
@@ -69,7 +69,7 @@ export const Default = {
         await step(
           "사용자가 모달 내부 영역을 클릭하면 아무런 일이 일어나지 않는다.",
           async () => {
-            const $modal = canvas.getByText("나가시겠습니까?");
+            const $modal = canvas.getByText("화면을 나가시겠습니까?");
             await userEvent.click($modal);
             expect($modal).toBeInTheDocument();
           },
@@ -80,7 +80,7 @@ export const Default = {
           async () => {
             const $modalOverlay =
               canvasElement.querySelector(".absolute.w-screen");
-            await userEvent.click($modalOverlay);
+            await userEvent.click($modalOverlay!);
             expect(
               canvas.queryByText("나가시겠습니까?"),
             ).not.toBeInTheDocument();
