@@ -187,23 +187,23 @@ const SearchedRegionList = () => {
 
   const isOriginFromKeyword = origin === "keyword";
 
-  const { data: addressListByKeyword } = useGetRegionByKeyword({
+  const { data: regionListByKeyword } = useGetRegionByKeyword({
     keyword,
     token,
     enabled: keyword.length > 0 && isOriginFromKeyword,
   });
 
-  const { data: addressListByLatLng } = useGetRegionByLatLng({
+  const { data: regionListByLatLng } = useGetRegionByLatLng({
     ...position,
     token,
     enabled: !isOriginFromKeyword,
   });
 
-  const addressList = isOriginFromKeyword
-    ? addressListByKeyword
-    : addressListByLatLng;
+  const regionList = isOriginFromKeyword
+    ? regionListByKeyword
+    : regionListByLatLng;
 
-  if (!addressList || addressList.length === 0) {
+  if (!regionList || regionList.length === 0) {
     return <section className="flex flex-col gap-4"></section>;
   }
 
@@ -218,7 +218,7 @@ const SearchedRegionList = () => {
           justifyContent: "start",
         }}
       >
-        {addressList.map(({ province, cityCounty, subDistrict, id }) => (
+        {regionList.map(({ province, cityCounty, subDistrict, id }) => (
           <SearchRegionControlItem
             key={id}
             province={province}
