@@ -39,9 +39,9 @@ export const useMarkingFormStore = create<
   setVisibility: (visibility) => set({ visibility }),
   setContent: (content) => set({ content }),
   setImages: (images) => {
-    set({ images });
+    set({ images, isCompressing: true });
 
-    Promise.all(images.map(({ file }) => file)).then(() => {
+    Promise.all(images.map(({ file }) => file)).finally(() => {
       set({ isCompressing: false });
     });
   },
