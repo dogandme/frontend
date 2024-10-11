@@ -73,7 +73,10 @@ export const getProfile = async ({
 export const useGetProfile = ({
   nickname,
   token,
-}: Pick<AuthStore, "nickname" | "token">) => {
+}: {
+  nickname: UserNickname;
+  token: AuthStore["token"];
+}) => {
   const queryClient = useQueryClient();
 
   return useQuery({
