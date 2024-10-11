@@ -19,6 +19,10 @@ const defaultCompressOptions: compressFileImageOptions = {
 /**
  * compressFileImage 은 File 객체를 options 에 설정된 maxSize 보다 작은 크기로 압축하고 extension 확장자로 변환하여 저장합니다.
  * canvas 를 이용해 이미지를 압축하며 , 파일의 너비와 높이를 원 사이즈 / compactSize 만큼의 비율로 크기를 줄입니다.
+ *
+ * 2024/10/11 업데이트
+ * 파일이 너무 크거나 손상된 경우엔 이미지 업로드를 거부하도록 합니다.
+ * 만약 파일은 문제 없으나 canvas 를 사용하지 못하는 경우엔 원본 파일을 반환합니다.
  * @param file 압축할 파일
  * @param options maxSize: 압축할 파일의 최대 크기, compactSize: 압축된 파일의 최소 크기 , quality: 압축 품질, extension: 압축할 파일의 확장자
  */
@@ -44,11 +48,14 @@ export const compressFileImage: compressFileImage = async (file, options) => {
   /**
    * FileReader 는 비동기적으로 load 되고 비동기적으로 데이터를 읽습니다.
    * result 는 reader 가 읽은 데이터를 base64 로 인코딩한 문자열 입니다.
+   * 2024/10/11 에러 시 reject 처리 추가
    */
-  const result = await new Promise<string>((resolve) => {
+  const result = await new Promise<string>((resolve, reject) => {
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
   });
+
   /**
    * 이미지의 src 를 base64 로 인코딩된 문자열로 설정합니다.
    * 이로 인해 canvas 에 해당 이미지를 그릴 수 있습니다.
