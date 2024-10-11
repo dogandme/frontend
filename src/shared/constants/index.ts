@@ -100,17 +100,19 @@ export const colors = {
 
 export const ROUTER_PATH = {
   MAIN: "/",
-  LOGIN: "/login",
-  LOGIN_BY_EMAIL: "/login/email",
-  FORGET_PASSWORD: "/login/forgot-password",
-  SIGN_UP: "/sign-up",
-  SIGN_UP_USER_INFO: "/sign-up/user-info",
-  SIGN_UP_PET_INFO: "/sign-up/pet-info",
-  // TODO 라우팅 경로 이름 변경하기
-  SEARCH: "/",
-  MAP: "/map",
-  COMMUNITY: "/community",
-  MY_PAGE: "/my-page",
-  SETTING: "/my-page/setting",
-  ACCOUNT: "/my-page/setting/manage-account",
+  MAP: `/map`,
+
+  MY_PAGE: `/my-page`,
+  SETTING: `/my-page/setting`,
+  MANAGE_ACCOUNT: `/my-page/setting/manage-account`,
+
+  LOGIN: `/login`,
+  LOGIN_BY_EMAIL: `/login/email`,
+  FORGET_PASSWORD: `/login/forget-password`,
+
+  SIGN_UP: `/sign-up`,
+  SIGN_UP_USER_INFO: `/sign-up/user-info`,
+  SIGN_UP_PET_INFO: `/sign-up/pet-info`,
 } as const;
+
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;

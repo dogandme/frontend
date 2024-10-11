@@ -126,8 +126,9 @@ export const OAuthLoginHyperLinks = () => {
 
     // 사용자의 정보가 닉네임 이외에 다른 정보가 있다면 해당 정보를 prefetch 합니다.
     queryClient.prefetchQuery({
-      queryKey: ["profile", nicknameOnCookie],
-      queryFn: () => getProfile(nicknameOnCookie),
+      queryKey: ["profile", nicknameOnCookie, tokenOnCookie],
+      queryFn: () =>
+        getProfile({ nickname: nicknameOnCookie, token: tokenOnCookie }),
     });
     setNickname(nicknameOnCookie);
     navigate(lastNoneAuthRoute);

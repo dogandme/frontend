@@ -1,8 +1,13 @@
 import { http, HttpResponse, PathParams } from "msw";
+import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
+import { APP_END_POINT } from "@/app/ReactQueryProvider/constants";
 import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import { SETTING_END_POINT } from "@/features/setting/constants";
+import { API_BASE_URL } from "@/shared/constants";
+import User from "../mocks/data/user.json";
+
 // data
 import markingListData from "./data/markingList.json";
 import regionListData from "./data/regionList.json";
@@ -136,6 +141,15 @@ export const userInfoRegistrationHandlers = [
       markings: [],
     };
 
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        nickname,
+        authorization: "Bearer token-for-role-guest",
+        role: "ROLE_GUEST",
+      },
+    });
     return HttpResponse.json(
       {
         code: 200,
@@ -143,7 +157,6 @@ export const userInfoRegistrationHandlers = [
         content: {
           nickname,
           role: "ROLE_GUEST",
-          authorization: "Bearer token for ROLE_GUEST",
         },
       },
       {
@@ -176,7 +189,7 @@ export const userInfoRegistrationHandlers = [
 
 export const markingModalHandlers = [
   http.get<PathParams>(
-    `${import.meta.env.VITE_API_BASE_URL}/maps/reverse-geocode`,
+    `${API_BASE_URL}/maps/reverse-geocode`,
     async ({ request }) => {
       const requestUrl = new URL(request.url);
       const lat = requestUrl.searchParams.get("lat");
@@ -204,7 +217,23 @@ export const markingModalHandlers = [
       });
     },
   ),
-  http.post<PathParams>(MARKING_REQUEST_URL.ADD, async () => {
+  http.post<PathParams>(MARKING_REQUEST_URL.ADD, async ({ request }) => {
+    /**
+     * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
+     */
+    const token = request.headers.get("Authorization");
+    if (token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -212,75 +241,75 @@ export const markingModalHandlers = [
   }),
   http.get<{
     [K in keyof Omit<MarkingListRequest, "token">]: string;
-  }>(
-    `${import.meta.env.VITE_API_BASE_URL}/markings/search`,
-    async ({ request }) => {
-      const token = request.headers.get("Authorization");
+  }>(`${API_BASE_URL}/markings/search`, async ({ request }) => {
+    const token = request.headers.get("Authorization");
 
-      if (token) {
-        return HttpResponse.json(
-          {
-            code: 200,
-            message: "success",
-            content: markingListData.member,
-          },
-          { status: 200, statusText: "success" },
-        );
-      }
-
+    if (token) {
       return HttpResponse.json(
         {
           code: 200,
           message: "success",
-          content: markingListData.notMember,
+          content: markingListData.member,
         },
         { status: 200, statusText: "success" },
       );
-    },
-  ),
+    }
+
+    return HttpResponse.json(
+      {
+        code: 200,
+        message: "success",
+        content: markingListData.notMember,
+      },
+      { status: 200, statusText: "success" },
+    );
+  }),
   http.delete<PathParams>(MARKING_REQUEST_URL.DELETE, () => {
     return HttpResponse.json({
       code: 200,
       message: "success",
     });
   }),
-  http.post<PathParams>(
-    `${import.meta.env.VITE_API_BASE_URL}/markings/like`,
-    () => {
-      return HttpResponse.json({
-        code: 200,
-        message: "success",
-      });
-    },
-  ),
-  http.delete<PathParams>(
-    `${import.meta.env.VITE_API_BASE_URL}/markings/like`,
-    () => {
-      return HttpResponse.json({
-        code: 200,
-        message: "success",
-      });
-    },
-  ),
-  http.post<PathParams>(
-    `${import.meta.env.VITE_API_BASE_URL}/markings/saves`,
-    () => {
-      return HttpResponse.json({
-        code: 200,
-        message: "success",
-      });
-    },
-  ),
-  http.delete<PathParams>(
-    `${import.meta.env.VITE_API_BASE_URL}/markings/saves`,
-    () => {
-      return HttpResponse.json({
-        code: 200,
-        message: "success",
-      });
-    },
-  ),
-  http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async () => {
+  http.post<PathParams>(`${API_BASE_URL}/markings/like`, () => {
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+  http.delete<PathParams>(`${API_BASE_URL}/markings/like`, () => {
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+  http.post<PathParams>(`${API_BASE_URL}/markings/saves`, () => {
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+  http.delete<PathParams>(`${API_BASE_URL}/markings/saves`, () => {
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+  http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async ({ request }) => {
+    /**
+     * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
+     */
+    const token = request.headers.get("Authorization");
+    if (token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -338,38 +367,51 @@ export const loginHandlers = [
   }),
 ];
 
-export const profileHandlers = [
-  http.get(
-    `${import.meta.env.VITE_API_BASE_URL}/profile`,
-    async ({ request }) => {
-      const requestUrl = new URL(request.url);
-      const nickname = requestUrl.searchParams.get("nickname");
+export const getProfileHandlers = [
+  http.get(`${API_BASE_URL}/profile`, async ({ request }) => {
+    const requestUrl = new URL(request.url);
+    const nickname = requestUrl.searchParams.get("nickname");
+    // 2024/10/05 AccessToken 검증 로직을 추가 합니다.
+    const token = request.headers.get("Authorization");
+    if (token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+    if (token === "freshAccessToken" && nickname === "뽀송송") {
+      return HttpResponse.json(User["ROLE_USER"]);
+    }
 
-      const userInfo = userDB[nickname as string];
-      if (!userInfo) {
-        return HttpResponse.json(
-          {
-            code: 404,
-            message: "해당하는 유저를 찾을 수 없습니다.",
-          },
-          {
-            status: 404,
-            statusText: "Not Found",
-          },
-        );
-      }
+    const userInfo = userDB[nickname as string];
+    if (!userInfo) {
+      return HttpResponse.json(
+        {
+          code: 404,
+          message: "해당하는 유저를 찾을 수 없습니다.",
+        },
+        {
+          status: 404,
+          statusText: "Not Found",
+        },
+      );
+    }
 
-      return HttpResponse.json({
-        code: 200,
-        message: "success",
-        content: userInfo,
-      });
-    },
-  ),
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: userInfo,
+    });
+  }),
 ];
 
 export const addressHandlers = [
-  http.get(`${import.meta.env.VITE_API_BASE_URL}/addresses`, (req) => {
+  http.get(`${API_BASE_URL}/addresses`, (req) => {
     const {
       request: { url },
     } = req;
@@ -407,7 +449,6 @@ export const addressHandlers = [
         content: regionListData["CURRENT_LOCATION"],
       });
     },
-  ),
 ];
 
 /**
@@ -500,14 +541,40 @@ export const petInfoFormHandlers = [
   }),
 ];
 
+const getNewAccessTokenHandler = [
+  http.get(APP_END_POINT.REFRESH_ACCESS_TOKEN, ({ cookies }) => {
+    const refreshToken = cookies["Authorization-refresh"];
+
+    if (refreshToken !== "freshRefreshToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "RefreshToken 검증에 실패했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        authorization: "freshAccessToken",
+      },
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
   ...userInfoRegistrationHandlers,
   ...markingModalHandlers,
   ...loginHandlers,
-  ...profileHandlers,
+  ...getProfileHandlers,
   ...addressHandlers,
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
+  ...getNewAccessTokenHandler,
 ];

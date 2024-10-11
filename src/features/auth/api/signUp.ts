@@ -4,11 +4,11 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
-interface VerificationCodeRequestData {
+export interface VerificationCodeRequestData {
   email: string;
 }
 
-interface VerificationCodeResponse {
+export interface VerificationCodeResponse {
   code: number;
   message: string;
 }

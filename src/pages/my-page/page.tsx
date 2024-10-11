@@ -24,7 +24,12 @@ import { NavigationBar } from "@/shared/ui/navigationbar";
 export const MyPage = () => {
   const role = useAuthStore((state) => state.role);
   const nickname = useAuthStore((state) => state.nickname);
-  const { data, isLoading } = useGetProfile(nickname);
+  const token = useAuthStore((state) => state.token);
+
+  const { data, isLoading } = useGetProfile({
+    nickname: nickname,
+    token: token,
+  });
 
   // TODO 로딩 처리 하기
   if (isLoading) {
@@ -121,7 +126,7 @@ export const NotRoleUserMyPage = ({
   nickname: UserInfo["nickname"] | null;
 }) => {
   return (
-    <div>
+    <>
       <MyPageNavigationBar role={role} nickname={nickname} />
       <section className="px-4 flex flex-col items-start gap-8">
         <EmptyMyProfileOverView role={role} />
@@ -130,7 +135,7 @@ export const NotRoleUserMyPage = ({
           <MarkingThumbnailGrid markings={[]} />
         </div>
       </section>
-    </div>
+    </>
   );
 };
 
@@ -146,7 +151,7 @@ export const RoleUserMyPage = ({
   Pick<AuthStore, "role"> &
   Pick<UserInfo, "tempCnt" | "markings">) => {
   return (
-    <div>
+    <>
       <MyPageNavigationBar role={role} nickname={nickname} />
       <section className="px-4 flex flex-col items-start gap-8">
         <ProfileOverView
@@ -161,7 +166,7 @@ export const RoleUserMyPage = ({
           <MarkingThumbnailGrid markings={markings} />
         </div>
       </section>
-    </div>
+    </>
   );
 };
 

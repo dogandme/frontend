@@ -38,7 +38,7 @@ export const SettingPage = () => {
 };
 
 const AccountManagement = () => (
-  <Link to={ROUTER_PATH.ACCOUNT} className="setting-item">
+  <Link to={ROUTER_PATH.MANAGE_ACCOUNT} className="setting-item">
     <p>계정관리</p>
     <span className="text-grey-500">
       <ArrowRightIcon />

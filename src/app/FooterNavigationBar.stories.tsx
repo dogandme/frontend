@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { within, userEvent, expect } from "@storybook/test";
-import { MainFooter } from "./MainFooter";
+import { FooterNavigationBar } from "./FooterNavigationBar";
 
 const meta: Meta = {
-  title: "app/layout/MainFooter",
+  title: "app/layout/FooterNavigationBar",
   parameters: {
     docs: {
       description: {
@@ -15,7 +15,7 @@ const meta: Meta = {
 
 export default meta;
 
-type Story = StoryObj<typeof MainFooter>;
+type Story = StoryObj<typeof FooterNavigationBar>;
 
 export const Default: Story = {
   decorators: (Story) => (
@@ -27,8 +27,8 @@ export const Default: Story = {
   render: () => {
     return (
       <div>
-        <h1>MainFooter</h1>
-        <MainFooter />
+        <h1>FooterNavigationBar</h1>
+        <FooterNavigationBar />
       </div>
     );
   },

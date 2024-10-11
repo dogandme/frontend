@@ -1,7 +1,7 @@
 import { action } from "@storybook/addon-actions";
 import { StoryObj } from "@storybook/react";
+import { OverlayPortal } from "@/app/OverlayPortal";
 import { useModal } from "@/shared/lib";
-import { OverlayPortal } from "@/app";
 import { ConfirmModal } from "./ConfirmModal";
 import { Modal } from "./Modal";
 

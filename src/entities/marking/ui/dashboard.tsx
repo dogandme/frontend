@@ -1,4 +1,5 @@
 import type { UserInfo } from "@/entities/profile/api";
+import { API_BASE_URL } from "@/shared/constants";
 import { ArrowRightIcon, InfoIcon } from "@/shared/ui/icon";
 
 /**
@@ -15,7 +16,7 @@ export const MarkingThumbnailGrid = ({
     <div className="grid grid-cols-3 gap-2 w-full">
       {markings.map(({ id, image }) => (
         <img
-          src={`${import.meta.env.VITE_API_BASE_URL}/${image}`}
+          src={`${API_BASE_URL}/markings/image/${image}`}
           key={id}
           alt={`마킹 번호 ${id}의 썸네일 이미지`}
           className="w-full h-full object-cover rounded-lg aspect-square"

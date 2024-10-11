@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MutationState, useMutationState } from "@tanstack/react-query";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { useSnackBar } from "@/shared/lib/overlay";
@@ -11,51 +11,106 @@ import {
   usePostCheckVerificationCode,
   usePostSignUpByEmail,
   usePostVerificationCode,
+  VerificationCodeRequestData,
+  VerificationCodeResponse,
 } from "../api";
-import { validateEmail, validatePassword } from "../lib";
 import { useSignUpByEmailFormStore } from "../store";
 
 const Email = () => {
-  const [isFocusedEmailInput, setIsFocusedEmailInput] =
-    useState<boolean>(false);
+  const { handleOpen, onClose } = useSnackBar(() => (
+    <Snackbar onClose={onClose}>메일로 인증코드가 전송되었습니다</Snackbar>
+  ));
 
-  // ! email.length = 0이면 [코드 전송] 버튼 비활성화해야 하기 때문에, email 구독
-  const email = useSignUpByEmailFormStore((state) => state.email);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const isEmailEmpty = useSignUpByEmailFormStore((state) => state.isEmailEmpty);
+  const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
+  const hasEmailChangedSinceSendCodeRequest = useSignUpByEmailFormStore(
+    (state) => state.hasEmailChangedSinceSendCodeRequest,
+  );
+  const isTimeLeftLessThanOneMinute = useSignUpByEmailFormStore(
+    (state) => state.isTimeLeftLessThanOneMinute,
+  );
   const setEmail = useSignUpByEmailFormStore((state) => state.setEmail);
+  const setHasEmailChangedSinceCodeRequest = useSignUpByEmailFormStore(
+    (state) => state.setHasEmailChangedSinceSendCodeRequest,
+  );
+  const setTimeLeft = useSignUpByEmailFormStore((state) => state.setTimeLeft);
+
+  const {
+    mutate: postVerificationCode,
+    isError: isErrorSendCode,
+    isSuccess: isSuccessSendCode,
+    isIdle: isIdleSendCode,
+    variables,
+  } = usePostVerificationCode();
+
+  const checkCodeResponseCacheArr = useMutationState<
+    MutationState<
+      CheckVerificationCodeResponse,
+      Error,
+      CheckVerificationCodeRequestData
+    >
+  >({
+    filters: {
+      mutationKey: ["checkVerificationCode"],
+    },
+  });
+  const lastCheckCodeResponse =
+    checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1];
+  const checkCodeStatus = lastCheckCodeResponse?.status;
+  const isSuccessCheckCode = checkCodeStatus === "success";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: email } = e.target;
 
     setEmail(email);
+
+    if (typeof variables !== "undefined") {
+      setHasEmailChangedSinceCodeRequest(variables.email !== email);
+    }
   };
 
-  const isEmailEmpty = email.length === 0;
-  const isValidEmail = validateEmail(email);
+  const isDuplicateEmail =
+    isErrorSendCode && !hasEmailChangedSinceSendCodeRequest;
 
-  // todo: error code에 따라 status text 변경
-  const {
-    mutate: postVerificationCode,
-    isError,
-    variables,
-  } = usePostVerificationCode();
+  const canNotResendCode =
+    isSuccessSendCode &&
+    !hasEmailChangedSinceSendCodeRequest &&
+    (!isTimeLeftLessThanOneMinute || isSuccessCheckCode);
 
-  const isDuplicateEmail = isError && variables?.email === email;
+  const handleSendVerificationCode = () => {
+    const { email } = useSignUpByEmailFormStore.getState();
+
+    postVerificationCode(
+      { email },
+      {
+        onSuccess: () => {
+          handleOpen();
+          setTimeLeft(1000 * 60 * 3);
+          setHasEmailChangedSinceCodeRequest(false);
+        },
+        onError: () => {
+          setHasEmailChangedSinceCodeRequest(false);
+        },
+      },
+    );
+  };
 
   const shouldShowEmailStatusText =
-    isFocusedEmailInput || (!isValidEmail && !isEmailEmpty) || isDuplicateEmail;
-
-  const { handleOpen, onClose } = useSnackBar(() => (
-    <Snackbar onClose={onClose}>메일로 인증코드가 전송되었습니다</Snackbar>
-  ));
+    isFocused || isValidEmail || !isEmailEmpty || isDuplicateEmail;
 
   const statusTextColorStyle = isDuplicateEmail
     ? "text-pink-500"
     : isValidEmail || isEmailEmpty
       ? "text-grey-500"
       : "text-pink-500";
-  const statusText = isDuplicateEmail
-    ? "이미 가입된 이메일 입니다"
-    : "이메일 형식으로 입력해 주세요";
+
+  const statusText = !isValidEmail
+    ? "이메일 형식으로 입력해 주세요"
+    : isDuplicateEmail
+      ? "이미 가입된 이메일 입니다"
+      : "올바른 이메일 형식입니다";
 
   return (
     <div>
@@ -64,28 +119,47 @@ const Email = () => {
           id="email"
           name="email"
           label="이메일"
-          isError={!isEmailEmpty && !isValidEmail}
+          disabled={isSuccessCheckCode}
+          isError={(!isEmailEmpty && !isValidEmail) || isDuplicateEmail}
           placeholder="이메일을 입력해 주세요"
           statusText={undefined}
           essential
           onChange={handleChange}
-          onFocus={() => setIsFocusedEmailInput(true)}
-          onBlur={() => setIsFocusedEmailInput(false)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
-        <Button
-          type="button"
-          colorType="secondary"
-          variant="filled"
-          size="medium"
-          fullWidth={false}
-          disabled={!isValidEmail || isEmailEmpty || isDuplicateEmail}
-          onClick={() => {
-            handleOpen();
-            postVerificationCode({ email });
-          }}
-        >
-          코드전송
-        </Button>
+        {isIdleSendCode ? (
+          <Button
+            type="button"
+            colorType="secondary"
+            variant="filled"
+            size="medium"
+            fullWidth={false}
+            className="w-[6.5rem]"
+            onClick={handleSendVerificationCode}
+            disabled={!isValidEmail || isDuplicateEmail || isSuccessCheckCode}
+          >
+            코드전송
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            colorType="secondary"
+            variant="filled"
+            size="medium"
+            fullWidth={false}
+            className="w-[6.5rem]"
+            onClick={handleSendVerificationCode}
+            disabled={
+              !isValidEmail ||
+              isDuplicateEmail ||
+              isSuccessCheckCode ||
+              canNotResendCode
+            }
+          >
+            재전송
+          </Button>
+        )}
       </div>
       {shouldShowEmailStatusText && (
         <p className={`body-3 pl-1 pr-3 pt-1 h-6 ${statusTextColorStyle}`}>
@@ -97,26 +171,24 @@ const Email = () => {
 };
 
 const VerificationCode = () => {
-  const email = useSignUpByEmailFormStore((state) => state.email);
-
+  const hasEmailChangedSinceSendCodeRequest = useSignUpByEmailFormStore(
+    (state) => state.hasEmailChangedSinceSendCodeRequest,
+  );
   const verificationCode = useSignUpByEmailFormStore(
     (state) => state.verificationCode,
   );
   const setVerificationCode = useSignUpByEmailFormStore(
     (state) => state.setVerificationCode,
   );
+  const timeLeft = useSignUpByEmailFormStore((state) => state.timeLeft);
+  const setTimeLeft = useSignUpByEmailFormStore((state) => state.setTimeLeft);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value: verificationCode } = e.target;
+  const verificationCodeRef = useRef<HTMLInputElement>(null);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
-    const isNumber = /^[0-9]*$/.test(verificationCode);
+  const CODE_LENGTH = 7;
+  const INTERVAL = 1000;
 
-    if (isNumber) {
-      setVerificationCode(verificationCode);
-    }
-  };
-
-  // todo: error code에 따라 status text 변경
   const {
     mutate: postCheckCode,
     isError: isErrorCheckCode,
@@ -124,47 +196,95 @@ const VerificationCode = () => {
     variables,
   } = usePostCheckVerificationCode();
 
-  const CODE_LENGTH = 7;
+  const hasCodeChangedSinceCheckCodeRequest =
+    variables?.authNum !== verificationCode;
 
-  const ref = useRef<HTMLInputElement>(null);
-
-  const handleCheckButtonClick = () => {
-    postCheckCode(
-      { email, authNum: verificationCode },
-      {
-        onError: () => {
-          ref.current?.focus();
-        },
-      },
-    );
-  };
-
-  const isValidEmail = validateEmail(email);
-  const isEmailChanged = variables?.email !== email;
-
-  const isSuccess = isSuccessCheckCode && !isEmailChanged;
-  const isError = isErrorCheckCode || (isSuccessCheckCode && isEmailChanged);
-
-  let statusText = "";
-
-  if (isSuccess) statusText = "인증되었습니다";
-  if (isError) statusText = "인증코드를 다시 확인해 주세요";
-
-  const sendCodeResponseCacheArr = useMutationState({
+  // 인증 코드 전송 요청에 대한 응답 캐시
+  const sendCodeResponseCacheArr = useMutationState<
+    MutationState<VerificationCodeResponse, Error, VerificationCodeRequestData>
+  >({
     filters: {
       mutationKey: ["sendVerificationCode"],
     },
   });
 
-  const isErrorSendCode =
-    sendCodeResponseCacheArr[sendCodeResponseCacheArr.length - 1]?.status ===
-    "error";
+  const lastSendCodeResponse =
+    sendCodeResponseCacheArr[sendCodeResponseCacheArr.length - 1];
+  const sendCodeStatus = lastSendCodeResponse?.status;
+  const isErrorSendCode = sendCodeStatus === "error";
+  const isSuccessSendCode = sendCodeStatus === "success";
+  const hasSentCode = !!lastSendCodeResponse?.data;
+
+  const isTimeOver = timeLeft === 0 && isSuccessSendCode;
+
+  const isCodeNotMatched =
+    isErrorCheckCode &&
+    !hasEmailChangedSinceSendCodeRequest &&
+    !hasCodeChangedSinceCheckCodeRequest;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value: verificationCode } = e.target;
+
+    const onlyNumbers = verificationCode.replace(/[^0-9]/g, "");
+
+    setVerificationCode(onlyNumbers);
+  };
+
+  const handleCheckButtonClick = () => {
+    const { email, verificationCode } = useSignUpByEmailFormStore.getState();
+
+    postCheckCode(
+      { email, authNum: verificationCode },
+      {
+        onError: () => {
+          verificationCodeRef.current?.focus();
+        },
+      },
+    );
+  };
+
+  useEffect(() => {
+    if (!isSuccessSendCode || isSuccessCheckCode) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(timeLeft - INTERVAL);
+    }, INTERVAL);
+
+    if (isTimeOver || hasEmailChangedSinceSendCodeRequest) {
+      setVerificationCode("");
+      clearInterval(timer);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [
+    timeLeft,
+    setTimeLeft,
+    isSuccessSendCode,
+    setVerificationCode,
+    isTimeOver,
+    hasEmailChangedSinceSendCodeRequest,
+    isSuccessCheckCode,
+  ]);
+
+  const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
+    2,
+    "0",
+  );
+  const seconds = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
+
+  let statusText = "인증코드 7자리를 입력해 주세요";
+  if (isSuccessCheckCode) statusText = "인증되었습니다";
+  if (isCodeNotMatched) statusText = "인증코드를 다시 확인해 주세요";
+  if (isTimeOver)
+    statusText = "인증시간이 만료되었습니다. 재전송 버튼을 눌러주세요";
 
   return (
     <div>
       <div className="flex items-end justify-between gap-2">
         <Input
-          ref={ref}
+          ref={verificationCodeRef}
           componentType="outlinedText"
           id="verification-code"
           name="verificationCode"
@@ -174,8 +294,25 @@ const VerificationCode = () => {
           maxLength={CODE_LENGTH}
           value={verificationCode}
           onChange={handleChange}
-          isError={isError}
-          disabled={!isValidEmail || isErrorSendCode || isSuccess}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          isError={isTimeOver || isCodeNotMatched}
+          disabled={
+            !hasSentCode ||
+            isErrorSendCode ||
+            (isSuccessSendCode && hasEmailChangedSinceSendCodeRequest) ||
+            isSuccessCheckCode
+          }
+          trailingNode={
+            isSuccessSendCode &&
+            !isSuccessCheckCode && (
+              <span
+                className={`body-2 ${isTimeOver ? "text-pink-500" : "text-grey-700"}`}
+              >
+                {minutes}:{seconds}
+              </span>
+            )
+          }
         />
         <Button
           type="button"
@@ -183,28 +320,29 @@ const VerificationCode = () => {
           variant="filled"
           size="medium"
           fullWidth={false}
+          className="w-[6.5rem]"
           onClick={handleCheckButtonClick}
           disabled={
-            !isValidEmail ||
-            isErrorSendCode ||
-            isSuccess ||
-            verificationCode.length < CODE_LENGTH
+            isCodeNotMatched ||
+            isTimeOver ||
+            verificationCode.length < CODE_LENGTH ||
+            isSuccessCheckCode
           }
         >
           확인
         </Button>
       </div>
       <p
-        className={`body-3 pl-1 pr-3 pt-1 h-6 ${isError ? "text-pink-500" : "text-grey-500"}`}
+        className={`body-3 pl-1 pr-3 pt-1 h-6 ${isTimeOver || isCodeNotMatched ? "text-pink-500" : "text-grey-500"}`}
       >
-        {statusText}
+        {(isFocused || isSuccessCheckCode || isTimeOver || isCodeNotMatched) &&
+          statusText}
       </p>
     </div>
   );
 };
 
 const Password = () => {
-  const password = useSignUpByEmailFormStore((state) => state.password);
   const setPassword = useSignUpByEmailFormStore((state) => state.setPassword);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -213,8 +351,12 @@ const Password = () => {
     setPassword(password);
   };
 
-  const isPasswordEmpty = password.length === 0;
-  const isValidPassword = validatePassword(password);
+  const isPasswordEmpty = useSignUpByEmailFormStore(
+    (state) => state.isPasswordEmpty,
+  );
+  const isValidPassword = useSignUpByEmailFormStore(
+    (state) => state.isValidPassword,
+  );
 
   const statusText = isPasswordEmpty
     ? "비밀번호를 입력해 주세요"
@@ -237,26 +379,31 @@ const Password = () => {
 };
 
 const PasswordConfirm = () => {
-  const password = useSignUpByEmailFormStore((state) => state.password);
   const passwordConfirm = useSignUpByEmailFormStore(
-    (state) => state.passwordConfirm,
+    (state) => state.confirmPassword,
   );
   const setPasswordConfirm = useSignUpByEmailFormStore(
-    (state) => state.setPasswordConfirm,
+    (state) => state.setConfirmPassword,
   );
 
-  const isPasswordConfirmEmpty = passwordConfirm.length === 0;
+  const isConfirmPasswordEmpty = useSignUpByEmailFormStore(
+    (state) => state.isConfirmPasswordEmpty,
+  );
 
-  const isValidPassword = validatePassword(password);
-  const isPasswordMatched = password === passwordConfirm;
+  const isValidPassword = useSignUpByEmailFormStore(
+    (state) => state.isValidPassword,
+  );
+  const isValidConfirmPassword = useSignUpByEmailFormStore(
+    (state) => state.isValidConfirmPassword,
+  );
 
   let statusText = "";
 
   if (isValidPassword) {
-    if (isPasswordMatched) statusText = "사용가능한 비밀번호 입니다";
+    if (isValidConfirmPassword) statusText = "사용가능한 비밀번호 입니다";
     else statusText = "비밀번호가 서로 일치하지 않습니다";
   } else {
-    if (isPasswordMatched) statusText = "";
+    if (isValidConfirmPassword) statusText = "";
     else statusText = "비밀번호가 서로 일치하지 않습니다";
   }
 
@@ -277,12 +424,12 @@ const PasswordConfirm = () => {
           essential
           value={passwordConfirm}
           onChange={handleChange}
-          isError={!isPasswordConfirmEmpty && !isPasswordMatched}
+          isError={!isConfirmPasswordEmpty && !isValidConfirmPassword}
         />
         <p
-          className={`body-3 pl-1 pr-3 pt-1 h-6 ${!isPasswordConfirmEmpty && !isPasswordMatched ? "text-pink-500" : "text-grey-500"}`}
+          className={`body-3 pl-1 pr-3 pt-1 h-6 ${!isConfirmPasswordEmpty && !isValidConfirmPassword ? "text-pink-500" : "text-grey-500"}`}
         >
-          {isPasswordConfirmEmpty ? "" : statusText}
+          {isConfirmPasswordEmpty ? "" : statusText}
         </p>
       </div>
       <span className="body-3 px-3 pt-1 text-grey-500">
@@ -296,68 +443,51 @@ const PasswordConfirm = () => {
 const SignUpByEmailForm = () => {
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
 
-  const checkCodeResponseCacheArr = useMutationState<
-    MutationState<
-      CheckVerificationCodeResponse,
-      Error,
-      CheckVerificationCodeRequestData
-    >
-  >({
-    filters: {
-      mutationKey: ["checkVerificationCode"],
-    },
-  });
+  const {
+    handleOpen: handleEmptyFieldsSnackBar,
+    onClose: onCloseEmptyFieldsSnackBar,
+  } = useSnackBar(() => (
+    <Snackbar onClose={onCloseEmptyFieldsSnackBar}>
+      이메일과 비밀번호를 모두 입력해 주세요
+    </Snackbar>
+  ));
+  const {
+    handleOpen: handleValidFieldsSnackBar,
+    onClose: onCloseValidFieldsSnackBar,
+  } = useSnackBar(() => (
+    <Snackbar onClose={onCloseValidFieldsSnackBar}>
+      이메일 또는 비밀번호를 올바르게 입력해 주세요
+    </Snackbar>
+  ));
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { email, password, passwordConfirm } =
-      useSignUpByEmailFormStore.getState();
+    const {
+      email,
+      password,
+      isEmailEmpty,
+      isPasswordEmpty,
+      isConfirmPasswordEmpty,
+      isValidEmail,
+      isValidPassword,
+      isValidConfirmPassword,
+    } = useSignUpByEmailFormStore.getState();
 
-    const isEmailEmpty = email.length === 0;
-    const isPasswordEmpty = password.length === 0;
-    const isPasswordConfirmEmpty = passwordConfirm.length === 0;
-
-    if (isEmailEmpty || isPasswordEmpty || isPasswordConfirmEmpty) {
-      // todo: snackbar 띄우기
-      alert("이메일 또는 비밀번호를 입력해 주세요");
+    if (isEmailEmpty || isPasswordEmpty || isConfirmPasswordEmpty) {
+      handleEmptyFieldsSnackBar();
       return;
     }
-
-    const isMatchedPassword = password === passwordConfirm;
 
     const isValidEmailAndPassword =
-      validateEmail(email) && validatePassword(password) && isMatchedPassword;
+      isValidEmail && isValidPassword && isValidConfirmPassword;
 
     if (!isValidEmailAndPassword) {
-      // todo: snackbar 띄우기
-      alert("이메일 또는 비밀번호를 올바르게 입력해 주세요");
+      handleValidFieldsSnackBar();
       return;
     }
 
-    const lastCheckCodeResponse =
-      checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1];
-    const isEmailChanged = lastCheckCodeResponse.variables?.email !== email;
-
-    if (isEmailChanged) {
-      alert("인증코드를 확인해 주세요");
-      return;
-    }
-
-    const isVerificationCodeCorrect =
-      lastCheckCodeResponse.status === "success";
-
-    if (!isVerificationCodeCorrect) {
-      // todo: snackbar 띄우기
-      alert("인증코드를 확인해 주세요");
-      return;
-    }
-
-    const canSignUp =
-      validateEmail(email) &&
-      validatePassword(password) &&
-      isMatchedPassword &&
-      isVerificationCodeCorrect;
+    const canSignUp = isValidEmail && isValidPassword && isValidConfirmPassword;
 
     if (canSignUp) postSignUpByEmail({ email, password });
   };

@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
-import USER from "@/mocks/data/user.json";
 
 // ! TODO
 // ! 해당 컴포넌트는 개발 환경에서만 사용 되는 컴포넌트 입니다.
@@ -17,7 +15,6 @@ export const DevTools = () => {
   );
 
   const nickname = "뽀송송";
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 1100px)");
@@ -28,6 +25,7 @@ export const DevTools = () => {
     mediaQuery.addEventListener("change", handleMediaChange);
     return () => {
       mediaQuery.removeEventListener("change", handleMediaChange);
+      document.cookie = "Authorization-refresh=; path=/; max-age=0";
     };
   }, []);
 
@@ -44,7 +42,6 @@ export const DevTools = () => {
           role: null,
           nickname: null,
         });
-        queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
         break;
       case "ROLE_NONE":
         useAuthStore.setState({
@@ -52,7 +49,6 @@ export const DevTools = () => {
           role: "ROLE_NONE",
           nickname: null,
         });
-        queryClient.invalidateQueries({ queryKey: ["profile", nickname] });
         break;
       case "ROLE_GUEST":
         useAuthStore.setState({
@@ -60,16 +56,38 @@ export const DevTools = () => {
           role: "ROLE_GUEST",
           nickname,
         });
-        queryClient.setQueryData(["profile", nickname], USER.ROLE_GUEST);
         break;
-      default:
+      case "ROLE_USER": {
         useAuthStore.setState({
           token: "Bearer token",
           role: "ROLE_USER",
           nickname,
         });
-        queryClient.setQueryData(["profile", nickname], USER.ROLE_USER);
+        break;
+      }
+      default:
+        return;
     }
+  };
+
+  const setStaleATandStaleRT = () => {
+    useAuthStore.setState({
+      role: "ROLE_USER",
+      token: "staleAccessToken",
+      nickname,
+    });
+    document.cookie =
+      "Authorization-refresh=staleRefreshToken; path=/; max-age=3600";
+  };
+
+  const setStaleATandFreshRT = () => {
+    useAuthStore.setState({
+      role: "ROLE_USER",
+      token: "staleAccessToken",
+      nickname,
+    });
+    document.cookie =
+      "Authorization-refresh=freshRefreshToken; path=/; max-age=3600";
   };
 
   // TODO 권한에 따라서 ProfileInfo 에 대한 useQuery InitialData 를 변경해야 합니다.
@@ -109,6 +127,29 @@ export const DevTools = () => {
           onClick={() => setAuthStore("ROLE_USER")}
         >
           SET ROLE_USER
+        </Button>
+        {/* 2014/10/05 refresh , access token 로직 추가 */}
+        <Button
+          colorType="primary"
+          variant="filled"
+          size="small"
+          onClick={setStaleATandFreshRT}
+        >
+          <p className="flex flex-col">
+            <span>ROLE_USER</span>
+            <span>stale AT & fresh RT</span>
+          </p>
+        </Button>
+        <Button
+          colorType="primary"
+          variant="filled"
+          size="small"
+          onClick={setStaleATandStaleRT}
+        >
+          <p className="flex flex-col">
+            <span>ROLE_USER</span>
+            <span>stale AT & stale RT</span>
+          </p>
         </Button>
       </div>
     </div>

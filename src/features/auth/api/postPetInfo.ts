@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { skipToken, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProfile } from "@/entities/profile/api";
 import { useAuthStore, AuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
@@ -58,7 +58,8 @@ const postPetInfo = async ({
     headers: {
       Authorization: token,
     },
-    credentials: "same-origin",
+    credentials:
+      process.env.NODE_ENV === "development" ? "include" : "same-origin",
     body: formData,
   });
 
@@ -86,17 +87,17 @@ export const usePostPetInfo = () => {
   return useMutation<PetInfoResponse, Error, PostPetInfoArgs>({
     mutationFn: postPetInfo,
     onSuccess: (data) => {
-      const { role, authorization } = data.content;
+      const { role, authorization: token } = data.content;
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
       const { nickname } = useAuthStore.getState();
 
       setRole(role);
-      setToken(authorization);
+      setToken(token);
       navigate(lastNoneAuthRoute);
 
       queryClient.prefetchQuery({
-        queryKey: ["profile", nickname],
-        queryFn: () => getProfile(nickname as string),
+        queryKey: ["profile", nickname, token],
+        queryFn: nickname ? () => getProfile({ nickname, token }) : skipToken,
       });
     },
 
