@@ -1,4 +1,4 @@
-import { skipToken, useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AuthStore } from "@/shared/store";
 import { PROFILE_END_POINT } from "../constants";
 
@@ -47,23 +47,19 @@ interface ProfileResponse {
   content: UserInfo;
 }
 
-interface ProfileRequest extends Pick<AuthStore, "token"> {
-  nickname: string | null;
+interface ProfileRequest {
+  token: NonNullable<AuthStore["token"]>;
+  nickname: UserNickname;
 }
 
 export const getProfile = async ({
   nickname,
   token,
-}: {
-  nickname: string;
-  token: AuthStore["token"];
-}): Promise<ProfileResponse> => {
-  const headers = new Headers();
-  if (token) {
-    headers.append("Authorization", token);
-  }
+}: ProfileRequest): Promise<ProfileResponse> => {
   const response = await fetch(PROFILE_END_POINT.PROFILE(nickname), {
-    headers,
+    headers: {
+      Authorization: token,
+    },
   });
 
   const data: ProfileResponse = await response.json();
@@ -74,13 +70,27 @@ export const getProfile = async ({
   return data;
 };
 
-export const useGetProfile = ({ nickname, token }: ProfileRequest) => {
+export const useGetProfile = ({
+  nickname,
+  token,
+}: {
+  nickname: UserNickname | null;
+  token: AuthStore["token"];
+}) => {
+  const queryClient = useQueryClient();
+
   return useQuery({
     queryKey: ["profile", nickname, token],
-    queryFn: nickname ? () => getProfile({ nickname, token }) : skipToken,
-
-    enabled: !!nickname,
-    staleTime: 1000 * 60 * 10, // 10분간 데이터는 캐시된 상태로 사용
+    queryFn:
+      nickname && token ? () => getProfile({ nickname, token }) : skipToken,
+    placeholderData: () => {
+      const cachedData = queryClient.getQueryData<ProfileResponse>([
+        "profile",
+        nickname,
+        token,
+      ]);
+      return cachedData;
+    },
     select: (data) => data?.content,
   });
 };
