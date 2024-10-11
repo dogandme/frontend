@@ -74,7 +74,7 @@ export const useGetProfile = ({
   nickname,
   token,
 }: {
-  nickname: UserNickname;
+  nickname: UserNickname | null;
   token: AuthStore["token"];
 }) => {
   const queryClient = useQueryClient();
