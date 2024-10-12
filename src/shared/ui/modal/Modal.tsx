@@ -68,7 +68,10 @@ const FilledButton = ({
   className = "",
   children,
   ...rest
-}: Partial<Omit<ButtonProps, "variant">> & { children: React.ReactNode }) => (
+}: Partial<Omit<ButtonProps, "variant">> & {
+  children: React.ReactNode;
+  onClick: ButtonProps["onClick"];
+}) => (
   <Button
     variant="filled"
     colorType={colorType}
@@ -89,7 +92,10 @@ const TextButton = ({
   className = "",
   children,
   ...rest
-}: Partial<Omit<ButtonProps, "variant">> & { children: React.ReactNode }) => (
+}: Partial<Omit<ButtonProps, "variant">> & {
+  children: React.ReactNode;
+  onClick: ButtonProps["onClick"];
+}) => (
   <Button
     variant="text"
     colorType={colorType}
