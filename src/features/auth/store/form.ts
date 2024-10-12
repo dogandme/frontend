@@ -1,55 +1,101 @@
 import { create } from "zustand";
+import { compressFileImage } from "@/shared/lib";
+import type { PetInfoFormData } from "../api";
 import type { LatLng } from "../api/region";
 import { validateEmail, validatePassword } from "../lib";
 
-interface PetInfoStore {
-  profileImage: File | null;
+export interface FileInfo {
   name: string;
-  isValidName: boolean;
-  breed: string;
-  characterList: string[];
-  introduce: string;
-
-  setProfileImage: (profileImage: File | null) => void;
-  setName: (name: string) => void;
-  setIsValidName: (name: string) => void;
-  setBreed: (greed: string) => void;
-  setCharacterList: (character: string) => void;
-  setIntroduce: (introduce: string) => void;
+  url: string;
+  file: File | null;
 }
 
-/**
- * public 폴더에 존재하는 기본 프로필 이미지를 사용합니다.
- * origin/{파일명} 을 통해 public 폴더에 접근하는 파일에 접근 할 수 있습니다.
- */
-export const usePetInfoStore = create<PetInfoStore>((set) => ({
-  profileImage: null,
+interface PetInfoFormStates extends Omit<PetInfoFormData, "profile"> {
+  isValidName: boolean;
+  profile: FileInfo;
+  isCompressing: boolean;
+  inputKey: number;
+}
+
+interface PetInfoFormActions {
+  setProfile: (profile: FileInfo) => void;
+  setName: (name: string) => void;
+  setIsValidName: (name: string) => void;
+  setBreed: (breed: string) => void;
+  setPersonalities: (personality: string) => void;
+  setDescription: (description: string) => void;
+}
+
+const petInfoFormInitialState: PetInfoFormStates = {
+  profile: { name: "", url: "/default-image.png", file: null },
   name: "",
   isValidName: true,
   breed: "",
-  characterList: [],
-  introduce: "",
+  personalities: [],
+  description: "",
+  isCompressing: false,
+  inputKey: 0,
+};
 
-  setProfileImage: (profileImage: File | null) => set({ profileImage }),
-  setName: (name: string) => set({ name }),
-  setIsValidName: (name: string) =>
-    set(() => {
-      const isValidName = new RegExp("^[가-힣a-zA-Z]{1,20}$").test(name);
-      return { isValidName };
-    }),
-  setBreed: (breed: string) => set({ breed }),
-  setCharacterList: (character: string) =>
-    set((state) => {
-      // 배열에 character 값이 존재 할 경우 제거하고, 존재하지 않을 경우 추가합니다.
-      const isAlreadySelected = state.characterList.includes(character);
+export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
+  (set, get) => ({
+    ...petInfoFormInitialState,
 
-      const newCharacter = isAlreadySelected
-        ? state.characterList.filter((c) => c !== character)
-        : [...state.characterList, character];
-      return { characterList: newCharacter };
-    }),
-  setIntroduce: (introduce: string) => set({ introduce }),
-}));
+    /**
+     * profile 을 설정하던 중 압축 과정이 진행 중일 경우 isCompressing 을 true, 종료 시 false 로 변경 합니다.
+     * 이 때 profile의 압축이 실패한 경우엔 실패한 profile이 아닌 기존 존재하던 profile 로 변경합니다.
+     */
+    setProfile: async (profile: FileInfo) => {
+      const { profile: prevProfile } = get();
+
+      if (!profile.file) {
+        set({
+          profile: prevProfile,
+          isCompressing: false,
+          inputKey: get().inputKey + 1,
+        });
+        return;
+      }
+
+      set({ profile, isCompressing: true, inputKey: get().inputKey + 1 });
+
+      try {
+        const compressedImage = await compressFileImage(profile.file);
+        set({ profile: { ...profile, file: compressedImage } });
+      } catch (error) {
+        // TODO 에러 바운더리 로직 나오면 변경하기
+        console.error(`
+          ${profile.name}을 압축하는데 실패했습니다.
+          ${error}`);
+
+        set({
+          profile: prevProfile,
+          inputKey: get().inputKey + 1,
+        });
+      } finally {
+        set({ isCompressing: false });
+      }
+    },
+    setName: (name: string) => set({ name }),
+    setIsValidName: (name: string) =>
+      set(() => {
+        const isValidName = new RegExp("^[가-힣a-zA-Z]{1,20}$").test(name);
+        return { isValidName };
+      }),
+    setBreed: (breed: string) => set({ breed }),
+    setPersonalities: (character: string) =>
+      set((state) => {
+        // 배열에 character 값이 존재 할 경우 제거하고, 존재하지 않을 경우 추가합니다.
+        const isAlreadySelected = state.personalities.includes(character);
+
+        const newCharacter = isAlreadySelected
+          ? state.personalities.filter((c) => c !== character)
+          : [...state.personalities, character];
+        return { personalities: newCharacter };
+      }),
+    setDescription: (description: string) => set({ description }),
+  }),
+);
 
 interface LoginFormStore {
   email: string;

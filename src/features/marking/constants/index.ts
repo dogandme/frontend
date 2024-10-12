@@ -6,3 +6,5 @@ export const POST_VISIBILITY_MAP = {
 
 export * from "./requestUrl";
 export * from "./message";
+
+export const MAX_IMAGE_LENGTH = 5;
