@@ -4,6 +4,7 @@ import { EmailLoginPage } from "@/pages/login/email";
 import { MapPage } from "@/pages/map";
 import { MyPage } from "@/pages/my-page";
 import { SettingPage } from "@/pages/my-page/setting";
+import { EditInfoPage } from "@/pages/my-page/setting/edit-info/page";
 import { AccountManagementPage } from "@/pages/my-page/setting/manage-account";
 import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
               {
                 path: ROUTER_PATH.MANAGE_ACCOUNT,
                 element: <AccountManagementPage />,
+              },
+              {
+                path: ROUTER_PATH.EDIT_MY_INFO,
+                element: <EditInfoPage />,
               },
             ],
           },
