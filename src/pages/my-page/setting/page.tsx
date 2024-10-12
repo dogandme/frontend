@@ -47,7 +47,7 @@ const AccountManagement = () => (
 );
 
 const EditMyInfo = () => (
-  <Link to="." className="setting-item">
+  <Link to={ROUTER_PATH.EDIT_MY_INFO} className="setting-item">
     <p>내 정보 수정</p>
     <span className="text-grey-500">
       <ArrowRightIcon />
