@@ -52,7 +52,7 @@ const NewPasswordInput = () => {
   const statusText = !isFilledNewPassword
     ? "비밀번호를 입력해 주세요"
     : isValidNewPassword
-      ? ""
+      ? "사용가능한 비밀번호 입니다"
       : "비밀번호 형식에 맞게 입력해 주세요";
 
   return (
@@ -85,7 +85,7 @@ const ConfirmNewPasswordInput = () => {
   const statusText = !isFilledConfirmPassword
     ? "비밀번호를 입력해 주세요"
     : isSameNewPasswordAndConfirmPassword
-      ? ""
+      ? "비밀번호가 일치 합니다"
       : "비밀번호가 서로 일치하지 않습니다";
 
   return (
@@ -126,15 +126,15 @@ export const PasswordChangeModal = ({
       return;
     }
 
-    if (!isAllValueValid) {
-      // TODO 에러바운더리 로직 나오면 변경 하기
-      console.error("비밀번호 형식에 맞게 입력해 주세요");
-      return;
-    }
-
     if (!isSameNewPasswordAndConfirmPassword) {
       // TODO 에러바운더리 로직 나오면 변경 하기
       console.error("새 비밀번호를 다시 확인해 주세요");
+      return;
+    }
+
+    if (!isAllValueValid) {
+      // TODO 에러바운더리 로직 나오면 변경 하기
+      console.error("비밀번호 형식에 맞게 입력해 주세요");
       return;
     }
 
