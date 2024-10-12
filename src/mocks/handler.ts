@@ -429,6 +429,10 @@ export const getProfileHandlers = [
       return HttpResponse.json(User["ROLE_USER"]);
     }
 
+    if (token === "freshAccessToken-socialType" && nickname === "뽀송송") {
+      return HttpResponse.json(User["ROLE_USER"]);
+    }
+
     const userInfo = userDB[nickname as string];
     if (!userInfo) {
       return HttpResponse.json(
