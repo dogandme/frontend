@@ -5,6 +5,7 @@ import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import { SETTING_END_POINT } from "@/features/setting/constants";
+import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
@@ -34,7 +35,16 @@ interface UserDB {
   [key: string]: UserInfo;
 }
 
+interface UserInfoDB {
+  [key: string]: MyInfo;
+}
+
 const userDB: UserDB = {};
+
+const userInfoDB: UserInfoDB = {
+  뽀송송_EMAIL: userInfoData["EMAIL"] as MyInfo,
+  뽀송송_NAVER: userInfoData["NAVER"] as MyInfo,
+};
 
 export const signUpByEmailHandlers = [
   http.post<
@@ -202,10 +212,18 @@ export const userInfoRegistrationHandlers = [
       );
     }
 
+    if (token === "freshAccessToken_naver") {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: userInfoDB["뽀송송_NAVER"],
+      });
+    }
+
     return HttpResponse.json({
       code: 200,
       message: "success",
-      content: userInfoData,
+      content: userInfoDB["뽀송송_EMAIL"],
     });
   }),
 ];
