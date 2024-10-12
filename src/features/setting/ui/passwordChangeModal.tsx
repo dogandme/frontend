@@ -165,16 +165,16 @@ export const PasswordChangeModal = ({
         <div className="flex flex-col gap-1">
           <NewPasswordInput />
           <ConfirmNewPasswordInput />
+          <p className="body-3 px-3 pt-1 text-grey-500">
+            영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로
+            입력해 주세요.
+          </p>
         </div>
-        <p className="body-3 px-3 pt-1 text-grey-500">
-          영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로 입력해
-          주세요.
-        </p>
+        <Modal.Footer axis="col">
+          <Modal.FilledButton onClick={handleSave}>저장</Modal.FilledButton>
+          <Modal.TextButton onClick={onClose}>취소</Modal.TextButton>
+        </Modal.Footer>
       </Modal.Content>
-      <Modal.Footer axis="col">
-        <Modal.FilledButton onClick={handleSave}>저장</Modal.FilledButton>
-        <Modal.TextButton onClick={onClose}>취소</Modal.TextButton>
-      </Modal.Footer>
     </Modal>
   );
 };
