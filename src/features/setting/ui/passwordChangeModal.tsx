@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
-import { Button } from "@/shared/ui/button";
-import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { usePasswordChangeFormStore } from "../store";
 
@@ -185,17 +183,13 @@ export const PasswordChangeModal = ({
 
   return (
     <Modal modalType="center">
-      <section className="flex justify-between self-stretch">
-        <h1 className="title-1 text-grey-900">비밀번호 변경</h1>
-        <button onClick={onClose}>
-          <CloseIcon />
-        </button>
-      </section>
-      <form
-        action=""
-        onSubmit={(e) => e.preventDefault()}
-        className="flex flex-col gap-4"
+      <Modal.Header
+        onClick={onClose}
+        closeButtonAriaLabel="비밀번호 변경 모달 닫기"
       >
+        비밀번호 변경
+      </Modal.Header>
+      <Modal.Content>
         <CurrentPasswordInput />
         <div className="flex flex-col gap-1">
           <NewPasswordInput />
@@ -205,20 +199,11 @@ export const PasswordChangeModal = ({
           영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로 입력해
           주세요.
         </p>
-      </form>
-      <div className="flex flex-col gap-2">
-        <Button colorType="primary" variant="filled" size="medium">
-          다음
-        </Button>
-        <Button
-          colorType="tertiary"
-          variant="text"
-          size="medium"
-          onClick={onClose}
-        >
-          취소
-        </Button>
-      </div>
+      </Modal.Content>
+      <Modal.Footer axis="col">
+        <Modal.FilledButton>다음</Modal.FilledButton>
+        <Modal.TextButton>취소</Modal.TextButton>
+      </Modal.Footer>
     </Modal>
   );
 };
