@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { Button } from "../button";
 import { ButtonProps } from "../button/Button";
 import { CloseIcon } from "../icon";
@@ -59,7 +59,19 @@ const Footer = ({
 }: {
   children: React.ReactNode;
   axis: "row" | "col";
-}) => <section className={`flex gap-2 flex-${axis}`}>{children}</section>;
+}) => {
+  return (
+    <section className={`flex gap-2 flex-${axis}`}>
+      {React.Children.map(children, (child) =>
+        React.isValidElement(child)
+          ? React.cloneElement(child as ReactElement, {
+              axis,
+            })
+          : child,
+      )}
+    </section>
+  );
+};
 
 const FilledButton = ({
   onClick,
@@ -67,8 +79,13 @@ const FilledButton = ({
   size = "medium",
   className = "",
   children,
+  axis,
   ...rest
-}: Partial<Omit<ButtonProps, "variant">> & { children: React.ReactNode }) => (
+}: Partial<Omit<ButtonProps, "variant">> & {
+  children: React.ReactNode;
+  onClick: ButtonProps["onClick"];
+  axis?: "row" | "col";
+}) => (
   <Button
     variant="filled"
     colorType={colorType}
@@ -76,7 +93,7 @@ const FilledButton = ({
     onClick={onClick}
     fullWidth={false}
     {...rest}
-    className={className}
+    className={`${axis === "row" && "flex-1"} ${className}`}
   >
     {children}
   </Button>
@@ -88,15 +105,20 @@ const TextButton = ({
   size = "medium",
   className = "",
   children,
+  axis,
   ...rest
-}: Partial<Omit<ButtonProps, "variant">> & { children: React.ReactNode }) => (
+}: Partial<Omit<ButtonProps, "variant">> & {
+  children: React.ReactNode;
+  onClick: ButtonProps["onClick"];
+  axis?: "row" | "col";
+}) => (
   <Button
     variant="text"
     colorType={colorType}
     size={size}
     onClick={onClick}
     fullWidth={false}
-    className={className}
+    className={`${axis === "row" && "flex-1"} ${className}`}
     {...rest}
   >
     {children}
