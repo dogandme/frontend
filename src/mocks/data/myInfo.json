@@ -45,6 +45,6 @@
     ],
     "nickLastModDt": "2023-10-01T12:34:56Z",
     "socialType": "NAVER",
-    "isPasswordSet": true
+    "isPasswordSet": false
   }
 }
