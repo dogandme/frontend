@@ -1,5 +1,8 @@
 import { usePasswordChangeModal } from "@/features/setting/hooks";
-import { useSettingPermission } from "@/features/setting/hooks";
+import {
+  useSettingPermission,
+  usePasswordSetModal,
+} from "@/features/setting/hooks";
 import { AccountCancellationModal } from "@/features/setting/ui";
 import type { MyInfo } from "@/entities/auth/api";
 import { useGetMyInfo } from "@/entities/auth/api";
@@ -69,10 +72,10 @@ const PasswordChangeButton = () => {
 
 const PasswordSetButton = () => {
   // TODO 비밀번호 설정 모달로 변경 하기
-  const handleOpenPasswordChangeModal = usePasswordChangeModal();
+  const handleOpenPasswordSetModal = usePasswordSetModal();
 
   return (
-    <button className="setting-item" onClick={handleOpenPasswordChangeModal}>
+    <button className="setting-item" onClick={handleOpenPasswordSetModal}>
       <p>비밀번호 설정</p>
       <div className="flex items-center text-grey-500">
         <span className="body-2">비밀번호를 설정해 주세요</span>
