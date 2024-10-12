@@ -107,7 +107,3 @@ export const usePasswordChangeFormStore = create<
   },
   reset: () => set({ ...initialPasswordChangeFormState }),
 }));
-
-usePasswordChangeFormStore.subscribe((state) => {
-  console.table(state);
-});

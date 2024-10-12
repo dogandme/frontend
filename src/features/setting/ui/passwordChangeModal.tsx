@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
+import { useSnackBar } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store";
 import { Modal } from "@/shared/ui/modal";
+import { Snackbar } from "@/shared/ui/snackbar";
+import { usePutChangePassword } from "../api/putChangePassword";
 import { usePasswordChangeFormStore } from "../store";
 
 // TODO 사용 가능한 비밀 번호 시 statusText 변경
@@ -110,6 +114,12 @@ export const PasswordChangeModal = ({
     (state) => state.reset,
   );
 
+  const { mutate: putChangePassword } = usePutChangePassword();
+  const { handleOpen: handleOpenSnackbar, onClose: onCloseSnackbar } =
+    useSnackBar(() => (
+      <Snackbar onClose={onCloseSnackbar}>비밀번호가 변경되었습니다.</Snackbar>
+    ));
+
   const handleSave = () => {
     const {
       currentPassword,
@@ -119,6 +129,7 @@ export const PasswordChangeModal = ({
       isAllValueValid,
       isSameNewPasswordAndConfirmPassword,
     } = usePasswordChangeFormStore.getState();
+    const { token } = useAuthStore.getState();
 
     if (!isAllValueFilled) {
       // TODO 에러바운더리 로직 나오면 변경 하기
@@ -138,14 +149,25 @@ export const PasswordChangeModal = ({
       return;
     }
 
-    // TODO mutation으로 바꾸기
-    console.table({
-      currentPassword,
-      newPassword,
-      confirmPassword,
-    });
-
-    onClose();
+    putChangePassword(
+      {
+        password: currentPassword,
+        newPw: newPassword,
+        newPwChk: confirmPassword,
+        token: token!,
+      },
+      {
+        onSuccess: () => {
+          resetPasswordChangeForm();
+          onClose();
+          handleOpenSnackbar();
+        },
+        onError: (error) => {
+          // TODO 에러 바운더리 로직 나오면 변경 하
+          console.error(error);
+        },
+      },
+    );
   };
 
   useEffect(() => {
