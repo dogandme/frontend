@@ -5,46 +5,19 @@ import { usePasswordChangeFormStore } from "../store";
 
 // TODO 사용 가능한 비밀 번호 시 statusText 변경
 
-const validatePassword = (password: string) => {
-  // 조건
-  // 1. 영문, 숫자, 특수문자 3가지 조합 포함
-  // 2. 8~15자 이내
-  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-
-  return passwordRegex.test(password);
-};
-
 const CurrentPasswordInput = () => {
   const isValidPassword = usePasswordChangeFormStore(
     (state) => state.isValidPassword,
   );
-  const isEmptyCurrentPassword = usePasswordChangeFormStore(
-    (state) => state.isEmptyCurrentPassword,
+  const isFilledCurrentPassword = usePasswordChangeFormStore(
+    (state) => state.isFilledCurrentPassword,
   );
 
   const setCurrentPassword = usePasswordChangeFormStore(
     (state) => state.setCurrentPassword,
   );
-  const setIsValidPassword = usePasswordChangeFormStore(
-    (state) => state.setIsValidPassword,
-  );
 
-  const setIsEmptyCurrentPassword = usePasswordChangeFormStore(
-    (state) => state.setIsEmptyCurrentPassword,
-  );
-
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = target;
-    setCurrentPassword(value);
-
-    const isValidPassword = validatePassword(value);
-    const isPasswordEmpty = value.length === 0;
-
-    setIsValidPassword(isValidPassword);
-    setIsEmptyCurrentPassword(isPasswordEmpty);
-  };
-
-  const statusText = isEmptyCurrentPassword
+  const statusText = !isFilledCurrentPassword
     ? "비밀번호를 입력해 주세요"
     : isValidPassword
       ? ""
@@ -57,9 +30,9 @@ const CurrentPasswordInput = () => {
       name="current-password"
       placeholder="현재 비밀번호를 입력해주세요"
       essential
-      onChange={handleChange}
+      onChange={({ target }) => setCurrentPassword(target.value)}
       statusText={statusText}
-      isError={!isEmptyCurrentPassword && !isValidPassword}
+      isError={isFilledCurrentPassword && !isValidPassword}
     />
   );
 };
@@ -68,38 +41,15 @@ const NewPasswordInput = () => {
   const isValidNewPassword = usePasswordChangeFormStore(
     (state) => state.isValidNewPassword,
   );
-  const isEmptyNewPassword = usePasswordChangeFormStore(
-    (state) => state.isEmptyNewPassword,
+  const isFilledNewPassword = usePasswordChangeFormStore(
+    (state) => state.isFilledNewPassword,
   );
 
   const setNewPassword = usePasswordChangeFormStore(
     (state) => state.setNewPassword,
   );
-  const setIsValidNewPassword = usePasswordChangeFormStore(
-    (state) => state.setIsValidNewPassword,
-  );
-  const setIsValidConfirmPassword = usePasswordChangeFormStore(
-    (state) => state.setIsValidConfirmPassword,
-  );
 
-  const setIsEmptyNewPassword = usePasswordChangeFormStore(
-    (state) => state.setIsEmptyNewPassword,
-  );
-
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = target;
-    setNewPassword(value);
-
-    const isValidNewPassword = validatePassword(value);
-    const isNewPasswordEmpty = value.length === 0;
-    setIsValidNewPassword(isValidNewPassword);
-    setIsEmptyNewPassword(isNewPasswordEmpty);
-
-    const { confirmPassword } = usePasswordChangeFormStore.getState();
-    setIsValidConfirmPassword(value === confirmPassword);
-  };
-
-  const statusText = isEmptyNewPassword
+  const statusText = !isFilledNewPassword
     ? "비밀번호를 입력해 주세요"
     : isValidNewPassword
       ? ""
@@ -112,46 +62,29 @@ const NewPasswordInput = () => {
       name="new-password"
       placeholder="비밀번호를 입력해 주세요"
       essential
-      onChange={handleChange}
+      onChange={({ target }) => setNewPassword(target.value)}
       statusText={statusText}
-      isError={!isEmptyNewPassword && !isValidNewPassword}
+      isError={isFilledNewPassword && !isValidNewPassword}
     />
   );
 };
 
 const ConfirmNewPasswordInput = () => {
-  const isValidConfirmPassword = usePasswordChangeFormStore(
-    (state) => state.isValidConfirmPassword,
+  const isFilledConfirmPassword = usePasswordChangeFormStore(
+    (state) => state.isFilledConfirmPassword,
   );
-  const isEmptyConfirmPassword = usePasswordChangeFormStore(
-    (state) => state.isEmptyConfirmPassword,
+
+  const isSameNewPasswordAndConfirmPassword = usePasswordChangeFormStore(
+    (state) => state.isSameNewPasswordAndConfirmPassword,
   );
 
   const setConfirmPassword = usePasswordChangeFormStore(
     (state) => state.setConfirmPassword,
   );
-  const setIsValidConfirmPassword = usePasswordChangeFormStore(
-    (state) => state.setIsValidConfirmPassword,
-  );
 
-  const setIsEmptyConfirmPassword = usePasswordChangeFormStore(
-    (state) => state.setIsEmptyConfirmPassword,
-  );
-
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = target;
-    setConfirmPassword(value);
-
-    const isConfirmPasswordEmpty = value.length === 0;
-    setIsEmptyConfirmPassword(isConfirmPasswordEmpty);
-
-    const { newPassword } = usePasswordChangeFormStore.getState();
-    setIsValidConfirmPassword(newPassword === value);
-  };
-
-  const statusText = isEmptyConfirmPassword
+  const statusText = !isFilledConfirmPassword
     ? "비밀번호를 입력해 주세요"
-    : isValidConfirmPassword
+    : isSameNewPasswordAndConfirmPassword
       ? ""
       : "비밀번호가 서로 일치하지 않습니다";
 
@@ -161,9 +94,9 @@ const ConfirmNewPasswordInput = () => {
       name="confirm-new-password"
       placeholder="비밀번호를 다시 한 번 입력해주세요"
       essential
-      onChange={handleChange}
+      onChange={({ target }) => setConfirmPassword(target.value)}
       statusText={statusText}
-      isError={!isEmptyConfirmPassword && !isValidConfirmPassword}
+      isError={isFilledConfirmPassword && !isSameNewPasswordAndConfirmPassword}
     />
   );
 };
@@ -176,6 +109,44 @@ export const PasswordChangeModal = ({
   const resetPasswordChangeForm = usePasswordChangeFormStore(
     (state) => state.reset,
   );
+
+  const handleSave = () => {
+    const {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+      isAllValueFilled,
+      isAllValueValid,
+      isSameNewPasswordAndConfirmPassword,
+    } = usePasswordChangeFormStore.getState();
+
+    if (!isAllValueFilled) {
+      // TODO 에러바운더리 로직 나오면 변경 하기
+      console.error("항목을 모두 입력해 주세요");
+      return;
+    }
+
+    if (!isAllValueValid) {
+      // TODO 에러바운더리 로직 나오면 변경 하기
+      console.error("비밀번호 형식에 맞게 입력해 주세요");
+      return;
+    }
+
+    if (!isSameNewPasswordAndConfirmPassword) {
+      // TODO 에러바운더리 로직 나오면 변경 하기
+      console.error("새 비밀번호를 다시 확인해 주세요");
+      return;
+    }
+
+    // TODO mutation으로 바꾸기
+    console.table({
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    });
+
+    onClose();
+  };
 
   useEffect(() => {
     return () => resetPasswordChangeForm();
@@ -201,8 +172,8 @@ export const PasswordChangeModal = ({
         </p>
       </Modal.Content>
       <Modal.Footer axis="col">
-        <Modal.FilledButton>다음</Modal.FilledButton>
-        <Modal.TextButton>취소</Modal.TextButton>
+        <Modal.FilledButton onClick={handleSave}>저장</Modal.FilledButton>
+        <Modal.TextButton onClick={onClose}>취소</Modal.TextButton>
       </Modal.Footer>
     </Modal>
   );

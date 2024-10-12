@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { validatePassword } from "@/features/auth/lib";
 
 interface PasswordChangeFormState {
   // password value
@@ -10,9 +11,14 @@ interface PasswordChangeFormState {
   isValidNewPassword: boolean;
   isValidConfirmPassword: boolean;
   // empty check
-  isEmptyCurrentPassword: boolean;
-  isEmptyNewPassword: boolean;
-  isEmptyConfirmPassword: boolean;
+  isFilledCurrentPassword: boolean;
+  isFilledNewPassword: boolean;
+  isFilledConfirmPassword: boolean;
+
+  /* 유효성 검증 시 사용하기 위한 boolean */
+  isAllValueValid: boolean;
+  isAllValueFilled: boolean;
+  isSameNewPasswordAndConfirmPassword: boolean;
 }
 
 interface PasswordChangeFormActions {
@@ -20,13 +26,6 @@ interface PasswordChangeFormActions {
   setNewPassword: (newPassword: string) => void;
   setConfirmPassword: (confirmPassword: string) => void;
 
-  setIsValidPassword: (isValidPassword: boolean) => void;
-  setIsValidNewPassword: (isValidNewPassword: boolean) => void;
-  setIsValidConfirmPassword: (isValidConfirmPassword: boolean) => void;
-
-  setIsEmptyCurrentPassword: (isEmptyCurrentPassword: boolean) => void;
-  setIsEmptyNewPassword: (isEmptyNewPassword: boolean) => void;
-  setIsEmptyConfirmPassword: (isEmptyConfirmPassword: boolean) => void;
   reset: () => void;
 }
 
@@ -39,32 +38,76 @@ export const initialPasswordChangeFormState: PasswordChangeFormState = {
   isValidNewPassword: false,
   isValidConfirmPassword: false,
 
-  isEmptyCurrentPassword: true,
-  isEmptyNewPassword: true,
-  isEmptyConfirmPassword: true,
+  isFilledCurrentPassword: false,
+  isFilledNewPassword: false,
+  isFilledConfirmPassword: false,
+
+  isAllValueValid: false,
+  isAllValueFilled: false,
+  isSameNewPasswordAndConfirmPassword: true,
 };
 
 export const usePasswordChangeFormStore = create<
   PasswordChangeFormState & PasswordChangeFormActions
->((set) => ({
+>((set, get) => ({
   ...initialPasswordChangeFormState,
 
-  setCurrentPassword: (currentPassword: string) => set({ currentPassword }),
-  setNewPassword: (newPassword: string) => set({ newPassword }),
-  setConfirmPassword: (confirmPassword: string) => set({ confirmPassword }),
-
-  setIsValidPassword: (isValidPassword: boolean) => set({ isValidPassword }),
-  setIsValidNewPassword: (isValidNewPassword: boolean) =>
-    set({ isValidNewPassword }),
-  setIsValidConfirmPassword: (isValidConfirmPassword: boolean) =>
-    set({ isValidConfirmPassword }),
-
-  // empty check
-  setIsEmptyCurrentPassword: (isEmptyCurrentPassword: boolean) =>
-    set({ isEmptyCurrentPassword }),
-  setIsEmptyNewPassword: (isEmptyNewPassword: boolean) =>
-    set({ isEmptyNewPassword }),
-  setIsEmptyConfirmPassword: (isEmptyConfirmPassword: boolean) =>
-    set({ isEmptyConfirmPassword }),
+  setCurrentPassword: (currentPassword: string) => {
+    const {
+      newPassword,
+      confirmPassword,
+      isValidNewPassword,
+      isValidConfirmPassword,
+    } = get();
+    const isValidPassword = validatePassword(currentPassword);
+    set({
+      currentPassword,
+      isFilledCurrentPassword: !!currentPassword,
+      isValidPassword,
+      isAllValueFilled: !!currentPassword && !!newPassword && !!confirmPassword,
+      isAllValueValid:
+        isValidPassword && isValidNewPassword && isValidConfirmPassword,
+    });
+  },
+  setNewPassword: (newPassword: string) => {
+    const {
+      currentPassword,
+      confirmPassword,
+      isValidPassword,
+      isValidConfirmPassword,
+    } = get();
+    const isValidNewPassword = validatePassword(newPassword);
+    set({
+      newPassword,
+      isFilledNewPassword: !!newPassword,
+      isValidNewPassword,
+      isAllValueFilled: !!currentPassword && !!newPassword && !!confirmPassword,
+      isAllValueValid:
+        isValidPassword && isValidNewPassword && isValidConfirmPassword,
+      isSameNewPasswordAndConfirmPassword: confirmPassword === newPassword,
+    });
+  },
+  setConfirmPassword: (confirmPassword: string) => {
+    const {
+      currentPassword,
+      newPassword,
+      isValidPassword,
+      isValidNewPassword,
+    } = get();
+    const isValidConfirmPassword = validatePassword(confirmPassword);
+    set({
+      confirmPassword,
+      isFilledConfirmPassword: !!confirmPassword,
+      isValidConfirmPassword,
+      isAllValueFilled: !!currentPassword && !!newPassword && !!confirmPassword,
+      isAllValueValid:
+        isValidPassword && isValidNewPassword && isValidConfirmPassword,
+      isSameNewPasswordAndConfirmPassword: newPassword === confirmPassword,
+    });
+  },
   reset: () => set({ ...initialPasswordChangeFormState }),
 }));
+
+usePasswordChangeFormStore.subscribe((state) => {
+  console.table(state);
+});
