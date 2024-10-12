@@ -5,10 +5,12 @@ import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import { SETTING_END_POINT } from "@/features/setting/constants";
+import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
 // data
 import markingListData from "./data/markingList.json";
+import userInfoData from "./data/myInfo.json";
 import regionListData from "./data/regionList.json";
 
 interface UserInfo {
@@ -182,6 +184,28 @@ export const userInfoRegistrationHandlers = [
     return HttpResponse.json({
       code: 200,
       message: "success",
+    });
+  }),
+
+  http.get(MY_INFO_END_POINT, async ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: userInfoData,
     });
   }),
 ];
@@ -439,16 +463,13 @@ export const addressHandlers = [
       message: "입력하신 주소가 없습니다",
     });
   }),
-  http.get(
-    `${import.meta.env.VITE_API_BASE_URL}/addresses/search-by-location`,
-    () => {
-      return HttpResponse.json({
-        code: 200,
-        message: "good",
-        content: regionListData["CURRENT_LOCATION"],
-      });
-    },
-  ),
+  http.get(`${API_BASE_URL}/addresses/search-by-location`, () => {
+    return HttpResponse.json({
+      code: 200,
+      message: "good",
+      content: regionListData["CURRENT_LOCATION"],
+    });
+  }),
 ];
 
 /**
