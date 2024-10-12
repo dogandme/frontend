@@ -21,59 +21,59 @@ export const EditInfoPage = () => {
       />
 
       <section className="flex flex-col gap-4 px-4 py-4">
-        <Nickname />
-        <Age age={age} />
-        <Gender gender={gender} />
-        <RegionSetting regions={regions} />
+        <NicknameButton />
+        <GenderButton gender={gender} />
+        <AgeButton age={age} />
+        <RegionSettingButton regions={regions} />
       </section>
     </>
   );
 };
 
-const Nickname = () => {
+const NicknameButton = () => {
   const nickname = useAuthStore((state) => state.nickname);
 
   return (
-    <div className="setting-item">
+    <button className="setting-item">
       <span>닉네임 변경</span>
 
       <div className="flex items-center text-grey-500">
         <span className="body-2">{nickname}</span>
         <ArrowRightIcon />
       </div>
-    </div>
+    </button>
   );
 };
 
-const Gender = ({ gender }: Pick<MyInfo, "gender">) => {
+const GenderButton = ({ gender }: Pick<MyInfo, "gender">) => {
   return (
-    <div className="setting-item">
+    <button className="setting-item">
       <span>성별 변경</span>
 
       <div className="flex items-center text-grey-500">
         <span className="body-2">{gender === "MALE" ? "남자" : "여자"}</span>
         <ArrowRightIcon />
       </div>
-    </div>
+    </button>
   );
 };
 
-const Age = ({ age }: Pick<MyInfo, "age">) => {
+const AgeButton = ({ age }: Pick<MyInfo, "age">) => {
   return (
-    <div className="setting-item">
+    <button className="setting-item">
       <span>나이대 변경</span>
 
       <div className="flex items-center text-grey-500">
         <span className="body-2">{age}</span>
         <ArrowRightIcon />
       </div>
-    </div>
+    </button>
   );
 };
 
-const RegionSetting = ({ regions }: Pick<MyInfo, "regions">) => {
+const RegionSettingButton = ({ regions }: Pick<MyInfo, "regions">) => {
   return (
-    <div>
+    <button>
       <div className="setting-item">
         <span>동네설정</span>
 
@@ -89,6 +89,6 @@ const RegionSetting = ({ regions }: Pick<MyInfo, "regions">) => {
           </ActionChip>
         ))}
       </ul>
-    </div>
+    </button>
   );
 };
