@@ -605,6 +605,46 @@ const getNewAccessTokenHandler = [
   }),
 ];
 
+const putChangePasswordHandler = [
+  http.put<PathParams, { newPw: string; newPwChk: string }>(
+    SETTING_END_POINT.CHANGE_PASSWORD,
+    async ({ request }) => {
+      const token = request.headers.get("Authorization");
+      const { newPw, newPwChk } = await request.json();
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      if (newPw !== newPwChk) {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message:
+              "변경하려는 비밀번호 혹은 입력하신 비밀번호가 올바르지 않습니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -616,4 +656,5 @@ export const handlers = [
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
   ...getNewAccessTokenHandler,
+  ...putChangePasswordHandler,
 ];
