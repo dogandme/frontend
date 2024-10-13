@@ -227,6 +227,8 @@ const putUserInfoRegister = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: token,
+      credentials:
+        process.env.NODE_ENV === "development" ? "include" : "same-origin",
     },
     body: JSON.stringify(userInfo),
   });
