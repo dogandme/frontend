@@ -2,52 +2,20 @@ import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
 import { useAuthStore } from "@/shared/store";
 import { Modal } from "@/shared/ui/modal";
-import { usePutChangePassword } from "../api";
-import { usePasswordChangeFormStore } from "../store";
+import { usePutSetPassword } from "../api";
+import { usePasswordSetFormStore } from "../store";
 
 // TODO 사용 가능한 비밀 번호 시 statusText 변경
 
-const CurrentPasswordInput = () => {
-  const isValidPassword = usePasswordChangeFormStore(
-    (state) => state.isValidPassword,
-  );
-  const isFilledCurrentPassword = usePasswordChangeFormStore(
-    (state) => state.isFilledCurrentPassword,
-  );
-
-  const setCurrentPassword = usePasswordChangeFormStore(
-    (state) => state.setCurrentPassword,
-  );
-
-  const statusText = !isFilledCurrentPassword
-    ? "비밀번호를 입력해 주세요"
-    : isValidPassword
-      ? ""
-      : "비밀번호 형식에 맞게 입력해 주세요";
-
-  return (
-    <PasswordInput
-      id="current-password"
-      label="현재 비밀번호"
-      name="current-password"
-      placeholder="현재 비밀번호를 입력해주세요"
-      essential
-      onChange={({ target }) => setCurrentPassword(target.value)}
-      statusText={statusText}
-      isError={isFilledCurrentPassword && !isValidPassword}
-    />
-  );
-};
-
 const NewPasswordInput = () => {
-  const isValidNewPassword = usePasswordChangeFormStore(
+  const isValidNewPassword = usePasswordSetFormStore(
     (state) => state.isValidNewPassword,
   );
-  const isFilledNewPassword = usePasswordChangeFormStore(
+  const isFilledNewPassword = usePasswordSetFormStore(
     (state) => state.isFilledNewPassword,
   );
 
-  const setNewPassword = usePasswordChangeFormStore(
+  const setNewPassword = usePasswordSetFormStore(
     (state) => state.setNewPassword,
   );
 
@@ -72,15 +40,15 @@ const NewPasswordInput = () => {
 };
 
 const ConfirmNewPasswordInput = () => {
-  const isFilledConfirmPassword = usePasswordChangeFormStore(
+  const isFilledConfirmPassword = usePasswordSetFormStore(
     (state) => state.isFilledConfirmPassword,
   );
 
-  const isSameNewPasswordAndConfirmPassword = usePasswordChangeFormStore(
+  const isSameNewPasswordAndConfirmPassword = usePasswordSetFormStore(
     (state) => state.isSameNewPasswordAndConfirmPassword,
   );
 
-  const setConfirmPassword = usePasswordChangeFormStore(
+  const setConfirmPassword = usePasswordSetFormStore(
     (state) => state.setConfirmPassword,
   );
 
@@ -103,28 +71,27 @@ const ConfirmNewPasswordInput = () => {
   );
 };
 
-export const PasswordChangeModal = ({
+export const PasswordSetModal = ({
   onClose,
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const resetPasswordChangeForm = usePasswordChangeFormStore(
-    (state) => state.reset,
-  );
+  const resetPasswordSetForm = usePasswordSetFormStore((state) => state.reset);
 
-  const { mutate: putChangePassword } = usePutChangePassword({
-    onSuccessCallback: onClose,
+  const { mutate: putSetPassword } = usePutSetPassword({
+    onSuccessCallback: () => {
+      onClose();
+    },
   });
 
   const handleSave = () => {
     const {
-      currentPassword,
       newPassword,
       confirmPassword,
       isAllValueFilled,
       isAllValueValid,
       isSameNewPasswordAndConfirmPassword,
-    } = usePasswordChangeFormStore.getState();
+    } = usePasswordSetFormStore.getState();
     const { token } = useAuthStore.getState();
 
     if (!isAllValueFilled) {
@@ -145,8 +112,7 @@ export const PasswordChangeModal = ({
       return;
     }
 
-    putChangePassword({
-      password: currentPassword,
+    putSetPassword({
       newPw: newPassword,
       newPwChk: confirmPassword,
       token: token!,
@@ -154,19 +120,18 @@ export const PasswordChangeModal = ({
   };
 
   useEffect(() => {
-    return () => resetPasswordChangeForm();
-  }, [resetPasswordChangeForm]);
+    return () => resetPasswordSetForm();
+  }, [resetPasswordSetForm]);
 
   return (
     <Modal modalType="center">
       <Modal.Header
         onClick={onClose}
-        closeButtonAriaLabel="비밀번호 변경 모달 닫기"
+        closeButtonAriaLabel="비밀번호 설정 모달 닫기"
       >
-        비밀번호 변경
+        비밀번호 설정
       </Modal.Header>
       <Modal.Content>
-        <CurrentPasswordInput />
         <div className="flex flex-col gap-1">
           <NewPasswordInput />
           <ConfirmNewPasswordInput />

@@ -26,6 +26,8 @@ export const Default: Story = {
     const emptyStatusText = "비밀번호를 입력해 주세요";
     const inValidStatusText = "비밀번호 형식에 맞게 입력해 주세요";
     const inValidConfirmStatusText = "비밀번호가 서로 일치하지 않습니다";
+    const validPasswordStatusText = "사용가능한 비밀번호 입니다";
+    const validConfirmPasswordStatusText = "비밀번호가 일치 합니다";
 
     await step(
       `각 인풋 필드들은 focus시 statusText로 ${emptyStatusText}가 나타난다.`,
@@ -64,7 +66,7 @@ export const Default: Story = {
       expect($statusText.textContent).toBe(inValidStatusText);
       // 나머지 모두 입력
       await userEvent.type($newPasswordInput, validPassword.slice(1));
-      expect($statusText.textContent).toBe("");
+      expect($statusText.textContent).toBe(validPasswordStatusText);
       // 초기화
       await userEvent.clear($newPasswordInput);
       expect($statusText.textContent).toBe(emptyStatusText);
@@ -86,14 +88,14 @@ export const Default: Story = {
         expect($statusText.textContent).toBe(inValidConfirmStatusText);
         // 나머지 모두 입력
         await userEvent.type($confirmPasswordInput, validPassword.slice(1));
-        expect($statusText.textContent).toBe("");
+        expect($statusText.textContent).toBe(validConfirmPasswordStatusText);
 
         // newPasswordInput 이 변경 되었을 때 statusText 가 변경 되는지 확인
         await userEvent.type($newPasswordInput, "{backspace}");
         expect($statusText.textContent).toBe(inValidConfirmStatusText);
 
         await userEvent.type($confirmPasswordInput, "{backspace}");
-        expect($statusText.textContent).toBe("");
+        expect($statusText.textContent).toBe(validConfirmPasswordStatusText);
 
         // 초기화
         await userEvent.clear($confirmPasswordInput);
@@ -105,7 +107,7 @@ export const Default: Story = {
 
         const $newPasswordStatusText = canvasElement.querySelectorAll("p")[1];
         expect($newPasswordStatusText.textContent).toBe(inValidStatusText);
-        expect($statusText.textContent).toBe("");
+        expect($statusText.textContent).toBe(validConfirmPasswordStatusText);
       },
     );
   },
