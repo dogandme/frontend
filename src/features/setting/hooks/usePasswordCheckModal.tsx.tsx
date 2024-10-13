@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { usePasswordCheckFormStore } from "../store";
@@ -7,6 +8,7 @@ export const usePasswordCheckModal = () => {
   const resetAccountCancellationForm = usePasswordCheckFormStore(
     (state) => state.reset,
   );
+  const queryClient = useQueryClient();
 
   const {
     handleOpen: handleOpenExitConfirmModal,
@@ -42,6 +44,13 @@ export const usePasswordCheckModal = () => {
     () => <PasswordCheckModal onClose={onCloseCancellationCheckModal} />,
     {
       beforeClose: () => {
+        const mutation = queryClient.getMutationCache().find({
+          mutationKey: ["deleteAccount"],
+        });
+        if (mutation?.state.status === "pending") {
+          return true;
+        }
+
         const { password } = usePasswordCheckFormStore.getState();
         if (password) {
           handleOpenExitConfirmModal();
