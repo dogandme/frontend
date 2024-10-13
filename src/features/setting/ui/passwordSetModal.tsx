@@ -80,7 +80,13 @@ export const PasswordSetModal = ({
 }) => {
   const resetPasswordSetForm = usePasswordSetFormStore((state) => state.reset);
 
-  const { mutate: putSetPassword } = usePutSetPassword();
+  const { mutate: putSetPassword } = usePutSetPassword({
+    onSuccessCallback: () => {
+      resetPasswordSetForm();
+      onClose();
+      handleOpenSnackbar();
+    },
+  });
   const { handleOpen: handleOpenSnackbar, onClose: onCloseSnackbar } =
     useSnackBar(() => (
       <Snackbar onClose={onCloseSnackbar}>비밀번호가 설정 되었습니다.</Snackbar>
@@ -114,24 +120,11 @@ export const PasswordSetModal = ({
       return;
     }
 
-    putSetPassword(
-      {
-        newPw: newPassword,
-        newPwChk: confirmPassword,
-        token: token!,
-      },
-      {
-        onSuccess: () => {
-          resetPasswordSetForm();
-          onClose();
-          handleOpenSnackbar();
-        },
-        onError: (error) => {
-          // TODO 에러 바운더리 로직 나오면 변경 하
-          console.error(error);
-        },
-      },
-    );
+    putSetPassword({
+      newPw: newPassword,
+      newPwChk: confirmPassword,
+      token: token!,
+    });
   };
 
   useEffect(() => {
