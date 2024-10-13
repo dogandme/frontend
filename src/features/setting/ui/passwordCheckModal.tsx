@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
-import { Button } from "@/shared/ui/button";
-import { CloseIcon, InfoIcon } from "@/shared/ui/icon";
+import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { usePasswordCheckFormStore } from "../store";
@@ -76,17 +75,13 @@ export const PasswordCheckModal = ({
     // TODO FormModal 생성 되면 적용하기
     <Modal modalType="center">
       {/* 상단 네비게이션 바 */}
-      <div className="flex self-stretch justify-between">
-        <h1 className="text-grey-900 title-1">비밀번호 확인</h1>
-        <button
-          className="px-[0.3125rem]"
-          onClick={onClose}
-          aria-label="비밀번호 확인 모달 닫기"
-        >
-          <CloseIcon />
-        </button>
-      </div>
-      <section className="flex flex-col gap-8">
+      <Modal.Header
+        onClick={onClose}
+        closeButtonAriaLabel="비밀번호 확인 모달 닫기"
+      >
+        비밀번호 확인
+      </Modal.Header>
+      <Modal.Content>
         {/* 알림창 */}
         <Notice>
           <InfoIcon width={20} height={20} />
@@ -94,21 +89,14 @@ export const PasswordCheckModal = ({
         </Notice>
         {/* PasswordInput */}
         <CurrentPasswordInput />
-      </section>
+      </Modal.Content>
       {/* 버튼들 */}
-      <div className="flex flex-col gap-2">
-        <Button colorType="primary" variant="filled" size="medium">
-          탈퇴하기
-        </Button>
-        <Button
-          colorType="tertiary"
-          variant="text"
-          size="medium"
-          onClick={onClose}
-        >
+      <Modal.Footer axis="col">
+        <Modal.FilledButton onClick={() => {}}>탈퇴하기</Modal.FilledButton>
+        <Modal.TextButton onClick={onClose} colorType="tertiary">
           취소
-        </Button>
-      </div>
+        </Modal.TextButton>
+      </Modal.Footer>
     </Modal>
   );
 };
