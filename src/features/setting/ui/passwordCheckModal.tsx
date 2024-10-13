@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
+import { useAuthStore } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
+import { useDeleteAccount } from "../api/deleteAccount";
 import { usePasswordCheckFormStore } from "../store";
 
 const CurrentPasswordInput = () => {
@@ -44,6 +46,23 @@ export const PasswordCheckModal = ({
     (state) => state.reset,
   );
 
+  const { mutate: deleteAccount } = useDeleteAccount();
+
+  const handleSubmit = () => {
+    const { password, isEmptyPassword, isValidPassword } =
+      usePasswordCheckFormStore.getState();
+    const { token } = useAuthStore.getState();
+
+    if (isEmptyPassword) {
+      // TODO 에러 바운더리 로직 나오면 수정 하기
+      console.error("비밀번호를 입력해 주세요");
+    }
+    if (!isValidPassword) {
+      return;
+    }
+
+    deleteAccount({ password, token: token! });
+  };
   useEffect(() => {
     return () => resetAccountCancellationForm();
   }, [resetAccountCancellationForm]);
@@ -69,7 +88,7 @@ export const PasswordCheckModal = ({
       </Modal.Content>
       {/* 버튼들 */}
       <Modal.Footer axis="col">
-        <Modal.FilledButton onClick={() => {}}>탈퇴하기</Modal.FilledButton>
+        <Modal.FilledButton onClick={handleSubmit}>탈퇴하기</Modal.FilledButton>
         <Modal.TextButton onClick={onClose} colorType="tertiary">
           취소
         </Modal.TextButton>
