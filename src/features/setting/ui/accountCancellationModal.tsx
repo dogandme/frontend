@@ -30,7 +30,7 @@ export const AccountCancellationModal = ({
         </div>
       </Modal.Content>
       {/* 버튼 */}
-      <Modal.Footer axis="col">
+      <Modal.Footer axis="col" className="px-4">
         <Modal.FilledButton
           onClick={handleOpenCancellationCheckModal}
           size="large"
