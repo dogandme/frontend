@@ -5,15 +5,6 @@ import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { usePasswordCheckFormStore } from "../store";
 
-const validatePassword = (password: string) => {
-  // 조건
-  // 1. 영문, 숫자, 특수문자 3가지 조합 포함
-  // 2. 8~15자 이내
-  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
-
-  return passwordRegex.test(password);
-};
-
 const CurrentPasswordInput = () => {
   const isValidPassword = usePasswordCheckFormStore(
     (state) => state.isValidPassword,
@@ -23,22 +14,6 @@ const CurrentPasswordInput = () => {
   );
 
   const setPassword = usePasswordCheckFormStore((state) => state.setPassword);
-  const setIsValidPassword = usePasswordCheckFormStore(
-    (state) => state.setIsValidPassword,
-  );
-  const setIsEmptyPassword = usePasswordCheckFormStore(
-    (state) => state.setIsEmptyPassword,
-  );
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = target;
-    setPassword(value);
-
-    const isValidPassword = validatePassword(value);
-    const isPasswordEmpty = value.length === 0;
-
-    setIsValidPassword(isValidPassword);
-    setIsEmptyPassword(isPasswordEmpty);
-  };
 
   const statusText = isEmptyCurrentPassword
     ? "비밀번호를 입력해 주세요"
@@ -53,7 +28,9 @@ const CurrentPasswordInput = () => {
       statusText={statusText}
       isError={!isEmptyCurrentPassword && !isValidPassword}
       essential
-      onChange={handleChange}
+      onChange={({ target }) => {
+        setPassword(target.value);
+      }}
     />
   );
 };
