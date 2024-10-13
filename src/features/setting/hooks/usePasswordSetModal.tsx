@@ -26,6 +26,7 @@ export const usePasswordSetModal = () => {
             onClick={() => {
               resetPasswordSetForm();
               onClosePasswordSetModal();
+              onCloseExitModal();
             }}
           >
             나가기
