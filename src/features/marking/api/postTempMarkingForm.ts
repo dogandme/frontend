@@ -24,13 +24,18 @@ const postMarkingFormDataTemporary = async ({
   const formData = new FormData();
   formData.append(
     "markingAddDto",
-    JSON.stringify({
-      region,
-      visibility: visibility ? POST_VISIBILITY_MAP[visibility] : null,
-      content,
-      lat,
-      lng,
-    }),
+    new Blob(
+      [
+        JSON.stringify({
+          region,
+          isVisible: visibility ? POST_VISIBILITY_MAP[visibility] : null,
+          content,
+          lat,
+          lng,
+        }),
+      ],
+      { type: "application/json" },
+    ),
   );
 
   images.forEach((image) => {
