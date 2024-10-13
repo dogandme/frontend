@@ -609,6 +609,7 @@ const putChangePasswordHandler = [
   http.put<PathParams, { password: string; newPw: string; newPwChk: string }>(
     SETTING_END_POINT.CHANGE_PASSWORD,
     async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
       const token = request.headers.get("Authorization");
       const { newPw, newPwChk } = await request.json();
 
@@ -649,6 +650,8 @@ export const putSetPasswordHandler = [
   http.put<PathParams, { newPw: string; newPwChk: string }>(
     SETTING_END_POINT.SET_PASSWORD,
     async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+
       const token = request.headers.get("Authorization");
       const { newPw, newPwChk } = await request.json();
 
