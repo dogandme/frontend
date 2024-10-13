@@ -212,7 +212,7 @@ export const userInfoRegistrationHandlers = [
       );
     }
 
-    if (token === "freshAccessToken_naver") {
+    if (token === "freshAccessToken-naver") {
       return HttpResponse.json({
         code: 200,
         message: "success",
@@ -425,11 +425,7 @@ export const getProfileHandlers = [
         },
       );
     }
-    if (token === "freshAccessToken" && nickname === "뽀송송") {
-      return HttpResponse.json(User["ROLE_USER"]);
-    }
-
-    if (token === "freshAccessToken-socialType" && nickname === "뽀송송") {
+    if (token?.split("-")[0] === "freshAccessToken" && nickname === "뽀송송") {
       return HttpResponse.json(User["ROLE_USER"]);
     }
 
@@ -682,7 +678,7 @@ export const putSetPasswordHandler = [
       }
 
       /* 가상 DB에서 해당 회원의 isPasswordSet 을 true 로 변경 합니다. */
-      userInfoDB["뽀송송_EMAIL"].isPasswordSet = true;
+      userInfoDB["뽀송송_NAVER"].isPasswordSet = true;
 
       return HttpResponse.json({
         code: 200,
