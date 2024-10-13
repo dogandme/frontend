@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { usePasswordCheckFormStore } from "../store";
@@ -7,6 +8,7 @@ export const usePasswordCheckModal = () => {
   const resetAccountCancellationForm = usePasswordCheckFormStore(
     (state) => state.reset,
   );
+  const queryClient = useQueryClient();
 
   const {
     handleOpen: handleOpenExitConfirmModal,
@@ -16,7 +18,7 @@ export const usePasswordCheckModal = () => {
       <Modal.Header onClick={onCloseConfirmModal}>
         화면을 나가시겠습니까?
       </Modal.Header>
-      <Modal.Content className="text-grey-700 body-2">
+      <Modal.Content className="text-grey-700 body-2 gap-0">
         <p>화면을 나갈 경우 입력한 정보들이 모두 삭제 됩니다.</p>
         <p>정말 화면을 나가시겠습니까?</p>
       </Modal.Content>
@@ -42,6 +44,13 @@ export const usePasswordCheckModal = () => {
     () => <PasswordCheckModal onClose={onCloseCancellationCheckModal} />,
     {
       beforeClose: () => {
+        const mutation = queryClient.getMutationCache().find({
+          mutationKey: ["deleteAccount"],
+        });
+        if (mutation?.state.status === "pending") {
+          return true;
+        }
+
         const { password } = usePasswordCheckFormStore.getState();
         if (password) {
           handleOpenExitConfirmModal();

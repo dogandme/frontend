@@ -1,6 +1,4 @@
-import { Button } from "@/shared/ui/button";
 import { Modal } from "@/shared/ui/modal";
-import { CloseNavigationBar } from "@/shared/ui/navigationbar";
 import { usePasswordCheckModal } from "../hooks";
 
 export const AccountCancellationModal = ({
@@ -11,10 +9,12 @@ export const AccountCancellationModal = ({
   const handleOpenCancellationCheckModal = usePasswordCheckModal();
 
   return (
-    // TODO FormModal 생성 되면 적용하기
     <Modal modalType="fullPage">
-      <CloseNavigationBar onClick={onClose} aria-label="회원 탈퇴 모달 닫기" />
-      <section className="flex flex-col gap-8 px-4">
+      <Modal.Header
+        onClick={onClose}
+        closeButtonAriaLabel="회원 탈퇴 모달 닫기"
+      />
+      <Modal.Content>
         {/* 프로덕트 마스코트 */}
         <img src="/default-image.png" className="mx-auto" />
         {/* 탈퇴 안내 문구 */}
@@ -28,28 +28,25 @@ export const AccountCancellationModal = ({
             <span>또한 모든 데이터는 복구가 불가능 합니다.</span>
           </p>
         </div>
-        {/* 버튼 */}
-        <div className="flex flex-col gap-4">
-          <Button
-            colorType="primary"
-            variant="filled"
-            size="large"
-            className="btn-2"
-            onClick={handleOpenCancellationCheckModal}
-          >
-            다음
-          </Button>
-          <Button
-            colorType="tertiary"
-            variant="text"
-            size="large"
-            className="btn-2"
-            onClick={onClose}
-          >
-            취소
-          </Button>
-        </div>
-      </section>
+      </Modal.Content>
+      {/* 버튼 */}
+      <Modal.Footer axis="col" className="px-4">
+        <Modal.FilledButton
+          onClick={handleOpenCancellationCheckModal}
+          size="large"
+          className="btn-2"
+        >
+          다음
+        </Modal.FilledButton>
+        <Modal.TextButton
+          onClick={onClose}
+          size="large"
+          className="btn-2"
+          colorType="tertiary"
+        >
+          취소
+        </Modal.TextButton>
+      </Modal.Footer>
     </Modal>
   );
 };
