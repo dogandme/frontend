@@ -36,13 +36,13 @@ export const MultiplePinMarker = () => {
   const multiMarkerInfo = [
     {
       position: { lat: 37.5664, lng: 126.974 },
-      imageUrl: "/public/default-image.png",
+      imageUrl: "/default-image.png",
       alt: "test",
       markerCount: 2,
     },
     {
       position: { lat: 37.5663, lng: 126.972 },
-      imageUrl: "/public/default-image.png",
+      imageUrl: "/default-image.png",
       alt: "test",
       markerCount: 500,
     },
@@ -73,7 +73,7 @@ export const ClusterMarker = () => {
 
 export const MarkingAddPin = () => {
   // TODO UserInfo API 나오면 유저 프로필 사진 붙이기
-  const profileImage = "/public/default-image.png";
+  const profileImage = "/default-image.png";
   const alt = "test";
 
   return (
