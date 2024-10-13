@@ -606,39 +606,42 @@ const getNewAccessTokenHandler = [
 ];
 
 export const deleteAccountHandlers = [
-  http.delete(SETTING_END_POINT.CANCELLATION, async ({ request }) => {
-    await new Promise((res) => setTimeout(res, 1000));
-    const token = request.headers.get("Authorization");
-    const password = await request.json();
-    if (!token || token === "staleAccessToken") {
-      return HttpResponse.json(
-        {
-          code: 401,
-          message: "토큰 검증에 실패 했습니다.",
-        },
-        {
-          status: 401,
-        },
-      );
-    }
+  http.delete<PathParams, { password: string }>(
+    SETTING_END_POINT.DELETE_ACCOUNT,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const token = request.headers.get("Authorization");
+      const { password } = await request.json();
+      if (!token || token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: "토큰 검증에 실패 했습니다.",
+          },
+          {
+            status: 401,
+          },
+        );
+      }
 
-    if (password !== "password123!") {
-      return HttpResponse.json(
-        {
-          code: 400,
-          message: "입력하신 비밀번호가 맞지 않습니다,",
-        },
-        {
-          status: 400,
-        },
-      );
-    }
+      if (password !== "password123!") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "입력하신 비밀번호가 맞지 않습니다,",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
 
-    return HttpResponse.json({
-      code: 200,
-      message: "회원 탈퇴가 완료 되었습니다.",
-    });
-  }),
+      return HttpResponse.json({
+        code: 200,
+        message: "회원 탈퇴가 완료 되었습니다.",
+      });
+    },
+  ),
 ];
 
 // * 나중에 msw 사용을 대비하여 만들었습니다.
@@ -652,4 +655,5 @@ export const handlers = [
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
   ...getNewAccessTokenHandler,
+  ...deleteAccountHandlers,
 ];
