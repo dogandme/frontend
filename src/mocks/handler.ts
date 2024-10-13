@@ -212,7 +212,7 @@ export const userInfoRegistrationHandlers = [
       );
     }
 
-    if (token === "freshAccessToken_naver") {
+    if (token === "freshAccessToken-naver") {
       return HttpResponse.json({
         code: 200,
         message: "success",
@@ -425,7 +425,7 @@ export const getProfileHandlers = [
         },
       );
     }
-    if (token === "freshAccessToken" && nickname === "뽀송송") {
+    if (token?.split("-")[0] === "freshAccessToken" && nickname === "뽀송송") {
       return HttpResponse.json(User["ROLE_USER"]);
     }
 
@@ -605,6 +605,92 @@ const getNewAccessTokenHandler = [
   }),
 ];
 
+const putChangePasswordHandler = [
+  http.put<PathParams, { password: string; newPw: string; newPwChk: string }>(
+    SETTING_END_POINT.CHANGE_PASSWORD,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const token = request.headers.get("Authorization");
+      const { newPw, newPwChk } = await request.json();
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      if (newPw !== newPwChk) {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message:
+              "변경하려는 비밀번호 혹은 입력하신 비밀번호가 올바르지 않습니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
+export const putSetPasswordHandler = [
+  http.put<PathParams, { newPw: string; newPwChk: string }>(
+    SETTING_END_POINT.SET_PASSWORD,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+
+      const token = request.headers.get("Authorization");
+      const { newPw, newPwChk } = await request.json();
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      if (newPw !== newPwChk) {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message:
+              "변경하려는 비밀번호 혹은 입력하신 비밀번호가 올바르지 않습니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      /* 가상 DB에서 해당 회원의 isPasswordSet 을 true 로 변경 합니다. */
+      userInfoDB["뽀송송_NAVER"].isPasswordSet = true;
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
 export const deleteAccountHandlers = [
   http.delete<PathParams, { password: string }>(
     SETTING_END_POINT.DELETE_ACCOUNT,
@@ -655,5 +741,7 @@ export const handlers = [
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
   ...getNewAccessTokenHandler,
+  ...putChangePasswordHandler,
+  ...putSetPasswordHandler,
   ...deleteAccountHandlers,
 ];
