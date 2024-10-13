@@ -56,12 +56,14 @@ const Content = ({
 const Footer = ({
   children,
   axis,
+  className = "",
 }: {
   children: React.ReactNode;
   axis: "row" | "col";
+  className?: string;
 }) => {
   return (
-    <section className={`flex gap-2 flex-${axis}`}>
+    <section className={`flex gap-2 flex-${axis} ${className}`}>
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
           ? React.cloneElement(child as ReactElement, {
