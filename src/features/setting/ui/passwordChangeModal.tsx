@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
 import { useAuthStore } from "@/shared/store";
 import { Modal } from "@/shared/ui/modal";
-import { usePutChangePassword } from "../api/putChangePassword";
+import { usePutChangePassword } from "../api";
 import { usePasswordChangeFormStore } from "../store";
 
 // TODO 사용 가능한 비밀 번호 시 statusText 변경
