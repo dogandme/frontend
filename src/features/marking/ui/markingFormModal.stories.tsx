@@ -164,9 +164,9 @@ export const Default: Story = {
       // 내용 작성
       await userEvent.type($textArea, "여기는 진짜 대박이긴 해요");
 
-      const { content, visibility, images } = useMarkingFormStore.getState();
+      const { content, isVisible, images } = useMarkingFormStore.getState();
       expect(content).toBe("여기는 진짜 대박이긴 해요");
-      expect(visibility).toBe("전체 공개");
+      expect(isVisible).toBe("전체 공개");
       expect(images).toHaveLength(4);
       expect(images.map((file) => file.name)).toEqual(
         dummyFiles.map((file) => file.name),
@@ -275,9 +275,9 @@ export const Default: Story = {
         const $exitAddModeButton = await canvas.findByText("나가기");
         await userEvent.click($exitAddModeButton);
 
-        const { content, visibility, images } = useMarkingFormStore.getState();
+        const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(visibility).toBe("");
+        expect(isVisible).toBe("");
         expect(images).toHaveLength(0);
 
         const $markingButton = await canvas.findByText("마킹하기");
@@ -323,9 +323,9 @@ export const Default: Story = {
         expect($snackBar).toBeVisible();
         expect(useMapStore.getState().mode).toBe("view");
 
-        const { content, visibility, images } = useMarkingFormStore.getState();
+        const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(visibility).toBe("");
+        expect(isVisible).toBe("");
         expect(images).toHaveLength(0);
       },
     );
@@ -368,9 +368,9 @@ export const Default: Story = {
         expect($snackBar).toBeVisible();
         expect(useMapStore.getState().mode).toBe("view");
 
-        const { content, visibility, images } = useMarkingFormStore.getState();
+        const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(visibility).toBe("");
+        expect(isVisible).toBe("");
         expect(images).toHaveLength(0);
       },
     );
