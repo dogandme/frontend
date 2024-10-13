@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MutationState, useMutationState } from "@tanstack/react-query";
 import { MyInfo } from "@/entities/auth/api";
 import { formatDateToYearMonthDay, useSnackBar } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
@@ -9,6 +10,7 @@ import { Snackbar } from "@/shared/ui/snackbar";
 import {
   DuplicateNicknameRequestData,
   DuplicateNicknameResponse,
+  usePutChangeNickname,
 } from "../api";
 import { validateNickname } from "../lib";
 import { NicknameInput } from "./NicknameInput";
@@ -59,7 +61,13 @@ export const ChangeNicknameModal = ({
     },
   });
 
+  const { mutate: postChangeNickname } = usePutChangeNickname();
+
   const handleSubmit = () => {
+    const { token } = useAuthStore.getState();
+
+    if (!token) return;
+
     const isNicknameEmpty = nickname.length === 0;
 
     if (isNicknameEmpty) {
@@ -95,6 +103,7 @@ export const ChangeNicknameModal = ({
       return;
     }
 
+    postChangeNickname({ token, nickname });
     onClose();
   };
 
