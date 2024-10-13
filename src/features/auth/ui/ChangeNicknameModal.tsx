@@ -1,10 +1,15 @@
 import { useState } from "react";
+import { MutationState, useMutationState } from "@tanstack/react-query";
 import { MyInfo } from "@/entities/auth/api";
 import { formatDateToYearMonthDay, useSnackBar } from "@/shared/lib";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { Snackbar } from "@/shared/ui/snackbar";
+import {
+  DuplicateNicknameRequestData,
+  DuplicateNicknameResponse,
+} from "../api";
 import { validateNickname } from "../lib";
 import { NicknameInput } from "./NicknameInput";
 
@@ -33,6 +38,26 @@ export const ChangeNicknameModal = ({
         한달 이후 닉네임을 변경해 주세요
       </Snackbar>
     ));
+  const {
+    handleOpen: openDuplicateNicknameAlert,
+    onClose: closeDuplicateNicknameAlert,
+  } = useSnackBar(() => (
+    <Snackbar onClose={closeDuplicateNicknameAlert}>
+      이미 존재하는 닉네임 입니다
+    </Snackbar>
+  ));
+
+  const duplicateNicknameResponseCacheArr = useMutationState<
+    MutationState<
+      DuplicateNicknameResponse,
+      Error,
+      DuplicateNicknameRequestData
+    >
+  >({
+    filters: {
+      mutationKey: ["checkDuplicateNickname"],
+    },
+  });
 
   const handleSubmit = () => {
     const isNicknameEmpty = nickname.length === 0;
@@ -54,6 +79,19 @@ export const ChangeNicknameModal = ({
 
     if (!canChange) {
       openChangePeriodAlert();
+      return;
+    }
+
+    const lastDuplicateNicknameResponse =
+      duplicateNicknameResponseCacheArr[
+        duplicateNicknameResponseCacheArr.length - 1
+      ];
+    const isDuplicateNickname =
+      lastDuplicateNicknameResponse.status === "error" &&
+      lastDuplicateNicknameResponse.variables?.nickname === nickname;
+
+    if (isDuplicateNickname) {
+      openDuplicateNicknameAlert();
       return;
     }
 
