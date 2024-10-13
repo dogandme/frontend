@@ -9,7 +9,7 @@ interface MarkingFileInfo extends FileInfo {
 
 interface MarkingFormState {
   region: string;
-  visibility: keyof typeof POST_VISIBILITY_MAP | "";
+  isVisible: keyof typeof POST_VISIBILITY_MAP | "";
   content: string;
   images: MarkingFileInfo[];
   isCompressing: boolean;
@@ -18,7 +18,7 @@ interface MarkingFormState {
 
 interface MarkingFormActions {
   setRegion: (region: string) => void;
-  setVisibility: (visibility: keyof typeof POST_VISIBILITY_MAP) => void;
+  setVisibility: (isVisible: keyof typeof POST_VISIBILITY_MAP) => void;
   setContent: (content: string) => void;
   setImages: (images: MarkingFileInfo[]) => void;
   resetMarkingFormStore: () => void;
@@ -26,7 +26,7 @@ interface MarkingFormActions {
 
 const MarkingFormInitialState: MarkingFormState = {
   region: "",
-  visibility: "",
+  isVisible: "",
   content: "",
   images: [],
   isCompressing: false,
@@ -39,7 +39,7 @@ export const useMarkingFormStore = create<
   ...MarkingFormInitialState,
 
   setRegion: (region) => set({ region }),
-  setVisibility: (visibility) => set({ visibility }),
+  setVisibility: (isVisible) => set({ isVisible }),
   setContent: (content) => set({ content }),
   /** 압축이 모두 종료 된 경우 비동기적으로 상태를 다시 업데이트 합니다.
    * 이 때 모든 file 들이 settled 된 이후 압축이 완료된 이미지만 남깁니다.

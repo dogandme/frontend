@@ -13,9 +13,9 @@ const postMarkingFormDataTemporary = async ({
   token,
   ...formObj
 }: Omit<MarkingFormRequest, "visibility"> & {
-  visibility: keyof typeof POST_VISIBILITY_MAP | "";
+  isVisible: keyof typeof POST_VISIBILITY_MAP | "";
 }) => {
-  const { region, visibility, content, images, lat, lng } = formObj;
+  const { region, isVisible, content, images, lat, lng } = formObj;
 
   if (!token) {
     throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
@@ -28,7 +28,7 @@ const postMarkingFormDataTemporary = async ({
       [
         JSON.stringify({
           region,
-          isVisible: visibility ? POST_VISIBILITY_MAP[visibility] : null,
+          isVisible: isVisible ? POST_VISIBILITY_MAP[isVisible] : null,
           content,
           lat,
           lng,
