@@ -4,4 +4,5 @@ export const SETTING_END_POINT = {
   LOGOUT: `${API_BASE_URL}/logout`,
   CHANGE_PASSWORD: `${API_BASE_URL}/users/profile/password`,
   SET_PASSWORD: `${API_BASE_URL}/users/profile/password/social`,
+  DELETE_ACCOUNT: `${API_BASE_URL}/users/me`,
 };

@@ -42,11 +42,11 @@ export const Default = {
             }}
             tempCnt={10}
             markings={[
-              { id: 1, image: "/default-image.png" },
-              { id: 2, image: "/default-image.png" },
-              { id: 3, image: "/default-image.png" },
-              { id: 4, image: "/default-image.png" },
-              { id: 5, image: "/default-image.png" },
+              { id: 1, images: "/default-image.png" },
+              { id: 2, images: "/default-image.png" },
+              { id: 3, images: "/default-image.png" },
+              { id: 4, images: "/default-image.png" },
+              { id: 5, images: "/default-image.png" },
             ]}
           />
         </div>

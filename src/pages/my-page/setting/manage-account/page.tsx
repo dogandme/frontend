@@ -56,7 +56,9 @@ const AccountEmail = ({
   );
 };
 
-const PasswordChangeButton = () => {
+const PasswordChangeButton = ({
+  isPasswordSet,
+}: Pick<MyInfo, "isPasswordSet">) => {
   const handleOpenPasswordChangeModal = usePasswordChangeModal();
 
   return (
@@ -79,6 +81,7 @@ const PasswordSetButton = () => {
       <p>비밀번호 설정</p>
       <div className="flex items-center text-grey-500">
         <span className="body-2">비밀번호를 설정해 주세요</span>
+
         <ArrowRightIcon />
       </div>
     </button>

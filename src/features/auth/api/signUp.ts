@@ -155,6 +155,7 @@ export const usePostSignUpByEmail = () => {
 
 export interface DuplicateNicknameRequestData {
   nickname: string;
+  token: string;
 }
 
 export interface DuplicateNicknameResponse {
@@ -164,11 +165,13 @@ export interface DuplicateNicknameResponse {
 
 const postDuplicateNickname = async ({
   nickname,
+  token,
 }: DuplicateNicknameRequestData) => {
   const response = await fetch(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: token,
     },
     body: JSON.stringify({ nickname }),
   });

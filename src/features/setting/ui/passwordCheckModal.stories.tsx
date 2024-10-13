@@ -2,7 +2,7 @@ import { StoryObj } from "@storybook/react";
 import { PasswordCheckModal } from "./passwordCheckModal";
 
 export default {
-  title: "features/setting/CancellationCheckModal",
+  title: "features/setting/PasswordCheckModal",
   component: PasswordCheckModal,
 };
 

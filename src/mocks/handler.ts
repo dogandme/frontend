@@ -212,7 +212,9 @@ export const userInfoRegistrationHandlers = [
       );
     }
 
+
     if (token === "freshAccessToken-naver") {
+
       return HttpResponse.json({
         code: 200,
         message: "success",
@@ -660,6 +662,20 @@ export const putSetPasswordHandler = [
           {
             code: 401,
             message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+
+export const deleteAccountHandlers = [
+  http.delete<PathParams, { password: string }>(
+    SETTING_END_POINT.DELETE_ACCOUNT,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const token = request.headers.get("Authorization");
+      const { password } = await request.json();
+      if (!token || token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: "토큰 검증에 실패 했습니다.",
+
           },
           {
             status: 401,
@@ -667,12 +683,20 @@ export const putSetPasswordHandler = [
         );
       }
 
+
       if (newPw !== newPwChk) {
         return HttpResponse.json(
           {
             code: 400,
             message:
               "변경하려는 비밀번호 혹은 입력하신 비밀번호가 올바르지 않습니다.",
+
+      if (password !== "password123!") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "입력하신 비밀번호가 맞지 않습니다,",
+
           },
           {
             status: 400,
@@ -680,12 +704,18 @@ export const putSetPasswordHandler = [
         );
       }
 
+
       /* 가상 DB에서 해당 회원의 isPasswordSet 을 true 로 변경 합니다. */
       userInfoDB["뽀송송_NAVER"].isPasswordSet = true;
 
       return HttpResponse.json({
         code: 200,
         message: "success",
+
+      return HttpResponse.json({
+        code: 200,
+        message: "회원 탈퇴가 완료 되었습니다.",
+
       });
     },
   ),
@@ -702,6 +732,10 @@ export const handlers = [
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
   ...getNewAccessTokenHandler,
+
   ...putChangePasswordHandler,
   ...putSetPasswordHandler,
+
+  ...deleteAccountHandlers,
+
 ];

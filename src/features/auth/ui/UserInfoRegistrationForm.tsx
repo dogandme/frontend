@@ -51,8 +51,9 @@ const NicknameInput = () => {
 
   const handleBlur = () => {
     if (!isValidNickname || isNicknameEmpty) return;
+    const { token } = useAuthStore.getState();
 
-    postDuplicateNickname({ nickname });
+    postDuplicateNickname({ nickname, token: token! });
   };
 
   let statusText = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";
