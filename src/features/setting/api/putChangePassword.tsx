@@ -52,6 +52,7 @@ export const usePutChangePassword = ({
 
   const { mutate: pureMutate, ...rest } = useMutation({
     mutationFn: putChangePassword,
+    mutationKey: ["putChangePassword"],
   });
 
   const mutate = (args: Parameters<typeof putChangePassword>[0]) =>

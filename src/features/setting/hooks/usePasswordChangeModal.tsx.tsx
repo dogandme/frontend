@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { usePasswordChangeFormStore } from "../store";
@@ -7,6 +8,7 @@ export const usePasswordChangeModal = () => {
   const resetPasswordChangeForm = usePasswordChangeFormStore(
     (state) => state.reset,
   );
+  const queryClient = useQueryClient();
 
   const { handleOpen: handleOpenExitConfirmModal, onClose: onCloseExitModal } =
     useModal(() => (
@@ -41,6 +43,17 @@ export const usePasswordChangeModal = () => {
     () => <PasswordChangeModal onClose={onClosePasswordChangeModal} />,
     {
       beforeClose: () => {
+        /**
+         * 만약 mutation 이 진행 중이라면 모달을 닫는 행위를
+         * 중지 시킵니다.
+         */
+        const mutationCache = queryClient.getMutationCache().find({
+          mutationKey: ["putChangePassword"],
+        });
+        if (mutationCache?.state.status === "pending") {
+          return true;
+        }
+
         const { currentPassword, newPassword, confirmPassword } =
           usePasswordChangeFormStore.getState();
 

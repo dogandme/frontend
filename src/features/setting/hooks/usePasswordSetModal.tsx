@@ -43,10 +43,10 @@ export const usePasswordSetModal = () => {
        * 만약 mutation 이 진행 중이라면 모달을 닫는 행위를
        * 중지 시킵니다.
        */
-      const mutationCached = queryClient.getMutationCache().find({
+      const mutationCache = queryClient.getMutationCache().find({
         mutationKey: ["putSetPassword"],
       });
-      if (mutationCached?.state.status === "pending") {
+      if (mutationCache?.state.status === "pending") {
         return true;
       }
 
