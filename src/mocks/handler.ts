@@ -681,6 +681,9 @@ export const putSetPasswordHandler = [
         );
       }
 
+      /* 가상 DB에서 해당 회원의 isPasswordSet 을 true 로 변경 합니다. */
+      userInfoDB["뽀송송_EMAIL"].isPasswordSet = true;
+
       return HttpResponse.json({
         code: 200,
         message: "success",
