@@ -1,4 +1,4 @@
-import { HTMLAttributes, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { NaverIcon, GoogleIcon } from "@/entities/auth/assets";
@@ -20,26 +20,24 @@ const hyperLinkColorMap = {
 const LoginHyperLinkClass =
   "flex h-12 items-center justify-center gap-[10px] self-stretch rounded-2xl pl-4 pr-6";
 
-const NaverLoginHyperLink = (props: HTMLAttributes<HTMLAnchorElement>) => (
-  <Link
+const NaverLoginHyperLink = () => (
+  <a
     className={`${LoginHyperLinkClass} ${hyperLinkColorMap.naver} `}
-    to={LOGIN_END_POINT.NAVER}
-    {...props}
+    href={LOGIN_END_POINT.NAVER}
   >
     <NaverIcon />
     <p className="button-2 text-center text-grey-0">Naver로 계속하기</p>
-  </Link>
+  </a>
 );
 
-const GoogleLoginHyperLink = (props: HTMLAttributes<HTMLAnchorElement>) => (
-  <Link
+const GoogleLoginHyperLink = () => (
+  <a
     className={`${LoginHyperLinkClass} ${hyperLinkColorMap.google}`}
-    {...props}
-    to={LOGIN_END_POINT.GOOGLE}
+    href={LOGIN_END_POINT.GOOGLE}
   >
     <GoogleIcon />
     <p className="button-2 text-center text-grey-900">Google로 계속하기</p>
-  </Link>
+  </a>
 );
 
 /* ----------------------------------컴포넌트 외부로 export 되어 사용되는 컴포넌트------------------------------- */
