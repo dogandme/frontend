@@ -162,7 +162,7 @@ export const MarkingItem = ({
 
       <div className="flex justify-between items-center gap-1 flex-1">
         <img
-          className="w-8 h-8 rounded-2xl"
+          className="w-8 h-8 rounded-2xl object-cover"
           src={`${API_BASE_URL}/pets/image/${pet.profile}`}
           alt={`${pet.name}-profile`}
         />
