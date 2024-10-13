@@ -1,0 +1,50 @@
+{
+  "EMAIL": {
+    "email": "example@example.com",
+    "gender": "MALE",
+    "age": 30,
+    "regions": [
+      {
+        "id": 3563,
+        "province": "울산광역시",
+        "cityCounty": "북구",
+        "district": null,
+        "subDistrict": "명촌동"
+      },
+      {
+        "id": 3564,
+        "province": "울산광역시",
+        "cityCounty": "북구",
+        "district": null,
+        "subDistrict": "명촌동"
+      }
+    ],
+    "nickLastModDt": "2023-10-01T12:34:56Z",
+    "socialType": "EMAIL",
+    "isPasswordSet": true
+  },
+  "NAVER": {
+    "email": "example@naver.com",
+    "gender": "MALE",
+    "age": 30,
+    "regions": [
+      {
+        "id": 3563,
+        "province": "울산광역시",
+        "cityCounty": "북구",
+        "district": null,
+        "subDistrict": "명촌동"
+      },
+      {
+        "id": 3564,
+        "province": "울산광역시",
+        "cityCounty": "북구",
+        "district": null,
+        "subDistrict": "명촌동"
+      }
+    ],
+    "nickLastModDt": "2023-10-01T12:34:56Z",
+    "socialType": "NAVER",
+    "isPasswordSet": false
+  }
+}

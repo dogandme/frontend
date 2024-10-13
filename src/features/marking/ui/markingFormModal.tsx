@@ -14,7 +14,11 @@ import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../../map/api";
 import { useMapStore } from "../../map/store/map";
 import { usePostMarkingForm, usePostTempMarkingForm } from "../api";
-import { MARKING_ADD_ERROR_MESSAGE, POST_VISIBILITY_MAP } from "../constants";
+import {
+  MARKING_ADD_ERROR_MESSAGE,
+  MAX_IMAGE_LENGTH,
+  POST_VISIBILITY_MAP,
+} from "../constants";
 import { useMarkingFormStore } from "../store";
 import { MarkingFormCloseModal } from "./markingFormCloseModal";
 
@@ -165,76 +169,48 @@ const PostVisibilitySelect = () => {
   );
 };
 
-interface ImageUrl {
-  url: string;
-  lastModified: number;
-  name: string;
-}
-
 const PhotoInput = () => {
   const images = useMarkingFormStore((state) => state.images);
   const setImages = useMarkingFormStore((state) => state.setImages);
+  const inputKey = useMarkingFormStore((state) => state.inputKey);
 
-  const [inputKey, setInputKey] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const [imageUrls, setImageUrls] = useState<ImageUrl[]>(() =>
-    images.map((image) => ({
-      url: URL.createObjectURL(image),
-      lastModified: image.lastModified,
-      name: image.name,
-    })),
-  );
 
   const handleOpenAlbum = () => {
     inputRef.current?.click();
   };
 
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
     const { files: newFiles } = target;
+
     if (!newFiles) {
       return;
     }
 
-    // TODO 이미지 파일 최적화 위해 용량 줄이기
-
-    const isImageAlreadyExist = (newFile: File) => {
-      return images.some(
-        (image) => image.lastModified === newFile.lastModified,
-      );
-    };
-
-    const _images = [...images];
-    const _imageUrls = [...imageUrls];
-
-    for (const newFile of newFiles) {
-      if (isImageAlreadyExist(newFile)) {
-        continue;
-      }
-
-      _images.push(newFile);
-      _imageUrls.push({
-        url: URL.createObjectURL(newFile),
-        lastModified: newFile.lastModified,
-        name: newFile.name,
-      });
-
-      if (_images.length > 5) {
-        throw new Error(MARKING_ADD_ERROR_MESSAGE.MAX_PHOTO_COUNT);
-      }
+    if (images.length + newFiles.length > MAX_IMAGE_LENGTH) {
+      // TODO 에러 바운더리에서 처리 하기
+      // throw new Error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
+      console.error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
     }
 
-    setImages([..._images]);
-    setImageUrls([..._imageUrls]);
+    const AvailableNewFileArray = [...newFiles]
+      .filter((newFile) => !images.some(({ name }) => name === newFile.name))
+      .slice(0, MAX_IMAGE_LENGTH - images.length);
+
+    setImages([
+      ...images,
+      ...AvailableNewFileArray.map((file) => ({
+        name: file.name,
+        url: URL.createObjectURL(file),
+        file,
+      })),
+    ]);
   };
 
-  const handleRemoveImage = (lastModified: number) => {
-    setImages(images.filter((image) => image.lastModified !== lastModified));
-    setImageUrls(
-      imageUrls.filter((image) => image.lastModified !== lastModified),
-    );
-
-    setInputKey((prev) => prev + 1);
+  const handleRemoveImage = (name: string) => {
+    setImages(images.filter((image) => image.name !== name));
   };
 
   return (
@@ -245,7 +221,6 @@ const PhotoInput = () => {
         type="file"
         accept=".jpeg,.jpg,.png,.webp"
         multiple
-        max={5}
         className="sr-only"
         ref={inputRef}
         id="images"
@@ -263,7 +238,7 @@ const PhotoInput = () => {
       </label>
       {/* 담긴 사진들 */}
       <ImgSlider>
-        {imageUrls.length < 5 && (
+        {images.length < 5 && (
           <ImgSlider.Item
             onClick={handleOpenAlbum}
             aria-label="마킹 게시글에 사진 추가하기"
@@ -271,12 +246,12 @@ const PhotoInput = () => {
             <PlusIcon />
           </ImgSlider.Item>
         )}
-        {imageUrls.map(({ url, name, lastModified }) => (
+        {images.map(({ url, name }) => (
           <ImgSlider.ImgItem
             src={url}
             alt={name}
-            key={lastModified}
-            onRemove={() => handleRemoveImage(lastModified)}
+            key={name}
+            onRemove={() => handleRemoveImage(name)}
           />
         ))}
       </ImgSlider>
@@ -311,7 +286,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
   );
-
+  const isCompressing = useMarkingFormStore((state) => state.isCompressing);
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
       <MapSnackbar onClose={onCloseSnackbar}>
@@ -327,20 +302,23 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     },
   });
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const { token } = useAuthStore.getState();
 
     if (!token) {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     }
 
-    const formObj = useMarkingFormStore.getState();
+    const { region, visibility, images, content } =
+      useMarkingFormStore.getState();
+
+    if (isCompressing) {
+      // TODO 에러 바운더리 생성되면 로직 변경하기
+      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      return;
+    }
+
     const center = map.getCenter();
-
-    const { region, visibility, images } = formObj;
-
-    const lat = center.lat();
-    const lng = center.lng();
 
     if (!region) {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
@@ -350,8 +328,19 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
     }
 
+    const lat = center.lat();
+    const lng = center.lng();
+
     postMarkingData(
-      { token, lat, lng, ...formObj, visibility },
+      {
+        token,
+        lat,
+        lng,
+        region,
+        visibility,
+        images: images.map((image) => image.file),
+        content,
+      },
       {
         onSuccess: () => {
           onCloseMarkingModal();
@@ -382,6 +371,7 @@ const TemporarySaveButton = ({
   onCloseMarkingModal,
 }: MarkingFormModalProps) => {
   const map = useMap();
+  const isCompressing = useMarkingFormStore((state) => state.isCompressing);
 
   const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
     () => (
@@ -401,18 +391,35 @@ const TemporarySaveButton = ({
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
+    const { region, visibility, images, content } =
+      useMarkingFormStore.getState();
 
     if (!token) {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     }
 
-    const formObj = useMarkingFormStore.getState();
+    if (isCompressing) {
+      // TODO 에러 바운더리 생성되면 로직 변경하기
+      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      return;
+    }
+
+    const compressedFiles = images.map((image) => image.file);
+
     const center = map.getCenter();
 
     const lat = center.lat();
     const lng = center.lng();
 
-    postTempMarkingData({ token, lat, lng, ...formObj });
+    postTempMarkingData({
+      token,
+      lat,
+      lng,
+      region,
+      visibility,
+      images: compressedFiles,
+      content,
+    });
   };
 
   return (
