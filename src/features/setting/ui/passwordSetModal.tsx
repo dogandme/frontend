@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
-import { useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { Modal } from "@/shared/ui/modal";
-import { Snackbar } from "@/shared/ui/snackbar";
 import { usePutSetPassword } from "../api/putSetPassword";
 import { usePasswordSetFormStore } from "../store";
 
@@ -82,15 +80,9 @@ export const PasswordSetModal = ({
 
   const { mutate: putSetPassword } = usePutSetPassword({
     onSuccessCallback: () => {
-      resetPasswordSetForm();
       onClose();
-      handleOpenSnackbar();
     },
   });
-  const { handleOpen: handleOpenSnackbar, onClose: onCloseSnackbar } =
-    useSnackBar(() => (
-      <Snackbar onClose={onCloseSnackbar}>비밀번호가 설정 되었습니다.</Snackbar>
-    ));
 
   const handleSave = () => {
     const {

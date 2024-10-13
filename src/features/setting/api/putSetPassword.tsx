@@ -1,7 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSnackBar } from "@/shared/lib";
 import { AuthStore } from "@/shared/store";
+import { Snackbar } from "@/shared/ui/snackbar";
 import { SETTING_END_POINT } from "../constants";
+import { usePasswordSetFormStore } from "../store";
 
 interface putSetPasswordRequest {
   newPw: string;
@@ -37,8 +40,14 @@ const putSetPassword = async ({
 export const usePutSetPassword = ({
   onSuccessCallback,
 }: {
-  onSuccessCallback: () => void;
+  onSuccessCallback?: () => void;
 }) => {
+  const resetPasswordSetForm = usePasswordSetFormStore((state) => state.reset);
+  const { handleOpen: handleOpenSnackbar, onClose: onCloseSnackbar } =
+    useSnackBar(() => (
+      <Snackbar onClose={onCloseSnackbar}>비밀번호가 설정 되었습니다.</Snackbar>
+    ));
+
   const queryClient = useQueryClient();
 
   const { mutate: pureMutate, ...rest } = useMutation({
@@ -50,8 +59,11 @@ export const usePutSetPassword = ({
   const mutate = (args: Parameters<typeof putSetPassword>[0]) =>
     pureMutate(args, {
       onSuccess: () => {
+        /* isPasswordSet 값의 mutation 이 일어났기 때문에 새로운 데이터를 패치 해옵니다. */
         queryClient.refetchQueries({ queryKey: ["myInfo"] });
-        onSuccessCallback();
+        resetPasswordSetForm();
+        handleOpenSnackbar();
+        onSuccessCallback?.();
       },
       onError: (error) => {
         // TODO 에러바운더리 로직 나오면 변경 하기
