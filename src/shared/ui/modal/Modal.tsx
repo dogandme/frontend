@@ -50,7 +50,11 @@ const Header = ({
       className={`flex justify-between ${modalType === "fullPage" && "py-2"}`}
     >
       <h1 className="title-1 text-grey-900">{children}</h1>
-      <button onClick={onClick} aria-label={closeButtonAriaLabel}>
+      <button
+        onClick={onClick}
+        aria-label={closeButtonAriaLabel}
+        className={`${modalType === "fullPage" && "px-3 py-3"}`}
+      >
         <CloseIcon />
       </button>
     </header>
