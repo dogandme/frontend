@@ -5,13 +5,13 @@ import { Snackbar } from "@/shared/ui/snackbar";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordChangeFormStore } from "../store";
 
-interface putChangePasswordRequest {
+interface PutChangePasswordRequest {
   password: string;
   newPw: string;
   newPwChk: string;
 }
 
-interface putChangePasswordResponse {
+interface PutChangePasswordResponse {
   code: number;
   message: string;
 }
@@ -19,7 +19,7 @@ interface putChangePasswordResponse {
 const putChangePassword = async ({
   token,
   ...formOj
-}: putChangePasswordRequest & { token: NonNullable<AuthStore["token"]> }) => {
+}: PutChangePasswordRequest & { token: NonNullable<AuthStore["token"]> }) => {
   const response = await fetch(SETTING_END_POINT.CHANGE_PASSWORD, {
     method: "PUT",
     headers: {
@@ -29,7 +29,7 @@ const putChangePassword = async ({
     body: JSON.stringify(formOj),
   });
 
-  const data: putChangePasswordResponse = await response.json();
+  const data: PutChangePasswordResponse = await response.json();
 
   if (!response.ok) {
     throw new Error(data.message);

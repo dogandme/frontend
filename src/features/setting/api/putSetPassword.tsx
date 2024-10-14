@@ -6,12 +6,12 @@ import { Snackbar } from "@/shared/ui/snackbar";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordSetFormStore } from "../store";
 
-interface putSetPasswordRequest {
+interface PutSetPasswordRequest {
   newPw: string;
   newPwChk: string;
 }
 
-interface putSetPasswordResponse {
+interface PutSetPasswordResponse {
   code: number;
   message: string;
 }
@@ -19,7 +19,7 @@ interface putSetPasswordResponse {
 const putSetPassword = async ({
   token,
   ...formObj
-}: putSetPasswordRequest & { token: NonNullable<AuthStore["token"]> }) => {
+}: PutSetPasswordRequest & { token: NonNullable<AuthStore["token"]> }) => {
   const response = await fetch(SETTING_END_POINT.SET_PASSWORD, {
     method: "PUT",
     headers: {
@@ -29,7 +29,7 @@ const putSetPassword = async ({
     body: JSON.stringify(formObj),
   });
 
-  const data: putSetPasswordResponse = await response.json();
+  const data: PutSetPasswordResponse = await response.json();
 
   if (!response.ok) {
     throw new Error(data.message);
