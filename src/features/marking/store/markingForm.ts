@@ -63,17 +63,22 @@ export const useMarkingFormStore = create<
       images.map(({ file }) => compressFileImage(file)),
     );
 
-    const resolvedImages = images.filter(({ name }, index) => {
-      const { status } = compressedFiles[index];
-      if (status === "rejected") {
+    /* 이미지 압축 실패 했던 내역에 대한 로그 남기기 */
+    compressedFiles
+      .filter((result) => result.status === "rejected")
+      .forEach((result, index) => {
         console.error(
-          `${name} 을 압축하는데 실패했습니다.
-          ${(compressedFiles[index] as PromiseRejectedResult).reason}`,
+          `${images[index].name}을 압축하는데 실패했습니다.`,
+          result.reason,
         );
-        return false;
-      }
-      return true;
-    });
+      });
+
+    const resolvedImages = compressedFiles
+      .map((result, index) => ({
+        ...images[index],
+        file: result.status === "fulfilled" ? result.value : images[index].file,
+      }))
+      .filter((_, index) => compressedFiles[index].status !== "rejected");
 
     /**
      * 압축에 실패한 경우엔 input key를 증가 시켜 다시 마운트 합니다.
