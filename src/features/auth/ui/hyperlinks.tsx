@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 import { NaverIcon, GoogleIcon } from "@/entities/auth/assets";
-import { getProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { deleteCookie, getCookie } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store/auth";
@@ -54,14 +52,11 @@ export const EmailLoginHyperLink = () => (
 
 export const OAuthLoginHyperLinks = () => {
   const navigate = useNavigate();
-
   const role = useAuthStore((state) => state.role);
 
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
   const setNickname = useAuthStore((state) => state.setNickname);
-
-  const queryClient = useQueryClient();
 
   /**
    * 해당 Effect는 다음과 같은 상황을 위해 사용됩니다.
@@ -73,22 +68,17 @@ export const OAuthLoginHyperLinks = () => {
   useEffect(() => {
     const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
 
-    // 로그인을 한 상태로 로그인 페이지에 접근 하는 행위를 방지 합니다.
-    if (role === "ROLE_NONE") {
-      navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
-      return;
-    }
+    /* 기존 권한이 존재한다면 가장 마지막으로 접속한 페이지로 네비게이팅 시킵니다. */
     if (role) {
       navigate(lastNoneAuthRoute);
       return;
     }
 
-    // 해당 코드들은 소셜 로그인을 시행 한 후 쿠키에 저장된 인증 정보를 이용하는 코드 들입니다.
     const tokenOnCookie = getCookie("authorization");
     const roleOnCookie = getCookie("role");
     const nicknameOnCookie = getCookie("nickname");
 
-    // 만약 페이지 진입 시 쿠키에 토큰과 권한이 없다면 아무것도 하지 않습니다.
+    /* 만약 페이지 진입 시 쿠키에 토큰과 권한이 없다면 아무것도 하지 않습니다. */
     if (!tokenOnCookie || !roleOnCookie) {
       return;
     }
@@ -96,7 +86,7 @@ export const OAuthLoginHyperLinks = () => {
     setToken(tokenOnCookie);
     setRole(roleOnCookie);
 
-    // 사용자가 추가 정보를 입력하지 않은 경우엔 추가 정보 입력 페이지로 이동 시킵니다.
+    /* 만약 사용자가 소셜 로그인을 이용해 회원가입 한 경우에는 기본 정보 입력 페이지로 리다이렉션 시킵니다. */
     if (!nicknameOnCookie) {
       navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
       return;
@@ -104,6 +94,7 @@ export const OAuthLoginHyperLinks = () => {
 
     setNickname(nicknameOnCookie);
     navigate(lastNoneAuthRoute);
+  });
 
   useEffect(() => {
     return () => {
@@ -111,7 +102,7 @@ export const OAuthLoginHyperLinks = () => {
         deleteCookie({ name, value: "", path: "/login" }),
       );
     };
-  }, [navigate, role, setToken, setRole, setNickname, queryClient]);
+  });
 
   return (
     <>
