@@ -41,22 +41,21 @@ export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
   (set, get) => ({
     ...petInfoFormInitialState,
 
-    /**
-     * profile 을 설정하던 중 압축 과정이 진행 중일 경우 isCompressing 을 true, 종료 시 false 로 변경 합니다.
-     * 이 때 profile의 압축이 실패한 경우엔 실패한 profile이 아닌 기존 존재하던 profile 로 변경합니다.
-     */
+    /* profile 을 설정하던 중 압축 과정이 진행 중일 경우 isCompressing 을 true, 종료 시 false 로 변경 합니다. */
     setProfile: async (profile: FileInfo) => {
-      const { profile: prevProfile } = get();
-
       if (!profile.file) {
         set({
-          profile: prevProfile,
+          profile,
           isCompressing: false,
           inputKey: get().inputKey + 1,
         });
         return;
       }
-
+      /**
+       * 상태 변경 전 파일을 캐싱 합니다.
+       * 그 이유는 압축 과정이 실패 할 경우 이전 파일로 복구하기 위함입니다.
+       */
+      const { profile: prevProfile } = get();
       set({ profile, isCompressing: true, inputKey: get().inputKey + 1 });
 
       try {
@@ -67,7 +66,9 @@ export const usePetInfoStore = create<PetInfoFormStates & PetInfoFormActions>(
         console.error(`
           ${profile.name}을 압축하는데 실패했습니다.
           ${error}`);
-
+        /**
+         * 이미지 압축 과정에 실패하면 이전에 캐싱한 파일로 복구합니다.
+         */
         set({
           profile: prevProfile,
           inputKey: get().inputKey + 1,

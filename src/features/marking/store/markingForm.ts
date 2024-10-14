@@ -53,7 +53,7 @@ export const useMarkingFormStore = create<
      * 사진이 추가되지 않고  사진이 삭제 된 경우엔 압축을 시작하지 않고 종료합니다.
      */
     if (images.length < get().images.length) {
-      set({ isCompressing: false, inputKey: get().inputKey + 1 });
+      set({ images, isCompressing: false, inputKey: get().inputKey + 1 });
       return;
     }
     /* 동기적으로 압축 예정인 이미지 파일을 업데이트 합니다. */
