@@ -16,19 +16,8 @@ export const setCookie = (cookieOption: CookieOption) => {
     "; path=" +
     path +
     "; domain=" +
-    window.location.hostname;
-
-  console.log(
-    name +
-      "=" +
-      value +
-      "; maxAge=" +
-      maxAge +
-      "; path=" +
-      path +
-      "; domain=" +
-      window.location.hostname,
-  );
+    window.location.hostname +
+    (maxAge === 0 ? "; expires=Thu, 01 Jan 1970 00:00:00 GMT" : "");
 };
 
 export const getCookie = (name: string): string | null => {
