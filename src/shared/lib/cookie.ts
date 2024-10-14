@@ -1,21 +1,34 @@
 export interface CookieOption {
   name: string;
   value: string;
-  days: number;
   path?: string;
+  maxAge: number;
 }
 
 export const setCookie = (cookieOption: CookieOption) => {
-  const { name, value, days, path } = cookieOption;
-  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  const { name, value, maxAge, path } = cookieOption;
   document.cookie =
     name +
     "=" +
-    encodeURIComponent(value) +
-    "; expires=" +
-    expires +
+    value +
+    "; max-age=" +
+    maxAge +
     "; path=" +
-    path;
+    path +
+    "; domain=" +
+    window.location.hostname;
+
+  console.log(
+    name +
+      "=" +
+      value +
+      "; maxAge=" +
+      maxAge +
+      "; path=" +
+      path +
+      "; domain=" +
+      window.location.hostname,
+  );
 };
 
 export const getCookie = (name: string): string | null => {
@@ -28,6 +41,6 @@ export const getCookie = (name: string): string | null => {
   );
 };
 
-export const deleteCookie = (cookieOption: Omit<CookieOption, "days">) => {
-  setCookie({ ...cookieOption, days: -1 });
+export const deleteCookie = (cookieOption: Omit<CookieOption, "maxAge">) => {
+  setCookie({ ...cookieOption, maxAge: 0 });
 };
