@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { useAuthStore } from "@/shared/store";
 import { Input } from "@/shared/ui/input";
 import { usePostDuplicateNickname } from "../api";
@@ -33,69 +33,71 @@ const useValidateNickname = (nickname: string) => {
   };
 };
 
-export const NicknameInput = ({
-  nickname: controlledNickname,
-  onChange,
-}: {
+interface NicknameInputProps {
   nickname?: string;
-  onChange: (nickname: string) => void;
-}) => {
-  const isControlled = typeof controlledNickname !== "undefined";
+  onChange?: (nickname: string) => void;
+}
 
-  const token = useAuthStore((state) => state.token);
-  const [nickname, setNickname] = useState<string>("");
+export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
+  ({ nickname: controlledNickname, onChange }, ref) => {
+    const isControlled = typeof controlledNickname !== "undefined";
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isControlled) {
-      setNickname(e.target.value);
+    const token = useAuthStore((state) => state.token);
+    const [nickname, setNickname] = useState<string>("");
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!isControlled) {
+        setNickname(e.target.value);
+      }
+
+      onChange?.(e.target.value);
+    };
+
+    const {
+      isValidNickname,
+      isDuplicateNickname,
+      isNicknameEmpty,
+      checkDuplicateNickname,
+    } = useValidateNickname(nickname);
+
+    const handleBlur = () => {
+      if (!token || !isValidNickname || isNicknameEmpty) return;
+
+      checkDuplicateNickname({ token, nickname });
+    };
+
+    let statusText = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";
+
+    if (isDuplicateNickname) {
+      statusText = "이미 존재하는 닉네임입니다.";
     }
 
-    onChange(e.target.value);
-  };
-
-  const {
-    isValidNickname,
-    isDuplicateNickname,
-    isNicknameEmpty,
-    checkDuplicateNickname,
-  } = useValidateNickname(nickname);
-
-  const handleBlur = () => {
-    if (!token || !isValidNickname || isNicknameEmpty) return;
-
-    checkDuplicateNickname({ token, nickname });
-  };
-
-  let statusText = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";
-
-  if (isDuplicateNickname) {
-    statusText = "이미 존재하는 닉네임입니다.";
-  }
-
-  return (
-    <Input
-      type="text"
-      id="nickname"
-      name="nickname"
-      label="닉네임"
-      placeholder="닉네임을 입력해 주세요"
-      statusText={statusText}
-      essential
-      componentType="outlinedText"
-      isError={!isValidNickname && !isNicknameEmpty}
-      value={isControlled ? controlledNickname : nickname}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      maxLength={20}
-      trailingNode={
-        <ValueLength
-          value={isControlled ? controlledNickname : nickname}
-          maxLength={20}
-        />
-      }
-    />
-  );
-};
+    return (
+      <Input
+        ref={ref}
+        type="text"
+        id="nickname"
+        name="nickname"
+        label="닉네임"
+        placeholder="닉네임을 입력해 주세요"
+        statusText={statusText}
+        essential
+        componentType="outlinedText"
+        isError={!isValidNickname && !isNicknameEmpty}
+        value={isControlled ? controlledNickname : nickname}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        maxLength={20}
+        trailingNode={
+          <ValueLength
+            value={isControlled ? controlledNickname : nickname}
+            maxLength={20}
+          />
+        }
+      />
+    );
+  },
+);
 
 const ValueLength = ({
   value,

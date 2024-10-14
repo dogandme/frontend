@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef } from "react";
 import { MutationState, useMutationState } from "@tanstack/react-query";
 import { MyInfo } from "@/entities/auth/api";
 import { formatDateToYearMonthDay, useSnackBar } from "@/shared/lib";
@@ -22,7 +22,7 @@ export const ChangeNicknameModal = ({
   onClose: () => void;
   nickLastModDt: NonNullable<MyInfo["nickLastModDt"]>;
 }) => {
-  const [nickname, setNickname] = useState<string>("");
+  const nicknameRef = useRef<HTMLInputElement | null>(null);
 
   const { handleOpen: openRequiredAlert, onClose: closeRequiredAlert } =
     useSnackBar(() => (
@@ -67,6 +67,8 @@ export const ChangeNicknameModal = ({
     const { token } = useAuthStore.getState();
 
     if (!token) return;
+
+    const nickname = nicknameRef.current?.value || "";
 
     const isNicknameEmpty = nickname.length === 0;
 
@@ -119,7 +121,7 @@ export const ChangeNicknameModal = ({
           </div>
         </Notice>
 
-        <NicknameInput onChange={setNickname} />
+        <NicknameInput ref={nicknameRef} />
       </Modal.Content>
 
       <Modal.Footer axis="col">
