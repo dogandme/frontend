@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuthStore } from "@/shared/store";
 import { Input } from "@/shared/ui/input";
 import { usePostDuplicateNickname } from "../api";
 import { validateNickname } from "../lib";
@@ -41,6 +42,7 @@ export const NicknameInput = ({
 }) => {
   const isControlled = typeof controlledNickname !== "undefined";
 
+  const token = useAuthStore((state) => state.token);
   const [nickname, setNickname] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,9 +61,9 @@ export const NicknameInput = ({
   } = useValidateNickname(nickname);
 
   const handleBlur = () => {
-    if (!isValidNickname || isNicknameEmpty) return;
+    if (!token || !isValidNickname || isNicknameEmpty) return;
 
-    checkDuplicateNickname({ nickname });
+    checkDuplicateNickname({ token, nickname });
   };
 
   let statusText = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";
