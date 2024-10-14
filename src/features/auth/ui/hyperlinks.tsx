@@ -131,19 +131,11 @@ export const OAuthLoginHyperLinks = () => {
     setNickname(nicknameOnCookie);
     navigate(lastNoneAuthRoute);
 
-    // 로그인에 성공하여 리다이렉션 될 때 해당 경로에서 쿠키를 제거 합니다.
+  useEffect(() => {
     return () => {
-      const cookies = [
-        { value: tokenOnCookie, name: "authorization" },
-        { value: roleOnCookie, name: "role" },
-        { value: nicknameOnCookie, name: "nickname" },
-      ];
-
-      cookies.forEach(({ value, name }) => {
-        if (value) {
-          deleteCookie({ name, value, path: "/login" });
-        }
-      });
+      ["authorization", "role", "nickname"].forEach((name) =>
+        deleteCookie({ name, value: "", path: "/login" }),
+      );
     };
   }, [navigate, role, setToken, setRole, setNickname, queryClient]);
 
