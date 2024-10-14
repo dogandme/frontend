@@ -78,7 +78,7 @@ export const useMarkingFormStore = create<
         ...images[index],
         file: result.status === "fulfilled" ? result.value : images[index].file,
       }))
-      .filter((_, index) => compressedFiles[index].status !== "rejected");
+      .filter((_, index) => compressedFiles[index].status === "fulfilled");
 
     /**
      * 압축에 실패한 경우엔 input key를 증가 시켜 다시 마운트 합니다.
