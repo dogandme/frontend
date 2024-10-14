@@ -62,9 +62,9 @@ const MarkingModalHeader = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   );
 
   const handleClose = () => {
-    const { visibility, images, content } = useMarkingFormStore.getState();
+    const { isVisible, images, content } = useMarkingFormStore.getState();
 
-    if (!visibility && images.length === 0 && !content) {
+    if (!isVisible && images.length === 0 && !content) {
       onCloseMarkingModal();
       return;
     }
@@ -125,7 +125,7 @@ const PostVisibilitySelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const VISIBILITY_LIST = Object.keys(POST_VISIBILITY_MAP);
 
-  const visibility = useMarkingFormStore((state) => state.visibility);
+  const isVisible = useMarkingFormStore((state) => state.isVisible);
   const setVisibility = useMarkingFormStore((state) => state.setVisibility);
 
   const handleCloseSelectList = () => setIsOpen(false);
@@ -142,7 +142,7 @@ const PostVisibilitySelect = () => {
         essential
         onClick={() => setIsOpen(!isOpen)}
         placeholder="공개 범위를 선택해주세요"
-        value={visibility}
+        value={isVisible}
       />
 
       <Select isOpen={isOpen} onClose={handleCloseSelectList}>
@@ -154,7 +154,7 @@ const PostVisibilitySelect = () => {
               <Select.Option
                 key={option}
                 value={option}
-                isSelected={option === visibility}
+                isSelected={option === isVisible}
                 onClick={() =>
                   handleSelect(option as keyof typeof POST_VISIBILITY_MAP)
                 }
@@ -309,7 +309,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     }
 
-    const { region, visibility, images, content } =
+    const { region, isVisible, images, content } =
       useMarkingFormStore.getState();
 
     if (isCompressing) {
@@ -324,7 +324,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
     }
 
-    if (!visibility || images.length === 0) {
+    if (!isVisible || images.length === 0) {
       throw new Error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
     }
 
@@ -337,7 +337,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
         lat,
         lng,
         region,
-        visibility,
+        isVisible,
         images: images.map((image) => image.file),
         content,
       },
@@ -391,7 +391,7 @@ const TemporarySaveButton = ({
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
-    const { region, visibility, images, content } =
+    const { region, isVisible, images, content } =
       useMarkingFormStore.getState();
 
     if (!token) {
@@ -416,7 +416,7 @@ const TemporarySaveButton = ({
       lat,
       lng,
       region,
-      visibility,
+      isVisible: isVisible || "전체 공개",
       images: compressedFiles,
       content,
     });

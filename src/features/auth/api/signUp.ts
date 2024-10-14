@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useAuthStore } from "@/shared/store";
+import { AuthStore, useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
 export interface VerificationCodeRequestData {
@@ -155,6 +155,7 @@ export const usePostSignUpByEmail = () => {
 
 export interface DuplicateNicknameRequestData {
   nickname: string;
+  token: NonNullable<AuthStore["token"]>;
 }
 
 export interface DuplicateNicknameResponse {
@@ -164,11 +165,13 @@ export interface DuplicateNicknameResponse {
 
 const postDuplicateNickname = async ({
   nickname,
+  token,
 }: DuplicateNicknameRequestData) => {
   const response = await fetch(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: token,
     },
     body: JSON.stringify({ nickname }),
   });
@@ -224,6 +227,8 @@ const putUserInfoRegister = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: token,
+      credentials:
+        process.env.NODE_ENV === "development" ? "include" : "same-origin",
     },
     body: JSON.stringify(userInfo),
   });

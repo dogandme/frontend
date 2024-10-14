@@ -100,7 +100,7 @@ export const ShowMyMarkingButton = () => {
         // todo 내 마킹 보기로 상태 변경
       }}
     >
-      <img src="/public/default-image.png" className="w-7 h-7 rounded-full" />
+      <img src="/default-image.png" className="w-7 h-7 rounded-full" />
     </Button>
   );
 };

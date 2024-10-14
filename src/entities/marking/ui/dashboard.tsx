@@ -16,8 +16,8 @@ export const MarkingThumbnailGrid = ({
     <div className="grid grid-cols-3 gap-2 w-full">
       {markings.map(({ id, image }) => (
         <img
-          src={`${API_BASE_URL}/markings/image/${image}`}
           key={id}
+          src={`${API_BASE_URL}/markings/image/${id}/${image}`}
           alt={`마킹 번호 ${id}의 썸네일 이미지`}
           className="w-full h-full object-cover rounded-lg aspect-square"
         />

@@ -13,7 +13,7 @@ import { useMarkingFormStore } from "../store";
 export interface MarkingFormRequest extends LatLng {
   token: NonNullable<AuthStore["token"]>;
   region: string;
-  visibility: keyof typeof POST_VISIBILITY_MAP;
+  isVisible: keyof typeof POST_VISIBILITY_MAP;
   content: string;
   images: File[];
 }
@@ -22,7 +22,7 @@ const postMarkingFormData = async ({
   token,
   ...formObj
 }: MarkingFormRequest) => {
-  const { visibility, images, ...rest } = formObj;
+  const { isVisible, images, ...rest } = formObj;
 
   if (!token) {
     throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
@@ -32,10 +32,15 @@ const postMarkingFormData = async ({
 
   formData.append(
     "markingAddDto",
-    JSON.stringify({
-      visibility: POST_VISIBILITY_MAP[visibility],
-      ...rest,
-    }),
+    new Blob(
+      [
+        JSON.stringify({
+          isVisible: POST_VISIBILITY_MAP[isVisible],
+          ...rest,
+        }),
+      ],
+      { type: "application/json" },
+    ),
   );
 
   images.forEach((image) => {
