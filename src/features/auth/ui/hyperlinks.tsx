@@ -69,9 +69,6 @@ export const OAuthLoginHyperLinks = () => {
    * 2. OAuth 인증을 마쳐 서버에서 쿠키를 삽입 받은 채 /login 페이지로 리다이렉션 된 경우, 쿠키를 사용해 AuthStore에 정보를 저장합니다.
    * 3. 쿠키에서 로그인 정보를 가져온 후 AuthStore에 상태 값을 저장하고 난 후엔 로그인 페이지가 아닌 다른 곳으로 리다이렉션 됩니다.
    * - 리다이렉션 될 때 클린업 함수로 인해 쿠키에 저장되어있던 인증 정보를 제거합니다.
-   *
-   * 2024.09.30 업데이트
-   * - OAuth Login 을 하고 나면 해당 사용자의 프로필 정보를 prefetch 합니다.
    */
   useEffect(() => {
     const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
@@ -105,29 +102,6 @@ export const OAuthLoginHyperLinks = () => {
       return;
     }
 
-    // 사용자의 정보가 닉네임밖에 없다면 setQueryData 를 통해 프로필 정보를 설정합니다.
-    if (roleOnCookie === "ROLE_GUEST") {
-      queryClient.setQueryData(["profile", nicknameOnCookie], {
-        nickname: nicknameOnCookie,
-        pet: null,
-        followers: [],
-        followings: [],
-        likes: [],
-        bookmarks: [],
-        tempCnt: 0,
-        markings: [],
-      });
-      setNickname(nicknameOnCookie);
-      navigate(lastNoneAuthRoute);
-      return;
-    }
-
-    // 사용자의 정보가 닉네임 이외에 다른 정보가 있다면 해당 정보를 prefetch 합니다.
-    queryClient.prefetchQuery({
-      queryKey: ["profile", nicknameOnCookie, tokenOnCookie],
-      queryFn: () =>
-        getProfile({ nickname: nicknameOnCookie, token: tokenOnCookie }),
-    });
     setNickname(nicknameOnCookie);
     navigate(lastNoneAuthRoute);
 
