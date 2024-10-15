@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AuthStore } from "@/shared/store/auth";
+import { useMutation } from "@tanstack/react-query";
+import { AuthStore, useAuthStore } from "@/shared/store/auth";
 import { CHANGE_USER_INFO_END_POINT } from "../constants";
 
 export interface ChangeNicknameResponse {
@@ -35,14 +35,12 @@ const putChangeNickname = async ({
 };
 
 export const usePutChangeNickname = () => {
-  const queryClient = useQueryClient();
+  const setNickname = useAuthStore((state) => state.setNickname);
 
   return useMutation<ChangeNicknameResponse, Error, ChangeNicknameRequest>({
     mutationFn: putChangeNickname,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["myInfo"],
-      });
+    onSuccess: (_, variables) => {
+      setNickname(variables.nickname);
     },
   });
 };
