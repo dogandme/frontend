@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useIsMutating } from "@tanstack/react-query";
 import { ageRangeMap } from "@/features/auth/constants";
 import type { MyInfo } from "@/entities/auth/api";
 import { useAuthStore } from "@/shared/store";
@@ -9,14 +10,20 @@ import { PutChangeAgeRequestData, usePutChangeAge } from "../api";
 // TODO useQuery 옮기고 isLoading 동안 disabled 시키기
 export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate: putChangeAge, isPending } = usePutChangeAge();
+  const { mutate: putChangeAge } = usePutChangeAge();
+
+  const isBottomSheetMutating =
+    useIsMutating({
+      mutationKey: ["bottomSheetMutating"],
+      exact: false,
+    }) > 0;
 
   return (
     <>
       <button
         className="setting-item"
         onClick={() => setIsOpen(!isOpen)}
-        disabled={isPending}
+        disabled={isBottomSheetMutating}
       >
         <span>나이대 변경</span>
         <div className="flex items-center text-grey-500">

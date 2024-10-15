@@ -34,7 +34,7 @@ export const usePutChangeAge = () => {
 
   return useMutation({
     mutationFn: putChangeAge,
-    mutationKey: ["putChangeAge", "bottomSheet"],
+    mutationKey: ["bottomSheetMutating", "putChangeAge"],
 
     /* 낙관적 업데이트 시행 */
     onMutate: async ({ age }) => {
