@@ -611,7 +611,7 @@ const putChangePasswordHandler = [
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));
       const token = request.headers.get("Authorization");
-      const { newPw, newPwChk } = await request.json();
+      const { password, newPw, newPwChk } = await request.json();
 
       if (token === "staleAccessToken") {
         return HttpResponse.json(
@@ -621,6 +621,18 @@ const putChangePasswordHandler = [
           },
           {
             status: 401,
+          },
+        );
+      }
+
+      if (password !== "password123!") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "리스소 접근 권한이 없습니다.",
+          },
+          {
+            status: 400,
           },
         );
       }
