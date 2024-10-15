@@ -32,25 +32,20 @@ const deleteAccount = async ({ password, token }: DeleteAccountRequest) => {
 };
 
 export const useDeleteAccount = () => {
-  const { mutate: pureMutate, ...rest } = useMutation({
-    mutationFn: deleteAccount,
-    mutationKey: ["deleteAccount"],
-  });
   const navigate = useNavigate();
   const resetAuthStore = useAuthStore((state) => state.reset);
 
-  const mutate = (args: Parameters<typeof deleteAccount>[0]) =>
-    pureMutate(args, {
-      onSuccess: () => {
-        // TODO navigate가 되지 않는 이유 찾아서 고치기
-        navigate(ROUTER_PATH.MAIN);
-        resetAuthStore();
-      },
-      onError: (error) => {
-        // TODO 에러바운더리 로직 나오면 변경 하기
-        console.error(error);
-      },
-    });
-
-  return { ...rest, mutate };
+  return useMutation({
+    mutationFn: deleteAccount,
+    mutationKey: ["deleteAccount"],
+    onSuccess: () => {
+      // TODO navigate가 되지 않는 이유 찾아서 고치기
+      navigate(ROUTER_PATH.MAIN);
+      resetAuthStore();
+    },
+    onError: (error) => {
+      // TODO 에러바운더리 로직 나오면 변경 하기
+      console.error(error);
+    },
+  });
 };
