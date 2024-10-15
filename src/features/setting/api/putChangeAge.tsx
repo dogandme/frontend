@@ -38,9 +38,9 @@ export const usePutChangeAge = () => {
    * 이 작업은 myInfo 쿼리의 staleTime이 늘어날 것임을 기대하고 한 작업입니다.
    */
   const optimisticCleanUpMethod = () => {
-    const cachedMutation = [
-      ...queryClient.getMutationCache().getAll(),
-    ].reverse()[0];
+    const cachedMutation = [...queryClient.getMutationCache().getAll()]
+      .reverse()
+      .find((mutation) => mutation?.options.mutationKey === mutationKey);
 
     if (cachedMutation?.state.status === "pending") {
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
