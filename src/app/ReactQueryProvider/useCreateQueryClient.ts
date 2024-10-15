@@ -48,7 +48,6 @@ export const useCreateQueryClient = () => {
       }),
       mutationCache: new MutationCache({
         onError: async (error, variables, context, mutation) => {
-          console.error("mutationCache에서 잡는다 얍! ", error);
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getNewAccessToken({
