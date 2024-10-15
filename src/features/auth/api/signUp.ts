@@ -199,7 +199,7 @@ export const usePostDuplicateNickname = () => {
   });
 };
 
-interface UserInfoRegistrationRequest {
+export interface UserInfoRegistrationRequest {
   token: string;
   nickname: string;
   gender: "FEMALE" | "MALE";
