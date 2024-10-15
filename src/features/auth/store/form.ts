@@ -126,7 +126,7 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
   setStatusText: (statusText: string) => set({ statusText }),
 }));
 
-type Gender = "FEMALE" | "MALE" | null;
+type Gender = "FEMALE" | "MALE" | "NONE" | null;
 type AgeRange = 10 | 20 | 30 | 40 | 50 | 60 | null;
 type CheckedList = boolean[];
 type Region = { address: string; id: number };

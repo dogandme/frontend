@@ -202,7 +202,7 @@ export const usePostDuplicateNickname = () => {
 interface UserInfoRegistrationRequest {
   token: string;
   nickname: string;
-  gender: "FEMALE" | "MALE";
+  gender: "FEMALE" | "MALE" | "NONE";
   age: 10 | 20 | 30 | 40 | 50 | 60;
   region: number[];
   marketingYn: boolean;
