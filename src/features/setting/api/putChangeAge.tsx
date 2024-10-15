@@ -31,10 +31,25 @@ const putChangeAge = async ({ token, age }: PutChangeAgeRequestData) => {
 
 export const usePutChangeAge = () => {
   const queryClient = useQueryClient();
+  const mutationKey = ["putChangeAge"];
 
-  return useMutation({
+  /**
+   * 해당 메소드는 낙관적 업데이트 이후 뮤테이션이 pending 상태일 때 언마운트 되게 된다면 데이터의 무결성을 위해 invalidateQueries를 호출해야 합니다.
+   * 이 작업은 myInfo 쿼리의 staleTime이 늘어날 것임을 기대하고 한 작업입니다.
+   */
+  const optimisticCleanUpMethod = () => {
+    const cachedMutation = [
+      ...queryClient.getMutationCache().getAll(),
+    ].reverse()[0];
+
+    if (cachedMutation?.state.status === "pending") {
+      queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+    }
+  };
+
+  const mutation = useMutation({
+    mutationKey,
     mutationFn: putChangeAge,
-    mutationKey: ["putChangeAge"],
 
     /* 낙관적 업데이트 시행 */
     onMutate: async ({ age }) => {
@@ -66,4 +81,6 @@ export const usePutChangeAge = () => {
       queryClient.setQueryData(["myInfo"], context);
     },
   });
+
+  return { ...mutation, optimisticCleanUpMethod };
 };
