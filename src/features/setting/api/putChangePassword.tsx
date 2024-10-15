@@ -50,23 +50,17 @@ export const usePutChangePassword = ({
       <Snackbar onClose={onCloseSnackbar}>비밀번호가 변경되었습니다.</Snackbar>
     ));
 
-  const { mutate: pureMutate, ...rest } = useMutation({
+  return useMutation({
     mutationFn: putChangePassword,
     mutationKey: ["putChangePassword"],
+    onSuccess: () => {
+      resetPasswordChangeForm();
+      handleOpenSnackbar();
+      onSuccessCallback?.();
+    },
+    onError: (error) => {
+      // TODO 에러  바운더리 로직 나오면 변경 하기
+      console.error(error);
+    },
   });
-
-  const mutate = (args: Parameters<typeof putChangePassword>[0]) =>
-    pureMutate(args, {
-      onSuccess: () => {
-        resetPasswordChangeForm();
-        handleOpenSnackbar();
-        onSuccessCallback?.();
-      },
-      onError: (error) => {
-        // TODO 에러  바운더리 로직 나오면 변경 하기
-        console.error(error);
-      },
-    });
-
-  return { mutate, ...rest };
 };
