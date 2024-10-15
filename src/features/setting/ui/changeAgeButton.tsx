@@ -26,13 +26,13 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
      * 이 작업은 myInfo 쿼리의 staleTime이 늘어날 것임을 기대하고 한 작업입니다.
      */
     return () => {
-      const isPending =
+      const isMutating =
         queryClient.getMutationCache().find({
           mutationKey: ["putChangeAge"],
           exact: false,
         })?.state.status === "pending";
 
-      if (isPending) {
+      if (isMutating) {
         queryClient.invalidateQueries({
           queryKey: ["myInfo"],
         });
