@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MyInfo, UserInfoResponse } from "@/entities/auth/api";
 import { AuthStore } from "@/shared/store";
@@ -46,8 +47,11 @@ export const usePutChangeGender = () => {
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
     }
   };
+  useEffect(() => {
+    return optimisticCleanUpMethod;
+  }, []);
 
-  const mutation = useMutation({
+  return useMutation({
     mutationKey,
     mutationFn: putChangeGender,
 
@@ -81,6 +85,4 @@ export const usePutChangeGender = () => {
       queryClient.setQueryData(["myInfo"], context);
     },
   });
-
-  return { ...mutation, optimisticCleanUpMethod };
 };

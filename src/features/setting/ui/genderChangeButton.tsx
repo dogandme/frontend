@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { genderMap, GenderMapKey } from "@/features/auth/constants";
 import type { MyInfo } from "@/entities/auth/api";
 import { AuthStore, useAuthStore } from "@/shared/store";
@@ -8,7 +8,7 @@ import { PutChangeAgeRequestData, usePutChangeGender } from "../api";
 
 export const GenderChangeButton = ({ gender }: Pick<MyInfo, "gender">) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate, optimisticCleanUpMethod } = usePutChangeGender();
+  const { mutate } = usePutChangeGender();
 
   const putChangeGender = ({
     gender: newGender,
@@ -23,10 +23,6 @@ export const GenderChangeButton = ({ gender }: Pick<MyInfo, "gender">) => {
       token,
     });
   };
-
-  useEffect(() => {
-    return optimisticCleanUpMethod;
-  }, []);
 
   return (
     <>
