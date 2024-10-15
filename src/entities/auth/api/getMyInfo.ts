@@ -1,4 +1,5 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
+import { GenderMapKey } from "@/features/auth/constants";
 import { AuthStore } from "@/shared/store";
 import { MY_INFO_END_POINT, SOCIAL_TYPE } from "../constants";
 
@@ -12,7 +13,7 @@ interface Region {
 
 export interface MyInfo {
   email: string;
-  gender: "MALE" | "FEMALE";
+  gender: GenderMapKey;
   age: 10 | 20 | 30 | 40 | 50 | 60;
   regions: Region[];
   nickLastModDt: string | null;

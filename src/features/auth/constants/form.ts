@@ -13,6 +13,16 @@ export const personalities = [
   "까칠한",
 ] as const;
 
+export type GenderMapKey = "MALE" | "FEMALE" | "NONE";
+type GenderMapValue = "남자" | "여자" | "선택안함";
+
+export const genderMap: Record<GenderMapKey, GenderMapValue> = {
+  MALE: "남자",
+  FEMALE: "여자",
+  NONE: "선택안함",
+};
+
+// TODO 리팩토링 단계에서 덜어내기
 export const genderOptionList = [
   {
     value: "MALE",
