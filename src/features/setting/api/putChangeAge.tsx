@@ -45,8 +45,6 @@ export const usePutChangeAge = () => {
         }),
       ].reverse()[0];
 
-      console.log(cachedMutation);
-
       if (cachedMutation?.state.status === "pending") {
         queryClient.invalidateQueries({ queryKey: ["myInfo"] });
       }
