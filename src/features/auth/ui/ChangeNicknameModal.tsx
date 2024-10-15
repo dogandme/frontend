@@ -61,7 +61,9 @@ export const ChangeNicknameModal = ({
     },
   });
 
-  const { mutate: postChangeNickname } = usePutChangeNickname();
+  const { mutate: postChangeNickname, status } = usePutChangeNickname({
+    onSuccessCallback: onClose,
+  });
 
   const handleSubmit = () => {
     const { token } = useAuthStore.getState();
@@ -106,7 +108,6 @@ export const ChangeNicknameModal = ({
     }
 
     postChangeNickname({ token, nickname });
-    onClose();
   };
 
   return (
@@ -125,7 +126,11 @@ export const ChangeNicknameModal = ({
       </Modal.Content>
 
       <Modal.Footer axis="col">
-        <Modal.FilledButton type="button" onClick={handleSubmit}>
+        <Modal.FilledButton
+          type="button"
+          disabled={status === "pending"}
+          onClick={handleSubmit}
+        >
           저장
         </Modal.FilledButton>
       </Modal.Footer>

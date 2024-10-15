@@ -34,13 +34,18 @@ const putChangeNickname = async ({
   return data;
 };
 
-export const usePutChangeNickname = () => {
+export const usePutChangeNickname = ({
+  onSuccessCallback,
+}: {
+  onSuccessCallback: () => void;
+}) => {
   const setNickname = useAuthStore((state) => state.setNickname);
 
   return useMutation<ChangeNicknameResponse, Error, ChangeNicknameRequest>({
     mutationFn: putChangeNickname,
     onSuccess: (_, variables) => {
       setNickname(variables.nickname);
+      onSuccessCallback();
     },
   });
 };
