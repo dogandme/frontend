@@ -4,35 +4,6 @@ import { Input } from "@/shared/ui/input";
 import { usePostDuplicateNickname } from "../api";
 import { validateNickname } from "../lib";
 
-/**
- * 닉네임 유효성 검사 결과를 반환하는 훅
- * 여기서만 사용되는 훅으로 별도의 파일로 분리하지 않았습니다.
- *
- * @param nickname 닉네임 값
- * @returns isValidNickname: 닉네임이 유효한지 여부
- * @returns isDuplicateNickname: 중복된 닉네임인지 여부
- * @returns isNicknameEmpty: 닉네임이 비어있는지 여부
- * @returns checkDuplicateNickname: 닉네임 중복 검사 함수
- */
-const useValidateNickname = (nickname: string) => {
-  const {
-    mutate: postDuplicateNickname,
-    isError,
-    variables,
-  } = usePostDuplicateNickname();
-
-  const isDuplicateNickname = isError && variables?.nickname === nickname;
-  const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
-  const isNicknameEmpty = nickname.length === 0;
-
-  return {
-    isValidNickname,
-    isDuplicateNickname,
-    isNicknameEmpty,
-    checkDuplicateNickname: postDuplicateNickname,
-  };
-};
-
 interface NicknameInputProps {
   nickname?: string;
   onChange?: (nickname: string) => void;
@@ -53,17 +24,17 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
       onChange?.(e.target.value);
     };
 
-    const {
-      isValidNickname,
-      isDuplicateNickname,
-      isNicknameEmpty,
-      checkDuplicateNickname,
-    } = useValidateNickname(nickname);
+    const { mutate: postDuplicateNickname, validateDuplicateNickname } =
+      usePostDuplicateNickname();
+
+    const isDuplicateNickname = validateDuplicateNickname(nickname);
+    const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
+    const isNicknameEmpty = nickname.length === 0;
 
     const handleBlur = () => {
       if (!token || !isValidNickname || isNicknameEmpty) return;
 
-      checkDuplicateNickname({ token, nickname });
+      postDuplicateNickname({ token, nickname });
     };
 
     let statusText = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";

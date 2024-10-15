@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import {
+  MutationState,
+  useMutation,
+  useMutationState,
+} from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
 import { AuthStore, useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
@@ -189,14 +193,39 @@ const postDuplicateNickname = async ({
 };
 
 export const usePostDuplicateNickname = () => {
-  return useMutation<
+  const MUTATION_KEY = "checkDuplicateNickname";
+
+  const mutate = useMutation<
     DuplicateNicknameResponse,
     Error,
     DuplicateNicknameRequestData
   >({
     mutationFn: postDuplicateNickname,
-    mutationKey: ["checkDuplicateNickname"],
+    mutationKey: [MUTATION_KEY],
   });
+
+  // mutate 상태 결과들을 보고 중복된 닉네임인지 판단
+  const mutationState = useMutationState<
+    MutationState<
+      DuplicateNicknameResponse,
+      Error,
+      DuplicateNicknameRequestData
+    >
+  >({
+    filters: {
+      mutationKey: [MUTATION_KEY],
+    },
+  });
+
+  const existingNicknames = mutationState
+    .filter(({ status }) => status === "error")
+    .map(({ variables }) => variables?.nickname)
+    .filter((nickname) => typeof nickname === "string");
+
+  const validateDuplicateNickname = (nickname: string) =>
+    existingNicknames.some((variable) => variable === nickname);
+
+  return { ...mutate, validateDuplicateNickname };
 };
 
 interface UserInfoRegistrationRequest {
