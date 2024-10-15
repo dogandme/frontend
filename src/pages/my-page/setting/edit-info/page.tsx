@@ -52,12 +52,7 @@ const NicknameButton = ({
   ));
 
   return (
-    <button
-      className="setting-item"
-      onClick={() => {
-        handleOpen();
-      }}
-    >
+    <button className="setting-item" onClick={handleOpen}>
       <span>닉네임 변경</span>
 
       <div className="flex items-center text-grey-500">
