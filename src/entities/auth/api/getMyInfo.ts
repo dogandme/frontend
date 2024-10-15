@@ -21,7 +21,7 @@ export interface MyInfo {
   isPasswordSet: boolean;
 }
 
-interface UserInfoResponse {
+export interface UserInfoResponse {
   code: number;
   message: string;
   content: MyInfo;
