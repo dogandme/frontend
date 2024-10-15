@@ -13,14 +13,14 @@ interface Region {
 export interface MyInfo {
   email: string;
   gender: "MALE" | "FEMALE";
-  age: 10 | 20 | 30 | 40 | 50 | 60;
+  age: "10" | "20" | "30" | "40" | "50" | "60";
   regions: Region[];
   nickLastModDt: string | null;
   socialType: keyof typeof SOCIAL_TYPE;
   isPasswordSet: boolean;
 }
 
-interface UserInfoResponse {
+export interface UserInfoResponse {
   code: number;
   message: string;
   content: MyInfo;
