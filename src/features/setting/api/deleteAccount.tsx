@@ -1,7 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
-import { AuthStore, useAuthStore } from "@/shared/store";
+import { AuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
 interface DeleteAccountRequest {
@@ -32,16 +31,11 @@ const deleteAccount = async ({ password, token }: DeleteAccountRequest) => {
 };
 
 export const useDeleteAccount = () => {
-  const navigate = useNavigate();
-  const resetAuthStore = useAuthStore((state) => state.reset);
-
   return useMutation({
     mutationFn: deleteAccount,
     mutationKey: ["deleteAccount"],
     onSuccess: () => {
-      // TODO navigate가 되지 않는 이유 찾아서 고치기
-      navigate(ROUTER_PATH.MAIN);
-      resetAuthStore();
+      window.location.href = ROUTER_PATH.MAIN;
     },
     onError: (error) => {
       // TODO 에러바운더리 로직 나오면 변경 하기
