@@ -28,7 +28,7 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         putChangeAge={putChangeAge}
-        age={age}
+        isSelected={(key) => key === age}
       />
     </>
   );
@@ -38,25 +38,25 @@ interface ChangeAgeBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
   putChangeAge: ({ age, token }: PutChangeAgeRequestData) => void;
-  age: keyof typeof ageRangeMap;
+  isSelected: (key: string) => boolean;
 }
 
 const ChangeAgeBottomSheet = ({
   isOpen,
   putChangeAge,
   onClose,
-  age,
+  isSelected,
 }: ChangeAgeBottomSheetProps) => {
   return (
     <Select isOpen={isOpen} onClose={onClose}>
       <Select.BottomSheet>
         <Select.OptionList>
-          {Object.entries(ageRangeMap).map(([key, value]) => {
+          {Object.entries(ageRangeMap).map(([key, ageRange]) => {
             return (
               <Select.Option
                 key={key}
                 value={key}
-                isSelected={key === age}
+                isSelected={isSelected(key)}
                 onClick={() => {
                   putChangeAge({
                     age: key as keyof typeof ageRangeMap,
@@ -64,7 +64,7 @@ const ChangeAgeBottomSheet = ({
                   });
                 }}
               >
-                {value}
+                {ageRange}
               </Select.Option>
             );
           })}
