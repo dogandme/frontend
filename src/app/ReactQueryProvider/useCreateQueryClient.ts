@@ -75,9 +75,12 @@ export const useCreateQueryClient = () => {
             default:
               /**
                * 만약 발생 한 에러가 전역으로 핸들링 할 에러가 아니라면
-               * 해당 mutation 의 onError 를 호출합니다.
+               * 아무런 행위도 하지 않습니다.
+               * 2024/10/15 에서 throw error 문이 제거 되었습니다.
+               * throw error 가 있을 경우 에러가 mutation.onError 에게 에러가 전달 되지 않고
+               * 실행 스택이 중단 되어 mutation.onError 가 호출 되지 않았습니다.
                */
-              mutation?.options.onError?.(error, variables, context);
+              return;
           }
         },
       }),
