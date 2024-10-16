@@ -641,8 +641,6 @@ const putChangeRegionHandler = [
         });
       });
 
-      console.log(newRegions);
-
       userInfoDB[
         token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL"
       ].regions = newRegions;
