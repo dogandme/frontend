@@ -10,17 +10,13 @@ export const GenderChangeButton = ({ gender }: Pick<MyInfo, "gender">) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate } = usePutChangeGender();
 
-  const putChangeGender = ({
-    gender: newGender,
-    token,
-  }: PutChangeAgeRequestData) => {
+  const putChangeGender = ({ gender: newGender }: PutChangeAgeRequestData) => {
     if (gender === newGender) {
       setIsOpen(false);
       return;
     }
     mutate({
       gender: newGender,
-      token,
     });
   };
 
