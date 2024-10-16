@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { validatePassword } from "@/features/auth/lib";
 
 interface PasswordCheckFormState {
   password: string;
@@ -8,8 +9,6 @@ interface PasswordCheckFormState {
 
 interface PasswordCheckFormAction {
   setPassword: (password: string) => void;
-  setIsValidPassword: (isValidPassword: boolean) => void;
-  setIsEmptyPassword: (isEmptyPassword: boolean) => void;
   reset: () => void;
 }
 
@@ -24,8 +23,11 @@ export const usePasswordCheckFormStore = create<
 >((set) => ({
   ...initialPasswordCheckFormState,
 
-  setPassword: (password: string) => set({ password }),
-  setIsValidPassword: (isValidPassword: boolean) => set({ isValidPassword }),
-  setIsEmptyPassword: (isEmptyPassword: boolean) => set({ isEmptyPassword }),
+  setPassword: (password: string) =>
+    set({
+      password,
+      isValidPassword: validatePassword(password),
+      isEmptyPassword: password.length === 0,
+    }),
   reset: () => set({ ...initialPasswordCheckFormState }),
 }));
