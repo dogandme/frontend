@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ageRangeMap } from "@/features/auth/constants";
+import { AGE_RANGE_MAP } from "@/features/auth/constants";
 import type { MyInfo } from "@/entities/auth/api";
 import { useAuthStore } from "@/shared/store";
 import { ArrowRightIcon } from "@/shared/ui/icon";
@@ -28,7 +28,7 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
       >
         <span>나이대 변경</span>
         <div className="flex items-center text-grey-500">
-          <span className="body-2">{ageRangeMap[age]}</span>
+          <span className="body-2">{AGE_RANGE_MAP[age]}</span>
           <ArrowRightIcon />
         </div>
       </button>
@@ -59,7 +59,7 @@ const ChangeAgeBottomSheet = ({
     <Select isOpen={isOpen} onClose={onClose}>
       <Select.BottomSheet>
         <Select.OptionList>
-          {Object.entries(ageRangeMap).map(([key, ageRange]) => {
+          {Object.entries(AGE_RANGE_MAP).map(([key, ageRange]) => {
             return (
               <Select.Option
                 key={key}
@@ -67,7 +67,7 @@ const ChangeAgeBottomSheet = ({
                 isSelected={isSelected(key)}
                 onClick={() => {
                   putChangeAge({
-                    age: key as keyof typeof ageRangeMap,
+                    age: key as keyof typeof AGE_RANGE_MAP,
                     token: useAuthStore.getState().token!,
                   });
                 }}

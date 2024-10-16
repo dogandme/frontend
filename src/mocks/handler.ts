@@ -2,7 +2,7 @@ import { http, HttpResponse, PathParams } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
 import { APP_END_POINT } from "@/app/ReactQueryProvider/constants";
 import {
-  ageRangeMap,
+  AGE_RANGE_MAP,
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
@@ -613,7 +613,7 @@ const putChangeAgeHandler = [
   http.put(SETTING_END_POINT.CHANGE_AGE, async ({ request }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const { age } = (await request.json()) as {
-      age: keyof typeof ageRangeMap;
+      age: keyof typeof AGE_RANGE_MAP;
     };
 
     const token = request.headers.get("Authorization")!;
