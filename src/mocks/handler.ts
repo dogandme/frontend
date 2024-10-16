@@ -192,7 +192,12 @@ export const userInfoRegistrationHandlers = [
   >(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, async ({ request }) => {
     const { nickname } = await request.json();
 
-    if (nickname === "중복" || userDB[nickname]) {
+    if (
+      nickname === "중복" ||
+      nickname === "뽀" ||
+      nickname === "송" ||
+      userDB[nickname]
+    ) {
       return new HttpResponse(null, { status: 409 });
     }
 
