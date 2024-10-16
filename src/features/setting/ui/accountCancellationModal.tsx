@@ -1,12 +1,28 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
-import { usePasswordCheckModal } from "../hooks";
+import { PasswordCheckModal } from "./passwordCheckModal";
 
 export const AccountCancellationModal = ({
   onClose,
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const handleOpenCancellationCheckModal = usePasswordCheckModal();
+  const queryClient = useQueryClient();
+
+  const { handleOpen, onClose: onClosePasswordCheckModal } = useModal(
+    () => <PasswordCheckModal onClose={onClosePasswordCheckModal} />,
+    {
+      beforeClose: () => {
+        const mutation = queryClient.getMutationCache().find({
+          mutationKey: ["deleteAccount"],
+        });
+        if (mutation?.state.status === "pending") {
+          return true;
+        }
+      },
+    },
+  );
 
   return (
     <Modal modalType="fullPage">
@@ -31,11 +47,7 @@ export const AccountCancellationModal = ({
       </Modal.Content>
       {/* 버튼 */}
       <Modal.Footer axis="col" className="px-4">
-        <Modal.FilledButton
-          onClick={handleOpenCancellationCheckModal}
-          size="large"
-          className="btn-2"
-        >
+        <Modal.FilledButton onClick={handleOpen} size="large" className="btn-2">
           다음
         </Modal.FilledButton>
         <Modal.TextButton

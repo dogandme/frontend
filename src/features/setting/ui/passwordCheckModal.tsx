@@ -45,7 +45,7 @@ export const PasswordCheckModal = ({
     (state) => state.reset,
   );
 
-  const { mutate: deleteAccount } = useDeleteAccount();
+  const { mutate: deleteAccount, isPending } = useDeleteAccount();
 
   const handleSubmit = () => {
     const { password, isEmptyPassword, isValidPassword } =
@@ -86,8 +86,14 @@ export const PasswordCheckModal = ({
       </Modal.Content>
       {/* 버튼들 */}
       <Modal.Footer axis="col">
-        <Modal.FilledButton onClick={handleSubmit}>탈퇴하기</Modal.FilledButton>
-        <Modal.TextButton onClick={onClose} colorType="tertiary">
+        <Modal.FilledButton onClick={handleSubmit} disabled={isPending}>
+          탈퇴하기
+        </Modal.FilledButton>
+        <Modal.TextButton
+          onClick={onClose}
+          colorType="tertiary"
+          disabled={isPending}
+        >
           취소
         </Modal.TextButton>
       </Modal.Footer>
