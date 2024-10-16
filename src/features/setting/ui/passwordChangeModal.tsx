@@ -112,7 +112,7 @@ export const PasswordChangeModal = ({
     (state) => state.reset,
   );
 
-  const { mutate: putChangePassword } = usePutChangePassword({
+  const { mutate: putChangePassword, isPending } = usePutChangePassword({
     onSuccessCallback: onClose,
   });
 
@@ -176,8 +176,12 @@ export const PasswordChangeModal = ({
           </p>
         </div>
         <Modal.Footer axis="col">
-          <Modal.FilledButton onClick={handleSave}>저장</Modal.FilledButton>
-          <Modal.TextButton onClick={onClose}>취소</Modal.TextButton>
+          <Modal.FilledButton onClick={handleSave} disabled={isPending}>
+            저장
+          </Modal.FilledButton>
+          <Modal.TextButton onClick={onClose} disabled={isPending}>
+            취소
+          </Modal.TextButton>
         </Modal.Footer>
       </Modal.Content>
     </Modal>

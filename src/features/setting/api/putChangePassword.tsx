@@ -56,7 +56,11 @@ export const usePutChangePassword = ({
     onSuccess: () => {
       resetPasswordChangeForm();
       handleOpenSnackbar();
-      onSuccessCallback?.();
+      // TODO beforeClose 에서 해당 뮤테이션의 key 가 확률적으로 pending 상태이거나 success 이거나 하는 문제가 있어
+      // 0초 뒤에 실행되도록 변경했습니다.
+      // 이러한 문제는 비동기 함수의 실행 순서에 따라 발생하는 문제로 보이는데
+      // 우선 테스트 이후 해당 문제를 해결하도록 하겠습니다.
+      setTimeout(onSuccessCallback, 0);
     },
     onError: (error) => {
       // TODO 에러  바운더리 로직 나오면 변경 하기
