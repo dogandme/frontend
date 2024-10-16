@@ -55,7 +55,7 @@ export const usePutSetPassword = ({
     mutationKey: ["putSetPassword"],
     onSuccess: () => {
       /* isPasswordSet 값의 mutation 이 일어났기 때문에 새로운 데이터를 패치 해옵니다. */
-      queryClient.refetchQueries({ queryKey: ["myInfo"] });
+      queryClient.invalidateQueries({ queryKey: ["myInfo"] });
       resetPasswordSetForm();
       handleOpenSnackbar();
       // TODO beforeClose 에서 해당 뮤테이션의 key 가 확률적으로 pending 상태이거나 success 이거나 하는 문제가 있어
