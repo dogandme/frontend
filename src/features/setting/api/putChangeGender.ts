@@ -1,24 +1,22 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MyInfo, UserInfoResponse } from "@/entities/auth/api";
-import { AuthStore } from "@/shared/store";
+import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
-export type PutChangeAgeRequestData = Pick<MyInfo, "gender"> & {
-  token: NonNullable<AuthStore["token"]>;
-};
+export type PutChangeAgeRequestData = Pick<MyInfo, "gender">;
 
 interface PutChangeGenderResponse {
   code: number;
   message: string;
 }
 
-const putChangeGender = async ({ token, gender }: PutChangeAgeRequestData) => {
+const putChangeGender = async ({ gender }: PutChangeAgeRequestData) => {
   const response = await fetch(SETTING_END_POINT.CHANGE_GENDER, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token,
+      Authorization: useAuthStore.getState().token!,
     },
     body: JSON.stringify({ gender }),
   });
