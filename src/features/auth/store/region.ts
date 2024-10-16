@@ -41,7 +41,7 @@ export const createRegionModalStore = (
 export type RegionModalStore = ReturnType<typeof createRegionModalStore>;
 
 export const useRegionModalStore = <T>(
-  callbackFn: (state: RegionModalState & RegionModalAction) => T,
+  selector: (state: RegionModalState & RegionModalAction) => T,
 ): T => {
   const store = useContext(RegionModalStoreContext);
   if (!store) {
@@ -50,7 +50,7 @@ export const useRegionModalStore = <T>(
     );
   }
 
-  return useStore(store, callbackFn);
+  return useStore(store, selector);
 };
 
 export const useRegionModalContext = () => {
