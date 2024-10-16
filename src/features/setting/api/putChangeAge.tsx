@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MyInfo, MyInfoResponse } from "@/entities/auth/api";
-import { AuthStore } from "@/shared/store";
+import { AuthStore, useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
 export type PutChangeAgeRequestData = Pick<MyInfo, "age"> & {
@@ -13,14 +13,16 @@ interface PutChangeAgeResponse {
   message: string;
 }
 
-const putChangeAge = async ({ token, age }: PutChangeAgeRequestData) => {
+const putChangeAge = async (
+  putChangeAgeRequestData: PutChangeAgeRequestData,
+) => {
   const response = await fetch(SETTING_END_POINT.CHANGE_AGE, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token,
+      Authorization: useAuthStore.getState().token!,
     },
-    body: JSON.stringify({ age }),
+    body: JSON.stringify(putChangeAgeRequestData),
   });
 
   const data: PutChangeAgeResponse = await response.json();
