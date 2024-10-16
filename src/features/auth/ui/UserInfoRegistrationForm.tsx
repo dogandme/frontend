@@ -190,11 +190,18 @@ const AgeRangeSelect = () => {
 };
 
 const RegionSetting = () => {
+  const setRegion = useUserInfoRegistrationFormStore(
+    (state) => state.setRegion,
+  );
   const { handleOpen, onClose } = useModal(() => (
     <RegionModal
       onClose={onClose}
       initialState={{
         regionList: useUserInfoRegistrationFormStore.getState().region,
+      }}
+      onSave={(regionList) => {
+        setRegion(regionList);
+        onClose();
       }}
     />
   ));

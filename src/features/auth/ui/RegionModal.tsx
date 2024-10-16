@@ -275,26 +275,21 @@ const SelectedRegionList = () => {
   );
 };
 
-const RegionModalCloseButton = ({
-  onClose,
+const RegionModalSaveButton = ({
+  onSave,
 }: {
-  onClose: () => Promise<void>;
+  onSave: (
+    regionList: RegionModalExternalState["regionList"],
+  ) => void | Promise<void>;
 }) => {
-  const regionList = useRegionModalStore((state) => state.regionList);
-
-  const handleCloseRegionModal = async () => {
-    if (regionList.length === 0) {
-      throw new Error(errorMessage.NON_SELECTED_ADDRESS);
-    }
-    await onClose();
-  };
+  const regionModalStore = useRegionModalContext();
 
   return (
     <Button
       colorType="primary"
       variant="filled"
       size="medium"
-      onClick={handleCloseRegionModal}
+      onClick={() => onSave(regionModalStore.getState().regionList)}
     >
       확인
     </Button>
@@ -304,17 +299,19 @@ const RegionModalCloseButton = ({
 interface RegionModalProps {
   onClose: () => Promise<void>;
   initialState?: RegionModalExternalState;
+  onSave: (regionList: RegionModalExternalState["regionList"]) => void;
 }
-export const RegionModal = ({ onClose, initialState }: RegionModalProps) => {
-  const handleRegionModalClose = async () => {
-    await onClose();
-  };
 
+export const RegionModal = ({
+  onClose,
+  initialState,
+  onSave,
+}: RegionModalProps) => {
   return (
     <RegionModalStoreProvider initialState={initialState}>
       <Modal modalType="fullPage">
         {/* Header */}
-        <CloseNavigationBar onClick={handleRegionModalClose} />
+        <CloseNavigationBar onClick={onClose} />
         <section
           className="px-4 flex flex-col gap-8"
           style={{
@@ -334,7 +331,7 @@ export const RegionModal = ({ onClose, initialState }: RegionModalProps) => {
               {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
               <SelectedRegionList />
               {/* 확인 버튼 */}
-              <RegionModalCloseButton onClose={handleRegionModalClose} />
+              <RegionModalSaveButton onSave={onSave} />
             </div>
           </section>
         </section>
