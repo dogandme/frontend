@@ -309,7 +309,7 @@ const MyRegionList = () => {
 
   return (
     <ul className="flex items-start gap-2 self-stretch overflow-auto">
-      {region.map(({ cityCounty, subDistrict, id }) => (
+      {region.map(({ province, cityCounty, subDistrict, id }) => (
         <li className="flex flex-shrink-0" key={id}>
           <ActionChip
             variant="outlined"
@@ -318,7 +318,7 @@ const MyRegionList = () => {
             onClick={() => handleRemoveRegion(id)}
             isSelected={true}
           >
-            {`${cityCounty} ${subDistrict}`}
+            {`${province} ${cityCounty} ${subDistrict}`}
           </ActionChip>
         </li>
       ))}

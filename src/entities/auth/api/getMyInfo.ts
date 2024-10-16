@@ -1,14 +1,7 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
+import type { Region } from "@/features/auth/api/region";
 import { AuthStore } from "@/shared/store";
 import { MY_INFO_END_POINT, SOCIAL_TYPE } from "../constants";
-
-interface Region {
-  id: number;
-  province: string;
-  cityCounty: string | null;
-  district: string | null;
-  subDistrict: string;
-}
 
 export interface MyInfo {
   email: string;
