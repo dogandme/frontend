@@ -7,7 +7,6 @@ import { SearchIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
-import { CloseNavigationBar } from "@/shared/ui/navigationbar";
 import {
   Region,
   useGetRegionByKeyword,
@@ -311,30 +310,25 @@ export const RegionModal = ({
     <RegionModalStoreProvider initialState={initialState}>
       <Modal modalType="fullPage">
         {/* Header */}
-        <CloseNavigationBar onClick={onClose} />
-        <section
-          className="px-4 flex flex-col gap-8"
-          style={{
-            height: "calc(100% - 6rem)",
-          }}
-        >
-          <section className="flex flex-col gap-4">
+        <Modal.Header onClick={onClose} />
+        <Modal.Content className="h-[calc(100% - 6rem)]">
+          <div className="flex flex-col gap-4">
             {/* 검색창 */}
             <RegionSearchInput />
             {/* 현재 위치로 찾기 버튼 */}
             <SearchRegionByGPSButton />
-          </section>
-          <section className="flex flex-col gap-8 flex-grow justify-between">
+          </div>
+          <div className="flex flex-col gap-8 flex-grow justify-between">
             {/* API 검색 결과 리스트 */}
             <SearchedRegionList />
-            <div className="flex flex-col gap-4 pb-8">
-              {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
-              <SelectedRegionList />
-              {/* 확인 버튼 */}
-              <RegionModalSaveButton onSave={onSave} />
-            </div>
-          </section>
-        </section>
+          </div>
+        </Modal.Content>
+        <Modal.Footer axis="col">
+          {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
+          <SelectedRegionList />
+          {/* 확인 버튼 */}
+          <RegionModalSaveButton onSave={onSave} />
+        </Modal.Footer>
       </Modal>
     </RegionModalStoreProvider>
   );
