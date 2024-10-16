@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { compressFileImage } from "@/shared/lib";
 import type { PetInfoFormData } from "../api";
-import type { LatLng } from "../api/region";
 import { validateEmail, validatePassword } from "../lib";
 
 export interface FileInfo {
@@ -159,36 +158,6 @@ export const useUserInfoRegistrationFormStore =
     setRegion: (region) => set({ region }),
     setCheckList: (checkList) => set({ checkList }),
   }));
-
-interface RegionModalState {
-  keyword: string;
-  position: LatLng;
-  origin: "keyword" | "position";
-}
-
-interface RegionModalActions {
-  setKeyword: (keyword: string) => void;
-  setPosition: (position: LatLng) => void;
-  setOrigin: (origin: "keyword" | "position") => void;
-  resetRegionModalStore: () => void;
-}
-
-const regionModalInitialState: RegionModalState = {
-  keyword: "",
-  position: { lat: 0, lng: 0 },
-  origin: "keyword",
-};
-
-export const useRegionModalStore = create<
-  RegionModalState & RegionModalActions
->((set) => ({
-  ...regionModalInitialState,
-
-  setKeyword: (keyword) => set({ keyword }),
-  setPosition: (position) => set({ position }),
-  setOrigin: (origin) => set({ origin }),
-  resetRegionModalStore: () => set(regionModalInitialState),
-}));
 
 interface SignUpByEmailFormState {
   email: string;

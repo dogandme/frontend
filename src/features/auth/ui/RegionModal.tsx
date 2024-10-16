@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef, createContext } from "react";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
@@ -12,9 +12,32 @@ import { useGetRegionByKeyword, useGetRegionByLatLng } from "../api/region";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { errorMessage } from "../constants";
 import {
+  createRegionModalStore,
   useRegionModalStore,
   useUserInfoRegistrationFormStore,
 } from "../store";
+import type { RegionModalExternalState, RegionModalStore } from "../store";
+
+export const RegionModalStoreContext = createContext<RegionModalStore | null>(
+  null,
+);
+
+interface RegionModalStoreProviderProps {
+  initialState?: RegionModalExternalState;
+  children: React.ReactNode;
+}
+
+export const RegionModalStoreProvider = ({
+  initialState,
+  children,
+}: RegionModalStoreProviderProps) => {
+  const store = useRef(createRegionModalStore(initialState)).current;
+  return (
+    <RegionModalStoreContext.Provider value={store}>
+      {children}
+    </RegionModalStoreContext.Provider>
+  );
+};
 
 // TODO 에러 처리 , 로딩 처리 작업 추가 예정
 const RegionSearchInput = () => {
@@ -274,16 +297,12 @@ const RegionModalCloseButton = ({
   onClose: () => Promise<void>;
 }) => {
   const region = useUserInfoRegistrationFormStore((state) => state.region);
-  const resetRegionModalStore = useRegionModalStore(
-    (state) => state.resetRegionModalStore,
-  );
 
   const handleCloseRegionModal = async () => {
     if (region.length === 0) {
       throw new Error(errorMessage.NON_SELECTED_ADDRESS);
     }
     await onClose();
-    resetRegionModalStore();
   };
 
   return (
@@ -298,45 +317,44 @@ const RegionModalCloseButton = ({
   );
 };
 
-export const RegionModal = ({ onClose }: { onClose: () => Promise<void> }) => {
-  const resetRegionModalStore = useRegionModalStore(
-    (state) => state.resetRegionModalStore,
-  );
-
-  useEffect(() => {
-    return () => resetRegionModalStore();
-  }, [resetRegionModalStore]);
-
+interface RegionModalProps {
+  onClose: () => Promise<void>;
+  initialState?: RegionModalExternalState;
+}
+export const RegionModal = ({ onClose, initialState }: RegionModalProps) => {
   const handleRegionModalClose = async () => {
     await onClose();
   };
+
   return (
-    <Modal modalType="fullPage">
-      {/* Header */}
-      <CloseNavigationBar onClick={handleRegionModalClose} />
-      <section
-        className="px-4 flex flex-col gap-8"
-        style={{
-          height: "calc(100% - 6rem)",
-        }}
-      >
-        <section className="flex flex-col gap-4">
-          {/* 검색창 */}
-          <RegionSearchInput />
-          {/* 현재 위치로 찾기 버튼 */}
-          <SearchRegionByGPSButton />
+    <RegionModalStoreProvider initialState={initialState}>
+      <Modal modalType="fullPage">
+        {/* Header */}
+        <CloseNavigationBar onClick={handleRegionModalClose} />
+        <section
+          className="px-4 flex flex-col gap-8"
+          style={{
+            height: "calc(100% - 6rem)",
+          }}
+        >
+          <section className="flex flex-col gap-4">
+            {/* 검색창 */}
+            <RegionSearchInput />
+            {/* 현재 위치로 찾기 버튼 */}
+            <SearchRegionByGPSButton />
+          </section>
+          <section className="flex flex-col gap-8 flex-grow justify-between">
+            {/* API 검색 결과 리스트 */}
+            <SearchedRegionList />
+            <div className="flex flex-col gap-4 pb-8">
+              {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
+              <SelectedRegionList />
+              {/* 확인 버튼 */}
+              <RegionModalCloseButton onClose={handleRegionModalClose} />
+            </div>
+          </section>
         </section>
-        <section className="flex flex-col gap-8 flex-grow justify-between">
-          {/* API 검색 결과 리스트 */}
-          <SearchedRegionList />
-          <div className="flex flex-col gap-4 pb-8">
-            {/* InfoRegistrationFormStore에 저장된 region 리스트 */}
-            <SelectedRegionList />
-            {/* 확인 버튼 */}
-            <RegionModalCloseButton onClose={handleRegionModalClose} />
-          </div>
-        </section>
-      </section>
-    </Modal>
+      </Modal>
+    </RegionModalStoreProvider>
   );
 };
