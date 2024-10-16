@@ -104,7 +104,8 @@ export const Default: Story = {
         await waitFor(
           async () => {
             expect(fetchSpy).toHaveBeenCalledTimes(1);
-            const $searchedResult = await canvas.findByText(/강남구 역삼1동/);
+            const $searchedResult =
+              await canvas.findByText(/서울특별시 강남구 역삼1동/);
             expect($searchedResult).toBeInTheDocument();
           },
           {
