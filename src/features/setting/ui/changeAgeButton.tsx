@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { AGE_RANGE_MAP } from "@/features/auth/constants";
 import type { MyInfo } from "@/entities/auth/api";
-import { useAuthStore } from "@/shared/store";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { PutChangeAgeRequestData, usePutChangeAge } from "../api";
@@ -11,12 +10,12 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { mutate, isPending } = usePutChangeAge();
 
-  const putChangeAge = ({ age: newAge, token }: PutChangeAgeRequestData) => {
+  const putChangeAge = ({ age: newAge }: PutChangeAgeRequestData) => {
     if (newAge === age) {
       setIsOpen(false);
       return;
     }
-    mutate({ age: newAge, token });
+    mutate({ age: newAge });
   };
 
   return (
@@ -45,7 +44,7 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
 interface ChangeAgeBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  putChangeAge: ({ age, token }: PutChangeAgeRequestData) => void;
+  putChangeAge: ({ age }: PutChangeAgeRequestData) => void;
   isSelected: (key: keyof typeof AGE_RANGE_MAP) => boolean;
 }
 
@@ -68,7 +67,6 @@ const ChangeAgeBottomSheet = ({
                 onClick={() => {
                   putChangeAge({
                     age: key as keyof typeof AGE_RANGE_MAP,
-                    token: useAuthStore.getState().token!,
                   });
                 }}
               >
