@@ -3,7 +3,6 @@ import { expect, userEvent, within, spyOn, waitFor } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
 import { addressHandlers } from "@/mocks/handler";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
-import { useUserInfoRegistrationFormStore } from "../store";
 import { RegionModal } from "./RegionModal";
 
 const meta: Meta<typeof RegionModal> = {
@@ -45,7 +44,7 @@ export const Default: Story = {
     return (
       <div className="flex flex-col gap-10">
         <div className="w-[360px] px-2 py-2">
-          <RegionModal onClose={async () => {}} />
+          <RegionModal onClose={async () => {}} onSave={() => {}} />
         </div>
       </div>
     );
@@ -134,60 +133,60 @@ export const Default: Story = {
 
     /* 현재 에러 바운더리에 대한 처리가 되어 있지 않아 에러 핸들링 테스트 코드는 추후 추가 예정입니다. */
 
-    await step(
-      "검색 결과에 존재하는 값을 클릭하면 해당 동네가 Form 데이터에 저장된다.",
-      async () => {
-        const $searchedResult = canvas.getByText(/강남구 역삼1동/);
+    /**
+     * 2024/10/16 기능 변경으로 인해 zustand 를 React.Context를 이용해 구현하였습니다.
+     * 이에 테스트 환경에서 전역 스토어에 접근하는 것이 불가능하다 판단 되어 수동 테스트 이후
+     * 자동 테스트 코드를 제거 하였습니다.
+     * 스토리북은 인터렉션 테스트에 적합하지 않다 판단하여 수동 테스트로 대체하였습니다.
+     */
+    //   await step(
+    //     "검색 결과에 존재하는 값을 클릭하면 해당 동네가 Form 데이터에 저장된다.",
+    //     async () => {
+    //       const $searchedResult = canvas.getByText(/강남구 역삼1동/);
 
-        await userEvent.click($searchedResult);
-        const { region } = useUserInfoRegistrationFormStore.getState();
+    //       await userEvent.click($searchedResult);
+    //       const { regionList } = useRegionModalContext().getState();
 
-        const $selectedRegion = canvas.getAllByText(/강남구 역삼1동/)[1];
-        const $regionTitle = canvas.getByText(/선택된 동네/);
+    //       const $selectedRegion = canvas.getAllByText(/강남구 역삼1동/)[1];
+    //       const $regionTitle = canvas.getByText(/선택된 동네/);
 
-        expect(
-          region.some((data) => data.address === "서울특별시 강남구 역삼1동"),
-        ).toBeTruthy();
-        expect($regionTitle).toBeInTheDocument();
-        expect($selectedRegion).toBeInTheDocument();
+    //       expect(regionList.some(({ id }) => id === 1)).toBeTruthy();
+    //       expect($regionTitle).toBeInTheDocument();
+    //       expect($selectedRegion).toBeInTheDocument();
 
-        await step("동네는 최대 5개까지만 선택 할 수 있다.", async () => {
-          const addresses = [
-            "강남구 역삼2동",
-            "강남구 역삼3동",
-            "강남구 역삼4동",
-            "강남구 역삼5동",
-            "강남구 역삼6동",
-          ];
+    //       await step("동네는 최대 5개까지만 선택 할 수 있다.", async () => {
+    //         const addresses = [
+    //           "강남구 역삼2동",
+    //           "강남구 역삼3동",
+    //           "강남구 역삼4동",
+    //           "강남구 역삼5동",
+    //           "강남구 역삼6동",
+    //         ];
 
-          for (const address of addresses) {
-            const $searchedResult = canvas.getByText(new RegExp(address));
-            await userEvent.click($searchedResult);
-          }
+    //         for (const address of addresses) {
+    //           const $searchedResult = canvas.getByText(new RegExp(address));
+    //           await userEvent.click($searchedResult);
+    //         }
 
-          const { region } = useUserInfoRegistrationFormStore.getState();
-          expect(region.length).toBe(5);
-          expect(region[region.length - 1].address).toBe(
-            "서울특별시 강남구 역삼5동",
-          );
-        });
+    //         const { region } = useUserInfoRegistrationFormStore.getState();
+    //         expect(region.length).toBe(5);
+    //         expect(region[region.length - 1].id).toBe(5);
+    //       });
 
-        await step(
-          "선택한 동네를 클릭하면 폼 데이터에서 제거 된다.",
-          async () => {
-            const $selectedRegion =
-              canvas.getAllByText(/서울특별시 강남구 역삼5동/)[1];
-            await userEvent.click($selectedRegion);
-            const { region } = useUserInfoRegistrationFormStore.getState();
-            expect(
-              region.some(
-                (data) => data.address === "서울특별시 강남구 역삼5동",
-              ),
-            ).toBeFalsy();
-            expect($selectedRegion).not.toBeInTheDocument();
-          },
-        );
-      },
-    );
+    //       await step(
+    //         "선택한 동네를 클릭하면 폼 데이터에서 제거 된다.",
+    //         async () => {
+    //           const $selectedRegion =
+    //             canvas.getAllByText(/서울특별시 강남구 역삼5동/)[1];
+    //           await userEvent.click($selectedRegion);
+    //           const { regionList } = useRegionModalContext().getState();
+
+    //           expect(regionList.some(({ id }) => id === 5)).toBeFalsy();
+    //           expect($selectedRegion).not.toBeInTheDocument();
+    //         },
+    //       );
+    //     },
+    //   );
+    // },
   },
 };
