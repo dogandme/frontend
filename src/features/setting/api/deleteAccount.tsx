@@ -1,11 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
-import { AuthStore } from "@/shared/store";
+import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
 interface DeleteAccountRequest {
   password: string;
-  token: NonNullable<AuthStore["token"]>;
 }
 
 interface DeleteAccountResponse {
@@ -13,12 +12,12 @@ interface DeleteAccountResponse {
   message: string;
 }
 
-const deleteAccount = async ({ password, token }: DeleteAccountRequest) => {
+const deleteAccount = async ({ password }: DeleteAccountRequest) => {
   const response = await fetch(SETTING_END_POINT.DELETE_ACCOUNT, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token,
+      Authorization: useAuthStore.getState().token!,
     },
     body: JSON.stringify({ password }),
   });
