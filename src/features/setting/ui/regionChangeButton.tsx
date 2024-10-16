@@ -1,19 +1,10 @@
 import type { Region } from "@/features/auth/api/region";
-import { RegionModal } from "@/features/auth/ui/RegionModal";
-import { useModal } from "@/shared/lib";
 import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon } from "@/shared/ui/icon";
+import { useChangeRegionModal } from "../hooks";
 
 export const RegionChangeButton = ({ regions }: { regions: Region[] }) => {
-  const { handleOpen, onClose } = useModal(() => (
-    <RegionModal
-      onClose={onClose}
-      onSave={() => {}}
-      initialState={{
-        regionList: regions,
-      }}
-    />
-  ));
+  const handleOpen = useChangeRegionModal(regions);
 
   return (
     <button onClick={handleOpen}>
@@ -25,7 +16,7 @@ export const RegionChangeButton = ({ regions }: { regions: Region[] }) => {
       </div>
       <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
         {regions.map(({ id, province, cityCounty, subDistrict }) => (
-          <li key={id}>
+          <li key={id} className="flex flex-shrink-0">
             <ActionChip variant="outlined" isSelected={true}>
               {`${province} ${cityCounty} ${subDistrict}`}
             </ActionChip>

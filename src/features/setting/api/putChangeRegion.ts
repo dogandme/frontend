@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Region } from "@/features/auth/api/region";
 import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
@@ -34,8 +34,18 @@ const putChangeRegion = async (
 };
 
 export const usePutChangeRegion = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: putChangeRegion,
     mutationKey: ["putChangeRegion"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["myInfo"],
+      });
+    },
+    onError: (error) => {
+      // TODO 스낵바 로직 나오면 변경 하기
+      console.error(error);
+    },
   });
 };
