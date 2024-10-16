@@ -20,7 +20,7 @@ export interface MyInfo {
   isPasswordSet: boolean;
 }
 
-export interface UserInfoResponse {
+export interface MyInfoResponse {
   code: number;
   message: string;
   content: MyInfo;
@@ -34,7 +34,7 @@ const getMyInfo = async ({ token }: { token: string }) => {
     },
   });
 
-  const data: UserInfoResponse = await response.json();
+  const data: MyInfoResponse = await response.json();
 
   if (!response.ok) {
     throw new Error(data.message);

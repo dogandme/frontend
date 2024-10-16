@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { MyInfo, UserInfoResponse } from "@/entities/auth/api";
+import type { MyInfo, MyInfoResponse } from "@/entities/auth/api";
 import { AuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
@@ -58,23 +58,20 @@ export const usePutChangeAge = () => {
     /* 낙관적 업데이트 시행 */
     onMutate: async ({ age }) => {
       await queryClient.cancelQueries({ queryKey: ["myInfo"] });
-      const prevQueryData = queryClient.getQueryData<UserInfoResponse>([
+      const prevQueryData = queryClient.getQueryData<MyInfoResponse>([
         "myInfo",
       ]);
 
-      queryClient.setQueryData(
-        ["myInfo"],
-        (prevQueryData?: UserInfoResponse) => {
-          if (!prevQueryData) return prevQueryData;
-          return {
-            ...prevQueryData,
-            content: {
-              ...prevQueryData.content,
-              age: age,
-            },
-          };
-        },
-      );
+      queryClient.setQueryData(["myInfo"], (prevQueryData?: MyInfoResponse) => {
+        if (!prevQueryData) return prevQueryData;
+        return {
+          ...prevQueryData,
+          content: {
+            ...prevQueryData.content,
+            age: age,
+          },
+        };
+      });
 
       return prevQueryData;
     },
