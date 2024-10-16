@@ -46,7 +46,7 @@ interface ChangeAgeBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
   putChangeAge: ({ age, token }: PutChangeAgeRequestData) => void;
-  isSelected: (key: string) => boolean;
+  isSelected: (key: keyof typeof AGE_RANGE_MAP) => boolean;
 }
 
 const ChangeAgeBottomSheet = ({
@@ -64,7 +64,7 @@ const ChangeAgeBottomSheet = ({
               <Select.Option
                 key={key}
                 value={key}
-                isSelected={isSelected(key)}
+                isSelected={isSelected(key as keyof typeof AGE_RANGE_MAP)}
                 onClick={() => {
                   putChangeAge({
                     age: key as keyof typeof AGE_RANGE_MAP,
