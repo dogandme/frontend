@@ -8,14 +8,14 @@ import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
 import { CloseNavigationBar } from "@/shared/ui/navigationbar";
-import { useGetRegionByKeyword, useGetRegionByLatLng } from "../api/region";
+import {
+  Region,
+  useGetRegionByKeyword,
+  useGetRegionByLatLng,
+} from "../api/region";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { errorMessage } from "../constants";
-import {
-  createRegionModalStore,
-  useRegionModalStore,
-  useUserInfoRegistrationFormStore,
-} from "../store";
+import { createRegionModalStore, useRegionModalStore } from "../store";
 import type { RegionModalExternalState, RegionModalStore } from "../store";
 
 export const RegionModalStoreContext = createContext<RegionModalStore | null>(
@@ -153,34 +153,21 @@ const SearchRegionByGPSButton = () => {
   );
 };
 
-const SearchRegionControlItem = ({
-  province,
-  cityCounty,
-  subDistrict,
-  id,
-}: {
-  province: string;
-  cityCounty: string;
-  subDistrict: string;
-  id: number;
-}) => {
-  const region = useUserInfoRegistrationFormStore((state) => state.region);
-  const setRegion = useUserInfoRegistrationFormStore(
-    (state) => state.setRegion,
-  );
-  const address = `${province} ${cityCounty} ${subDistrict}`;
+const SearchRegionControlItem = (region: Region) => {
+  const regionList = useRegionModalStore((state) => state.regionList);
+  const setRegionList = useRegionModalStore((state) => state.setRegionList);
 
   const handleSelectRegion = () => {
     // TODO 에러 바운더리 나오면 에러 던지기
-    if (region.length >= 5) {
+    if (regionList.length >= 5) {
       // throw new Error("동네는 최대 5개까지 선택할 수 있습니다.");
       return;
     }
 
-    if (region.some((data) => data.address === address)) {
+    if (regionList.some((selectedRegion) => selectedRegion.id === region.id)) {
       return;
     }
-    setRegion([...region, { address, id }]);
+    setRegionList([...regionList, region]);
   };
 
   return (
@@ -191,13 +178,13 @@ const SearchRegionControlItem = ({
       onClick={handleSelectRegion}
       className="title-3"
     >
-      {`${province} ${cityCounty} ${subDistrict}`}
+      {`${region.cityCounty} ${region.subDistrict}`}
     </List.Item>
   );
 };
 
 const SearchedRegionList = () => {
-  const region = useUserInfoRegistrationFormStore((state) => state.region);
+  const regionList = useRegionModalStore((state) => state.regionList);
   const keyword = useRegionModalStore((state) => state.keyword);
   const position = useRegionModalStore((state) => state.position);
   const origin = useRegionModalStore((state) => state.origin);
@@ -222,11 +209,11 @@ const SearchedRegionList = () => {
     enabled: !isOriginFromKeyword,
   });
 
-  const regionList = isOriginFromKeyword
+  const regionListResponse = isOriginFromKeyword
     ? regionListByKeyword
     : regionListByLatLng;
 
-  if (!regionList || regionList.length === 0) {
+  if (!regionListResponse || regionListResponse.length === 0) {
     return <section className="flex flex-col gap-4"></section>;
   }
 
@@ -236,19 +223,13 @@ const SearchedRegionList = () => {
         {isOriginFromKeyword ? keyword : "현재 위치"} 동네 검색 결과
       </h1>
       <List
-        className={`overflow-y-auto ${region.length > 0 ? "max-h-[18.125rem]" : ""}`}
+        className={`overflow-y-auto ${regionList.length > 0 ? "max-h-[18.125rem]" : ""}`}
         style={{
           justifyContent: "start",
         }}
       >
-        {regionList.map(({ province, cityCounty, subDistrict, id }) => (
-          <SearchRegionControlItem
-            key={id}
-            province={province}
-            cityCounty={cityCounty}
-            subDistrict={subDistrict}
-            id={id}
-          />
+        {regionListResponse.map((region) => (
+          <SearchRegionControlItem key={region.id} {...region} />
         ))}
       </List>
     </section>
@@ -256,33 +237,31 @@ const SearchedRegionList = () => {
 };
 
 const SelectedRegionList = () => {
-  const region = useUserInfoRegistrationFormStore((state) => state.region);
-  const setRegion = useUserInfoRegistrationFormStore(
-    (state) => state.setRegion,
-  );
+  const regionList = useRegionModalStore((state) => state.regionList);
+  const setRegionList = useRegionModalStore((state) => state.setRegionList);
 
-  if (region.length === 0) {
+  if (regionList.length === 0) {
     return <section className="py-2 flex flex-col gap-4"></section>;
   }
 
-  const handleRemoveRegion = (address: string) => {
-    setRegion(region.filter((region) => region.address !== address));
+  const handleRemoveRegion = (id: Region["id"]) => {
+    setRegionList(regionList.filter((region) => region.id !== id));
   };
 
   return (
     <section className="pb-2 py-[2.5rem] flex flex-col gap-4 border-grey-200 border-t-[0.0625rem]">
       <p className="title-2">선택된 동네</p>
       <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
-        {region.map(({ address, id }) => (
+        {regionList.map(({ cityCounty, subDistrict, id }) => (
           <li className="flex flex-shrink-0" key={id}>
             <ActionChip
               variant="outlined"
               trailingIcon={<CancelIcon width={20} height={20} />}
               key={id}
-              onClick={() => handleRemoveRegion(address)}
+              onClick={() => handleRemoveRegion(id)}
               isSelected={true}
             >
-              {address}
+              {`${cityCounty} ${subDistrict}`}
             </ActionChip>
           </li>
         ))}
@@ -296,10 +275,10 @@ const RegionModalCloseButton = ({
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const region = useUserInfoRegistrationFormStore((state) => state.region);
+  const regionList = useRegionModalStore((state) => state.regionList);
 
   const handleCloseRegionModal = async () => {
-    if (region.length === 0) {
+    if (regionList.length === 0) {
       throw new Error(errorMessage.NON_SELECTED_ADDRESS);
     }
     await onClose();

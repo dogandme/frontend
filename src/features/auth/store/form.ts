@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { compressFileImage } from "@/shared/lib";
 import type { PetInfoFormData } from "../api";
+import { Region } from "../api/region";
 import { validateEmail, validatePassword } from "../lib";
 
 export interface FileInfo {
@@ -128,7 +129,6 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
 type Gender = "FEMALE" | "MALE" | "NONE" | null;
 type AgeRange = 10 | 20 | 30 | 40 | 50 | 60 | null;
 type CheckedList = boolean[];
-type Region = { address: string; id: number };
 
 interface UserInfoRegistrationFormStore {
   nickname: string;

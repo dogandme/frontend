@@ -21,6 +21,7 @@ import {
   usePostDuplicateNickname,
   usePutUserInfoRegistration,
 } from "../api";
+import { Region } from "../api/region";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
@@ -190,7 +191,12 @@ const AgeRangeSelect = () => {
 
 const RegionSetting = () => {
   const { handleOpen, onClose } = useModal(() => (
-    <RegionModal onClose={onClose} />
+    <RegionModal
+      onClose={onClose}
+      initialState={{
+        regionList: useUserInfoRegistrationFormStore.getState().region,
+      }}
+    />
   ));
 
   return (
@@ -290,22 +296,22 @@ const MyRegionList = () => {
     return;
   }
 
-  const handleRemoveRegion = (address: string) => {
-    setRegion(region.filter((region) => region.address !== address));
+  const handleRemoveRegion = (id: Region["id"]) => {
+    setRegion(region.filter((region) => region.id !== id));
   };
 
   return (
     <ul className="flex items-start gap-2 self-stretch overflow-auto">
-      {region.map(({ address, id }) => (
+      {region.map(({ cityCounty, subDistrict, id }) => (
         <li className="flex flex-shrink-0" key={id}>
           <ActionChip
             variant="outlined"
             trailingIcon={<CancelIcon width={20} height={20} />}
             key={id}
-            onClick={() => handleRemoveRegion(address)}
+            onClick={() => handleRemoveRegion(id)}
             isSelected={true}
           >
-            {address}
+            {`${cityCounty} ${subDistrict}`}
           </ActionChip>
         </li>
       ))}
