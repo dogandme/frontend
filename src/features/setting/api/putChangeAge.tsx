@@ -1,12 +1,10 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MyInfo, MyInfoResponse } from "@/entities/auth/api";
-import { AuthStore, useAuthStore } from "@/shared/store";
+import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
-export type PutChangeAgeRequestData = Pick<MyInfo, "age"> & {
-  token: NonNullable<AuthStore["token"]>;
-};
+export type PutChangeAgeRequestData = Pick<MyInfo, "age">;
 
 interface PutChangeAgeResponse {
   code: number;
