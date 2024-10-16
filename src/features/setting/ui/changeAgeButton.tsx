@@ -8,7 +8,7 @@ import { PutChangeAgeRequestData, usePutChangeAge } from "../api";
 
 // TODO useQuery 옮기고 isLoading 동안 disabled 시키기
 export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { mutate, isPending } = usePutChangeAge();
 
   const putChangeAge = ({ age: newAge, token }: PutChangeAgeRequestData) => {
@@ -23,7 +23,7 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
     <>
       <button
         className="setting-item"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(true)}
         disabled={isPending}
       >
         <span>나이대 변경</span>
