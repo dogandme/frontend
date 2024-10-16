@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
-import { useAuthStore } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
@@ -51,7 +50,6 @@ export const PasswordCheckModal = ({
   const handleSubmit = () => {
     const { password, isEmptyPassword, isValidPassword } =
       usePasswordCheckFormStore.getState();
-    const { token } = useAuthStore.getState();
 
     if (isEmptyPassword) {
       // TODO 에러 바운더리 로직 나오면 수정 하기
@@ -61,7 +59,7 @@ export const PasswordCheckModal = ({
       return;
     }
 
-    deleteAccount({ password, token: token! });
+    deleteAccount({ password });
   };
   useEffect(() => {
     return () => resetAccountCancellationForm();
