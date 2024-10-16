@@ -52,3 +52,13 @@ export const useRegionModalStore = <T>(
 
   return useStore(store, callbackFn);
 };
+
+export const useRegionModalContext = () => {
+  const store = useContext(RegionModalStoreContext);
+  if (!store) {
+    throw new Error(
+      "useRegionModalStore 는 RegionModalStoreProvider 내부에서만 사용 가능 합니다.",
+    );
+  }
+  return store;
+};

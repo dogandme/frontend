@@ -15,7 +15,11 @@ import {
 } from "../api/region";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { errorMessage } from "../constants";
-import { createRegionModalStore, useRegionModalStore } from "../store";
+import {
+  createRegionModalStore,
+  useRegionModalContext,
+  useRegionModalStore,
+} from "../store";
 import type { RegionModalExternalState, RegionModalStore } from "../store";
 
 export const RegionModalStoreContext = createContext<RegionModalStore | null>(
@@ -154,10 +158,11 @@ const SearchRegionByGPSButton = () => {
 };
 
 const SearchRegionControlItem = (region: Region) => {
-  const regionList = useRegionModalStore((state) => state.regionList);
+  const regionModalStore = useRegionModalContext();
   const setRegionList = useRegionModalStore((state) => state.setRegionList);
 
   const handleSelectRegion = () => {
+    const { regionList } = regionModalStore.getState();
     // TODO 에러 바운더리 나오면 에러 던지기
     if (regionList.length >= 5) {
       // throw new Error("동네는 최대 5개까지 선택할 수 있습니다.");
