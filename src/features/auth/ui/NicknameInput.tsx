@@ -24,12 +24,19 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
       onChange?.(e.target.value);
     };
 
-    const { mutate: postDuplicateNickname, validateDuplicateNickname } =
-      usePostDuplicateNickname();
+    const {
+      mutate: postDuplicateNickname,
+      isError,
+      isSuccess,
+      variables,
+    } = usePostDuplicateNickname();
 
-    const isDuplicateNickname = validateDuplicateNickname(nickname);
+    // todo 409 응답코드이면 중복된 닉네임으로 판단
+    const isDuplicateNickname = isError && variables?.nickname === nickname;
     const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
     const isNicknameEmpty = nickname.length === 0;
+    const isEnableNickname =
+      isValidNickname && variables?.nickname === nickname && isSuccess;
 
     const handleBlur = () => {
       if (!token || !isValidNickname || isNicknameEmpty) return;
@@ -41,6 +48,9 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
 
     if (isDuplicateNickname) {
       statusText = "이미 존재하는 닉네임입니다.";
+    }
+    if (isEnableNickname) {
+      statusText = "사용 가능한 닉네임입니다.";
     }
 
     return (

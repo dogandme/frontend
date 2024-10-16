@@ -193,17 +193,17 @@ const postDuplicateNickname = async ({
 };
 
 export const usePostDuplicateNickname = () => {
-  const MUTATION_KEY = "checkDuplicateNickname";
-
-  const mutate = useMutation<
+  return useMutation<
     DuplicateNicknameResponse,
     Error,
     DuplicateNicknameRequestData
   >({
     mutationFn: postDuplicateNickname,
-    mutationKey: [MUTATION_KEY],
+    mutationKey: ["checkDuplicateNickname"],
   });
+};
 
+export const usePostDuplicateNicknameState = () => {
   // mutate 상태 결과들을 보고 중복된 닉네임인지 판단
   const mutationState = useMutationState<
     MutationState<
@@ -213,19 +213,17 @@ export const usePostDuplicateNickname = () => {
     >
   >({
     filters: {
-      mutationKey: [MUTATION_KEY],
+      mutationKey: ["checkDuplicateNickname"],
     },
   });
 
-  const existingNicknames = mutationState
-    .filter(({ status }) => status === "error")
-    .map(({ variables }) => variables?.nickname)
-    .filter((nickname) => typeof nickname === "string");
+  const lastMutationState = mutationState[mutationState.length - 1];
 
-  const validateDuplicateNickname = (nickname: string) =>
-    existingNicknames.some((variable) => variable === nickname);
+  // todo 409 코드일 경우, 중복된 닉네임 처리
+  const isDuplicateNickname = lastMutationState?.status === "error";
+  const isPending = lastMutationState?.status === "pending";
 
-  return { ...mutate, validateDuplicateNickname };
+  return { isDuplicateNickname, isPending };
 };
 
 interface UserInfoRegistrationRequest {

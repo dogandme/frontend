@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { MutationState, useMutationState } from "@tanstack/react-query";
 import {
   AgreementCheckbox,
   SelectOpener,
@@ -15,8 +14,7 @@ import { CancelIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
 import {
-  DuplicateNicknameRequestData,
-  DuplicateNicknameResponse,
+  usePostDuplicateNicknameState,
   usePutUserInfoRegistration,
 } from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
@@ -291,17 +289,7 @@ const UserInfoRegistrationForm = () => {
     },
   });
 
-  const duplicateNicknameResponseCacheArr = useMutationState<
-    MutationState<
-      DuplicateNicknameResponse,
-      Error,
-      DuplicateNicknameRequestData
-    >
-  >({
-    filters: {
-      mutationKey: ["checkDuplicateNickname"],
-    },
-  });
+  const { isDuplicateNickname } = usePostDuplicateNicknameState();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -326,14 +314,6 @@ const UserInfoRegistrationForm = () => {
       openRequiredFieldsAlert();
       return;
     }
-
-    const lastDuplicateNicknameResponse =
-      duplicateNicknameResponseCacheArr[
-        duplicateNicknameResponseCacheArr.length - 1
-      ];
-    const isDuplicateNickname =
-      lastDuplicateNicknameResponse.status === "error" &&
-      lastDuplicateNicknameResponse.variables?.nickname === nickname;
 
     const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
 

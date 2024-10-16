@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { MutationState, useMutationState } from "@tanstack/react-query";
 import { MyInfo } from "@/entities/auth/api";
 import { formatDateToYearMonthDay, useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -7,11 +6,7 @@ import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { Snackbar } from "@/shared/ui/snackbar";
-import {
-  DuplicateNicknameRequestData,
-  DuplicateNicknameResponse,
-  usePutChangeNickname,
-} from "../api";
+import { usePostDuplicateNicknameState, usePutChangeNickname } from "../api";
 import { validateNickname } from "../lib";
 import { NicknameInput } from "./NicknameInput";
 
@@ -49,21 +44,12 @@ export const ChangeNicknameModal = ({
     </Snackbar>
   ));
 
-  const duplicateNicknameResponseCacheArr = useMutationState<
-    MutationState<
-      DuplicateNicknameResponse,
-      Error,
-      DuplicateNicknameRequestData
-    >
-  >({
-    filters: {
-      mutationKey: ["checkDuplicateNickname"],
-    },
-  });
-
-  const { mutate: postChangeNickname, status } = usePutChangeNickname({
-    onSuccessCallback: onClose,
-  });
+  const { mutate: postChangeNickname, status: changeNicknameStatus } =
+    usePutChangeNickname({
+      onSuccessCallback: onClose,
+    });
+  const { isDuplicateNickname, isPending: isDuplicateCheckPending } =
+    usePostDuplicateNicknameState();
 
   const handleSubmit = () => {
     const { token } = useAuthStore.getState();
@@ -94,15 +80,7 @@ export const ChangeNicknameModal = ({
       return;
     }
 
-    const lastDuplicateNicknameResponse =
-      duplicateNicknameResponseCacheArr[
-        duplicateNicknameResponseCacheArr.length - 1
-      ];
-    const isDuplicateNickname =
-      lastDuplicateNicknameResponse.status === "error" &&
-      lastDuplicateNicknameResponse.variables?.nickname === nickname;
-
-    if (isDuplicateNickname) {
+    if (isDuplicateNickname || isDuplicateCheckPending) {
       openDuplicateNicknameAlert();
       return;
     }
@@ -128,7 +106,9 @@ export const ChangeNicknameModal = ({
       <Modal.Footer axis="col">
         <Modal.FilledButton
           type="button"
-          disabled={status === "pending"}
+          disabled={
+            changeNicknameStatus === "pending" || isDuplicateCheckPending
+          }
           onClick={handleSubmit}
         >
           저장
