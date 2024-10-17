@@ -4,6 +4,7 @@ import { APP_END_POINT } from "@/app/ReactQueryProvider/constants";
 import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
+import { PutChangeAgeRequestData } from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
@@ -605,6 +606,39 @@ const getNewAccessTokenHandler = [
   }),
 ];
 
+const putChangeAgeHandler = [
+  http.put<PathParams, PutChangeAgeRequestData>(
+    SETTING_END_POINT.CHANGE_AGE,
+    async ({ request }) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { age } = await request.json();
+
+      const token = request.headers.get("Authorization")!;
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      if (token.split("-")[1] === "naver") {
+        userInfoDB["뽀송송_NAVER"].age = age;
+      }
+      userInfoDB["뽀송송_EMAIL"].age = age;
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -616,4 +650,5 @@ export const handlers = [
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
   ...getNewAccessTokenHandler,
+  ...putChangeAgeHandler,
 ];
