@@ -12,7 +12,6 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
 
   const putChangeAge = ({ age: newAge }: PutChangeAgeRequestData) => {
     if (newAge === age) {
-      setIsOpen(false);
       return;
     }
     mutate({ age: newAge });
@@ -34,7 +33,7 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
       <ChangeAgeBottomSheet
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        putChangeAge={putChangeAge}
+        onSelect={putChangeAge}
         isSelected={(key) => key === age}
       />
     </>
@@ -44,13 +43,13 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
 interface ChangeAgeBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  putChangeAge: ({ age }: PutChangeAgeRequestData) => void;
+  onSelect: ({ age }: PutChangeAgeRequestData) => void;
   isSelected: (key: keyof typeof AGE_RANGE_MAP) => boolean;
 }
 
 const ChangeAgeBottomSheet = ({
   isOpen,
-  putChangeAge,
+  onSelect,
   onClose,
   isSelected,
 }: ChangeAgeBottomSheetProps) => {
@@ -65,7 +64,7 @@ const ChangeAgeBottomSheet = ({
                 value={key}
                 isSelected={isSelected(key as keyof typeof AGE_RANGE_MAP)}
                 onClick={() => {
-                  putChangeAge({
+                  onSelect({
                     age: key as keyof typeof AGE_RANGE_MAP,
                   });
                 }}
