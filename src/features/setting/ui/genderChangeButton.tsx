@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { genderMap, GenderMapKey } from "@/features/auth/constants";
 import type { MyInfo } from "@/entities/auth/api";
-import { AuthStore, useAuthStore } from "@/shared/store";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { PutChangeAgeRequestData, usePutChangeGender } from "../api";
@@ -33,7 +32,7 @@ export const GenderChangeButton = ({ gender }: Pick<MyInfo, "gender">) => {
         isOpen={isOpen}
         isSelected={(newGender: GenderMapKey) => newGender === gender}
         onClose={() => setIsOpen(false)}
-        putChangeGender={putChangeGender}
+        onSelect={putChangeGender}
       />
     </>
   );
@@ -42,19 +41,13 @@ export const GenderChangeButton = ({ gender }: Pick<MyInfo, "gender">) => {
 interface GenderChangeBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  putChangeGender: ({
-    gender,
-    token,
-  }: {
-    gender: GenderMapKey;
-    token: NonNullable<AuthStore["token"]>;
-  }) => void;
+  onSelect: ({ gender }: { gender: GenderMapKey }) => void;
   isSelected: (newGender: GenderMapKey) => boolean;
 }
 
 const GenderChangeBottomSheet = ({
   isOpen,
-  putChangeGender,
+  onSelect,
   onClose,
   isSelected,
 }: GenderChangeBottomSheetProps) => {
@@ -69,9 +62,8 @@ const GenderChangeBottomSheet = ({
                 value={key}
                 isSelected={isSelected(key as GenderMapKey)}
                 onClick={() => {
-                  putChangeGender({
+                  onSelect({
                     gender: key as GenderMapKey,
-                    token: useAuthStore.getState().token!,
                   });
                 }}
               >
