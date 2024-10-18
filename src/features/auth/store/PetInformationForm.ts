@@ -106,13 +106,13 @@ export const createPetInformationFormState = (
       setBreed: (breed: string) => set({ breed }),
       setPersonalities: (personality: string) =>
         set(({ personalities }) => {
-          // 배열에 character 값이 존재 할 경우 제거하고, 존재하지 않을 경우 추가합니다.
+          // 배열에 personality 값이 존재 할 경우 제거하고, 존재하지 않을 경우 추가합니다.
           const isAlreadySelected = personalities.includes(personality);
 
-          const newCharacter = isAlreadySelected
+          const newPersonality = isAlreadySelected
             ? personalities.filter((c) => c !== personality)
             : [...personalities, personality];
-          return { personalities: newCharacter };
+          return { personalities: newPersonality };
         }),
 
       setDescription: (description: string) => set({ description }),
