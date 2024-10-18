@@ -40,7 +40,7 @@ const putChangePetInformation = async ({
     }),
   );
   if (profile) {
-    formData.append("profile", profile);
+    formData.append("image", profile);
   }
 
   const response = await fetch(SETTING_END_POINT.CHANGE_PET_INFO, {
