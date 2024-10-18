@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
 import { create, useStore } from "zustand";
+import { PetInfo } from "@/entities/profile/api";
 import { MASCOT_IMAGE_URL } from "@/shared/constants";
 import { compressFileImage } from "@/shared/lib";
 
@@ -9,13 +10,9 @@ export interface FileInfo {
   file: File | null;
 }
 
-export interface PetInformationFormExternalState {
+export type PetInformationFormExternalState = Omit<PetInfo, "profile"> & {
   profile: FileInfo;
-  name: string;
-  breed: string;
-  personalities: string[];
-  description: string;
-}
+};
 
 interface PetInformationFormInternalState {
   isValidName: boolean;
