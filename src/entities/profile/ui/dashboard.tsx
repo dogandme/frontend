@@ -19,7 +19,7 @@ export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
         profile ? `${API_BASE_URL}/pets/image/${profile}` : "/default-image.png"
       }
       alt={`${nickname} 의 프로필 사진`}
-      className="w-16 h-16 rounded-[1.75rem]"
+      className="w-16 h-16 rounded-[1.75rem] object-cover"
     />
   );
 };
