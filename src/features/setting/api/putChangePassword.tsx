@@ -17,7 +17,7 @@ interface PutChangePasswordResponse {
 }
 
 const putChangePassword = async (
-  putChangePasswordRequestData: PutChangePasswordRequest,
+  changePasswordForm: PutChangePasswordRequest,
 ) => {
   const response = await fetch(SETTING_END_POINT.CHANGE_PASSWORD, {
     method: "PUT",
@@ -25,7 +25,7 @@ const putChangePassword = async (
       "Content-Type": "application/json",
       Authorization: useAuthStore.getState().token!,
     },
-    body: JSON.stringify(putChangePasswordRequestData),
+    body: JSON.stringify(changePasswordForm),
   });
 
   const data: PutChangePasswordResponse = await response.json();
