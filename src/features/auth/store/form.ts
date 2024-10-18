@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { LatLng } from "../api/region";
+import { Region } from "../api/region";
 import { validateEmail, validatePassword } from "../lib";
 
 interface LoginFormStore {
@@ -33,7 +33,6 @@ export const useLoginFormStore = create<LoginFormStore>((set) => ({
 type Gender = "FEMALE" | "MALE" | "NONE" | null;
 type AgeRange = 10 | 20 | 30 | 40 | 50 | 60 | null;
 type CheckedList = boolean[];
-type Region = { address: string; id: number };
 
 interface UserInfoRegistrationFormStore {
   nickname: string;
@@ -63,36 +62,6 @@ export const useUserInfoRegistrationFormStore =
     setRegion: (region) => set({ region }),
     setCheckList: (checkList) => set({ checkList }),
   }));
-
-interface RegionModalState {
-  keyword: string;
-  position: LatLng;
-  origin: "keyword" | "position";
-}
-
-interface RegionModalActions {
-  setKeyword: (keyword: string) => void;
-  setPosition: (position: LatLng) => void;
-  setOrigin: (origin: "keyword" | "position") => void;
-  resetRegionModalStore: () => void;
-}
-
-const regionModalInitialState: RegionModalState = {
-  keyword: "",
-  position: { lat: 0, lng: 0 },
-  origin: "keyword",
-};
-
-export const useRegionModalStore = create<
-  RegionModalState & RegionModalActions
->((set) => ({
-  ...regionModalInitialState,
-
-  setKeyword: (keyword) => set({ keyword }),
-  setPosition: (position) => set({ position }),
-  setOrigin: (origin) => set({ origin }),
-  resetRegionModalStore: () => set(regionModalInitialState),
-}));
 
 interface SignUpByEmailFormState {
   email: string;

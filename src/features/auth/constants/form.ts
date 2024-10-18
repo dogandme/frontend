@@ -13,6 +13,16 @@ export const personalities = [
   "까칠한",
 ] as const;
 
+export type GenderMapKey = "MALE" | "FEMALE" | "NONE";
+type GenderMapValue = "남자" | "여자" | "선택안함";
+
+export const genderMap: Record<GenderMapKey, GenderMapValue> = {
+  MALE: "남자",
+  FEMALE: "여자",
+  NONE: "선택안함",
+};
+
+// TODO 리팩토링 단계에서 덜어내기
 export const genderOptionList = [
   {
     value: "MALE",
@@ -28,6 +38,16 @@ export const genderOptionList = [
   },
 ] as const;
 
+export const AGE_RANGE_MAP = {
+  "10": "10대",
+  "20": "20대",
+  "30": "30대",
+  "40": "40대",
+  "50": "50대",
+  "60": "60대 이상",
+} as const;
+
+// TODO 다음 리팩토링 때 제거 하기
 export const ageRangeOptionList = [
   {
     value: 10,

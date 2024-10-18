@@ -479,8 +479,7 @@ export const Default: Story = {
 
         await new Promise((res) => setTimeout(res, REGION_API_DEBOUNCE_DELAY)); // API 요청이 끝날 때까지 안전하게 딜레이 추가
 
-        const $selectedRegion =
-          await canvas.findByText(/서울특별시 강남구 역삼1동/);
+        const $selectedRegion = await canvas.findByText(/강남구 역삼1동/);
         await userEvent.click($selectedRegion);
 
         const $confirmButton = canvas.getByText("확인");

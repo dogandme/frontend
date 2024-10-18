@@ -1,4 +1,8 @@
+import { ChangeNicknameModal } from "@/features/auth/ui/ChangeNicknameModal";
+import { GenderChangeButton } from "@/features/setting/ui";
+import { ChangeAgeButton } from "@/features/setting/ui";
 import { MyInfo, useGetMyInfo } from "@/entities/auth/api";
+import { useModal } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon } from "@/shared/ui/icon";
@@ -6,13 +10,21 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const EditInfoPage = () => {
   const token = useAuthStore((state) => state.token);
+  const role = useAuthStore((state) => state.role);
   const { data: myInfo } = useGetMyInfo({ token });
 
-  if (!myInfo) {
-    return null;
-  }
+  if (!myInfo) return null;
 
-  const { age, gender, regions } = myInfo;
+  const { age, gender, regions, nickLastModDt } = myInfo;
+
+  const hasPermission =
+    (role === "ROLE_GUEST" || role === "ROLE_USER") &&
+    age !== null &&
+    gender !== null &&
+    regions.length > 0 &&
+    nickLastModDt !== null;
+
+  if (!hasPermission) return null;
 
   return (
     <>
@@ -21,50 +33,32 @@ export const EditInfoPage = () => {
       />
 
       <section className="flex flex-col gap-4 px-4 py-4">
-        <NicknameButton />
-        <GenderButton gender={gender} />
-        <AgeButton age={age} />
+        <NicknameButton nickLastModDt={nickLastModDt} />
+        <GenderChangeButton gender={gender} />
+        <ChangeAgeButton age={age} />
         <RegionSettingButton regions={regions} />
       </section>
     </>
   );
 };
 
-const NicknameButton = () => {
+const NicknameButton = ({
+  nickLastModDt,
+}: {
+  nickLastModDt: NonNullable<MyInfo["nickLastModDt"]>;
+}) => {
   const nickname = useAuthStore((state) => state.nickname);
 
+  const { handleOpen, onClose } = useModal(() => (
+    <ChangeNicknameModal onClose={onClose} nickLastModDt={nickLastModDt} />
+  ));
+
   return (
-    <button className="setting-item">
+    <button className="setting-item" onClick={handleOpen}>
       <span>닉네임 변경</span>
 
       <div className="flex items-center text-grey-500">
         <span className="body-2">{nickname}</span>
-        <ArrowRightIcon />
-      </div>
-    </button>
-  );
-};
-
-const GenderButton = ({ gender }: Pick<MyInfo, "gender">) => {
-  return (
-    <button className="setting-item">
-      <span>성별 변경</span>
-
-      <div className="flex items-center text-grey-500">
-        <span className="body-2">{gender === "MALE" ? "남자" : "여자"}</span>
-        <ArrowRightIcon />
-      </div>
-    </button>
-  );
-};
-
-const AgeButton = ({ age }: Pick<MyInfo, "age">) => {
-  return (
-    <button className="setting-item">
-      <span>나이대 변경</span>
-
-      <div className="flex items-center text-grey-500">
-        <span className="body-2">{age}</span>
         <ArrowRightIcon />
       </div>
     </button>
