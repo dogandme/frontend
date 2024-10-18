@@ -50,7 +50,7 @@ export const PetInformationForm = ({
         <NameInput />
         <BreedInput />
         <PersonalitiesInput />
-        <IntroduceTextArea />
+        <PetDescriptionTextArea />
         <SubmitButton />
       </Form>
     </PetInformationFormProvider>
@@ -285,7 +285,7 @@ const PersonalitiesInput = () => {
   );
 };
 
-const IntroduceTextArea = () => {
+const PetDescriptionTextArea = () => {
   const { description } = usePetInformationFormContext().getState();
   const setDescription = usePetInformationFormStore(
     (state) => state.setDescription,
