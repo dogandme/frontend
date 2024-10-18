@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "../constants";
 
 export interface LatLng {
   lat: number;
@@ -20,7 +19,6 @@ interface UserInfo {
 }
 
 interface MapState {
-  mapInfo: MapInfo;
   userInfo: UserInfo;
   mode: Mode;
   isCenterOnMyLocation: boolean;
@@ -28,7 +26,6 @@ interface MapState {
 }
 
 interface MapActions {
-  setMapInfo: (mapInfo: MapInfo) => void;
   setUserInfo: (userInfo: UserInfo) => void;
   setMode: (mode: Mode) => void;
   setIsCenterOnMyLocation: (isCenterOnMyLocation: boolean) => void;
@@ -36,10 +33,6 @@ interface MapActions {
 }
 
 const mapStoreInitialState: MapState = {
-  mapInfo: {
-    center: MAP_INITIAL_CENTER,
-    zoom: MAP_INITIAL_ZOOM,
-  },
   userInfo: {
     currentLocation: { lat: null, lng: null },
     hasLocationPermission: false,
@@ -51,7 +44,6 @@ const mapStoreInitialState: MapState = {
 
 export const useMapStore = create<MapState & MapActions>((set) => ({
   ...mapStoreInitialState,
-  setMapInfo: (mapInfo) => set({ mapInfo }),
   setUserInfo: (userInfo) => set({ userInfo }),
   setMode: (mode) => set({ mode }),
   setIsCenterOnMyLocation: (isCenterOnMyLocation) =>

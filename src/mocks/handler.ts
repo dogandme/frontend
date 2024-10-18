@@ -1,7 +1,11 @@
 import { http, HttpResponse, PathParams } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
 import { APP_END_POINT } from "@/app/ReactQueryProvider/constants";
-import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
+import {
+  CHANGE_USER_INFO_END_POINT,
+  LOGIN_END_POINT,
+  SIGN_UP_END_POINT,
+} from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import { PutChangeAgeRequestData } from "@/features/setting/api";
@@ -136,7 +140,8 @@ export const userInfoRegistrationHandlers = [
   >(SIGN_UP_END_POINT.USER_INFO, async ({ request }) => {
     const { nickname } = await request.json();
 
-    const isDuplicateNickname = nickname === "중복";
+    const isDuplicateNickname =
+      nickname === "중복" || nickname === "뽀" || nickname === "송";
 
     if (isDuplicateNickname) {
       return new HttpResponse(null, { status: 409 });
@@ -188,7 +193,12 @@ export const userInfoRegistrationHandlers = [
   >(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, async ({ request }) => {
     const { nickname } = await request.json();
 
-    if (nickname === "중복" || userDB[nickname]) {
+    if (
+      nickname === "중복" ||
+      nickname === "뽀" ||
+      nickname === "송" ||
+      userDB[nickname]
+    ) {
       return new HttpResponse(null, { status: 409 });
     }
 
@@ -639,6 +649,35 @@ const putChangeGenderHandler = [
   }),
 ];
 
+const changeUserInfoHandler = [
+  http.put<PathParams, { nickname: string }>(
+    CHANGE_USER_INFO_END_POINT.NICKNAME,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+
+      const { nickname } = await request.json();
+
+      // 서버에서 어떻게 에러처리했는지 물어봐야 함
+      if (nickname === "중복" || nickname === "뽀" || nickname === "송") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "이미 존재하는 닉네임입니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -651,4 +690,5 @@ export const handlers = [
   ...postLogoutHandlers,
   ...getNewAccessTokenHandler,
   ...putChangeGenderHandler,
+  ...changeUserInfoHandler,
 ];

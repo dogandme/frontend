@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Map } from "@vis.gl/react-google-maps";
-import { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
 import { useMapStore } from "@/features/map/store/map";
-import { debounce } from "@/shared/lib";
 import { mapOptions } from "../constants";
 
 const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
@@ -18,7 +16,6 @@ interface GoogleMapProps {
 export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const isLoadedRef = useRef<boolean>(false);
 
-  const setMapInfo = useMapStore((state) => state.setMapInfo);
   const setIsMapCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
@@ -26,21 +23,10 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
     (state) => state.setIsLastSearchedLocation,
   );
 
-  const DELAY_SET_MAP_INFO = 500;
-
-  const debouncedUpdateMapInfo = debounce(
-    (detail: MapCameraChangedEvent["detail"]) => {
-      const { center, zoom } = detail;
-      setMapInfo({ center, zoom });
-    },
-    DELAY_SET_MAP_INFO,
-  );
-
-  const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
+  const handleMapChange = () => {
     if (!isLoadedRef.current) return;
 
     setIsLastSearchedLocation(false);
-    debouncedUpdateMapInfo(detail); // debounce 시켜 MapStore 의 mapInfo 를 변경합니다.
     setIsMapCenteredOnMyLocation(false);
   };
 
@@ -71,7 +57,6 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       defaultCenter={MAP_INITIAL_CENTER}
       defaultZoom={MAP_INITIAL_ZOOM}
       reuseMaps // Map 컴포넌트가 unmount 되었다가 다시 mount 될 때 기존의 map instance 를 재사용 하여 memory leak을 방지합니다.
-      // debounce 를 이용하여 MapStore 의 mapInfo 를 변경합니다.
       onCameraChanged={handleMapChange}
       onTilesLoaded={() => {
         isLoadedRef.current = true;
