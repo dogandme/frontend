@@ -14,7 +14,7 @@ interface PutChangeRegionResponseData {
 }
 
 const putChangeRegion = async (
-  putChangeRequestData: PutChangeRegionRequestData,
+  changeRegionData: PutChangeRegionRequestData,
 ) => {
   const response = await fetch(SETTING_END_POINT.CHANGE_GENDER, {
     method: "PUT",
@@ -22,7 +22,7 @@ const putChangeRegion = async (
       "Content-Type": "application/json",
       Authorization: useAuthStore.getState().token!,
     },
-    body: JSON.stringify(putChangeRequestData),
+    body: JSON.stringify(changeRegionData),
   });
 
   const data = (await response.json()) as PutChangeRegionResponseData;
