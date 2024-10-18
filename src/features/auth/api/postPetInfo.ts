@@ -22,9 +22,9 @@ export interface PetInfoRequestData {
 }
 
 const postPetInfo = async (
-  formObject: PetInfoRequestData,
+  petInfoForm: PetInfoRequestData,
 ): Promise<PetInfoResponseData> => {
-  const { name, personalities, description, breed, profile } = formObject;
+  const { name, personalities, description, breed, profile } = petInfoForm;
 
   const formData = new FormData();
 
