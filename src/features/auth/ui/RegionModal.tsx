@@ -159,6 +159,7 @@ const SearchRegionByGPSButton = () => {
 const SearchRegionControlItem = (region: Region) => {
   const regionModalStore = useRegionModalContext();
   const setRegionList = useRegionModalStore((state) => state.setRegionList);
+  const { id, province, cityCounty, subDistrict } = region;
 
   const handleSelectRegion = () => {
     const { regionList } = regionModalStore.getState();
@@ -168,7 +169,7 @@ const SearchRegionControlItem = (region: Region) => {
       return;
     }
 
-    if (regionList.some((selectedRegion) => selectedRegion.id === region.id)) {
+    if (regionList.some((selectedRegion) => selectedRegion.id === id)) {
       return;
     }
     setRegionList([...regionList, region]);
@@ -182,7 +183,7 @@ const SearchRegionControlItem = (region: Region) => {
       onClick={handleSelectRegion}
       className="title-3"
     >
-      {`${region.cityCounty} ${region.subDistrict}`}
+      {`${province} ${cityCounty} ${subDistrict}`}
     </List.Item>
   );
 };
@@ -256,7 +257,7 @@ const SelectedRegionList = () => {
     <section className="pb-2 py-[2.5rem] flex flex-col gap-4 border-grey-200 border-t-[0.0625rem]">
       <p className="title-2">선택된 동네</p>
       <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
-        {regionList.map(({ cityCounty, subDistrict, id }) => (
+        {regionList.map(({ province, cityCounty, subDistrict, id }) => (
           <li className="flex flex-shrink-0" key={id}>
             <ActionChip
               variant="outlined"
@@ -265,7 +266,7 @@ const SelectedRegionList = () => {
               onClick={() => handleRemoveRegion(id)}
               isSelected={true}
             >
-              {`${cityCounty} ${subDistrict}`}
+              {`${province} ${cityCounty} ${subDistrict}`}
             </ActionChip>
           </li>
         ))}
