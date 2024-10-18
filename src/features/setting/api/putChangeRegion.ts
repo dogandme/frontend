@@ -16,7 +16,7 @@ interface PutChangeRegionResponseData {
 const putChangeRegion = async (
   changeRegionData: PutChangeRegionRequestData,
 ) => {
-  const response = await fetch(SETTING_END_POINT.CHANGE_GENDER, {
+  const response = await fetch(SETTING_END_POINT.CHANGE_REGION, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

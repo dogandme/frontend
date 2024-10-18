@@ -618,7 +618,7 @@ const getNewAccessTokenHandler = [
 
 const putChangeRegionHandler = [
   http.put<PathParams, PutChangeRegionRequestData>(
-    SETTING_END_POINT.CHANGE_GENDER,
+    SETTING_END_POINT.CHANGE_REGION,
     async ({ request }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const { addIds, removeIds } = await request.json();
