@@ -5,16 +5,20 @@ interface SelectChipProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   controlledIsSelected?: boolean;
+  uncontrolledInitialIsSelected?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const SelectChip = ({
   controlledIsSelected,
+  uncontrolledInitialIsSelected,
   onClick,
   label,
   ...rest
 }: SelectChipProps) => {
-  const [unControlledIsSelected, setIsUnControlledIsSelected] = useState(false);
+  const [unControlledIsSelected, setIsUnControlledIsSelected] = useState(
+    () => !!uncontrolledInitialIsSelected,
+  );
 
   // 제어컴포넌트와 비제어컴포넌트를 구분하는 boolean 변수를 선언합니다.
   const isUncontrolled = typeof controlledIsSelected === "undefined";
