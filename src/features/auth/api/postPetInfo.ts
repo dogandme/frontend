@@ -13,13 +13,18 @@ interface PetInfoResponseData {
   };
 }
 
-export interface PetInfoRequestData {
+export interface PetInfoForm {
   name: string;
   breed: string;
   personalities: string[];
   description: string;
+}
+
+export interface Profile {
   profile: File | null;
 }
+
+export type PetInfoRequestData = PetInfoForm & Profile;
 
 const postPetInfo = async (
   petInfoForm: PetInfoRequestData,
