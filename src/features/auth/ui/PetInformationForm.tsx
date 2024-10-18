@@ -45,14 +45,14 @@ export const PetInformationForm = ({
 }) => {
   return (
     <PetInformationFormProvider initialState={initialState}>
-      <Form>
+      <section className="flex w-full flex-col items-center gap-4">
         <ProfileInput />
         <NameInput />
         <BreedInput />
         <PersonalitiesInput />
         <PetDescriptionTextArea />
         <SubmitButton />
-      </Form>
+      </section>
     </PetInformationFormProvider>
   );
 };
@@ -70,19 +70,6 @@ const TextCounter = ({
       <span>/</span>
       <span>{maxLength}</span>
     </p>
-  );
-};
-
-const Form = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <form
-      className="flex w-full flex-col items-center gap-4"
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-    >
-      {children}
-    </form>
   );
 };
 
