@@ -34,6 +34,7 @@ export const useDeleteAccount = () => {
     mutationFn: deleteAccount,
     mutationKey: ["deleteAccount"],
     onSuccess: () => {
+      // 메모리 초기화를 위해 window 객체를 이용한 라우
       window.location.href = ROUTER_PATH.MAIN;
     },
     onError: (error) => {
