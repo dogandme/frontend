@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { MASCOT_IMAGE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib/overlay";
-import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { SelectChip } from "@/shared/ui/chip";
@@ -11,7 +10,7 @@ import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
-import { usePostPetInfo } from "../api";
+import { PetInfoRequestData } from "../api";
 import { personalities, dogBreeds } from "../constants/form";
 import {
   createPetInformationFormState,
@@ -38,11 +37,17 @@ const PetInformationFormProvider = ({
   );
 };
 
+interface PetInformationFormProps {
+  initialState?: PetInformationFormExternalState;
+  onSubmit: (petInfoFormState: PetInfoRequestData) => void;
+  disabled?: boolean;
+}
+
 export const PetInformationForm = ({
   initialState,
-}: {
-  initialState?: PetInformationFormExternalState;
-}) => {
+  onSubmit,
+  disabled,
+}: PetInformationFormProps) => {
   return (
     <PetInformationFormProvider initialState={initialState}>
       <section className="flex w-full flex-col items-center gap-4">
@@ -51,7 +56,7 @@ export const PetInformationForm = ({
         <BreedInput />
         <PersonalitiesInput />
         <PetDescriptionTextArea />
-        <SubmitButton />
+        <SubmitButton onSubmit={onSubmit} disabled={disabled} />
       </section>
     </PetInformationFormProvider>
   );
@@ -290,8 +295,10 @@ const PetDescriptionTextArea = () => {
   );
 };
 
-const SubmitButton = () => {
-  const { mutate: postPetInfo } = usePostPetInfo();
+const SubmitButton = ({
+  onSubmit,
+  disabled,
+}: Omit<PetInformationFormProps, "initialState">) => {
   const store = usePetInformationFormContext();
   // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
   const { handleOpen: openInfoSnackBar, onClose } = useSnackBar(() => (
@@ -316,8 +323,6 @@ const SubmitButton = () => {
       return;
     }
 
-    const { token } = useAuthStore.getState();
-
     const isNameEmpty = name.length === 0;
     const isBreedEmpty = breed.length === 0;
 
@@ -327,15 +332,12 @@ const SubmitButton = () => {
       return;
     }
 
-    postPetInfo({
-      token: token!,
-      formObject: {
-        name,
-        breed,
-        personalities,
-        description,
-        profile: profile.file,
-      },
+    onSubmit({
+      name,
+      breed,
+      personalities,
+      description,
+      profile: profile.file,
     });
   };
   return (
@@ -345,6 +347,7 @@ const SubmitButton = () => {
       variant="filled"
       onClick={handleClick}
       type="button"
+      disabled={disabled}
     >
       등록하기
     </Button>
