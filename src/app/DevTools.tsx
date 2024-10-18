@@ -90,6 +90,16 @@ export const DevTools = () => {
       "Authorization-refresh=freshRefreshToken; path=/; max-age=3600";
   };
 
+  const setSocialUser = () => {
+    useAuthStore.setState({
+      role: "ROLE_USER",
+      token: "freshAccessToken-naver",
+      nickname,
+    });
+    document.cookie =
+      "Authorization-refresh=freshRefreshToken; path=/; max-age=3600";
+  };
+
   // TODO 권한에 따라서 ProfileInfo 에 대한 useQuery InitialData 를 변경해야 합니다.
 
   return (
@@ -149,6 +159,17 @@ export const DevTools = () => {
           <p className="flex flex-col">
             <span>ROLE_USER</span>
             <span>stale AT & stale RT</span>
+          </p>
+        </Button>
+        <Button
+          colorType="primary"
+          variant="filled"
+          size="small"
+          onClick={setSocialUser}
+        >
+          <p className="flex flex-col">
+            <span>ROLE_USER</span>
+            <span>Social Type : Naver</span>
           </p>
         </Button>
       </div>

@@ -8,6 +8,10 @@ import {
 } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
+import {
+  PutChangeAgeRequestData,
+  PutChangeGenderRequestData,
+} from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
@@ -222,7 +226,7 @@ export const userInfoRegistrationHandlers = [
       );
     }
 
-    if (token === "freshAccessToken_naver") {
+    if (token === "freshAccessToken-naver") {
       return HttpResponse.json({
         code: 200,
         message: "success",
@@ -435,7 +439,7 @@ export const getProfileHandlers = [
         },
       );
     }
-    if (token === "freshAccessToken" && nickname === "뽀송송") {
+    if (token?.split("-")[0] === "freshAccessToken" && nickname === "뽀송송") {
       return HttpResponse.json(User["ROLE_USER"]);
     }
 
@@ -654,6 +658,170 @@ export const deleteAccountHandlers = [
   ),
 ];
 
+const putChangeGenderHandler = [
+  http.put(SETTING_END_POINT.CHANGE_GENDER, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
+
+    const token = request.headers.get("Authorization")!;
+    const { gender } = (await request.json()) as PutChangeGenderRequestData;
+    if (token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    const userKey =
+      token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL";
+
+    userInfoDB[userKey] = {
+      ...userInfoDB[userKey],
+      gender,
+    };
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+];
+
+const putChangePasswordHandler = [
+  http.put<PathParams, { password: string; newPw: string; newPwChk: string }>(
+    SETTING_END_POINT.CHANGE_PASSWORD,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const token = request.headers.get("Authorization");
+      const { password, newPw, newPwChk } = await request.json();
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      if (password !== "password123!") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "리스소 접근 권한이 없습니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      if (newPw !== newPwChk) {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message:
+              "변경하려는 비밀번호 혹은 입력하신 비밀번호가 올바르지 않습니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
+export const putSetPasswordHandler = [
+  http.put<PathParams, { newPw: string; newPwChk: string }>(
+    SETTING_END_POINT.SET_PASSWORD,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+
+      const token = request.headers.get("Authorization");
+      const { newPw, newPwChk } = await request.json();
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      if (newPw !== newPwChk) {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message:
+              "변경하려는 비밀번호 혹은 입력하신 비밀번호가 올바르지 않습니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      /* 가상 DB에서 해당 회원의 isPasswordSet 을 true 로 변경 합니다. */
+      userInfoDB["뽀송송_NAVER"].isPasswordSet = true;
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
+const putChangeAgeHandler = [
+  http.put<PathParams, PutChangeAgeRequestData>(
+    SETTING_END_POINT.CHANGE_AGE,
+    async ({ request }) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { age } = await request.json();
+
+      const token = request.headers.get("Authorization")!;
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      if (token.split("-")[1] === "naver") {
+        userInfoDB["뽀송송_NAVER"].age = age;
+      }
+      userInfoDB["뽀송송_EMAIL"].age = age;
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
 const changeUserInfoHandler = [
   http.put<PathParams, { nickname: string }>(
     CHANGE_USER_INFO_END_POINT.NICKNAME,
@@ -695,5 +863,9 @@ export const handlers = [
   ...postLogoutHandlers,
   ...getNewAccessTokenHandler,
   ...deleteAccountHandlers,
+  ...putChangeGenderHandler,
+  ...putChangePasswordHandler,
+  ...putSetPasswordHandler,
+  ...putChangeAgeHandler,
   ...changeUserInfoHandler,
 ];

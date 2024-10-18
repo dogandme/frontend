@@ -1,4 +1,6 @@
 import { ChangeNicknameModal } from "@/features/auth/ui/ChangeNicknameModal";
+import { GenderChangeButton } from "@/features/setting/ui";
+import { ChangeAgeButton } from "@/features/setting/ui";
 import { MyInfo, useGetMyInfo } from "@/entities/auth/api";
 import { useModal } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -32,8 +34,8 @@ export const EditInfoPage = () => {
 
       <section className="flex flex-col gap-4 px-4 py-4">
         <NicknameButton nickLastModDt={nickLastModDt} />
-        <GenderButton gender={gender} />
-        <AgeButton age={age} />
+        <GenderChangeButton gender={gender} />
+        <ChangeAgeButton age={age} />
         <RegionSettingButton regions={regions} />
       </section>
     </>
@@ -57,32 +59,6 @@ const NicknameButton = ({
 
       <div className="flex items-center text-grey-500">
         <span className="body-2">{nickname}</span>
-        <ArrowRightIcon />
-      </div>
-    </button>
-  );
-};
-
-const GenderButton = ({ gender }: Pick<MyInfo, "gender">) => {
-  return (
-    <button className="setting-item">
-      <span>성별 변경</span>
-
-      <div className="flex items-center text-grey-500">
-        <span className="body-2">{gender === "MALE" ? "남자" : "여자"}</span>
-        <ArrowRightIcon />
-      </div>
-    </button>
-  );
-};
-
-const AgeButton = ({ age }: Pick<MyInfo, "age">) => {
-  return (
-    <button className="setting-item">
-      <span>나이대 변경</span>
-
-      <div className="flex items-center text-grey-500">
-        <span className="body-2">{age}</span>
         <ArrowRightIcon />
       </div>
     </button>

@@ -12,15 +12,15 @@ interface Region {
 
 export interface MyInfo {
   email: string;
-  gender: "MALE" | "FEMALE";
-  age: 10 | 20 | 30 | 40 | 50 | 60;
+  gender: "FEMALE" | "MALE" | "NONE";
+  age: "10" | "20" | "30" | "40" | "50" | "60";
   regions: Region[];
   nickLastModDt: string | null;
   socialType: keyof typeof SOCIAL_TYPE;
   isPasswordSet: boolean;
 }
 
-interface UserInfoResponse {
+export interface MyInfoResponse {
   code: number;
   message: string;
   content: MyInfo;
@@ -34,7 +34,7 @@ const getMyInfo = async ({ token }: { token: string }) => {
     },
   });
 
-  const data: UserInfoResponse = await response.json();
+  const data: MyInfoResponse = await response.json();
 
   if (!response.ok) {
     throw new Error(data.message);
