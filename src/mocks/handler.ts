@@ -854,6 +854,7 @@ const changeUserInfoHandler = [
 
 const putChangePetInformationHandler = [
   http.put(SETTING_END_POINT.CHANGE_PET_INFO, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
     const token = request.headers.get("Authorization")!;
     if (token === "staleAccessToken") {
       return HttpResponse.json(
@@ -874,9 +875,12 @@ const putChangePetInformationHandler = [
     const userInfo = User["ROLE_USER"];
     const newData = {
       ...userInfo,
-      pet: {
-        ...petDto,
-        profile: image ? URL.createObjectURL(image) : (petDto.profile ?? null),
+      content: {
+        ...userInfo.content,
+        pet: {
+          ...petDto,
+          profile: image ? URL.createObjectURL(image) : petDto.profile,
+        },
       },
     };
     User["ROLE_USER"] = newData;
