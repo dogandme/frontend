@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import {
+  MutationState,
+  useMutation,
+  useMutationState,
+} from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
 import { AuthStore, useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
@@ -199,10 +203,33 @@ export const usePostDuplicateNickname = () => {
   });
 };
 
+export const usePostDuplicateNicknameState = () => {
+  // mutate 상태 결과들을 보고 중복된 닉네임인지 판단
+  const mutationState = useMutationState<
+    MutationState<
+      DuplicateNicknameResponse,
+      Error,
+      DuplicateNicknameRequestData
+    >
+  >({
+    filters: {
+      mutationKey: ["checkDuplicateNickname"],
+    },
+  });
+
+  const lastMutationState = mutationState[mutationState.length - 1];
+
+  // todo 409 코드일 경우, 중복된 닉네임 처리
+  const isDuplicateNickname = lastMutationState?.status === "error";
+  const isPending = lastMutationState?.status === "pending";
+
+  return { isDuplicateNickname, isPending };
+};
+
 interface UserInfoRegistrationRequest {
   token: string;
   nickname: string;
-  gender: "FEMALE" | "MALE";
+  gender: "FEMALE" | "MALE" | "NONE";
   age: 10 | 20 | 30 | 40 | 50 | 60;
   region: number[];
   marketingYn: boolean;

@@ -22,6 +22,10 @@ export const genderOptionList = [
     value: "FEMALE",
     name: "여자",
   },
+  {
+    value: "NONE",
+    name: "선택안함",
+  },
 ] as const;
 
 export const AGE_RANGE_MAP = {
