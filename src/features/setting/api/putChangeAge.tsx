@@ -4,33 +4,31 @@ import type { MyInfo, MyInfoResponse } from "@/entities/auth/api";
 import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
-export type PutChangeGenderRequestData = Pick<MyInfo, "gender">;
+export type PutChangeAgeRequestData = Pick<MyInfo, "age">;
 
-interface PutChangeGenderResponse {
+interface PutChangeAgeResponse {
   code: number;
   message: string;
 }
 
-const putChangeGender = async (
-  changeGenderData: PutChangeGenderRequestData,
-) => {
-  const response = await fetch(SETTING_END_POINT.CHANGE_GENDER, {
+const putChangeAge = async (changeAgeData: PutChangeAgeRequestData) => {
+  const response = await fetch(SETTING_END_POINT.CHANGE_AGE, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: useAuthStore.getState().token!,
     },
-    body: JSON.stringify(changeGenderData),
+    body: JSON.stringify(changeAgeData),
   });
 
-  const data: PutChangeGenderResponse = await response.json();
+  const data: PutChangeAgeResponse = await response.json();
   if (!response.ok) {
     throw new Error(data.message);
   }
   return data;
 };
 
-export const usePutChangeGender = () => {
+export const usePutChangeAge = () => {
   const queryClient = useQueryClient();
 
   /**
@@ -41,7 +39,7 @@ export const usePutChangeGender = () => {
     return () => {
       const cachedMutation = [
         ...queryClient.getMutationCache().findAll({
-          mutationKey: ["putChangeGender"],
+          mutationKey: ["putChangeAge"],
         }),
       ].reverse()[0];
 
@@ -52,11 +50,11 @@ export const usePutChangeGender = () => {
   }, [queryClient]);
 
   return useMutation({
-    mutationKey: ["putChangeGender"],
-    mutationFn: putChangeGender,
+    mutationKey: ["putChangeAge"],
+    mutationFn: putChangeAge,
 
     /* 낙관적 업데이트 시행 */
-    onMutate: async ({ gender }) => {
+    onMutate: async ({ age }) => {
       await queryClient.cancelQueries({ queryKey: ["myInfo"] });
       const prevQueryData = queryClient.getQueryData<MyInfoResponse>([
         "myInfo",
@@ -68,7 +66,7 @@ export const usePutChangeGender = () => {
           ...prevQueryData,
           content: {
             ...prevQueryData.content,
-            gender: gender,
+            age: age,
           },
         };
       });
