@@ -21,7 +21,7 @@ export const GenderChangeButton = ({ gender }: Pick<MyInfo, "gender">) => {
 
   return (
     <>
-      <button className="setting-item" onClick={() => setIsOpen(!isOpen)}>
+      <button className="setting-item" onClick={() => setIsOpen(true)}>
         <span>성별 변경</span>
         <div className="flex items-center text-grey-500">
           <span className="body-2">{genderMap[gender]}</span>
