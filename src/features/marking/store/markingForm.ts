@@ -9,7 +9,7 @@ interface MarkingFileInfo extends FileInfo {
 
 interface MarkingFormState {
   region: string;
-  visibility: keyof typeof POST_VISIBILITY_MAP | "";
+  isVisible: keyof typeof POST_VISIBILITY_MAP | "";
   content: string;
   images: MarkingFileInfo[];
   isCompressing: boolean;
@@ -18,7 +18,7 @@ interface MarkingFormState {
 
 interface MarkingFormActions {
   setRegion: (region: string) => void;
-  setVisibility: (visibility: keyof typeof POST_VISIBILITY_MAP) => void;
+  setVisibility: (isVisible: keyof typeof POST_VISIBILITY_MAP) => void;
   setContent: (content: string) => void;
   setImages: (images: MarkingFileInfo[]) => void;
   resetMarkingFormStore: () => void;
@@ -26,7 +26,7 @@ interface MarkingFormActions {
 
 const MarkingFormInitialState: MarkingFormState = {
   region: "",
-  visibility: "",
+  isVisible: "",
   content: "",
   images: [],
   isCompressing: false,
@@ -39,7 +39,7 @@ export const useMarkingFormStore = create<
   ...MarkingFormInitialState,
 
   setRegion: (region) => set({ region }),
-  setVisibility: (visibility) => set({ visibility }),
+  setVisibility: (isVisible) => set({ isVisible }),
   setContent: (content) => set({ content }),
   /** 압축이 모두 종료 된 경우 비동기적으로 상태를 다시 업데이트 합니다.
    * 이 때 모든 file 들이 settled 된 이후 압축이 완료된 이미지만 남깁니다.
@@ -53,7 +53,7 @@ export const useMarkingFormStore = create<
      * 사진이 추가되지 않고  사진이 삭제 된 경우엔 압축을 시작하지 않고 종료합니다.
      */
     if (images.length < get().images.length) {
-      set({ isCompressing: false, inputKey: get().inputKey + 1 });
+      set({ images, isCompressing: false, inputKey: get().inputKey + 1 });
       return;
     }
     /* 동기적으로 압축 예정인 이미지 파일을 업데이트 합니다. */
@@ -63,17 +63,22 @@ export const useMarkingFormStore = create<
       images.map(({ file }) => compressFileImage(file)),
     );
 
-    const resolvedImages = images.filter(({ name }, index) => {
-      const { status } = compressedFiles[index];
-      if (status === "rejected") {
+    /* 이미지 압축 실패 했던 내역에 대한 로그 남기기 */
+    compressedFiles
+      .filter((result) => result.status === "rejected")
+      .forEach((result, index) => {
         console.error(
-          `${name} 을 압축하는데 실패했습니다.
-          ${(compressedFiles[index] as PromiseRejectedResult).reason}`,
+          `${images[index].name}을 압축하는데 실패했습니다.`,
+          result.reason,
         );
-        return false;
-      }
-      return true;
-    });
+      });
+
+    const resolvedImages = compressedFiles
+      .map((result, index) => ({
+        ...images[index],
+        file: result.status === "fulfilled" ? result.value : images[index].file,
+      }))
+      .filter((_, index) => compressedFiles[index].status === "fulfilled");
 
     /**
      * 압축에 실패한 경우엔 input key를 증가 시켜 다시 마운트 합니다.

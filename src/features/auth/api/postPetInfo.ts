@@ -38,8 +38,6 @@ const postPetInfo = async ({
   if (profile) {
     const profileExtension = profile.type.split("/")[1];
     formData.append("image", profile, `${name}-profile.${profileExtension}`);
-  } else {
-    formData.append("image", "");
   }
 
   formData.append(
