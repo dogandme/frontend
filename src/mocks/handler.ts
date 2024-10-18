@@ -532,6 +532,7 @@ export const petInfoFormHandlers = [
       image: string;
     }
   >(SIGN_UP_END_POINT.PET_INFO, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
     const formData = await request.formData();
 
     const petSignUpDto = JSON.parse(formData.get("petSignUpDto") as string);
