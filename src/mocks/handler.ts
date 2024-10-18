@@ -8,8 +8,10 @@ import {
 } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
-import { PutChangeAgeRequestData } from "@/features/setting/api";
-import { PutChangeAgeRequestData } from "@/features/setting/api";
+import {
+  PutChangeAgeRequestData,
+  PutChangeGenderRequestData,
+} from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
@@ -622,7 +624,7 @@ const putChangeGenderHandler = [
     await new Promise((res) => setTimeout(res, 1000));
 
     const token = request.headers.get("Authorization")!;
-    const { gender } = (await request.json()) as PutChangeAgeRequestData;
+    const { gender } = (await request.json()) as PutChangeGenderRequestData;
     if (token === "staleAccessToken") {
       return HttpResponse.json(
         {
