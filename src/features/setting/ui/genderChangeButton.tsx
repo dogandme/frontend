@@ -7,14 +7,13 @@ import { PutChangeAgeRequestData, usePutChangeGender } from "../api";
 
 export const GenderChangeButton = ({ gender }: Pick<MyInfo, "gender">) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate } = usePutChangeGender();
+  const { mutate: putChangeGender } = usePutChangeGender();
 
-  const putChangeGender = ({ gender: newGender }: PutChangeAgeRequestData) => {
+  const handleSelect = ({ gender: newGender }: PutChangeAgeRequestData) => {
     if (gender === newGender) {
-      setIsOpen(false);
       return;
     }
-    mutate({
+    putChangeGender({
       gender: newGender,
     });
   };
@@ -32,7 +31,7 @@ export const GenderChangeButton = ({ gender }: Pick<MyInfo, "gender">) => {
         isOpen={isOpen}
         isSelected={(newGender: GenderMapKey) => newGender === gender}
         onClose={() => setIsOpen(false)}
-        onSelect={putChangeGender}
+        onSelect={handleSelect}
       />
     </>
   );
