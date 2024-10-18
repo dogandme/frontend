@@ -51,7 +51,7 @@ export const Default: StoryObj<typeof PetInformationForm> = {
 
   render: () => (
     <div className="mx-auto w-96">
-      <PetInformationForm />
+      <PetInformationForm onSubmit={() => {}} />
     </div>
   ),
 
@@ -318,26 +318,5 @@ export const Default: StoryObj<typeof PetInformationForm> = {
     });
 
     await clearAll();
-
-    await step(
-      "올바른 API 요청이 전송되면 role 에 값이 저장된다.",
-      async () => {
-        await userEvent.type($name, "초코");
-        await userEvent.click($breed);
-        await userEvent.click(document.querySelector("#푸들")!);
-        await userEvent.click($characterButton1!);
-        await userEvent.click($characterButton2!);
-        await userEvent.type(
-          $textarea,
-          "안녕하세요 너무 귀여운 강아지 입니다.",
-        );
-
-        await userEvent.click($submit);
-
-        const { role, token } = useAuthStore.getState();
-        expect(role).toBe("ROLE_USER");
-        expect(token).toBe("freshAccessToken");
-      },
-    );
   },
 };
