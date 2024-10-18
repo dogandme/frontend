@@ -852,6 +852,42 @@ const changeUserInfoHandler = [
   ),
 ];
 
+const putChangePetInformationHandler = [
+  http.put(SETTING_END_POINT.CHANGE_PET_INFO, async ({ request }) => {
+    const token = request.headers.get("Authorization")!;
+    if (token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    const formData = await request.formData();
+    const petDto = JSON.parse(formData.get("petDto") as string);
+    const image = formData.get("image") as File;
+
+    const userInfo = User["ROLE_USER"];
+    const newData = {
+      ...userInfo,
+      pet: {
+        ...petDto,
+        profile: image ? URL.createObjectURL(image) : (petDto.profile ?? null),
+      },
+    };
+    User["ROLE_USER"] = newData;
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -869,4 +905,5 @@ export const handlers = [
   ...putSetPasswordHandler,
   ...putChangeAgeHandler,
   ...changeUserInfoHandler,
+  ...putChangePetInformationHandler,
 ];
