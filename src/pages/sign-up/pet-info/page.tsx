@@ -1,4 +1,4 @@
-import { PetInfoForm } from "@/features/auth/ui";
+import { PetInformationForm } from "@/features/auth/ui";
 import { AuthNavigationBar } from "@/features/auth/ui";
 
 const PetInfoPage = () => {
@@ -11,14 +11,7 @@ const PetInfoPage = () => {
         <h1 className="headline-3 overflow-ellipsis text-center text-grey-900">
           우리 댕댕이를 소개해 주세요
         </h1>
-        <PetInfoForm.Form>
-          <PetInfoForm.ProfileInput />
-          <PetInfoForm.NameInput />
-          <PetInfoForm.BreedInput />
-          <PetInfoForm.CharacterInput />
-          <PetInfoForm.IntroduceTextArea />
-          <PetInfoForm.SubmitButton />
-        </PetInfoForm.Form>
+        <PetInformationForm />
       </main>
     </div>
   );

@@ -4,29 +4,16 @@ import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { getProfileHandlers } from "@/mocks/handler";
-import { usePetInfoStore } from "../store";
-import * as PetInfoForm from "./PetInfoForm";
+import { PetInformationForm } from "./PetInformationForm";
 
-const _PetInfoForm = () => (
-  <PetInfoForm.Form>
-    <PetInfoForm.ProfileInput />
-    <PetInfoForm.NameInput />
-    <PetInfoForm.BreedInput />
-    <PetInfoForm.CharacterInput />
-    <PetInfoForm.IntroduceTextArea />
-    <PetInfoForm.SubmitButton />
-  </PetInfoForm.Form>
-);
-
-const meta: Meta<typeof _PetInfoForm> = {
-  title: "features/auth/PetInfoForm",
+const meta: Meta<typeof PetInformationForm> = {
+  title: "features/auth/PetInformationForm",
   tags: ["autodocs"],
-  component: _PetInfoForm,
 };
 
 export default meta;
 
-export const Default: StoryObj<typeof _PetInfoForm> = {
+export const Default: StoryObj<typeof PetInformationForm> = {
   parameters: {
     msw: {
       handlers: [
@@ -48,14 +35,6 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
   },
 
   decorators: (Story) => {
-    usePetInfoStore.setState({
-      name: "",
-      isValidName: true,
-      breed: "",
-      personalities: [],
-      description: "",
-    });
-
     useAuthStore.setState({
       nickname: "뽀송송",
       token: "Bearer token",
@@ -72,14 +51,7 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
 
   render: () => (
     <div className="mx-auto w-96">
-      <PetInfoForm.Form>
-        <PetInfoForm.ProfileInput />
-        <PetInfoForm.NameInput />
-        <PetInfoForm.BreedInput />
-        <PetInfoForm.CharacterInput />
-        <PetInfoForm.IntroduceTextArea />
-        <PetInfoForm.SubmitButton />
-      </PetInfoForm.Form>
+      <PetInformationForm />
     </div>
   ),
 
@@ -100,16 +72,6 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
     const clearAll = async () => {
       await userEvent.clear($name);
       await userEvent.clear($textarea);
-
-      const { personalities } = usePetInfoStore.getState();
-      personalities.forEach((personality) => {
-        if (personality === "호기심 많은") {
-          userEvent.click($characterButton1!);
-        }
-        if (personality === "애착이 강한") {
-          userEvent.click($characterButton2!);
-        }
-      });
     };
 
     await clearAll();
@@ -353,68 +315,6 @@ export const Default: StoryObj<typeof _PetInfoForm> = {
           await userEvent.click($unknownBreed!);
         },
       );
-    });
-
-    await clearAll();
-
-    await step("폼 데이터가 상태에 잘 저장되는지 테스트", async () => {
-      await step(
-        "input , textarea 에 적은 내용은 상태에 잘 저장된다.",
-        async () => {
-          await userEvent.type($name, "초코");
-          await userEvent.click($breed);
-          await userEvent.click(document.querySelector("#푸들")!);
-          await userEvent.type(
-            $textarea,
-            "안녕하세요 너무 귀여운 강아지 입니다.",
-          );
-          await userEvent.click($submit);
-
-          const { name, breed, description } = usePetInfoStore.getState();
-
-          expect(name).toBe("초코");
-          expect(breed).toBe("푸들");
-          expect(description).toBe("안녕하세요 너무 귀여운 강아지 입니다.");
-        },
-      );
-
-      await step("mix 를 선택 했을 때 상태에 mix로 잘 저장된다.", async () => {
-        await userEvent.click($unknownBreed!);
-
-        const { breed } = usePetInfoStore.getState();
-        expect(breed).toBe("모르겠어요");
-        await userEvent.click($unknownBreed!);
-      });
-
-      await step(
-        "성격란을 클릭하지 않았을 때 상태에는 아무런 값도 저장되지 않는다.",
-        async () => {
-          const { personalities } = usePetInfoStore.getState();
-          expect(personalities).toEqual([]);
-        },
-      );
-
-      await step("성격란을 클릭하면 상태엔 값이 적절히 저장된다.", async () => {
-        await userEvent.click($characterButton1!);
-
-        await expect(usePetInfoStore.getState().personalities[0]).toEqual(
-          "호기심 많은",
-        );
-
-        await userEvent.click($characterButton2!);
-        await expect(usePetInfoStore.getState().personalities[1]).toEqual(
-          "애착이 강한",
-        );
-
-        // 이미 있는 것을 클릭 한 경우엔 폼에서 해당 값이 사라진다.
-        await userEvent.click($characterButton1!);
-        await expect(usePetInfoStore.getState().personalities).toEqual([
-          "애착이 강한",
-        ]);
-
-        // 선택한 버튼 초기화
-        await userEvent.click($characterButton2!);
-      });
     });
 
     await clearAll();

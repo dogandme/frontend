@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
+import { MASCOT_IMAGE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store/auth";
 import { Button } from "@/shared/ui/button";
@@ -12,9 +13,49 @@ import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
 import { usePostPetInfo } from "../api";
 import { personalities, dogBreeds } from "../constants/form";
-import { usePetInfoStore } from "../store";
+import {
+  createPetInformationFormState,
+  PetInformationFormExternalState,
+  PetInformationFormStoreContext,
+  usePetInformationFormStore,
+  usePetInformationFormContext,
+} from "../store";
 
-const DEFAULT_PROFILE_IMAGE = "/default-image.png";
+interface PetInformationFormProviderProps {
+  children: React.ReactNode;
+  initialState?: PetInformationFormExternalState;
+}
+const PetInformationFormProvider = ({
+  children,
+  initialState,
+}: PetInformationFormProviderProps) => {
+  const store = useRef(createPetInformationFormState(initialState)).current;
+
+  return (
+    <PetInformationFormStoreContext.Provider value={store}>
+      {children}
+    </PetInformationFormStoreContext.Provider>
+  );
+};
+
+export const PetInformationForm = ({
+  initialState,
+}: {
+  initialState?: PetInformationFormExternalState;
+}) => {
+  return (
+    <PetInformationFormProvider initialState={initialState}>
+      <Form>
+        <ProfileInput />
+        <NameInput />
+        <BreedInput />
+        <CharacterInput />
+        <IntroduceTextArea />
+        <SubmitButton />
+      </Form>
+    </PetInformationFormProvider>
+  );
+};
 
 const TextCounter = ({
   text,
@@ -32,7 +73,7 @@ const TextCounter = ({
   );
 };
 
-export const Form = ({ children }: { children: React.ReactNode }) => {
+const Form = ({ children }: { children: React.ReactNode }) => {
   return (
     <form
       className="flex w-full flex-col items-center gap-4"
@@ -45,10 +86,10 @@ export const Form = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const ProfileInput = () => {
-  const profile = usePetInfoStore((state) => state.profile);
-  const setProfile = usePetInfoStore((state) => state.setProfile);
-  const inputKey = usePetInfoStore((state) => state.inputKey);
+const ProfileInput = () => {
+  const profile = usePetInformationFormStore((state) => state.profile);
+  const setProfile = usePetInformationFormStore((state) => state.setProfile);
+  const inputKey = usePetInformationFormStore((state) => state.inputKey);
   // 바텀시트를 조작하기 위한 state
   const [isOpen, setOpen] = useState<boolean>(false);
   // actual dom 의 input 태그를 조작하기 위한 ref , state
@@ -78,7 +119,7 @@ export const ProfileInput = () => {
     setProfile({
       file: null,
       name: "",
-      url: DEFAULT_PROFILE_IMAGE,
+      url: MASCOT_IMAGE_URL,
     });
   };
 
@@ -118,7 +159,7 @@ export const ProfileInput = () => {
             </Select.Option>
             <Select.Option
               onClick={handleDelete}
-              disabled={profile.url === DEFAULT_PROFILE_IMAGE}
+              disabled={profile.url === MASCOT_IMAGE_URL}
             >
               삭제 하기
             </Select.Option>
@@ -129,11 +170,10 @@ export const ProfileInput = () => {
   );
 };
 
-export const NameInput = () => {
-  const name = usePetInfoStore((state) => state.name);
-  const isValidName = usePetInfoStore((state) => state.isValidName);
-  const setName = usePetInfoStore((state) => state.setName);
-  const setIsValidName = usePetInfoStore((state) => state.setIsValidName);
+const NameInput = () => {
+  const name = usePetInformationFormStore((state) => state.name);
+  const isValidName = usePetInformationFormStore((state) => state.isValidName);
+  const setName = usePetInformationFormStore((state) => state.setName);
 
   const isNameEmpty = name.length === 0;
   const MAX_LENGTH = 20;
@@ -144,7 +184,6 @@ export const NameInput = () => {
     const regex = /[^가-힣a-zA-Z0-9ㄱ-ㅎ\s]/g;
     const filteredName = value.replace(regex, "");
     setName(filteredName);
-    setIsValidName(filteredName);
   };
 
   return (
@@ -164,9 +203,9 @@ export const NameInput = () => {
   );
 };
 
-export const BreedInput = () => {
-  const breed = usePetInfoStore((state) => state.breed);
-  const setBreed = usePetInfoStore((state) => state.setBreed);
+const BreedInput = () => {
+  const breed = usePetInformationFormStore((state) => state.breed);
+  const setBreed = usePetInformationFormStore((state) => state.setBreed);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onOpen = () => setIsOpen(true);
@@ -219,8 +258,10 @@ export const BreedInput = () => {
   );
 };
 
-export const CharacterInput = () => {
-  const setPersonalities = usePetInfoStore((state) => state.setPersonalities);
+const CharacterInput = () => {
+  const setPersonalities = usePetInformationFormStore(
+    (state) => state.setPersonalities,
+  );
 
   return (
     <div>
@@ -238,8 +279,10 @@ export const CharacterInput = () => {
   );
 };
 
-export const IntroduceTextArea = () => {
-  const setDescription = usePetInfoStore((state) => state.setDescription);
+const IntroduceTextArea = () => {
+  const setDescription = usePetInformationFormStore(
+    (state) => state.setDescription,
+  );
   return (
     <TextArea
       id="introduce"
@@ -251,16 +294,16 @@ export const IntroduceTextArea = () => {
   );
 };
 
-export const SubmitButton = () => {
+const SubmitButton = () => {
   const { mutate: postPetInfo } = usePostPetInfo();
-
+  const store = usePetInformationFormContext();
   // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
   const { handleOpen: openInfoSnackBar, onClose } = useSnackBar(() => (
     <Snackbar onClose={onClose}>필수 항목을 모두 입력해 주세요</Snackbar>
   ));
 
   const handleClick = () => {
-    const petInfoForm = usePetInfoStore.getState();
+    const petInfoForm = store.getState();
     const {
       isValidName,
       name,
