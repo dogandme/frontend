@@ -40,7 +40,7 @@ const PetInformationFormProvider = ({
 interface PetInformationFormProps {
   initialState?: PetInformationFormExternalState;
   onSubmit: (petInfoFormState: PetInfoRequestData) => void;
-  disabled?: boolean;
+  disabled?: boolean | (() => boolean);
 }
 
 export const PetInformationForm = ({
@@ -347,7 +347,7 @@ const SubmitButton = ({
       variant="filled"
       onClick={handleClick}
       type="button"
-      disabled={disabled}
+      disabled={typeof disabled === "function" ? disabled() : disabled}
     >
       등록하기
     </Button>
