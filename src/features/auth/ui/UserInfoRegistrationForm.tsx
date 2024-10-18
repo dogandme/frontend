@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { MutationState, useMutationState } from "@tanstack/react-query";
 import {
   AgreementCheckbox,
   SelectOpener,
@@ -12,74 +11,18 @@ import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
 import { MapLocationSearchingIcon } from "@/shared/ui/icon";
 import { CancelIcon } from "@/shared/ui/icon";
-import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
 import {
-  DuplicateNicknameRequestData,
-  DuplicateNicknameResponse,
-  usePostDuplicateNickname,
+  usePostDuplicateNicknameState,
   usePutUserInfoRegistration,
 } from "../api";
 import { Region } from "../api/region";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
+import { NicknameInput } from "./NicknameInput";
 import { RegionModal } from "./RegionModal";
-
-const NicknameInput = () => {
-  const nickname = useUserInfoRegistrationFormStore((state) => state.nickname);
-  const setNickname = useUserInfoRegistrationFormStore(
-    (state) => state.setNickname,
-  );
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value: nickname } = e.target;
-
-    setNickname(nickname);
-  };
-
-  // todo: isError 대신 응답 코드로 status text 변경하기
-  const {
-    mutate: postDuplicateNickname,
-    isError,
-    variables,
-  } = usePostDuplicateNickname();
-
-  const isDuplicateNickname = isError && variables?.nickname === nickname;
-  const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
-  const isNicknameEmpty = nickname.length === 0;
-
-  const handleBlur = () => {
-    if (!isValidNickname || isNicknameEmpty) return;
-    const { token } = useAuthStore.getState();
-
-    postDuplicateNickname({ nickname, token: token! });
-  };
-
-  let statusText = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";
-
-  if (isDuplicateNickname) {
-    statusText = "이미 존재하는 닉네임입니다.";
-  }
-
-  return (
-    <Input
-      type="text"
-      id="nickname"
-      name="nickname"
-      label="닉네임"
-      placeholder="닉네임을 입력해 주세요"
-      statusText={statusText}
-      essential
-      componentType="outlinedText"
-      isError={!isValidNickname && !isNicknameEmpty}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      maxLength={20}
-    />
-  );
-};
 
 const GenderSelect = () => {
   const gender = useUserInfoRegistrationFormStore((state) => state.gender);
@@ -359,17 +302,7 @@ const UserInfoRegistrationForm = () => {
     },
   });
 
-  const duplicateNicknameResponseCacheArr = useMutationState<
-    MutationState<
-      DuplicateNicknameResponse,
-      Error,
-      DuplicateNicknameRequestData
-    >
-  >({
-    filters: {
-      mutationKey: ["checkDuplicateNickname"],
-    },
-  });
+  const { isDuplicateNickname } = usePostDuplicateNicknameState();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -394,14 +327,6 @@ const UserInfoRegistrationForm = () => {
       openRequiredFieldsAlert();
       return;
     }
-
-    const lastDuplicateNicknameResponse =
-      duplicateNicknameResponseCacheArr[
-        duplicateNicknameResponseCacheArr.length - 1
-      ];
-    const isDuplicateNickname =
-      lastDuplicateNicknameResponse.status === "error" &&
-      lastDuplicateNicknameResponse.variables?.nickname === nickname;
 
     const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
 
@@ -431,7 +356,11 @@ const UserInfoRegistrationForm = () => {
   return (
     <form className="flex flex-col gap-8 self-stretch" onSubmit={handleSubmit}>
       <section className="flex flex-col gap-4 self-stretch">
-        <NicknameInput />
+        <NicknameInput
+          onChange={useUserInfoRegistrationFormStore(
+            (state) => state.setNickname,
+          )}
+        />
         <GenderSelect />
         <AgeRangeSelect />
         <RegionSetting />

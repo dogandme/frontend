@@ -20,3 +20,7 @@ export const ADDRESSES_END_POINT = {
     `${API_BASE_URL}/addresses/search-by-location?lat=${lat}&lng=${lng}`,
   ADDRESS: (keyword: string) => `${API_BASE_URL}/addresses?keyword=${keyword}`,
 };
+
+export const CHANGE_USER_INFO_END_POINT = {
+  NICKNAME: `${API_BASE_URL}/users/profile/nickname`,
+};
