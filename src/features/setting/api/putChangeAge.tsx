@@ -11,16 +11,14 @@ interface PutChangeAgeResponse {
   message: string;
 }
 
-const putChangeAge = async (
-  putChangeAgeRequestData: PutChangeAgeRequestData,
-) => {
+const putChangeAge = async (changeAgeData: PutChangeAgeRequestData) => {
   const response = await fetch(SETTING_END_POINT.CHANGE_AGE, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: useAuthStore.getState().token!,
     },
-    body: JSON.stringify(putChangeAgeRequestData),
+    body: JSON.stringify(changeAgeData),
   });
 
   const data: PutChangeAgeResponse = await response.json();
