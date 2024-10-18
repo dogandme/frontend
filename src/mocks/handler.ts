@@ -8,7 +8,10 @@ import {
 } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
-import { PutChangeAgeRequestData } from "@/features/setting/api";
+import {
+  PutChangeAgeRequestData,
+  PutChangeGenderRequestData,
+} from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
@@ -616,6 +619,39 @@ const getNewAccessTokenHandler = [
   }),
 ];
 
+const putChangeGenderHandler = [
+  http.put(SETTING_END_POINT.CHANGE_GENDER, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
+
+    const token = request.headers.get("Authorization")!;
+    const { gender } = (await request.json()) as PutChangeGenderRequestData;
+    if (token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    const userKey =
+      token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL";
+
+    userInfoDB[userKey] = {
+      ...userInfoDB[userKey],
+      gender,
+    };
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+];
+
 const putChangePasswordHandler = [
   http.put<PathParams, { password: string; newPw: string; newPwChk: string }>(
     SETTING_END_POINT.CHANGE_PASSWORD,
@@ -787,6 +823,7 @@ export const handlers = [
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
   ...getNewAccessTokenHandler,
+  ...putChangeGenderHandler,
   ...putChangePasswordHandler,
   ...putSetPasswordHandler,
   ...putChangeAgeHandler,

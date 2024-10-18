@@ -12,7 +12,7 @@ interface Region {
 
 export interface MyInfo {
   email: string;
-  gender: "MALE" | "FEMALE";
+  gender: "FEMALE" | "MALE" | "NONE";
   age: "10" | "20" | "30" | "40" | "50" | "60";
   regions: Region[];
   nickLastModDt: string | null;
