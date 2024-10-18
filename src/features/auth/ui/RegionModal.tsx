@@ -278,9 +278,7 @@ const SelectedRegionList = () => {
 const RegionModalSaveButton = ({
   onSave,
 }: {
-  onSave: (
-    regionList: RegionModalExternalState["regionList"],
-  ) => void | Promise<void>;
+  onSave: (regionList: RegionModalExternalState["regionList"]) => void;
 }) => {
   const regionModalStore = useRegionModalContext();
 
