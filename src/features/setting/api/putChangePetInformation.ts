@@ -12,12 +12,12 @@ import { SETTING_END_POINT } from "../constants";
  * 2. 프로필 이미지가 변경 되지 않은 경우 profile : MyInfo.PetInfo.profile
  * 3. 프로필 이미지가 변경 된 경우 profile : null (멀티파트 폼의 profile에선 새로운 파일이 들어갑니다.)
  */
-interface PutPetInfoFormObject extends PetInfoForm {
-  profile: ProfileImageUrl | null;
+interface PutPetInfoFormObject extends Omit<PetInfoForm, "profile"> {
+  prevProfile: ProfileImageUrl | null;
 }
 
 interface PutPetInfoFormRequest extends PutPetInfoFormObject {
-  newProfile?: File;
+  profile: File | null;
 }
 
 interface PutPetInfoFormResponse {
@@ -26,14 +26,21 @@ interface PutPetInfoFormResponse {
 }
 
 const putChangePetInformation = async ({
-  newProfile,
+  profile,
+  prevProfile,
   ...formObj
 }: PutPetInfoFormRequest): Promise<PutPetInfoFormResponse> => {
   const formData = new FormData();
 
-  formData.append("petDto", JSON.stringify(formObj));
-  if (newProfile) {
-    formData.append("profile", newProfile);
+  formData.append(
+    "petDto",
+    JSON.stringify({
+      ...formObj,
+      profile: prevProfile,
+    }),
+  );
+  if (profile) {
+    formData.append("profile", profile);
   }
 
   const response = await fetch(SETTING_END_POINT.CHANGE_PET_INFO, {
