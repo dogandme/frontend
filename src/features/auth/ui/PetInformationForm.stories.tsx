@@ -4,7 +4,7 @@ import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { getProfileHandlers } from "@/mocks/handler";
-import { PetInformationForm } from "./PetInformationForm";
+import { PetInformationForm } from "./petInformationForm";
 
 const meta: Meta<typeof PetInformationForm> = {
   title: "features/auth/PetInformationForm",
