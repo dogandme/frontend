@@ -28,6 +28,16 @@ export const genderOptionList = [
   },
 ] as const;
 
+export const AGE_RANGE_MAP = {
+  "10": "10대",
+  "20": "20대",
+  "30": "30대",
+  "40": "40대",
+  "50": "50대",
+  "60": "60대 이상",
+} as const;
+
+// TODO 다음 리팩토링 때 제거 하기
 export const ageRangeOptionList = [
   {
     value: 10,
