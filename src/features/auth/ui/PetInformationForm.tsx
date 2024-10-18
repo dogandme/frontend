@@ -290,7 +290,6 @@ const PetDescriptionTextArea = () => {
       statusText=""
       onChange={(e) => setDescription(e.target.value)}
       defaultValue={description}
-      initialCurrentLength={description.length}
     />
   );
 };

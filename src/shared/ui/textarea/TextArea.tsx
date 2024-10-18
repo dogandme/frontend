@@ -16,22 +16,23 @@ export interface TextAreaProps
   essential?: boolean;
   fullWidth?: boolean;
   initialCurrentLength?: number;
+  defaultValue: string;
 }
 
 export const TextArea = ({
   id,
   label,
   statusText,
-  initialCurrentLength = 0,
   isError = false,
   maxLength = 150,
   disabled = false,
   essential = false,
   fullWidth = true,
+  defaultValue = "",
   ...props
 }: TextAreaProps) => {
   const [currentLength, setCurrentLength] = useState<number>(
-    () => initialCurrentLength ?? 0,
+    () => defaultValue.length ?? 0,
   );
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const shouldShowStatusText = statusText !== undefined;
@@ -95,6 +96,7 @@ export const TextArea = ({
           onInput={handleInput}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          defaultValue={defaultValue}
           {...rest}
         />
         <p className="body-3 flex items-end justify-end gap-[2px] self-stretch">
