@@ -3,7 +3,7 @@ import { expect, userEvent, within, spyOn, waitFor } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
 import { addressHandlers } from "@/mocks/handler";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
-import { RegionModal } from "./RegionModal";
+import { RegionModal } from "./regionModal";
 
 const meta: Meta<typeof RegionModal> = {
   title: "features/auth/RegionModal",

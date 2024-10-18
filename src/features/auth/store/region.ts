@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { create, useStore } from "zustand";
 import { LatLng, Region } from "../api/region";
-import { RegionModalStoreContext } from "../ui/RegionModal";
+import { RegionModalStoreContext } from "../ui/regionModal";
 
 interface RegionModalInternalState {
   keyword: string;

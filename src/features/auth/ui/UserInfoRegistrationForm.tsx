@@ -22,7 +22,7 @@ import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
 import { NicknameInput } from "./NicknameInput";
-import { RegionModal } from "./RegionModal";
+import { RegionModal } from "./regionModal";
 
 const GenderSelect = () => {
   const gender = useUserInfoRegistrationFormStore((state) => state.gender);
