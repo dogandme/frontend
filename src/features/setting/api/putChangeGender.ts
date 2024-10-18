@@ -11,14 +11,14 @@ interface PutChangeGenderResponse {
   message: string;
 }
 
-const putChangeGender = async ({ gender }: PutChangeAgeRequestData) => {
+const putChangeGender = async (changeGenderData: PutChangeAgeRequestData) => {
   const response = await fetch(SETTING_END_POINT.CHANGE_GENDER, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: useAuthStore.getState().token!,
     },
-    body: JSON.stringify({ gender }),
+    body: JSON.stringify(changeGenderData),
   });
 
   const data: PutChangeGenderResponse = await response.json();
