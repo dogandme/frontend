@@ -4,7 +4,7 @@ import { PasswordInput } from "@/entities/auth/ui";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
-import { useDeleteAccount } from "../api/deleteAccount";
+import { useDeleteAccount } from "../api";
 import {
   createPasswordCheckFormStore,
   PasswordCheckFormContext,
