@@ -32,7 +32,7 @@ export const TextArea = ({
   ...props
 }: TextAreaProps) => {
   const [currentLength, setCurrentLength] = useState<number>(
-    () => defaultValue.length ?? 0,
+    () => defaultValue.length,
   );
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const shouldShowStatusText = statusText !== undefined;
