@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
-import { useAuthStore } from "@/shared/store";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePassword } from "../api";
 import { usePasswordChangeFormStore } from "../store";
@@ -125,7 +124,6 @@ export const PasswordChangeModal = ({
       isAllValueValid,
       isSameNewPasswordAndConfirmPassword,
     } = usePasswordChangeFormStore.getState();
-    const { token } = useAuthStore.getState();
 
     if (!isAllValueFilled) {
       // TODO 에러바운더리 로직 나오면 변경 하기
@@ -149,7 +147,6 @@ export const PasswordChangeModal = ({
       password: currentPassword,
       newPw: newPassword,
       newPwChk: confirmPassword,
-      token: token!,
     });
   };
 
