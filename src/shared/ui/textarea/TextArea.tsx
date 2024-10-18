@@ -15,12 +15,14 @@ export interface TextAreaProps
   disabled?: boolean;
   essential?: boolean;
   fullWidth?: boolean;
+  initialCurrentLength?: number;
 }
 
 export const TextArea = ({
   id,
   label,
   statusText,
+  initialCurrentLength = 0,
   isError = false,
   maxLength = 150,
   disabled = false,
@@ -28,7 +30,9 @@ export const TextArea = ({
   fullWidth = true,
   ...props
 }: TextAreaProps) => {
-  const [currentLength, setCurrentLength] = useState<number>(0);
+  const [currentLength, setCurrentLength] = useState<number>(
+    () => initialCurrentLength ?? 0,
+  );
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const shouldShowStatusText = statusText !== undefined;
 

@@ -280,6 +280,7 @@ const CharacterInput = () => {
 };
 
 const IntroduceTextArea = () => {
+  const { description } = usePetInformationFormContext().getState();
   const setDescription = usePetInformationFormStore(
     (state) => state.setDescription,
   );
@@ -290,6 +291,8 @@ const IntroduceTextArea = () => {
       placeholder="우리 댕댕이를 간단히 소개해주세요"
       statusText=""
       onChange={(e) => setDescription(e.target.value)}
+      defaultValue={description}
+      initialCurrentLength={description.length}
     />
   );
 };
