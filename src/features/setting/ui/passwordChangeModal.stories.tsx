@@ -27,7 +27,7 @@ export const Default: Story = {
     const inValidStatusText = "비밀번호 형식에 맞게 입력해 주세요";
     const inValidConfirmStatusText = "비밀번호가 서로 일치하지 않습니다";
     const validPasswordStatusText = "사용가능한 비밀번호 입니다";
-    const validConfirmPasswordStatusText = "비밀번호가 일치 합니다";
+    const validConfirmPasswordStatusText = "비밀번호가 일치합니다";
 
     await step(
       `각 인풋 필드들은 focus시 statusText로 ${emptyStatusText}가 나타난다.`,

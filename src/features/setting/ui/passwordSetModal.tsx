@@ -55,7 +55,7 @@ const ConfirmNewPasswordInput = () => {
   const statusText = !isFilledConfirmPassword
     ? "비밀번호를 입력해 주세요"
     : isSameNewPasswordAndConfirmPassword
-      ? "비밀번호가 일치 합니다"
+      ? "비밀번호가 일치합니다"
       : "비밀번호가 서로 일치하지 않습니다";
 
   return (
