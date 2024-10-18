@@ -9,6 +9,9 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
   const { mutate: putChangePetInformation, isPending } =
     usePutChangePetInformation();
 
+  const isProfileChanged = (profile: File | null) =>
+    pet.profile && profile === null;
+
   const { handleOpen, onClose } = useModal(() => (
     <Modal modalType="fullPage">
       <Modal.Header
@@ -38,7 +41,7 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
               {
                 profile,
                 ...rest,
-                prevProfile: profile ? null : pet.profile,
+                prevProfile: isProfileChanged(profile) ? null : pet.profile,
               },
               {
                 onSuccess: onClose,
