@@ -16,14 +16,14 @@ interface PutSetPasswordResponse {
   message: string;
 }
 
-const putSetPassword = async (setPasswordForm: PutSetPasswordRequest) => {
+const putSetPassword = async (setPasswordData: PutSetPasswordRequest) => {
   const response = await fetch(SETTING_END_POINT.SET_PASSWORD, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: useAuthStore.getState().token!,
     },
-    body: JSON.stringify(setPasswordForm),
+    body: JSON.stringify(setPasswordData),
   });
 
   const data: PutSetPasswordResponse = await response.json();
