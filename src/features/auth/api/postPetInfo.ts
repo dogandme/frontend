@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { useAuthStore, AuthStore } from "@/shared/store/auth";
+import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";
 
-export interface PetInfoResponse {
+interface PetInfoResponseData {
   code: number;
   message: string;
   content: {
@@ -13,7 +13,7 @@ export interface PetInfoResponse {
   };
 }
 
-export interface PetInfoFormData {
+export interface PetInfoRequestData {
   name: string;
   breed: string;
   personalities: string[];
@@ -21,15 +21,9 @@ export interface PetInfoFormData {
   profile: File | null;
 }
 
-interface PostPetInfoArgs {
-  token: NonNullable<AuthStore["token"]>;
-  formObject: PetInfoFormData;
-}
-
-const postPetInfo = async ({
-  token,
-  formObject,
-}: PostPetInfoArgs): Promise<PetInfoResponse> => {
+const postPetInfo = async (
+  formObject: PetInfoRequestData,
+): Promise<PetInfoResponseData> => {
   const { name, personalities, description, breed, profile } = formObject;
 
   const formData = new FormData();
@@ -53,7 +47,7 @@ const postPetInfo = async ({
   const response = await fetch(SIGN_UP_END_POINT.PET_INFO, {
     method: "POST",
     headers: {
-      Authorization: token,
+      Authorization: useAuthStore.getState().token!,
     },
     credentials:
       process.env.NODE_ENV === "development" ? "include" : "same-origin",
@@ -79,7 +73,7 @@ export const usePostPetInfo = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
-  return useMutation<PetInfoResponse, Error, PostPetInfoArgs>({
+  return useMutation<PetInfoResponseData, Error, PetInfoRequestData>({
     mutationFn: postPetInfo,
     onSuccess: (data) => {
       const { role, authorization: token } = data.content;
