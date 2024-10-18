@@ -49,7 +49,7 @@ export const PetInformationForm = ({
         <ProfileInput />
         <NameInput />
         <BreedInput />
-        <CharacterInput />
+        <PersonalitiesInput />
         <IntroduceTextArea />
         <SubmitButton />
       </Form>
@@ -258,7 +258,10 @@ const BreedInput = () => {
   );
 };
 
-const CharacterInput = () => {
+const PersonalitiesInput = () => {
+  const { personalities: initialPersonalities } =
+    usePetInformationFormContext().getState();
+
   const setPersonalities = usePetInformationFormStore(
     (state) => state.setPersonalities,
   );
@@ -272,6 +275,9 @@ const CharacterInput = () => {
             key={idx}
             label={personality}
             onClick={() => setPersonalities(personality)}
+            uncontrolledInitialIsSelected={initialPersonalities.includes(
+              personality,
+            )}
           />
         ))}
       </div>
