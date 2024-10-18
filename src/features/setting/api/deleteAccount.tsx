@@ -12,14 +12,14 @@ interface DeleteAccountResponse {
   message: string;
 }
 
-const deleteAccount = async ({ password }: DeleteAccountRequest) => {
+const deleteAccount = async (deleteAccountData: DeleteAccountRequest) => {
   const response = await fetch(SETTING_END_POINT.DELETE_ACCOUNT, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       Authorization: useAuthStore.getState().token!,
     },
-    body: JSON.stringify({ password }),
+    body: JSON.stringify(deleteAccountData),
   });
   const data: DeleteAccountResponse = await response.json();
 
