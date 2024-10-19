@@ -34,7 +34,7 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
             /**
              * 새로운 File 이 추가되지 않았거나
              * initialState 로 건내준 pet 정보와 변경 된 정보가 변경되지 않았다면
-             * isCharProfile 을 false 로 설정합니다.
+             * isChaProfile 을 false 로 설정합니다.
              */
             putChangePetInformation(
               {
