@@ -1,10 +1,11 @@
 import { ChangeNicknameModal } from "@/features/auth/ui/ChangeNicknameModal";
 import { GenderChangeButton } from "@/features/setting/ui";
 import { ChangeAgeButton } from "@/features/setting/ui";
-import { MyInfo, useGetMyInfo } from "@/entities/auth/api";
+import { RegionChangeButton } from "@/features/setting/ui";
+import { useGetMyInfo } from "@/entities/auth/api";
+import type { MyInfo } from "@/entities/auth/api";
 import { useModal } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
@@ -36,7 +37,7 @@ export const EditInfoPage = () => {
         <NicknameButton nickLastModDt={nickLastModDt} />
         <GenderChangeButton gender={gender} />
         <ChangeAgeButton age={age} />
-        <RegionSettingButton regions={regions} />
+        <RegionChangeButton regions={regions} />
       </section>
     </>
   );
@@ -61,28 +62,6 @@ const NicknameButton = ({
         <span className="body-2">{nickname}</span>
         <ArrowRightIcon />
       </div>
-    </button>
-  );
-};
-
-const RegionSettingButton = ({ regions }: Pick<MyInfo, "regions">) => {
-  return (
-    <button>
-      <div className="setting-item">
-        <span>동네설정</span>
-
-        <div className="text-grey-500">
-          <ArrowRightIcon />
-        </div>
-      </div>
-
-      <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
-        {regions.map(({ id, subDistrict }) => (
-          <ActionChip key={id} variant="outlined" isSelected={true}>
-            {subDistrict}
-          </ActionChip>
-        ))}
-      </ul>
     </button>
   );
 };

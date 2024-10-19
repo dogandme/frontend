@@ -3,7 +3,7 @@ import { expect, userEvent, within, spyOn, waitFor } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
 import { addressHandlers } from "@/mocks/handler";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
-import { RegionModal } from "./RegionModal";
+import { RegionModal } from "./regionModal";
 
 const meta: Meta<typeof RegionModal> = {
   title: "features/auth/RegionModal",
@@ -104,7 +104,8 @@ export const Default: Story = {
         await waitFor(
           async () => {
             expect(fetchSpy).toHaveBeenCalledTimes(1);
-            const $searchedResult = await canvas.findByText(/강남구 역삼1동/);
+            const $searchedResult =
+              await canvas.findByText(/서울특별시 강남구 역삼1동/);
             expect($searchedResult).toBeInTheDocument();
           },
           {

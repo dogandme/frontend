@@ -1,4 +1,5 @@
 export * from "./postLogout";
+export * from "./postChangeRegion";
 export * from "./deleteAccount";
 export * from "./putChangePassword";
 export * from "./putSetPassword";

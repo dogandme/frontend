@@ -159,6 +159,7 @@ const SearchRegionByGPSButton = () => {
 const SearchRegionControlItem = (region: Region) => {
   const regionModalStore = useRegionModalContext();
   const setRegionList = useRegionModalStore((state) => state.setRegionList);
+  const { id, province, cityCounty, subDistrict } = region;
 
   const handleSelectRegion = () => {
     const { regionList } = regionModalStore.getState();
@@ -168,7 +169,7 @@ const SearchRegionControlItem = (region: Region) => {
       return;
     }
 
-    if (regionList.some((selectedRegion) => selectedRegion.id === region.id)) {
+    if (regionList.some((selectedRegion) => selectedRegion.id === id)) {
       return;
     }
     setRegionList([...regionList, region]);
@@ -182,7 +183,7 @@ const SearchRegionControlItem = (region: Region) => {
       onClick={handleSelectRegion}
       className="title-3"
     >
-      {`${region.cityCounty} ${region.subDistrict}`}
+      {`${province} ${cityCounty} ${subDistrict}`}
     </List.Item>
   );
 };
@@ -256,7 +257,7 @@ const SelectedRegionList = () => {
     <section className="pb-2 py-[2.5rem] flex flex-col gap-4 border-grey-200 border-t-[0.0625rem]">
       <p className="title-2">선택된 동네</p>
       <ul className="flex items-start gap-2 self-stretch overflow-auto pb-4">
-        {regionList.map(({ cityCounty, subDistrict, id }) => (
+        {regionList.map(({ province, cityCounty, subDistrict, id }) => (
           <li className="flex flex-shrink-0" key={id}>
             <ActionChip
               variant="outlined"
@@ -265,7 +266,7 @@ const SelectedRegionList = () => {
               onClick={() => handleRemoveRegion(id)}
               isSelected={true}
             >
-              {`${cityCounty} ${subDistrict}`}
+              {`${province} ${cityCounty} ${subDistrict}`}
             </ActionChip>
           </li>
         ))}
@@ -277,9 +278,7 @@ const SelectedRegionList = () => {
 const RegionModalSaveButton = ({
   onSave,
 }: {
-  onSave: (
-    regionList: RegionModalExternalState["regionList"],
-  ) => void | Promise<void>;
+  onSave: (regionList: RegionModalExternalState["regionList"]) => void;
 }) => {
   const regionModalStore = useRegionModalContext();
 
@@ -288,7 +287,20 @@ const RegionModalSaveButton = ({
       colorType="primary"
       variant="filled"
       size="medium"
-      onClick={() => onSave(regionModalStore.getState().regionList)}
+      onClick={() => {
+        const { regionList } = regionModalStore.getState();
+        if (regionList.length === 0) {
+          // TODO 에러바운더리 나오면 로직 변경 하기
+          console.error("동네를 선택해 주세요");
+          return;
+        }
+        if (regionList.length > 5) {
+          // TODO 에러바운더리 나오면 로직 변경 하기
+          console.error("동네는 최대 5개까지 선택할 수 있습니다.");
+          return;
+        }
+        onSave(regionList);
+      }}
     >
       확인
     </Button>

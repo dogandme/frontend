@@ -8,6 +8,7 @@ import {
 } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
+import { PostChangeRegionRequestData } from "@/features/setting/api";
 import {
   PutChangeAgeRequestData,
   PutChangeGenderRequestData,
@@ -621,6 +622,45 @@ const getNewAccessTokenHandler = [
   }),
 ];
 
+const putChangeRegionHandler = [
+  http.post<PathParams, PostChangeRegionRequestData>(
+    SETTING_END_POINT.CHANGE_REGION,
+    async ({ request }) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { newIds } = await request.json();
+
+      const token = request.headers.get("Authorization")!;
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      const newRegions = newIds.map(
+        (id) =>
+          Object.values(regionListData)
+            .flat()
+            .find((region) => region.id === id)!,
+      );
+
+      userInfoDB[
+        token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL"
+      ].regions = newRegions;
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
 export const deleteAccountHandlers = [
   http.delete<PathParams, { password: string }>(
     SETTING_END_POINT.DELETE_ACCOUNT,
@@ -917,6 +957,7 @@ export const handlers = [
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
   ...getNewAccessTokenHandler,
+  ...putChangeRegionHandler,
   ...deleteAccountHandlers,
   ...putChangeGenderHandler,
   ...putChangePasswordHandler,
