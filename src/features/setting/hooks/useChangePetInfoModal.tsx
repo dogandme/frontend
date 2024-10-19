@@ -16,7 +16,7 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
           onClose();
         }}
       />
-      <Modal.Content>
+      <Modal.Content className="pb-32">
         <h1 className="headline-3 overflow-ellipsis text-center text-grey-900">
           우리 댕댕이를 소개해 주세요
         </h1>
