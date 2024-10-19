@@ -621,7 +621,7 @@ const putChangeRegionHandler = [
     SETTING_END_POINT.CHANGE_REGION,
     async ({ request }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const { addIds, removeIds } = await request.json();
+      const { newIds } = await request.json();
 
       const token = request.headers.get("Authorization")!;
       if (token === "staleAccessToken") {
@@ -636,20 +636,12 @@ const putChangeRegionHandler = [
         );
       }
 
-      const { regions } =
-        userInfoDB[
-          token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL"
-        ];
-
-      const newRegions = regions.filter(({ id }) => !removeIds.includes(id));
-      addIds.forEach((addId) => {
-        const regionListValues = Object.values(regionListData).flat();
-        regionListValues.forEach(({ id }, index) => {
-          if (id === addId) {
-            newRegions.push(regionListValues[index]);
-          }
-        });
-      });
+      const newRegions = newIds.map(
+        (id) =>
+          Object.values(regionListData)
+            .flat()
+            .find((region) => region.id === id)!,
+      );
 
       userInfoDB[
         token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL"

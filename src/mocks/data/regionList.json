@@ -130,5 +130,21 @@
       "subDistrict": "영등포 7가",
       "district": "123-45"
     }
+  ],
+  "ULSAN": [
+    {
+      "id": 3563,
+      "province": "울산광역시",
+      "cityCounty": "북구",
+      "district": "",
+      "subDistrict": "명촌동"
+    },
+    {
+      "id": 3564,
+      "province": "울산광역시",
+      "cityCounty": "북구",
+      "district": "",
+      "subDistrict": "명촌동"
+    }
   ]
 }
