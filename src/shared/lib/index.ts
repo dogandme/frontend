@@ -6,6 +6,7 @@ export * from "./debounce";
 export * from "./image";
 export * from "./format";
 export * from "./apiClient";
+export * from "./error";
 
 // TODO refactoring 시 해당 훅 제거 하기
 /**
