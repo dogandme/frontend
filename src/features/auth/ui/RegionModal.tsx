@@ -287,7 +287,20 @@ const RegionModalSaveButton = ({
       colorType="primary"
       variant="filled"
       size="medium"
-      onClick={() => onSave(regionModalStore.getState().regionList)}
+      onClick={() => {
+        const { regionList } = regionModalStore.getState();
+        if (regionList.length === 0) {
+          // TODO 에러바운더리 나오면 로직 변경 하기
+          console.error("동네를 선택해 주세요");
+          return;
+        }
+        if (regionList.length > 5) {
+          // TODO 에러바운더리 나오면 로직 변경 하기
+          console.error("동네는 최대 5개까지 선택할 수 있습니다.");
+          return;
+        }
+        onSave(regionList);
+      }}
     >
       확인
     </Button>
