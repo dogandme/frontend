@@ -11,6 +11,7 @@ import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import {
   PutChangeAgeRequestData,
   PutChangeGenderRequestData,
+  PutChangePetInformationRequest,
 } from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
@@ -853,43 +854,56 @@ const changeUserInfoHandler = [
 ];
 
 const putChangePetInformationHandler = [
-  http.put(SETTING_END_POINT.CHANGE_PET_INFO, async ({ request }) => {
-    await new Promise((res) => setTimeout(res, 1000));
-    const token = request.headers.get("Authorization")!;
-    if (token === "staleAccessToken") {
-      return HttpResponse.json(
-        {
-          code: 401,
-          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
-        },
-        {
-          status: 401,
-        },
-      );
-    }
+  http.put<PathParams, PutChangePetInformationRequest>(
+    SETTING_END_POINT.CHANGE_PET_INFO,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const token = request.headers.get("Authorization")!;
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
 
-    const formData = await request.formData();
-    const petDto = JSON.parse(formData.get("petDto") as string);
-    const image = formData.get("image") as File;
+      const formData = await request.formData();
+      const petDto = JSON.parse(formData.get("petDto") as string);
+      const image = formData.get("image") as File;
 
-    const userInfo = User["ROLE_USER"];
-    const newData = {
-      ...userInfo,
-      content: {
-        ...userInfo.content,
-        pet: {
-          ...petDto,
-          profile: image ? URL.createObjectURL(image) : petDto.profile,
+      const userInfo = User["ROLE_USER"];
+      const newData = {
+        ...userInfo,
+        content: {
+          ...userInfo.content,
+          pet: {
+            ...petDto,
+            // image 있고 isChaProfile true -> 새로운 이미지로 변경
+            // image 있고 isChaProfile false -> 불가능한 조건
+            // image 없고 isChaProfile false -> 기존 이미지 사용
+            // image 없고 isChaProfile true -> 이미지 삭제
+            profile: image
+              ? petDto.isChaProfile
+                ? URL.createObjectURL(image)
+                : null // 발생 될 수 없는 조건
+              : petDto.isChaProfile
+                ? null
+                : userInfo.content.pet.profile,
+          },
         },
-      },
-    };
-    User["ROLE_USER"] = newData;
+      };
+      User["ROLE_USER"] = newData;
 
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
-  }),
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
 ];
 
 // * 나중에 msw 사용을 대비하여 만들었습니다.
