@@ -4,16 +4,19 @@ import { HttpError } from "./error";
 
 type Method = "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
 
-interface Response<T = undefined> {
+interface Response {
   code: number;
   message: string;
-  content: T extends undefined ? never : T;
+}
+
+interface SuccessResponse<T> extends Response {
+  content: T;
 }
 
 interface FetcherOptions {
   method: Method;
   headers?: HeadersInit;
-  body?: RequestInit["body"];
+  body?: unknown;
   credentials?: RequestInit["credentials"];
   withToken?: boolean;
 }
@@ -31,15 +34,17 @@ const fetcher = async <T>(
       if (token) httpHeaders.set("Authorization", token);
     }
 
-    const response = await fetch(`${API_BASE_URL + url}`, {
+    const options: RequestInit = {
       method,
-      headers,
-      body:
-        httpHeaders.get("Content-Type") === "application/json"
-          ? JSON.stringify(body)
-          : body,
+      headers: httpHeaders,
       credentials,
-    });
+    };
+
+    if (body) {
+      options.body = body instanceof FormData ? body : JSON.stringify(body);
+    }
+
+    const response = await fetch(`${API_BASE_URL + url}`, options);
 
     if (!response.ok) {
       const { code, message }: Response = await response.json();
@@ -47,13 +52,15 @@ const fetcher = async <T>(
       throw new HttpError({ code, message });
     }
 
-    const { content }: Response<T> = await response.json();
+    const { content }: SuccessResponse<T> = await response.json();
 
     return content;
   } catch (error) {
     if (error instanceof HttpError) {
       console.error(error.message);
     }
+
+    throw error;
   }
 };
 
