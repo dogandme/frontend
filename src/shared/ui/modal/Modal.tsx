@@ -47,7 +47,7 @@ const Header = ({
 
   return (
     <header
-      className={`flex justify-between ${modalType === "fullPage" && "py-2"}`}
+      className={`flex justify-between ${modalType === "fullPage" && "py-2 pl-4 pr-1"}`}
     >
       <h1 className="title-1 text-grey-900">{children}</h1>
       <button
@@ -64,9 +64,17 @@ const Header = ({
 const Content = ({
   children,
   className = "",
-}: Omit<ModalProps, "modalType">) => (
-  <section className={`flex flex-col gap-8 ${className}`}>{children}</section>
-);
+}: Omit<ModalProps, "modalType">) => {
+  const modalType = useContext(ModalTypeContext);
+
+  return (
+    <section
+      className={`flex flex-col gap-8 ${className} ${modalType === "fullPage" && "px-4"}`}
+    >
+      {children}
+    </section>
+  );
+};
 
 interface ModalFooterProps {
   children: React.ReactNode;
@@ -75,8 +83,12 @@ interface ModalFooterProps {
 }
 
 const Footer = ({ children, axis, className = "" }: ModalFooterProps) => {
+  const modalType = useContext(ModalTypeContext);
+
   return (
-    <section className={`flex gap-2 flex-${axis} ${className}`}>
+    <section
+      className={`flex gap-2 flex-${axis} ${modalType === "fullPage" && "px-4"} ${className} `}
+    >
       <ModalFooterAxisContext.Provider value={axis}>
         {children}
       </ModalFooterAxisContext.Provider>
