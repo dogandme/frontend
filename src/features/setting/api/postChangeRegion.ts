@@ -3,7 +3,7 @@ import type { Region } from "@/features/auth/api/region";
 import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
-export interface PutChangeRegionRequestData {
+export interface PostChangeRegionRequestData {
   newIds: Region["id"][];
 }
 
@@ -12,11 +12,11 @@ interface PutChangeRegionResponseData {
   message: string;
 }
 
-const putChangeRegion = async (
-  changeRegionData: PutChangeRegionRequestData,
+const postChangeRegion = async (
+  changeRegionData: PostChangeRegionRequestData,
 ) => {
   const response = await fetch(SETTING_END_POINT.CHANGE_REGION, {
-    method: "PUT",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: useAuthStore.getState().token!,
@@ -32,11 +32,11 @@ const putChangeRegion = async (
   return data;
 };
 
-export const usePutChangeRegion = () => {
+export const usePostChangeRegion = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: putChangeRegion,
-    mutationKey: ["putChangeRegion"],
+    mutationFn: postChangeRegion,
+    mutationKey: ["postChangeRegion"],
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["myInfo"],

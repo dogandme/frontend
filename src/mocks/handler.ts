@@ -8,7 +8,7 @@ import {
 } from "@/features/auth/constants";
 import { MarkingListRequest } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
-import { PutChangeRegionRequestData } from "@/features/setting/api/putChangeRegion";
+import { PostChangeRegionRequestData } from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
@@ -617,7 +617,7 @@ const getNewAccessTokenHandler = [
 ];
 
 const putChangeRegionHandler = [
-  http.put<PathParams, PutChangeRegionRequestData>(
+  http.post<PathParams, PostChangeRegionRequestData>(
     SETTING_END_POINT.CHANGE_REGION,
     async ({ request }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
