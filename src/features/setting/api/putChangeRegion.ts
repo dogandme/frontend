@@ -4,8 +4,7 @@ import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
 export interface PutChangeRegionRequestData {
-  removeIds: Region["id"][];
-  addIds: Region["id"][];
+  newIds: Region["id"][];
 }
 
 interface PutChangeRegionResponseData {

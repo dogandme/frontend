@@ -11,26 +11,10 @@ export const useChangeRegionModal = (regions: MyInfo["regions"]) => {
     () => (
       <RegionModal
         onClose={onClose}
-        onSave={(regionListInRegionModal) => {
-          /* 기존 저장 된 regionListInRegionModal에서 추가 되거나 삭제 될 region id 들을 필터링 합니다.  */
-          const prevRegionIds = regions.map(({ id }) => id);
-          const nextRegionIds = regionListInRegionModal.map(({ id }) => id);
-
-          const removeIds = prevRegionIds.filter(
-            (id) => !nextRegionIds.includes(id),
-          );
-          const addIds = nextRegionIds.filter(
-            (id) => !prevRegionIds.includes(id),
-          );
-
-          if (removeIds.length === 0 && addIds.length === 0) {
-            onClose();
-            return;
-          }
+        onSave={(regionList) => {
           putChangeRegion(
             {
-              removeIds,
-              addIds,
+              newIds: regionList.map((region) => region.id),
             },
             {
               onSuccess: onClose,
