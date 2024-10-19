@@ -1,13 +1,9 @@
-import { PetInfoRequestData, usePostPetInfo } from "@/features/auth/api";
+import { usePostPetInfo } from "@/features/auth/api";
 import { PetInformationForm } from "@/features/auth/ui";
 import { AuthNavigationBar } from "@/features/auth/ui";
 
 const PetInfoPage = () => {
   const { mutate: postPetInformation, isPending } = usePostPetInfo();
-
-  const handleSubmit = (formObject: PetInfoRequestData) => {
-    postPetInformation(formObject);
-  };
 
   return (
     <div>
@@ -18,7 +14,18 @@ const PetInfoPage = () => {
         <h1 className="headline-3 overflow-ellipsis text-center text-grey-900">
           우리 댕댕이를 소개해 주세요
         </h1>
-        <PetInformationForm onSubmit={handleSubmit} disabled={isPending} />
+        <PetInformationForm
+          onSubmit={({ name, breed, description, personalities, profile }) =>
+            postPetInformation({
+              name,
+              breed,
+              description,
+              personalities,
+              image: profile.file,
+            })
+          }
+          disabled={isPending}
+        />
       </main>
     </div>
   );

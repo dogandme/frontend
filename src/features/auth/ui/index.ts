@@ -5,3 +5,5 @@ export * from "./petInformationForm";
 export { default as UserInfoRegistrationForm } from "./UserInfoRegistrationForm";
 export * from "./authNavigationBar";
 export * from "./regionModal";
+export * from "./dashboard";
+

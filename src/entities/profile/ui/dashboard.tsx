@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { API_BASE_URL } from "@/shared/constants";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { DividerLine } from "@/shared/ui/divider";
-import { EditIcon, DropDownIcon } from "@/shared/ui/icon";
+import { DropDownIcon } from "@/shared/ui/icon";
 import { PetInfo, UserInfo } from "../api";
 
 type ProfileImageProps = Pick<PetInfo, "profile"> & Pick<UserInfo, "nickname">;
@@ -43,16 +43,6 @@ export const ProfileHeading = ({
           팔로잉 <span className="text-grey-900">{followings.length}</span>
         </span>
       </p>
-    </div>
-  );
-};
-
-export const ProfileEditButton = () => {
-  return (
-    <div className="flex flex-grow justify-end">
-      <button className="w-6 h-6" aria-label="프로필 설정 수정 하기 버튼">
-        <EditIcon />
-      </button>
     </div>
   );
 };
