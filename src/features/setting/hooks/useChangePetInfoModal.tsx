@@ -1,6 +1,5 @@
 import { PetInformationForm } from "@/features/auth/ui";
 import { UserInfo } from "@/entities/profile/api";
-import { MASCOT_IMAGE_URL } from "@/shared/constants";
 import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePetInformation } from "../api";
@@ -8,9 +7,6 @@ import { usePutChangePetInformation } from "../api";
 export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
   const { mutate: putChangePetInformation, isPending } =
     usePutChangePetInformation();
-
-  const isProfileChanged = (profile: File | null) =>
-    pet.profile && profile === null;
 
   const { handleOpen, onClose } = useModal(() => (
     <Modal modalType="fullPage">
@@ -30,18 +26,24 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
             ...pet,
             profile: {
               name: "",
-              url: pet.profile || MASCOT_IMAGE_URL,
+              url: pet.profile,
               file: null,
             },
           }}
-          onSubmit={({ profile, ...rest }) => {
-            // 수정에 사용하는 formObj 에서 prevProfile은 새로운 파일이 존재 할 경우엔 null 값을
-            // 넣어주고, 기존의 프로필 이미지를 사용할 경우엔 기존의 프로필 이미지를 넣어줍니다.
+          onSubmit={({ profile, name, breed, personalities, description }) => {
+            /**
+             * 새로운 File 이 추가되지 않았거나
+             * initialState 로 건내준 pet 정보와 변경 된 정보가 변경되지 않았다면
+             * isCharProfile 을 false 로 설정합니다.
+             */
             putChangePetInformation(
               {
-                profile,
-                ...rest,
-                prevProfile: isProfileChanged(profile) ? null : pet.profile,
+                name,
+                breed,
+                personalities,
+                description,
+                isChaProfile: !!profile.file || profile.url !== pet.profile,
+                image: profile.file,
               },
               {
                 onSuccess: onClose,
