@@ -10,7 +10,6 @@ import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
-import { PetInfoRequestData } from "../api";
 import { personalities, dogBreeds } from "../constants/form";
 import {
   createPetInformationFormState,
@@ -39,7 +38,7 @@ const PetInformationFormProvider = ({
 
 interface PetInformationFormProps {
   initialState?: PetInformationFormExternalState;
-  onSubmit: (petInfoFormState: PetInfoRequestData) => void;
+  onSubmit: (petInfoFormState: PetInformationFormExternalState) => void;
   disabled?: boolean;
 }
 
@@ -336,7 +335,7 @@ const SubmitButton = ({
       breed,
       personalities,
       description,
-      profile: profile.file,
+      profile,
     });
   };
   return (
