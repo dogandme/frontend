@@ -1,8 +1,8 @@
+import { ProfileEditButton } from "@/features/auth/ui";
 import { UserInfo } from "@/entities/profile/api";
 import {
   PetPersonalityList,
   PetDescription,
-  ProfileEditButton,
   ProfileHeading,
   ProfileImage,
 } from "@/entities/profile/ui";
@@ -39,7 +39,7 @@ export const ProfileOverView = ({
           followings={followings}
         />
         {/* TODO 내 페이지인지, 남의 페이지인지에 따라 다른 버튼을 보여줘야 함 */}
-        <ProfileEditButton />
+        <ProfileEditButton pet={pet} />
       </div>
       {/* 반려동물 소개와 성격 리스트 */}
       <PetDescription description={description} />

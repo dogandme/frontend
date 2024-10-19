@@ -10,7 +10,6 @@ import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
-import { PetInfoRequestData } from "../api";
 import { personalities, dogBreeds } from "../constants/form";
 import {
   createPetInformationFormState,
@@ -39,7 +38,7 @@ const PetInformationFormProvider = ({
 
 interface PetInformationFormProps {
   initialState?: PetInformationFormExternalState;
-  onSubmit: (petInfoFormState: PetInfoRequestData) => void;
+  onSubmit: (petInfoFormState: PetInformationFormExternalState) => void;
   disabled?: boolean;
 }
 
@@ -125,7 +124,7 @@ const ProfileInput = () => {
       <button
         className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(${profile.url})`,
+          backgroundImage: `url(${profile.url || MASCOT_IMAGE_URL})`,
         }}
         onClick={onOpen}
         aria-label="profile-image-button"
@@ -336,7 +335,7 @@ const SubmitButton = ({
       breed,
       personalities,
       description,
-      profile: profile.file,
+      profile,
     });
   };
   return (

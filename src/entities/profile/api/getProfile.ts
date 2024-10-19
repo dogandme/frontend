@@ -15,7 +15,7 @@ type PetName = string;
 type Breed = string;
 type PetDescription = string;
 type Personalities = string[];
-type ProfileImageUrl = string;
+export type ProfileImageUrl = string;
 
 export interface PetInfo {
   name: PetName;

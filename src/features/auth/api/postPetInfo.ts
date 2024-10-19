@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { PetInfo } from "@/entities/profile/api";
 import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";
 
-interface PetInfoResponseData {
+interface PostPetInfoResponseData {
   code: number;
   message: string;
   content: {
@@ -13,41 +14,26 @@ interface PetInfoResponseData {
   };
 }
 
-export interface PetInfoForm {
-  name: string;
-  breed: string;
-  personalities: string[];
-  description: string;
+export type PetInfoFormObject = Omit<PetInfo, "profile">;
+export interface ProfileImage {
+  image: File | null;
 }
 
-export interface Profile {
-  profile: File | null;
-}
+export type PostPetInfoRequestData = PetInfoFormObject & ProfileImage;
 
-export type PetInfoRequestData = PetInfoForm & Profile;
-
-const postPetInfo = async (
-  petInfoForm: PetInfoRequestData,
-): Promise<PetInfoResponseData> => {
-  const { name, personalities, description, breed, profile } = petInfoForm;
-
+const postPetInfo = async ({
+  image,
+  ...petInfoFormObject
+}: PostPetInfoRequestData): Promise<PostPetInfoResponseData> => {
   const formData = new FormData();
 
   // 이미지 파일은 파일 이름과 확장자를 붙혀 보내야 합니다.
-  if (profile) {
-    const profileExtension = profile.type.split("/")[1];
-    formData.append("image", profile, `${name}-profile.${profileExtension}`);
+  if (image) {
+    const profileExtension = image.type.split("/")[1];
+    formData.append("image", image, `${name}-profile.${profileExtension}`);
   }
 
-  formData.append(
-    "petSignUpDto",
-    JSON.stringify({
-      name,
-      personalities,
-      description,
-      breed,
-    }),
-  );
+  formData.append("petSignUpDto", JSON.stringify(petInfoFormObject));
 
   const response = await fetch(SIGN_UP_END_POINT.PET_INFO, {
     method: "POST",
@@ -78,7 +64,7 @@ export const usePostPetInfo = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
-  return useMutation<PetInfoResponseData, Error, PetInfoRequestData>({
+  return useMutation<PostPetInfoResponseData, Error, PostPetInfoRequestData>({
     mutationFn: postPetInfo,
     onSuccess: (data) => {
       const { role, authorization: token } = data.content;
