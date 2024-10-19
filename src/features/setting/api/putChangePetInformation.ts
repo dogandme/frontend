@@ -3,6 +3,7 @@ import { PostPetInfoRequestData } from "@/features/auth/api";
 import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
+// TODO 타입 리팩토링 하며 변경 하기
 export interface PutChangePetInformationRequest extends PostPetInfoRequestData {
   isChaProfile: boolean;
 }
