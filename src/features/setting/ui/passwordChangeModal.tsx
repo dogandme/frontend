@@ -111,9 +111,7 @@ export const PasswordChangeModal = ({
     (state) => state.reset,
   );
 
-  const { mutate: putChangePassword, isPending } = usePutChangePassword({
-    onSuccessCallback: onClose,
-  });
+  const { mutate: putChangePassword, isPending } = usePutChangePassword();
 
   const handleSave = () => {
     const {

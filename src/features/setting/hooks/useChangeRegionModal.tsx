@@ -12,14 +12,9 @@ export const useChangeRegionModal = (regions: MyInfo["regions"]) => {
       <RegionModal
         onClose={onClose}
         onSave={(regionList) => {
-          putChangeRegion(
-            {
-              newIds: regionList.map((region) => region.id),
-            },
-            {
-              onSuccess: onClose,
-            },
-          );
+          putChangeRegion({
+            newIds: regionList.map((region) => region.id),
+          });
         }}
         initialState={{
           regionList: regions,

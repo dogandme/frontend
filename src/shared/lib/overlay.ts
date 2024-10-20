@@ -18,7 +18,7 @@ export const useOverlay: UseOverlay = (
 ) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { disableInteraction = true, beforeClose, afterClose } = options;
-  const id = generateId();
+  const [id] = useState(() => generateId()); // 불변하는 상태값 생성
 
   const addOverlay = useOverlayStore((state) => state.addOverlay);
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
