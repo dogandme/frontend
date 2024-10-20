@@ -34,7 +34,7 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         onSelect={putChangeAge}
-        isSelected={(key) => key === age}
+        isSelected={(key) => +key === +age}
       />
     </>
   );
