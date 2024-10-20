@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
-import { useGetAddressFromLatLng } from "@/entities/map/api";
 import { MapSnackbar } from "@/entities/map/ui";
+import { useGetAddressFromLatLng } from "@/entities/marking/api";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -13,7 +13,7 @@ import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { useMapStore } from "../../map/store/map";
-import { usePostMarkingForm, usePostTempMarkingForm } from "../api";
+import { usePostAddMarking, usePostTempMarkingForm } from "../api";
 import {
   MARKING_ADD_ERROR_MESSAGE,
   MAX_IMAGE_LENGTH,
@@ -295,7 +295,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     ),
   );
 
-  const { mutate: postMarkingData } = usePostMarkingForm({
+  const { mutate: postMarkingData } = usePostAddMarking({
     onSuccess: () => {
       onCloseMarkingModal();
       onOpenSnackbar();
@@ -333,7 +333,6 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 
     postMarkingData(
       {
-        token,
         lat,
         lng,
         region,

@@ -1,5 +1,5 @@
 export * from "./getMarkingList";
-export * from "./postMarkingForm";
+export * from "./postAddMarking";
 export * from "./postTempMarkingForm";
 export * from "./deleteMarking";
 export * from "./postLikeMarking";
