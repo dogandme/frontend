@@ -26,7 +26,7 @@ export const PinMarker = () => {
         lat: lat,
         lng: lng,
       }}
-      imageUrl={`${API_BASE_URL}/markings/image/${markingId}/${images[0]}`}
+      imageUrl={`${API_BASE_URL}/markings/image/${markingId}/${images[0].imageUrl}`}
       alt={images[0].id.toString()}
     />
   ));
