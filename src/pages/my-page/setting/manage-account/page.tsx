@@ -7,7 +7,6 @@ import type { MyInfo } from "@/entities/auth/api";
 import { useGetMyInfo } from "@/entities/auth/api";
 import { SOCIAL_TYPE } from "@/entities/auth/constants";
 import { useModal } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
@@ -15,8 +14,7 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 export const AccountManagementPage = () => {
   const hasPermission = useSettingPermission("NONE");
 
-  const token = useAuthStore((state) => state.token);
-  const { data: userInfo } = useGetMyInfo({ token });
+  const { data: userInfo } = useGetMyInfo();
 
   if (!userInfo) {
     return null;
