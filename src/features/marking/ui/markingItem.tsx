@@ -56,7 +56,7 @@ const MarkingManageButton = ({
     const { token, role } = useAuthStore.getState();
 
     if (token && role === "ROLE_USER") {
-      deleteMarking({ token, markingId });
+      deleteMarking({ markingId });
     }
 
     setIsOpen(false);
