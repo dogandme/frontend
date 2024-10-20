@@ -3,7 +3,7 @@ import { API_BASE_URL } from "@/shared/constants";
 export const LOGIN_END_POINT = {
   GOOGLE: `${API_BASE_URL}/oauth2/authorization/google`,
   NAVER: `${API_BASE_URL}/oauth2/authorization/naver`,
-  EMAIL: `${API_BASE_URL}/login`,
+  EMAIL: "/login",
 };
 
 export const SIGN_UP_END_POINT = {
