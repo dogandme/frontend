@@ -1,6 +1,6 @@
 import { useRef, createContext } from "react";
 import {
-  Region,
+  type Region,
   useGetRegionByKeyword,
   useGetRegionByLatLng,
 } from "@/entities/auth/api";

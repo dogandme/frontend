@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Region } from "@/entities/auth/api";
+import type { Region } from "@/entities/auth/api";
 import {
   AgreementCheckbox,
   SelectOpener,

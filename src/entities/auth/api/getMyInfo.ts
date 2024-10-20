@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Region } from "@/features/auth/api/region";
 import { apiClient } from "@/shared/lib";
 import { MY_INFO_END_POINT, SOCIAL_TYPE } from "../constants";
+import type { Region } from "./getRegion";
 
 export interface MyInfo {
   email: string;
