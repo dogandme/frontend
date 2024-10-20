@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useResearchMarkingList } from "@/features/map/hooks";
-import { AuthStore, useAuthStore } from "@/shared/store";
+import { apiClient } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store";
 import { MARKING_REQUEST_URL } from "../constants/requestUrl";
 
 interface Pet {
@@ -51,58 +52,35 @@ export interface Marking {
   images: Image[];
 }
 
-export interface MarkingListRequest {
-  token: AuthStore["token"];
+export interface GetMarkingListRequestData {
   southWestLat: number;
   southWestLng: number;
   northEastLat: number;
   northEastLng: number;
 }
 
-interface MarkingListResponse {
-  code: number;
-  message: string;
-  content: Marking[];
-}
-
 const getMarkingList = async ({
-  token,
   southWestLat,
   southWestLng,
   northEastLat,
   northEastLng,
-}: MarkingListRequest) => {
-  const options: RequestInit = {
-    method: "GET",
-  };
+}: GetMarkingListRequestData) => {
+  const hasToken = !!useAuthStore.getState().token;
 
-  if (token) {
-    options.headers = {
-      Authorization: token,
-    };
-  }
-  const response = await fetch(
+  return apiClient.get<Marking[]>(
     MARKING_REQUEST_URL.SEARCH_MARKING({
       southWestLat,
       southWestLng,
       northEastLat,
       northEastLng,
     }),
-    options,
+    {
+      withToken: hasToken,
+    },
   );
-
-  const data: MarkingListResponse = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-
-  return data;
 };
 
 export const useGetMarkingList = () => {
-  const token = useAuthStore((state) => state.token);
-
   const { bounds } = useResearchMarkingList();
 
   const southWestLat = bounds?.southWest.lat;
@@ -110,10 +88,9 @@ export const useGetMarkingList = () => {
   const northEastLat = bounds?.northEast.lat;
   const northEastLng = bounds?.northEast.lng;
 
-  return useQuery<MarkingListResponse, Error, MarkingListResponse["content"]>({
+  return useQuery({
     queryKey: [
       "markingList",
-      token,
       southWestLat,
       southWestLng,
       northEastLat,
@@ -121,13 +98,11 @@ export const useGetMarkingList = () => {
     ],
     queryFn: () =>
       getMarkingList({
-        token,
         southWestLat: southWestLat!,
         southWestLng: southWestLng!,
         northEastLat: northEastLat!,
         northEastLng: northEastLng!,
       }),
-    select: (data) => data.content,
     enabled:
       !!bounds &&
       !!southWestLat &&

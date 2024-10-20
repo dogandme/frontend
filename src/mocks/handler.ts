@@ -6,7 +6,7 @@ import {
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
-import { MarkingListRequest } from "@/features/marking/api";
+import { GetMarkingListRequestData } from "@/features/marking/api";
 import { MARKING_REQUEST_URL } from "@/features/marking/constants";
 import { PostChangeRegionRequestData } from "@/features/setting/api";
 import {
@@ -297,7 +297,7 @@ export const markingModalHandlers = [
     });
   }),
   http.get<{
-    [K in keyof Omit<MarkingListRequest, "token">]: string;
+    [K in keyof Omit<GetMarkingListRequestData, "token">]: string;
   }>(`${API_BASE_URL}/markings/search`, async ({ request }) => {
     const token = request.headers.get("Authorization");
 
