@@ -71,7 +71,7 @@ export const PetDescription = ({ description }: PetIntroduceProps) => {
         >
           {description}
         </p>
-        {isEllipsis && (
+        {description.length > 0 && isEllipsis && (
           <button
             className="w-4 h-4"
             onClick={handleClick}
