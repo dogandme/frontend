@@ -18,7 +18,7 @@ import {
   Marking,
   useDeleteSavedMarking,
   usePostLikeMarking,
-  usePostSavedMarking,
+  usePostSaveMarking,
   useDeleteLikeMarking,
 } from "../api";
 import { useDeleteMarking } from "../api";
@@ -123,7 +123,7 @@ export const MarkingItem = ({
     else postLikeMarking({ markingId });
   };
 
-  const { mutate: postSavedMarking } = usePostSavedMarking();
+  const { mutate: postSaveMarking } = usePostSaveMarking();
   const { mutate: deleteSavedMarking } = useDeleteSavedMarking();
 
   const handleSave = () => {
@@ -131,8 +131,8 @@ export const MarkingItem = ({
 
     if (!token || role === "ROLE_NONE" || role === null) return;
 
-    if (isBookmarked) deleteSavedMarking({ markingId, token });
-    else postSavedMarking({ markingId, token });
+    if (isBookmarked) deleteSavedMarking({ markingId });
+    else postSaveMarking({ markingId });
   };
 
   return (
