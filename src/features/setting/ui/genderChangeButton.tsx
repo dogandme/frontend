@@ -3,13 +3,13 @@ import { genderMap, GenderMapKey } from "@/features/auth/constants";
 import type { MyInfo } from "@/entities/auth/api";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
-import { PutChangeAgeRequestData, usePutChangeGender } from "../api";
+import { PutChangeGenderRequestData, usePutChangeGender } from "../api";
 
 export const GenderChangeButton = ({ gender }: Pick<MyInfo, "gender">) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: putChangeGender } = usePutChangeGender();
 
-  const handleSelect = ({ gender: newGender }: PutChangeAgeRequestData) => {
+  const handleSelect = ({ gender: newGender }: PutChangeGenderRequestData) => {
     if (gender === newGender) {
       return;
     }
