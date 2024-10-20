@@ -14,10 +14,10 @@ import { CancelIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
 import {
-  usePostDuplicateNicknameState,
+  usePostCheckDuplicateNicknameState,
   usePutUserInfoRegistration,
 } from "../api";
-import { Region } from "../api/region";
+import { Region } from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
@@ -302,7 +302,7 @@ const UserInfoRegistrationForm = () => {
     },
   });
 
-  const { isDuplicateNickname } = usePostDuplicateNicknameState();
+  const { isDuplicateNickname } = usePostCheckDuplicateNicknameState();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

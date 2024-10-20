@@ -6,7 +6,10 @@ import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { Snackbar } from "@/shared/ui/snackbar";
-import { usePostDuplicateNicknameState, usePutChangeNickname } from "../api";
+import {
+  usePostCheckDuplicateNicknameState,
+  usePutChangeNickname,
+} from "../api";
 import { validateNickname } from "../lib";
 import { NicknameInput } from "./NicknameInput";
 
@@ -49,7 +52,7 @@ export const ChangeNicknameModal = ({
       onSuccessCallback: onClose,
     });
   const { isDuplicateNickname, isPending: isDuplicateCheckPending } =
-    usePostDuplicateNicknameState();
+    usePostCheckDuplicateNicknameState();
 
   const handleSubmit = () => {
     const { token } = useAuthStore.getState();
