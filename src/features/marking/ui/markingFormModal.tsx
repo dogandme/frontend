@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
-import { MapSnackbar } from "@/entities/map/ui";
-import { useModal, useSnackBar } from "@/shared/lib/overlay";
+import { useModal } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -12,7 +11,6 @@ import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { useGetAddressFromLatLng } from "../../map/api";
-import { useMapStore } from "../../map/store/map";
 import { usePostMarkingForm, usePostTempMarkingForm } from "../api";
 import {
   MARKING_ADD_ERROR_MESSAGE,
@@ -43,8 +41,8 @@ export const MarkingFormModal = ({
         <MarkingTextArea />
         {/* 제출 버튼들 */}
         <div className="flex flex-col gap-2">
-          <SaveButton onCloseMarkingModal={onCloseMarkingModal} />
-          <TemporarySaveButton onCloseMarkingModal={onCloseMarkingModal} />
+          <SaveButton />
+          <TemporarySaveButton />
         </div>
       </section>
     </Modal>
@@ -279,28 +277,12 @@ const MarkingTextArea = () => {
   );
 };
 
-const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
+const SaveButton = () => {
   const map = useMap();
 
-  const setMode = useMapStore((state) => state.setMode);
-  const resetMarkingFormStore = useMarkingFormStore(
-    (state) => state.resetMarkingFormStore,
-  );
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
-  const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
-    () => (
-      <MapSnackbar onClose={onCloseSnackbar}>
-        내 마킹이 추가되었습니다
-      </MapSnackbar>
-    ),
-  );
 
-  const { mutate: postMarkingData } = usePostMarkingForm({
-    onSuccess: () => {
-      onCloseMarkingModal();
-      onOpenSnackbar();
-    },
-  });
+  const { mutate: postMarkingData } = usePostMarkingForm();
 
   const handleSave = async () => {
     const { token } = useAuthStore.getState();
@@ -331,28 +313,15 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     const lat = center.lat();
     const lng = center.lng();
 
-    postMarkingData(
-      {
-        token,
-        lat,
-        lng,
-        region,
-        isVisible,
-        images: images.map((image) => image.file),
-        content,
-      },
-      {
-        onSuccess: () => {
-          onCloseMarkingModal();
-          resetMarkingFormStore();
-          setMode("view");
-          onOpenSnackbar();
-        },
-        onError: (error) => {
-          throw new Error(error.message);
-        },
-      },
-    );
+    postMarkingData({
+      token,
+      lat,
+      lng,
+      region,
+      isVisible,
+      images: images.map((image) => image.file),
+      content,
+    });
   };
 
   return (
@@ -367,27 +336,11 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     </Button>
   );
 };
-const TemporarySaveButton = ({
-  onCloseMarkingModal,
-}: MarkingFormModalProps) => {
+const TemporarySaveButton = () => {
   const map = useMap();
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
 
-  const { handleOpen: onOpenSnackbar, onClose: onCloseSnackbar } = useSnackBar(
-    () => (
-      <MapSnackbar onClose={onCloseSnackbar}>
-        <p>임시저장 되었습니다</p>
-        <p>내 마킹에서 저장을 완료해 주세요</p>
-      </MapSnackbar>
-    ),
-  );
-
-  const { mutate: postTempMarkingData } = usePostTempMarkingForm({
-    onSuccess: () => {
-      onCloseMarkingModal();
-      onOpenSnackbar();
-    },
-  });
+  const { mutate: postTempMarkingData } = usePostTempMarkingForm();
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
