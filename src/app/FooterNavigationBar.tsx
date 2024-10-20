@@ -19,10 +19,8 @@ const footerNavigationBarStyles = {
 export const FooterNavigationBar = () => {
   const { active, inactive, base } = footerNavigationBarStyles;
   const nickname = useAuthStore((state) => state.nickname);
-  const token = useAuthStore((state) => state.token);
   const { data } = useGetProfile({
     nickname,
-    token,
   });
   // TODO API 에서 받아온 프로필 이미지 사용하기
   const profileImageUrl = data?.pet?.profile
