@@ -20,7 +20,7 @@ export type ProfileImageUrl = string;
 export interface PetInfo {
   name: PetName;
   breed: Breed;
-  description: PetDescription;
+  description?: PetDescription;
   personalities: Personalities;
   profile: ProfileImageUrl;
 }

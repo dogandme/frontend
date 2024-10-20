@@ -9,7 +9,9 @@ import { PetInfo, UserInfo } from "../api";
 type ProfileImageProps = Pick<PetInfo, "profile"> & Pick<UserInfo, "nickname">;
 type ProfileHeadingProps = Pick<PetInfo, "name" | "breed"> &
   Pick<UserInfo, "followers" | "followings">;
-type PetIntroduceProps = Pick<PetInfo, "description">;
+type PetIntroduceProps = {
+  description: NonNullable<PetInfo["description"]>;
+};
 type PetCharacterListProps = Pick<PetInfo, "personalities">;
 
 export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {

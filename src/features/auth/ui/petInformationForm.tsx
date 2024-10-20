@@ -288,7 +288,7 @@ const PetDescriptionTextArea = () => {
       placeholder="우리 댕댕이를 간단히 소개해주세요"
       statusText=""
       onChange={(e) => setDescription(e.target.value)}
-      defaultValue={description}
+      defaultValue={description || ""}
     />
   );
 };
