@@ -13,7 +13,7 @@ import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { useMapStore } from "../../map/store/map";
-import { usePostAddMarking, usePostTempMarkingForm } from "../api";
+import { usePostAddMarking, usePostAddTempMarking } from "../api";
 import {
   MARKING_ADD_ERROR_MESSAGE,
   MAX_IMAGE_LENGTH,
@@ -381,7 +381,7 @@ const TemporarySaveButton = ({
     ),
   );
 
-  const { mutate: postTempMarkingData } = usePostTempMarkingForm({
+  const { mutate: postAddTempMarking } = usePostAddTempMarking({
     onSuccess: () => {
       onCloseMarkingModal();
       onOpenSnackbar();
@@ -410,8 +410,7 @@ const TemporarySaveButton = ({
     const lat = center.lat();
     const lng = center.lng();
 
-    postTempMarkingData({
-      token,
+    postAddTempMarking({
       lat,
       lng,
       region,
