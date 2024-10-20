@@ -6,10 +6,9 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Snackbar } from "@/shared/ui/snackbar";
 import {
-  CheckVerificationCodeRequestData,
-  CheckVerificationCodeResponse,
+  PostCheckCodeRequestData,
   PostSendCodeRequestData,
-  usePostCheckVerificationCode,
+  usePostCheckCode,
   usePostSendCode,
   usePostSignUpByEmail,
 } from "../api";
@@ -45,11 +44,7 @@ const Email = () => {
   } = usePostSendCode();
 
   const checkCodeResponseCacheArr = useMutationState<
-    MutationState<
-      CheckVerificationCodeResponse,
-      Error,
-      CheckVerificationCodeRequestData
-    >
+    MutationState<unknown, Error, PostCheckCodeRequestData>
   >({
     filters: {
       mutationKey: ["checkVerificationCode"],
@@ -193,7 +188,7 @@ const VerificationCode = () => {
     isError: isErrorCheckCode,
     isSuccess: isSuccessCheckCode,
     variables,
-  } = usePostCheckVerificationCode();
+  } = usePostCheckCode();
 
   const hasCodeChangedSinceCheckCodeRequest =
     variables?.authNum !== verificationCode;

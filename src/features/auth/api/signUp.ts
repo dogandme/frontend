@@ -8,51 +8,6 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { AuthStore, useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
-export interface CheckVerificationCodeRequestData {
-  email: string;
-  authNum: string;
-}
-
-export interface CheckVerificationCodeResponse {
-  code: number;
-  message: string;
-}
-
-const postCheckVerificationCode = async ({
-  email,
-  authNum,
-}: CheckVerificationCodeRequestData) => {
-  const response = await fetch(SIGN_UP_END_POINT.CHECK_VERIFICATION_CODE, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, authNum }),
-  });
-
-  const data: CheckVerificationCodeResponse = await response.json();
-
-  // 401: 인증번호 불일치
-  if (!response.ok) {
-    const { message } = data;
-
-    throw new Error(message);
-  }
-
-  return data;
-};
-
-export const usePostCheckVerificationCode = () => {
-  return useMutation<
-    CheckVerificationCodeResponse,
-    Error,
-    CheckVerificationCodeRequestData
-  >({
-    mutationFn: postCheckVerificationCode,
-    mutationKey: ["checkVerificationCode"],
-  });
-};
-
 interface SignUpByEmailResponse {
   code: number;
   message: string;
