@@ -47,6 +47,10 @@ const fetcher = async <T>(
       if (token) httpHeaders.set("Authorization", token);
     }
 
+    if (body && !(body instanceof FormData)) {
+      httpHeaders.set("Content-Type", "application/json");
+    }
+
     const options: RequestInit = {
       method,
       headers: httpHeaders,
