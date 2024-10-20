@@ -1,6 +1,6 @@
 import { GetMarkingListRequestData } from "../api";
 
-export const MARKING_REQUEST_URL = {
+export const MARKING_END_POINT = {
   SEARCH_MARKING: ({
     southWestLat,
     southWestLng,

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useResearchMarkingList } from "@/features/map/hooks";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_REQUEST_URL } from "../constants/requestUrl";
+import { MARKING_END_POINT } from "../constants/endPoint";
 
 interface Pet {
   petId: number;
@@ -68,7 +68,7 @@ const getMarkingList = async ({
   const hasToken = !!useAuthStore.getState().token;
 
   return apiClient.get<Marking[]>(
-    MARKING_REQUEST_URL.SEARCH_MARKING({
+    MARKING_END_POINT.SEARCH_MARKING({
       southWestLat,
       southWestLng,
       northEastLat,

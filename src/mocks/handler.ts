@@ -7,7 +7,7 @@ import {
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
 import { GetMarkingListRequestData } from "@/features/marking/api";
-import { MARKING_REQUEST_URL } from "@/features/marking/constants";
+import { MARKING_END_POINT } from "@/features/marking/constants";
 import { PostChangeRegionRequestData } from "@/features/setting/api";
 import {
   PutChangeAgeRequestData,
@@ -274,7 +274,7 @@ export const markingModalHandlers = [
       });
     },
   ),
-  http.post<PathParams>(MARKING_REQUEST_URL.ADD, async ({ request }) => {
+  http.post<PathParams>(MARKING_END_POINT.ADD, async ({ request }) => {
     /**
      * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
      */
@@ -321,7 +321,7 @@ export const markingModalHandlers = [
       { status: 200, statusText: "success" },
     );
   }),
-  http.delete<PathParams>(MARKING_REQUEST_URL.DELETE, () => {
+  http.delete<PathParams>(MARKING_END_POINT.DELETE, () => {
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -351,7 +351,7 @@ export const markingModalHandlers = [
       message: "success",
     });
   }),
-  http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async ({ request }) => {
+  http.post<PathParams>(MARKING_END_POINT.SAVE_TEMP, async ({ request }) => {
     /**
      * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
      */

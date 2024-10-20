@@ -1,13 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
-import { MARKING_REQUEST_URL } from "../constants";
+import { MARKING_END_POINT } from "../constants";
 
 interface PostLikeMarkingRequestData {
   markingId: number;
 }
 
 const postLikeMarking = async ({ markingId }: PostLikeMarkingRequestData) => {
-  return apiClient.post(MARKING_REQUEST_URL.LIKE(markingId), {
+  return apiClient.post(MARKING_END_POINT.LIKE(markingId), {
     withToken: true,
   });
 };

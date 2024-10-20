@@ -1,13 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
-import { MARKING_REQUEST_URL } from "../constants";
+import { MARKING_END_POINT } from "../constants";
 
 interface DeleteMarkingRequest {
   markingId: number;
 }
 
 const deleteMarking = async ({ markingId }: DeleteMarkingRequest) => {
-  return apiClient.delete(MARKING_REQUEST_URL.DELETE, {
+  return apiClient.delete(MARKING_END_POINT.DELETE, {
     withToken: true,
     body: { markingId },
   });

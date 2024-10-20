@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
-import { MARKING_REQUEST_URL } from "../constants";
+import { MARKING_END_POINT } from "../constants";
 
 interface DeleteLikeMarkingRequestData {
   markingId: number;
@@ -9,7 +9,7 @@ interface DeleteLikeMarkingRequestData {
 const deleteLikeMarking = async ({
   markingId,
 }: DeleteLikeMarkingRequestData) => {
-  return apiClient.delete(MARKING_REQUEST_URL.LIKE(markingId), {
+  return apiClient.delete(MARKING_END_POINT.LIKE(markingId), {
     withToken: true,
   });
 };

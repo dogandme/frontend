@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
 import type { LatLng } from "@/entities/auth/api";
 import { apiClient } from "@/shared/lib";
-import { MARKING_REQUEST_URL, POST_VISIBILITY_MAP } from "../constants";
+import { MARKING_END_POINT, POST_VISIBILITY_MAP } from "../constants";
 import { useMarkingFormStore } from "../store";
 
 // Marking Form 저장 API
@@ -36,7 +36,7 @@ const postAddMarking = async (formObj: PostAddMarkingRequestData) => {
     formData.append("images", image, fileName);
   });
 
-  return apiClient.post(MARKING_REQUEST_URL.ADD, {
+  return apiClient.post(MARKING_END_POINT.ADD, {
     withToken: true,
     body: formData,
   });

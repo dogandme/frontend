@@ -1,13 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
-import { MARKING_REQUEST_URL } from "../constants";
+import { MARKING_END_POINT } from "../constants";
 
 export interface PostSaveMarkingRequestData {
   markingId: number;
 }
 
 const postSaveMarking = async ({ markingId }: PostSaveMarkingRequestData) => {
-  return apiClient.post(MARKING_REQUEST_URL.SAVE(markingId), {
+  return apiClient.post(MARKING_END_POINT.SAVE(markingId), {
     withToken: true,
   });
 };
