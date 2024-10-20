@@ -1,74 +1,10 @@
-import { useNavigate } from "react-router-dom";
 import {
   MutationState,
   useMutation,
   useMutationState,
 } from "@tanstack/react-query";
-import { ROUTER_PATH } from "@/shared/constants";
 import { AuthStore, useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
-
-interface SignUpByEmailResponse {
-  code: number;
-  message: string;
-  content: {
-    authorization: string;
-    role: string;
-    userId: number;
-  };
-}
-
-interface SignUpByEmailRequestData {
-  email: string;
-  password: string;
-}
-
-const postSignUpByEmail = async ({
-  email,
-  password,
-}: SignUpByEmailRequestData) => {
-  const response = await fetch(SIGN_UP_END_POINT.EMAIL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  });
-
-  const data: SignUpByEmailResponse = await response.json();
-
-  // todo: 예외처리 구체화하기
-  // code = 409이면, 이미 가입된 계정
-  if (!response.ok) {
-    const { message } = data;
-
-    throw new Error(message);
-  }
-
-  return data;
-};
-
-export const usePostSignUpByEmail = () => {
-  const navigate = useNavigate();
-  const setToken = useAuthStore((state) => state.setToken);
-  const setRole = useAuthStore((state) => state.setRole);
-
-  return useMutation<SignUpByEmailResponse, Error, SignUpByEmailRequestData>({
-    mutationFn: postSignUpByEmail,
-    onSuccess: ({ content }) => {
-      const { authorization, role } = content;
-
-      setToken(authorization);
-      setRole(role);
-
-      navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
-    },
-    onError: (error) => {
-      // todo: snackbar 띄우기
-      alert(error.message);
-    },
-  });
-};
 
 export interface DuplicateNicknameRequestData {
   nickname: string;
