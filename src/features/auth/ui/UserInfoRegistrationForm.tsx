@@ -14,10 +14,7 @@ import { MapLocationSearchingIcon } from "@/shared/ui/icon";
 import { CancelIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { Snackbar } from "@/shared/ui/snackbar";
-import {
-  usePostCheckDuplicateNicknameState,
-  usePutUserInfoRegistration,
-} from "../api";
+import { usePostCheckDuplicateNicknameState, usePutAddUserInfo } from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
@@ -296,7 +293,7 @@ const UserInfoRegistrationForm = () => {
 
   const token = useAuthStore((state) => state.token);
 
-  const { mutate: putUserInfoRegistration } = usePutUserInfoRegistration({
+  const { mutate: putUserInfoRegistration } = usePutAddUserInfo({
     onSuccess: () => {
       openLandingModal();
     },
