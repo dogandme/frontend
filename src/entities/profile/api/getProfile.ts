@@ -22,7 +22,7 @@ export interface PetInfo {
   breed: Breed;
   description: PetDescription;
   personalities: Personalities;
-  profile: ProfileImageUrl;
+  profile?: ProfileImageUrl;
 }
 
 export interface MarkingPreviewData {
