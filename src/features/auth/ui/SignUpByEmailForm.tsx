@@ -8,11 +8,10 @@ import { Snackbar } from "@/shared/ui/snackbar";
 import {
   CheckVerificationCodeRequestData,
   CheckVerificationCodeResponse,
+  PostSendCodeRequestData,
   usePostCheckVerificationCode,
+  usePostSendCode,
   usePostSignUpByEmail,
-  usePostVerificationCode,
-  VerificationCodeRequestData,
-  VerificationCodeResponse,
 } from "../api";
 import { useSignUpByEmailFormStore } from "../store";
 
@@ -43,7 +42,7 @@ const Email = () => {
     isSuccess: isSuccessSendCode,
     isIdle: isIdleSendCode,
     variables,
-  } = usePostVerificationCode();
+  } = usePostSendCode();
 
   const checkCodeResponseCacheArr = useMutationState<
     MutationState<
@@ -201,7 +200,7 @@ const VerificationCode = () => {
 
   // 인증 코드 전송 요청에 대한 응답 캐시
   const sendCodeResponseCacheArr = useMutationState<
-    MutationState<VerificationCodeResponse, Error, VerificationCodeRequestData>
+    MutationState<unknown, Error, PostSendCodeRequestData>
   >({
     filters: {
       mutationKey: ["sendVerificationCode"],

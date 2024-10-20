@@ -8,48 +8,6 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { AuthStore, useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
-export interface VerificationCodeRequestData {
-  email: string;
-}
-
-export interface VerificationCodeResponse {
-  code: number;
-  message: string;
-}
-
-const postVerificationCode = async ({ email }: VerificationCodeRequestData) => {
-  const response = await fetch(SIGN_UP_END_POINT.VERIFICATION_CODE, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  });
-
-  const data: SignUpByEmailResponse = await response.json();
-
-  // todo: 예외처리 구체화하기
-  // code = 409이면, 이미 가입된 이메일 있음
-  if (!response.ok) {
-    const { message } = data;
-
-    throw new Error(message);
-  }
-
-  return data;
-};
-
-export const usePostVerificationCode = () => {
-  return useMutation<
-    VerificationCodeResponse,
-    Error,
-    VerificationCodeRequestData
-  >({
-    mutationFn: postVerificationCode,
-    mutationKey: ["sendVerificationCode"],
-  });
-};
-
 export interface CheckVerificationCodeRequestData {
   email: string;
   authNum: string;
