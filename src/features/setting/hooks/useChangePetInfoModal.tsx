@@ -48,9 +48,7 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
   ));
 
   const { mutate: putChangePetInformation, isPending } =
-    usePutChangePetInformation({
-      onSuccessCallback: onClose,
-    });
+    usePutChangePetInformation();
 
   return handleOpen;
 };

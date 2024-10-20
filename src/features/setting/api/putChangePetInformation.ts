@@ -39,11 +39,7 @@ const putChangePetInformation = async ({
   return data;
 };
 
-export const usePutChangePetInformation = ({
-  onSuccessCallback,
-}: {
-  onSuccessCallback: () => Promise<void>;
-}) => {
+export const usePutChangePetInformation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -53,7 +49,6 @@ export const usePutChangePetInformation = ({
       queryClient.invalidateQueries({
         queryKey: ["profile", useAuthStore.getState().nickname],
       });
-      onSuccessCallback();
     },
     onError: (error) => {
       // TODO 에러 바운더리 나오면 수정 하기
