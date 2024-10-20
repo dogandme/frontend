@@ -24,8 +24,8 @@ export const SignUpLandingModal = ({
   return (
     <Modal modalType="fullPage">
       <Modal.Header onClick={() => handleNavigate(lastNoneAuthRoute)} />
-      <Modal.Content className="pb-32">
-        <section className="flex px-4 flex-col justify-center items-center gap-2 self-stretch headline-3">
+      <Modal.Content>
+        <section className="flex flex-col justify-center items-center gap-2 self-stretch headline-3">
           <h1>
             <span className="text-tangerine-500">{nickname}</span>님
           </h1>
@@ -45,7 +45,10 @@ export const SignUpLandingModal = ({
         >
           등록하기
         </Modal.FilledButton>
-        <Modal.TextButton onClick={() => handleNavigate(lastNoneAuthRoute)}>
+        <Modal.TextButton
+          colorType="tertiary"
+          onClick={() => handleNavigate(lastNoneAuthRoute)}
+        >
           나중에 할게요
         </Modal.TextButton>
       </Modal.Footer>
