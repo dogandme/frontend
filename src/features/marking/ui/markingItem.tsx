@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { API_BASE_URL } from "@/shared/constants";
+import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
 import { formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
@@ -154,7 +154,11 @@ export const MarkingItem = ({
       <div className="flex justify-between items-center gap-1 flex-1">
         <img
           className="w-8 h-8 rounded-2xl object-cover"
-          src={`${API_BASE_URL}/pets/image/${pet.profile}`}
+          src={
+            pet.profile
+              ? `${API_BASE_URL}/pets/image/${pet.profile}`
+              : MASCOT_IMAGE_URL
+          }
           alt={`${pet.name}-profile`}
         />
         <span className="title-3 text-grey-700">{nickName}</span>
