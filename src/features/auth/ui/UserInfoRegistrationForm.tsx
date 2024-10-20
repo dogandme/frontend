@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Region } from "@/entities/auth/api";
 import {
   AgreementCheckbox,
   SelectOpener,
@@ -17,7 +18,6 @@ import {
   usePostCheckDuplicateNicknameState,
   usePutUserInfoRegistration,
 } from "../api";
-import { Region } from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
 import { validateNickname } from "../lib";
 import { useUserInfoRegistrationFormStore } from "../store";
