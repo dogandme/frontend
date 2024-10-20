@@ -8,7 +8,6 @@ type UseOverlay = (
   handleOpen: () => Promise<void>;
   onClose: () => Promise<void>;
   isOpen: boolean;
-  id: number;
 };
 
 const generateId = () => window.crypto.getRandomValues(new Uint32Array(1))[0];
@@ -44,7 +43,7 @@ export const useOverlay: UseOverlay = (
     setIsOpen(true);
   };
 
-  return { handleOpen, onClose, isOpen, id };
+  return { handleOpen, onClose, isOpen };
 };
 
 export const useSnackBar: UseOverlay = (createOverlayComponent, options) => {

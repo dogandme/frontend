@@ -5,7 +5,7 @@ import { Modal } from "@/shared/ui/modal";
 import { usePutChangePetInformation } from "../api";
 
 export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
-  const { handleOpen, onClose, id } = useModal(() => (
+  const { handleOpen, onClose } = useModal(() => (
     <Modal modalType="fullPage">
       <Modal.Header
         onClick={() => {
@@ -49,7 +49,7 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
 
   const { mutate: putChangePetInformation, isPending } =
     usePutChangePetInformation({
-      modalId: id,
+      onSuccessCallback: onClose,
     });
 
   return handleOpen;
