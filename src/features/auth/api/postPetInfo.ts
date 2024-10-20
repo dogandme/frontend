@@ -1,20 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { PetInfo } from "@/entities/profile/api";
+import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";
 
 interface PostPetInfoResponseData {
-  code: number;
-  message: string;
-  content: {
-    role: string;
-    authorization: string;
-  };
+  role: string;
+  authorization: string;
 }
 
 export type PetInfoFormObject = Omit<PetInfo, "profile">;
+
 export interface ProfileImage {
   image: File | null;
 }
@@ -35,28 +33,12 @@ const postPetInfo = async ({
 
   formData.append("petSignUpDto", JSON.stringify(petInfoFormObject));
 
-  const response = await fetch(SIGN_UP_END_POINT.PET_INFO, {
-    method: "POST",
-    headers: {
-      Authorization: useAuthStore.getState().token!,
-    },
+  return apiClient.post<PostPetInfoResponseData>(SIGN_UP_END_POINT.PET_INFO, {
+    withToken: true,
     credentials:
       process.env.NODE_ENV === "development" ? "include" : "same-origin",
     body: formData,
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    if (response.status === 500) {
-      throw new Error(
-        "예기치 못한 에러가 발생했습니다.잠시 후 다시 시도해주세요.",
-      );
-    }
-    throw new Error(data.message);
-  }
-
-  return data;
 };
 
 export const usePostPetInfo = () => {
@@ -67,7 +49,7 @@ export const usePostPetInfo = () => {
   return useMutation<PostPetInfoResponseData, Error, PostPetInfoRequestData>({
     mutationFn: postPetInfo,
     onSuccess: (data) => {
-      const { role, authorization: token } = data.content;
+      const { role, authorization: token } = data;
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
 
       setRole(role);

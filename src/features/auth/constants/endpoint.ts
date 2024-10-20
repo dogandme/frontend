@@ -12,7 +12,7 @@ export const SIGN_UP_END_POINT = {
   CHECK_VERIFICATION_CODE: `${API_BASE_URL}/users/auth/check`,
   DUPLICATE_NICKNAME: `${API_BASE_URL}/users/nickname`,
   USER_INFO: `${API_BASE_URL}/users/additional-info`,
-  PET_INFO: `${API_BASE_URL}/pets`,
+  PET_INFO: "/pets",
 };
 
 export const ADDRESSES_END_POINT = {
