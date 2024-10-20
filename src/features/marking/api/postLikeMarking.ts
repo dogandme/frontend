@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { MARKING_REQUEST_URL } from "../constants";
 
-export interface PostLikeMarkingRequestData {
+interface PostLikeMarkingRequestData {
   markingId: number;
 }
 
