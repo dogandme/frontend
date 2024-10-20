@@ -295,7 +295,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     ),
   );
 
-  const { mutate: postMarkingData } = usePostAddMarking({
+  const { mutate: postAddMarking } = usePostAddMarking({
     onSuccess: () => {
       onCloseMarkingModal();
       onOpenSnackbar();
@@ -331,7 +331,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     const lat = center.lat();
     const lng = center.lng();
 
-    postMarkingData(
+    postAddMarking(
       {
         lat,
         lng,
