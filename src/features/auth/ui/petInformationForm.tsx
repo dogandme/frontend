@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
-import { MASCOT_IMAGE_URL } from "@/shared/constants";
+import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
@@ -86,6 +86,12 @@ const ProfileInput = () => {
   // actual dom 의 input 태그를 조작하기 위한 ref , state
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const backgroundUrl = profile.url
+    ? profile.url.startsWith("blob")
+      ? profile.url
+      : `${API_BASE_URL}/pets/image/${profile.url}`
+    : MASCOT_IMAGE_URL;
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
@@ -124,7 +130,7 @@ const ProfileInput = () => {
       <button
         className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(${profile.url || MASCOT_IMAGE_URL})`,
+          backgroundImage: `url(${backgroundUrl})`,
         }}
         onClick={onOpen}
         aria-label="profile-image-button"
