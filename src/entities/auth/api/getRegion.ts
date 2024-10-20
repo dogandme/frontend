@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
-import { ADDRESSES_END_POINT } from "../constants";
+import { REGION_END_POINT } from "../constants";
 
 export interface LatLng {
   lat: number;
@@ -17,11 +17,11 @@ export interface Region {
   subDistrict: string;
 }
 
-type RegionResponseData = Region[];
+type GetRegionResponseData = Region[];
 
 const getRegionByKeyword = async (keyword: RegionKeyword) => {
-  return apiClient.get<RegionResponseData>(
-    ADDRESSES_END_POINT.ADDRESS(keyword),
+  return apiClient.get<GetRegionResponseData>(
+    REGION_END_POINT.REGION_LIST(keyword),
     {},
   );
 };
@@ -42,8 +42,8 @@ export const useGetRegionByKeyword = ({
 };
 
 const getRegionByLatLng = async ({ lat, lng }: LatLng) => {
-  return apiClient.get<RegionResponseData>(
-    ADDRESSES_END_POINT.CURRENT_POSITION({ lat, lng }),
+  return apiClient.get<GetRegionResponseData>(
+    REGION_END_POINT.CURRENT_POSITION({ lat, lng }),
     {},
   );
 };

@@ -6,8 +6,8 @@ export const SOCIAL_TYPE = {
   GOOGLE: "구글",
 };
 
-export const ADDRESSES_END_POINT = {
+export const REGION_END_POINT = {
   CURRENT_POSITION: ({ lat, lng }: { lat: number; lng: number }) =>
     `/addresses/search-by-location?lat=${lat}&lng=${lng}`,
-  ADDRESS: (keyword: string) => `/addresses?keyword=${keyword}`,
+  REGION_LIST: (keyword: string) => `/addresses?keyword=${keyword}`,
 };
