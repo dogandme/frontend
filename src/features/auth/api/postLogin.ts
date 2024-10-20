@@ -26,7 +26,7 @@ const postLogin = async (formData: EmailLoginRequestData) => {
 };
 
 // TODO 리액트 쿼리를 활용하여 최적화 하기
-export const usePostLoginForm = () => {
+export const usePostLogin = () => {
   const navigate = useNavigate();
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
