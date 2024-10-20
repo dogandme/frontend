@@ -8,7 +8,6 @@ export interface PostSendCodeRequestData {
 
 const postSendCode = async ({ email }: PostSendCodeRequestData) => {
   return apiClient.post(SIGN_UP_END_POINT.VERIFICATION_CODE, {
-    withToken: true,
     body: { email },
   });
 };
