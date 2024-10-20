@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
+import { useGetAddressFromLatLng } from "@/entities/map/api";
 import { MapSnackbar } from "@/entities/map/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
@@ -11,7 +12,6 @@ import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
-import { useGetAddressFromLatLng } from "../../map/api";
 import { useMapStore } from "../../map/store/map";
 import { usePostMarkingForm, usePostTempMarkingForm } from "../api";
 import {
@@ -94,7 +94,7 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
   }
 
-  const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng, token });
+  const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng });
   const setRegion = useMarkingFormStore((state) => state.setRegion);
 
   useEffect(() => {
