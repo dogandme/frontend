@@ -119,8 +119,8 @@ export const MarkingItem = ({
 
     if (!token || role === "ROLE_NONE" || role === null) return;
 
-    if (isLiked) deleteLikeMarking({ markingId, token });
-    else postLikeMarking({ markingId, token });
+    if (isLiked) deleteLikeMarking({ markingId });
+    else postLikeMarking({ markingId });
   };
 
   const { mutate: postSavedMarking } = usePostSavedMarking();

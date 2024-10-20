@@ -1,6 +1,9 @@
 import { API_BASE_URL } from "@/shared/constants";
 import { GetMarkingListRequestData } from "../api";
-import { LikeMarkingRequest } from "../api/likeMarking";
+import {
+  PostLikeMarkingRequestData,
+  DeleteLikeMarkingRequestData,
+} from "../api";
 
 export const MARKING_REQUEST_URL = {
   SEARCH_MARKING: ({
@@ -13,8 +16,8 @@ export const MARKING_REQUEST_URL = {
   ADD: `${API_BASE_URL}/markings`,
   SAVE_TEMP: `${API_BASE_URL}/markings/temp`,
   DELETE: "/markings",
-  LIKE: (markingId: LikeMarkingRequest["markingId"]) =>
+  LIKE: (markingId: PostLikeMarkingRequestData["markingId"]) =>
     `${API_BASE_URL}/markings/like/${markingId}`,
-  SAVE: (markingId: LikeMarkingRequest["markingId"]) =>
+  SAVE: (markingId: DeleteLikeMarkingRequestData["markingId"]) =>
     `${API_BASE_URL}/markings/saves/${markingId}`,
 };
