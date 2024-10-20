@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
-import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
+import { MASCOT_IMAGE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
@@ -125,7 +125,7 @@ const ProfileInput = () => {
         className="flex h-20 w-20 flex-shrink items-end justify-end rounded-[28px] bg-cover bg-center bg-no-repeat"
         // TODO : backgroundUrl 말고 image 를 이용하여 캐시를 사용하도록 변경하기
         style={{
-          backgroundImage: `url(${profile.url ? `${API_BASE_URL}/markings/image/${profile.url}` : MASCOT_IMAGE_URL})`,
+          backgroundImage: profile.url,
         }}
         onClick={onOpen}
         aria-label="profile-image-button"

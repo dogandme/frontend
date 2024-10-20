@@ -1,5 +1,6 @@
 import { PetInformationForm } from "@/features/auth/ui";
 import { UserInfo } from "@/entities/profile/api";
+import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
 import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePetInformation } from "../api";
@@ -26,7 +27,9 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
             ...pet,
             profile: {
               name: "",
-              url: pet.profile,
+              url: pet.profile
+                ? `${API_BASE_URL}/pets/image/${pet.profile}`
+                : MASCOT_IMAGE_URL,
               file: null,
             },
           }}
