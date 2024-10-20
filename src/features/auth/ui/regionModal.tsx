@@ -1,5 +1,9 @@
 import { useRef, createContext } from "react";
-import { useAuthStore } from "@/shared/store/auth";
+import {
+  Region,
+  useGetRegionByKeyword,
+  useGetRegionByLatLng,
+} from "@/entities/auth/api";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
 import { CancelIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";
@@ -7,11 +11,6 @@ import { SearchIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
-import {
-  Region,
-  useGetRegionByKeyword,
-  useGetRegionByLatLng,
-} from "../api/region";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { errorMessage } from "../constants";
 import {
@@ -194,23 +193,15 @@ const SearchedRegionList = () => {
   const position = useRegionModalStore((state) => state.position);
   const origin = useRegionModalStore((state) => state.origin);
 
-  const { token } = useAuthStore.getState();
-
-  if (!token) {
-    throw new Error("로그인 후 다시 이용해주세요");
-  }
-
   const isOriginFromKeyword = origin === "keyword";
 
   const { data: regionListByKeyword } = useGetRegionByKeyword({
     keyword,
-    token,
     enabled: keyword.length > 0 && isOriginFromKeyword,
   });
 
   const { data: regionListByLatLng } = useGetRegionByLatLng({
     ...position,
-    token,
     enabled: !isOriginFromKeyword,
   });
 

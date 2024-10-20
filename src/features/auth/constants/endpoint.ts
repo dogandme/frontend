@@ -15,12 +15,6 @@ export const SIGN_UP_END_POINT = {
   PET_INFO: "/pets",
 };
 
-export const ADDRESSES_END_POINT = {
-  CURRENT_POSITION: ({ lat, lng }: { lat: number; lng: number }) =>
-    `${API_BASE_URL}/addresses/search-by-location?lat=${lat}&lng=${lng}`,
-  ADDRESS: (keyword: string) => `${API_BASE_URL}/addresses?keyword=${keyword}`,
-};
-
 export const CHANGE_USER_INFO_END_POINT = {
   NICKNAME: "/users/profile/nickname",
 };
