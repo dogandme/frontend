@@ -42,7 +42,7 @@ export const ProfileOverView = ({
         <ProfileEditButton pet={pet} />
       </div>
       {/* 반려동물 소개와 성격 리스트 */}
-      <PetDescription description={description} />
+      {description && <PetDescription description={description} />}
       <PetPersonalityList personalities={personalities} />
     </section>
   );

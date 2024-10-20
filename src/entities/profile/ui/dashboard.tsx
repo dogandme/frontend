@@ -9,7 +9,9 @@ import { PetInfo, UserInfo } from "../api";
 type ProfileImageProps = Pick<PetInfo, "profile"> & Pick<UserInfo, "nickname">;
 type ProfileHeadingProps = Pick<PetInfo, "name" | "breed"> &
   Pick<UserInfo, "followers" | "followings">;
-type PetIntroduceProps = Pick<PetInfo, "description">;
+type PetIntroduceProps = {
+  description: NonNullable<PetInfo["description"]>;
+};
 type PetCharacterListProps = Pick<PetInfo, "personalities">;
 
 export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
@@ -52,6 +54,22 @@ export const PetDescription = ({ description }: PetIntroduceProps) => {
   const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
+  // 줄바꿈이 적용된 배열
+  const multiLineDescription = description.split("\n");
+  const isMultiLine = multiLineDescription.length > 1;
+  const renderDescription = () => {
+    if (isMultiLine) {
+      return isSummary
+        ? multiLineDescription[0]
+        : multiLineDescription.map((line, index) => (
+            <p className="min-h-4" key={index}>
+              {line}
+            </p>
+          ));
+    }
+    return description;
+  };
+
   useEffect(() => {
     const $p = descriptionRef.current!;
     setIsEllipsis($p.scrollWidth > $p.clientWidth);
@@ -63,15 +81,15 @@ export const PetDescription = ({ description }: PetIntroduceProps) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4 self-stretch text-grey-500 body-2 w-full justify-between">
-        <p
+        <div
           className={
             isSummary ? "text-ellipsis overflow-hidden text-nowrap" : ""
           }
           ref={descriptionRef}
         >
-          {description}
-        </p>
-        {isEllipsis && (
+          {renderDescription()}
+        </div>
+        {description.length > 0 && (isMultiLine || isEllipsis) && (
           <button
             className="w-4 h-4"
             onClick={handleClick}
