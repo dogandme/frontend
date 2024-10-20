@@ -85,7 +85,7 @@ export const ChangeNicknameModal = ({
       return;
     }
 
-    postChangeNickname({ token, nickname });
+    postChangeNickname({ nickname });
   };
 
   return (

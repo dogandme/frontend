@@ -22,5 +22,5 @@ export const ADDRESSES_END_POINT = {
 };
 
 export const CHANGE_USER_INFO_END_POINT = {
-  NICKNAME: `${API_BASE_URL}/users/profile/nickname`,
+  NICKNAME: "/users/profile/nickname",
 };
