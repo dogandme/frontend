@@ -19,7 +19,7 @@ export interface ProfileImage {
 
 export type PostPetInfoRequestData = PetInfoFormObject & ProfileImage;
 
-const postPetInfo = async ({
+const postAddPetInfo = async ({
   image,
   ...petInfoFormObject
 }: PostPetInfoRequestData): Promise<PostPetInfoResponseData> => {
@@ -41,13 +41,13 @@ const postPetInfo = async ({
   });
 };
 
-export const usePostPetInfo = () => {
+export const usePostAddPetInfo = () => {
   const setRole = useAuthStore((state) => state.setRole);
   const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
   return useMutation<PostPetInfoResponseData, Error, PostPetInfoRequestData>({
-    mutationFn: postPetInfo,
+    mutationFn: postAddPetInfo,
     onSuccess: (data) => {
       const { role, authorization: token } = data;
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();

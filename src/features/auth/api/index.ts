@@ -1,4 +1,4 @@
 export * from "./postLogin.ts";
 export * from "./signUp.ts";
-export * from "./postPetInfo.ts";
+export * from "./postAddPetInfo.ts";
 export * from "./putChangeNickname.ts";
