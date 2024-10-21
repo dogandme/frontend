@@ -31,10 +31,10 @@ export const ProfilePage = () => {
   if (nicknameParams === "null") {
     return <NullPage />;
   }
-  if (nicknameParams === "none") {
+  if (nicknameParams === "ROLE_NONE") {
     return <NonePage />;
   }
-  if (nicknameParams === "guest") {
+  if (nicknameParams === "ROLE_GUEST") {
     return <GuestPage />;
   }
   return <RoleUserProfile />;
@@ -50,11 +50,9 @@ const NullPage = () => {
     if (isMyPage) {
       return;
     }
-    if (role === "ROLE_NONE") {
-      return navigate("/@none");
-    }
-    if (role === "ROLE_GUEST") {
-      return navigate("/@guest");
+    if (role !== "ROLE_USER") {
+      navigate(`/@${role}`);
+      return;
     }
     return navigate(`/@${nickname}`);
   });
@@ -103,11 +101,9 @@ const NonePage = () => {
     if (isMyPage) {
       return;
     }
-    if (role === null) {
-      return navigate("/@null");
-    }
-    if (role === "ROLE_GUEST") {
-      return navigate("/@guest");
+    if (role !== "ROLE_USER") {
+      navigate(`/@${role}`);
+      return;
     }
     return navigate(`/@${nickname}`);
   });
@@ -159,11 +155,9 @@ const GuestPage = () => {
     if (isMyPage) {
       return;
     }
-    if (role === null) {
-      return navigate("/@null");
-    }
-    if (role === "ROLE_NONE") {
-      return navigate("/@none");
+    if (role !== "ROLE_USER") {
+      navigate(`/@${role}`);
+      return;
     }
     return navigate(`/@${nickname}`);
   });
@@ -207,12 +201,20 @@ const GuestPage = () => {
 
 export const RoleUserProfile = () => {
   const { nicknameParams, isMyPage } = useNicknameParams();
+  const token = useAuthStore((state) => state.token);
   const role = useAuthStore((state) => state.role);
+  const navigate = useNavigate();
 
   const { data } = useGetProfile({
     nickname: nicknameParams,
-    token: useAuthStore.getState().token!,
+    token,
   });
+
+  useEffect(() => {
+    if (!token) {
+      navigate(ROUTER_PATH.LOGIN);
+    }
+  }, [token, navigate]);
 
   if (!data) {
     return;
