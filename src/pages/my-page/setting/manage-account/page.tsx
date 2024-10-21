@@ -14,9 +14,9 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 export const AccountManagementPage = () => {
   const hasPermission = useSettingPermission("NONE");
 
-  const { data: userInfo } = useGetMyInfo();
+  const { data: myInfo } = useGetMyInfo();
 
-  if (!userInfo) {
+  if (!myInfo) {
     return null;
   }
 
@@ -24,7 +24,7 @@ export const AccountManagementPage = () => {
     return null;
   }
 
-  const { email, socialType, isPasswordSet } = userInfo;
+  const { email, socialType, isPasswordSet } = myInfo;
 
   return (
     <>
