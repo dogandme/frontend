@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
+import { ProfilePage } from "@/pages/[nickname]";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
 import { MapPage } from "@/pages/map";
-import { ProfilePage } from "@/pages/my-page";
-import { SettingPage } from "@/pages/my-page/setting";
-import { EditInfoPage } from "@/pages/my-page/setting/edit-info/page";
-import { AccountManagementPage } from "@/pages/my-page/setting/manage-account";
+import { SettingPage } from "@/pages/setting";
+import { EditInfoPage } from "@/pages/setting/edit-info/page";
+import { AccountManagementPage } from "@/pages/setting/manage-account";
 import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
