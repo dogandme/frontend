@@ -8,7 +8,6 @@ import { useAuthStore } from "../store";
  */
 export const useNicknameParams = () => {
   const { nickname } = useParams<{ nickname: string }>();
-  const role = useAuthStore((state) => state.role);
 
   if (!nickname) {
     throw new Error("parameter에 nickname이 없습니다.");
@@ -17,9 +16,8 @@ export const useNicknameParams = () => {
   const nicknameParams = nickname.slice(1);
 
   const isMyPage =
-    (nicknameParams === "null" && role === null) ||
-    (nicknameParams === "none" && role === "ROLE_NONE") ||
-    (nicknameParams === "guest" && role === "ROLE_GUEST") ||
+    nicknameParams === String(useAuthStore.getState().role) ||
     nicknameParams === useAuthStore.getState().nickname;
+
   return { nicknameParams, isMyPage };
 };

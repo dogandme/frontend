@@ -143,10 +143,10 @@ const MyPageNavLink = () => {
   const { active, inactive, base } = footerNavigationBarStyles;
 
   const getNavigatePath = () => {
-    if (role === null) return "/@null";
-    if (role === "ROLE_NONE") return "/@none";
-    if (role === "ROLE_GUEST") return "/@guest";
-    return `@${nickname}`;
+    if (role === "ROLE_USER") {
+      return `/@${nickname}`;
+    }
+    return `/@${role}`;
   };
 
   return (
