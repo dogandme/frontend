@@ -1,31 +1,16 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { MyInfo, MyInfoResponse } from "@/entities/auth/api";
-import { useAuthStore } from "@/shared/store";
+import type { MyInfo } from "@/entities/auth/api";
+import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
 export type PutChangeAgeRequestData = Pick<MyInfo, "age">;
 
-interface PutChangeAgeResponse {
-  code: number;
-  message: string;
-}
-
 const putChangeAge = async (changeAgeData: PutChangeAgeRequestData) => {
-  const response = await fetch(SETTING_END_POINT.CHANGE_AGE, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: useAuthStore.getState().token!,
-    },
-    body: JSON.stringify(changeAgeData),
+  return apiClient.put(SETTING_END_POINT.CHANGE_AGE, {
+    withToken: true,
+    body: changeAgeData,
   });
-
-  const data: PutChangeAgeResponse = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-  return data;
 };
 
 export const usePutChangeAge = () => {
@@ -56,16 +41,14 @@ export const usePutChangeAge = () => {
     /* 낙관적 업데이트 시행 */
     onMutate: async ({ age }) => {
       await queryClient.cancelQueries({ queryKey: ["myInfo"] });
-      const prevQueryData = queryClient.getQueryData<MyInfoResponse>([
-        "myInfo",
-      ]);
+      const prevQueryData = queryClient.getQueryData<MyInfo>(["myInfo"]);
 
-      queryClient.setQueryData(["myInfo"], (prevQueryData?: MyInfoResponse) => {
+      queryClient.setQueryData(["myInfo"], (prevQueryData?: MyInfo) => {
         if (!prevQueryData) return prevQueryData;
         return {
           ...prevQueryData,
           content: {
-            ...prevQueryData.content,
+            ...prevQueryData,
             age: age,
           },
         };

@@ -3,7 +3,7 @@ import { AGE_RANGE_MAP } from "@/features/auth/constants";
 import type { MyInfo } from "@/entities/auth/api";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
-import { PutChangeAgeRequestData, usePutChangeAge } from "../api";
+import { type PutChangeAgeRequestData, usePutChangeAge } from "../api";
 
 // TODO useQuery 옮기고 isLoading 동안 disabled 시키기
 export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
