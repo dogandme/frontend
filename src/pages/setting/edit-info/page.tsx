@@ -1,4 +1,5 @@
 import { ChangeNicknameModal } from "@/features/auth/ui/ChangeNicknameModal";
+import { useSettingPermission } from "@/features/setting/hooks/useSettingPermission";
 import { GenderChangeButton } from "@/features/setting/ui";
 import { ChangeAgeButton } from "@/features/setting/ui";
 import { RegionChangeButton } from "@/features/setting/ui";
@@ -11,19 +12,12 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const EditInfoPage = () => {
   const token = useAuthStore((state) => state.token);
-  const role = useAuthStore((state) => state.role);
   const { data: myInfo } = useGetMyInfo({ token });
+  const hasPermission = useSettingPermission("GUEST");
 
   if (!myInfo) return null;
 
   const { age, gender, regions, nickLastModDt } = myInfo;
-
-  const hasPermission =
-    (role === "ROLE_GUEST" || role === "ROLE_USER") &&
-    age !== null &&
-    gender !== null &&
-    regions.length > 0 &&
-    nickLastModDt !== null;
 
   if (!hasPermission) return null;
 
