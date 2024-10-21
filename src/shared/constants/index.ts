@@ -102,10 +102,10 @@ export const ROUTER_PATH = {
   MAIN: "/",
   MAP: `/map`,
 
-  MY_PAGE: `/my-page`,
-  SETTING: `/my-page/setting`,
-  MANAGE_ACCOUNT: `/my-page/setting/manage-account`,
-  EDIT_MY_INFO: `/my-page/setting/edit-info`,
+  PROFILE: `/:nickname`,
+  SETTING: `/setting`,
+  MANAGE_ACCOUNT: `/setting/manage-account`,
+  EDIT_MY_INFO: `/setting/edit-info`,
 
   LOGIN: `/login`,
   LOGIN_BY_EMAIL: `/login/email`,
@@ -114,6 +114,8 @@ export const ROUTER_PATH = {
   SIGN_UP: `/sign-up`,
   SIGN_UP_USER_INFO: `/sign-up/user-info`,
   SIGN_UP_PET_INFO: `/sign-up/pet-info`,
+
+  NOT_FOUND_USER: "/not-found-user",
 } as const;
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
