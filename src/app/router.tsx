@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { ProfilePage } from "@/pages/[nickname]";
+import { NotFoundUser, ProfilePage } from "@/pages/[nickname]";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
 import { MapPage } from "@/pages/map";
@@ -29,6 +29,10 @@ export const router = createBrowserRouter([
       {
         path: ROUTER_PATH.PROFILE,
         element: <ProfilePage />,
+      },
+      {
+        path: ROUTER_PATH.NOT_FOUND_USER,
+        element: <NotFoundUser />,
       },
       {
         path: ROUTER_PATH.SETTING,
