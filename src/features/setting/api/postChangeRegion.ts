@@ -1,39 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Region } from "@/entities/auth/api";
-import { useAuthStore } from "@/shared/store";
+import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
 export interface PostChangeRegionRequestData {
   newIds: Region["id"][];
 }
 
-interface PutChangeRegionResponseData {
-  code: number;
-  message: string;
-}
-
 const postChangeRegion = async (
   changeRegionData: PostChangeRegionRequestData,
 ) => {
-  const response = await fetch(SETTING_END_POINT.CHANGE_REGION, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: useAuthStore.getState().token!,
-    },
-    body: JSON.stringify(changeRegionData),
+  return apiClient.post(SETTING_END_POINT.CHANGE_REGION, {
+    withToken: true,
+    body: changeRegionData,
   });
-
-  const data = (await response.json()) as PutChangeRegionResponseData;
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-  return data;
 };
 
 export const usePostChangeRegion = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: postChangeRegion,
     mutationKey: ["postChangeRegion"],
