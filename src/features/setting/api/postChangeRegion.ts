@@ -17,7 +17,7 @@ const postChangeRegion = async (changeRegionData: PostChangeRegionRequest) => {
 export const usePostChangeRegion = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<unknown, Error, PostChangeRegionRequest>({
     mutationFn: postChangeRegion,
     mutationKey: ["postChangeRegion"],
     onSuccess: () => {

@@ -15,7 +15,7 @@ const deleteAccount = async (deleteAccountData: DeleteAccountRequest) => {
 };
 
 export const useDeleteAccount = () => {
-  return useMutation({
+  return useMutation<unknown, Error, DeleteAccountRequest>({
     mutationFn: deleteAccount,
     mutationKey: ["deleteAccount"],
     onSuccess: () => {

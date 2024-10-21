@@ -22,7 +22,7 @@ export const usePostLogout = ({ onMutate }: { onMutate: () => void }) => {
   const queryClient = useQueryClient();
   const resetAuthStore = useAuthStore((state) => state.reset);
 
-  return useMutation({
+  return useMutation<unknown, Error>({
     mutationFn: postLogout,
     // 2024/10/03 - 현재는 로그아웃 단계에서 response 값과 상관 없이 로그아웃 처리 하기로 이야기 나눠놓았습니다.
     onMutate: () => {

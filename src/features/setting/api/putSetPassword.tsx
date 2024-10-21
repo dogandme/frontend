@@ -30,7 +30,7 @@ export const usePutSetPassword = ({
 
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<unknown, Error, PutSetPasswordRequest>({
     mutationFn: putSetPassword,
     mutationKey: ["putSetPassword"],
     onSuccess: () => {

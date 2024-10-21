@@ -34,7 +34,7 @@ export const usePutChangeGender = () => {
     };
   }, [queryClient]);
 
-  return useMutation({
+  return useMutation<unknown, Error, PutChangeGenderRequest>({
     mutationKey: ["putChangeGender"],
     mutationFn: putChangeGender,
 

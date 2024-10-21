@@ -32,7 +32,7 @@ export const usePutChangePassword = ({
       <Snackbar onClose={onCloseSnackbar}>비밀번호가 변경되었습니다.</Snackbar>
     ));
 
-  return useMutation({
+  return useMutation<unknown, Error, PutChangePasswordRequest>({
     mutationFn: putChangePassword,
     mutationKey: ["putChangePassword"],
     onSuccess: () => {

@@ -34,7 +34,7 @@ export const usePutChangeAge = () => {
     };
   }, [queryClient]);
 
-  return useMutation({
+  return useMutation<unknown, Error, PutChangeAgeRequest>({
     mutationKey: ["putChangeAge"],
     mutationFn: putChangeAge,
 
