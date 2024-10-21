@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { apiClient, useSnackBar } from "@/shared/lib";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordSetFormStore } from "../store";
@@ -11,27 +10,11 @@ interface PutSetPasswordRequest {
   newPwChk: string;
 }
 
-interface PutSetPasswordResponse {
-  code: number;
-  message: string;
-}
-
 const putSetPassword = async (setPasswordData: PutSetPasswordRequest) => {
-  const response = await fetch(SETTING_END_POINT.SET_PASSWORD, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: useAuthStore.getState().token!,
-    },
-    body: JSON.stringify(setPasswordData),
+  return apiClient.put(SETTING_END_POINT.SET_PASSWORD, {
+    withToken: true,
+    body: setPasswordData,
   });
-
-  const data: PutSetPasswordResponse = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-  return data;
 };
 
 export const usePutSetPassword = ({
