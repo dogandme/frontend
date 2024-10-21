@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Snackbar } from "@/shared/ui/snackbar";
@@ -27,11 +26,7 @@ export const LogoutModal = ({
   });
 
   const handleLogout = () => {
-    const { token } = useAuthStore.getState();
-    if (!token) {
-      throw new Error("로그인 후 이용해 주세요");
-    }
-    postLogout(token);
+    postLogout();
   };
 
   return (
