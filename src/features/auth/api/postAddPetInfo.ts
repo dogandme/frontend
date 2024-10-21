@@ -11,13 +11,13 @@ interface PostPetInfoResponseData {
   authorization: string;
 }
 
-export type PetInfoFormObject = Omit<PetInfo, "profile">;
+type PetInfoFormObject = Omit<PetInfo, "profile">;
 
-export interface ProfileImage {
+interface ProfileImage {
   image: File | null;
 }
 
-export type PostPetInfoRequestData = PetInfoFormObject & ProfileImage;
+type PostPetInfoRequestData = PetInfoFormObject & ProfileImage;
 
 const postAddPetInfo = async ({
   image,
