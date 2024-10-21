@@ -1,4 +1,4 @@
-import type { Region } from "@/features/auth/api/region";
+import type { Region } from "@/entities/auth/api";
 import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { useChangeRegionModal } from "../hooks";

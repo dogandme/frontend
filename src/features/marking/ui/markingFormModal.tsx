@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { MapSnackbar } from "@/entities/map/ui";
+import { useGetAddressFromLatLng } from "@/entities/marking/api";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -11,9 +12,8 @@ import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
-import { useGetAddressFromLatLng } from "../../map/api";
 import { useMapStore } from "../../map/store/map";
-import { usePostMarkingForm, usePostTempMarkingForm } from "../api";
+import { usePostAddMarking, usePostAddTempMarking } from "../api";
 import {
   MARKING_ADD_ERROR_MESSAGE,
   MAX_IMAGE_LENGTH,
@@ -94,7 +94,7 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
   }
 
-  const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng, token });
+  const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng });
   const setRegion = useMarkingFormStore((state) => state.setRegion);
 
   useEffect(() => {
@@ -295,7 +295,7 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     ),
   );
 
-  const { mutate: postMarkingData } = usePostMarkingForm({
+  const { mutate: postAddMarking } = usePostAddMarking({
     onSuccess: () => {
       onCloseMarkingModal();
       onOpenSnackbar();
@@ -331,9 +331,8 @@ const SaveButton = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     const lat = center.lat();
     const lng = center.lng();
 
-    postMarkingData(
+    postAddMarking(
       {
-        token,
         lat,
         lng,
         region,
@@ -382,7 +381,7 @@ const TemporarySaveButton = ({
     ),
   );
 
-  const { mutate: postTempMarkingData } = usePostTempMarkingForm({
+  const { mutate: postAddTempMarking } = usePostAddTempMarking({
     onSuccess: () => {
       onCloseMarkingModal();
       onOpenSnackbar();
@@ -411,8 +410,7 @@ const TemporarySaveButton = ({
     const lat = center.lat();
     const lng = center.lng();
 
-    postTempMarkingData({
-      token,
+    postAddTempMarking({
       lat,
       lng,
       region,

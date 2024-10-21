@@ -1,7 +1,7 @@
 import { forwardRef, useState } from "react";
 import { useAuthStore } from "@/shared/store";
 import { Input } from "@/shared/ui/input";
-import { usePostDuplicateNickname } from "../api";
+import { usePostCheckDuplicateNickname } from "../api";
 import { validateNickname } from "../lib";
 
 interface NicknameInputProps {
@@ -29,7 +29,7 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
       isError,
       isSuccess,
       variables,
-    } = usePostDuplicateNickname();
+    } = usePostCheckDuplicateNickname();
 
     // todo 409 응답코드이면 중복된 닉네임으로 판단
     const isDuplicateNickname = isError && variables?.nickname === nickname;
@@ -41,7 +41,7 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
     const handleBlur = () => {
       if (!token || !isValidNickname || isNicknameEmpty) return;
 
-      postDuplicateNickname({ token, nickname });
+      postDuplicateNickname({ nickname });
     };
 
     let statusText = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";

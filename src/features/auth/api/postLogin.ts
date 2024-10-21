@@ -1,58 +1,42 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
+import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
 
-export interface LoginResponse {
-  code: number;
-  message: string;
-  content: {
-    authorization: string;
-    role: string;
-    userId: number | null;
-    nickname: string | null;
-  };
+interface EmailLoginResponse {
+  authorization: string;
+  role: string;
+  userId: number | null;
+  nickname: string | null;
 }
 
-interface EmailLoginFormData {
+interface EmailLoginRequest {
   email: string;
   password: string;
   persistLogin: boolean;
 }
 
-const postLogin = async (
-  formData: EmailLoginFormData,
-): Promise<LoginResponse> => {
-  const response = await fetch(LOGIN_END_POINT.EMAIL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
+const postLogin = async (formData: EmailLoginRequest) => {
+  return apiClient.post<EmailLoginResponse>(LOGIN_END_POINT.EMAIL, {
+    body: formData,
   });
-
-  const data: LoginResponse = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-
-  return data;
 };
 
 // TODO 리액트 쿼리를 활용하여 최적화 하기
-export const usePostLoginForm = () => {
+export const usePostLogin = () => {
   const navigate = useNavigate();
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
   const setNickname = useAuthStore((state) => state.setNickname);
 
-  const mutate = useMutation<LoginResponse, Error, EmailLoginFormData>({
+  return useMutation<EmailLoginResponse, Error, EmailLoginRequest>({
     mutationFn: postLogin,
-    onSuccess: ({ content }) => {
-      const { authorization, role, nickname } = content;
+    onSuccess: (data) => {
+      const { authorization, role, nickname } = data;
+
       setToken(authorization);
       setRole(role);
       setNickname(nickname);
@@ -70,6 +54,4 @@ export const usePostLoginForm = () => {
       throw new Error(error.message);
     },
   });
-
-  return mutate;
 };

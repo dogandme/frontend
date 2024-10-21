@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Region } from "../api/region";
+import type { Region } from "@/entities/auth/api";
 import { validateEmail, validatePassword } from "../lib";
 
 interface LoginFormStore {

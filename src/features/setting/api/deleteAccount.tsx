@@ -1,36 +1,21 @@
 import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useAuthStore } from "@/shared/store";
+import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
 interface DeleteAccountRequest {
   password: string;
 }
 
-interface DeleteAccountResponse {
-  code: number;
-  message: string;
-}
-
 const deleteAccount = async (deleteAccountData: DeleteAccountRequest) => {
-  const response = await fetch(SETTING_END_POINT.DELETE_ACCOUNT, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: useAuthStore.getState().token!,
-    },
-    body: JSON.stringify(deleteAccountData),
+  return apiClient.delete(SETTING_END_POINT.DELETE_ACCOUNT, {
+    withToken: true,
+    body: deleteAccountData,
   });
-  const data: DeleteAccountResponse = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-  return data;
 };
 
 export const useDeleteAccount = () => {
-  return useMutation({
+  return useMutation<unknown, Error, DeleteAccountRequest>({
     mutationFn: deleteAccount,
     mutationKey: ["deleteAccount"],
     onSuccess: () => {

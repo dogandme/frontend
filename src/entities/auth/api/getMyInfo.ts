@@ -1,7 +1,7 @@
-import { skipToken, useQuery } from "@tanstack/react-query";
-import type { Region } from "@/features/auth/api/region";
-import { AuthStore } from "@/shared/store";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/shared/lib";
 import { MY_INFO_END_POINT, SOCIAL_TYPE } from "../constants";
+import type { Region } from "./getRegion";
 
 export interface MyInfo {
   email: string;
@@ -13,33 +13,15 @@ export interface MyInfo {
   isPasswordSet: boolean;
 }
 
-export interface MyInfoResponse {
-  code: number;
-  message: string;
-  content: MyInfo;
-}
-
-const getMyInfo = async ({ token }: { token: string }) => {
-  const response = await fetch(MY_INFO_END_POINT, {
-    method: "GET",
-    headers: {
-      Authorization: token,
-    },
+const getMyInfo = async () => {
+  return apiClient.get<MyInfo>(MY_INFO_END_POINT, {
+    withToken: true,
   });
-
-  const data: MyInfoResponse = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-
-  return data;
 };
 
-export const useGetMyInfo = ({ token }: Pick<AuthStore, "token">) => {
+export const useGetMyInfo = () => {
   return useQuery({
     queryKey: ["myInfo"],
-    queryFn: typeof token === "string" ? () => getMyInfo({ token }) : skipToken,
-    select: (data) => data.content,
+    queryFn: getMyInfo,
   });
 };

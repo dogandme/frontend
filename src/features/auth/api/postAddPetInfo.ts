@@ -1,30 +1,28 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { PetInfo } from "@/entities/profile/api";
+import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";
 
-interface PostPetInfoResponseData {
-  code: number;
-  message: string;
-  content: {
-    role: string;
-    authorization: string;
-  };
+interface PostPetInfoResponse {
+  role: string;
+  authorization: string;
 }
 
-export type PetInfoFormObject = Omit<PetInfo, "profile">;
-export interface ProfileImage {
+type PetInfoFormObject = Omit<PetInfo, "profile">;
+
+interface ProfileImage {
   image: File | null;
 }
 
-export type PostPetInfoRequestData = PetInfoFormObject & ProfileImage;
+type PostPetInfoRequest = PetInfoFormObject & ProfileImage;
 
-const postPetInfo = async ({
+const postAddPetInfo = async ({
   image,
   ...petInfoFormObject
-}: PostPetInfoRequestData): Promise<PostPetInfoResponseData> => {
+}: PostPetInfoRequest) => {
   const formData = new FormData();
 
   // 이미지 파일은 파일 이름과 확장자를 붙혀 보내야 합니다.
@@ -35,39 +33,23 @@ const postPetInfo = async ({
 
   formData.append("petSignUpDto", JSON.stringify(petInfoFormObject));
 
-  const response = await fetch(SIGN_UP_END_POINT.PET_INFO, {
-    method: "POST",
-    headers: {
-      Authorization: useAuthStore.getState().token!,
-    },
+  return apiClient.post<PostPetInfoResponse>(SIGN_UP_END_POINT.PET_INFO, {
+    withToken: true,
     credentials:
       process.env.NODE_ENV === "development" ? "include" : "same-origin",
     body: formData,
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    if (response.status === 500) {
-      throw new Error(
-        "예기치 못한 에러가 발생했습니다.잠시 후 다시 시도해주세요.",
-      );
-    }
-    throw new Error(data.message);
-  }
-
-  return data;
 };
 
-export const usePostPetInfo = () => {
+export const usePostAddPetInfo = () => {
   const setRole = useAuthStore((state) => state.setRole);
   const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
-  return useMutation<PostPetInfoResponseData, Error, PostPetInfoRequestData>({
-    mutationFn: postPetInfo,
+  return useMutation<PostPetInfoResponse, Error, PostPetInfoRequest>({
+    mutationFn: postAddPetInfo,
     onSuccess: (data) => {
-      const { role, authorization: token } = data.content;
+      const { role, authorization: token } = data;
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
 
       setRole(role);

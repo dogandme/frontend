@@ -1,27 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AuthStore, useAuthStore } from "@/shared/store";
+import { apiClient } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
-/**
- * @param token - useAuthStore 에 담긴 토큰 값 입니다.
- * @returns - 로그아웃 요청에 대한 응답을 반환합니다.
- */
-const postLogout = async (token: NonNullable<AuthStore["token"]>) => {
-  const response = await fetch(SETTING_END_POINT.LOGOUT, {
-    method: "POST",
-    headers: {
-      Authorization: token,
-    },
+const postLogout = async () => {
+  return apiClient.post(SETTING_END_POINT.LOGOUT, {
+    withToken: true,
     credentials:
       process.env.NODE_ENV === "development" ? "include" : "same-origin",
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-  return data;
 };
 
 /**
@@ -35,7 +22,7 @@ export const usePostLogout = ({ onMutate }: { onMutate: () => void }) => {
   const queryClient = useQueryClient();
   const resetAuthStore = useAuthStore((state) => state.reset);
 
-  return useMutation({
+  return useMutation<unknown, Error>({
     mutationFn: postLogout,
     // 2024/10/03 - 현재는 로그아웃 단계에서 response 값과 상관 없이 로그아웃 처리 하기로 이야기 나눠놓았습니다.
     onMutate: () => {

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { create, useStore } from "zustand";
-import { LatLng, Region } from "../api/region";
+import type { LatLng, Region } from "@/entities/auth/api";
 import { RegionModalStoreContext } from "../ui/regionModal";
 
 interface RegionModalInternalState {

@@ -1,9 +1,9 @@
-import { usePostPetInfo } from "@/features/auth/api";
+import { usePostAddPetInfo } from "@/features/auth/api";
 import { PetInformationForm } from "@/features/auth/ui";
 import { AuthNavigationBar } from "@/features/auth/ui";
 
 const PetInfoPage = () => {
-  const { mutate: postPetInformation, isPending } = usePostPetInfo();
+  const { mutate: postAddPetInfo, isPending } = usePostAddPetInfo();
 
   return (
     <div>
@@ -16,7 +16,7 @@ const PetInfoPage = () => {
         </h1>
         <PetInformationForm
           onSubmit={({ name, breed, description, personalities, profile }) =>
-            postPetInformation({
+            postAddPetInfo({
               name,
               breed,
               description,
