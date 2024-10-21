@@ -1,39 +1,22 @@
 import { useMutation } from "@tanstack/react-query";
-import { useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { apiClient, useSnackBar } from "@/shared/lib";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordChangeFormStore } from "../store";
 
-interface PutChangePasswordRequest {
+interface PutChangePasswordRequestData {
   password: string;
   newPw: string;
   newPwChk: string;
 }
 
-interface PutChangePasswordResponse {
-  code: number;
-  message: string;
-}
-
 const putChangePassword = async (
-  changePasswordData: PutChangePasswordRequest,
+  changePasswordData: PutChangePasswordRequestData,
 ) => {
-  const response = await fetch(SETTING_END_POINT.CHANGE_PASSWORD, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: useAuthStore.getState().token!,
-    },
-    body: JSON.stringify(changePasswordData),
+  return apiClient.put(SETTING_END_POINT.CHANGE_PASSWORD, {
+    withToken: true,
+    body: changePasswordData,
   });
-
-  const data: PutChangePasswordResponse = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-  return data;
 };
 
 export const usePutChangePassword = ({
