@@ -2,11 +2,10 @@ import { PetInformationForm } from "@/features/auth/ui";
 import { UserInfo } from "@/entities/profile/api";
 import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
-import { usePutChangePetInformation } from "../api";
+import { usePutChangePetInfo } from "../api";
 
 export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
-  const { mutate: putChangePetInformation, isPending } =
-    usePutChangePetInformation();
+  const { mutate: putChangePetInformation, isPending } = usePutChangePetInfo();
 
   const { handleOpen, onClose } = useModal(() => (
     <Modal modalType="fullPage">

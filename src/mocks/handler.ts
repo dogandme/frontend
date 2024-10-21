@@ -9,10 +9,10 @@ import {
 import { GetMarkingListRequestData } from "@/features/marking/api";
 import { MARKING_END_POINT } from "@/features/marking/constants";
 import { PostChangeRegionRequestData } from "@/features/setting/api";
-import {
+import type {
   PutChangeAgeRequestData,
   PutChangeGenderRequestData,
-  PutChangePetInformationRequest,
+  PutChangePetInfoRequestData,
 } from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
@@ -894,7 +894,7 @@ const changeUserInfoHandler = [
 ];
 
 const putChangePetInformationHandler = [
-  http.put<PathParams, PutChangePetInformationRequest>(
+  http.put<PathParams, PutChangePetInfoRequestData>(
     SETTING_END_POINT.CHANGE_PET_INFO,
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));
