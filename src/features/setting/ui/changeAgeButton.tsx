@@ -8,13 +8,13 @@ import { type PutChangeAgeRequestData, usePutChangeAge } from "../api";
 // TODO useQuery 옮기고 isLoading 동안 disabled 시키기
 export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { mutate, isPending } = usePutChangeAge();
+  const { mutate: putChangeAge, isPending } = usePutChangeAge();
 
-  const putChangeAge = ({ age: newAge }: PutChangeAgeRequestData) => {
+  const handleSelect = ({ age: newAge }: PutChangeAgeRequestData) => {
     if (newAge === age) {
       return;
     }
-    mutate({ age: newAge });
+    putChangeAge({ age: newAge });
   };
 
   return (
@@ -33,7 +33,7 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
       <ChangeAgeBottomSheet
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        onSelect={putChangeAge}
+        onSelect={handleSelect}
         isSelected={(key) => key === age}
       />
     </>
