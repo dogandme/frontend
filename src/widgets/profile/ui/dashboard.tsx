@@ -6,6 +6,7 @@ import {
   ProfileHeading,
   ProfileImage,
 } from "@/entities/profile/ui";
+import { useNicknameParams } from "@/shared/lib/profile";
 
 /**
  * ProfileOverView는 NonNullable 한 useGetProfile의 반환값을 받아서 렌더링 됩니다.
@@ -25,7 +26,7 @@ export const ProfileOverView = ({
   followings,
 }: ProfileOverViewProps) => {
   const { profile, name, breed, description, personalities } = pet;
-
+  const { isMyPage } = useNicknameParams();
   return (
     <section className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full">
       <div className="flex gap-4 self-stretch">
@@ -39,7 +40,7 @@ export const ProfileOverView = ({
           followings={followings}
         />
         {/* TODO 내 페이지인지, 남의 페이지인지에 따라 다른 버튼을 보여줘야 함 */}
-        <ProfileEditButton pet={pet} />
+        {isMyPage ? <ProfileEditButton pet={pet} /> : <button> 팔로잉</button>}
       </div>
       {/* 반려동물 소개와 성격 리스트 */}
       <PetDescription description={description} />
