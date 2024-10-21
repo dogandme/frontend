@@ -106,6 +106,7 @@ export const ROUTER_PATH = {
   SETTING: `/setting`,
   MANAGE_ACCOUNT: `/setting/manage-account`,
   EDIT_MY_INFO: `/setting/edit-info`,
+  FOLLOWING: `/my-page/followings`,
 
   LOGIN: `/login`,
   LOGIN_BY_EMAIL: `/login/email`,

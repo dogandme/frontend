@@ -3,6 +3,7 @@ import { ProfilePage } from "@/pages/[nickname]";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
 import { MapPage } from "@/pages/map";
+import { FollowingPage } from "@/pages/my-page/following";
 import { SettingPage } from "@/pages/setting";
 import { EditInfoPage } from "@/pages/setting/edit-info/page";
 import { AccountManagementPage } from "@/pages/setting/manage-account";
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
       {
         path: ROUTER_PATH.PROFILE,
         element: <ProfilePage />,
+      },
+      {
+        path: ROUTER_PATH.FOLLOWING,
+        element: <FollowingPage />,
       },
       {
         path: ROUTER_PATH.SETTING,
