@@ -3,7 +3,7 @@ import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
-interface PostAddUserInfoRequestData {
+interface PostAddUserInfoRequest {
   token: string;
   nickname: string;
   gender: "FEMALE" | "MALE" | "NONE";
@@ -12,22 +12,19 @@ interface PostAddUserInfoRequestData {
   marketingYn: boolean;
 }
 
-interface PostAddUserInfoResponseData {
+interface PostAddUserInfoResponse {
   role: string;
   nickname: string;
   authorization: string;
 }
 
-const putAddUserInfo = async (userInfo: PostAddUserInfoRequestData) => {
-  return apiClient.put<PostAddUserInfoResponseData>(
-    SIGN_UP_END_POINT.USER_INFO,
-    {
-      withToken: true,
-      credentials:
-        process.env.NODE_ENV === "development" ? "include" : "same-origin",
-      body: userInfo,
-    },
-  );
+const putAddUserInfo = async (userInfo: PostAddUserInfoRequest) => {
+  return apiClient.put<PostAddUserInfoResponse>(SIGN_UP_END_POINT.USER_INFO, {
+    withToken: true,
+    credentials:
+      process.env.NODE_ENV === "development" ? "include" : "same-origin",
+    body: userInfo,
+  });
 };
 
 export const usePutAddUserInfo = ({ onSuccess }: { onSuccess: () => void }) => {
@@ -35,11 +32,7 @@ export const usePutAddUserInfo = ({ onSuccess }: { onSuccess: () => void }) => {
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
 
-  return useMutation<
-    PostAddUserInfoResponseData,
-    Error,
-    PostAddUserInfoRequestData
-  >({
+  return useMutation<PostAddUserInfoResponse, Error, PostAddUserInfoRequest>({
     mutationFn: putAddUserInfo,
     onSuccess: (data) => {
       const { role, nickname, authorization } = data;

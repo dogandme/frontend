@@ -1,4 +1,4 @@
-import { GetMarkingListRequestData } from "../api";
+import { GetMarkingListRequest } from "../api";
 
 export const MARKING_END_POINT = {
   SEARCH_MARKING: ({
@@ -6,7 +6,7 @@ export const MARKING_END_POINT = {
     southWestLng,
     northEastLat,
     northEastLng,
-  }: Omit<GetMarkingListRequestData, "token">) =>
+  }: Omit<GetMarkingListRequest, "token">) =>
     `/markings/search?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}`,
   ADD: `/markings`,
   SAVE_TEMP: `/markings/temp`,

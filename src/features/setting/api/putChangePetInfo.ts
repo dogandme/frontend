@@ -10,7 +10,7 @@ interface ProfileImage {
   image: File | null;
 }
 
-export type PutChangePetInfoRequestData = PetInfoFormObject &
+export type PutChangePetInfoRequest = PetInfoFormObject &
   ProfileImage & {
     isChaProfile: boolean;
   };
@@ -18,7 +18,7 @@ export type PutChangePetInfoRequestData = PetInfoFormObject &
 const putChangePetInfo = async ({
   image,
   ...changePetInfoFormObject
-}: PutChangePetInfoRequestData) => {
+}: PutChangePetInfoRequest) => {
   const formData = new FormData();
 
   formData.append("petDto", JSON.stringify(changePetInfoFormObject));

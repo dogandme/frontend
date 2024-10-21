@@ -3,13 +3,11 @@ import type { Region } from "@/entities/auth/api";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
-export interface PostChangeRegionRequestData {
+export interface PostChangeRegionRequest {
   newIds: Region["id"][];
 }
 
-const postChangeRegion = async (
-  changeRegionData: PostChangeRegionRequestData,
-) => {
+const postChangeRegion = async (changeRegionData: PostChangeRegionRequest) => {
   return apiClient.post(SETTING_END_POINT.CHANGE_REGION, {
     withToken: true,
     body: changeRegionData,

@@ -6,14 +6,14 @@ import { MARKING_END_POINT, POST_VISIBILITY_MAP } from "../constants";
 import { useMarkingFormStore } from "../store";
 
 // Marking Form 저장 API
-export interface PostAddMarkingRequestData extends LatLng {
+export interface PostAddMarkingRequest extends LatLng {
   region: string;
   isVisible: keyof typeof POST_VISIBILITY_MAP;
   content: string;
   images: File[];
 }
 
-const postAddMarking = async (formObj: PostAddMarkingRequestData) => {
+const postAddMarking = async (formObj: PostAddMarkingRequest) => {
   const { isVisible, images, ...rest } = formObj;
 
   const formData = new FormData();
@@ -48,7 +48,7 @@ export const usePostAddMarking = ({ onSuccess }: { onSuccess: () => void }) => {
   );
   const setMode = useMapStore((state) => state.setMode);
 
-  return useMutation<unknown, Error, PostAddMarkingRequestData>({
+  return useMutation<unknown, Error, PostAddMarkingRequest>({
     mutationFn: postAddMarking,
     onSuccess: () => {
       onSuccess();

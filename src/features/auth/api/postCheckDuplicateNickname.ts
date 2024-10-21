@@ -6,13 +6,13 @@ import {
 import { apiClient } from "@/shared/lib";
 import { SIGN_UP_END_POINT } from "../constants";
 
-export interface PostCheckDuplicateNicknameRequestData {
+export interface PostCheckDuplicateNicknameRequest {
   nickname: string;
 }
 
 const postCheckDuplicateNickname = async ({
   nickname,
-}: PostCheckDuplicateNicknameRequestData) => {
+}: PostCheckDuplicateNicknameRequest) => {
   return apiClient.post(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, {
     withToken: true,
     body: { nickname },
@@ -20,7 +20,7 @@ const postCheckDuplicateNickname = async ({
 };
 
 export const usePostCheckDuplicateNickname = () => {
-  return useMutation<unknown, Error, PostCheckDuplicateNicknameRequestData>({
+  return useMutation<unknown, Error, PostCheckDuplicateNicknameRequest>({
     mutationFn: postCheckDuplicateNickname,
     mutationKey: ["checkDuplicateNickname"],
   });
@@ -29,7 +29,7 @@ export const usePostCheckDuplicateNickname = () => {
 export const usePostCheckDuplicateNicknameState = () => {
   // mutate 상태 결과들을 보고 중복된 닉네임인지 판단
   const mutationState = useMutationState<
-    MutationState<unknown, Error, PostCheckDuplicateNicknameRequestData>
+    MutationState<unknown, Error, PostCheckDuplicateNicknameRequest>
   >({
     filters: {
       mutationKey: ["checkDuplicateNickname"],

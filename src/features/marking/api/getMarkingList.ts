@@ -52,7 +52,7 @@ export interface Marking {
   images: Image[];
 }
 
-export interface GetMarkingListRequestData {
+export interface GetMarkingListRequest {
   southWestLat: number;
   southWestLng: number;
   northEastLat: number;
@@ -64,7 +64,7 @@ const getMarkingList = async ({
   southWestLng,
   northEastLat,
   northEastLng,
-}: GetMarkingListRequestData) => {
+}: GetMarkingListRequest) => {
   const hasToken = !!useAuthStore.getState().token;
 
   return apiClient.get<Marking[]>(

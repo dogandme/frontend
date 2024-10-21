@@ -4,10 +4,10 @@ import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT, POST_VISIBILITY_MAP } from "../constants";
 import { useMarkingFormStore } from "../store";
-import type { PostAddMarkingRequestData } from "./postAddMarking";
+import type { PostAddMarkingRequest } from "./postAddMarking";
 
 interface PostAddTempMarkingRequestData
-  extends Omit<PostAddMarkingRequestData, "isVisible"> {
+  extends Omit<PostAddMarkingRequest, "isVisible"> {
   isVisible: keyof typeof POST_VISIBILITY_MAP | "";
 }
 

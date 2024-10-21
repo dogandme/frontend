@@ -41,11 +41,11 @@ export interface UserInfo {
   markings: MarkingPreviewData[];
 }
 
-interface ProfileRequestData {
+interface ProfileRequest {
   nickname: UserNickname;
 }
 
-export const getProfile = async ({ nickname }: ProfileRequestData) => {
+export const getProfile = async ({ nickname }: ProfileRequest) => {
   return apiClient.get<UserInfo>(PROFILE_END_POINT.PROFILE(nickname), {
     withToken: true,
   });

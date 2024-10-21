@@ -6,8 +6,8 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Snackbar } from "@/shared/ui/snackbar";
 import {
-  PostCheckCodeRequestData,
-  PostSendCodeRequestData,
+  PostCheckCodeRequest,
+  PostSendCodeRequest,
   usePostCheckCode,
   usePostSendCode,
   usePostSignUpByEmail,
@@ -44,7 +44,7 @@ const Email = () => {
   } = usePostSendCode();
 
   const checkCodeResponseCacheArr = useMutationState<
-    MutationState<unknown, Error, PostCheckCodeRequestData>
+    MutationState<unknown, Error, PostCheckCodeRequest>
   >({
     filters: {
       mutationKey: ["checkVerificationCode"],
@@ -195,7 +195,7 @@ const VerificationCode = () => {
 
   // 인증 코드 전송 요청에 대한 응답 캐시
   const sendCodeResponseCacheArr = useMutationState<
-    MutationState<unknown, Error, PostSendCodeRequestData>
+    MutationState<unknown, Error, PostSendCodeRequest>
   >({
     filters: {
       mutationKey: ["sendVerificationCode"],

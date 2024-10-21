@@ -6,13 +6,13 @@ import {
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
-import { GetMarkingListRequestData } from "@/features/marking/api";
+import { GetMarkingListRequest } from "@/features/marking/api";
 import { MARKING_END_POINT } from "@/features/marking/constants";
-import { PostChangeRegionRequestData } from "@/features/setting/api";
+import { PostChangeRegionRequest } from "@/features/setting/api";
 import type {
-  PutChangeAgeRequestData,
-  PutChangeGenderRequestData,
-  PutChangePetInfoRequestData,
+  PutChangeAgeRequest,
+  PutChangeGenderRequest,
+  PutChangePetInfoRequest,
 } from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
@@ -297,7 +297,7 @@ export const markingModalHandlers = [
     });
   }),
   http.get<{
-    [K in keyof Omit<GetMarkingListRequestData, "token">]: string;
+    [K in keyof Omit<GetMarkingListRequest, "token">]: string;
   }>(`${API_BASE_URL}/markings/search`, async ({ request }) => {
     const token = request.headers.get("Authorization");
 
@@ -623,7 +623,7 @@ const getNewAccessTokenHandler = [
 ];
 
 const putChangeRegionHandler = [
-  http.post<PathParams, PostChangeRegionRequestData>(
+  http.post<PathParams, PostChangeRegionRequest>(
     SETTING_END_POINT.CHANGE_REGION,
     async ({ request }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -705,7 +705,7 @@ const putChangeGenderHandler = [
     await new Promise((res) => setTimeout(res, 1000));
 
     const token = request.headers.get("Authorization")!;
-    const { gender } = (await request.json()) as PutChangeGenderRequestData;
+    const { gender } = (await request.json()) as PutChangeGenderRequest;
     if (token === "staleAccessToken") {
       return HttpResponse.json(
         {
@@ -832,7 +832,7 @@ export const putSetPasswordHandler = [
 ];
 
 const putChangeAgeHandler = [
-  http.put<PathParams, PutChangeAgeRequestData>(
+  http.put<PathParams, PutChangeAgeRequest>(
     SETTING_END_POINT.CHANGE_AGE,
     async ({ request }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -894,7 +894,7 @@ const changeUserInfoHandler = [
 ];
 
 const putChangePetInformationHandler = [
-  http.put<PathParams, PutChangePetInfoRequestData>(
+  http.put<PathParams, PutChangePetInfoRequest>(
     SETTING_END_POINT.CHANGE_PET_INFO,
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));

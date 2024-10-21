@@ -4,11 +4,9 @@ import type { MyInfo } from "@/entities/auth/api";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
-export type PutChangeGenderRequestData = Pick<MyInfo, "gender">;
+export type PutChangeGenderRequest = Pick<MyInfo, "gender">;
 
-const putChangeGender = async (
-  changeGenderData: PutChangeGenderRequestData,
-) => {
+const putChangeGender = async (changeGenderData: PutChangeGenderRequest) => {
   return apiClient.put(SETTING_END_POINT.CHANGE_GENDER, {
     withToken: true,
     body: changeGenderData,

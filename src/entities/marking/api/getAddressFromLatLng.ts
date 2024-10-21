@@ -2,20 +2,20 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { REVERSE_GEOCODING_END_POINT } from "../constants";
 
-interface GetAddressFromLatLngRequestData {
+interface GetAddressFromLatLngRequest {
   lat: number;
   lng: number;
 }
 
-interface GetAddressFromLatLngResponseData {
+interface GetAddressFromLatLngResponse {
   region: string;
 }
 
 const getAddressFromLatLng = async ({
   lat,
   lng,
-}: GetAddressFromLatLngRequestData) => {
-  return apiClient.get<GetAddressFromLatLngResponseData>(
+}: GetAddressFromLatLngRequest) => {
+  return apiClient.get<GetAddressFromLatLngResponse>(
     REVERSE_GEOCODING_END_POINT({ lat, lng }),
     {
       withToken: true,
@@ -26,7 +26,7 @@ const getAddressFromLatLng = async ({
 export const useGetAddressFromLatLng = ({
   lat,
   lng,
-}: GetAddressFromLatLngRequestData) => {
+}: GetAddressFromLatLngRequest) => {
   return useQuery({
     queryKey: ["address", lat, lng],
     queryFn: () => getAddressFromLatLng({ lat, lng }),

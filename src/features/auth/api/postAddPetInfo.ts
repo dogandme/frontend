@@ -6,7 +6,7 @@ import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";
 
-interface PostPetInfoResponseData {
+interface PostPetInfoResponse {
   role: string;
   authorization: string;
 }
@@ -17,12 +17,12 @@ interface ProfileImage {
   image: File | null;
 }
 
-type PostPetInfoRequestData = PetInfoFormObject & ProfileImage;
+type PostPetInfoRequest = PetInfoFormObject & ProfileImage;
 
 const postAddPetInfo = async ({
   image,
   ...petInfoFormObject
-}: PostPetInfoRequestData): Promise<PostPetInfoResponseData> => {
+}: PostPetInfoRequest) => {
   const formData = new FormData();
 
   // 이미지 파일은 파일 이름과 확장자를 붙혀 보내야 합니다.
@@ -33,7 +33,7 @@ const postAddPetInfo = async ({
 
   formData.append("petSignUpDto", JSON.stringify(petInfoFormObject));
 
-  return apiClient.post<PostPetInfoResponseData>(SIGN_UP_END_POINT.PET_INFO, {
+  return apiClient.post<PostPetInfoResponse>(SIGN_UP_END_POINT.PET_INFO, {
     withToken: true,
     credentials:
       process.env.NODE_ENV === "development" ? "include" : "same-origin",
@@ -46,7 +46,7 @@ export const usePostAddPetInfo = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
-  return useMutation<PostPetInfoResponseData, Error, PostPetInfoRequestData>({
+  return useMutation<PostPetInfoResponse, Error, PostPetInfoRequest>({
     mutationFn: postAddPetInfo,
     onSuccess: (data) => {
       const { role, authorization: token } = data;

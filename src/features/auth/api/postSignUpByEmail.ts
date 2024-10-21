@@ -5,13 +5,13 @@ import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
-interface PostSignUpByEmailResponseData {
+interface PostSignUpByEmailResponse {
   authorization: string;
   role: string;
   userId: number;
 }
 
-interface PostSignUpByEmailRequestData {
+interface PostSignUpByEmailRequest {
   email: string;
   password: string;
 }
@@ -19,13 +19,10 @@ interface PostSignUpByEmailRequestData {
 const postSignUpByEmail = async ({
   email,
   password,
-}: PostSignUpByEmailRequestData) => {
-  return apiClient.post<PostSignUpByEmailResponseData>(
-    SIGN_UP_END_POINT.EMAIL,
-    {
-      body: { email, password },
-    },
-  );
+}: PostSignUpByEmailRequest) => {
+  return apiClient.post<PostSignUpByEmailResponse>(SIGN_UP_END_POINT.EMAIL, {
+    body: { email, password },
+  });
 };
 
 export const usePostSignUpByEmail = () => {
@@ -34,9 +31,9 @@ export const usePostSignUpByEmail = () => {
   const setRole = useAuthStore((state) => state.setRole);
 
   return useMutation<
-    PostSignUpByEmailResponseData,
+    PostSignUpByEmailResponse,
     Error,
-    PostSignUpByEmailRequestData
+    PostSignUpByEmailRequest
   >({
     mutationFn: postSignUpByEmail,
     onSuccess: (data) => {

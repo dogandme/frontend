@@ -3,11 +3,11 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
-interface DeleteAccountRequestData {
+interface DeleteAccountRequest {
   password: string;
 }
 
-const deleteAccount = async (deleteAccountData: DeleteAccountRequestData) => {
+const deleteAccount = async (deleteAccountData: DeleteAccountRequest) => {
   return apiClient.delete(SETTING_END_POINT.DELETE_ACCOUNT, {
     withToken: true,
     body: deleteAccountData,

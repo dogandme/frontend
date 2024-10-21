@@ -6,21 +6,21 @@ import { useAuthStore } from "@/shared/store";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
 
-interface EmailLoginResponseData {
+interface EmailLoginResponse {
   authorization: string;
   role: string;
   userId: number | null;
   nickname: string | null;
 }
 
-interface EmailLoginRequestData {
+interface EmailLoginRequest {
   email: string;
   password: string;
   persistLogin: boolean;
 }
 
-const postLogin = async (formData: EmailLoginRequestData) => {
-  return apiClient.post<EmailLoginResponseData>(LOGIN_END_POINT.EMAIL, {
+const postLogin = async (formData: EmailLoginRequest) => {
+  return apiClient.post<EmailLoginResponse>(LOGIN_END_POINT.EMAIL, {
     body: formData,
   });
 };
@@ -32,7 +32,7 @@ export const usePostLogin = () => {
   const setRole = useAuthStore((state) => state.setRole);
   const setNickname = useAuthStore((state) => state.setNickname);
 
-  return useMutation<EmailLoginResponseData, Error, EmailLoginRequestData>({
+  return useMutation<EmailLoginResponse, Error, EmailLoginRequest>({
     mutationFn: postLogin,
     onSuccess: (data) => {
       const { authorization, role, nickname } = data;

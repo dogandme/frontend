@@ -4,14 +4,14 @@ import { Snackbar } from "@/shared/ui/snackbar";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordChangeFormStore } from "../store";
 
-interface PutChangePasswordRequestData {
+interface PutChangePasswordRequest {
   password: string;
   newPw: string;
   newPwChk: string;
 }
 
 const putChangePassword = async (
-  changePasswordData: PutChangePasswordRequestData,
+  changePasswordData: PutChangePasswordRequest,
 ) => {
   return apiClient.put(SETTING_END_POINT.CHANGE_PASSWORD, {
     withToken: true,

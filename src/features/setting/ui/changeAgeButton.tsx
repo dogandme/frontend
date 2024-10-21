@@ -3,14 +3,14 @@ import { AGE_RANGE_MAP } from "@/features/auth/constants";
 import type { MyInfo } from "@/entities/auth/api";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
-import { type PutChangeAgeRequestData, usePutChangeAge } from "../api";
+import { type PutChangeAgeRequest, usePutChangeAge } from "../api";
 
 // TODO useQuery 옮기고 isLoading 동안 disabled 시키기
 export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { mutate: putChangeAge, isPending } = usePutChangeAge();
 
-  const handleSelect = ({ age: newAge }: PutChangeAgeRequestData) => {
+  const handleSelect = ({ age: newAge }: PutChangeAgeRequest) => {
     if (newAge === age) {
       return;
     }
@@ -43,7 +43,7 @@ export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
 interface ChangeAgeBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: ({ age }: PutChangeAgeRequestData) => void;
+  onSelect: ({ age }: PutChangeAgeRequest) => void;
   isSelected: (key: keyof typeof AGE_RANGE_MAP) => boolean;
 }
 
