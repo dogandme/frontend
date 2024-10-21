@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ROUTER_PATH } from "@/shared/constants";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/shared/store";
 
 type Role = null | "NONE" | "GUEST" | "USER";
@@ -11,12 +10,9 @@ type Role = null | "NONE" | "GUEST" | "USER";
  * @param boundary 허용 가능한 권한의 최소 범위를 이야기 합니다. 예를 들어 boundary 가 NONE 이라면 NONE 이상 부터 Permission을 갖습니다.
  */
 export const useSettingPermission = (boundary: Role = "NONE") => {
-  const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const nickname = useAuthStore((state) => state.nickname);
   const role = useAuthStore((state) => state.role);
-  const urlNickname = decodeURIComponent(pathname.split("/")[1]);
 
   let hasPermission: boolean = false;
   switch (boundary) {
@@ -27,12 +23,10 @@ export const useSettingPermission = (boundary: Role = "NONE") => {
       hasPermission = role !== null;
       break;
     case "GUEST":
-      hasPermission =
-        (role === "ROLE_GUEST" || role === "ROLE_USER") &&
-        nickname === urlNickname;
+      hasPermission = role === "ROLE_GUEST" || role === "ROLE_USER";
       break;
     case "USER":
-      hasPermission = role === "ROLE_USER" && nickname === urlNickname;
+      hasPermission = role === "ROLE_USER";
       break;
     default:
       hasPermission = false;
@@ -40,9 +34,9 @@ export const useSettingPermission = (boundary: Role = "NONE") => {
 
   useEffect(() => {
     if (!hasPermission) {
-      navigate(ROUTER_PATH.MY_PAGE);
+      navigate(`/@${role}`);
     }
-  }, [hasPermission, navigate]);
+  }, [hasPermission, navigate, role]);
 
   return hasPermission;
 };
