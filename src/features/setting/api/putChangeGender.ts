@@ -47,10 +47,7 @@ export const usePutChangeGender = () => {
         if (!prevQueryData) return prevQueryData;
         return {
           ...prevQueryData,
-          content: {
-            ...prevQueryData,
-            gender: gender,
-          },
+          gender,
         };
       });
 

@@ -45,12 +45,10 @@ export const usePutChangeAge = () => {
 
       queryClient.setQueryData(["myInfo"], (prevQueryData?: MyInfo) => {
         if (!prevQueryData) return prevQueryData;
+
         return {
           ...prevQueryData,
-          content: {
-            ...prevQueryData,
-            age: age,
-          },
+          age,
         };
       });
 
