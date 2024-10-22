@@ -6,7 +6,7 @@ export const SNACKBAR_ID = 999999999;
 export interface SnackBarProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   autoHideDuration?: number | null;
-  positionClassName?: string;
+  className?: string;
 }
 
 /**
@@ -18,7 +18,7 @@ export interface SnackBarProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Snackbar = ({
   children,
   autoHideDuration = 1000,
-  positionClassName = "absolute top-4 left-1/2 transform -translate-x-1/2",
+  className = "absolute top-4 left-1/2 transform -translate-x-1/2",
   ...props
 }: SnackBarProps) => {
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
@@ -39,7 +39,7 @@ export const Snackbar = ({
     "shadow-custom-2 inline-flex min-w-[328px] max-w-96 items-center justify-between rounded-2xl bg-grey-0 py-1 pl-4 pr-3";
 
   return (
-    <div className={`${baseClassName} ${positionClassName}`} {...props}>
+    <div className={`${baseClassName} ${className}`} {...props}>
       <div className="body-2 text-grey-700 flex flex-col">{children}</div>
       <button
         className="h-10"
