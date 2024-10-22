@@ -141,19 +141,19 @@ const MyPageNavLink = () => {
 
   const { active, inactive, base } = footerNavigationBarStyles;
 
-  const getNavigatePath = () => {
-    if (role === "ROLE_USER" || role === "ROLE_GUEST") {
-      return `/@${nickname}`;
+  const getMyPagePath = () => {
+    if (role === null) {
+      return ROUTER_PATH.LOGIN;
     }
     if (role === "ROLE_NONE") {
       return ROUTER_PATH.SIGN_UP_USER_INFO;
     }
-    return ROUTER_PATH.LOGIN;
+    return `/@${nickname}`;
   };
 
   return (
     <NavLink
-      to={getNavigatePath()}
+      to={getMyPagePath()}
       className={({ isActive }) => `${isActive ? active : inactive} ${base}`}
     >
       <img
