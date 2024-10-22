@@ -21,8 +21,6 @@ export const HistoryTracker = () => {
       ROUTER_PATH.SIGN_UP_USER_INFO,
       ROUTER_PATH.SIGN_UP_PET_INFO,
       ROUTER_PATH.FORGET_PASSWORD,
-      // 404 error 페이지 제외
-      ROUTER_PATH.NOT_FOUND_USER,
     ];
     const isAuthRoute = authPageRouterList.includes(pathname);
 
