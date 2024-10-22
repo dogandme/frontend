@@ -61,7 +61,7 @@ const fetcher = async <T>(
       options.body = body instanceof FormData ? body : JSON.stringify(body);
     }
 
-    const response = await fetch(`${API_BASE_URL + url}`, options);
+    const response = await fetch(url, options);
 
     if (!response.ok) {
       const { code, message }: Response = await response.json();

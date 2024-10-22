@@ -3,18 +3,18 @@ import { API_BASE_URL } from "@/shared/constants";
 export const LOGIN_END_POINT = {
   GOOGLE: `${API_BASE_URL}/oauth2/authorization/google`,
   NAVER: `${API_BASE_URL}/oauth2/authorization/naver`,
-  EMAIL: "/login",
+  EMAIL: `${API_BASE_URL}/login`,
 };
 
 export const SIGN_UP_END_POINT = {
-  EMAIL: "/users",
-  VERIFICATION_CODE: "/users/auth",
-  CHECK_VERIFICATION_CODE: "/users/auth/check",
-  DUPLICATE_NICKNAME: "/users/nickname",
-  USER_INFO: "/users/additional-info",
-  PET_INFO: "/pets",
+  EMAIL: `${API_BASE_URL}/users`,
+  VERIFICATION_CODE: `${API_BASE_URL}/users/auth`,
+  CHECK_VERIFICATION_CODE: `${API_BASE_URL}/users/auth/check`,
+  DUPLICATE_NICKNAME: `${API_BASE_URL}/users/nickname`,
+  USER_INFO: `${API_BASE_URL}/users/additional-info`,
+  PET_INFO: `${API_BASE_URL}/pets`,
 };
 
 export const CHANGE_USER_INFO_END_POINT = {
-  NICKNAME: "/users/profile/nickname",
+  NICKNAME: `${API_BASE_URL}/users/profile/nickname`,
 };
