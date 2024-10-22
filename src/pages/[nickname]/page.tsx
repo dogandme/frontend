@@ -8,7 +8,7 @@ import {
 import { useGetProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useNicknameParams } from "@/shared/lib/profile";
-import { useAuthStore, AuthStore } from "@/shared/store";
+import { useAuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
 import { PlusIcon } from "@/shared/ui/icon";
 import {
@@ -199,7 +199,6 @@ const GuestPage = () => {
 export const RoleUserProfile = () => {
   const { nicknameParams, isMyPage } = useNicknameParams();
   const token = useAuthStore((state) => state.token);
-  const role = useAuthStore((state) => state.role);
   const navigate = useNavigate();
 
   const { data } = useGetProfile({
@@ -221,11 +220,11 @@ export const RoleUserProfile = () => {
   return (
     <>
       {isMyPage ? (
-        <MyPageNavigationBar role={role} nickname={nicknameParams} />
+        <MyPageNavigationBar />
       ) : (
-        <BackwardNavigationBar>
-          <h1 className="text-grey-900 title-1">{nicknameParams}님</h1>
-        </BackwardNavigationBar>
+        <BackwardNavigationBar
+          label={<h1 className="text-grey-900 title-1">{nicknameParams}님</h1>}
+        />
       )}
       <section className="px-4 flex flex-col items-start gap-8">
         <ProfileOverView
@@ -244,55 +243,8 @@ export const RoleUserProfile = () => {
   );
 };
 
-type MyPageNavigationBarProps = Pick<AuthStore, "role" | "nickname">;
-const MyPageNavigationBar = ({ role, nickname }: MyPageNavigationBarProps) => {
-  if (role === null) {
-    return (
-      <NavigationBar
-        componentType="buttonRight"
-        label={
-          <Link to={ROUTER_PATH.LOGIN} className="text-grey-900 title-1">
-            로그인 후 이용해 주세요
-          </Link>
-        }
-        button={
-          <Link
-            to={ROUTER_PATH.LOGIN}
-            className="px-3 py-3 text-grey-500"
-            aria-label="로그인 하기"
-          >
-            <SettingIcon />
-          </Link>
-        }
-      />
-    );
-  }
-
-  if (role === "ROLE_NONE") {
-    return (
-      <NavigationBar
-        componentType="buttonRight"
-        label={
-          <Link
-            to={ROUTER_PATH.SIGN_UP_USER_INFO}
-            className="text-grey-900 title-1"
-          >
-            기본 정보 입력 후 이용해 주세요
-          </Link>
-        }
-        button={
-          <Link
-            to={ROUTER_PATH.SETTING}
-            className="px-3 py-3 text-grey-500"
-            aria-label="내 정보 설정하기"
-          >
-            <SettingIcon />
-          </Link>
-        }
-      />
-    );
-  }
-
+const MyPageNavigationBar = () => {
+  const nickname = useAuthStore((state) => state.nickname);
   return (
     <NavigationBar
       componentType="buttonRight"
