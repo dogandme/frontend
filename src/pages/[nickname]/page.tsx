@@ -93,7 +93,6 @@ const MyPageNavigationBar = () => {
 
 /**
  * 해당 컴포넌트는 사용자가 반려동물을 등록하지 않았을 때 MyPage에서 나타나는 컴포넌트 입니다.
- * 사용자 권한에 따라 라우팅 경로가 달라집니다.
  */
 export const EmptyMyProfileOverView = () => {
   return (
