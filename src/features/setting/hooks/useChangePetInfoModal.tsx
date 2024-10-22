@@ -15,7 +15,7 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
           onClose();
         }}
       />
-      <Modal.Content>
+      <Modal.Content className="pb-32">
         <h1 className="headline-3 overflow-ellipsis text-center text-grey-900">
           우리 댕댕이를 소개해 주세요
         </h1>
@@ -35,19 +35,14 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
              * initialState 로 건내준 pet 정보와 변경 된 정보가 변경되지 않았다면
              * isChaProfile 을 false 로 설정합니다.
              */
-            putChangePetInformation(
-              {
-                name,
-                breed,
-                personalities,
-                description,
-                isChaProfile: !!profile.file || profile.url !== pet.profile,
-                image: profile.file,
-              },
-              {
-                onSuccess: onClose,
-              },
-            );
+            putChangePetInformation({
+              name,
+              breed,
+              personalities,
+              description,
+              isChaProfile: !!profile.file || profile.url !== pet.profile,
+              image: profile.file,
+            });
           }}
         />
       </Modal.Content>
