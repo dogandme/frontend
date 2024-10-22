@@ -19,7 +19,7 @@ export const LogoutModal = ({
       onCloseLogoutModal();
       navigate(ROUTER_PATH.MAIN);
       // 네비게이팅이 완료된 후에 스낵바를 띄우기 위해 setTimeout 사용
-      setTimeout(() => handleOpenSnackbar("로그아웃이 완료되었습니다"), 100);
+      setTimeout(() => handleOpenSnackbar("로그아웃 되었습니다"), 100);
     },
   });
 
