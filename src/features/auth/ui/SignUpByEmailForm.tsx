@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { MutationState, useMutationState } from "@tanstack/react-query";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { useSnackBar } from "@/shared/lib/overlay";
+import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { Snackbar } from "@/shared/ui/snackbar";
 import {
   PostCheckCodeRequest,
   PostSendCodeRequest,
@@ -15,9 +14,7 @@ import {
 import { useSignUpByEmailFormStore } from "../store";
 
 const Email = () => {
-  const { handleOpen, onClose } = useSnackBar(() => (
-    <Snackbar onClose={onClose}>메일로 인증코드가 전송되었습니다</Snackbar>
-  ));
+  const handleOpenSnackbar = useSnackBar();
 
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
@@ -80,7 +77,7 @@ const Email = () => {
       { email },
       {
         onSuccess: () => {
-          handleOpen();
+          handleOpenSnackbar("메일로 인증코드가 전송되었습니다");
           setTimeLeft(1000 * 60 * 3);
           setHasEmailChangedSinceCodeRequest(false);
         },
@@ -437,22 +434,7 @@ const PasswordConfirm = () => {
 const SignUpByEmailForm = () => {
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
 
-  const {
-    handleOpen: handleEmptyFieldsSnackBar,
-    onClose: onCloseEmptyFieldsSnackBar,
-  } = useSnackBar(() => (
-    <Snackbar onClose={onCloseEmptyFieldsSnackBar}>
-      이메일과 비밀번호를 모두 입력해 주세요
-    </Snackbar>
-  ));
-  const {
-    handleOpen: handleValidFieldsSnackBar,
-    onClose: onCloseValidFieldsSnackBar,
-  } = useSnackBar(() => (
-    <Snackbar onClose={onCloseValidFieldsSnackBar}>
-      이메일 또는 비밀번호를 올바르게 입력해 주세요
-    </Snackbar>
-  ));
+  const handleOpenSnackbar = useSnackBar();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -469,7 +451,7 @@ const SignUpByEmailForm = () => {
     } = useSignUpByEmailFormStore.getState();
 
     if (isEmailEmpty || isPasswordEmpty || isConfirmPasswordEmpty) {
-      handleEmptyFieldsSnackBar();
+      handleOpenSnackbar("이메일과 비밀번호를 모두 입력해 주세요");
       return;
     }
 
@@ -477,7 +459,7 @@ const SignUpByEmailForm = () => {
       isValidEmail && isValidPassword && isValidConfirmPassword;
 
     if (!isValidEmailAndPassword) {
-      handleValidFieldsSnackBar();
+      handleOpenSnackbar("이메일 또는 비밀번호를 올바르게 입력해 주세요");
       return;
     }
 

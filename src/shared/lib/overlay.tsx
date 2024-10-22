@@ -46,13 +46,6 @@ export const useOverlay: UseOverlay = (
   return { handleOpen, onClose, isOpen };
 };
 
-export const useSnackBar: UseOverlay = (createOverlayComponent, options) => {
-  return useOverlay(createOverlayComponent, {
-    disableInteraction: false,
-    ...options,
-  });
-};
-
 export const useModal: UseOverlay = (createOverlayComponent, options) => {
   return useOverlay(createOverlayComponent, {
     disableInteraction: true,
