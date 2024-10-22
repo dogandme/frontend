@@ -268,16 +268,20 @@ const MyPageNavigationBar = () => {
  */
 export const EmptyMyProfileOverView = () => {
   const role = useAuthStore((state) => state.role);
-  const navigatePath =
-    role === null
-      ? ROUTER_PATH.LOGIN
-      : role === "ROLE_NONE"
-        ? ROUTER_PATH.SIGN_UP_USER_INFO
-        : ROUTER_PATH.SIGN_UP_PET_INFO;
+
+  const getNavigatePath = () => {
+    if (role === null) {
+      return ROUTER_PATH.LOGIN;
+    }
+    if (role === "ROLE_NONE") {
+      return ROUTER_PATH.SIGN_UP_USER_INFO;
+    }
+    return ROUTER_PATH.SIGN_UP_PET_INFO;
+  };
 
   return (
     <Link
-      to={navigatePath}
+      to={getNavigatePath()}
       className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full items-center text-grey-500"
     >
       <PlusIcon />
