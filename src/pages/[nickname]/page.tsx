@@ -15,6 +15,7 @@ import {
   BackwardNavigationBar,
   NavigationBar,
 } from "@/shared/ui/navigationbar";
+import { NotFoundUser } from "./notFoundUser";
 
 /**
  * 해당 컴포넌트는 /:nickname 경로로 들어온 사용자의 프로필 페이지를 나타냅니다.
@@ -25,7 +26,7 @@ export const ProfilePage = () => {
   const token = useAuthStore((state) => state.token);
   const navigate = useNavigate();
 
-  const { data } = useGetProfile({
+  const { data, isError, error } = useGetProfile({
     nickname: nicknameParams,
   });
 
@@ -35,6 +36,10 @@ export const ProfilePage = () => {
       navigate(ROUTER_PATH.LOGIN);
     }
   }, [token, navigate]);
+
+  if (isError && error.code === 404) {
+    return <NotFoundUser />;
+  }
 
   if (!data) {
     return;
