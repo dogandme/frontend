@@ -207,7 +207,7 @@ const VerificationCode = () => {
   const sendCodeStatus = lastSendCodeResponse?.status;
   const isErrorSendCode = sendCodeStatus === "error";
   const isSuccessSendCode = sendCodeStatus === "success";
-  const hasSentCode = !!lastSendCodeResponse?.data;
+  const hasSentCode = !!lastSendCodeResponse?.variables;
 
   const isTimeOver = timeLeft === 0 && isSuccessSendCode;
 
