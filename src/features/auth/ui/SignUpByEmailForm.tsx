@@ -5,13 +5,11 @@ import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import {
-  CheckVerificationCodeRequestData,
-  CheckVerificationCodeResponse,
-  usePostCheckVerificationCode,
+  PostCheckCodeRequest,
+  PostSendCodeRequest,
+  usePostCheckCode,
+  usePostSendCode,
   usePostSignUpByEmail,
-  usePostVerificationCode,
-  VerificationCodeRequestData,
-  VerificationCodeResponse,
 } from "../api";
 import { useSignUpByEmailFormStore } from "../store";
 
@@ -40,14 +38,10 @@ const Email = () => {
     isSuccess: isSuccessSendCode,
     isIdle: isIdleSendCode,
     variables,
-  } = usePostVerificationCode();
+  } = usePostSendCode();
 
   const checkCodeResponseCacheArr = useMutationState<
-    MutationState<
-      CheckVerificationCodeResponse,
-      Error,
-      CheckVerificationCodeRequestData
-    >
+    MutationState<unknown, Error, PostCheckCodeRequest>
   >({
     filters: {
       mutationKey: ["checkVerificationCode"],
@@ -191,14 +185,14 @@ const VerificationCode = () => {
     isError: isErrorCheckCode,
     isSuccess: isSuccessCheckCode,
     variables,
-  } = usePostCheckVerificationCode();
+  } = usePostCheckCode();
 
   const hasCodeChangedSinceCheckCodeRequest =
     variables?.authNum !== verificationCode;
 
   // 인증 코드 전송 요청에 대한 응답 캐시
   const sendCodeResponseCacheArr = useMutationState<
-    MutationState<VerificationCodeResponse, Error, VerificationCodeRequestData>
+    MutationState<unknown, Error, PostSendCodeRequest>
   >({
     filters: {
       mutationKey: ["sendVerificationCode"],
@@ -210,7 +204,7 @@ const VerificationCode = () => {
   const sendCodeStatus = lastSendCodeResponse?.status;
   const isErrorSendCode = sendCodeStatus === "error";
   const isSuccessSendCode = sendCodeStatus === "success";
-  const hasSentCode = !!lastSendCodeResponse?.data;
+  const hasSentCode = !!lastSendCodeResponse?.variables;
 
   const isTimeOver = timeLeft === 0 && isSuccessSendCode;
 

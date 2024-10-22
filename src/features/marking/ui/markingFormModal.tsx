@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
+import { useGetAddressFromLatLng } from "@/entities/marking/api";
 import { useModal } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -10,8 +11,7 @@ import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
-import { useGetAddressFromLatLng } from "../../map/api";
-import { usePostMarkingForm, usePostTempMarkingForm } from "../api";
+import { usePostAddMarking, usePostAddTempMarking } from "../api";
 import {
   MARKING_ADD_ERROR_MESSAGE,
   MAX_IMAGE_LENGTH,
@@ -92,7 +92,7 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
   }
 
-  const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng, token });
+  const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng });
   const setRegion = useMarkingFormStore((state) => state.setRegion);
 
   useEffect(() => {
@@ -282,7 +282,7 @@ const SaveButton = () => {
 
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
 
-  const { mutate: postMarkingData } = usePostMarkingForm();
+  const { mutate: postMarkingData } = usePostAddMarking();
 
   const handleSave = async () => {
     const { token } = useAuthStore.getState();
@@ -314,7 +314,6 @@ const SaveButton = () => {
     const lng = center.lng();
 
     postMarkingData({
-      token,
       lat,
       lng,
       region,
@@ -340,7 +339,7 @@ const TemporarySaveButton = () => {
   const map = useMap();
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
 
-  const { mutate: postTempMarkingData } = usePostTempMarkingForm();
+  const { mutate: postAddTempMarking } = usePostAddTempMarking();
 
   const handleSave = () => {
     const { token } = useAuthStore.getState();
@@ -364,8 +363,7 @@ const TemporarySaveButton = () => {
     const lat = center.lat();
     const lng = center.lng();
 
-    postTempMarkingData({
-      token,
+    postAddTempMarking({
       lat,
       lng,
       region,

@@ -1,7 +1,4 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { MarkingList } from "@/entities/marking/ui";
-import { markingModalHandlers } from "@/mocks/handler";
-import { useGetMarkingList } from "../api";
 import { MarkingItem } from "./markingItem";
 
 const meta: Meta<typeof MarkingItem> = {
@@ -80,25 +77,3 @@ export default meta;
 type Story = StoryObj<typeof MarkingItem>;
 
 export const Default: Story = {};
-
-export const WithMarkingList: Story = {
-  parameters: {
-    msw: [...markingModalHandlers],
-  },
-  render: () => {
-    /* eslint-disable*/
-    const { data } = useGetMarkingList();
-
-    return (
-      <MarkingList>
-        {data?.map((marking) => (
-          <MarkingItem
-            key={marking.markingId}
-            onRegionClick={() => {}}
-            {...marking}
-          />
-        ))}
-      </MarkingList>
-    );
-  },
-};

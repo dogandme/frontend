@@ -1,7 +1,7 @@
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
-import { usePostLoginForm } from "../api";
+import { usePostLogin } from "../api";
 import { useLoginFormStore } from "../store";
 
 export const Form = ({ children }: { children: React.ReactNode }) => {
@@ -98,7 +98,7 @@ export const PersistLogin = () => {
 };
 
 export const SubmitButton = () => {
-  const { mutate: postLoginForm } = usePostLoginForm();
+  const { mutate: postLoginForm } = usePostLogin();
   const handleOpenSnackbar = useSnackBar();
 
   const handleSubmit = () => {

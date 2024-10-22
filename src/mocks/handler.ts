@@ -6,17 +6,17 @@ import {
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
-import { MarkingListRequest } from "@/features/marking/api";
-import { MARKING_REQUEST_URL } from "@/features/marking/constants";
-import { PostChangeRegionRequestData } from "@/features/setting/api";
-import {
-  PutChangeAgeRequestData,
-  PutChangeGenderRequestData,
-  PutChangePetInformationRequest,
+import { MARKING_END_POINT } from "@/features/marking/constants";
+import { PostChangeRegionRequest } from "@/features/setting/api";
+import type {
+  PutChangeAgeRequest,
+  PutChangeGenderRequest,
+  PutChangePetInfoRequest,
 } from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
+import type { GetMarkingListRequest } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
 // data
@@ -274,7 +274,7 @@ export const markingModalHandlers = [
       });
     },
   ),
-  http.post<PathParams>(MARKING_REQUEST_URL.ADD, async ({ request }) => {
+  http.post<PathParams>(MARKING_END_POINT.ADD, async ({ request }) => {
     /**
      * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
      */
@@ -297,7 +297,7 @@ export const markingModalHandlers = [
     });
   }),
   http.get<{
-    [K in keyof Omit<MarkingListRequest, "token">]: string;
+    [K in keyof Omit<GetMarkingListRequest, "token">]: string;
   }>(`${API_BASE_URL}/markings/search`, async ({ request }) => {
     const token = request.headers.get("Authorization");
 
@@ -321,7 +321,7 @@ export const markingModalHandlers = [
       { status: 200, statusText: "success" },
     );
   }),
-  http.delete<PathParams>(MARKING_REQUEST_URL.DELETE, () => {
+  http.delete<PathParams>(MARKING_END_POINT.DELETE, () => {
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -351,7 +351,7 @@ export const markingModalHandlers = [
       message: "success",
     });
   }),
-  http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async ({ request }) => {
+  http.post<PathParams>(MARKING_END_POINT.SAVE_TEMP, async ({ request }) => {
     /**
      * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
      */
@@ -623,7 +623,7 @@ const getNewAccessTokenHandler = [
 ];
 
 const putChangeRegionHandler = [
-  http.post<PathParams, PostChangeRegionRequestData>(
+  http.post<PathParams, PostChangeRegionRequest>(
     SETTING_END_POINT.CHANGE_REGION,
     async ({ request }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -705,7 +705,7 @@ const putChangeGenderHandler = [
     await new Promise((res) => setTimeout(res, 1000));
 
     const token = request.headers.get("Authorization")!;
-    const { gender } = (await request.json()) as PutChangeGenderRequestData;
+    const { gender } = (await request.json()) as PutChangeGenderRequest;
     if (token === "staleAccessToken") {
       return HttpResponse.json(
         {
@@ -832,7 +832,7 @@ export const putSetPasswordHandler = [
 ];
 
 const putChangeAgeHandler = [
-  http.put<PathParams, PutChangeAgeRequestData>(
+  http.put<PathParams, PutChangeAgeRequest>(
     SETTING_END_POINT.CHANGE_AGE,
     async ({ request }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -894,7 +894,7 @@ const changeUserInfoHandler = [
 ];
 
 const putChangePetInformationHandler = [
-  http.put<PathParams, PutChangePetInformationRequest>(
+  http.put<PathParams, PutChangePetInfoRequest>(
     SETTING_END_POINT.CHANGE_PET_INFO,
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));

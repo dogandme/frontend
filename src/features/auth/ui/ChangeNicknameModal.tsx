@@ -5,7 +5,10 @@ import { useAuthStore } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
-import { usePostDuplicateNicknameState, usePutChangeNickname } from "../api";
+import {
+  usePostCheckDuplicateNicknameState,
+  usePutChangeNickname,
+} from "../api";
 import { validateNickname } from "../lib";
 import { NicknameInput } from "./NicknameInput";
 
@@ -23,7 +26,7 @@ export const ChangeNicknameModal = ({
   const { mutate: postChangeNickname, status: changeNicknameStatus } =
     usePutChangeNickname();
   const { isDuplicateNickname, isPending: isDuplicateCheckPending } =
-    usePostDuplicateNicknameState();
+    usePostCheckDuplicateNicknameState();
 
   const handleSubmit = () => {
     const { token } = useAuthStore.getState();
@@ -59,7 +62,7 @@ export const ChangeNicknameModal = ({
       return;
     }
 
-    postChangeNickname({ token, nickname });
+    postChangeNickname({ nickname });
   };
 
   return (
