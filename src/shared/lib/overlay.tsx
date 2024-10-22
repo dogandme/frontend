@@ -82,7 +82,7 @@ export const useSnackBar = () => {
       ...snackbarProps
     } = snackbarOptions || {};
     // autoHideDuration 시간 후 스낵바를 닫습니다.
-    // 이 때 다른 스낵바가 열리게 되면 이전에 설정한 타이머를 초기화 하고 재설정 합니다.
+    // 이 때 타이머 발동 전 기존 스낵바가 다시 열리게 되면 clearTimeout을 호출하여 이전 타이머를 초기화 합니다.
     if (timerId.current) {
       clearTimeout(timerId.current);
     }
