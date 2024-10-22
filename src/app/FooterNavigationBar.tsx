@@ -135,7 +135,6 @@ const MyPageNavLink = () => {
   const { data } = useGetProfile({
     nickname,
   });
-
   const profileImageUrl = data?.pet?.profile
     ? `${API_BASE_URL}/pets/image/${data.pet.profile}`
     : "/default-image.png";
@@ -143,10 +142,13 @@ const MyPageNavLink = () => {
   const { active, inactive, base } = footerNavigationBarStyles;
 
   const getNavigatePath = () => {
-    if (role === "ROLE_USER") {
+    if (role === "ROLE_USER" || role === "ROLE_GUEST") {
       return `/@${nickname}`;
     }
-    return `/@${role}`;
+    if (role === "ROLE_NONE") {
+      return ROUTER_PATH.SIGN_UP_USER_INFO;
+    }
+    return ROUTER_PATH.LOGIN;
   };
 
   return (

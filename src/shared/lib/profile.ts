@@ -19,10 +19,7 @@ export const useNicknameParams = () => {
   }
 
   const nicknameParams = nickname.slice(1);
-
-  const isMyPage =
-    nicknameParams === String(useAuthStore.getState().role) ||
-    nicknameParams === useAuthStore.getState().nickname;
+  const isMyPage = nicknameParams === useAuthStore.getState().nickname;
 
   return { nicknameParams, isMyPage };
 };
