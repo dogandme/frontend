@@ -17,11 +17,14 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
     const [nickname, setNickname] = useState<string>("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const regex = /[^가-힣a-zA-Z0-9ㄱ-ㅎ\s]/g;
+      const filteredNickname = e.target.value.replace(regex, "");
+
       if (!isControlled) {
-        setNickname(e.target.value);
+        setNickname(filteredNickname);
       }
 
-      onChange?.(e.target.value);
+      onChange?.(filteredNickname);
     };
 
     const {
