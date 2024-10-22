@@ -46,6 +46,23 @@ export const ProfilePage = () => {
   }
 
   const { followers, followings, pet, tempCnt, markings } = data;
+
+  const renderProfileOverView = () => {
+    if (pet) {
+      return (
+        <ProfileOverView
+          nickname={nicknameParams}
+          followers={followers}
+          followings={followings}
+          pet={pet}
+        />
+      );
+    }
+    if (isMyPage) {
+      return <EmptyMyProfileOverView />;
+    }
+    return <div>추가 예정인 컴포넌트</div>;
+  };
   return (
     <>
       {isMyPage ? (
@@ -56,12 +73,8 @@ export const ProfilePage = () => {
         />
       )}
       <section className="px-4 flex flex-col items-start gap-8">
-        <ProfileOverView
-          nickname={nicknameParams}
-          followers={followers}
-          followings={followings}
-          pet={pet!}
-        />
+        {/* TODO isMyPage에 따라 조건부 처리 하기*/}
+        {renderProfileOverView()}
         <div className="flex flex-col items-start gap-2 w-full ">
           <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
           {tempCnt > 0 && <TemporaryMarkingBar tempCnt={tempCnt} />}
