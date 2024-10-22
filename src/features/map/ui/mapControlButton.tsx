@@ -1,5 +1,5 @@
 import { useMap } from "@vis.gl/react-google-maps";
-import { CurrentLocationLoading, MapSnackbar } from "@/entities/map/ui";
+import { CurrentLocationLoading } from "@/entities/map/ui";
 import { useModal, useSnackBar } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
 import {
@@ -16,14 +16,12 @@ import { useMapStore } from "../store";
 export const MarkingAddButton = () => {
   const setMode = useMapStore((state) => state.setMode);
 
-  const { handleOpen, onClose } = useSnackBar(() => (
-    <MapSnackbar onClose={onClose} autoHideDuration={5000}>
-      마킹 위치를 손가락으로 움직여서 선택해 주세요
-    </MapSnackbar>
-  ));
+  const handleOpenSnackbar = useSnackBar();
 
   const handleClick = () => {
-    handleOpen();
+    handleOpenSnackbar("마킹 위치를 손가락으로 움직여서 선택해 주세요", {
+      type: "map",
+    });
     setMode("add");
   };
 

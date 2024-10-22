@@ -12,7 +12,6 @@ import { ActionChip } from "@/shared/ui/chip";
 import { MapLocationSearchingIcon } from "@/shared/ui/icon";
 import { CancelIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
-import { Snackbar } from "@/shared/ui/snackbar";
 import {
   usePostDuplicateNicknameState,
   usePutUserInfoRegistration,
@@ -270,26 +269,7 @@ const MyRegionList = () => {
 };
 
 const UserInfoRegistrationForm = () => {
-  const {
-    handleOpen: openRequiredFieldsAlert,
-    onClose: closeRequiredFieldsAlert,
-  } = useSnackBar(() => (
-    <Snackbar onClose={closeRequiredFieldsAlert}>
-      필수 항목을 모두 입력해 주세요
-    </Snackbar>
-  ));
-  const { handleOpen: openNicknameAlert, onClose: closeNicknameAlert } =
-    useSnackBar(() => (
-      <Snackbar onClose={closeNicknameAlert}>
-        올바른 닉네임을 입력해 주세요
-      </Snackbar>
-    ));
-  const { handleOpen: openAgreementAlert, onClose: closeAgreementAlert } =
-    useSnackBar(() => (
-      <Snackbar onClose={closeAgreementAlert}>
-        필수 약관에 모두 동의해 주세요
-      </Snackbar>
-    ));
+  const handleOpenSnackbar = useSnackBar();
 
   const { handleOpen: openLandingModal, onClose: onCloseLandingModal } =
     useModal(() => <SignUpLandingModal onClose={onCloseLandingModal} />);
@@ -324,21 +304,21 @@ const UserInfoRegistrationForm = () => {
       region.length > 0;
 
     if (!areEssentialFieldsFilled) {
-      openRequiredFieldsAlert();
+      handleOpenSnackbar("필수 항목을 모두 입력해 주세요");
       return;
     }
 
     const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
 
     if (!isValidNickname) {
-      openNicknameAlert();
+      handleOpenSnackbar("올바른 닉네임을 입력해 주세요");
       return;
     }
 
     const areRequiredAgreementsChecked = checkList[0] && checkList[1];
 
     if (!areRequiredAgreementsChecked) {
-      openAgreementAlert();
+      handleOpenSnackbar("필수 약관에 모두 동의해 주세요");
       return;
     }
 

@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { LatLng } from "@/features/auth/api/region";
 import { useMapStore } from "@/features/map/store";
-import { MapSnackbar } from "@/entities/map/ui";
 import { useSnackBar } from "@/shared/lib";
 import { AuthStore } from "@/shared/store";
 import {
@@ -75,16 +74,16 @@ export const usePostMarkingForm = () => {
   );
   const setMode = useMapStore((state) => state.setMode);
 
-  const { handleOpen, onClose } = useSnackBar(() => (
-    <MapSnackbar onClose={onClose}>내 마킹이 추가되었습니다</MapSnackbar>
-  ));
+  const handleOpenSnackbar = useSnackBar();
 
   return useMutation({
     mutationFn: postMarkingFormData,
     onSuccess: () => {
       resetMarkingFormStore();
       setMode("view");
-      handleOpen();
+      handleOpenSnackbar("내 마킹이 추가되었습니다", {
+        type: "map",
+      });
     },
     onError: (error) => {
       throw new Error(error.message);
