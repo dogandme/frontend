@@ -1,5 +1,5 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/shared/lib";
+import { apiClient, HttpError } from "@/shared/lib";
 import { PROFILE_END_POINT } from "../constants";
 
 // 유저 정보
@@ -56,7 +56,7 @@ export const useGetProfile = ({
 }: {
   nickname: UserNickname | null;
 }) => {
-  return useQuery({
+  return useQuery<UserInfo, HttpError, UserInfo>({
     queryKey: ["profile", nickname],
     queryFn: nickname ? () => getProfile({ nickname }) : skipToken,
   });

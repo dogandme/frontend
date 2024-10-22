@@ -19,14 +19,6 @@ const footerNavigationBarStyles = {
 
 export const FooterNavigationBar = () => {
   const { active, inactive, base } = footerNavigationBarStyles;
-  const nickname = useAuthStore((state) => state.nickname);
-  const { data } = useGetProfile({
-    nickname,
-  });
-  // TODO API 에서 받아온 프로필 이미지 사용하기
-  const profileImageUrl = data?.pet?.profile
-    ? `${API_BASE_URL}/pets/image/${data.pet.profile}`
-    : "/default-image.png";
 
   const location = useLocation();
 
@@ -128,26 +120,48 @@ export const FooterNavigationBar = () => {
             </NavLink>
           </li>
           <li className="grow">
-            <NavLink
-              to={ROUTER_PATH.MY_PAGE}
-              className={({ isActive }) =>
-                `${isActive ? active : inactive} ${base}`
-              }
-            >
-              <img
-                src={profileImageUrl}
-                alt={
-                  nickname
-                    ? `${nickname}님의 프로필 이미지`
-                    : "기본 프로필 이미지"
-                }
-                className="w-6 h-6 rounded-2xl flex-shrink-0"
-              />
-              My
-            </NavLink>
+            <MyPageNavLink />
           </li>
         </ul>
       </nav>
     </footer>
+  );
+};
+
+const MyPageNavLink = () => {
+  const role = useAuthStore((state) => state.role);
+  const nickname = useAuthStore((state) => state.nickname);
+
+  const { data } = useGetProfile({
+    nickname,
+  });
+  const profileImageUrl = data?.pet?.profile
+    ? `${API_BASE_URL}/pets/image/${data.pet.profile}`
+    : "/default-image.png";
+
+  const { active, inactive, base } = footerNavigationBarStyles;
+
+  const getMyPagePath = () => {
+    if (role === null) {
+      return ROUTER_PATH.LOGIN;
+    }
+    if (role === "ROLE_NONE") {
+      return ROUTER_PATH.SIGN_UP_USER_INFO;
+    }
+    return `/@${nickname}`;
+  };
+
+  return (
+    <NavLink
+      to={getMyPagePath()}
+      className={({ isActive }) => `${isActive ? active : inactive} ${base}`}
+    >
+      <img
+        src={profileImageUrl}
+        alt={nickname ? `${nickname}님의 프로필 이미지` : "기본 프로필 이미지"}
+        className="w-6 h-6 rounded-2xl flex-shrink-0"
+      />
+      My
+    </NavLink>
   );
 };

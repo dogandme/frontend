@@ -441,6 +441,10 @@ export const getProfileHandlers = [
         },
       );
     }
+    if (token === "freshAccessTokenGuest" && nickname === "뽀송송") {
+      return HttpResponse.json(User["ROLE_GUEST"]);
+    }
+
     if (token?.split("-")[0] === "freshAccessToken" && nickname === "뽀송송") {
       return HttpResponse.json(User["ROLE_USER"]);
     }

@@ -1,4 +1,5 @@
 import { ChangeNicknameModal } from "@/features/auth/ui/ChangeNicknameModal";
+import { useSettingPermission } from "@/features/setting/hooks";
 import { GenderChangeButton } from "@/features/setting/ui";
 import { ChangeAgeButton } from "@/features/setting/ui";
 import { RegionChangeButton } from "@/features/setting/ui";
@@ -10,20 +11,13 @@ import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const EditInfoPage = () => {
-  const role = useAuthStore((state) => state.role);
   const { data: myInfo } = useGetMyInfo();
-
+  const hasPermission = useSettingPermission("GUEST");
   if (!myInfo) return null;
 
   const { age, gender, regions, nickLastModDt } = myInfo;
 
-  const hasPermission =
-    (role === "ROLE_GUEST" || role === "ROLE_USER") &&
-    age !== null &&
-    gender !== null &&
-    regions.length > 0 &&
-    nickLastModDt !== null;
-
+  // TODO 권한 없으면 보일 페이지 디자이너와 상의 하기
   if (!hasPermission) return null;
 
   return (
@@ -33,7 +27,7 @@ export const EditInfoPage = () => {
       />
 
       <section className="flex flex-col gap-4 px-4 py-4">
-        <NicknameButton nickLastModDt={nickLastModDt} />
+        <NicknameButton nickLastModDt={nickLastModDt!} />
         <GenderChangeButton gender={gender} />
         <ChangeAgeButton age={age} />
         <RegionChangeButton regions={regions} />
