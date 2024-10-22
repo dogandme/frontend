@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { OverlayOptions, useOverlayStore } from "../store/overlay";
 import { Snackbar, SNACKBAR_ID, SnackBarProps } from "../ui/snackbar";
 
@@ -66,6 +66,14 @@ export const useSnackBar = () => {
     default: "absolute top-4 left-1/2 transform -translate-x-1/2",
     map: "absolute top-16 left-1/2 transform -translate-x-1/2 translate-y-1/2",
   };
+
+  useEffect(() => {
+    return () => {
+      if (timerId.current) {
+        clearTimeout(timerId.current);
+      }
+    };
+  }, []);
 
   const handleOpenSnackbar = (
     text: React.ReactNode,
