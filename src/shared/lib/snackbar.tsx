@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
+import { SNACKBAR_ID } from "../constants";
 import { useOverlayStore } from "../store/overlay";
-import { Snackbar, SNACKBAR_ID, SnackBarProps } from "../ui/snackbar";
+import { Snackbar, SnackBarProps } from "../ui/snackbar";
 
 /**
  * useSnackBar 훅은 스낵바를 열고 닫는 기능을 제공합니다.

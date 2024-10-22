@@ -1,7 +1,7 @@
+import { SNACKBAR_ID } from "@/shared/constants";
 import { useOverlayStore } from "@/shared/store/overlay";
 import { CloseIcon } from "../icon";
 
-export const SNACKBAR_ID = 999999999;
 export interface SnackBarProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   autoHideDuration?: number | null;
