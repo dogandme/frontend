@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { userEvent, expect, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useSnackBar } from "@/shared/lib/overlay";
 import { Snackbar } from "./Snackbar";
@@ -18,25 +17,13 @@ const meta: Meta<typeof Snackbar> = {
   },
 
   argTypes: {
-    onClose: {
-      description:
-        "useOverlay 를 통해 생성되는 onClose를 받기 위한 props 입니다.",
-    },
     children: {
       description: "스낵바에 표시할 메시지 혹은 컴포넌트 입니다.",
       control: {
         type: "text",
       },
     },
-
-    autoHideDuration: {
-      control: {
-        type: "number",
-      },
-      description:
-        "스낵바가 자동으로 사라지는 시간 (ms), 기본적으로 InfoSnackbar는 1초 후 사라집니다. 만약 사라지기를 원치 않는 경우엔 null 을 전달해 주세요",
-    },
-    positionClassName: {
+    className: {
       description: "스낵바의 위치를 지정하는 클래스명입니다.",
       control: {
         type: "text",
@@ -73,57 +60,28 @@ export const Default: Story = {
 
   render: () => {
     /* eslint-disable */
-    const { handleOpen, onClose } = useSnackBar(() => (
-      <Snackbar onClose={onClose}>스낵바가 열렸습니다</Snackbar>
-    ));
+    const handleOpenSnackbar = useSnackBar();
 
     return (
-      <div className="flex h-96 w-full items-end justify-end px-2 py-2">
-        <button className="bg-tangerine-50 px-2 py-2" onClick={handleOpen}>
-          스낵바 열기
+      <div className="flex h-96 w-full items-end justify-end px-2 py-2 gap-2">
+        <button
+          className="px-2 py-2 bg-grey-200"
+          onClick={() => handleOpenSnackbar("1번 스낵바 오픈")}
+        >
+          1번 스낵바 열기
+        </button>
+        <button
+          className="px-2 py-2 bg-grey-200"
+          onClick={() =>
+            handleOpenSnackbar("2번 스낵바 오픈", {
+              className:
+                "absolute top-16 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-grey-200",
+            })
+          }
+        >
+          2번 스낵바 열기
         </button>
       </div>
-    );
-  },
-
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const $button = canvasElement.querySelector("button")!;
-
-    await step("스낵바 열기를 클릭하면", async () => {
-      await userEvent.click($button);
-
-      await step("스낵바 컴포넌트가 렌더링 됩니다.", () => {
-        expect(canvas.queryByText("스낵바가 열렸습니다")).toBeInTheDocument();
-      });
-
-      await step(
-        "스낵바 컴포넌트의 닫힘 버튼을 클릭하면 스낵바가 사라집니다.",
-        async () => {
-          const $closeButton = canvas.getByLabelText("스낵바 닫기");
-
-          await userEvent.click($closeButton);
-
-          expect(
-            canvas.queryByText("스낵바가 열렸습니다"),
-          ).not.toBeInTheDocument();
-        },
-      );
-    });
-
-    await step(
-      "스낵바를 열고 나서 1초가 지나면 자동으로 스낵바는 사라진다.",
-      async () => {
-        await userEvent.click($button);
-
-        expect(canvas.queryByText("스낵바가 열렸습니다")).toBeInTheDocument();
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        expect(
-          canvas.queryByText("스낵바가 열렸습니다"),
-        ).not.toBeInTheDocument();
-      },
     );
   },
 };
