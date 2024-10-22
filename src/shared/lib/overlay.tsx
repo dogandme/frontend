@@ -62,16 +62,25 @@ export const useSnackBar = () => {
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
 
   const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const SNACKBAR_POSITION_CLASS_NAME = {
+    default: "absolute top-4 left-1/2 transform -translate-x-1/2",
+    map: "absolute top-16 left-1/2 transform -translate-x-1/2 translate-y-1/2",
+  };
 
   const handleOpenSnackbar = (
     text: React.ReactNode,
-    snackbarOptions?: { autoHideDuration?: number } & Omit<
-      SnackBarProps,
-      "children"
-    >,
+    snackbarOptions?: {
+      autoHideDuration?: number;
+      type?: "default" | "map";
+    } & Omit<SnackBarProps, "children">,
   ) => {
     // TODO authHideDuration 기간 정하기
-    const { autoHideDuration = 1000, ...snackbarProps } = snackbarOptions || {};
+    const {
+      autoHideDuration = 1000,
+      type = "default",
+      className = "",
+      ...snackbarProps
+    } = snackbarOptions || {};
     // autoHideDuration 시간 후 스낵바를 닫습니다.
     // 이 때 다른 스낵바가 열리게 되면 이전에 설정한 타이머를 초기화 하고 재설정 합니다.
     if (timerId.current) {
@@ -86,7 +95,14 @@ export const useSnackBar = () => {
 
     addOverlay({
       id: SNACKBAR_ID,
-      component: <Snackbar {...snackbarProps}>{text}</Snackbar>,
+      component: (
+        <Snackbar
+          {...snackbarProps}
+          className={`${SNACKBAR_POSITION_CLASS_NAME[type]} ${className}`}
+        >
+          {text}
+        </Snackbar>
+      ),
       options: {
         disableInteraction: false,
       },
