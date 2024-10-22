@@ -50,11 +50,10 @@ const NullPage = () => {
     if (isMyPage) {
       return;
     }
-    if (role !== "ROLE_USER") {
-      navigate(`/@${role}`);
-      return;
+    if (role === "ROLE_USER") {
+      return navigate(`/@${nickname}`);
     }
-    return navigate(`/@${nickname}`);
+    navigate(`/@${role}`);
   });
 
   if (!isMyPage) {
@@ -101,11 +100,10 @@ const NonePage = () => {
     if (isMyPage) {
       return;
     }
-    if (role !== "ROLE_USER") {
-      navigate(`/@${role}`);
-      return;
+    if (role === "ROLE_USER") {
+      return navigate(`/@${nickname}`);
     }
-    return navigate(`/@${nickname}`);
+    navigate(`/@${role}`);
   });
 
   if (!isMyPage) {
@@ -155,11 +153,10 @@ const GuestPage = () => {
     if (isMyPage) {
       return;
     }
-    if (role !== "ROLE_USER") {
-      navigate(`/@${role}`);
-      return;
+    if (role === "ROLE_USER") {
+      return navigate(`/@${nickname}`);
     }
-    return navigate(`/@${nickname}`);
+    navigate(`/@${role}`);
   });
 
   if (!isMyPage) {
