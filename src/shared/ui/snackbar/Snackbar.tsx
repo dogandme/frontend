@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useOverlayStore } from "@/shared/store/overlay";
 import { CloseIcon } from "../icon";
 
@@ -12,28 +11,14 @@ export interface SnackBarProps extends React.HTMLAttributes<HTMLDivElement> {
 /**
  * InfoSnackBar 컴포넌트는 사용자에게 정보를 제공하는 메시지를 표시합니다.
  * @param children - 스낵바에 표시할 메시지
- * @param autoHideDuration - 스낵바가 자동으로 사라지는 시간 (ms), 기본적으로 InfoSnackbar는 1초 후 사라집니다. 만약 사라지기를 원치 않는 경우엔 null 을 전달해 주세요
- * @param positionClassName - 스낵바의 위치를 지정하는 클래스명
+ * @param className - 스낵바의 위치를 지정하는 클래스명
  */
 export const Snackbar = ({
   children,
-  autoHideDuration = 1000,
   className = "absolute top-4 left-1/2 transform -translate-x-1/2",
   ...props
 }: SnackBarProps) => {
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
-
-  useEffect(() => {
-    if (autoHideDuration === null) {
-      return;
-    }
-
-    const timerId = setTimeout(() => {
-      removeOverlay(SNACKBAR_ID);
-    }, autoHideDuration);
-
-    return () => clearTimeout(timerId);
-  }, [autoHideDuration, removeOverlay]);
 
   const baseClassName =
     "shadow-custom-2 inline-flex min-w-[328px] max-w-96 items-center justify-between rounded-2xl bg-grey-0 py-1 pl-4 pr-3";
