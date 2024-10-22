@@ -1,4 +1,3 @@
-import { API_BASE_URL } from "../constants";
 import { useAuthStore } from "../store";
 import { HttpError } from "./error";
 
@@ -26,7 +25,7 @@ interface FetcherOptions {
  * 응답이 성공적으로 왔을 경우 content만 반환합니다.
  * 응답이 실패했을 경우 HttpError를 throw 합니다.
  *
- * @param url 서버 api의 엔드 포인트 (API_BASE_URL을 제외한 나머지)
+ * @param url 서버 api url
  * @param method HTTP 메소드
  * @param headers HTTP 헤더
  * @param withToken 토큰을 HTTP 헤더에 담아줄지 여부
