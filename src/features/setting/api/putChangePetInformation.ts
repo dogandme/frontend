@@ -41,6 +41,7 @@ const putChangePetInformation = async ({
 
 export const usePutChangePetInformation = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: putChangePetInformation,
     mutationKey: ["putChangePetInformation"],

@@ -45,9 +45,7 @@ export const ChangeNicknameModal = ({
   ));
 
   const { mutate: postChangeNickname, status: changeNicknameStatus } =
-    usePutChangeNickname({
-      onSuccessCallback: onClose,
-    });
+    usePutChangeNickname();
   const { isDuplicateNickname, isPending: isDuplicateCheckPending } =
     usePostDuplicateNicknameState();
 

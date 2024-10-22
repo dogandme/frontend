@@ -77,9 +77,7 @@ export const PasswordSetModal = ({
 }) => {
   const resetPasswordSetForm = usePasswordSetFormStore((state) => state.reset);
 
-  const { mutate: putSetPassword, isPending } = usePutSetPassword({
-    onSuccessCallback: onClose,
-  });
+  const { mutate: putSetPassword, isPending } = usePutSetPassword();
 
   const handleSave = () => {
     const {

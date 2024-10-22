@@ -5,9 +5,6 @@ import { Modal } from "@/shared/ui/modal";
 import { usePutChangePetInformation } from "../api";
 
 export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
-  const { mutate: putChangePetInformation, isPending } =
-    usePutChangePetInformation();
-
   const { handleOpen, onClose } = useModal(() => (
     <Modal modalType="fullPage">
       <Modal.Header
@@ -36,24 +33,22 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
              * initialState 로 건내준 pet 정보와 변경 된 정보가 변경되지 않았다면
              * isChaProfile 을 false 로 설정합니다.
              */
-            putChangePetInformation(
-              {
-                name,
-                breed,
-                personalities,
-                description,
-                isChaProfile: !!profile.file || profile.url !== pet.profile,
-                image: profile.file,
-              },
-              {
-                onSuccess: onClose,
-              },
-            );
+            putChangePetInformation({
+              name,
+              breed,
+              personalities,
+              description,
+              isChaProfile: !!profile.file || profile.url !== pet.profile,
+              image: profile.file,
+            });
           }}
         />
       </Modal.Content>
     </Modal>
   ));
+
+  const { mutate: putChangePetInformation, isPending } =
+    usePutChangePetInformation();
 
   return handleOpen;
 };
