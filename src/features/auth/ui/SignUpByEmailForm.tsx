@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MutationState, useMutationState } from "@tanstack/react-query";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { useSnackBar } from "@/shared/lib/overlay";
+import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import {

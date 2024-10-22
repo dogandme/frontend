@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { MASCOT_IMAGE_URL } from "@/shared/constants";
-import { useSnackBar } from "@/shared/lib/overlay";
+import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { SelectChip } from "@/shared/ui/chip";

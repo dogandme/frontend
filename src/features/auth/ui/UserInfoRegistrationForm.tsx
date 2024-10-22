@@ -4,7 +4,7 @@ import {
   SelectOpener,
   SignUpLandingModal,
 } from "@/entities/auth/ui";
-import { useModal, useSnackBar } from "@/shared/lib/overlay";
+import { useModal, useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store/auth";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
