@@ -13,7 +13,7 @@ export interface OverlayOptions {
 export interface OverlayInfo {
   id: number;
   component: JSX.Element;
-  onClose: () => Promise<void>;
+  onClose?: () => Promise<void> | void;
   options: OverlayOptions;
 }
 
