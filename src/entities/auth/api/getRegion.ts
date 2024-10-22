@@ -22,7 +22,6 @@ type GetRegionResponse = Region[];
 const getRegionByKeyword = async (keyword: RegionKeyword) => {
   return apiClient.get<GetRegionResponse>(
     REGION_END_POINT.REGION_LIST(keyword),
-    {},
   );
 };
 
@@ -44,7 +43,6 @@ export const useGetRegionByKeyword = ({
 const getRegionByLatLng = async ({ lat, lng }: LatLng) => {
   return apiClient.get<GetRegionResponse>(
     REGION_END_POINT.CURRENT_POSITION({ lat, lng }),
-    {},
   );
 };
 

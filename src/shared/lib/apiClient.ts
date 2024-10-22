@@ -35,9 +35,17 @@ interface FetcherOptions {
  */
 const fetcher = async <T>(
   url: string,
-  { method, headers, withToken = false, body, credentials }: FetcherOptions,
+  fetcherOptions?: Partial<FetcherOptions>,
 ) => {
   try {
+    const {
+      method,
+      headers,
+      withToken = false,
+      body,
+      credentials,
+    } = fetcherOptions || {};
+
     const httpHeaders = new Headers(headers || {});
 
     if (withToken) {
@@ -83,18 +91,14 @@ const fetcher = async <T>(
 export const apiClient = {
   get: <T>(
     url: string,
-    {
-      headers,
-      credentials,
-      withToken,
-    }: Omit<FetcherOptions, "method" | "body">,
-  ) => fetcher<T>(url, { method: "GET", headers, credentials, withToken }),
-  post: <T>(url: string, options: Omit<FetcherOptions, "method">) =>
+    options?: Partial<Omit<FetcherOptions, "method" | "body">>,
+  ) => fetcher<T>(url, { method: "GET", ...options }),
+  post: <T>(url: string, options?: Partial<Omit<FetcherOptions, "method">>) =>
     fetcher<T>(url, { method: "POST", ...options }),
-  delete: <T>(url: string, options: Omit<FetcherOptions, "method">) =>
+  delete: <T>(url: string, options?: Partial<Omit<FetcherOptions, "method">>) =>
     fetcher<T>(url, { method: "DELETE", ...options }),
-  patch: <T>(url: string, options: Omit<FetcherOptions, "method">) =>
+  patch: <T>(url: string, options?: Partial<Omit<FetcherOptions, "method">>) =>
     fetcher<T>(url, { method: "PATCH", ...options }),
-  put: <T>(url: string, options: Omit<FetcherOptions, "method">) =>
+  put: <T>(url: string, options?: Partial<Omit<FetcherOptions, "method">>) =>
     fetcher<T>(url, { method: "PUT", ...options }),
 };
