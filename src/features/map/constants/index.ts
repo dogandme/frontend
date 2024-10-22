@@ -1,5 +1,3 @@
-import { API_BASE_URL } from "@/shared/constants";
-
 /**
  * Google map 에 사용 할 옵션들을 지정한 객체입니다.
  * 사용 가능한 객체들은 다음과 같은 곳에서 확인할 수 있습니다.
@@ -60,9 +58,4 @@ export const MAP_INITIAL_BOUNDS = {
   north: 37.572444179048894,
   south: 37.56055534657849,
   west: 126.97381575396503,
-};
-
-export const MAP_ENDPOINT = {
-  REVERSE_GEOCODING: ({ lat, lng }: { lat: number; lng: number }) =>
-    `${API_BASE_URL}/maps/reverse-geocode?lat=${lat}&lng=${lng}`,
 };

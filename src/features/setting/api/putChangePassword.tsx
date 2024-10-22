@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { apiClient, useSnackBar } from "@/shared/lib";
 import { Snackbar } from "@/shared/ui/snackbar";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordChangeFormStore } from "../store";
@@ -11,29 +10,13 @@ interface PutChangePasswordRequest {
   newPwChk: string;
 }
 
-interface PutChangePasswordResponse {
-  code: number;
-  message: string;
-}
-
 const putChangePassword = async (
   changePasswordData: PutChangePasswordRequest,
 ) => {
-  const response = await fetch(SETTING_END_POINT.CHANGE_PASSWORD, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: useAuthStore.getState().token!,
-    },
-    body: JSON.stringify(changePasswordData),
+  return apiClient.put(SETTING_END_POINT.CHANGE_PASSWORD, {
+    withToken: true,
+    body: changePasswordData,
   });
-
-  const data: PutChangePasswordResponse = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-  return data;
 };
 
 export const usePutChangePassword = () => {
@@ -45,7 +28,7 @@ export const usePutChangePassword = () => {
       <Snackbar onClose={onCloseSnackbar}>비밀번호가 변경되었습니다.</Snackbar>
     ));
 
-  return useMutation({
+  return useMutation<unknown, Error, PutChangePasswordRequest>({
     mutationFn: putChangePassword,
     mutationKey: ["putChangePassword"],
     onSuccess: () => {

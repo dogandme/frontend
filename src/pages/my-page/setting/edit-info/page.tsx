@@ -10,9 +10,8 @@ import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const EditInfoPage = () => {
-  const token = useAuthStore((state) => state.token);
   const role = useAuthStore((state) => state.role);
-  const { data: myInfo } = useGetMyInfo({ token });
+  const { data: myInfo } = useGetMyInfo();
 
   if (!myInfo) return null;
 

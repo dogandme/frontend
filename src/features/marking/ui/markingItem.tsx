@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { Marking } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -15,10 +16,9 @@ import {
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
 import {
-  Marking,
   useDeleteSavedMarking,
   usePostLikeMarking,
-  usePostSavedMarking,
+  usePostSaveMarking,
   useDeleteLikeMarking,
 } from "../api";
 import { useDeleteMarking } from "../api";
@@ -56,7 +56,7 @@ const MarkingManageButton = ({
     const { token, role } = useAuthStore.getState();
 
     if (token && role === "ROLE_USER") {
-      deleteMarking({ token, markingId });
+      deleteMarking({ markingId });
     }
 
     setIsOpen(false);
@@ -119,11 +119,11 @@ export const MarkingItem = ({
 
     if (!token || role === "ROLE_NONE" || role === null) return;
 
-    if (isLiked) deleteLikeMarking({ markingId, token });
-    else postLikeMarking({ markingId, token });
+    if (isLiked) deleteLikeMarking({ markingId });
+    else postLikeMarking({ markingId });
   };
 
-  const { mutate: postSavedMarking } = usePostSavedMarking();
+  const { mutate: postSaveMarking } = usePostSaveMarking();
   const { mutate: deleteSavedMarking } = useDeleteSavedMarking();
 
   const handleSave = () => {
@@ -131,8 +131,8 @@ export const MarkingItem = ({
 
     if (!token || role === "ROLE_NONE" || role === null) return;
 
-    if (isBookmarked) deleteSavedMarking({ markingId, token });
-    else postSavedMarking({ markingId, token });
+    if (isBookmarked) deleteSavedMarking({ markingId });
+    else postSaveMarking({ markingId });
   };
 
   return (
