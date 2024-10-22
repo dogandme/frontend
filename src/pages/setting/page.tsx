@@ -9,6 +9,7 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 export const SettingPage = () => {
   const hasPermission = useSettingPermission("NONE");
 
+  // TODO 권한 없으면 보일 페이지 디자이너와 상의 하기
   if (!hasPermission) {
     return null;
   }

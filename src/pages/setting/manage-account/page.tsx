@@ -20,6 +20,7 @@ export const AccountManagementPage = () => {
     return null;
   }
 
+  // TODO 권한 없으면 보일 페이지 디자이너와 상의 하기
   if (!hasPermission) {
     return null;
   }
