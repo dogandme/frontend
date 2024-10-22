@@ -52,7 +52,7 @@ export const DevTools = () => {
         break;
       case "ROLE_GUEST":
         useAuthStore.setState({
-          token: "Bearer token",
+          token: "freshAccessTokenGuest",
           role: "ROLE_GUEST",
           nickname,
         });
