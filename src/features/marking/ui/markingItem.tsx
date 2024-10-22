@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { Marking } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -15,7 +16,6 @@ import {
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
 import {
-  Marking,
   useDeleteSavedMarking,
   usePostLikeMarking,
   usePostSaveMarking,

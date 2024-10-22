@@ -1,4 +1,3 @@
-export * from "./getMarkingList";
 export * from "./postAddMarking";
 export * from "./postAddTempMarking";
 export * from "./deleteMarking";

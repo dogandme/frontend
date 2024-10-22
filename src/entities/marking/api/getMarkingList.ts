@@ -1,8 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { useResearchMarkingList } from "@/features/map/hooks";
+import { skipToken, useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_END_POINT } from "../constants/endPoint";
+import { SEARCH_MARKING_END_POINT } from "../constants";
 
 interface Pet {
   petId: number;
@@ -68,7 +67,7 @@ const getMarkingList = async ({
   const hasToken = !!useAuthStore.getState().token;
 
   return apiClient.get<Marking[]>(
-    MARKING_END_POINT.SEARCH_MARKING({
+    SEARCH_MARKING_END_POINT({
       southWestLat,
       southWestLng,
       northEastLat,
@@ -80,14 +79,17 @@ const getMarkingList = async ({
   );
 };
 
-export const useGetMarkingList = () => {
-  const { bounds } = useResearchMarkingList();
-
-  const southWestLat = bounds?.southWest.lat;
-  const southWestLng = bounds?.southWest.lng;
-  const northEastLat = bounds?.northEast.lat;
-  const northEastLng = bounds?.northEast.lng;
-
+export const useGetMarkingList = ({
+  southWestLat,
+  southWestLng,
+  northEastLat,
+  northEastLng,
+}: {
+  southWestLat?: number;
+  southWestLng?: number;
+  northEastLat?: number;
+  northEastLng?: number;
+}) => {
   return useQuery({
     queryKey: [
       "markingList",
@@ -96,19 +98,16 @@ export const useGetMarkingList = () => {
       northEastLat,
       northEastLng,
     ],
-    queryFn: () =>
-      getMarkingList({
-        southWestLat: southWestLat!,
-        southWestLng: southWestLng!,
-        northEastLat: northEastLat!,
-        northEastLng: northEastLng!,
-      }),
-    enabled:
-      !!bounds &&
-      !!southWestLat &&
-      !!southWestLng &&
-      !!northEastLat &&
-      !!northEastLng,
+    queryFn:
+      !!southWestLat && !!southWestLng && !!northEastLat && !!northEastLng
+        ? () =>
+            getMarkingList({
+              southWestLat,
+              southWestLng,
+              northEastLat,
+              northEastLng,
+            })
+        : skipToken,
     refetchOnWindowFocus: false,
   });
 };

@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { Sheet, SheetRef } from "react-modal-sheet";
 import { NavLink, useLocation } from "react-router-dom";
+import { useResearchMarkingList } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
-import { useGetMarkingList } from "@/features/marking/api";
 import { MarkingItem } from "@/features/marking/ui";
+import { useGetMarkingList } from "@/entities/marking/api";
 import { MarkingList } from "@/entities/marking/ui";
 import { useGetProfile } from "@/entities/profile/api";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
@@ -38,7 +39,13 @@ export const FooterNavigationBar = () => {
   const snapPointRef = useRef(initialSnap);
   const snapTo = (i: number) => sheetRef.current?.snapTo(i);
 
-  const { data: markingList } = useGetMarkingList();
+  const { bounds } = useResearchMarkingList();
+  const { data: markingList } = useGetMarkingList({
+    southWestLat: bounds?.southWest.lat,
+    southWestLng: bounds?.southWest.lng,
+    northEastLat: bounds?.northEast.lat,
+    northEastLng: bounds?.northEast.lng,
+  });
 
   const mapMode = useMapStore((state) => state.mode);
 
