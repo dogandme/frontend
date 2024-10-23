@@ -74,7 +74,7 @@ export const ProfilePage = () => {
         {renderProfileOverView()}
         <div className="flex flex-col items-start gap-2 w-full ">
           <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
-          {typeof tempCnt !== "undefined" && tempCnt > 0 && (
+          {typeof tempCnt === "number" && tempCnt > 0 && (
             <TemporaryMarkingBar tempCnt={tempCnt} />
           )}
           {/* TODO 
