@@ -106,7 +106,7 @@ export const PetDescriptionText = ({
 };
 
 interface PetPersonalityListProps {
-  personalities: NonNullable<PetPersonalities>;
+  personalities: PetPersonalities;
 }
 export const PetPersonalityList = ({
   personalities,

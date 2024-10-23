@@ -46,7 +46,9 @@ export const ProfileOverView = ({
       </div>
       {/* 반려동물 소개와 성격 리스트 */}
       {description && <PetDescriptionText description={description} />}
-      {personalities && <PetPersonalityList personalities={personalities} />}
+      {personalities.length > 0 && (
+        <PetPersonalityList personalities={personalities} />
+      )}
     </section>
   );
 };
