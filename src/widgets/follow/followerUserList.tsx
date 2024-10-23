@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { AddFollowButton, DeleteFollowerButton } from "@/features/follow/ui";
 import { Nickname, PetName, ProfileImageUrl } from "@/entities/profile/api";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
@@ -14,6 +15,8 @@ export const FollowerUserList = ({
   profile,
   isMutualFollow,
 }: FollowerUserListProps) => {
+  const [_isMutualFollow, _setIsMutualFollow] = useState(() => isMutualFollow);
+
   return (
     <li className="px-4 flex  gap-4 overflow-y-auto">
       {/* TODO 로딩상태가 함께 있는 ProfileImage 컴포넌트 만들어서 대체하기 */}
@@ -27,7 +30,12 @@ export const FollowerUserList = ({
         <div className="flex gap-2">
           <p className="title-2 text-grey-900">{nickname}</p>
           {/* TODO 미니 팔로우 버튼으로 만들기 */}
-          {!isMutualFollow && <AddFollowButton type="mini" />}
+          {!_isMutualFollow && (
+            <AddFollowButton
+              type="mini"
+              onClick={() => _setIsMutualFollow(!_isMutualFollow)}
+            />
+          )}
         </div>
         <p className="body-3 text-grey-500">{petName}</p>
       </div>

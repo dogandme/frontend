@@ -1,12 +1,18 @@
 import { Button } from "@/shared/ui/button";
 
-export const DeleteFollowButton = () => {
+interface DeleteFollowButtonProps {
+  onClick: () => void;
+}
+export const DeleteFollowButton = ({ onClick }: DeleteFollowButtonProps) => {
   return (
     <Button
       size="small"
       variant="outlined"
       colorType="tertiary"
       fullWidth={false}
+      onClick={() => {
+        onClick();
+      }}
     >
       팔로잉
     </Button>

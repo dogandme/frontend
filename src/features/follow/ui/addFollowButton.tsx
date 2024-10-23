@@ -1,9 +1,13 @@
 import { Button } from "@/shared/ui/button";
 
 interface AddFollowButtonProps {
+  onClick: () => void;
   type?: "default" | "mini";
 }
-export const AddFollowButton = ({ type = "default" }: AddFollowButtonProps) => {
+export const AddFollowButton = ({
+  type = "default",
+  onClick,
+}: AddFollowButtonProps) => {
   if (type === "default") {
     return (
       <Button
@@ -11,10 +15,22 @@ export const AddFollowButton = ({ type = "default" }: AddFollowButtonProps) => {
         variant="filled"
         colorType="primary"
         fullWidth={false}
+        onClick={() => {
+          onClick();
+        }}
       >
         팔로우
       </Button>
     );
   }
-  return <button className="btn-3 text-tangerine-500">팔로우</button>;
+  return (
+    <button
+      className="btn-3 text-tangerine-500"
+      onClick={() => {
+        onClick();
+      }}
+    >
+      팔로우
+    </button>
+  );
 };
