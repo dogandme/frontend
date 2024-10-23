@@ -51,9 +51,12 @@ const NicknameButton = ({
     ),
     {
       beforeClose: () => {
-        const mutationCache = queryClient.getMutationCache().find({
-          mutationKey: ["changeNickname"],
-        });
+        const mutationCache = queryClient
+          .getMutationCache()
+          .findAll({
+            mutationKey: ["changeNickname"],
+          })
+          .reverse()[0];
 
         if (mutationCache?.state.status === "pending") {
           return true;
