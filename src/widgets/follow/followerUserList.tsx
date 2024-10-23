@@ -29,7 +29,6 @@ export const FollowerUserList = ({
       <div className="flex flex-col justify-center flex-1">
         <div className="flex gap-2">
           <p className="title-2 text-grey-900">{nickname}</p>
-          {/* TODO 미니 팔로우 버튼으로 만들기 */}
           {!_isMutualFollow && (
             <AddFollowButton
               type="mini"
