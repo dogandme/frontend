@@ -1,4 +1,4 @@
-import { skipToken, useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery, UseQueryResult } from "@tanstack/react-query";
 import { apiClient, HttpError } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { PROFILE_END_POINT } from "../constants";
@@ -69,5 +69,37 @@ export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
     queryKey: ["profile", nickname],
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
     gcTime: 0,
+  });
+};
+
+export const useGetMyProfile = <TResult = GetProfileResponse>(
+  select: (data: GetProfileResponse) => TResult,
+): [TResult | undefined, Omit<UseQueryResult<TResult>, "data">] => {
+  const token = useAuthStore((state) => state.token);
+  const nickname = useAuthStore((state) => state.nickname);
+
+  const { data, ...queryResult } = useQuery({
+    queryKey: ["profile", nickname],
+    queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
+    gcTime: 0,
+    select,
+  });
+
+  return [data, { ...queryResult }];
+};
+
+export const useGetMyMutualFollowMap = (): [
+  Record<UserId, boolean> | undefined,
+  Omit<UseQueryResult<Record<UserId, boolean>>, "data">,
+] => {
+  return useGetMyProfile((data) => {
+    const followingsIds = data?.followingsIds || [];
+    return followingsIds.reduce(
+      (map, id) => {
+        map[id] = true;
+        return map;
+      },
+      {} as Record<UserId, boolean>,
+    );
   });
 };
