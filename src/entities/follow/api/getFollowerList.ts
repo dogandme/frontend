@@ -34,7 +34,7 @@ type GetFollowerListResponse = {
   }[];
 } & PageAbleInformation;
 
-const getFollowerList = async ({
+const getFollowerList = ({
   pageParam = 0,
   nickname,
 }: GetFollowerListRequest & { pageParam: number }) => {
