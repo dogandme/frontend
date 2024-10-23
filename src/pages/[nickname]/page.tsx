@@ -74,7 +74,7 @@ export const ProfilePage = () => {
         {renderProfileOverView()}
         <div className="flex flex-col items-start gap-2 w-full ">
           <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
-          {tempCnt > 0 && <TemporaryMarkingBar tempCnt={tempCnt} />}
+          {tempCnt && tempCnt > 0 && <TemporaryMarkingBar tempCnt={tempCnt} />}
           {/* TODO 
           2024/10/23 마킹 썸네일 가져오는 로직이 변경 되었습니다. 
           해당 부분 수정 일어나야 합니다.

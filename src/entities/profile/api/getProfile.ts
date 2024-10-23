@@ -35,13 +35,13 @@ export interface PetInfo {
 
 interface ProfileInfo {
   nickname: Nickname;
-  socialType: SocialType;
+  socialType: SocialType | null;
   followers: FollowerList;
   followings: FollowingList;
   likes: LikeMarkingList;
-  bookmarks: BookmarkMarkingList;
-  tempCnt: TemporarySavedMarkingCount;
-  markings: MarkingIdList;
+  bookmarks: BookmarkMarkingList | null;
+  tempCnt: TemporarySavedMarkingCount | null;
+  markings: MarkingIdList | null;
 }
 
 export type GetProfileResponse = ProfileInfo & {
