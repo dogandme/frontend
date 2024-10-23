@@ -85,6 +85,8 @@ const SearchRegionByGPSButton = () => {
   const setPosition = useRegionModalStore((state) => state.setPosition);
   const setOrigin = useRegionModalStore((state) => state.setOrigin);
 
+  const handleOpenSnackbar = useSnackBar();
+
   const additionalClassName =
     origin === "position"
       ? "border-tangerine-500 text-tangerine-500 active:border-tangerine-500 active:text-tangerine-500 hover:border-tangerine-500 hover:text-tangerine-500 focus-visible:border-tangerine-500 focus-visible:text-tangerine-500"
@@ -161,12 +163,12 @@ const SearchRegionControlItem = (region: Region) => {
   const regionModalStore = useRegionModalContext();
   const setRegionList = useRegionModalStore((state) => state.setRegionList);
   const { id, province, cityCounty, subDistrict } = region;
+  const handleOpenSnackbar = useSnackBar();
 
   const handleSelectRegion = () => {
     const { regionList } = regionModalStore.getState();
-    // TODO 에러 바운더리 나오면 에러 던지기
     if (regionList.length >= 5) {
-      // throw new Error("동네는 최대 5개까지 선택할 수 있습니다.");
+      handleOpenSnackbar("동네는 최대 5개까지 선택할 수 있습니다.");
       return;
     }
 
@@ -285,11 +287,6 @@ const RegionModalSaveButton = ({
         const { regionList } = regionModalStore.getState();
         if (regionList.length === 0) {
           handleOpenSnackbar("동네를 선택해 주세요");
-          return;
-        }
-        if (regionList.length > 5) {
-          // TODO 에러바운더리 나오면 로직 변경 하기
-          console.error("동네는 최대 5개까지 선택할 수 있습니다.");
           return;
         }
         onSave(regionList);
