@@ -11,6 +11,7 @@ export const getMockMarkingList = ({
     markingId: index + 1,
     region: "**시 **구 **동",
     content: `Marking content ${index + 1}`,
+    previewImage: "fa805c91-8228-4ec4-927f-9eb876a480c3",
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
     userId: index + 1,
@@ -36,7 +37,7 @@ export const getMockMarkingList = ({
       description: `Pet description ${index + 1}`,
       profile: `profile_url_${index + 1}`,
       breed: `Breed${index + 1}`,
-      personalities: `Personality${index + 1}`,
+      personalities: ["personality1", "personality2"],
     },
     images: [
       {

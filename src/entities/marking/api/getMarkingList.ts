@@ -39,6 +39,7 @@ export interface Marking {
   content: string;
   isVisible: "PUBLIC" | "FOLLOWERS_ONLY" | "PRIVATE";
   regDt: string;
+  previewImage: string;
   userId: number;
   nickName: string;
   isOwner: boolean;
