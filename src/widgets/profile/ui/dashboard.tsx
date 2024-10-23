@@ -1,5 +1,5 @@
 import { ProfileEditButton } from "@/features/auth/ui";
-import {
+import type {
   FollowerList,
   FollowingList,
   Nickname,

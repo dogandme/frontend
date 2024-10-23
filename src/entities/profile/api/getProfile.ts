@@ -52,10 +52,8 @@ interface GetProfileRequest {
   nickname: Nickname;
 }
 
-export const getProfile = ({
-  nickname,
-}: GetProfileRequest): Promise<GetProfileResponse> =>
-  apiClient.get(PROFILE_END_POINT.PROFILE(nickname), {
+export const getProfile = ({ nickname }: GetProfileRequest) =>
+  apiClient.get<GetProfileResponse>(PROFILE_END_POINT.PROFILE(nickname), {
     withToken: true,
   });
 
