@@ -1,19 +1,19 @@
 import { FollowNavigationBar } from "@/widgets/follow";
 import { FollowingUserList } from "@/widgets/follow/followingUserList";
 import { useGetFollowingList } from "@/entities/follow/api";
-import { useGetMyMutualFollowMap } from "@/entities/profile/api";
+import { useGetMyMutualFollowingMap } from "@/entities/profile/api";
 import { useNicknameParams } from "@/shared/lib/profile";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const FollowingPage = () => {
   const { nicknameParams } = useNicknameParams();
 
-  const [mutualFollowMap] = useGetMyMutualFollowMap();
+  const [mutualFollowingMap] = useGetMyMutualFollowingMap();
   const { data, fetchNextPage } = useGetFollowingList({
     nickname: nicknameParams,
   });
 
-  if (!mutualFollowMap) {
+  if (!mutualFollowingMap) {
     return <div>loading...</div>;
   }
 
@@ -32,7 +32,7 @@ export const FollowingPage = () => {
             nickname={nickname}
             petName={pet.name}
             profile={pet.profile}
-            isMutualFollow={mutualFollowMap[userId]}
+            isMutualFollow={mutualFollowingMap[userId]}
           />
         ))}
       </ul>

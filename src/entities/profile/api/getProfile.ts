@@ -88,7 +88,7 @@ export const useGetMyProfile = <TResult = GetProfileResponse>(
   return [data, { ...queryResult }];
 };
 
-export const useGetMyMutualFollowMap = (): [
+export const useGetMyMutualFollowingMap = (): [
   Record<UserId, boolean> | undefined,
   Omit<UseQueryResult<Record<UserId, boolean>>, "data">,
 ] => {

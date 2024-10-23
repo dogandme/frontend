@@ -1,7 +1,7 @@
 import { FollowerUserList, FollowNavigationBar } from "@/widgets/follow";
 import { FollowingUserList } from "@/widgets/follow/followingUserList";
 import { useGetFollowerList } from "@/entities/follow/api";
-import { useGetMyMutualFollowMap } from "@/entities/profile/api";
+import { useGetMyMutualFollowingMap } from "@/entities/profile/api";
 import { useNicknameParams } from "@/shared/lib/profile";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
@@ -11,14 +11,13 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
  */
 export const FollowerPage = () => {
   const { nicknameParams, isMyPage } = useNicknameParams();
-  const [mutualFollowMap] = useGetMyMutualFollowMap();
-
+  const [mutualFollowingMap] = useGetMyMutualFollowingMap();
   const { data, fetchNextPage } = useGetFollowerList({
     nickname: nicknameParams,
   });
 
   // TODO 로딩 상태 생각해보기
-  if (!mutualFollowMap) {
+  if (!mutualFollowingMap) {
     return <div>내 정보를 가져오는 중...</div>;
   }
 
@@ -38,7 +37,7 @@ export const FollowerPage = () => {
               nickname={nickname}
               petName={pet.name}
               profile={pet.profile}
-              isMutualFollow={mutualFollowMap[userId]}
+              isMutualFollow={mutualFollowingMap[userId]}
             />
           ) : (
             <FollowingUserList
@@ -46,7 +45,7 @@ export const FollowerPage = () => {
               nickname={nickname}
               petName={pet.name}
               profile={pet.profile}
-              isMutualFollow={mutualFollowMap[userId]}
+              isMutualFollow={mutualFollowingMap[userId]}
             />
           ),
         )}
