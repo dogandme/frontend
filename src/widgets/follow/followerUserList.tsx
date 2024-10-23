@@ -7,15 +7,17 @@ interface FollowerUserListProps {
   nickname: Nickname;
   petName: PetName;
   profile: ProfileImageUrl;
-  isMutualFollow?: boolean;
+  isMutualFollowing?: boolean;
 }
 export const FollowerUserList = ({
   nickname,
   petName,
   profile,
-  isMutualFollow,
+  isMutualFollowing,
 }: FollowerUserListProps) => {
-  const [_isMutualFollow, _setIsMutualFollow] = useState(() => isMutualFollow);
+  const [_isMutualFollowing, _setisMutualFollowing] = useState(
+    () => isMutualFollowing,
+  );
 
   return (
     <li className="px-4 flex  gap-4 overflow-y-auto">
@@ -29,10 +31,10 @@ export const FollowerUserList = ({
       <div className="flex flex-col justify-center flex-1">
         <div className="flex gap-2">
           <p className="title-2 text-grey-900">{nickname}</p>
-          {!_isMutualFollow && (
+          {!_isMutualFollowing && (
             <AddFollowButton
               type="mini"
-              onClick={() => _setIsMutualFollow(!_isMutualFollow)}
+              onClick={() => _setisMutualFollowing(!_isMutualFollowing)}
             />
           )}
         </div>

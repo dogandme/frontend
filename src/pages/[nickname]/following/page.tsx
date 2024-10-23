@@ -32,7 +32,7 @@ export const FollowingPage = () => {
             nickname={nickname}
             petName={pet.name}
             profile={pet.profile}
-            isMutualFollow={mutualFollowingMap[userId]}
+            isMutualFollowing={mutualFollowingMap[userId]}
           />
         ))}
       </ul>
