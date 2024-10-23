@@ -16,11 +16,10 @@ import type {
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
-import type { GetMarkingListRequest } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
 // data
-import markingListData from "./data/markingList.json";
+import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
 import regionListData from "./data/regionList.json";
 
@@ -296,31 +295,7 @@ export const markingModalHandlers = [
       message: "success",
     });
   }),
-  http.get<{
-    [K in keyof Omit<GetMarkingListRequest, "token">]: string;
-  }>(`${API_BASE_URL}/markings/search`, async ({ request }) => {
-    const token = request.headers.get("Authorization");
 
-    if (token) {
-      return HttpResponse.json(
-        {
-          code: 200,
-          message: "success",
-          content: markingListData.member,
-        },
-        { status: 200, statusText: "success" },
-      );
-    }
-
-    return HttpResponse.json(
-      {
-        code: 200,
-        message: "success",
-        content: markingListData.notMember,
-      },
-      { status: 200, statusText: "success" },
-    );
-  }),
   http.delete<PathParams>(MARKING_END_POINT.DELETE, () => {
     return HttpResponse.json({
       code: 200,
@@ -989,6 +964,46 @@ const putChangePetInformationHandler = [
   ),
 ];
 
+const getMarkingListHandler = [
+  http.get(`${API_BASE_URL}/markings/search`, async ({ request }) => {
+    const url = new URL(request.url);
+    const lat = Number(url.searchParams.get("lat"));
+    const lng = Number(url.searchParams.get("lng"));
+    const pageNumber = Number(url.searchParams.get("offset") || 0);
+
+    const markingList = getMockMarkingList({ lat, lng });
+    const totalCount = markingList.length;
+    const pageSize = 20;
+    const lastPage = Math.ceil(totalCount / pageSize);
+
+    // sort, paged, unpaged: 의미가 없는 데이터라 임의로 설정
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        markings: markingList.slice(
+          pageNumber * pageSize,
+          (pageNumber + 1) * pageSize,
+        ),
+        totalElements: totalCount,
+        totalPages: lastPage,
+        pageAble: {
+          pageNumber,
+          pageSize,
+          sort: {
+            sorted: false,
+            unsorted: true,
+            empty: true,
+          },
+          offset: pageNumber,
+          paged: true,
+          unpaged: false,
+        },
+      },
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1008,4 +1023,5 @@ export const handlers = [
   ...putChangeAgeHandler,
   ...putChangeNickname,
   ...putChangePetInformationHandler,
+  ...getMarkingListHandler,
 ];
