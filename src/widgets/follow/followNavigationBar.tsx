@@ -6,7 +6,7 @@ interface FollowNavigationBarProps {
 }
 export const FollowNavigationBar = ({ nickname }: FollowNavigationBarProps) => {
   return (
-    <div className="flex self-stretch items-center title-2 text-center">
+    <div className="flex self-stretch items-center title-2 text-center px-4">
       <FollowNavLink to={`/@${nickname}/${ROUTER_PATH.FOLLOWINGS}`}>
         팔로잉
       </FollowNavLink>
