@@ -1,0 +1,362 @@
+[
+  {
+    "userId": 31,
+    "nickname": "user31",
+    "pet": {
+      "petId": 101,
+      "name": "Buddy",
+      "description": "Friendly and playful",
+      "profile": "/images/buddy.jpg",
+      "breed": "Golden Retriever",
+      "personalities": ["Friendly", "Playful"]
+    }
+  },
+  {
+    "userId": 32,
+    "nickname": "user32",
+    "pet": {
+      "petId": 102,
+      "name": "Max",
+      "description": "Loyal and protective",
+      "profile": "/images/max.jpg",
+      "breed": "German Shepherd",
+      "personalities": ["Loyal", "Protective"]
+    }
+  },
+  {
+    "userId": 33,
+    "nickname": "user33",
+    "pet": {
+      "petId": 103,
+      "name": "Bella",
+      "description": "Gentle and affectionate",
+      "profile": "/images/bella.jpg",
+      "breed": "Labrador Retriever",
+      "personalities": ["Gentle", "Affectionate"]
+    }
+  },
+  {
+    "userId": 34,
+    "nickname": "user34",
+    "pet": {
+      "petId": 104,
+      "name": "Charlie",
+      "description": "Energetic and curious",
+      "profile": "/images/charlie.jpg",
+      "breed": "Beagle",
+      "personalities": ["Energetic", "Curious"]
+    }
+  },
+  {
+    "userId": 35,
+    "nickname": "user35",
+    "pet": {
+      "petId": 105,
+      "name": "Lucy",
+      "description": "Calm and friendly",
+      "profile": "/images/lucy.jpg",
+      "breed": "Bulldog",
+      "personalities": ["Calm", "Friendly"]
+    }
+  },
+  {
+    "userId": 36,
+    "nickname": "user36",
+    "pet": {
+      "petId": 106,
+      "name": "Daisy",
+      "description": "Playful and energetic",
+      "profile": "/images/daisy.jpg",
+      "breed": "Poodle",
+      "personalities": ["Playful", "Energetic"]
+    }
+  },
+  {
+    "userId": 37,
+    "nickname": "user37",
+    "pet": {
+      "petId": 107,
+      "name": "Rocky",
+      "description": "Strong and brave",
+      "profile": "/images/rocky.jpg",
+      "breed": "Rottweiler",
+      "personalities": ["Strong", "Brave"]
+    }
+  },
+  {
+    "userId": 38,
+    "nickname": "user38",
+    "pet": {
+      "petId": 108,
+      "name": "Molly",
+      "description": "Sweet and gentle",
+      "profile": "/images/molly.jpg",
+      "breed": "Shih Tzu",
+      "personalities": ["Sweet", "Gentle"]
+    }
+  },
+  {
+    "userId": 39,
+    "nickname": "user39",
+    "pet": {
+      "petId": 109,
+      "name": "Bailey",
+      "description": "Friendly and loyal",
+      "profile": "/images/bailey.jpg",
+      "breed": "Boxer",
+      "personalities": ["Friendly", "Loyal"]
+    }
+  },
+  {
+    "userId": 40,
+    "nickname": "user40",
+    "pet": {
+      "petId": 110,
+      "name": "Zoe",
+      "description": "Curious and playful",
+      "profile": "/images/zoe.jpg",
+      "breed": "Dachshund",
+      "personalities": ["Curious", "Playful"]
+    }
+  },
+  {
+    "userId": 41,
+    "nickname": "user41",
+    "pet": {
+      "petId": 111,
+      "name": "Luna",
+      "description": "Calm and affectionate",
+      "profile": "/images/luna.jpg",
+      "breed": "Siberian Husky",
+      "personalities": ["Calm", "Affectionate"]
+    }
+  },
+  {
+    "userId": 42,
+    "nickname": "user42",
+    "pet": {
+      "petId": 112,
+      "name": "Jack",
+      "description": "Energetic and loyal",
+      "profile": "/images/jack.jpg",
+      "breed": "Jack Russell Terrier",
+      "personalities": ["Energetic", "Loyal"]
+    }
+  },
+  {
+    "userId": 43,
+    "nickname": "user43",
+    "pet": {
+      "petId": 113,
+      "name": "Sadie",
+      "description": "Friendly and playful",
+      "profile": "/images/sadie.jpg",
+      "breed": "Cocker Spaniel",
+      "personalities": ["Friendly", "Playful"]
+    }
+  },
+  {
+    "userId": 44,
+    "nickname": "user44",
+    "pet": {
+      "petId": 114,
+      "name": "Toby",
+      "description": "Curious and energetic",
+      "profile": "/images/toby.jpg",
+      "breed": "Yorkshire Terrier",
+      "personalities": ["Curious", "Energetic"]
+    }
+  },
+  {
+    "userId": 45,
+    "nickname": "user45",
+    "pet": {
+      "petId": 115,
+      "name": "Chloe",
+      "description": "Gentle and sweet",
+      "profile": "/images/chloe.jpg",
+      "breed": "Pomeranian",
+      "personalities": ["Gentle", "Sweet"]
+    }
+  },
+  {
+    "userId": 46,
+    "nickname": "user46",
+    "pet": {
+      "petId": 116,
+      "name": "Buster",
+      "description": "Strong and protective",
+      "profile": "/images/buster.jpg",
+      "breed": "Doberman",
+      "personalities": ["Strong", "Protective"]
+    }
+  },
+  {
+    "userId": 47,
+    "nickname": "user47",
+    "pet": {
+      "petId": 117,
+      "name": "Roxy",
+      "description": "Playful and friendly",
+      "profile": "/images/roxy.jpg",
+      "breed": "Boston Terrier",
+      "personalities": ["Playful", "Friendly"]
+    }
+  },
+  {
+    "userId": 48,
+    "nickname": "user48",
+    "pet": {
+      "petId": 118,
+      "name": "Oliver",
+      "description": "Loyal and affectionate",
+      "profile": "/images/oliver.jpg",
+      "breed": "Cavalier King Charles Spaniel",
+      "personalities": ["Loyal", "Affectionate"]
+    }
+  },
+  {
+    "userId": 49,
+    "nickname": "user49",
+    "pet": {
+      "petId": 119,
+      "name": "Coco",
+      "description": "Sweet and gentle",
+      "profile": "/images/coco.jpg",
+      "breed": "Chihuahua",
+      "personalities": ["Sweet", "Gentle"]
+    }
+  },
+  {
+    "userId": 50,
+    "nickname": "user50",
+    "pet": {
+      "petId": 120,
+      "name": "Riley",
+      "description": "Energetic and playful",
+      "profile": "/images/riley.jpg",
+      "breed": "Australian Shepherd",
+      "personalities": ["Energetic", "Playful"]
+    }
+  },
+  {
+    "userId": 51,
+    "nickname": "user51",
+    "pet": {
+      "petId": 121,
+      "name": "Sophie",
+      "description": "Friendly and calm",
+      "profile": "/images/sophie.jpg",
+      "breed": "Bichon Frise",
+      "personalities": ["Friendly", "Calm"]
+    }
+  },
+  {
+    "userId": 52,
+    "nickname": "user52",
+    "pet": {
+      "petId": 122,
+      "name": "Oscar",
+      "description": "Loyal and protective",
+      "profile": "/images/oscar.jpg",
+      "breed": "Shiba Inu",
+      "personalities": ["Loyal", "Protective"]
+    }
+  },
+  {
+    "userId": 53,
+    "nickname": "user53",
+    "pet": {
+      "petId": 123,
+      "name": "Maggie",
+      "description": "Gentle and sweet",
+      "profile": "/images/maggie.jpg",
+      "breed": "Maltese",
+      "personalities": ["Gentle", "Sweet"]
+    }
+  },
+  {
+    "userId": 54,
+    "nickname": "user54",
+    "pet": {
+      "petId": 124,
+      "name": "Zeus",
+      "description": "Strong and brave",
+      "profile": "/images/zeus.jpg",
+      "breed": "Great Dane",
+      "personalities": ["Strong", "Brave"]
+    }
+  },
+  {
+    "userId": 55,
+    "nickname": "user55",
+    "pet": {
+      "petId": 125,
+      "name": "Ruby",
+      "description": "Playful and energetic",
+      "profile": "/images/ruby.jpg",
+      "breed": "Miniature Schnauzer",
+      "personalities": ["Playful", "Energetic"]
+    }
+  },
+  {
+    "userId": 56,
+    "nickname": "user56",
+    "pet": {
+      "petId": 126,
+      "name": "Gizmo",
+      "description": "Curious and friendly",
+      "profile": "/images/gizmo.jpg",
+      "breed": "Pekingese",
+      "personalities": ["Curious", "Friendly"]
+    }
+  },
+  {
+    "userId": 57,
+    "nickname": "user57",
+    "pet": {
+      "petId": 127,
+      "name": "Lily",
+      "description": "Sweet and gentle",
+      "profile": "/images/lily.jpg",
+      "breed": "Papillon",
+      "personalities": ["Sweet", "Gentle"]
+    }
+  },
+  {
+    "userId": 58,
+    "nickname": "user58",
+    "pet": {
+      "petId": 128,
+      "name": "Thor",
+      "description": "Strong and protective",
+      "profile": "/images/thor.jpg",
+      "breed": "Bullmastiff",
+      "personalities": ["Strong", "Protective"]
+    }
+  },
+  {
+    "userId": 59,
+    "nickname": "user59",
+    "pet": {
+      "petId": 129,
+      "name": "Milo",
+      "description": "Playful and energetic",
+      "profile": "/images/milo.jpg",
+      "breed": "Border Collie",
+      "personalities": ["Playful", "Energetic"]
+    }
+  },
+  {
+    "userId": 60,
+    "nickname": "user60",
+    "pet": {
+      "petId": 130,
+      "name": "Nala",
+      "description": "Friendly and calm",
+      "profile": "/images/nala.jpg",
+      "breed": "Samoyed",
+      "personalities": ["Friendly", "Calm"]
+    }
+  }
+]

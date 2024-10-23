@@ -20,6 +20,7 @@ import type { GetMarkingListRequest } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
 import followerListData from "./data/followers.json";
+import followingListData from "./data/followings.json";
 // data
 import markingListData from "./data/markingList.json";
 import userInfoData from "./data/myInfo.json";
@@ -70,7 +71,7 @@ type FollowDB = {
 
 const followDB: FollowDB = {
   followers: followerListData,
-  followings: [],
+  followings: followingListData,
 };
 
 const userInfoDB: UserInfoDB = {
@@ -1011,7 +1012,7 @@ const putChangePetInformationHandler = [
   ),
 ];
 
-const getFollowListHandler = [
+const getFollowerListHandler = [
   http.get<PathParams>(
     `${API_BASE_URL}$/users/follows/followers`,
     async ({ request }) => {
@@ -1059,6 +1060,54 @@ const getFollowListHandler = [
   ),
 ];
 
+const getFollowingListHandler = [
+  http.get<PathParams>(
+    `${API_BASE_URL}$/users/follows/followings`,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+
+      const token = request.headers.get("Authorization");
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+      const requestUrl = new URL(request.url);
+      const offset = requestUrl.searchParams.get("offset");
+      const itemPerPage = 20;
+      const start = Number(offset) * itemPerPage;
+      const end = start + itemPerPage;
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          userInfo: followDB.followings.slice(start, end),
+          totalElements: followDB.followings.length,
+          totalPages: Math.ceil(followDB.followings.length / itemPerPage),
+          pageAble: {
+            pageNumber: Number(offset),
+            pageSize: itemPerPage,
+            sort: {
+              empty: false,
+              unsorted: false,
+              sorted: true,
+            },
+            offset: Number(offset),
+            unpaged: false,
+            paged: true,
+          },
+        },
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1078,5 +1127,6 @@ export const handlers = [
   ...putChangeAgeHandler,
   ...putChangeNickname,
   ...putChangePetInformationHandler,
-  ...getFollowListHandler,
+  ...getFollowerListHandler,
+  ...getFollowingListHandler,
 ];
