@@ -4,6 +4,7 @@ import {
   useGetRegionByKeyword,
   useGetRegionByLatLng,
 } from "@/entities/auth/api";
+import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
 import { CancelIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";
@@ -272,6 +273,7 @@ const RegionModalSaveButton = ({
   onSave: (regionList: RegionModalExternalState["regionList"]) => void;
 }) => {
   const regionModalStore = useRegionModalContext();
+  const handleOpenSnackbar = useSnackBar();
 
   return (
     <Button
@@ -281,8 +283,7 @@ const RegionModalSaveButton = ({
       onClick={() => {
         const { regionList } = regionModalStore.getState();
         if (regionList.length === 0) {
-          // TODO 에러바운더리 나오면 로직 변경 하기
-          console.error("동네를 선택해 주세요");
+          handleOpenSnackbar("동네를 선택해 주세요");
           return;
         }
         if (regionList.length > 5) {
