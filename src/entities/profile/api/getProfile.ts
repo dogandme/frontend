@@ -7,15 +7,15 @@ import { PROFILE_END_POINT } from "../constants";
 export type Nickname = string;
 type SocialType = "NAVER" | "GOOGLE" | "EMAIL";
 type UserId = number;
-export type FollowerList = UserId[];
-export type FollowingList = UserId[];
+export type FollowerIdList = UserId[];
+export type FollowingIdList = UserId[];
 
 // 펫 프로필 정보
 export type PetName = string;
 export type Breed = string;
-export type PetDescription = string;
 export type PetPersonalities = string[];
-export type ProfileImageUrl = string;
+export type PetDescription = string | null;
+export type ProfileImageUrl = string | null;
 
 type MarkingId = number;
 
@@ -28,20 +28,23 @@ type MarkingIdList = MarkingId[];
 export interface PetInfo {
   name: PetName;
   breed: Breed;
-  description: PetDescription | null;
-  personalities: PetPersonalities | null;
-  profile: ProfileImageUrl | null;
+  description: PetDescription;
+  personalities: PetPersonalities;
+  profile: ProfileImageUrl;
 }
 
+/**
+ * likes, bookmarks, tempCnt , markings는 본인의 페이지 일 때에만 나타납니다.
+ */
 interface ProfileInfo {
   nickname: Nickname;
   socialType: SocialType | null;
-  followers: FollowerList;
-  followings: FollowingList;
-  likes: LikeMarkingList;
-  bookmarks: BookmarkMarkingList | null;
-  tempCnt: TemporarySavedMarkingCount | null;
-  markings: MarkingIdList | null;
+  followersIds: FollowerIdList;
+  followingsIds: FollowingIdList;
+  likes?: LikeMarkingList;
+  bookmarks?: BookmarkMarkingList;
+  tempCnt?: TemporarySavedMarkingCount;
+  markings?: MarkingIdList;
 }
 
 export type GetProfileResponse = ProfileInfo & {

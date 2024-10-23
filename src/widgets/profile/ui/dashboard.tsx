@@ -1,7 +1,7 @@
 import { ProfileEditButton } from "@/features/auth/ui";
 import type {
-  FollowerList,
-  FollowingList,
+  FollowerIdList,
+  FollowingIdList,
   Nickname,
   PetInfo,
 } from "@/entities/profile/api";
@@ -16,15 +16,15 @@ import { useNicknameParams } from "@/shared/lib/profile";
 interface ProfileOverviewProps {
   nickname: Nickname;
   pet: PetInfo;
-  followers: FollowerList;
-  followings: FollowingList;
+  followersIds: FollowerIdList;
+  followingsIds: FollowingIdList;
 }
 
 export const ProfileOverView = ({
   nickname,
   pet,
-  followers,
-  followings,
+  followersIds,
+  followingsIds,
 }: ProfileOverviewProps) => {
   const { profile, name, breed, description, personalities } = pet;
   const { isMyPage } = useNicknameParams();
@@ -38,8 +38,8 @@ export const ProfileOverView = ({
         <ProfileHeading
           name={name}
           breed={breed}
-          followers={followers}
-          followings={followings}
+          followersIds={followersIds}
+          followingsIds={followingsIds}
         />
         {/* TODO 내 페이지인지, 남의 페이지인지에 따라 다른 버튼을 보여줘야 함 */}
         {isMyPage ? <ProfileEditButton pet={pet} /> : <button>팔로잉</button>}

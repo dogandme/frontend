@@ -42,15 +42,15 @@ export const ProfilePage = () => {
     return;
   }
 
-  const { followers, followings, pet, tempCnt } = data;
+  const { followersIds, followingsIds, pet, tempCnt } = data;
 
   const renderProfileOverView = () => {
     if (pet) {
       return (
         <ProfileOverView
           nickname={nicknameParams}
-          followers={followers}
-          followings={followings}
+          followersIds={followersIds}
+          followingsIds={followingsIds}
           pet={pet}
         />
       );

@@ -6,8 +6,8 @@ import { DividerLine } from "@/shared/ui/divider";
 import { DropDownIcon } from "@/shared/ui/icon";
 import type {
   Breed,
-  FollowerList,
-  FollowingList,
+  FollowerIdList,
+  FollowingIdList,
   Nickname,
   PetDescription,
   PetName,
@@ -16,9 +16,10 @@ import type {
 } from "../api";
 
 type ProfileImageProps = {
-  profile: ProfileImageUrl | null;
+  profile: ProfileImageUrl;
   nickname: Nickname;
 };
+
 export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
   return (
     <img
@@ -34,15 +35,15 @@ export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
 type ProfileHeadingProps = {
   name: PetName;
   breed: Breed;
-  followers: FollowerList;
-  followings: FollowingList;
+  followersIds: FollowerIdList;
+  followingsIds: FollowingIdList;
 };
 
 export const ProfileHeading = ({
   name,
   breed,
-  followers,
-  followings,
+  followersIds,
+  followingsIds,
 }: ProfileHeadingProps) => {
   return (
     <div className="flex flex-col gap-1 items-start self-stretch">
@@ -50,11 +51,11 @@ export const ProfileHeading = ({
       <h2 className="text-grey-500 body-3">{breed}</h2>
       <p className="text-grey-700 body-3 flex gap-2 items-center">
         <span>
-          팔로워 <span className="text-grey-900">{followers.length}</span>
+          팔로워 <span className="text-grey-900">{followersIds.length}</span>
         </span>
         <DividerLine axis="col" />
         <span>
-          팔로잉 <span className="text-grey-900">{followings.length}</span>
+          팔로잉 <span className="text-grey-900">{followingsIds.length}</span>
         </span>
       </p>
     </div>
@@ -62,7 +63,7 @@ export const ProfileHeading = ({
 };
 
 interface PetDescriptionTextProps {
-  description: PetDescription;
+  description: NonNullable<PetDescription>;
 }
 
 export const PetDescriptionText = ({
@@ -105,7 +106,7 @@ export const PetDescriptionText = ({
 };
 
 interface PetPersonalityListProps {
-  personalities: PetPersonalities;
+  personalities: NonNullable<PetPersonalities>;
 }
 export const PetPersonalityList = ({
   personalities,
