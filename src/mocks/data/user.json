@@ -9,7 +9,7 @@
       "followingsIds": [],
       "likes": [],
       "bookmarks": [],
-      "tempCnt": 0,
+      "tempCnt": 3,
       "markings": [],
       "pet": null
     }
@@ -25,7 +25,7 @@
       "followingsIds": [1, 2, 3, 4, 5, 6, 7, 8, 9],
       "likes": [],
       "bookmarks": [],
-      "tempCnt": 0,
+      "tempCnt": 3,
       "markings": [1, 2, 3, 4, 5],
       "pet": {
         "name": "뽀송이",
