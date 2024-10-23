@@ -47,7 +47,7 @@ export const useGetFollowerList = ({ nickname }: GetFollowerListRequest) => {
   const token = useAuthStore((state) => state.token);
 
   return useInfiniteQuery({
-    queryKey: ["followingList", nickname],
+    queryKey: ["followerList", nickname],
     queryFn: token
       ? ({ pageParam = 0 }) => getFollowerList({ nickname, pageParam })
       : skipToken,
