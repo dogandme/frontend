@@ -1,5 +1,5 @@
 import { FollowerUserList, FollowNavigationBar } from "@/widgets/follow";
-import { FollowUserList } from "@/widgets/follow/followUserList";
+import { FollowingUserList } from "@/widgets/follow/followingUserList";
 import { useGetFollowerList } from "@/entities/follow/api";
 import { useGetMyMutualFollowMap } from "@/entities/profile/api";
 import { useNicknameParams } from "@/shared/lib/profile";
@@ -41,7 +41,7 @@ export const FollowerPage = () => {
               isMutualFollow={mutualFollowMap[userId]}
             />
           ) : (
-            <FollowUserList
+            <FollowingUserList
               key={userId}
               nickname={nickname}
               petName={pet.name}
