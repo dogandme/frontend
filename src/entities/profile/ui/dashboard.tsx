@@ -4,13 +4,21 @@ import { API_BASE_URL } from "@/shared/constants";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { DividerLine } from "@/shared/ui/divider";
 import { DropDownIcon } from "@/shared/ui/icon";
-import { PetInfo, UserInfo } from "../api";
+import type {
+  Breed,
+  FollowerIdList,
+  FollowingIdList,
+  Nickname,
+  PetDescription,
+  PetName,
+  PetPersonalities,
+  ProfileImageUrl,
+} from "../api";
 
-type ProfileImageProps = Pick<PetInfo, "profile"> & Pick<UserInfo, "nickname">;
-type ProfileHeadingProps = Pick<PetInfo, "name" | "breed"> &
-  Pick<UserInfo, "followers" | "followings">;
-type PetIntroduceProps = Pick<PetInfo, "description">;
-type PetCharacterListProps = Pick<PetInfo, "personalities">;
+type ProfileImageProps = {
+  profile: ProfileImageUrl;
+  nickname: Nickname;
+};
 
 export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
   return (
@@ -24,11 +32,18 @@ export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
   );
 };
 
+type ProfileHeadingProps = {
+  name: PetName;
+  breed: Breed;
+  followersIds: FollowerIdList;
+  followingsIds: FollowingIdList;
+};
+
 export const ProfileHeading = ({
   name,
   breed,
-  followers,
-  followings,
+  followersIds,
+  followingsIds,
 }: ProfileHeadingProps) => {
   return (
     <div className="flex flex-col gap-1 items-start self-stretch">
@@ -36,18 +51,24 @@ export const ProfileHeading = ({
       <h2 className="text-grey-500 body-3">{breed}</h2>
       <p className="text-grey-700 body-3 flex gap-2 items-center">
         <span>
-          팔로워 <span className="text-grey-900">{followers.length}</span>
+          팔로워 <span className="text-grey-900">{followersIds.length}</span>
         </span>
         <DividerLine axis="col" />
         <span>
-          팔로잉 <span className="text-grey-900">{followings.length}</span>
+          팔로잉 <span className="text-grey-900">{followingsIds.length}</span>
         </span>
       </p>
     </div>
   );
 };
 
-export const PetDescription = ({ description }: PetIntroduceProps) => {
+interface PetDescriptionTextProps {
+  description: NonNullable<PetDescription>;
+}
+
+export const PetDescriptionText = ({
+  description,
+}: PetDescriptionTextProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
   const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
@@ -58,7 +79,6 @@ export const PetDescription = ({ description }: PetIntroduceProps) => {
   }, []);
 
   const handleClick = () => setIsSummary((prev) => !prev);
-  // summary 상태 일 경우엔 introduce가 한 줄만 보이게 합니다.
 
   return (
     <div className="flex flex-col gap-4">
@@ -85,9 +105,12 @@ export const PetDescription = ({ description }: PetIntroduceProps) => {
   );
 };
 
+interface PetPersonalityListProps {
+  personalities: PetPersonalities;
+}
 export const PetPersonalityList = ({
   personalities,
-}: PetCharacterListProps) => {
+}: PetPersonalityListProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
 
   const visiblePersonalities = isSummary
