@@ -99,17 +99,18 @@ const SearchRegionByGPSButton = () => {
     setOrigin("position");
   };
 
-  // TODO 에러 바운더리로 스낵바 띄우기
   const errorCallback = (error: GeolocationPositionError) => {
     switch (error.code) {
       case GeolocationPositionError.PERMISSION_DENIED:
-        throw new Error(errorMessage.PERMISSION_DENIED);
+        handleOpenSnackbar(errorMessage.PERMISSION_DENIED);
+        break;
       case GeolocationPositionError.POSITION_UNAVAILABLE:
-        throw new Error(errorMessage.POSITION_UNAVAILABLE);
+        handleOpenSnackbar(errorMessage.POSITION_UNAVAILABLE);
+        break;
       case GeolocationPositionError.TIMEOUT:
         if (failureCount.current >= 3) {
           failureCount.current = 0;
-          throw new Error(errorMessage.POSITION_UNAVAILABLE);
+          handleOpenSnackbar(errorMessage.POSITION_UNAVAILABLE);
         }
         failureCount.current += 1;
         window.navigator.geolocation.getCurrentPosition(
@@ -123,7 +124,7 @@ const SearchRegionByGPSButton = () => {
         );
         break;
       default:
-        throw new Error(errorMessage.UNKNOWN);
+        handleOpenSnackbar(errorMessage.UNKNOWN);
     }
   };
 
