@@ -16,14 +16,14 @@ export const ChangeNicknameModal = ({
   onClose,
   nickLastModDt,
 }: {
-  onClose: () => void;
+  onClose: () => Promise<void>;
   nickLastModDt: NonNullable<MyInfo["nickLastModDt"]>;
 }) => {
   const nicknameRef = useRef<HTMLInputElement | null>(null);
 
   const handleOpenSnackbar = useSnackBar();
 
-  const { mutate: putChangeNickname, status: changeNicknameStatus } =
+  const { mutate: putChangeNickname, isPending: isChangeNicknamePending } =
     usePutChangeNickname();
   const { isDuplicateNickname, isPending: isDuplicateCheckPending } =
     usePostCheckDuplicateNicknameState();
@@ -49,8 +49,9 @@ export const ChangeNicknameModal = ({
       return;
     }
 
-    const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const canChange = new Date(nickLastModDt) <= oneMonthAgo;
+    const now = new Date();
+    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const canChange = new Date(nickLastModDt) < oneMonthAgo;
 
     if (!canChange) {
       handleOpenSnackbar("한달 이후 닉네임을 변경해 주세요");
@@ -83,9 +84,7 @@ export const ChangeNicknameModal = ({
       <Modal.Footer axis="col">
         <Modal.FilledButton
           type="button"
-          disabled={
-            changeNicknameStatus === "pending" || isDuplicateCheckPending
-          }
+          disabled={isChangeNicknamePending || isDuplicateCheckPending}
           onClick={handleSubmit}
         >
           저장
