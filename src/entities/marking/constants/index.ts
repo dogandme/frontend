@@ -14,5 +14,9 @@ export const SEARCH_MARKING_END_POINT = ({
   southWestLng,
   northEastLat,
   northEastLng,
-}: Omit<GetMarkingListRequest, "token">) =>
-  `${API_BASE_URL}/markings/search?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}`;
+  lat,
+  lng,
+  sortType,
+  offset,
+}: GetMarkingListRequest) =>
+  `${API_BASE_URL}/markings/search?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&lat=${lat}&lng=${lng}&sortType=${sortType}&offset=${offset}`;
