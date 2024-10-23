@@ -12,13 +12,19 @@ interface Address {
   subDistrict: string;
 }
 
+type PetName = string;
+type Breed = string;
+type PetDescription = string | null;
+type ProfileImageUrl = string | null;
+type PetPersonalities = string[];
+
 interface Pet {
   petId: number;
-  name: string;
-  description: string | null;
-  profile: string;
-  breed: string | null;
-  personalities: string | null;
+  name: PetName;
+  description: PetDescription;
+  profile: ProfileImageUrl;
+  breed: Breed;
+  personalities: PetPersonalities;
 }
 
 interface Image {
