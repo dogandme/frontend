@@ -4,47 +4,47 @@ import { useAuthStore } from "@/shared/store";
 import { PROFILE_END_POINT } from "../constants";
 
 // 유저 정보
-type Nickname = string;
+export type Nickname = string;
 type SocialType = "NAVER" | "GOOGLE" | "EMAIL";
 type UserId = number;
-type FollowerList = UserId[];
-type FollowingList = UserId[];
+export type FollowerList = UserId[];
+export type FollowingList = UserId[];
 
 // 펫 프로필 정보
-type PetName = string;
-type Breed = string;
-type PetDescription = string;
-type Personalities = string[];
+export type PetName = string;
+export type Breed = string;
+export type PetDescription = string;
+export type PetPersonalities = string[];
 export type ProfileImageUrl = string;
 
 type MarkingId = number;
 
 // 마킹 정보
-type TempCnt = number;
+export type TemporarySavedMarkingCount = number;
 type BookmarkMarkingList = MarkingId[];
 type LikeMarkingList = MarkingId[];
-type MarkingList = MarkingId[];
+type MarkingIdList = MarkingId[];
 
-interface PetInfo {
+export interface PetInfo {
   name: PetName;
   breed: Breed;
   description: PetDescription | null;
-  personalities: Personalities | null;
+  personalities: PetPersonalities | null;
   profile: ProfileImageUrl | null;
 }
 
-export interface ProfileInfo {
+interface ProfileInfo {
   nickname: Nickname;
   socialType: SocialType;
   followers: FollowerList;
   followings: FollowingList;
   likes: LikeMarkingList;
   bookmarks: BookmarkMarkingList;
-  tempCnt: TempCnt;
-  markings: MarkingList;
+  tempCnt: TemporarySavedMarkingCount;
+  markings: MarkingIdList;
 }
 
-type GetProfileResponse = ProfileInfo & {
+export type GetProfileResponse = ProfileInfo & {
   pet: PetInfo | null;
 };
 

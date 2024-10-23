@@ -4,14 +4,21 @@ import { API_BASE_URL } from "@/shared/constants";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { DividerLine } from "@/shared/ui/divider";
 import { DropDownIcon } from "@/shared/ui/icon";
-import { PetInfo, UserInfo } from "../api";
+import type {
+  Breed,
+  FollowerList,
+  FollowingList,
+  Nickname,
+  PetDescription,
+  PetName,
+  PetPersonalities,
+  ProfileImageUrl,
+} from "../api";
 
-type ProfileImageProps = Pick<PetInfo, "profile"> & Pick<UserInfo, "nickname">;
-type ProfileHeadingProps = Pick<PetInfo, "name" | "breed"> &
-  Pick<UserInfo, "followers" | "followings">;
-type PetIntroduceProps = Pick<PetInfo, "description">;
-type PetCharacterListProps = Pick<PetInfo, "personalities">;
-
+type ProfileImageProps = {
+  profile: ProfileImageUrl | null;
+  nickname: Nickname;
+};
 export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
   return (
     <img
@@ -22,6 +29,13 @@ export const ProfileImage = ({ profile, nickname }: ProfileImageProps) => {
       className="w-16 h-16 rounded-[1.75rem] object-cover"
     />
   );
+};
+
+type ProfileHeadingProps = {
+  name: PetName;
+  breed: Breed;
+  followers: FollowerList;
+  followings: FollowingList;
 };
 
 export const ProfileHeading = ({
@@ -47,7 +61,13 @@ export const ProfileHeading = ({
   );
 };
 
-export const PetDescription = ({ description }: PetIntroduceProps) => {
+interface PetDescriptionTextProps {
+  description: PetDescription;
+}
+
+export const PetDescriptionText = ({
+  description,
+}: PetDescriptionTextProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
   const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
@@ -58,7 +78,6 @@ export const PetDescription = ({ description }: PetIntroduceProps) => {
   }, []);
 
   const handleClick = () => setIsSummary((prev) => !prev);
-  // summary 상태 일 경우엔 introduce가 한 줄만 보이게 합니다.
 
   return (
     <div className="flex flex-col gap-4">
@@ -85,9 +104,12 @@ export const PetDescription = ({ description }: PetIntroduceProps) => {
   );
 };
 
+interface PetPersonalityListProps {
+  personalities: PetPersonalities;
+}
 export const PetPersonalityList = ({
   personalities,
-}: PetCharacterListProps) => {
+}: PetPersonalityListProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
 
   const visiblePersonalities = isSummary

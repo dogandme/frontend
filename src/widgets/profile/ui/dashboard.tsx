@@ -1,30 +1,31 @@
 import { ProfileEditButton } from "@/features/auth/ui";
-import { UserInfo } from "@/entities/profile/api";
 import {
+  FollowerList,
+  FollowingList,
+  Nickname,
+  PetInfo,
+} from "@/entities/profile/api";
+import {
+  PetDescriptionText,
   PetPersonalityList,
-  PetDescription,
   ProfileHeading,
   ProfileImage,
 } from "@/entities/profile/ui";
 import { useNicknameParams } from "@/shared/lib/profile";
 
-/**
- * ProfileOverView는 NonNullable 한 useGetProfile의 반환값을 받아서 렌더링 됩니다.
- * 즉 해당 컴포넌트는 ROLE_USER 이상의 권한을 가진 사용자에게만 정상적으로 렌더링 됩니다.
- */
-export type ProfileOverViewProps = Pick<
-  UserInfo,
-  "followers" | "followings" | "nickname"
-> & {
-  pet: NonNullable<UserInfo["pet"]>;
-};
+interface ProfileOverviewProps {
+  nickname: Nickname;
+  pet: PetInfo;
+  followers: FollowerList;
+  followings: FollowingList;
+}
 
 export const ProfileOverView = ({
   nickname,
   pet,
   followers,
   followings,
-}: ProfileOverViewProps) => {
+}: ProfileOverviewProps) => {
   const { profile, name, breed, description, personalities } = pet;
   const { isMyPage } = useNicknameParams();
 
@@ -44,8 +45,8 @@ export const ProfileOverView = ({
         {isMyPage ? <ProfileEditButton pet={pet} /> : <button>팔로잉</button>}
       </div>
       {/* 반려동물 소개와 성격 리스트 */}
-      <PetDescription description={description} />
-      <PetPersonalityList personalities={personalities} />
+      {description && <PetDescriptionText description={description} />}
+      {personalities && <PetPersonalityList personalities={personalities} />}
     </section>
   );
 };
