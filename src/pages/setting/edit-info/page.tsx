@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { ChangeNicknameModal } from "@/features/auth/ui/ChangeNicknameModal";
 import { useSettingPermission } from "@/features/setting/hooks";
 import { GenderChangeButton } from "@/features/setting/ui";
@@ -42,10 +43,27 @@ const NicknameButton = ({
   nickLastModDt: NonNullable<MyInfo["nickLastModDt"]>;
 }) => {
   const nickname = useAuthStore((state) => state.nickname);
+  const queryClient = useQueryClient();
 
-  const { handleOpen, onClose } = useModal(() => (
-    <ChangeNicknameModal onClose={onClose} nickLastModDt={nickLastModDt} />
-  ));
+  const { handleOpen, onClose } = useModal(
+    () => (
+      <ChangeNicknameModal onClose={onClose} nickLastModDt={nickLastModDt} />
+    ),
+    {
+      beforeClose: () => {
+        const mutationCache = queryClient
+          .getMutationCache()
+          .findAll({
+            mutationKey: ["changeNickname"],
+          })
+          .reverse()[0];
+
+        if (mutationCache?.state.status === "pending") {
+          return true;
+        }
+      },
+    },
+  );
 
   return (
     <button className="setting-item" onClick={handleOpen}>

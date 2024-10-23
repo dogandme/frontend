@@ -11,17 +11,26 @@ interface NicknameInputProps {
 
 export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
   ({ nickname: controlledNickname, onChange }, ref) => {
+    const MAX_LENGTH = 20;
+
     const isControlled = typeof controlledNickname !== "undefined";
 
     const token = useAuthStore((state) => state.token);
     const [nickname, setNickname] = useState<string>("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!isControlled) {
-        setNickname(e.target.value);
+      if (e.target.value.length > MAX_LENGTH) {
+        e.target.value = e.target.value.slice(0, MAX_LENGTH);
       }
 
-      onChange?.(e.target.value);
+      const regex = /[^가-힣a-zA-Z0-9ㄱ-ㅎ\s]/g;
+      const filteredNickname = e.target.value.replace(regex, "");
+
+      if (!isControlled) {
+        setNickname(filteredNickname);
+      }
+
+      onChange?.(filteredNickname);
     };
 
     const {
@@ -44,7 +53,7 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
       postDuplicateNickname({ nickname });
     };
 
-    let statusText = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";
+    let statusText = `${MAX_LENGTH}자 이내의 한글 영어 숫자만 사용 가능합니다.`;
 
     if (isDuplicateNickname) {
       statusText = "이미 존재하는 닉네임입니다.";
@@ -68,11 +77,11 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
         value={isControlled ? controlledNickname : nickname}
         onChange={handleChange}
         onBlur={handleBlur}
-        maxLength={20}
+        maxLength={MAX_LENGTH}
         trailingNode={
           <ValueLength
             value={isControlled ? controlledNickname : nickname}
-            maxLength={20}
+            maxLength={MAX_LENGTH}
           />
         }
       />

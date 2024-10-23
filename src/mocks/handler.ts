@@ -868,7 +868,7 @@ const putChangeAgeHandler = [
   ),
 ];
 
-const changeUserInfoHandler = [
+const putChangeNickname = [
   http.put<PathParams, { nickname: string }>(
     CHANGE_USER_INFO_END_POINT.NICKNAME,
     async ({ request }) => {
@@ -876,18 +876,57 @@ const changeUserInfoHandler = [
 
       const { nickname } = await request.json();
 
-      // 서버에서 어떻게 에러처리했는지 물어봐야 함
       if (nickname === "중복" || nickname === "뽀" || nickname === "송") {
         return HttpResponse.json(
           {
-            code: 400,
+            code: 409,
             message: "이미 존재하는 닉네임입니다.",
+          },
+          {
+            status: 409,
+          },
+        );
+      }
+
+      const token = request.headers.get("Authorization")!;
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      const userKey =
+        token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL";
+
+      const { nickLastModDt } = userInfoDB[userKey];
+
+      const now = new Date();
+      const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      const canChange = nickLastModDt && new Date(nickLastModDt) < oneMonthAgo;
+
+      if (!canChange) {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "2024-10-29 화 23:27 이후 변경이 가능합니다.",
           },
           {
             status: 400,
           },
         );
       }
+
+      userInfoDB[userKey] = {
+        ...userInfoDB[userKey],
+        nickLastModDt: new Date().toISOString(),
+      };
 
       return HttpResponse.json({
         code: 200,
@@ -967,6 +1006,6 @@ export const handlers = [
   ...putChangePasswordHandler,
   ...putSetPasswordHandler,
   ...putChangeAgeHandler,
-  ...changeUserInfoHandler,
+  ...putChangeNickname,
   ...putChangePetInformationHandler,
 ];
