@@ -22,11 +22,11 @@ interface PageAbleInformation {
   };
 }
 
-interface GetFollowingListRequest {
+interface GetFollowerListRequest {
   nickname: Nickname;
 }
 
-type GetFollowingListResponse = {
+type GetFollowerListResponse = {
   userInfos: {
     userId: UserId;
     nickname: Nickname;
@@ -34,22 +34,22 @@ type GetFollowingListResponse = {
   }[];
 } & PageAbleInformation;
 
-const getFollowingList = async ({
+const getFollowerList = async ({
   pageParam = 0,
   nickname,
-}: GetFollowingListRequest & { pageParam: number }) => {
-  return apiClient.get<GetFollowingListResponse>(
-    FOLLOW_ENDPOINT.FOLLOWING_LIST(nickname, pageParam),
+}: GetFollowerListRequest & { pageParam: number }) => {
+  return apiClient.get<GetFollowerListResponse>(
+    FOLLOW_ENDPOINT.FOLLOWER_LIST(nickname, pageParam),
   );
 };
 
-export const useGetFollowingList = ({ nickname }: GetFollowingListRequest) => {
+export const useGetFollowerList = ({ nickname }: GetFollowerListRequest) => {
   const token = useAuthStore((state) => state.token);
 
   return useInfiniteQuery({
     queryKey: ["followingList", nickname],
     queryFn: token
-      ? ({ pageParam = 0 }) => getFollowingList({ nickname, pageParam })
+      ? ({ pageParam = 0 }) => getFollowerList({ nickname, pageParam })
       : skipToken,
     getNextPageParam: ({ totalPages, pageAble }) => {
       return pageAble.pageNumber < totalPages ? pageAble.pageNumber + 1 : null;
