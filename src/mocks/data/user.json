@@ -4,13 +4,14 @@
     "message": "success",
     "content": {
       "nickname": "뽀송송",
-      "pet": null,
+      "socialType": "EMAIL",
       "followers": [],
       "followings": [],
       "likes": [],
       "bookmarks": [],
       "tempCnt": 0,
-      "markings": []
+      "markings": [],
+      "pet": null
     }
   },
 
@@ -19,6 +20,13 @@
     "message": "success",
     "content": {
       "nickname": "뽀송송",
+      "socialType": "EMAIL",
+      "followers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "followings": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      "likes": [],
+      "bookmarks": [],
+      "tempCnt": 0,
+      "markings": [1, 2, 3, 4, 5],
       "pet": {
         "name": "뽀송이",
         "breed": "비숑 프리제",
@@ -31,18 +39,7 @@
           "까칠한"
         ],
         "profile": null
-      },
-      "followers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      "followings": [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      "likes": [],
-      "bookmarks": [],
-      "tempCnt": 0,
-      "markings": [
-        { "id": 1, "image": "/default-image.png" },
-        { "id": 2, "image": "/default-image.png" },
-        { "id": 3, "image": "/default-image.png" },
-        { "id": 4, "image": "/default-image.png" }
-      ]
+      }
     }
   }
 }
