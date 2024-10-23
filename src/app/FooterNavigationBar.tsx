@@ -37,6 +37,7 @@ export const FooterNavigationBar = () => {
     southWestLng: bounds?.southWest.lng,
     northEastLat: bounds?.northEast.lat,
     northEastLng: bounds?.northEast.lng,
+    sortType: "RECENT",
   });
 
   const mapMode = useMapStore((state) => state.mode);
