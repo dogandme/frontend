@@ -1,14 +1,14 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { apiClient, HttpError } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store";
 import { PROFILE_END_POINT } from "../constants";
 
 // 유저 정보
-type UserNickname = string;
-type Followers = number[];
-type Followings = number[];
-type Likes = number[];
-type Bookmarks = number[];
-type TempCnt = number;
+type Nickname = string;
+type SocialType = "NAVER" | "GOOGLE" | "EMAIL";
+type UserId = number;
+type FollowerList = UserId[];
+type FollowingList = UserId[];
 
 // 펫 프로필 정보
 type PetName = string;
@@ -17,47 +17,54 @@ type PetDescription = string;
 type Personalities = string[];
 export type ProfileImageUrl = string;
 
-export interface PetInfo {
+type MarkingId = number;
+
+// 마킹 정보
+type TempCnt = number;
+type BookmarkMarkingList = MarkingId[];
+type LikeMarkingList = MarkingId[];
+type MarkingList = MarkingId[];
+
+interface PetInfo {
   name: PetName;
   breed: Breed;
-  description: PetDescription;
-  personalities: Personalities;
-  profile: ProfileImageUrl;
+  description: PetDescription | null;
+  personalities: Personalities | null;
+  profile: ProfileImageUrl | null;
 }
 
-export interface MarkingPreviewData {
-  id: number;
-  image: string;
-}
-
-export interface UserInfo {
-  nickname: UserNickname;
-  pet: PetInfo | null;
-  followers: Followers;
-  followings: Followings;
-  likes: Likes;
-  bookmarks: Bookmarks;
+export interface ProfileInfo {
+  nickname: Nickname;
+  socialType: SocialType;
+  followers: FollowerList;
+  followings: FollowingList;
+  likes: LikeMarkingList;
+  bookmarks: BookmarkMarkingList;
   tempCnt: TempCnt;
-  markings: MarkingPreviewData[];
+  markings: MarkingList;
 }
 
-interface ProfileRequest {
-  nickname: UserNickname;
-}
-
-export const getProfile = async ({ nickname }: ProfileRequest) => {
-  return apiClient.get<UserInfo>(PROFILE_END_POINT.PROFILE(nickname), {
-    withToken: true,
-  });
+type GetProfileResponse = ProfileInfo & {
+  pet: PetInfo | null;
 };
 
-export const useGetProfile = ({
+interface GetProfileRequest {
+  nickname: Nickname;
+}
+
+export const getProfile = ({
   nickname,
-}: {
-  nickname: UserNickname | null;
-}) => {
-  return useQuery<UserInfo, HttpError, UserInfo>({
+}: GetProfileRequest): Promise<GetProfileResponse> =>
+  apiClient.get(PROFILE_END_POINT.PROFILE(nickname), {
+    withToken: true,
+  });
+
+export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
+  const token = useAuthStore((state) => state.token);
+
+  return useQuery<GetProfileResponse, HttpError>({
     queryKey: ["profile", nickname],
-    queryFn: nickname ? () => getProfile({ nickname }) : skipToken,
+    queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
+    gcTime: 0,
   });
 };
