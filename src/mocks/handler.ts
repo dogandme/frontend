@@ -19,6 +19,7 @@ import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import type { GetMarkingListRequest } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
+import followerListData from "./data/followers.json";
 // data
 import markingListData from "./data/markingList.json";
 import userInfoData from "./data/myInfo.json";
@@ -50,6 +51,27 @@ interface UserInfoDB {
 }
 
 const userDB: UserDB = {};
+
+// TODO 타입 리팩토링 시 외부에서 타입 가져오기
+type FollowDB = {
+  [key in "followers" | "followings"]: {
+    userId: number;
+    nickname: string;
+    pet: {
+      petId?: number;
+      name: string;
+      description?: string;
+      profile?: string;
+      breed?: string;
+      personalities?: string[];
+    };
+  }[];
+};
+
+const followDB: FollowDB = {
+  followers: followerListData,
+  followings: [],
+};
 
 const userInfoDB: UserInfoDB = {
   뽀송송_EMAIL: userInfoData["EMAIL"] as MyInfo,
@@ -989,6 +1011,54 @@ const putChangePetInformationHandler = [
   ),
 ];
 
+const getFollowListHandler = [
+  http.get<PathParams>(
+    `${API_BASE_URL}$/users/follows/followers`,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+
+      const token = request.headers.get("Authorization");
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+      const requestUrl = new URL(request.url);
+      const offset = requestUrl.searchParams.get("offset");
+      const itemPerPage = 20;
+      const start = Number(offset) * itemPerPage;
+      const end = start + itemPerPage;
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          userInfo: followDB.followers.slice(start, end),
+          totalElements: followDB.followers.length,
+          totalPages: Math.ceil(followDB.followers.length / itemPerPage),
+          pageAble: {
+            pageNumber: Number(offset),
+            pageSize: itemPerPage,
+            sort: {
+              empty: false,
+              unsorted: false,
+              sorted: true,
+            },
+            offset: Number(offset),
+            unpaged: false,
+            paged: true,
+          },
+        },
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1008,4 +1078,5 @@ export const handlers = [
   ...putChangeAgeHandler,
   ...putChangeNickname,
   ...putChangePetInformationHandler,
+  ...getFollowListHandler,
 ];
