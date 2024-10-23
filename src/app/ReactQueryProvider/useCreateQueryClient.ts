@@ -49,7 +49,14 @@ export const useCreateQueryClient = () => {
         },
       }),
       mutationCache: new MutationCache({
-        onSuccess: () => {
+        onSuccess: (data, variables, context, mutation) => {
+          // * 중복 닉네임 체크인 경우에만 모달을 닫지 않습니다.
+          if (
+            mutation.options.mutationKey?.includes("checkDuplicateNickname")
+          ) {
+            return;
+          }
+
           if (useOverlayStore.getState().overlays.length > 0) {
             resetOverlays();
           }
