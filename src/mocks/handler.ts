@@ -935,7 +935,7 @@ const getMarkingListHandler = [
     const markingList = getMockMarkingList({ lat, lng });
     const totalCount = markingList.length;
     const pageSize = 20;
-    const lastPage = Math.ceil(totalCount / pageSize) - 1; // pageNumber가 0부터 시작하기 때문에 1을 빼줍니다.
+    const lastPage = Math.ceil(totalCount / pageSize);
 
     // sort, paged, unpaged: 의미가 없는 데이터라 임의로 설정
     return HttpResponse.json({
@@ -947,7 +947,7 @@ const getMarkingListHandler = [
           (pageNumber + 1) * pageSize,
         ),
         totalElements: totalCount,
-        totalPages: lastPage + 1,
+        totalPages: lastPage,
         pageAble: {
           pageNumber,
           pageSize,
