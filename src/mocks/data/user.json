@@ -5,8 +5,8 @@
     "content": {
       "nickname": "뽀송송",
       "socialType": "EMAIL",
-      "followers": [],
-      "followings": [],
+      "followersIds": [],
+      "followingsIds": [],
       "likes": [],
       "bookmarks": [],
       "tempCnt": 0,
@@ -21,8 +21,8 @@
     "content": {
       "nickname": "뽀송송",
       "socialType": "EMAIL",
-      "followers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      "followings": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      "followersIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "followingsIds": [1, 2, 3, 4, 5, 6, 7, 8, 9],
       "likes": [],
       "bookmarks": [],
       "tempCnt": 0,

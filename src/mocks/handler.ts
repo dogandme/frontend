@@ -33,8 +33,8 @@ interface UserInfo {
     personalities: string[];
     profile: string;
   } | null;
-  followers: number[];
-  followings: number[];
+  followersIds: number[];
+  followingsIds: number[];
   likes: number[];
   bookmarks: number[];
   tempCnt: number;
@@ -155,8 +155,8 @@ export const userInfoRegistrationHandlers = [
     userDB[nickname] = {
       nickname,
       pet: null,
-      followers: [],
-      followings: [],
+      followersIds: [],
+      followingsIds: [],
       likes: [],
       bookmarks: [],
       tempCnt: 0,
