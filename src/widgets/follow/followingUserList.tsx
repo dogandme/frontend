@@ -21,11 +21,11 @@ export const FollowingUserList = ({
   profile,
   isMutualFollowing,
 }: FollowingUserListProps) => {
-  const [_isMutualFollowing, _setisMutualFollowing] = useState(
+  const [_isMutualFollowing, _setIsMutualFollowing] = useState(
     () => isMutualFollowing,
   );
   const handleClick = () => {
-    _setisMutualFollowing(!_isMutualFollowing);
+    _setIsMutualFollowing(!_isMutualFollowing);
   };
 
   return (

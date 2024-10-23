@@ -15,7 +15,7 @@ export const FollowerUserList = ({
   profile,
   isMutualFollowing,
 }: FollowerUserListProps) => {
-  const [_isMutualFollowing, _setisMutualFollowing] = useState(
+  const [_isMutualFollowing, _setIsMutualFollowing] = useState(
     () => isMutualFollowing,
   );
 
@@ -34,7 +34,7 @@ export const FollowerUserList = ({
           {!_isMutualFollowing && (
             <AddFollowButton
               type="mini"
-              onClick={() => _setisMutualFollowing(!_isMutualFollowing)}
+              onClick={() => _setIsMutualFollowing(!_isMutualFollowing)}
             />
           )}
         </div>
