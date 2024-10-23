@@ -164,12 +164,7 @@ export const useGetMarkingList = ({
             })
         : skipToken,
 
-    getNextPageParam: (lastPage) => {
-      const {
-        pageAble: { pageNumber },
-        totalPages,
-      } = lastPage;
-
+    getNextPageParam: ({ pageAble: { pageNumber }, totalPages }) => {
       return pageNumber < totalPages ? pageNumber + 1 : null;
     },
     initialPageParam: 0,
