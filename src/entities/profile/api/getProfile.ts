@@ -6,11 +6,12 @@ import { PROFILE_END_POINT } from "../constants";
 // 유저 정보
 export type Nickname = string;
 type SocialType = "NAVER" | "GOOGLE" | "EMAIL";
-type UserId = number;
+export type UserId = number;
 export type FollowerIdList = UserId[];
 export type FollowingIdList = UserId[];
 
 // 펫 프로필 정보
+export type PetId = number;
 export type PetName = string;
 export type Breed = string;
 export type PetPersonalities = string[];
@@ -26,6 +27,7 @@ type LikeMarkingList = MarkingId[];
 type MarkingIdList = MarkingId[];
 
 export interface PetInfo {
+  petId: PetId;
   name: PetName;
   breed: Breed;
   description: PetDescription;

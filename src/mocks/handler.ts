@@ -18,13 +18,13 @@ import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import type { GetMarkingListRequest } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
-import User from "../mocks/data/user.json";
-import followerListData from "./data/followers.json";
-import followingListData from "./data/followings.json";
+import { followerListData } from "./data/followers";
+import { followingListData } from "./data/followings";
 // data
 import markingListData from "./data/markingList.json";
 import userInfoData from "./data/myInfo.json";
 import regionListData from "./data/regionList.json";
+import { User } from "./data/user";
 
 interface UserInfo {
   nickname: string;
@@ -1014,7 +1014,7 @@ const putChangePetInformationHandler = [
 
 const getFollowerListHandler = [
   http.get<PathParams>(
-    `${API_BASE_URL}$/users/follows/followers`,
+    `${API_BASE_URL}/users/follows/followers/:nickname`,
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));
 
@@ -1035,13 +1035,14 @@ const getFollowerListHandler = [
       const itemPerPage = 20;
       const start = Number(offset) * itemPerPage;
       const end = start + itemPerPage;
+      const { followers } = followDB;
       return HttpResponse.json({
         code: 200,
         message: "success",
         content: {
-          userInfo: followDB.followers.slice(start, end),
-          totalElements: followDB.followers.length,
-          totalPages: Math.ceil(followDB.followers.length / itemPerPage),
+          userInfos: followers.slice(start, end),
+          totalElements: followers.length,
+          totalPages: Math.ceil(followers.length / itemPerPage),
           pageAble: {
             pageNumber: Number(offset),
             pageSize: itemPerPage,
@@ -1062,7 +1063,7 @@ const getFollowerListHandler = [
 
 const getFollowingListHandler = [
   http.get<PathParams>(
-    `${API_BASE_URL}$/users/follows/followings`,
+    `${API_BASE_URL}/users/follows/followings/:nickname`,
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));
 
@@ -1087,7 +1088,7 @@ const getFollowingListHandler = [
         code: 200,
         message: "success",
         content: {
-          userInfo: followDB.followings.slice(start, end),
+          userInfos: followDB.followings.slice(start, end),
           totalElements: followDB.followings.length,
           totalPages: Math.ceil(followDB.followings.length / itemPerPage),
           pageAble: {
