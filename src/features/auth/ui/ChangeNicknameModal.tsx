@@ -23,7 +23,7 @@ export const ChangeNicknameModal = ({
 
   const handleOpenSnackbar = useSnackBar();
 
-  const { mutate: postChangeNickname, status: changeNicknameStatus } =
+  const { mutate: putChangeNickname, status: changeNicknameStatus } =
     usePutChangeNickname();
   const { isDuplicateNickname, isPending: isDuplicateCheckPending } =
     usePostCheckDuplicateNicknameState();
@@ -62,7 +62,7 @@ export const ChangeNicknameModal = ({
       return;
     }
 
-    postChangeNickname({ nickname });
+    putChangeNickname({ nickname });
   };
 
   return (
