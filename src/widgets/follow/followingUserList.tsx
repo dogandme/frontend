@@ -17,19 +17,17 @@ interface FollowingUserListProps {
   nickname: Nickname;
   petName: PetName;
   profile: ProfileImageUrl;
-  isMutualFollowing: boolean;
+  isFollowing: boolean;
 }
 export const FollowingUserList = ({
   nickname,
   petName,
   profile,
-  isMutualFollowing,
+  isFollowing,
 }: FollowingUserListProps) => {
-  const [_isMutualFollowing, _setIsMutualFollowing] = useState(
-    () => isMutualFollowing,
-  );
+  const [_isFollowing, _setisFollowing] = useState(() => isFollowing);
   const handleClick = () => {
-    _setIsMutualFollowing(!_isMutualFollowing);
+    _setisFollowing(!_isFollowing);
   };
 
   return (
@@ -45,7 +43,7 @@ export const FollowingUserList = ({
         <p className="title-2 text-grey-900">{nickname}</p>
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
-      {_isMutualFollowing ? (
+      {_isFollowing ? (
         <UnFollowingButton onClick={handleClick} />
       ) : (
         <FollowingButton onClick={handleClick} />

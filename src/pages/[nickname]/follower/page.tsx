@@ -37,7 +37,7 @@ export const FollowerPage = () => {
               nickname={nickname}
               petName={pet.name}
               profile={pet.profile}
-              isMutualFollowing={myFollowingIdsMap[userId]}
+              isFollowing={myFollowingIdsMap[userId]}
             />
           ) : (
             <FollowingUserList
@@ -45,7 +45,7 @@ export const FollowerPage = () => {
               nickname={nickname}
               petName={pet.name}
               profile={pet.profile}
-              isMutualFollowing={myFollowingIdsMap[userId]}
+              isFollowing={myFollowingIdsMap[userId]}
             />
           ),
         )}
