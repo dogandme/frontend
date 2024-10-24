@@ -1,5 +1,9 @@
-import { FollowerUserList, FollowNavigationBar } from "@/widgets/follow";
-import { FollowingUserList } from "@/widgets/follow";
+import {
+  FollowerUserItem,
+  FollowList,
+  FollowNavigationBar,
+} from "@/widgets/follow";
+import { FollowingUserItem } from "@/widgets/follow";
 import { useGetFollowerList } from "@/entities/follow/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
 import { useNicknameParams } from "@/shared/lib/profile";
@@ -28,11 +32,11 @@ export const FollowerPage = () => {
       />
       <FollowNavigationBar nickname={nicknameParams} />
       {/* TODO 무한스크롤로 변경 하기 */}
-      <ul className="px-4 flex flex-col gap-4 overflow-y-auto">
+      <FollowList>
         <button onClick={() => fetchNextPage()}>next fetch</button>
         {followerList?.map(({ userId, nickname, pet }) =>
           isMyPage ? (
-            <FollowerUserList
+            <FollowerUserItem
               key={userId}
               nickname={nickname}
               petName={pet.name}
@@ -40,7 +44,7 @@ export const FollowerPage = () => {
               isFollowing={myFollowingIdsMap[userId]}
             />
           ) : (
-            <FollowingUserList
+            <FollowingUserItem
               key={userId}
               nickname={nickname}
               petName={pet.name}
@@ -49,7 +53,7 @@ export const FollowerPage = () => {
             />
           ),
         )}
-      </ul>
+      </FollowList>
     </section>
   );
 };

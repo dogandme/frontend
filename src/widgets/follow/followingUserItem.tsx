@@ -13,18 +13,18 @@ import type {
 } from "@/entities/profile/api";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
 
-interface FollowingUserListProps {
+interface FollowingUserItemProps {
   nickname: Nickname;
   petName: PetName;
   profile: ProfileImageUrl;
   isFollowing: boolean;
 }
-export const FollowingUserList = ({
+export const FollowingUserItem = ({
   nickname,
   petName,
   profile,
   isFollowing,
-}: FollowingUserListProps) => {
+}: FollowingUserItemProps) => {
   const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
   const handleClick = () => {
     _setIsFollowing(!_isFollowing);
