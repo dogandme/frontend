@@ -73,6 +73,22 @@ export const PetDescriptionText = ({
   const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
+  // 줄바꿈이 적용된 배열
+  const multiLineDescription = description.split("\n");
+  const isMultiLine = multiLineDescription.length > 1;
+  const renderDescription = () => {
+    if (isMultiLine) {
+      return isSummary
+        ? multiLineDescription[0]
+        : multiLineDescription.map((line, index) => (
+            <p className="min-h-4" key={index}>
+              {line}
+            </p>
+          ));
+    }
+    return description;
+  };
+
   useEffect(() => {
     const $p = descriptionRef.current!;
     setIsEllipsis($p.scrollWidth > $p.clientWidth);
@@ -83,15 +99,15 @@ export const PetDescriptionText = ({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4 self-stretch text-grey-500 body-2 w-full justify-between">
-        <p
+        <div
           className={
             isSummary ? "text-ellipsis overflow-hidden text-nowrap" : ""
           }
           ref={descriptionRef}
         >
-          {description}
-        </p>
-        {isEllipsis && (
+          {renderDescription()}
+        </div>
+        {(isMultiLine || isEllipsis) && (
           <button
             className="w-4 h-4"
             onClick={handleClick}
