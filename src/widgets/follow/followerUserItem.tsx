@@ -32,7 +32,7 @@ export const FollowerUserItem = ({
       />
       <div className="flex flex-col justify-center flex-1">
         <div className="flex gap-2">
-          <p className="title-2 text-grey-900">{nickname}</p>
+          <p className="title-2 text-grey-700">{nickname}</p>
           {!_isFollowing && (
             <FollowingButton
               type="mini"

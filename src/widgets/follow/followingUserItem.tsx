@@ -40,7 +40,7 @@ export const FollowingUserItem = ({
         className="w-10 h-10 rounded-[1.75rem]"
       />
       <div className="flex flex-col justify-center flex-1">
-        <p className="title-2 text-grey-900">{nickname}</p>
+        <p className="title-2 text-grey-700">{nickname}</p>
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
       {_isFollowing ? (
