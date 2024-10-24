@@ -1,10 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
-import { Snackbar } from "@/shared/ui/snackbar";
 import { usePostLogout } from "../api";
 
 export const LogoutModal = ({
@@ -13,25 +11,19 @@ export const LogoutModal = ({
   onCloseLogoutModal: () => Promise<void>;
 }) => {
   const navigate = useNavigate();
-  const { handleOpen: handleOpenSnackbar, onClose: onCloseSnackbar } =
-    useSnackBar(() => (
-      <Snackbar onClose={onCloseSnackbar}>로그아웃이 완료되었습니다</Snackbar>
-    ));
+  const handleOpenSnackbar = useSnackBar();
 
   const { mutate: postLogout } = usePostLogout({
     onMutate: () => {
       onCloseLogoutModal();
       navigate(ROUTER_PATH.MAIN);
-      setTimeout(handleOpenSnackbar, 0);
+      // 네비게이팅이 완료된 후에 스낵바를 띄우기 위해 setTimeout 사용
+      setTimeout(() => handleOpenSnackbar("로그아웃 되었습니다"), 100);
     },
   });
 
   const handleLogout = () => {
-    const { token } = useAuthStore.getState();
-    if (!token) {
-      throw new Error("로그인 후 이용해 주세요");
-    }
-    postLogout(token);
+    postLogout();
   };
 
   return (

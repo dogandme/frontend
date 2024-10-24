@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
 import { useAuthStore } from "@/shared/store";
+import { useOverlayStore } from "@/shared/store/overlay";
 import { ERROR_MESSAGE } from "./constants";
 import { getNewAccessToken } from "./errorHandlers";
 
@@ -9,6 +10,7 @@ export const useCreateQueryClient = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const resetAuthStore = useAuthStore((state) => state.reset);
   const navigate = useNavigate();
+  const resetOverlays = useOverlayStore((state) => state.resetOverlays);
 
   const queryClient = useRef(
     new QueryClient({
@@ -32,21 +34,36 @@ export const useCreateQueryClient = () => {
       },
 
       queryCache: new QueryCache({
-        onError: async (error) => {
+        onError: async (error, query) => {
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getNewAccessToken({
                 queryClient,
                 callbackFunctions: { setToken, resetAuthStore, navigate },
               });
+              queryClient.invalidateQueries({
+                queryKey: query.queryKey,
+              });
               break;
             }
             default:
-              throw error;
+              return;
           }
         },
       }),
       mutationCache: new MutationCache({
+        onSuccess: (data, variables, context, mutation) => {
+          // * 중복 닉네임 체크인 경우에만 모달을 닫지 않습니다.
+          if (
+            mutation.options.mutationKey?.includes("checkDuplicateNickname")
+          ) {
+            return;
+          }
+
+          if (useOverlayStore.getState().overlays.length > 0) {
+            resetOverlays();
+          }
+        },
         onError: async (error, variables, context, mutation) => {
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
@@ -54,9 +71,7 @@ export const useCreateQueryClient = () => {
                 queryClient,
                 callbackFunctions: { setToken, resetAuthStore, navigate },
               });
-
               const { options, state } = mutation;
-
               /**
                * 이전에 시도 했던 mutationFn 을 업데이트 된 액세스 토큰을 이용해 다시 시도합니다.
                * options.mutationFn 으로 재시도 하는 mutation의 경우엔 onSuccess, onError를 자동으로 호출하지 않습니다.
@@ -66,6 +81,11 @@ export const useCreateQueryClient = () => {
                 const { token } = useAuthStore.getState();
                 const updatedVariables = { ...(variables as object), token };
                 await options.mutationFn?.(updatedVariables);
+                // mutation이 성공하면 mutationCached에 존재하는 로직과 동일하게 모든 오버레이 닫기
+                if (useOverlayStore.getState().overlays.length > 0) {
+                  resetOverlays();
+                }
+                // 기존 mutation 의 onSuccess 호출
                 options.onSuccess?.(state.data, updatedVariables, context);
               } catch (error) {
                 options.onError?.(error, variables, context);

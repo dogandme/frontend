@@ -6,13 +6,12 @@ import {
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
-import { MarkingListRequest } from "@/features/marking/api";
-import { MARKING_REQUEST_URL } from "@/features/marking/constants";
-import { PostChangeRegionRequestData } from "@/features/setting/api";
-import {
-  PutChangeAgeRequestData,
-  PutChangeGenderRequestData,
-  PutChangePetInformationRequest,
+import { MARKING_END_POINT } from "@/features/marking/constants";
+import { PostChangeRegionRequest } from "@/features/setting/api";
+import type {
+  PutChangeAgeRequest,
+  PutChangeGenderRequest,
+  PutChangePetInfoRequest,
 } from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
@@ -20,7 +19,7 @@ import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import User from "../mocks/data/user.json";
 // data
-import markingListData from "./data/markingList.json";
+import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
 import regionListData from "./data/regionList.json";
 
@@ -33,8 +32,8 @@ interface UserInfo {
     personalities: string[];
     profile: string;
   } | null;
-  followers: number[];
-  followings: number[];
+  followersIds: number[];
+  followingsIds: number[];
   likes: number[];
   bookmarks: number[];
   tempCnt: number;
@@ -155,8 +154,8 @@ export const userInfoRegistrationHandlers = [
     userDB[nickname] = {
       nickname,
       pet: null,
-      followers: [],
-      followings: [],
+      followersIds: [],
+      followingsIds: [],
       likes: [],
       bookmarks: [],
       tempCnt: 0,
@@ -274,7 +273,7 @@ export const markingModalHandlers = [
       });
     },
   ),
-  http.post<PathParams>(MARKING_REQUEST_URL.ADD, async ({ request }) => {
+  http.post<PathParams>(MARKING_END_POINT.ADD, async ({ request }) => {
     /**
      * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
      */
@@ -296,32 +295,8 @@ export const markingModalHandlers = [
       message: "success",
     });
   }),
-  http.get<{
-    [K in keyof Omit<MarkingListRequest, "token">]: string;
-  }>(`${API_BASE_URL}/markings/search`, async ({ request }) => {
-    const token = request.headers.get("Authorization");
 
-    if (token) {
-      return HttpResponse.json(
-        {
-          code: 200,
-          message: "success",
-          content: markingListData.member,
-        },
-        { status: 200, statusText: "success" },
-      );
-    }
-
-    return HttpResponse.json(
-      {
-        code: 200,
-        message: "success",
-        content: markingListData.notMember,
-      },
-      { status: 200, statusText: "success" },
-    );
-  }),
-  http.delete<PathParams>(MARKING_REQUEST_URL.DELETE, () => {
+  http.delete<PathParams>(MARKING_END_POINT.DELETE, () => {
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -351,7 +326,7 @@ export const markingModalHandlers = [
       message: "success",
     });
   }),
-  http.post<PathParams>(MARKING_REQUEST_URL.SAVE_TEMP, async ({ request }) => {
+  http.post<PathParams>(MARKING_END_POINT.SAVE_TEMP, async ({ request }) => {
     /**
      * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
      */
@@ -441,6 +416,10 @@ export const getProfileHandlers = [
         },
       );
     }
+    if (token === "freshAccessTokenGuest" && nickname === "뽀송송") {
+      return HttpResponse.json(User["ROLE_GUEST"]);
+    }
+
     if (token?.split("-")[0] === "freshAccessToken" && nickname === "뽀송송") {
       return HttpResponse.json(User["ROLE_USER"]);
     }
@@ -623,7 +602,7 @@ const getNewAccessTokenHandler = [
 ];
 
 const putChangeRegionHandler = [
-  http.post<PathParams, PostChangeRegionRequestData>(
+  http.post<PathParams, PostChangeRegionRequest>(
     SETTING_END_POINT.CHANGE_REGION,
     async ({ request }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -705,7 +684,7 @@ const putChangeGenderHandler = [
     await new Promise((res) => setTimeout(res, 1000));
 
     const token = request.headers.get("Authorization")!;
-    const { gender } = (await request.json()) as PutChangeGenderRequestData;
+    const { gender } = (await request.json()) as PutChangeGenderRequest;
     if (token === "staleAccessToken") {
       return HttpResponse.json(
         {
@@ -832,7 +811,7 @@ export const putSetPasswordHandler = [
 ];
 
 const putChangeAgeHandler = [
-  http.put<PathParams, PutChangeAgeRequestData>(
+  http.put<PathParams, PutChangeAgeRequest>(
     SETTING_END_POINT.CHANGE_AGE,
     async ({ request }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -864,7 +843,7 @@ const putChangeAgeHandler = [
   ),
 ];
 
-const changeUserInfoHandler = [
+const putChangeNickname = [
   http.put<PathParams, { nickname: string }>(
     CHANGE_USER_INFO_END_POINT.NICKNAME,
     async ({ request }) => {
@@ -872,18 +851,57 @@ const changeUserInfoHandler = [
 
       const { nickname } = await request.json();
 
-      // 서버에서 어떻게 에러처리했는지 물어봐야 함
       if (nickname === "중복" || nickname === "뽀" || nickname === "송") {
         return HttpResponse.json(
           {
-            code: 400,
+            code: 409,
             message: "이미 존재하는 닉네임입니다.",
+          },
+          {
+            status: 409,
+          },
+        );
+      }
+
+      const token = request.headers.get("Authorization")!;
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      const userKey =
+        token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL";
+
+      const { nickLastModDt } = userInfoDB[userKey];
+
+      const now = new Date();
+      const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      const canChange = nickLastModDt && new Date(nickLastModDt) < oneMonthAgo;
+
+      if (!canChange) {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "2024-10-29 화 23:27 이후 변경이 가능합니다.",
           },
           {
             status: 400,
           },
         );
       }
+
+      userInfoDB[userKey] = {
+        ...userInfoDB[userKey],
+        nickLastModDt: new Date().toISOString(),
+      };
 
       return HttpResponse.json({
         code: 200,
@@ -894,7 +912,7 @@ const changeUserInfoHandler = [
 ];
 
 const putChangePetInformationHandler = [
-  http.put<PathParams, PutChangePetInformationRequest>(
+  http.put<PathParams, PutChangePetInfoRequest>(
     SETTING_END_POINT.CHANGE_PET_INFO,
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));
@@ -946,6 +964,46 @@ const putChangePetInformationHandler = [
   ),
 ];
 
+const getMarkingListHandler = [
+  http.get(`${API_BASE_URL}/markings/search`, async ({ request }) => {
+    const url = new URL(request.url);
+    const lat = Number(url.searchParams.get("lat"));
+    const lng = Number(url.searchParams.get("lng"));
+    const pageNumber = Number(url.searchParams.get("offset") || 0);
+
+    const markingList = getMockMarkingList({ lat, lng });
+    const totalCount = markingList.length;
+    const pageSize = 20;
+    const lastPage = Math.ceil(totalCount / pageSize);
+
+    // sort, paged, unpaged: 의미가 없는 데이터라 임의로 설정
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        markings: markingList.slice(
+          pageNumber * pageSize,
+          (pageNumber + 1) * pageSize,
+        ),
+        totalElements: totalCount,
+        totalPages: lastPage,
+        pageAble: {
+          pageNumber,
+          pageSize,
+          sort: {
+            sorted: false,
+            unsorted: true,
+            empty: true,
+          },
+          offset: pageNumber,
+          paged: true,
+          unpaged: false,
+        },
+      },
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -963,6 +1021,7 @@ export const handlers = [
   ...putChangePasswordHandler,
   ...putSetPasswordHandler,
   ...putChangeAgeHandler,
-  ...changeUserInfoHandler,
+  ...putChangeNickname,
   ...putChangePetInformationHandler,
+  ...getMarkingListHandler,
 ];

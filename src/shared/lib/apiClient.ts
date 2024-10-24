@@ -1,4 +1,3 @@
-import { API_BASE_URL } from "../constants";
 import { useAuthStore } from "../store";
 import { HttpError } from "./error";
 
@@ -26,7 +25,7 @@ interface FetcherOptions {
  * 응답이 성공적으로 왔을 경우 content만 반환합니다.
  * 응답이 실패했을 경우 HttpError를 throw 합니다.
  *
- * @param url 서버 api의 엔드 포인트 (API_BASE_URL을 제외한 나머지)
+ * @param url 서버 api url
  * @param method HTTP 메소드
  * @param headers HTTP 헤더
  * @param withToken 토큰을 HTTP 헤더에 담아줄지 여부
@@ -36,9 +35,17 @@ interface FetcherOptions {
  */
 const fetcher = async <T>(
   url: string,
-  { method, headers, withToken = false, body, credentials }: FetcherOptions,
+  fetcherOptions?: Partial<FetcherOptions>,
 ) => {
   try {
+    const {
+      method,
+      headers,
+      withToken = false,
+      body,
+      credentials,
+    } = fetcherOptions || {};
+
     const httpHeaders = new Headers(headers || {});
 
     if (withToken) {
@@ -61,7 +68,7 @@ const fetcher = async <T>(
       options.body = body instanceof FormData ? body : JSON.stringify(body);
     }
 
-    const response = await fetch(`${API_BASE_URL + url}`, options);
+    const response = await fetch(url, options);
 
     if (!response.ok) {
       const { code, message }: Response = await response.json();
@@ -84,18 +91,14 @@ const fetcher = async <T>(
 export const apiClient = {
   get: <T>(
     url: string,
-    {
-      headers,
-      credentials,
-      withToken,
-    }: Omit<FetcherOptions, "method" | "body">,
-  ) => fetcher<T>(url, { method: "GET", headers, credentials, withToken }),
-  post: <T>(url: string, options: Omit<FetcherOptions, "method">) =>
+    options?: Partial<Omit<FetcherOptions, "method" | "body">>,
+  ) => fetcher<T>(url, { method: "GET", ...options }),
+  post: <T>(url: string, options?: Partial<Omit<FetcherOptions, "method">>) =>
     fetcher<T>(url, { method: "POST", ...options }),
-  delete: <T>(url: string, options: Omit<FetcherOptions, "method">) =>
+  delete: <T>(url: string, options?: Partial<Omit<FetcherOptions, "method">>) =>
     fetcher<T>(url, { method: "DELETE", ...options }),
-  patch: <T>(url: string, options: Omit<FetcherOptions, "method">) =>
+  patch: <T>(url: string, options?: Partial<Omit<FetcherOptions, "method">>) =>
     fetcher<T>(url, { method: "PATCH", ...options }),
-  put: <T>(url: string, options: Omit<FetcherOptions, "method">) =>
+  put: <T>(url: string, options?: Partial<Omit<FetcherOptions, "method">>) =>
     fetcher<T>(url, { method: "PUT", ...options }),
 };

@@ -34,10 +34,8 @@ export const Default: StoryObj<typeof LoginForm> = {
   ),
 
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const $input = canvasElement.querySelector("#email")!;
     const $statusText = canvasElement.querySelector("p")!;
-    const $submit = canvas.getByText("로그인")!;
 
     const DEFAULT_STATUS_TEXT = "이메일 형식으로 입력해 주세요";
     const EMPTY_STATUS_TEXT = "이메일 형식으로 입력해 주세요";
@@ -88,19 +86,6 @@ export const Default: StoryObj<typeof LoginForm> = {
         expect($statusText).toHaveTextContent(DEFAULT_STATUS_TEXT);
       },
     );
-
-    // window.alert 목업하기
-    const originalAlert = window.alert;
-    let alertCalled = false;
-    window.alert = () => {
-      alertCalled = true;
-    };
-    // TODO 스낵바로 변경하여 테스트 하기
-    await step("유효성을 만족하지 않으면 alert 창이 떠야 한다.", async () => {
-      await userEvent.click($submit);
-      expect(alertCalled).toBe(true);
-    });
-    window.alert = originalAlert;
   },
 };
 

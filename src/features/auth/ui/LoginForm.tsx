@@ -1,6 +1,7 @@
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
+import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
-import { usePostLoginForm } from "../api";
+import { usePostLogin } from "../api";
 import { useLoginFormStore } from "../store";
 
 export const Form = ({ children }: { children: React.ReactNode }) => {
@@ -97,7 +98,8 @@ export const PersistLogin = () => {
 };
 
 export const SubmitButton = () => {
-  const { mutate: postLoginForm } = usePostLoginForm();
+  const { mutate: postLoginForm } = usePostLogin();
+  const handleOpenSnackbar = useSnackBar();
 
   const handleSubmit = () => {
     const { email, password, isValidEmail, persistLogin } =
@@ -106,8 +108,7 @@ export const SubmitButton = () => {
     const isPasswordEmpty = password.length === 0;
 
     if (isEmailEmpty || isPasswordEmpty || !isValidEmail) {
-      // TODO : alert 창 모달로 변경하기
-      alert("아이디 또는 비밀번호를 모두 입력해 주세요");
+      handleOpenSnackbar("아이디 또는 비밀번호를 모두 입력해 주세요");
       // TODO : 유효성을 만족하지 않는 경우의 메시지를 디자이너와 상담하여 생성하기
       return;
     }

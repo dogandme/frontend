@@ -1,14 +1,13 @@
 import { useState, useRef } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { MASCOT_IMAGE_URL } from "@/shared/constants";
-import { useSnackBar } from "@/shared/lib/overlay";
+import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { SelectChip } from "@/shared/ui/chip";
 import { EditIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
-import { Snackbar } from "@/shared/ui/snackbar";
 import { TextArea } from "@/shared/ui/textarea";
 import { personalities, dogBreeds } from "../constants/form";
 import {
@@ -299,9 +298,7 @@ const SubmitButton = ({
 }: Omit<PetInformationFormProps, "initialState">) => {
   const store = usePetInformationFormContext();
   // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
-  const { handleOpen: openInfoSnackBar, onClose } = useSnackBar(() => (
-    <Snackbar onClose={onClose}>필수 항목을 모두 입력해 주세요</Snackbar>
-  ));
+  const handleOpenSnackbar = useSnackBar();
 
   const handleClick = () => {
     const petInfoForm = store.getState();
@@ -326,7 +323,7 @@ const SubmitButton = ({
 
     // TODO 에러 바운더리 생성되면 로직 변경하기
     if (!isValidName || isNameEmpty || isBreedEmpty) {
-      openInfoSnackBar();
+      handleOpenSnackbar("필수 항목을 모두 입력해 주세요");
       return;
     }
 

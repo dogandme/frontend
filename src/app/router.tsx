@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
+import { ProfilePage } from "@/pages/[nickname]";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
 import { MapPage } from "@/pages/map";
-import { MyPage } from "@/pages/my-page";
-import { SettingPage } from "@/pages/my-page/setting";
-import { EditInfoPage } from "@/pages/my-page/setting/edit-info/page";
-import { AccountManagementPage } from "@/pages/my-page/setting/manage-account";
+import { SettingPage } from "@/pages/setting";
+import { EditInfoPage } from "@/pages/setting/edit-info/page";
+import { AccountManagementPage } from "@/pages/setting/manage-account";
 import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
@@ -27,28 +27,23 @@ export const router = createBrowserRouter([
         element: <MapPage />, // 지도
       },
       {
-        path: ROUTER_PATH.MY_PAGE,
+        path: ROUTER_PATH.PROFILE,
+        element: <ProfilePage />,
+      },
+      {
+        path: ROUTER_PATH.SETTING,
         children: [
           {
             index: true,
-            element: <MyPage />,
+            element: <SettingPage />,
           },
           {
-            path: ROUTER_PATH.SETTING,
-            children: [
-              {
-                index: true,
-                element: <SettingPage />,
-              },
-              {
-                path: ROUTER_PATH.MANAGE_ACCOUNT,
-                element: <AccountManagementPage />,
-              },
-              {
-                path: ROUTER_PATH.EDIT_MY_INFO,
-                element: <EditInfoPage />,
-              },
-            ],
+            path: ROUTER_PATH.MANAGE_ACCOUNT,
+            element: <AccountManagementPage />,
+          },
+          {
+            path: ROUTER_PATH.EDIT_MY_INFO,
+            element: <EditInfoPage />,
           },
         ],
       },

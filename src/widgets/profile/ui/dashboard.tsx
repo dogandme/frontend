@@ -1,30 +1,33 @@
 import { ProfileEditButton } from "@/features/auth/ui";
-import { UserInfo } from "@/entities/profile/api";
+import type {
+  FollowerIdList,
+  FollowingIdList,
+  Nickname,
+  PetInfo,
+} from "@/entities/profile/api";
 import {
+  PetDescriptionText,
   PetPersonalityList,
-  PetDescription,
   ProfileHeading,
   ProfileImage,
 } from "@/entities/profile/ui";
+import { useNicknameParams } from "@/shared/lib/profile";
 
-/**
- * ProfileOverView는 NonNullable 한 useGetProfile의 반환값을 받아서 렌더링 됩니다.
- * 즉 해당 컴포넌트는 ROLE_USER 이상의 권한을 가진 사용자에게만 정상적으로 렌더링 됩니다.
- */
-export type ProfileOverViewProps = Pick<
-  UserInfo,
-  "followers" | "followings" | "nickname"
-> & {
-  pet: NonNullable<UserInfo["pet"]>;
-};
+interface ProfileOverviewProps {
+  nickname: Nickname;
+  pet: PetInfo;
+  followersIds: FollowerIdList;
+  followingsIds: FollowingIdList;
+}
 
 export const ProfileOverView = ({
   nickname,
   pet,
-  followers,
-  followings,
-}: ProfileOverViewProps) => {
+  followersIds,
+  followingsIds,
+}: ProfileOverviewProps) => {
   const { profile, name, breed, description, personalities } = pet;
+  const { isMyPage } = useNicknameParams();
 
   return (
     <section className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full">
@@ -35,15 +38,17 @@ export const ProfileOverView = ({
         <ProfileHeading
           name={name}
           breed={breed}
-          followers={followers}
-          followings={followings}
+          followersIds={followersIds}
+          followingsIds={followingsIds}
         />
         {/* TODO 내 페이지인지, 남의 페이지인지에 따라 다른 버튼을 보여줘야 함 */}
-        <ProfileEditButton pet={pet} />
+        {isMyPage ? <ProfileEditButton pet={pet} /> : <button>팔로잉</button>}
       </div>
       {/* 반려동물 소개와 성격 리스트 */}
-      {description && <PetDescription description={description} />}
-      <PetPersonalityList personalities={personalities} />
+      {description && <PetDescriptionText description={description} />}
+      {personalities.length > 0 && (
+        <PetPersonalityList personalities={personalities} />
+      )}
     </section>
   );
 };

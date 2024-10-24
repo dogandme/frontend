@@ -1,5 +1,10 @@
 import { useRef, createContext } from "react";
-import { useAuthStore } from "@/shared/store/auth";
+import {
+  type Region,
+  useGetRegionByKeyword,
+  useGetRegionByLatLng,
+} from "@/entities/auth/api";
+import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
 import { CancelIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";
@@ -7,11 +12,6 @@ import { SearchIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { List } from "@/shared/ui/list";
 import { Modal } from "@/shared/ui/modal";
-import {
-  Region,
-  useGetRegionByKeyword,
-  useGetRegionByLatLng,
-} from "../api/region";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { errorMessage } from "../constants";
 import {
@@ -85,6 +85,8 @@ const SearchRegionByGPSButton = () => {
   const setPosition = useRegionModalStore((state) => state.setPosition);
   const setOrigin = useRegionModalStore((state) => state.setOrigin);
 
+  const handleOpenSnackbar = useSnackBar();
+
   const additionalClassName =
     origin === "position"
       ? "border-tangerine-500 text-tangerine-500 active:border-tangerine-500 active:text-tangerine-500 hover:border-tangerine-500 hover:text-tangerine-500 focus-visible:border-tangerine-500 focus-visible:text-tangerine-500"
@@ -99,17 +101,18 @@ const SearchRegionByGPSButton = () => {
     setOrigin("position");
   };
 
-  // TODO 에러 바운더리로 스낵바 띄우기
   const errorCallback = (error: GeolocationPositionError) => {
     switch (error.code) {
       case GeolocationPositionError.PERMISSION_DENIED:
-        throw new Error(errorMessage.PERMISSION_DENIED);
+        handleOpenSnackbar(errorMessage.PERMISSION_DENIED);
+        break;
       case GeolocationPositionError.POSITION_UNAVAILABLE:
-        throw new Error(errorMessage.POSITION_UNAVAILABLE);
+        handleOpenSnackbar(errorMessage.POSITION_UNAVAILABLE);
+        break;
       case GeolocationPositionError.TIMEOUT:
         if (failureCount.current >= 3) {
           failureCount.current = 0;
-          throw new Error(errorMessage.POSITION_UNAVAILABLE);
+          handleOpenSnackbar(errorMessage.POSITION_UNAVAILABLE);
         }
         failureCount.current += 1;
         window.navigator.geolocation.getCurrentPosition(
@@ -123,7 +126,7 @@ const SearchRegionByGPSButton = () => {
         );
         break;
       default:
-        throw new Error(errorMessage.UNKNOWN);
+        handleOpenSnackbar(errorMessage.UNKNOWN);
     }
   };
 
@@ -160,12 +163,12 @@ const SearchRegionControlItem = (region: Region) => {
   const regionModalStore = useRegionModalContext();
   const setRegionList = useRegionModalStore((state) => state.setRegionList);
   const { id, province, cityCounty, subDistrict } = region;
+  const handleOpenSnackbar = useSnackBar();
 
   const handleSelectRegion = () => {
     const { regionList } = regionModalStore.getState();
-    // TODO 에러 바운더리 나오면 에러 던지기
     if (regionList.length >= 5) {
-      // throw new Error("동네는 최대 5개까지 선택할 수 있습니다.");
+      handleOpenSnackbar("동네는 최대 5개까지 선택할 수 있습니다.");
       return;
     }
 
@@ -194,23 +197,15 @@ const SearchedRegionList = () => {
   const position = useRegionModalStore((state) => state.position);
   const origin = useRegionModalStore((state) => state.origin);
 
-  const { token } = useAuthStore.getState();
-
-  if (!token) {
-    throw new Error("로그인 후 다시 이용해주세요");
-  }
-
   const isOriginFromKeyword = origin === "keyword";
 
   const { data: regionListByKeyword } = useGetRegionByKeyword({
     keyword,
-    token,
     enabled: keyword.length > 0 && isOriginFromKeyword,
   });
 
   const { data: regionListByLatLng } = useGetRegionByLatLng({
     ...position,
-    token,
     enabled: !isOriginFromKeyword,
   });
 
@@ -281,6 +276,7 @@ const RegionModalSaveButton = ({
   onSave: (regionList: RegionModalExternalState["regionList"]) => void;
 }) => {
   const regionModalStore = useRegionModalContext();
+  const handleOpenSnackbar = useSnackBar();
 
   return (
     <Button
@@ -290,13 +286,7 @@ const RegionModalSaveButton = ({
       onClick={() => {
         const { regionList } = regionModalStore.getState();
         if (regionList.length === 0) {
-          // TODO 에러바운더리 나오면 로직 변경 하기
-          console.error("동네를 선택해 주세요");
-          return;
-        }
-        if (regionList.length > 5) {
-          // TODO 에러바운더리 나오면 로직 변경 하기
-          console.error("동네는 최대 5개까지 선택할 수 있습니다.");
+          handleOpenSnackbar("동네를 선택해 주세요");
           return;
         }
         onSave(regionList);

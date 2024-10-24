@@ -1,96 +1,71 @@
-import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AuthStore } from "@/shared/store";
+import { skipToken, useQuery } from "@tanstack/react-query";
+import { apiClient, HttpError } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store";
 import { PROFILE_END_POINT } from "../constants";
 
 // 유저 정보
-type UserNickname = string;
-type Followers = number[];
-type Followings = number[];
-type Likes = number[];
-type Bookmarks = number[];
-type TempCnt = number;
+export type Nickname = string;
+type SocialType = "NAVER" | "GOOGLE" | "EMAIL";
+type UserId = number;
+export type FollowerIdList = UserId[];
+export type FollowingIdList = UserId[];
 
 // 펫 프로필 정보
-type PetName = string;
-type Breed = string;
-type PetDescription = string;
-type Personalities = string[];
-export type ProfileImageUrl = string;
+export type PetName = string;
+export type Breed = string;
+export type PetPersonalities = string[];
+export type PetDescription = string | null;
+export type ProfileImageUrl = string | null;
+
+type MarkingId = number;
+
+// 마킹 정보
+export type TemporarySavedMarkingCount = number;
+type BookmarkMarkingList = MarkingId[];
+type LikeMarkingList = MarkingId[];
+type MarkingIdList = MarkingId[];
 
 export interface PetInfo {
   name: PetName;
   breed: Breed;
-  description?: PetDescription;
-  personalities: Personalities;
+  description: PetDescription;
+  personalities: PetPersonalities;
   profile: ProfileImageUrl;
 }
 
-export interface MarkingPreviewData {
-  id: number;
-  image: string;
+/**
+ * likes, bookmarks, tempCnt , markings는 본인의 페이지 일 때에만 나타납니다.
+ */
+interface ProfileInfo {
+  nickname: Nickname;
+  socialType: SocialType | null;
+  followersIds: FollowerIdList;
+  followingsIds: FollowingIdList;
+  likes?: LikeMarkingList;
+  bookmarks?: BookmarkMarkingList;
+  tempCnt?: TemporarySavedMarkingCount;
+  markings?: MarkingIdList;
 }
 
-export interface UserInfo {
-  nickname: UserNickname;
+export type GetProfileResponse = ProfileInfo & {
   pet: PetInfo | null;
-  followers: Followers;
-  followings: Followings;
-  likes: Likes;
-  bookmarks: Bookmarks;
-  tempCnt: TempCnt;
-  markings: MarkingPreviewData[];
-}
-
-interface ProfileResponse {
-  code: number;
-  message: string;
-  content: UserInfo;
-}
-
-interface ProfileRequest {
-  token: NonNullable<AuthStore["token"]>;
-  nickname: UserNickname;
-}
-
-export const getProfile = async ({
-  nickname,
-  token,
-}: ProfileRequest): Promise<ProfileResponse> => {
-  const response = await fetch(PROFILE_END_POINT.PROFILE(nickname), {
-    headers: {
-      Authorization: token,
-    },
-  });
-
-  const data: ProfileResponse = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message);
-  }
-  return data;
 };
 
-export const useGetProfile = ({
-  nickname,
-  token,
-}: {
-  nickname: UserNickname | null;
-  token: AuthStore["token"];
-}) => {
-  const queryClient = useQueryClient();
+interface GetProfileRequest {
+  nickname: Nickname;
+}
 
-  return useQuery({
-    queryKey: ["profile", nickname, token],
-    queryFn:
-      nickname && token ? () => getProfile({ nickname, token }) : skipToken,
-    placeholderData: () => {
-      const cachedData = queryClient.getQueryData<ProfileResponse>([
-        "profile",
-        nickname,
-        token,
-      ]);
-      return cachedData;
-    },
-    select: (data) => data?.content,
+export const getProfile = ({ nickname }: GetProfileRequest) =>
+  apiClient.get<GetProfileResponse>(PROFILE_END_POINT.PROFILE(nickname), {
+    withToken: true,
+  });
+
+export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
+  const token = useAuthStore((state) => state.token);
+
+  return useQuery<GetProfileResponse, HttpError>({
+    queryKey: ["profile", nickname],
+    queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
+    gcTime: 0,
   });
 };

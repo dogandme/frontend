@@ -4,22 +4,17 @@
  */
 import { useSnackBar } from "@/shared/lib";
 import { useModal } from "@/shared/lib";
-import { Snackbar } from "@/shared/ui/snackbar";
 import { LogoutModal } from "./logoutModal";
 
 export const Report = () => {
   const officialEmail = "mungwithme@gmail.com";
 
-  const { handleOpen, onClose } = useSnackBar(() => (
-    <Snackbar onClose={onClose}>
-      <p>문의 사항을 보낼 이메일 주소가 복사되었습니다</p>
-    </Snackbar>
-  ));
+  const handleOpenSnackbar = useSnackBar();
 
   const handleClick = async () => {
     try {
       await window.navigator.clipboard.writeText(officialEmail);
-      handleOpen();
+      handleOpenSnackbar("문의 사항을 보낼 이메일 주소가 복사되었습니다");
     } catch (error) {
       // TODO 에러 처리 로직 추가
       console.error(error);
