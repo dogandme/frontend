@@ -25,9 +25,9 @@ export const FollowingUserList = ({
   profile,
   isFollowing,
 }: FollowingUserListProps) => {
-  const [_isFollowing, _setisFollowing] = useState(() => isFollowing);
+  const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
   const handleClick = () => {
-    _setisFollowing(!_isFollowing);
+    _setIsFollowing(!_isFollowing);
   };
 
   return (

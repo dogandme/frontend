@@ -19,7 +19,7 @@ export const FollowerUserList = ({
   profile,
   isFollowing,
 }: FollowerUserListProps) => {
-  const [_isFollowing, _setisFollowing] = useState(() => isFollowing);
+  const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
 
   return (
     <li className="px-4 flex  gap-4 overflow-y-auto">
@@ -36,7 +36,7 @@ export const FollowerUserList = ({
           {!_isFollowing && (
             <FollowingButton
               type="mini"
-              onClick={() => _setisFollowing(!_isFollowing)}
+              onClick={() => _setIsFollowing(!_isFollowing)}
             />
           )}
         </div>
