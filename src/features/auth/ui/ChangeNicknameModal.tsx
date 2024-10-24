@@ -5,8 +5,10 @@ import { useAuthStore } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
-import { Snackbar } from "@/shared/ui/snackbar";
-import { usePostDuplicateNicknameState, usePutChangeNickname } from "../api";
+import {
+  usePostCheckDuplicateNicknameState,
+  usePutChangeNickname,
+} from "../api";
 import { validateNickname } from "../lib";
 import { NicknameInput } from "./NicknameInput";
 
@@ -14,42 +16,17 @@ export const ChangeNicknameModal = ({
   onClose,
   nickLastModDt,
 }: {
-  onClose: () => void;
+  onClose: () => Promise<void>;
   nickLastModDt: NonNullable<MyInfo["nickLastModDt"]>;
 }) => {
   const nicknameRef = useRef<HTMLInputElement | null>(null);
 
-  const { handleOpen: openRequiredAlert, onClose: closeRequiredAlert } =
-    useSnackBar(() => (
-      <Snackbar onClose={closeRequiredAlert}>닉네임을 입력해 주세요</Snackbar>
-    ));
-  const { handleOpen: openNicknameAlert, onClose: closeNicknameAlert } =
-    useSnackBar(() => (
-      <Snackbar onClose={closeNicknameAlert}>
-        올바른 닉네임을 입력해 주세요
-      </Snackbar>
-    ));
-  const { handleOpen: openChangePeriodAlert, onClose: closeChangePeriodAlert } =
-    useSnackBar(() => (
-      <Snackbar onClose={closeChangePeriodAlert}>
-        한달 이후 닉네임을 변경해 주세요
-      </Snackbar>
-    ));
-  const {
-    handleOpen: openDuplicateNicknameAlert,
-    onClose: closeDuplicateNicknameAlert,
-  } = useSnackBar(() => (
-    <Snackbar onClose={closeDuplicateNicknameAlert}>
-      이미 존재하는 닉네임 입니다
-    </Snackbar>
-  ));
+  const handleOpenSnackbar = useSnackBar();
 
-  const { mutate: postChangeNickname, status: changeNicknameStatus } =
-    usePutChangeNickname({
-      onSuccessCallback: onClose,
-    });
+  const { mutate: putChangeNickname, isPending: isChangeNicknamePending } =
+    usePutChangeNickname();
   const { isDuplicateNickname, isPending: isDuplicateCheckPending } =
-    usePostDuplicateNicknameState();
+    usePostCheckDuplicateNicknameState();
 
   const handleSubmit = () => {
     const { token } = useAuthStore.getState();
@@ -61,31 +38,32 @@ export const ChangeNicknameModal = ({
     const isNicknameEmpty = nickname.length === 0;
 
     if (isNicknameEmpty) {
-      openRequiredAlert();
+      handleOpenSnackbar("닉네임을 입력해 주세요");
       return;
     }
 
     const isNicknameValid = validateNickname(nickname);
 
     if (!isNicknameValid) {
-      openNicknameAlert();
+      handleOpenSnackbar("올바른 닉네임을 입력해 주세요");
       return;
     }
 
-    const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const canChange = new Date(nickLastModDt) <= oneMonthAgo;
+    const now = new Date();
+    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const canChange = new Date(nickLastModDt) < oneMonthAgo;
 
     if (!canChange) {
-      openChangePeriodAlert();
+      handleOpenSnackbar("한달 이후 닉네임을 변경해 주세요");
       return;
     }
 
     if (isDuplicateNickname || isDuplicateCheckPending) {
-      openDuplicateNicknameAlert();
+      handleOpenSnackbar("이미 존재하는 닉네임 입니다");
       return;
     }
 
-    postChangeNickname({ token, nickname });
+    putChangeNickname({ nickname });
   };
 
   return (
@@ -106,9 +84,7 @@ export const ChangeNicknameModal = ({
       <Modal.Footer axis="col">
         <Modal.FilledButton
           type="button"
-          disabled={
-            changeNicknameStatus === "pending" || isDuplicateCheckPending
-          }
+          disabled={isChangeNicknamePending || isDuplicateCheckPending}
           onClick={handleSubmit}
         >
           저장
