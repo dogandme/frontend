@@ -5,7 +5,7 @@
  * 3. 남의 프로필의 팔로워 리스트를 확인 할 로
  */
 import { useState } from "react";
-import { AddFollowButton, DeleteFollowButton } from "@/features/follow/ui";
+import { FollowingButton, UnFollowingButton } from "@/features/follow/ui";
 import type {
   Nickname,
   PetName,
@@ -46,9 +46,9 @@ export const FollowingUserList = ({
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
       {_isMutualFollowing ? (
-        <DeleteFollowButton onClick={handleClick} />
+        <UnFollowingButton onClick={handleClick} />
       ) : (
-        <AddFollowButton onClick={handleClick} />
+        <FollowingButton onClick={handleClick} />
       )}
     </li>
   );

@@ -1,3 +1,3 @@
-export * from "./addFollowButton";
-export * from "./deleteFollowButton";
+export * from "./FollowingButton";
+export * from "./UnFollowingButton";
 export * from "./deleteFollowerButton";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AddFollowButton, DeleteFollowerButton } from "@/features/follow/ui";
+import { FollowingButton, DeleteFollowerButton } from "@/features/follow/ui";
 import type {
   Nickname,
   PetName,
@@ -36,7 +36,7 @@ export const FollowerUserList = ({
         <div className="flex gap-2">
           <p className="title-2 text-grey-900">{nickname}</p>
           {!_isMutualFollowing && (
-            <AddFollowButton
+            <FollowingButton
               type="mini"
               onClick={() => _setIsMutualFollowing(!_isMutualFollowing)}
             />

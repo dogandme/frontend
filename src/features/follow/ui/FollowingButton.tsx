@@ -1,13 +1,13 @@
 import { Button } from "@/shared/ui/button";
 
-interface AddFollowButtonProps {
+interface FollowingButtonProps {
   onClick: () => void;
   type?: "default" | "mini";
 }
-export const AddFollowButton = ({
+export const FollowingButton = ({
   type = "default",
   onClick,
-}: AddFollowButtonProps) => {
+}: FollowingButtonProps) => {
   if (type === "default") {
     return (
       <Button

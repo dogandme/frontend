@@ -1,9 +1,9 @@
 import { Button } from "@/shared/ui/button";
 
-interface DeleteFollowButtonProps {
+interface UnFollowingButtonProps {
   onClick: () => void;
 }
-export const DeleteFollowButton = ({ onClick }: DeleteFollowButtonProps) => {
+export const UnFollowingButton = ({ onClick }: UnFollowingButtonProps) => {
   return (
     <Button
       size="small"
