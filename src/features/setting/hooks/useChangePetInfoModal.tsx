@@ -25,7 +25,7 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
             ...pet,
             profile: {
               name: "",
-              url: pet.profile,
+              url: pet.profile || "",
               file: null,
             },
           }}
