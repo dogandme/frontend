@@ -6,6 +6,7 @@ import {
 import { FollowingUserItem } from "@/widgets/follow";
 import { useGetFollowerList } from "@/entities/follow/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
+import { useInfiniteScroll } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib/profile";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
@@ -16,8 +17,18 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 export const FollowerPage = () => {
   const { nicknameParams, isMyPage } = useNicknameParams();
   const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
-  const { data: followerList, fetchNextPage } = useGetFollowerList({
+  const {
+    data: followerList,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useGetFollowerList({
     nickname: nicknameParams,
+  });
+  const [setNode] = useInfiniteScroll(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
   });
 
   // TODO 로딩 상태 생각해보기
@@ -31,9 +42,7 @@ export const FollowerPage = () => {
         label={<h1 className="title-1 text-grey-900">{nicknameParams}</h1>}
       />
       <FollowNavigationBar nickname={nicknameParams} />
-      {/* TODO 무한스크롤로 변경 하기 */}
       <FollowList>
-        <button onClick={() => fetchNextPage()}>next fetch</button>
         {followerList?.map(({ userId, nickname, pet }) =>
           isMyPage ? (
             <FollowerUserItem
@@ -53,6 +62,7 @@ export const FollowerPage = () => {
             />
           ),
         )}
+        <div ref={setNode} />
       </FollowList>
     </section>
   );
