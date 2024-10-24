@@ -6,7 +6,11 @@
  */
 import { useState } from "react";
 import { AddFollowButton, DeleteFollowButton } from "@/features/follow/ui";
-import { Nickname, PetName, ProfileImageUrl } from "@/entities/profile/api";
+import type {
+  Nickname,
+  PetName,
+  ProfileImageUrl,
+} from "@/entities/profile/api";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
 
 interface FollowingUserListProps {
