@@ -6,7 +6,7 @@ export const followingListData = Array.from({ length: 200 }).map((_, index) => {
       petId: 200 + index,
       name: `name-${index}`,
       description: `description-${index}`.repeat(Math.ceil(Math.random() * 10)),
-      profile: "/images/buddy.jpg",
+      profile: "/images/buddy",
       breed: ["비숑", "비글", "시츄"].at(index % 3),
       personalities: [
         "애교가 많은",

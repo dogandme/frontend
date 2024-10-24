@@ -30,9 +30,9 @@ interface UserInfo {
   pet: {
     name: string;
     breed: string;
-    description: string;
+    description: string | null;
     personalities: string[];
-    profile: string;
+    profile: string | null;
   } | null;
   followersIds: number[];
   followingsIds: number[];
@@ -58,12 +58,12 @@ type FollowDB = {
     userId: number;
     nickname: string;
     pet: {
-      petId?: number;
+      petId: number;
       name: string;
-      description?: string;
-      profile?: string;
+      description: string | null;
+      profile: string | null;
       breed?: string;
-      personalities?: string[];
+      personalities: string[];
     };
   }[];
 };
@@ -574,7 +574,7 @@ export const petInfoFormHandlers = [
       ...userInfo,
       pet: {
         ...petSignUpDto,
-        profile: image ? URL.createObjectURL(image) : "/default-image.png",
+        profile: image ? URL.createObjectURL(image) : null,
       },
     };
 

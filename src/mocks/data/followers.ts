@@ -17,7 +17,7 @@ export const followerListData = randomNumbers.map((num) => {
       petId: num,
       name: `name-${num}`,
       description: `description-${num}`.repeat(Math.ceil(Math.random() * 10)),
-      profile: "/images/buddy.jpg",
+      profile: "/images/buddy",
       breed: ["비숑", "비글", "시츄"].at(num % 3),
       personalities: [
         "애교가 많은",
