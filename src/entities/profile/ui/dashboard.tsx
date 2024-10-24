@@ -107,7 +107,7 @@ export const PetDescriptionText = ({
         >
           {renderDescription()}
         </div>
-        {description.length > 0 && (isMultiLine || isEllipsis) && (
+        {(isMultiLine || isEllipsis) && (
           <button
             className="w-4 h-4"
             onClick={handleClick}
