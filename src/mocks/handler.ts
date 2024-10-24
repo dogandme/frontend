@@ -17,20 +17,22 @@ import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import { API_BASE_URL } from "@/shared/constants";
-import User from "../mocks/data/user.json";
+import { followerListData } from "./data/followers";
+import { followingListData } from "./data/followings";
 // data
 import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
 import regionListData from "./data/regionList.json";
+import { User } from "./data/user";
 
 interface UserInfo {
   nickname: string;
   pet: {
     name: string;
     breed: string;
-    description: string;
+    description: string | null;
     personalities: string[];
-    profile: string;
+    profile: string | null;
   } | null;
   followersIds: number[];
   followingsIds: number[];
@@ -49,6 +51,27 @@ interface UserInfoDB {
 }
 
 const userDB: UserDB = {};
+
+// TODO 타입 리팩토링 시 외부에서 타입 가져오기
+type FollowDB = {
+  [key in "followers" | "followings"]: {
+    userId: number;
+    nickname: string;
+    pet: {
+      petId: number;
+      name: string;
+      description: string | null;
+      profile: string | null;
+      breed?: string;
+      personalities: string[];
+    };
+  }[];
+};
+
+const followDB: FollowDB = {
+  followers: followerListData,
+  followings: followingListData,
+};
 
 const userInfoDB: UserInfoDB = {
   뽀송송_EMAIL: userInfoData["EMAIL"] as MyInfo,
@@ -551,7 +574,7 @@ export const petInfoFormHandlers = [
       ...userInfo,
       pet: {
         ...petSignUpDto,
-        profile: image ? URL.createObjectURL(image) : "/default-image.png",
+        profile: image ? URL.createObjectURL(image) : null,
       },
     };
 
@@ -964,6 +987,103 @@ const putChangePetInformationHandler = [
   ),
 ];
 
+const getFollowerListHandler = [
+  http.get<PathParams>(
+    `${API_BASE_URL}/users/follows/followers/:nickname`,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+
+      const token = request.headers.get("Authorization");
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+      const requestUrl = new URL(request.url);
+      const offset = requestUrl.searchParams.get("offset");
+      const itemPerPage = 20;
+      const start = Number(offset) * itemPerPage;
+      const end = start + itemPerPage;
+      const { followers } = followDB;
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          userInfos: followers.slice(start, end),
+          totalElements: followers.length,
+          totalPages: Math.ceil(followers.length / itemPerPage),
+          pageAble: {
+            pageNumber: Number(offset),
+            pageSize: itemPerPage,
+            sort: {
+              empty: false,
+              unsorted: false,
+              sorted: true,
+            },
+            offset: Number(offset),
+            unpaged: false,
+            paged: true,
+          },
+        },
+      });
+    },
+  ),
+];
+
+const getFollowingListHandler = [
+  http.get<PathParams>(
+    `${API_BASE_URL}/users/follows/followings/:nickname`,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+
+      const token = request.headers.get("Authorization");
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+      const requestUrl = new URL(request.url);
+      const offset = requestUrl.searchParams.get("offset");
+      const itemPerPage = 20;
+      const start = Number(offset) * itemPerPage;
+      const end = start + itemPerPage;
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          userInfos: followDB.followings.slice(start, end),
+          totalElements: followDB.followings.length,
+          totalPages: Math.ceil(followDB.followings.length / itemPerPage),
+          pageAble: {
+            pageNumber: Number(offset),
+            pageSize: itemPerPage,
+            sort: {
+              empty: false,
+              unsorted: false,
+              sorted: true,
+            },
+            offset: Number(offset),
+            unpaged: false,
+            paged: true,
+          },
+        },
+      });
+    },
+  ),
+];
+
 const getMarkingListHandler = [
   http.get(`${API_BASE_URL}/markings/search`, async ({ request }) => {
     const url = new URL(request.url);
@@ -1023,5 +1143,7 @@ export const handlers = [
   ...putChangeAgeHandler,
   ...putChangeNickname,
   ...putChangePetInformationHandler,
+  ...getFollowerListHandler,
+  ...getFollowingListHandler,
   ...getMarkingListHandler,
 ];

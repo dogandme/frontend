@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { ProfilePage } from "@/pages/[nickname]";
+import { FollowerPage } from "@/pages/[nickname]/follower";
+import { FollowingPage } from "@/pages/[nickname]/following";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
 import { MapPage } from "@/pages/map";
@@ -28,8 +30,22 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTER_PATH.PROFILE,
-        element: <ProfilePage />,
+        children: [
+          {
+            index: true,
+            element: <ProfilePage />,
+          },
+          {
+            path: ROUTER_PATH.FOLLOWINGS,
+            element: <FollowingPage />,
+          },
+          {
+            path: ROUTER_PATH.FOLLOWERS,
+            element: <FollowerPage />,
+          },
+        ],
       },
+
       {
         path: ROUTER_PATH.SETTING,
         children: [

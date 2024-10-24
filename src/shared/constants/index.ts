@@ -103,6 +103,9 @@ export const ROUTER_PATH = {
   MAP: `/map`,
 
   PROFILE: `/:nickname`,
+  FOLLOWINGS: `followings`,
+  FOLLOWERS: `followers`,
+
   SETTING: `/setting`,
   MANAGE_ACCOUNT: `/setting/manage-account`,
   EDIT_MY_INFO: `/setting/edit-info`,
@@ -118,5 +121,4 @@ export const ROUTER_PATH = {
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const MASCOT_IMAGE_URL = "/default-image.png";
-
 export const SNACKBAR_ID = 999999999;

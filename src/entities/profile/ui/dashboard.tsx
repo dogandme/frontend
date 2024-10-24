@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import { API_BASE_URL } from "@/shared/constants";
+import { Link } from "react-router-dom";
+import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { DividerLine } from "@/shared/ui/divider";
 import { DropDownIcon } from "@/shared/ui/icon";
@@ -50,13 +51,13 @@ export const ProfileHeading = ({
       <h1 className="text-grey-900 title-2">{name}</h1>
       <h2 className="text-grey-500 body-3">{breed}</h2>
       <p className="text-grey-700 body-3 flex gap-2 items-center">
-        <span>
+        <Link to={ROUTER_PATH.FOLLOWERS}>
           팔로워 <span className="text-grey-900">{followersIds.length}</span>
-        </span>
+        </Link>
         <DividerLine axis="col" />
-        <span>
+        <Link to={ROUTER_PATH.FOLLOWINGS}>
           팔로잉 <span className="text-grey-900">{followingsIds.length}</span>
-        </span>
+        </Link>
       </p>
     </div>
   );

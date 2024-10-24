@@ -6,11 +6,12 @@ import { PROFILE_END_POINT } from "../constants";
 // 유저 정보
 export type Nickname = string;
 type SocialType = "NAVER" | "GOOGLE" | "EMAIL";
-type UserId = number;
+export type UserId = number;
 export type FollowerIdList = UserId[];
 export type FollowingIdList = UserId[];
 
 // 펫 프로필 정보
+export type PetId = number;
 export type PetName = string;
 export type Breed = string;
 export type PetPersonalities = string[];
@@ -26,6 +27,7 @@ type LikeMarkingList = MarkingId[];
 type MarkingIdList = MarkingId[];
 
 export interface PetInfo {
+  petId: PetId;
   name: PetName;
   breed: Breed;
   description: PetDescription;
@@ -67,5 +69,32 @@ export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
     queryKey: ["profile", nickname],
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
     gcTime: 0,
+  });
+};
+
+export const useGetMyProfile = <TResult = GetProfileResponse>(
+  select: (data: GetProfileResponse) => TResult,
+) => {
+  const token = useAuthStore((state) => state.token);
+  const nickname = useAuthStore((state) => state.nickname);
+
+  return useQuery({
+    queryKey: ["profile", nickname],
+    queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
+    gcTime: 0,
+    select,
+  });
+};
+
+export const useGetMyFollowingIdsMap = () => {
+  return useGetMyProfile((data) => {
+    const followingsIds = data?.followingsIds || [];
+    return followingsIds.reduce(
+      (map, id) => {
+        map[id] = true;
+        return map;
+      },
+      {} as Record<UserId, boolean>,
+    );
   });
 };
