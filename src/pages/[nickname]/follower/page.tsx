@@ -1,5 +1,5 @@
 import { FollowerUserList, FollowNavigationBar } from "@/widgets/follow";
-import { FollowingUserList } from "@/widgets/follow/followingUserList";
+import { FollowingUserList } from "@/widgets/follow";
 import { useGetFollowerList } from "@/entities/follow/api";
 import { useGetMyMutualFollowingMap } from "@/entities/profile/api";
 import { useNicknameParams } from "@/shared/lib/profile";
