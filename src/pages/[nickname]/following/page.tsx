@@ -8,8 +8,8 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 export const FollowingPage = () => {
   const { nicknameParams } = useNicknameParams();
 
-  const [myFollowingIdsMap] = useGetMyFollowingIdsMap();
-  const { data, fetchNextPage } = useGetFollowingList({
+  const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
+  const { data: followingList, fetchNextPage } = useGetFollowingList({
     nickname: nicknameParams,
   });
 
@@ -26,7 +26,7 @@ export const FollowingPage = () => {
       {/* TODO 무한스크롤로 변경 하기 */}
       <ul className="px-4 flex flex-col gap-4 overflow-y-auto">
         <button onClick={() => fetchNextPage()}>next fetch</button>
-        {data?.map(({ userId, nickname, pet }) => (
+        {followingList?.map(({ userId, nickname, pet }) => (
           <FollowingUserList
             key={userId}
             nickname={nickname}
