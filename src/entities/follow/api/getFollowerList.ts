@@ -40,6 +40,9 @@ const getFollowerList = ({
 }: GetFollowerListRequest & { pageParam: number }) => {
   return apiClient.get<GetFollowerListResponse>(
     FOLLOW_ENDPOINT.FOLLOWER_LIST(nickname, pageParam),
+    {
+      withToken: true,
+    },
   );
 };
 
