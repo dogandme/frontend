@@ -1,23 +1,35 @@
 import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
+import { sortTypeMap } from "@/features/map/constants";
 import { useCurrentLocation } from "@/features/map/hooks";
 import { useResearchMarkingList } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
+import { SortType } from "@/entities/marking/api";
 
 export const MapInitializer = () => {
   const map = useMap();
 
   const { loading, setCurrentLocation } = useCurrentLocation();
-  const { researchMarkingList, bounds: boundsParams } =
-    useResearchMarkingList();
+  const {
+    researchMarkingList,
+    bounds: boundsParams,
+    sortType: sortTypeParam,
+  } = useResearchMarkingList();
 
+  const isMapIdle = useMapStore((state) => state.isIdle);
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
 
   useEffect(() => {
-    if (!map) return;
+    if (!map || !isMapIdle) return;
+
+    const hasSortTypeParam = !!sortTypeParam && sortTypeParam in sortTypeMap;
+
+    const filterOptions = {
+      sortType: hasSortTypeParam ? (sortTypeParam as SortType) : "RECENT",
+    };
 
     // map 인스턴스가 생기고 나서, 현재 위치를 가져옵니다.
     setCurrentLocation({
@@ -34,12 +46,12 @@ export const MapInitializer = () => {
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          researchMarkingList();
+          researchMarkingList(filterOptions);
         }
       },
       onError: () => {
         if (!boundsParams) {
-          researchMarkingList();
+          researchMarkingList(filterOptions);
         }
       },
     });
@@ -55,10 +67,10 @@ export const MapInitializer = () => {
       east: northEast.lng,
     });
 
-    researchMarkingList();
-  }, [map]);
+    researchMarkingList(filterOptions);
+  }, [map, sortTypeParam, isMapIdle]);
 
-  if (!map || loading) {
+  if (!map || loading || !isMapIdle) {
     return <CurrentLocationLoading />;
   }
 

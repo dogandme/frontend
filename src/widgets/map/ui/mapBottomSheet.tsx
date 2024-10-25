@@ -3,7 +3,7 @@ import { Sheet, SheetRef } from "react-modal-sheet";
 import { useLocation } from "react-router-dom";
 import { useResearchMarkingList } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
-import { MarkingFilter } from "@/features/marking/ui";
+import { SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { MyLocationIcon } from "@/shared/ui/icon";
@@ -20,13 +20,13 @@ export const MapBottomSheet = () => {
   const snapPointRef = useRef(initialSnap);
   const snapTo = (i: number) => sheetRef.current?.snapTo(i);
 
-  const { bounds } = useResearchMarkingList();
+  const { bounds, sortType } = useResearchMarkingList();
   const { data: markingList } = useGetMarkingList({
     southWestLat: bounds?.southWest.lat,
     southWestLng: bounds?.southWest.lng,
     northEastLat: bounds?.northEast.lat,
     northEastLng: bounds?.northEast.lng,
-    sortType: "RECENT",
+    sortType,
   });
 
   const mapMode = useMapStore((state) => state.mode);
@@ -75,8 +75,7 @@ export const MapBottomSheet = () => {
               </div>
 
               <div className="flex">
-                <MarkingFilter>내 위치 중심</MarkingFilter>
-                <MarkingFilter>인기순</MarkingFilter>
+                <SortTypeFilter />
               </div>
             </div>
 

@@ -144,6 +144,7 @@ export const useGetMarkingList = ({
       southWestLng,
       northEastLat,
       northEastLng,
+      sortType,
     ],
 
     queryFn:

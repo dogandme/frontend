@@ -1,7 +1,13 @@
 import { useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
+import { SortType } from "@/entities/marking/api";
+import { sortTypeMap } from "../constants";
 import { useMapStore } from "../store";
+
+interface Filter {
+  sortType?: SortType;
+}
 
 export const useResearchMarkingList = () => {
   const queryClient = useQueryClient();
@@ -13,7 +19,7 @@ export const useResearchMarkingList = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const researchMarkingList = () => {
+  const researchMarkingList = (filter?: Filter) => {
     if (!map) return;
 
     const bounds = map.getBounds();
@@ -22,8 +28,6 @@ export const useResearchMarkingList = () => {
 
     const northEast = bounds.getNorthEast();
     const southWest = bounds.getSouthWest();
-
-    if (!northEast || !southWest) return;
 
     const northEastLat = northEast.lat();
     const northEastLng = northEast.lng();
@@ -35,6 +39,7 @@ export const useResearchMarkingList = () => {
       boundsNELng: northEastLng.toString(),
       boundsSWLat: southWestLat.toString(),
       boundsSWLng: southWestLng.toString(),
+      sortType: filter?.sortType || "RECENT",
     });
 
     setIsLastSearchedLocation(true);
@@ -71,8 +76,15 @@ export const useResearchMarkingList = () => {
       }
     : null;
 
+  const sortTypeParam = searchParams.get("sortType");
+  const sortType =
+    typeof sortTypeParam === "string" && sortTypeParam in sortTypeMap
+      ? (sortTypeParam as SortType)
+      : "RECENT";
+
   return {
     bounds,
+    sortType,
     researchMarkingList,
   };
 };
