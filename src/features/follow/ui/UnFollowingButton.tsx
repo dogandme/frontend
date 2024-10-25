@@ -1,9 +1,13 @@
 import { Button } from "@/shared/ui/button";
 
-interface UnFollowingButtonProps {
+interface UnFollowingButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick: () => void;
 }
-export const UnFollowingButton = ({ onClick }: UnFollowingButtonProps) => {
+export const UnFollowingButton = ({
+  onClick,
+  ...props
+}: UnFollowingButtonProps) => {
   return (
     <Button
       size="small"
@@ -13,6 +17,7 @@ export const UnFollowingButton = ({ onClick }: UnFollowingButtonProps) => {
       onClick={() => {
         onClick();
       }}
+      {...props}
     >
       팔로잉
     </Button>
