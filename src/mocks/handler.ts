@@ -1143,7 +1143,6 @@ const postFollowingHandler = [
         );
       }
       // 보낸 유저는 모두 뽀송송 ROLE_USER로 가정하고 FOLLOWING_LIST_DATA에 추가합니다.
-      const followingListData = followDB.followings;
       const { nickname } = params;
 
       if (typeof nickname !== "string") {
@@ -1158,32 +1157,38 @@ const postFollowingHandler = [
         );
       }
 
-      followDB.followings = [
-        ...followingListData,
-        // 닉네임만으로 가상 유저를 생성합니다.
-        {
-          userId: 200 + followingListData.length + 1,
-          nickname: nickname,
-          pet: {
-            petId: 200 + followingListData.length + 1,
-            name: `name-${followingListData.length + 1}`,
-            description: `description-${followingListData.length + 1}`.repeat(
-              Math.ceil(Math.random() * 10),
-            ),
-            profile: "/images/buddy",
-            breed: ["비숑", "비글", "시츄"].at(followingListData.length % 3),
-            personalities: [
-              "애교가 많은",
-              "사람을 좋아하는",
-              "까칠한",
-              "부끄럼이 많은",
-            ].slice(
-              followingListData.length + (Math.ceil(Math.random() * 10) % 4),
-              followingListData.length + (Math.ceil(Math.random() * 10) % 4),
-            ),
-          },
+      const followingListData = followDB.followings;
+      const NEW_USER_ID = 200 + followingListData.length + 1;
+      const newFollowingData = {
+        userId: NEW_USER_ID,
+        nickname: nickname,
+        pet: {
+          petId: NEW_USER_ID,
+          name: `name-${followingListData.length + 1}`,
+          description: `description-${followingListData.length + 1}`.repeat(
+            Math.ceil(Math.random() * 10),
+          ),
+          profile: "/images/buddy",
+          breed: ["비숑", "비글", "시츄"].at(followingListData.length % 3),
+          personalities: [
+            "애교가 많은",
+            "사람을 좋아하는",
+            "까칠한",
+            "부끄럼이 많은",
+          ].slice(
+            followingListData.length + (Math.ceil(Math.random() * 10) % 4),
+            followingListData.length + (Math.ceil(Math.random() * 10) % 4),
+          ),
         },
-      ];
+      };
+
+      followDB.followings = [newFollowingData, ...followingListData];
+      User["ROLE_USER"].content.followingsIds.push(NEW_USER_ID);
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
     },
   ),
 ];
@@ -1221,9 +1226,18 @@ const deleteFollowingHandler = [
         );
       }
 
+      const DELETE_USER_ID = followingListData.find(
+        (following) => following.nickname === nickname,
+      )?.userId;
+
       followDB.followings = followingListData.filter(
-        (following) => following.nickname !== nickname,
+        ({ userId }) => userId !== DELETE_USER_ID,
       );
+
+      User["ROLE_USER"].content.followingsIds = User[
+        "ROLE_USER"
+      ].content.followingsIds.filter((id) => id !== DELETE_USER_ID);
+
       return HttpResponse.json({
         code: 200,
         message: "success",
