@@ -58,6 +58,8 @@ export interface Marking {
   images: Image[];
 }
 
+export type SortType = "RECENT" | "DISTANCE" | "POPULARITY";
+
 export interface GetMarkingListRequest {
   southWestLat: number;
   southWestLng: number;
@@ -66,7 +68,7 @@ export interface GetMarkingListRequest {
   lat: number;
   lng: number;
   offset: number; // 페이지 번호
-  sortType: "RECENT" | "DISTANCE" | "POPULARITY"; // 정렬 기준
+  sortType: SortType;
 }
 
 // sort, paged, unpaged은 사용하지 x
