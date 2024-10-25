@@ -34,6 +34,9 @@ export const FollowingUserItem = ({
     useDeleteFollowing();
 
   const handleOptimisticFollowing = () => {
+    if (isUnFollowingPending) {
+      return;
+    }
     _setIsFollowing(true);
     postFollowing(nickname, {
       onError: () => {
@@ -43,6 +46,9 @@ export const FollowingUserItem = ({
   };
 
   const handleOptimisticUnFollowing = () => {
+    if (isFollowingPending) {
+      return;
+    }
     _setIsFollowing(false);
     deleteFollowing(nickname, {
       onError: () => {
@@ -52,7 +58,7 @@ export const FollowingUserItem = ({
   };
 
   return (
-    <li className="px-4 flex  gap-4 overflow-y-auto">
+    <li className="px-4 flex gap-4 overflow-y-auto">
       {/* TODO 로딩상태가 함께 있는 ProfileImage 컴포넌트 만들어서 대체하기 */}
       <img
         src={
@@ -65,15 +71,9 @@ export const FollowingUserItem = ({
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
       {_isFollowing ? (
-        <UnFollowingButton
-          onClick={handleOptimisticUnFollowing}
-          disabled={isFollowingPending}
-        />
+        <UnFollowingButton onClick={handleOptimisticUnFollowing} />
       ) : (
-        <FollowingButton
-          onClick={handleOptimisticFollowing}
-          disabled={isUnFollowingPending}
-        />
+        <FollowingButton onClick={handleOptimisticFollowing} />
       )}
     </li>
   );
