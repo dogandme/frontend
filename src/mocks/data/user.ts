@@ -1,5 +1,4 @@
-import { followerListData } from "./followers";
-import { followingListData } from "./followings";
+import { otherUsers } from "./otherUser";
 
 export const User = {
   ROLE_GUEST: {
@@ -24,8 +23,12 @@ export const User = {
     content: {
       nickname: "뽀송송",
       socialType: "EMAIL",
-      followersIds: followerListData.map((data) => data.userId),
-      followingsIds: followingListData.map((data) => data.userId),
+      followersIds: otherUsers
+        .filter(({ followingIds }) => followingIds.includes(1))
+        .map(({ userId }) => userId),
+      followingsIds: otherUsers
+        .filter(({ followersIds }) => followersIds.includes(1))
+        .map(({ userId }) => userId),
       likes: [],
       bookmarks: [],
       tempCnt: 3,

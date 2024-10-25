@@ -17,11 +17,10 @@ import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import { API_BASE_URL } from "@/shared/constants";
-import { followerListData } from "./data/followers";
-import { followingListData } from "./data/followings";
 // data
 import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
+import { otherUsers } from "./data/otherUser";
 import regionListData from "./data/regionList.json";
 import { User } from "./data/user";
 
@@ -51,27 +50,6 @@ interface UserInfoDB {
 }
 
 const userDB: UserDB = {};
-
-// TODO 타입 리팩토링 시 외부에서 타입 가져오기
-type FollowDB = {
-  [key in "followers" | "followings"]: {
-    userId: number;
-    nickname: string;
-    pet: {
-      petId: number;
-      name: string;
-      description: string | null;
-      profile: string | null;
-      breed?: string;
-      personalities: string[];
-    };
-  }[];
-};
-
-const followDB: FollowDB = {
-  followers: followerListData,
-  followings: followingListData,
-};
 
 const userInfoDB: UserInfoDB = {
   뽀송송_EMAIL: userInfoData["EMAIL"] as MyInfo,
@@ -990,8 +968,20 @@ const putChangePetInformationHandler = [
 const getFollowerListHandler = [
   http.get<PathParams>(
     `${API_BASE_URL}/users/follows/followers/:nickname`,
-    async ({ request }) => {
+    async ({ request, params }) => {
       await new Promise((res) => setTimeout(res, 1000));
+      const nickname = params.nickname;
+      if (typeof nickname !== "string") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "잘못된 요청입니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
 
       const token = request.headers.get("Authorization");
       if (token === "staleAccessToken") {
@@ -1005,19 +995,40 @@ const getFollowerListHandler = [
           },
         );
       }
+
+      const followerIds =
+        nickname === "뽀송송"
+          ? User["ROLE_USER"].content.followersIds
+          : otherUsers.find((user) => user.nickname === nickname)?.followersIds;
+
+      if (!followerIds) {
+        return HttpResponse.json(
+          {
+            code: 404,
+            message: "해당하는 유저를 찾을 수 없습니다.",
+          },
+          {
+            status: 404,
+          },
+        );
+      }
+
+      const userInfos = otherUsers
+        .filter((user) => followerIds.includes(user.userId))
+        .map(({ userId, pet, nickname }) => ({ userId, pet, nickname }));
+
       const requestUrl = new URL(request.url);
       const offset = requestUrl.searchParams.get("offset");
       const itemPerPage = 20;
       const start = Number(offset) * itemPerPage;
       const end = start + itemPerPage;
-      const { followers } = followDB;
       return HttpResponse.json({
         code: 200,
         message: "success",
         content: {
-          userInfos: followers.slice(start, end),
-          totalElements: followers.length,
-          totalPages: Math.ceil(followers.length / itemPerPage),
+          userInfos: userInfos.slice(start, end),
+          totalElements: userInfos.length,
+          totalPages: Math.ceil(userInfos.length / itemPerPage),
           pageAble: {
             pageNumber: Number(offset),
             pageSize: itemPerPage,
@@ -1039,7 +1050,7 @@ const getFollowerListHandler = [
 const getFollowingListHandler = [
   http.get<PathParams>(
     `${API_BASE_URL}/users/follows/followings/:nickname`,
-    async ({ request }) => {
+    async ({ request, params }) => {
       await new Promise((res) => setTimeout(res, 1000));
 
       const token = request.headers.get("Authorization");
@@ -1054,6 +1065,42 @@ const getFollowingListHandler = [
           },
         );
       }
+
+      const nickname = params.nickname;
+
+      if (typeof nickname !== "string") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "잘못된 요청입니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      const followingIds =
+        nickname === "뽀송송"
+          ? User["ROLE_USER"].content.followingsIds
+          : otherUsers.find((user) => user.nickname === nickname)?.followingIds;
+
+      if (!followingIds) {
+        return HttpResponse.json(
+          {
+            code: 404,
+            message: "해당하는 유저를 찾을 수 없습니다.",
+          },
+          {
+            status: 404,
+          },
+        );
+      }
+
+      const userInfos = otherUsers
+        .filter((user) => followingIds.includes(user.userId))
+        .map(({ userId, pet, nickname }) => ({ userId, pet, nickname }));
+
       const requestUrl = new URL(request.url);
       const offset = requestUrl.searchParams.get("offset");
       const itemPerPage = 20;
@@ -1063,9 +1110,9 @@ const getFollowingListHandler = [
         code: 200,
         message: "success",
         content: {
-          userInfos: followDB.followings.slice(start, end),
-          totalElements: followDB.followings.length,
-          totalPages: Math.ceil(followDB.followings.length / itemPerPage),
+          userInfos: userInfos.slice(start, end),
+          totalElements: userInfos.length,
+          totalPages: Math.ceil(userInfos.length / itemPerPage),
           pageAble: {
             pageNumber: Number(offset),
             pageSize: itemPerPage,
@@ -1157,33 +1204,23 @@ const postFollowingHandler = [
         );
       }
 
-      const followingListData = followDB.followings;
-      const NEW_USER_ID = 200 + followingListData.length + 1;
-      const newFollowingData = {
-        userId: NEW_USER_ID,
-        nickname: nickname,
-        pet: {
-          petId: NEW_USER_ID,
-          name: `name-${followingListData.length + 1}`,
-          description: `description-${followingListData.length + 1}`.repeat(
-            Math.ceil(Math.random() * 10),
-          ),
-          profile: "/images/buddy",
-          breed: ["비숑", "비글", "시츄"].at(followingListData.length % 3),
-          personalities: [
-            "애교가 많은",
-            "사람을 좋아하는",
-            "까칠한",
-            "부끄럼이 많은",
-          ].slice(
-            followingListData.length + (Math.ceil(Math.random() * 10) % 4),
-            followingListData.length + (Math.ceil(Math.random() * 10) % 4),
-          ),
-        },
-      };
+      const targetUser = otherUsers.find((user) => user.nickname === nickname);
+      if (!targetUser) {
+        return HttpResponse.json(
+          {
+            code: 404,
+            message: "해당하는 유저를 찾을 수 없습니다.",
+          },
+          {
+            status: 404,
+          },
+        );
+      }
 
-      followDB.followings = [newFollowingData, ...followingListData];
-      User["ROLE_USER"].content.followingsIds.push(NEW_USER_ID);
+      // 내 팔로잉 ID 에 해당 유저의 userId 추가
+      User["ROLE_USER"].content.followingsIds.push(targetUser.userId);
+      // 해당 유저의 팔로워 ID 에 내 userId 추가
+      targetUser.followersIds.push(1);
 
       return HttpResponse.json({
         code: 200,
@@ -1211,7 +1248,6 @@ const deleteFollowingHandler = [
           },
         );
       }
-      const followingListData = followDB.followings;
       const { nickname } = params;
 
       if (typeof nickname !== "string") {
@@ -1226,17 +1262,26 @@ const deleteFollowingHandler = [
         );
       }
 
-      const DELETE_USER_ID = followingListData.find(
-        (following) => following.nickname === nickname,
-      )?.userId;
-
-      followDB.followings = followingListData.filter(
-        ({ userId }) => userId !== DELETE_USER_ID,
-      );
-
+      const targetUser = otherUsers.find((user) => user.nickname === nickname);
+      if (!targetUser) {
+        return HttpResponse.json(
+          {
+            code: 404,
+            message: "해당하는 유저를 찾을 수 없습니다.",
+          },
+          {
+            status: 404,
+          },
+        );
+      }
+      // 내가 팔로잉 하는 ID 에 해당 유저의 userId 제거
       User["ROLE_USER"].content.followingsIds = User[
         "ROLE_USER"
-      ].content.followingsIds.filter((id) => id !== DELETE_USER_ID);
+      ].content.followingsIds.filter((id) => id !== targetUser.userId);
+      // 팔로잉 취소 당하는 유저의 팔로워 ID 에 내 userId 제거
+      targetUser.followersIds = targetUser.followersIds.filter(
+        (id) => id !== 1,
+      );
 
       return HttpResponse.json({
         code: 200,
