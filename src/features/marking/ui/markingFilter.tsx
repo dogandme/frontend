@@ -126,22 +126,33 @@ type MapViewMode = keyof typeof mapViewModeMap;
 // map?sortType&lat&lng&... => lat과 lng이 mapStore의 userInfo.currentLocation의 lat과 lng이 다른 경우 => 현재 지도 중심
 
 /**
- * 내 마킹, 동네마킹에서 사용하는 필터
- * 내 마킹에서 [전체보기], [내 위치 중심], [현재 지도 중심] 옵션 제공
- * 동네 마킹에서 [내 위치 중심], [현재 지도 중심] 옵션 제공
+ * 마킹 노출 범위 필터
  *
  * 옵션
  * ALL_VIEW: [전체보기]
  * CURRENT_LOCATION: [내 위치 중심]
  * MAP_LOCATION: [현재 지도 중심]
  *
+ * ! [전체보기] 옵션은 내 마킹에서만 제공합니다.
+ *
+ * 내 마킹: [전체보기] (기본값), [내 위치 중심], [현재 지도 중심]
+ * 동네 마킹: [내 위치 중심] (기본값), [현재 지도 중심]
+ *
  * @param includeAllViewMode: [전체보기] 옵션 포함 여부
  */
 export const MapViewModeFilter = ({
+  defaultMapViewMode,
   includeAllViewMode,
 }: {
+  defaultMapViewMode: MapViewMode;
   includeAllViewMode: boolean;
 }) => {
+  if (defaultMapViewMode === "ALL_VIEW" && !includeAllViewMode) {
+    throw new Error(
+      "defaultMapViewMode가 ALL_VIEW이면 includeAllViewMode는 true여야 합니다.",
+    );
+  }
+
   const { currentLocation } = useMapStore((state) => state.userInfo);
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
@@ -180,10 +191,6 @@ export const MapViewModeFilter = ({
 
     // todo mapViewMode가 ALL_VIEW일 경우
   };
-
-  const defaultMapViewMode: MapViewMode = includeAllViewMode
-    ? "ALL_VIEW"
-    : "CURRENT_LOCATION";
 
   let mapViewMode: MapViewMode = defaultMapViewMode;
 
