@@ -76,7 +76,7 @@ export const MapBottomSheet = () => {
 
               <div className="flex">
                 <MapViewModeFilter includeAllViewMode={false} />
-                <SortTypeFilter />
+                <SortTypeFilter defaultSortType="POPULARITY" />
               </div>
             </div>
 

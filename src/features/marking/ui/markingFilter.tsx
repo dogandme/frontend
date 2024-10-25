@@ -37,7 +37,30 @@ const MarkingFilterButton = ({
   );
 };
 
-export const SortTypeFilter = () => {
+/**
+ * 마킹 데이터들을 정렬하는 필터
+ *
+ * 옵션
+ * RECENT: [최신순]
+ * POPULAR: [인기순]
+ * DISTANCE: [거리순]
+ *
+ * ! 이장소 관련 마킹에서만 [거리순] 옵션 제공하지 않습니다.
+ *
+ * 내 마킹: [최신순] (기본값), [인기순], [거리순] 제공
+ * 동네 마킹: [인기순] (기본값), [최신순], [거리순] 제공
+ * 이장소 관련 마킹: [인기순] (기본값), [최신순] 제공
+ *
+ * @param defaultSortType: 기본 정렬 타입
+ * @param includeDistanceSortType: [거리순] 옵션 포함 여부
+ */
+export const SortTypeFilter = ({
+  defaultSortType,
+  includeDistanceSortType = true,
+}: {
+  defaultSortType: SortType;
+  includeDistanceSortType?: boolean;
+}) => {
   const { sortType, researchMarkingList } = useResearchMarkingList();
 
   const handleSelect = (sortType: SortType) => {
@@ -46,22 +69,39 @@ export const SortTypeFilter = () => {
     });
   };
 
+  if (defaultSortType === "DISTANCE" && !includeDistanceSortType) {
+    throw new Error(
+      "defaultSortType가 DISTANCE이면 includeDistanceSortType는 true여야 합니다.",
+    );
+  }
+
   const { handleOpen, onClose, isOpen } = useModal(() => (
     <Modal modalType="center">
       <Select isOpen={isOpen} onClose={onClose}>
         <Select.OptionList>
-          {Object.entries(sortTypeMap).map(([key, value]) => {
-            return (
-              <Select.Option
-                key={key}
-                value={key}
-                onClick={() => handleSelect(key as SortType)}
-                isSelected={sortType === key}
-              >
-                {value}
-              </Select.Option>
-            );
-          })}
+          <Select.Option
+            value={defaultSortType}
+            isSelected={defaultSortType === sortType}
+            onClick={() => handleSelect(defaultSortType)}
+          >
+            {sortTypeMap[defaultSortType]}
+          </Select.Option>
+
+          {Object.entries(sortTypeMap)
+            .filter(([key]) => includeDistanceSortType || key !== "DISTANCE")
+            .filter(([key]) => key !== defaultSortType)
+            .map(([key, value]) => {
+              return (
+                <Select.Option
+                  key={key}
+                  value={key}
+                  onClick={() => handleSelect(key as SortType)}
+                  isSelected={sortType === key}
+                >
+                  {value}
+                </Select.Option>
+              );
+            })}
         </Select.OptionList>
       </Select>
     </Modal>
