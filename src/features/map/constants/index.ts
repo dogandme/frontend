@@ -59,6 +59,12 @@ export const sortTypeMap: Record<SortType, string> = {
   POPULARITY: "인기순",
 };
 
+export const mapViewModeMap = {
+  ALL_VIEW: "전체보기", // 내 마킹에서만 있는 option
+  CURRENT_LOCATION: "내 위치 중심",
+  MAP_LOCATION: "현재 지도 중심",
+};
+
 export const MAP_INITIAL_CENTER = { lat: 37.5665, lng: 126.978 };
 export const MAP_INITIAL_ZOOM = 16;
 export const MAP_INITIAL_BOUNDS = {

@@ -3,7 +3,7 @@ import { Sheet, SheetRef } from "react-modal-sheet";
 import { useLocation } from "react-router-dom";
 import { useResearchMarkingList } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
-import { SortTypeFilter } from "@/features/marking/ui";
+import { MapViewModeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { MyLocationIcon } from "@/shared/ui/icon";
@@ -75,6 +75,7 @@ export const MapBottomSheet = () => {
               </div>
 
               <div className="flex">
+                <MapViewModeFilter includeAllViewMode={false} />
                 <SortTypeFilter />
               </div>
             </div>
