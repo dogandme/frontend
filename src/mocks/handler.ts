@@ -1124,6 +1124,114 @@ const getMarkingListHandler = [
   }),
 ];
 
+const postFollowingHandler = [
+  http.post(
+    `${API_BASE_URL}/users/follows/my-followings/:nickname`,
+    async ({ request, params }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const token = request.headers.get("Authorization");
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+      // 보낸 유저는 모두 뽀송송 ROLE_USER로 가정하고 FOLLOWING_LIST_DATA에 추가합니다.
+      const followingListData = followDB.followings;
+      const { nickname } = params;
+
+      if (typeof nickname !== "string") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "잘못된 요청입니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      followDB.followings = [
+        ...followingListData,
+        // 닉네임만으로 가상 유저를 생성합니다.
+        {
+          userId: 200 + followingListData.length + 1,
+          nickname: nickname,
+          pet: {
+            petId: 200 + followingListData.length + 1,
+            name: `name-${followingListData.length + 1}`,
+            description: `description-${followingListData.length + 1}`.repeat(
+              Math.ceil(Math.random() * 10),
+            ),
+            profile: "/images/buddy",
+            breed: ["비숑", "비글", "시츄"].at(followingListData.length % 3),
+            personalities: [
+              "애교가 많은",
+              "사람을 좋아하는",
+              "까칠한",
+              "부끄럼이 많은",
+            ].slice(
+              followingListData.length + (Math.ceil(Math.random() * 10) % 4),
+              followingListData.length + (Math.ceil(Math.random() * 10) % 4),
+            ),
+          },
+        },
+      ];
+    },
+  ),
+];
+
+const deleteFollowingHandler = [
+  http.delete(
+    `${API_BASE_URL}/users/follows/my-followings/:nickname`,
+    async ({ request, params }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const token = request.headers.get("Authorization");
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+      const followingListData = followDB.followings;
+      const { nickname } = params;
+
+      if (typeof nickname !== "string") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "잘못된 요청입니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      followDB.followings = followingListData.filter(
+        (following) => following.nickname !== nickname,
+      );
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1146,4 +1254,6 @@ export const handlers = [
   ...getFollowerListHandler,
   ...getFollowingListHandler,
   ...getMarkingListHandler,
+  ...postFollowingHandler,
+  ...deleteFollowingHandler,
 ];
