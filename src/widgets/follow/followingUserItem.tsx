@@ -5,6 +5,7 @@
  * 3. 남의 프로필의 팔로워 리스트를 확인 할 로
  */
 import { useState } from "react";
+import { useDeleteFollowing, usePostFollowing } from "@/features/follow/api";
 import { FollowingButton, UnFollowingButton } from "@/features/follow/ui";
 import type {
   Nickname,
@@ -26,8 +27,28 @@ export const FollowingUserItem = ({
   isFollowing,
 }: FollowingUserItemProps) => {
   const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
-  const handleClick = () => {
-    _setIsFollowing(!_isFollowing);
+
+  const { mutate: postFollowing, isPending: isFollowingPending } =
+    usePostFollowing();
+  const { mutate: deleteFollowing, isPending: isUnFollowingPending } =
+    useDeleteFollowing();
+
+  const handleOptimisticFollowing = () => {
+    _setIsFollowing(true);
+    postFollowing(nickname, {
+      onError: () => {
+        _setIsFollowing(false);
+      },
+    });
+  };
+
+  const handleOptimisticUnFollowing = () => {
+    _setIsFollowing(false);
+    deleteFollowing(nickname, {
+      onError: () => {
+        _setIsFollowing(true);
+      },
+    });
   };
 
   return (
@@ -44,9 +65,15 @@ export const FollowingUserItem = ({
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
       {_isFollowing ? (
-        <UnFollowingButton onClick={handleClick} />
+        <UnFollowingButton
+          onClick={handleOptimisticUnFollowing}
+          disabled={isFollowingPending}
+        />
       ) : (
-        <FollowingButton onClick={handleClick} />
+        <FollowingButton
+          onClick={handleOptimisticFollowing}
+          disabled={isUnFollowingPending}
+        />
       )}
     </li>
   );

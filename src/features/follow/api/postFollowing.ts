@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Nickname } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
-import { FOLLOW_END_POINT } from "../constatns";
+import { FOLLOW_END_POINT } from "../constants";
 
 export const usePostFollowing = () => {
   return useMutation({
