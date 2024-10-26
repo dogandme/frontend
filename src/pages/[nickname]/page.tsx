@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ProfileOverView } from "@/widgets/profile/ui";
-import { TemporaryMarkingBar } from "@/entities/marking/ui";
+import {
+  MarkingThumbnailGrid,
+  TemporaryMarkingBar,
+} from "@/entities/marking/ui";
 import { useGetProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useNicknameParams } from "@/shared/lib/profile";
@@ -26,7 +29,6 @@ export const ProfilePage = () => {
   const { data, isError, error } = useGetProfile({
     nickname: nicknameParams,
   });
-
   // TODO 404 와 같은 양식의 디자인 사용하는건 어떤지 디자이너와 상의
   useEffect(() => {
     if (!token) {
@@ -77,11 +79,8 @@ export const ProfilePage = () => {
           {typeof tempCnt === "number" && tempCnt > 0 && (
             <TemporaryMarkingBar tempCnt={tempCnt} />
           )}
-          {/* TODO 
-          2024/10/23 마킹 썸네일 가져오는 로직이 변경 되었습니다. 
-          해당 부분 수정 일어나야 합니다.
-          마킹 API 결정 되면 그 때 수정이 일어나야 함 */}
-          {/* <MarkingThumbnailGrid markings={markings} /> */}
+          {/* {nickname} 유저의 마킹들 3x3 썸네일 */}
+          <MarkingThumbnailGrid nickname={nicknameParams} />
         </div>
       </section>
     </>
