@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePostFollowing } from "@/features/follow/api";
 import { FollowingButton, DeleteFollowerButton } from "@/features/follow/ui";
 import type {
   Nickname,
@@ -20,6 +21,15 @@ export const FollowerUserItem = ({
   isFollowing,
 }: FollowerUserItemProps) => {
   const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
+  const { mutate: postFollowing } = usePostFollowing();
+  const handleOptimisticFollowing = () => {
+    _setIsFollowing(true);
+    postFollowing(nickname, {
+      onError: () => {
+        _setIsFollowing(false);
+      },
+    });
+  };
 
   return (
     <li className="px-4 flex  gap-4 overflow-y-auto">
@@ -35,8 +45,8 @@ export const FollowerUserItem = ({
           <p className="title-2 text-grey-700">{nickname}</p>
           {!_isFollowing && (
             <FollowingButton
-              type="mini"
-              onClick={() => _setIsFollowing(!_isFollowing)}
+              buttonType="mini"
+              onClick={handleOptimisticFollowing}
             />
           )}
         </div>

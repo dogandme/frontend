@@ -1,14 +1,16 @@
 import { Button } from "@/shared/ui/button";
 
-interface FollowingButtonProps {
+interface FollowingButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick: () => void;
-  type?: "default" | "mini";
+  buttonType?: "default" | "mini";
 }
 export const FollowingButton = ({
-  type = "default",
+  buttonType = "default",
   onClick,
+  ...props
 }: FollowingButtonProps) => {
-  if (type === "default") {
+  if (buttonType === "default") {
     return (
       <Button
         size="small"
@@ -18,6 +20,7 @@ export const FollowingButton = ({
         onClick={() => {
           onClick();
         }}
+        {...props}
       >
         팔로우
       </Button>
@@ -29,6 +32,7 @@ export const FollowingButton = ({
       onClick={() => {
         onClick();
       }}
+      {...props}
     >
       팔로우
     </button>
