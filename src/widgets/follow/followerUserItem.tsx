@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePostFollowing } from "@/features/follow/api";
+import { useDeleteFollower, usePostFollowing } from "@/features/follow/api";
 import { FollowingButton, DeleteFollowerButton } from "@/features/follow/ui";
 import type {
   Nickname,
@@ -21,7 +21,11 @@ export const FollowerUserItem = ({
   isFollowing,
 }: FollowerUserItemProps) => {
   const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
+
   const { mutate: postFollowing } = usePostFollowing();
+  const { mutate: deleteFollower } = useDeleteFollower();
+
   const handleOptimisticFollowing = () => {
     _setIsFollowing(true);
     postFollowing(nickname, {
@@ -30,6 +34,19 @@ export const FollowerUserItem = ({
       },
     });
   };
+
+  const handleOptimisticDeleteFollower = () => {
+    setIsDeleted(true);
+    deleteFollower(nickname, {
+      onError: () => {
+        setIsDeleted(false);
+      },
+    });
+  };
+
+  if (isDeleted) {
+    return null;
+  }
 
   return (
     <li className="px-4 flex  gap-4 overflow-y-auto">
@@ -52,7 +69,7 @@ export const FollowerUserItem = ({
         </div>
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
-      <DeleteFollowerButton />
+      <DeleteFollowerButton onClick={handleOptimisticDeleteFollower} />
     </li>
   );
 };

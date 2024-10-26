@@ -6,4 +6,6 @@ export const FOLLOW_END_POINT = {
     `${API_BASE_URL}/users/follows/my-followings/${nickname}`,
   DELETE_FOLLOWING: (nickname: Nickname) =>
     `${API_BASE_URL}/users/follows/my-followings/${nickname}`,
+  DELETE_FOLLOWER: (nickname: Nickname) =>
+    `${API_BASE_URL}/users/follows/my-followers/${nickname}`,
 };
