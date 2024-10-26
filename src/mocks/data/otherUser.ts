@@ -5,7 +5,7 @@ export const otherUsers = Array.from({ length: 400 }).map((_, i) => ({
   socialType: null,
   tempCnt: 0,
   followersIds: Math.random() < 0.3 ? [1] : [],
-  followingIds: i < 200 ? [1] : [],
+  followingsIds: i < 200 ? [1] : [],
   pet: {
     petId: i + 1,
     name: `name-${i + 1}`,

@@ -1083,7 +1083,8 @@ const getFollowingListHandler = [
       const followingIds =
         nickname === "뽀송송"
           ? User["ROLE_USER"].content.followingsIds
-          : otherUsers.find((user) => user.nickname === nickname)?.followingIds;
+          : otherUsers.find((user) => user.nickname === nickname)
+              ?.followingsIds;
 
       if (!followingIds) {
         return HttpResponse.json(
@@ -1291,6 +1292,68 @@ const deleteFollowingHandler = [
   ),
 ];
 
+const deleteFollowerHandler = [
+  http.delete(
+    `${API_BASE_URL}/users/follows/my-followers/:nickname`,
+    async ({ request, params }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const token = request.headers.get("Authorization");
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+      const { nickname } = params;
+
+      if (typeof nickname !== "string") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "잘못된 요청입니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      const targetUser = otherUsers.find((user) => user.nickname === nickname);
+
+      if (!targetUser) {
+        return HttpResponse.json(
+          {
+            code: 404,
+            message: "해당하는 유저를 찾을 수 없습니다.",
+          },
+          {
+            status: 404,
+          },
+        );
+      }
+      // 내 팔로워 ID 에 해당 유저의 userId 제거
+      User["ROLE_USER"].content.followersIds = User[
+        "ROLE_USER"
+      ].content.followersIds.filter((id) => id !== targetUser.userId);
+      // 팔로워 취소 당하는 유저의 팔로잉 ID 에 내 userId 제거
+      targetUser.followingsIds = targetUser.followingsIds.filter(
+        (id) => id !== 1,
+      );
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1315,4 +1378,5 @@ export const handlers = [
   ...getMarkingListHandler,
   ...postFollowingHandler,
   ...deleteFollowingHandler,
+  ...deleteFollowerHandler,
 ];

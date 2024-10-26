@@ -24,7 +24,7 @@ export const User = {
       nickname: "뽀송송",
       socialType: "EMAIL",
       followersIds: otherUsers
-        .filter(({ followingIds }) => followingIds.includes(1))
+        .filter(({ followingsIds }) => followingsIds.includes(1))
         .map(({ userId }) => userId),
       followingsIds: otherUsers
         .filter(({ followersIds }) => followersIds.includes(1))
