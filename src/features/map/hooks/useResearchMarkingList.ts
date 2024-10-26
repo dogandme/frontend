@@ -54,7 +54,9 @@ export const useResearchMarkingList = () => {
       sortType: filter?.sortType || sortType,
     });
 
-    setIsLastSearchedLocation(true);
+    setTimeout(() => {
+      setIsLastSearchedLocation(true);
+    }, 0);
 
     queryClient.removeQueries({
       queryKey: ["markingList"],
