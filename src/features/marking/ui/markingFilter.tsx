@@ -61,7 +61,14 @@ export const SortTypeFilter = ({
   defaultSortType: SortType;
   includeDistanceSortType?: boolean;
 }) => {
-  const { sortType, researchMarkingList } = useResearchMarkingList();
+  if (defaultSortType === "DISTANCE" && !includeDistanceSortType) {
+    throw new Error(
+      "defaultSortType가 DISTANCE이면 includeDistanceSortType는 true여야 합니다.",
+    );
+  }
+
+  const { sortType: selectedSortType, researchMarkingList } =
+    useResearchMarkingList();
 
   const handleSelect = (sortType: SortType) => {
     researchMarkingList({
@@ -69,11 +76,9 @@ export const SortTypeFilter = ({
     });
   };
 
-  if (defaultSortType === "DISTANCE" && !includeDistanceSortType) {
-    throw new Error(
-      "defaultSortType가 DISTANCE이면 includeDistanceSortType는 true여야 합니다.",
-    );
-  }
+  const options = Object.entries(sortTypeMap).filter(
+    ([key]) => includeDistanceSortType || key !== "DISTANCE",
+  );
 
   const { handleOpen, onClose, isOpen } = useModal(() => (
     <Modal modalType="center">
@@ -81,14 +86,13 @@ export const SortTypeFilter = ({
         <Select.OptionList>
           <Select.Option
             value={defaultSortType}
-            isSelected={defaultSortType === sortType}
+            isSelected={defaultSortType === selectedSortType}
             onClick={() => handleSelect(defaultSortType)}
           >
             {sortTypeMap[defaultSortType]}
           </Select.Option>
 
-          {Object.entries(sortTypeMap)
-            .filter(([key]) => includeDistanceSortType || key !== "DISTANCE")
+          {options
             .filter(([key]) => key !== defaultSortType)
             .map(([key, value]) => {
               return (
@@ -96,7 +100,7 @@ export const SortTypeFilter = ({
                   key={key}
                   value={key}
                   onClick={() => handleSelect(key as SortType)}
-                  isSelected={sortType === key}
+                  isSelected={key === selectedSortType}
                 >
                   {value}
                 </Select.Option>
@@ -109,7 +113,7 @@ export const SortTypeFilter = ({
 
   return (
     <MarkingFilterButton onClick={handleOpen}>
-      {sortTypeMap[sortType]}
+      {sortTypeMap[selectedSortType]}
     </MarkingFilterButton>
   );
 };
