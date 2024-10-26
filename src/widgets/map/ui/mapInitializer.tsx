@@ -68,7 +68,7 @@ export const MapInitializer = () => {
     });
 
     researchMarkingList(filterOptions);
-  }, [map, sortTypeParam, isMapIdle]);
+  }, [map, isMapIdle]);
 
   if (!map || loading || !isMapIdle) {
     return <CurrentLocationLoading />;
