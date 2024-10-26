@@ -1,16 +1,15 @@
-import { Button } from "@/shared/ui/button";
-import { CloseIcon } from "@/shared/ui/icon";
+import { useOverlayStore } from "@/shared/store/overlay";
 import { Modal } from "@/shared/ui/modal";
 import { useMapStore } from "../../map/store";
+import { MARKING_FORM_MODAL_ID } from "../constants";
 import { useMarkingFormStore } from "../store";
 
 export const MarkingFormCloseModal = ({
   onCloseExitModal,
-  onCloseMarkingModal,
 }: {
   onCloseExitModal: () => Promise<void>;
-  onCloseMarkingModal: () => Promise<void>;
 }) => {
+  const removeOverlay = useOverlayStore((state) => state.removeOverlay);
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
   );
@@ -18,48 +17,33 @@ export const MarkingFormCloseModal = ({
 
   return (
     <Modal modalType="center">
-      <section className="flex flex-col gap-8">
-        <div className="flex justify-between">
-          <span className="title-1 text-grey-900">화면을 나가시겠습니까</span>
-          <button
-            onClick={onCloseExitModal}
-            aria-label="게시글 나가기 확인창 닫기"
-          >
-            <CloseIcon />
-          </button>
-        </div>
+      <Modal.Header
+        onClick={onCloseExitModal}
+        closeButtonAriaLabel="게시글 나가기 확인창 닫기"
+      >
+        화면을 나가시겠습니까?
+      </Modal.Header>
+      <Modal.Content>
         <div className="text-grey-700 body-2">
           <p>화면을 나갈 경우 입력한 정보들이 모두 삭제 됩니다</p>
           <p>정말 화면을 나가시겠습니까?</p>
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant="text"
-            colorType="tertiary"
-            size="medium"
-            fullWidth={false}
-            className="flex-1"
-            onClick={onCloseExitModal}
-          >
-            취소
-          </Button>
-          <Button
-            variant="text"
-            colorType="primary"
-            size="medium"
-            onClick={() => {
-              onCloseExitModal();
-              onCloseMarkingModal();
-              resetMarkingFormStore();
-              setMode("view");
-            }}
-            fullWidth={false}
-            className="flex-1"
-          >
-            나가기
-          </Button>
-        </div>
-      </section>
+      </Modal.Content>
+      <Modal.Footer axis="row">
+        <Modal.TextButton onClick={onCloseExitModal} colorType="tertiary">
+          취소
+        </Modal.TextButton>
+        <Modal.TextButton
+          onClick={() => {
+            onCloseExitModal();
+            removeOverlay(MARKING_FORM_MODAL_ID);
+            resetMarkingFormStore();
+            setMode("view");
+          }}
+        >
+          나가기
+        </Modal.TextButton>
+      </Modal.Footer>
     </Modal>
   );
 };
