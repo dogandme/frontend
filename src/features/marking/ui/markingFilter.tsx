@@ -142,6 +142,7 @@ type MapViewMode = keyof typeof mapViewModeMap;
  * 내 마킹: [전체보기] (기본값), [내 위치 중심], [현재 지도 중심]
  * 동네 마킹: [내 위치 중심] (기본값), [현재 지도 중심]
  *
+ * @param defaultMapViewMode: 기본 노출 범위
  * @param includeAllViewMode: [전체보기] 옵션 포함 여부
  */
 export const MapViewModeFilter = ({
