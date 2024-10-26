@@ -196,7 +196,7 @@ export const MapViewModeFilter = ({
     // todo mapViewMode가 ALL_VIEW일 경우
   };
 
-  let mapViewMode: MapViewMode = defaultMapViewMode;
+  let selectedMapViewMode: MapViewMode = defaultMapViewMode;
 
   const isCurrentLocation =
     !!currentLocation.lat &&
@@ -204,7 +204,11 @@ export const MapViewModeFilter = ({
     center.lat === currentLocation.lat &&
     center.lng === currentLocation.lng;
 
-  if (!isCurrentLocation) mapViewMode = "MAP_LOCATION";
+  if (!isCurrentLocation) selectedMapViewMode = "MAP_LOCATION";
+
+  const options = Object.entries(mapViewModeMap).filter(
+    ([key]) => includeAllViewMode || key !== "ALL_VIEW",
+  );
 
   const { handleOpen, onClose, isOpen } = useModal(() => (
     <Modal modalType="center">
@@ -213,23 +217,22 @@ export const MapViewModeFilter = ({
           <Select.Option
             value={defaultMapViewMode}
             onClick={() => handleSelect(defaultMapViewMode)}
-            isSelected={mapViewMode === defaultMapViewMode}
+            isSelected={selectedMapViewMode === defaultMapViewMode}
           >
             {mapViewModeMap[defaultMapViewMode]}
           </Select.Option>
 
-          {Object.keys(mapViewModeMap)
-            .filter((key) => includeAllViewMode || key !== "ALL_VIEW")
-            .filter((key) => key !== defaultMapViewMode)
-            .map((key) => {
+          {options
+            .filter(([key]) => key !== defaultMapViewMode)
+            .map(([key, value]) => {
               return (
                 <Select.Option
                   key={key}
                   value={key}
                   onClick={() => handleSelect(key as MapViewMode)}
-                  isSelected={mapViewMode === key}
+                  isSelected={selectedMapViewMode === key}
                 >
-                  {mapViewModeMap[key as MapViewMode]}
+                  {value}
                 </Select.Option>
               );
             })}
@@ -240,7 +243,7 @@ export const MapViewModeFilter = ({
 
   return (
     <MarkingFilterButton onClick={handleOpen}>
-      {mapViewModeMap[mapViewMode]}
+      {mapViewModeMap[selectedMapViewMode]}
     </MarkingFilterButton>
   );
 };
