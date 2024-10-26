@@ -6,6 +6,7 @@ export const otherUsers = Array.from({ length: 400 }).map((_, i) => ({
   tempCnt: 0,
   followersIds: Math.random() < 0.3 ? [1] : [],
   followingsIds: i < 200 ? [1] : [],
+  markings: [],
   pet: {
     petId: i + 1,
     name: `name-${i + 1}`,
