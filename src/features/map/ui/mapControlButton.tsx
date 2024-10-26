@@ -1,4 +1,7 @@
 import { useMap } from "@vis.gl/react-google-maps";
+import { MARKING_FORM_MODAL_ID } from "@/features/marking/constants";
+import { useMarkingFormStore } from "@/features/marking/store";
+import { MarkingFormCloseModal } from "@/features/marking/ui/markingFormCloseModal";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 import { useModal, useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
@@ -147,9 +150,12 @@ export const CollectionButton = () => {
 
 /* ----------add mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingFormTriggerButton = () => {
-  const { handleOpen, onClose: onCloseMarkingModal } = useModal(() => (
-    <MarkingFormModal onCloseMarkingModal={onCloseMarkingModal} />
-  ));
+  const { handleOpen, onClose: onCloseMarkingModal } = useModal(
+    () => <MarkingFormModal onCloseMarkingModal={onCloseMarkingModal} />,
+    {
+      staticId: MARKING_FORM_MODAL_ID,
+    },
+  );
 
   return (
     <Button
@@ -164,8 +170,19 @@ export const MarkingFormTriggerButton = () => {
 };
 
 export const ExitAddModeButton = () => {
+  const { onClose, handleOpen } = useModal(() => (
+    <MarkingFormCloseModal onCloseExitModal={onClose} />
+  ));
+
   const setMode = useMapStore((state) => state.setMode);
+
   const handleClick = () => {
+    const { images, isVisible, content } = useMarkingFormStore.getState();
+
+    if (images.length > 0 || content || isVisible) {
+      handleOpen();
+      return;
+    }
     setMode("view");
   };
 
