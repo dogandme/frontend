@@ -53,14 +53,14 @@ const MarkingFilterButton = ({
  * 이장소 관련 마킹: [인기순] (기본값), [최신순] 제공
  *
  * @param options: "RECENT", "POPULAR", "DISTANCE"로 구성된 배열
- * @param defaultOptionIdx: 기본 옵션 인덱스
+ * @param defaultOptionIdx: 기본 옵션 인덱스 (기본값: 0)
  */
 export const SortTypeFilter = ({
   options,
-  defaultOptionIdx,
+  defaultOptionIdx = 0,
 }: {
   options: SortType[];
-  defaultOptionIdx: number;
+  defaultOptionIdx?: number;
 }) => {
   const { sortType: selectedSortType, researchMarkingList } =
     useResearchMarkingList();
@@ -129,14 +129,14 @@ type MapViewMode = keyof typeof mapViewModeMap;
  * 동네 마킹: [내 위치 중심] (기본값), [현재 지도 중심]
  *
  * @param options: "ALL_VIEW", "CURRENT_LOCATION", "MAP_LOCATION"로 구성된 배열
- * @param defaultOptionIdx: 기본 옵션 인덱스
+ * @param defaultOptionIdx: 기본 옵션 인덱스 (기본값: 0)
  */
 export const MapViewModeFilter = ({
   options,
-  defaultOptionIdx,
+  defaultOptionIdx = 0,
 }: {
   options: MapViewMode[];
-  defaultOptionIdx: number;
+  defaultOptionIdx?: number;
 }) => {
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
