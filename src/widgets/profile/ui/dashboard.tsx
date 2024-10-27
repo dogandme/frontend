@@ -1,4 +1,5 @@
 import { ProfileEditButton } from "@/features/auth/ui";
+import { OptimisticFollowButtons } from "@/features/follow/ui";
 import type {
   FollowerIdList,
   FollowingIdList,
@@ -42,7 +43,18 @@ export const ProfileOverView = ({
           followingsIds={followingsIds}
         />
         {/* TODO 내 페이지인지, 남의 페이지인지에 따라 다른 버튼을 보여줘야 함 */}
-        {isMyPage ? <ProfileEditButton pet={pet} /> : <button>팔로잉</button>}
+        <div className="flex flex-grow justify-end">
+          {isMyPage ? (
+            <ProfileEditButton pet={pet} />
+          ) : (
+            <OptimisticFollowButtons
+              nickname={nickname}
+              isFollowing={false}
+              followingButtonType="default"
+              size="xSmall"
+            />
+          )}
+        </div>
       </div>
       {/* 반려동물 소개와 성격 리스트 */}
       {description && <PetDescriptionText description={description} />}

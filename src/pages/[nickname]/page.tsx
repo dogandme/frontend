@@ -27,6 +27,7 @@ export const ProfilePage = () => {
   const { data, isError, error } = useGetProfile({
     nickname: nicknameParams,
   });
+
   // TODO 404 와 같은 양식의 디자인 사용하는건 어떤지 디자이너와 상의
   useEffect(() => {
     if (!token) {
@@ -58,6 +59,7 @@ export const ProfilePage = () => {
     if (isMyPage) {
       return <EmptyMyProfileOverView />;
     }
+    // TODO ROLE_GUEST 인 유저의 오버뷰 페이지
     return <div>추가 예정인 컴포넌트</div>;
   };
   return (
@@ -70,13 +72,12 @@ export const ProfilePage = () => {
         />
       )}
       <section className="px-4 flex flex-col items-start gap-8">
-        {/* TODO isMyPage에 따라 조건부 처리 하기*/}
         {renderProfileOverView()}
         <div className="flex flex-col items-start gap-2 w-full ">
           <h3 className="text-grey-900 text-center title-2">
             {isMyPage ? "내 마킹" : `${nicknameParams}님의 마킹`}
           </h3>
-          {typeof tempCnt === "number" && tempCnt > 0 && (
+          {isMyPage && typeof tempCnt === "number" && tempCnt > 0 && (
             <TemporaryMarkingBar tempCnt={tempCnt} />
           )}
           {/* {nickname} 유저의 마킹들 3x3 썸네일 */}

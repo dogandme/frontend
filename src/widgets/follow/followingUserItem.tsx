@@ -4,12 +4,9 @@
  * 2. 남의 프로필의 팔로잉 리스트를 확인 할 때
  * 3. 남의 프로필의 팔로워 리스트를 확인 할 로
  */
-import { useState } from "react";
-import { useDeleteFollowing, usePostFollowing } from "@/features/follow/api";
-import { FollowingButton, UnFollowingButton } from "@/features/follow/ui";
+import { OptimisticFollowButtons } from "@/features/follow/ui";
 import { ProfileLink } from "@/features/profile/ui";
 import {
-  useGetMyProfile,
   type Nickname,
   type PetName,
   type ProfileImageUrl,
@@ -28,53 +25,6 @@ export const FollowingUserItem = ({
   profile,
   isFollowing,
 }: FollowingUserItemProps) => {
-  const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
-  const { data: myNickname } = useGetMyProfile((data) => data.nickname);
-
-  const { mutate: postFollowing, isPending: isFollowingPending } =
-    usePostFollowing();
-  const { mutate: deleteFollowing, isPending: isUnFollowingPending } =
-    useDeleteFollowing();
-
-  const handleOptimisticFollowing = () => {
-    if (isUnFollowingPending) {
-      return;
-    }
-    _setIsFollowing(true);
-    postFollowing(nickname, {
-      onError: () => {
-        _setIsFollowing(false);
-      },
-    });
-  };
-
-  const handleOptimisticUnFollowing = () => {
-    if (isFollowingPending) {
-      return;
-    }
-    _setIsFollowing(false);
-    deleteFollowing(nickname, {
-      onError: () => {
-        _setIsFollowing(true);
-      },
-    });
-  };
-
-  // TODO 로딩 상태 추가하기
-  if (!myNickname) {
-    return <div> 내 정보 받아오는 중 ..</div>;
-  }
-
-  const renderFollowButton = () => {
-    if (nickname === myNickname) {
-      return null;
-    }
-    if (_isFollowing) {
-      return <UnFollowingButton onClick={handleOptimisticUnFollowing} />;
-    }
-    return <FollowingButton onClick={handleOptimisticFollowing} />;
-  };
-
   return (
     <ProfileLink
       nickname={nickname}
@@ -91,7 +41,12 @@ export const FollowingUserItem = ({
         <p className="title-2 text-grey-700">{nickname}</p>
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
-      {renderFollowButton()}
+      <OptimisticFollowButtons
+        nickname={nickname}
+        isFollowing={isFollowing}
+        followingButtonType="default"
+        size="small"
+      />
     </ProfileLink>
   );
 };
