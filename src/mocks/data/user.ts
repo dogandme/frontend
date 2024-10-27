@@ -1,4 +1,5 @@
 import { otherUsers } from "./otherUser";
+import { profileMarkingThumbnail } from "./profileMarking";
 
 export const User = {
   ROLE_GUEST: {
@@ -32,7 +33,9 @@ export const User = {
       likes: [],
       bookmarks: [],
       tempCnt: 3,
-      markings: [1, 2, 3, 4, 5],
+      markings: profileMarkingThumbnail["뽀송송"].map(
+        ({ markingId }) => markingId,
+      ),
       pet: {
         name: "뽀송이",
         breed: "비숑 프리제",

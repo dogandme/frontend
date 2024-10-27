@@ -21,6 +21,7 @@ import { API_BASE_URL } from "@/shared/constants";
 import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
 import { otherUsers } from "./data/otherUser";
+import { profileMarkingThumbnail } from "./data/profileMarking";
 import regionListData from "./data/regionList.json";
 import { User } from "./data/user";
 
@@ -1354,6 +1355,68 @@ const deleteFollowerHandler = [
   ),
 ];
 
+const getProfileThumbnailHandler = [
+  http.get(
+    `${API_BASE_URL}/markings/marks/:nickname`,
+    async ({ request, params }) => {
+      const { nickname } = params;
+      const token = request.headers.get("Authorization");
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      if (profileMarkingThumbnail[nickname as string] === undefined) {
+        return HttpResponse.json(
+          {
+            code: 404,
+            message: "해당하는 유저를 찾을 수 없습니다.",
+          },
+          {
+            status: 404,
+          },
+        );
+      }
+
+      const marks = profileMarkingThumbnail[nickname as string];
+
+      const offset = Number(new URL(request.url).searchParams.get("offset"));
+      const itemPerPage = 20;
+      const start = offset * itemPerPage;
+      const end = start + itemPerPage;
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          marks: marks.slice(start, end),
+          totalElements: marks.length,
+          totalPages: Math.ceil(marks.length / itemPerPage),
+          pageAble: {
+            pageNumber: offset,
+            pageSize: itemPerPage,
+            sort: {
+              empty: true,
+              unsorted: true,
+              sorted: false,
+            },
+            offset: itemPerPage,
+            unpaged: false,
+            paged: true,
+          },
+        },
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1379,4 +1442,5 @@ export const handlers = [
   ...postFollowingHandler,
   ...deleteFollowingHandler,
   ...deleteFollowerHandler,
+  ...getProfileThumbnailHandler,
 ];
