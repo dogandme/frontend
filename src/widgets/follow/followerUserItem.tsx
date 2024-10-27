@@ -27,7 +27,12 @@ export const FollowerUserItem = ({
   const { mutate: postFollowing } = usePostFollowing();
   const { mutate: deleteFollower } = useDeleteFollower();
 
-  const handleOptimisticFollowing = () => {
+  const handleOptimisticFollowing = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.stopPropagation();
+    event.preventDefault();
+
     _setIsFollowing(true);
     postFollowing(nickname, {
       onError: () => {
@@ -36,7 +41,12 @@ export const FollowerUserItem = ({
     });
   };
 
-  const handleOptimisticDeleteFollower = () => {
+  const handleOptimisticDeleteFollower = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.stopPropagation();
+    event.preventDefault();
+
     setIsDeleted(true);
     deleteFollower(nickname, {
       onError: () => {

@@ -23,7 +23,12 @@ export const OptimisticFollowButtons = <T extends FollowingButtonType>({
   const { mutate: deleteFollowing, isPending: isUnFollowingPending } =
     useDeleteFollowing();
 
-  const handleOptimisticFollowing = () => {
+  const handleOptimisticFollowing = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.stopPropagation();
+    event.preventDefault();
+
     if (isUnFollowingPending) {
       return;
     }
@@ -35,7 +40,12 @@ export const OptimisticFollowButtons = <T extends FollowingButtonType>({
     });
   };
 
-  const handleOptimisticUnFollowing = () => {
+  const handleOptimisticUnFollowing = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.stopPropagation();
+    event.preventDefault();
+
     if (isFollowingPending) {
       return;
     }
@@ -65,14 +75,12 @@ type FollowingButtonType = "default" | "mini";
 
 interface FollowingButtonProps<T extends FollowingButtonType>
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  onClick: () => void;
   buttonType: T;
   size?: T extends "default" ? ButtonProps["size"] : never;
 }
 
 export const FollowingButton = <T extends FollowingButtonType>({
   buttonType,
-  onClick,
   size,
   ...props
 }: FollowingButtonProps<T>) => {
@@ -83,9 +91,6 @@ export const FollowingButton = <T extends FollowingButtonType>({
         variant="filled"
         colorType="primary"
         fullWidth={false}
-        onClick={() => {
-          onClick();
-        }}
         {...props}
       >
         팔로우
@@ -93,35 +98,20 @@ export const FollowingButton = <T extends FollowingButtonType>({
     );
   }
   return (
-    <button
-      className="btn-3 text-tangerine-500"
-      onClick={() => {
-        onClick();
-      }}
-      {...props}
-    >
+    <button className="btn-3 text-tangerine-500" {...props}>
       팔로우
     </button>
   );
 };
 
-interface UnFollowingButtonProps
-  extends Omit<ButtonProps, "variant" | "colorType" | "children"> {
-  onClick: () => void;
-}
-
-export const UnFollowingButton = ({
-  onClick,
-  ...props
-}: UnFollowingButtonProps) => {
+export const UnFollowingButton = (
+  props: Omit<ButtonProps, "variant" | "colorType" | "children">,
+) => {
   return (
     <Button
       variant="outlined"
       colorType="tertiary"
       fullWidth={false}
-      onClick={() => {
-        onClick();
-      }}
       {...props}
     >
       팔로잉
