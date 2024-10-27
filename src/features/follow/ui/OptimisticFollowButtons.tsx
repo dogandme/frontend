@@ -48,7 +48,13 @@ export const OptimisticFollowButtons = <T extends FollowButtonType>({
   };
 
   if (_isFollowing) {
-    return <UnFollowingButton onClick={handleOptimisticUnFollowing} />;
+    return (
+      <UnFollowingButton
+        onClick={handleOptimisticUnFollowing}
+        buttonType={followingButtonType}
+        size={size}
+      />
+    );
   }
   return (
     <FollowingButton
@@ -103,17 +109,15 @@ export const FollowingButton = <T extends FollowButtonType>({
   );
 };
 
-interface UnFollowingButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  onClick: () => void;
-}
-export const UnFollowingButton = ({
+export const UnFollowingButton = <T extends FollowButtonType>({
+  buttonType,
   onClick,
+  size,
   ...props
-}: UnFollowingButtonProps) => {
+}: FollowingButtonProps<T>) => {
   return (
     <Button
-      size="small"
+      size={size || "small"}
       variant="outlined"
       colorType="tertiary"
       fullWidth={false}
