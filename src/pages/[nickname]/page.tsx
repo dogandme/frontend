@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MarkingThumbnailGrid } from "@/widgets/marking/ui";
-import { ProfileOverView } from "@/widgets/profile/ui";
+import { ProfileOverView, EmptyProfileOverView } from "@/widgets/profile/ui";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
 import { useGetMyFollowingIdsMap, useGetProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useNicknameParams } from "@/shared/lib/profile";
 import { useAuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
-import { PlusIcon } from "@/shared/ui/icon";
 import {
   BackwardNavigationBar,
   NavigationBar,
@@ -46,24 +45,6 @@ export const ProfilePage = () => {
 
   const { followersIds, followingsIds, pet, tempCnt, userId } = data;
 
-  const renderProfileOverView = () => {
-    if (pet) {
-      return (
-        <ProfileOverView
-          nickname={nicknameParams}
-          followersIds={followersIds}
-          followingsIds={followingsIds}
-          isFollowing={myFollowingIdsMap[userId]}
-          pet={pet}
-        />
-      );
-    }
-    if (isMyPage) {
-      return <EmptyMyProfileOverView />;
-    }
-    // TODO ROLE_GUEST 인 유저의 오버뷰 페이지
-    return <div>추가 예정인 컴포넌트</div>;
-  };
   return (
     <>
       {isMyPage ? (
@@ -74,7 +55,17 @@ export const ProfilePage = () => {
         />
       )}
       <section className="px-4 flex flex-col items-start gap-8">
-        {renderProfileOverView()}
+        {pet ? (
+          <ProfileOverView
+            nickname={nicknameParams}
+            followersIds={followersIds}
+            followingsIds={followingsIds}
+            isFollowing={myFollowingIdsMap[userId]}
+            pet={pet}
+          />
+        ) : (
+          <EmptyProfileOverView isMyPage={isMyPage} />
+        )}
         <div className="flex flex-col items-start gap-2 w-full ">
           <h3 className="text-grey-900 text-center title-2">
             {isMyPage ? "내 마킹" : `${nicknameParams}님의 마킹`}
@@ -106,20 +97,5 @@ const MyPageNavigationBar = () => {
         </Link>
       }
     />
-  );
-};
-
-/**
- * 해당 컴포넌트는 사용자가 반려동물을 등록하지 않았을 때 MyPage에서 나타나는 컴포넌트 입니다.
- */
-export const EmptyMyProfileOverView = () => {
-  return (
-    <Link
-      to={ROUTER_PATH.SIGN_UP_PET_INFO}
-      className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full items-center text-grey-500"
-    >
-      <PlusIcon />
-      <p className="title-3">반려동물을 등록해 주세요</p>
-    </Link>
   );
 };
