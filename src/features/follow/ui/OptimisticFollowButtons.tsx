@@ -4,13 +4,13 @@ import { Button } from "@/shared/ui/button";
 import { ButtonProps } from "@/shared/ui/button/Button";
 import { usePostFollowing, useDeleteFollowing } from "../api";
 
-interface OptimisticFollowButtonsProps<T extends FollowButtonType> {
+interface OptimisticFollowButtonsProps<T extends FollowingButtonType> {
   nickname: Nickname;
   isFollowing: boolean;
   followingButtonType: T;
   size?: T extends "default" ? ButtonProps["size"] : never;
 }
-export const OptimisticFollowButtons = <T extends FollowButtonType>({
+export const OptimisticFollowButtons = <T extends FollowingButtonType>({
   nickname,
   isFollowing,
   followingButtonType,
@@ -65,16 +65,16 @@ export const OptimisticFollowButtons = <T extends FollowButtonType>({
   );
 };
 
-type FollowButtonType = "default" | "mini";
+type FollowingButtonType = "default" | "mini";
 
-interface FollowingButtonProps<T extends FollowButtonType>
+interface FollowingButtonProps<T extends FollowingButtonType>
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick: () => void;
   buttonType: T;
   size?: T extends "default" ? ButtonProps["size"] : never;
 }
 
-export const FollowingButton = <T extends FollowButtonType>({
+export const FollowingButton = <T extends FollowingButtonType>({
   buttonType,
   onClick,
   size,
@@ -109,7 +109,7 @@ export const FollowingButton = <T extends FollowButtonType>({
   );
 };
 
-export const UnFollowingButton = <T extends FollowButtonType>({
+export const UnFollowingButton = <T extends FollowingButtonType>({
   buttonType,
   onClick,
   size,
