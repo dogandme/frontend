@@ -20,7 +20,7 @@ export const SEARCH_MARKING_END_POINT = ({
   sortType,
   offset,
 }: GetMarkingListRequest) =>
-  `${API_BASE_URL}/markings/search?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&lat=${lat}&lng=${lng}&sortType=${sortType}&offset=${offset}`;
+  `${API_BASE_URL}/markings/nearby?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&lat=${lat}&lng=${lng}&sortType=${sortType}&offset=${offset}`;
 
 export const MARKER_END_POINT = {
   BOUNDARY: ({
