@@ -11,7 +11,7 @@ export const otherUsers = Array.from({ length: 400 }).map((_, i) => ({
     petId: i + 2,
     name: `name-${i + 2}`,
     description: `description-${i + 2}`.repeat(Math.ceil(Math.random() * 10)),
-    profile: "/images/buddy",
+    profile: Math.random() > 0.5 ? "/images/buddy" : null,
     breed: ["비숑", "비글", "시츄"][i % 3],
     personalities: [
       "애교가 많은",

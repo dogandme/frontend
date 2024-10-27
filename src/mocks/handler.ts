@@ -426,7 +426,7 @@ export const getProfileHandlers = [
       return HttpResponse.json(User["ROLE_USER"]);
     }
 
-    const userInfo = userDB[nickname as string];
+    const userInfo = otherUsers.find((user) => user.nickname === nickname);
     if (!userInfo) {
       return HttpResponse.json(
         {
@@ -1018,6 +1018,14 @@ const getFollowerListHandler = [
         .filter((user) => followerIds.includes(user.userId))
         .map(({ userId, pet, nickname }) => ({ userId, pet, nickname }));
 
+      if (followerIds.includes(1)) {
+        userInfos.push({
+          userId: 1,
+          pet: User["ROLE_USER"].content.pet,
+          nickname: User["ROLE_USER"].content.nickname,
+        });
+      }
+
       const requestUrl = new URL(request.url);
       const offset = requestUrl.searchParams.get("offset");
       const itemPerPage = 20;
@@ -1102,6 +1110,14 @@ const getFollowingListHandler = [
       const userInfos = otherUsers
         .filter((user) => followingIds.includes(user.userId))
         .map(({ userId, pet, nickname }) => ({ userId, pet, nickname }));
+
+      if (followingIds.includes(1)) {
+        userInfos.push({
+          userId: 1,
+          pet: User["ROLE_USER"].content.pet,
+          nickname: User["ROLE_USER"].content.nickname,
+        });
+      }
 
       const requestUrl = new URL(request.url);
       const offset = requestUrl.searchParams.get("offset");
