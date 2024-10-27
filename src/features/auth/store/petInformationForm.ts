@@ -10,7 +10,10 @@ export interface FileInfo {
   file: File | null;
 }
 
-export type PetInformationFormExternalState = Omit<PetInfo, "profile"> & {
+export type PetInformationFormExternalState = Omit<
+  PetInfo,
+  "profile" | "petId"
+> & {
   profile: FileInfo;
 };
 
