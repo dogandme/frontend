@@ -1174,14 +1174,16 @@ const getMarkingListHandler = [
 
     const markingListDBKey = `${southBottomLat}-${northTopLat}-${southLeftLng}-${northRightLng}`;
 
-    const markingList =
-      markingListDB[markingListDBKey] ??
-      getMockMarkingList({
+    if (!markingListDB[markingListDBKey]) {
+      markingListDB[markingListDBKey] = getMockMarkingList({
         southBottomLat,
         northTopLat,
         southLeftLng,
         northRightLng,
       });
+    }
+
+    const markingList = markingListDB[markingListDBKey];
 
     const sortType = url.searchParams.get("sortType") as SortType;
 
@@ -1244,14 +1246,16 @@ const getBoundaryMarkerListHandler = [
 
     const markingListDBKey = `${southBottomLat}-${northTopLat}-${southLeftLng}-${northRightLng}`;
 
-    const markingList =
-      markingListDB[markingListDBKey] ??
-      getMockMarkingList({
+    if (!markingListDB[markingListDBKey]) {
+      markingListDB[markingListDBKey] = getMockMarkingList({
         southBottomLat,
         northTopLat,
         southLeftLng,
         northRightLng,
       });
+    }
+
+    const markingList = markingListDB[markingListDBKey];
 
     const markerList = markingList.map((marking) => ({
       markingId: marking.markingId,
