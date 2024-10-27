@@ -181,7 +181,9 @@ export const MapViewModeFilter = ({
   };
 
   const defaultOption = options[defaultOptionIdx];
-  const otherOptions = options.filter((option) => option !== defaultOption);
+  const nonDefaultOptions = options.filter(
+    (option) => option !== defaultOption,
+  );
 
   const { handleOpen, onClose, isOpen } = useModal(() => (
     <Modal modalType="center">
@@ -195,7 +197,7 @@ export const MapViewModeFilter = ({
             {mapViewModeMap[defaultOption]}
           </Select.Option>
 
-          {otherOptions.map((option) => {
+          {nonDefaultOptions.map((option) => {
             return (
               <Select.Option
                 key={option}
