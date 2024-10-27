@@ -8,10 +8,11 @@ import { useState } from "react";
 import { useDeleteFollowing, usePostFollowing } from "@/features/follow/api";
 import { FollowingButton, UnFollowingButton } from "@/features/follow/ui";
 import { ProfileLink } from "@/features/profile/ui";
-import type {
-  Nickname,
-  PetName,
-  ProfileImageUrl,
+import {
+  useGetMyProfile,
+  type Nickname,
+  type PetName,
+  type ProfileImageUrl,
 } from "@/entities/profile/api";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
 
@@ -28,6 +29,7 @@ export const FollowingUserItem = ({
   isFollowing,
 }: FollowingUserItemProps) => {
   const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
+  const { data: myNickname } = useGetMyProfile((data) => data.nickname);
 
   const { mutate: postFollowing, isPending: isFollowingPending } =
     usePostFollowing();
@@ -58,6 +60,21 @@ export const FollowingUserItem = ({
     });
   };
 
+  // TODO 로딩 상태 추가하기
+  if (!myNickname) {
+    return <div> 내 정보 받아오는 중 ..</div>;
+  }
+
+  const renderFollowButton = () => {
+    if (nickname === myNickname) {
+      return null;
+    }
+    if (_isFollowing) {
+      return <UnFollowingButton onClick={handleOptimisticUnFollowing} />;
+    }
+    return <FollowingButton onClick={handleOptimisticFollowing} />;
+  };
+
   return (
     <ProfileLink
       nickname={nickname}
@@ -74,11 +91,7 @@ export const FollowingUserItem = ({
         <p className="title-2 text-grey-700">{nickname}</p>
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
-      {_isFollowing ? (
-        <UnFollowingButton onClick={handleOptimisticUnFollowing} />
-      ) : (
-        <FollowingButton onClick={handleOptimisticFollowing} />
-      )}
+      {renderFollowButton()}
     </ProfileLink>
   );
 };
