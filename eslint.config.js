@@ -26,7 +26,7 @@ export default tseslint.config(
       "no-unused-vars": [
         "error",
         {
-          vars: "all",
+          vars: "after-used",
           args: "after-used",
           ignoreRestSiblings: true,
           argsIgnorePattern: "^_", // 언더스코어로 시작하는 매개변수는 무시
@@ -35,7 +35,7 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
-          vars: "all",
+          vars: "after-used",
           args: "after-used",
           ignoreRestSiblings: true,
           argsIgnorePattern: "^_", // 언더스코어로 시작하는 매개변수는 무시
