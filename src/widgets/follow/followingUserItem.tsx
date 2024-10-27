@@ -2,12 +2,11 @@
  * 해당 컴포넌트는 다음과 같은 경우 사용 됩니다.
  * 1. 나의 프로필에서 팔로잉 리스트를 확인 할 때
  * 2. 남의 프로필의 팔로잉 리스트를 확인 할 때
- * 3. 남의 프로필의 팔로워 리스트를 확인 할 로
+ * 3. 남의 프로필의 팔로워 리스트를 확인 할 때
  */
 import { OptimisticFollowButtons } from "@/features/follow/ui";
 import { ProfileLink } from "@/features/profile/ui";
 import {
-  useGetMyFollowingIdsMap,
   type Nickname,
   type PetName,
   type ProfileImageUrl,
@@ -27,13 +26,7 @@ export const FollowingUserItem = ({
   profile,
   isFollowing,
 }: FollowingUserItemProps) => {
-  const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
   const { isMyPage } = useNicknameParams();
-
-  // TODO 로딩 페이지 생각 하기
-  if (!myFollowingIdsMap) {
-    return <div>loading..</div>;
-  }
 
   return (
     <ProfileLink
