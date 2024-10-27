@@ -16,7 +16,7 @@ import type {
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
-import { SortType } from "@/entities/marking/api";
+import { Marking, SortType } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 // data
 import { getMockMarkingList } from "./data/markingList";
@@ -1159,7 +1159,7 @@ const getDistanceFromLatLonInKm = (
   return distance;
 };
 
-let markingList = [];
+const markingListDB: Record<string, Marking[]> = {};
 
 const getMarkingListHandler = [
   http.get(`${API_BASE_URL}/markings/nearby`, async ({ request }) => {
@@ -1172,15 +1172,16 @@ const getMarkingListHandler = [
     const southLeftLng = Number(url.searchParams.get("southLeftLng"));
     const northRightLng = Number(url.searchParams.get("northRightLng"));
 
-    // 기존에 데이터가 있을 경우 초기화
-    if (markingList.length > 0) markingList = [];
+    const markingListDBKey = `${southBottomLat}-${northTopLat}-${southLeftLng}-${northRightLng}`;
 
-    markingList = getMockMarkingList({
-      southBottomLat,
-      northTopLat,
-      southLeftLng,
-      northRightLng,
-    });
+    const markingList =
+      markingListDB[markingListDBKey] ??
+      getMockMarkingList({
+        southBottomLat,
+        northTopLat,
+        southLeftLng,
+        northRightLng,
+      });
 
     const sortType = url.searchParams.get("sortType") as SortType;
 
@@ -1241,15 +1242,16 @@ const getBoundaryMarkerListHandler = [
     const southLeftLng = Number(url.searchParams.get("southLeftLng"));
     const northRightLng = Number(url.searchParams.get("northRightLng"));
 
-    // 기존에 데이터가 있을 경우 초기화
-    if (markingList.length > 0) markingList = [];
+    const markingListDBKey = `${southBottomLat}-${northTopLat}-${southLeftLng}-${northRightLng}`;
 
-    markingList = getMockMarkingList({
-      southBottomLat,
-      northTopLat,
-      southLeftLng,
-      northRightLng,
-    });
+    const markingList =
+      markingListDB[markingListDBKey] ??
+      getMockMarkingList({
+        southBottomLat,
+        northTopLat,
+        southLeftLng,
+        northRightLng,
+      });
 
     const markerList = markingList.map((marking) => ({
       markingId: marking.markingId,
