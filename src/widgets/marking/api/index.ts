@@ -1,1 +1,1 @@
-export * from "./getMarkingThumbnail";
+export * from "./getDashboardMarkingThumbnail";

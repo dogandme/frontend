@@ -1,4 +1,5 @@
-import { OptimisticFollowButtons } from "@/features/follow/ui";
+import { Link } from "react-router-dom";
+import { ProfileEditButton } from "@/features/auth/ui";
 import type {
   FollowerIdList,
   FollowingIdList,
@@ -11,21 +12,21 @@ import {
   ProfileHeading,
   ProfileImage,
 } from "@/entities/profile/ui";
+import { ROUTER_PATH } from "@/shared/constants";
+import { PlusIcon } from "@/shared/ui/icon";
 
 interface ProfileOverviewProps {
   nickname: Nickname;
   pet: PetInfo;
   followersIds: FollowerIdList;
   followingsIds: FollowingIdList;
-  isFollowing: boolean;
 }
 
-export const ProfileOverView = ({
+export const MyProfileOverview = ({
   nickname,
   pet,
   followersIds,
   followingsIds,
-  isFollowing,
 }: ProfileOverviewProps) => {
   const { profile, name, breed, description, personalities } = pet;
 
@@ -42,12 +43,7 @@ export const ProfileOverView = ({
           followingsIds={followingsIds}
         />
         <div className="flex flex-grow justify-end">
-          <OptimisticFollowButtons
-            nickname={nickname}
-            isFollowing={isFollowing}
-            followingButtonType="default"
-            size="xSmall"
-          />
+          <ProfileEditButton pet={pet} />
         </div>
       </div>
       {/* 반려동물 소개와 성격 리스트 */}
@@ -60,8 +56,16 @@ export const ProfileOverView = ({
 };
 
 /**
- * 해당 컴포넌트는 다른 유저가 반려동물을 등록하지 않았을 때 :nickname 대시보드에서 나타나는 컴포넌트 입니다.
+ * 해당 컴포넌트는 사용자가 반려동물을 등록하지 않았을 때 MyPage에서 나타나는 컴포넌트 입니다.
  */
-export const EmptyProfileOverView = () => {
-  return <div>다른 사람의 빈 페이지 ..</div>;
+export const EmptyMyProfileOverView = () => {
+  return (
+    <Link
+      to={ROUTER_PATH.SIGN_UP_PET_INFO}
+      className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full items-center text-grey-500"
+    >
+      <PlusIcon />
+      <p className="title-3">반려동물을 등록해 주세요</p>
+    </Link>
+  );
 };
