@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDeleteFollower, usePostFollowing } from "@/features/follow/api";
 import { FollowingButton, DeleteFollowerButton } from "@/features/follow/ui";
+import { ProfileLink } from "@/features/profile/ui";
 import type {
   Nickname,
   PetName,
@@ -49,7 +50,10 @@ export const FollowerUserItem = ({
   }
 
   return (
-    <li className="px-4 flex  gap-4 overflow-y-auto">
+    <ProfileLink
+      nickname={nickname}
+      className="px-4 flex  gap-4 overflow-y-auto"
+    >
       {/* TODO 로딩상태가 함께 있는 ProfileImage 컴포넌트 만들어서 대체하기 */}
       <img
         src={
@@ -70,6 +74,6 @@ export const FollowerUserItem = ({
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
       <DeleteFollowerButton onClick={handleOptimisticDeleteFollower} />
-    </li>
+    </ProfileLink>
   );
 };
