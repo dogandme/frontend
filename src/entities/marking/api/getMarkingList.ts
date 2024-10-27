@@ -54,7 +54,7 @@ export interface Marking {
   lng: number;
   address: Address;
   countData: Count;
-  pet: Pick<Pet, "profile" | "petId" | "name">;
+  pet: Pet;
   images: Image[];
 }
 
