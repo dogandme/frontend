@@ -19,6 +19,7 @@ interface ProfileOverviewProps {
   pet: PetInfo;
   followersIds: FollowerIdList;
   followingsIds: FollowingIdList;
+  isFollowing: boolean;
 }
 
 export const ProfileOverView = ({
@@ -26,6 +27,7 @@ export const ProfileOverView = ({
   pet,
   followersIds,
   followingsIds,
+  isFollowing,
 }: ProfileOverviewProps) => {
   const { profile, name, breed, description, personalities } = pet;
   const { isMyPage } = useNicknameParams();
@@ -42,14 +44,13 @@ export const ProfileOverView = ({
           followersIds={followersIds}
           followingsIds={followingsIds}
         />
-        {/* TODO 내 페이지인지, 남의 페이지인지에 따라 다른 버튼을 보여줘야 함 */}
         <div className="flex flex-grow justify-end">
           {isMyPage ? (
             <ProfileEditButton pet={pet} />
           ) : (
             <OptimisticFollowButtons
               nickname={nickname}
-              isFollowing={false}
+              isFollowing={isFollowing}
               followingButtonType="default"
               size="xSmall"
             />

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { MarkingThumbnailGrid } from "@/widgets/marking/ui";
 import { ProfileOverView } from "@/widgets/profile/ui";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
-import { useGetProfile } from "@/entities/profile/api";
+import { useGetMyFollowingIdsMap, useGetProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useNicknameParams } from "@/shared/lib/profile";
 import { useAuthStore } from "@/shared/store";
@@ -27,6 +27,7 @@ export const ProfilePage = () => {
   const { data, isError, error } = useGetProfile({
     nickname: nicknameParams,
   });
+  const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
 
   // TODO 404 와 같은 양식의 디자인 사용하는건 어떤지 디자이너와 상의
   useEffect(() => {
@@ -39,11 +40,11 @@ export const ProfilePage = () => {
     return <NotFoundUser />;
   }
 
-  if (!data) {
+  if (!data || !myFollowingIdsMap) {
     return;
   }
 
-  const { followersIds, followingsIds, pet, tempCnt } = data;
+  const { followersIds, followingsIds, pet, tempCnt, userId } = data;
 
   const renderProfileOverView = () => {
     if (pet) {
@@ -52,6 +53,7 @@ export const ProfilePage = () => {
           nickname={nicknameParams}
           followersIds={followersIds}
           followingsIds={followingsIds}
+          isFollowing={myFollowingIdsMap[userId]}
           pet={pet}
         />
       );
