@@ -52,7 +52,7 @@ export const useCreateQueryClient = () => {
         },
       }),
       mutationCache: new MutationCache({
-        onSuccess: (data, variables, context, mutation) => {
+        onSuccess: (_data, _variables, _context, mutation) => {
           // * 중복 닉네임 체크인 경우에만 모달을 닫지 않습니다.
           if (
             mutation.options.mutationKey?.includes("checkDuplicateNickname")

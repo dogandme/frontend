@@ -57,7 +57,7 @@ export const usePutChangeAge = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
     },
-    onError: (error, variable, context) => {
+    onError: (_error, _variable, context) => {
       queryClient.setQueryData(["myInfo"], context);
     },
   });
