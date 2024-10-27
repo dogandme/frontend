@@ -4,7 +4,7 @@ import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
-type PetInfoFormObject = Omit<PetInfo, "profile">;
+type PetInfoFormObject = Omit<PetInfo, "profile" | "petId">;
 
 interface ProfileImage {
   image: File | null;
