@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { mapViewModeMap, sortTypeMap } from "@/features/map/constants";
 import {
@@ -114,15 +115,6 @@ export const SortTypeFilter = ({
 
 type MapViewMode = keyof typeof mapViewModeMap;
 
-// 내마킹 url
-// map/nickname?sortType => 전체보기 (기본값)
-// map/nickname?sortType&lat&lng&... => lat과 lng이 mapStore의 userInfo.currentLocation의 lat과 lng이 같은 경우 => 내 위치 중심
-// map/nickname?sortType&lat&lng&... => lat과 lng이 mapStore의 userInfo.currentLocation의 lat과 lng이 다른 경우 => 현재 지도 중심
-
-// 동네마킹 url
-// map?sortType&lat&lng&... => lat과 lng이 mapStore의 userInfo.currentLocation의 lat과 lng이 같은 경우 => 내 위치 중심 (기본값)
-// map?sortType&lat&lng&... => lat과 lng이 mapStore의 userInfo.currentLocation의 lat과 lng이 다른 경우 => 현재 지도 중심
-
 /**
  * 마킹 노출 범위 필터
  *
@@ -140,28 +132,27 @@ type MapViewMode = keyof typeof mapViewModeMap;
  * @param includeAllViewMode: [전체보기] 옵션 포함 여부
  */
 export const MapViewModeFilter = ({
-  defaultMapViewMode,
-  includeAllViewMode,
+  options,
+  defaultOptionIdx,
 }: {
-  defaultMapViewMode: MapViewMode;
-  includeAllViewMode: boolean;
+  options: MapViewMode[];
+  defaultOptionIdx: number;
 }) => {
-  if (defaultMapViewMode === "ALL_VIEW" && !includeAllViewMode) {
-    throw new Error(
-      "defaultMapViewMode가 ALL_VIEW이면 includeAllViewMode는 true여야 합니다.",
-    );
-  }
-
-  const { currentLocation } = useMapStore((state) => state.userInfo);
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
-  const { researchMarkingList, center } = useResearchMarkingList();
+  const { researchMarkingList } = useResearchMarkingList();
   const { setCurrentLocation } = useCurrentLocation();
 
   const map = useMap();
 
+  const [selectedOption, setSelectedOption] = useState<MapViewMode>(
+    options[defaultOptionIdx],
+  );
+
   const handleSelect = (mapViewMode: MapViewMode) => {
+    setSelectedOption(mapViewMode);
+
     if (mapViewMode === "CURRENT_LOCATION") {
       setCurrentLocation({
         onSuccess: ({ coords: { latitude, longitude } }) => {
@@ -182,55 +173,40 @@ export const MapViewModeFilter = ({
     }
 
     if (mapViewMode === "MAP_LOCATION") {
-      if (isCurrentLocation) {
-        // todo 현재 지도 중심과 내 위치 중심이 같을 경우 어떻게 해야할 지 => snack bar 띄우기?
-      }
       researchMarkingList();
+      return;
     }
 
     // todo mapViewMode가 ALL_VIEW일 경우
   };
 
-  let selectedMapViewMode: MapViewMode = defaultMapViewMode;
-
-  const isCurrentLocation =
-    !!currentLocation.lat &&
-    !!currentLocation.lng &&
-    center.lat === currentLocation.lat &&
-    center.lng === currentLocation.lng;
-
-  if (!isCurrentLocation) selectedMapViewMode = "MAP_LOCATION";
-
-  const options = Object.entries(mapViewModeMap).filter(
-    ([key]) => includeAllViewMode || key !== "ALL_VIEW",
-  );
+  const defaultOption = options[defaultOptionIdx];
+  const otherOptions = options.filter((option) => option !== defaultOption);
 
   const { handleOpen, onClose, isOpen } = useModal(() => (
     <Modal modalType="center">
       <Select isOpen={isOpen} onClose={onClose}>
         <Select.OptionList>
           <Select.Option
-            value={defaultMapViewMode}
-            onClick={() => handleSelect(defaultMapViewMode)}
-            isSelected={selectedMapViewMode === defaultMapViewMode}
+            value={defaultOption}
+            onClick={() => handleSelect(defaultOption)}
+            isSelected={selectedOption === defaultOption}
           >
-            {mapViewModeMap[defaultMapViewMode]}
+            {mapViewModeMap[defaultOption]}
           </Select.Option>
 
-          {options
-            .filter(([key]) => key !== defaultMapViewMode)
-            .map(([key, value]) => {
-              return (
-                <Select.Option
-                  key={key}
-                  value={key}
-                  onClick={() => handleSelect(key as MapViewMode)}
-                  isSelected={selectedMapViewMode === key}
-                >
-                  {value}
-                </Select.Option>
-              );
-            })}
+          {otherOptions.map((option) => {
+            return (
+              <Select.Option
+                key={option}
+                value={option}
+                onClick={() => handleSelect(option)}
+                isSelected={selectedOption === option}
+              >
+                {mapViewModeMap[option]}
+              </Select.Option>
+            );
+          })}
         </Select.OptionList>
       </Select>
     </Modal>
@@ -238,7 +214,7 @@ export const MapViewModeFilter = ({
 
   return (
     <MarkingFilterButton onClick={handleOpen}>
-      {mapViewModeMap[selectedMapViewMode]}
+      {mapViewModeMap[selectedOption]}
     </MarkingFilterButton>
   );
 };
