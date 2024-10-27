@@ -1,3 +1,5 @@
+import type { SortType } from "@/entities/marking/api";
+
 /**
  * Google map 에 사용 할 옵션들을 지정한 객체입니다.
  * 사용 가능한 객체들은 다음과 같은 곳에서 확인할 수 있습니다.
@@ -49,6 +51,18 @@ export const mapOptions = {
 
   // 모든 제스처를 활성화합니다. 사용자는 한 손가락으로 드래그하고, 두 손가락으로 확대/축소할 수 있습니다.
   gestureHandling: "greedy",
+};
+
+export const sortTypeMap: Record<SortType, string> = {
+  RECENT: "최신순",
+  DISTANCE: "가까운순",
+  POPULARITY: "인기순",
+};
+
+export const mapViewModeMap = {
+  ALL_VIEW: "전체보기", // 내 마킹에서만 있는 option
+  CURRENT_LOCATION: "내 위치 중심",
+  MAP_LOCATION: "현재 지도 중심",
 };
 
 export const MAP_INITIAL_CENTER = { lat: 37.5665, lng: 126.978 };

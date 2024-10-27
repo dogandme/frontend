@@ -14,7 +14,8 @@ interface GoogleMapProps {
  * 기본적으로 GoogleMaps 는 w-full h-full relative로 설정 되어 있습니다.
  */
 export const GoogleMaps = ({ children }: GoogleMapProps) => {
-  const isLoadedRef = useRef<boolean>(false);
+  const isTilesLoadedRef = useRef<boolean>(false);
+  const setIsIdle = useMapStore((state) => state.setIsIdle);
 
   const setIsMapCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
@@ -24,7 +25,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   );
 
   const handleMapChange = () => {
-    if (!isLoadedRef.current) return;
+    if (!isTilesLoadedRef.current) return;
 
     setIsLastSearchedLocation(false);
     setIsMapCenteredOnMyLocation(false);
@@ -53,13 +54,18 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
     <Map
       mapId={GOOGLE_MAPS_MAP_ID}
       options={mapOptions}
+      renderingType="VECTOR"
       // TODO 상태 붙혀서 default Center 이동시키기
       defaultCenter={MAP_INITIAL_CENTER}
       defaultZoom={MAP_INITIAL_ZOOM}
       reuseMaps // Map 컴포넌트가 unmount 되었다가 다시 mount 될 때 기존의 map instance 를 재사용 하여 memory leak을 방지합니다.
       onCameraChanged={handleMapChange}
+      onIdle={() => {
+        // 이동이나 확대/축소 후 지도가 멈추었을 때 호출
+        setIsIdle(true);
+      }}
       onTilesLoaded={() => {
-        isLoadedRef.current = true;
+        isTilesLoadedRef.current = true;
       }}
     >
       {children}
