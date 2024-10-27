@@ -6,18 +6,18 @@ import { usePostFollowing, useDeleteFollowing } from "../api";
 
 type FollowingButtonType = "default" | "mini";
 
-interface OptimisticFollowButtonsProps<T extends FollowingButtonType> {
+interface FollowingToggleProps<T extends FollowingButtonType> {
   nickname: Nickname;
   isFollowing: boolean;
   followingButtonType: T;
   size: T extends "default" ? ButtonProps["size"] : never;
 }
-export const OptimisticFollowButtons = <T extends FollowingButtonType>({
+export const FollowingToggle = <T extends FollowingButtonType>({
   nickname,
   isFollowing,
   followingButtonType,
   size,
-}: OptimisticFollowButtonsProps<T>) => {
+}: FollowingToggleProps<T>) => {
   const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
 
   const { mutate: postFollowing, isPending: isFollowingPending } =

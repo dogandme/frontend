@@ -1,4 +1,4 @@
-import { OptimisticFollowButtons } from "@/features/follow/ui";
+import { FollowingToggle } from "@/features/follow/ui";
 import type {
   FollowerIdList,
   FollowingIdList,
@@ -42,7 +42,7 @@ export const ProfileOverView = ({
           followingsIds={followingsIds}
         />
         <div className="flex flex-grow justify-end">
-          <OptimisticFollowButtons
+          <FollowingToggle
             nickname={nickname}
             isFollowing={isFollowing}
             followingButtonType="default"

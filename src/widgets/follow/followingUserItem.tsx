@@ -4,7 +4,7 @@
  * 2. 남의 프로필의 팔로잉 리스트를 확인 할 때
  * 3. 남의 프로필의 팔로워 리스트를 확인 할 때
  */
-import { OptimisticFollowButtons } from "@/features/follow/ui";
+import { FollowingToggle } from "@/features/follow/ui";
 import { ProfileLink } from "@/features/profile/ui";
 import {
   type Nickname,
@@ -45,7 +45,7 @@ export const FollowingUserItem = ({
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
       {!isMyPage || (
-        <OptimisticFollowButtons
+        <FollowingToggle
           nickname={nickname}
           isFollowing={isFollowing}
           followingButtonType="default"

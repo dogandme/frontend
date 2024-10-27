@@ -1,2 +1,2 @@
 export * from "./deleteFollowerButton";
-export * from "./OptimisticFollowButtons";
+export * from "./FollowingToggle";
