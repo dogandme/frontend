@@ -1,4 +1,3 @@
-import { Nickname } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { GetMarkingListRequest } from "../api";
 
@@ -21,8 +20,3 @@ export const SEARCH_MARKING_END_POINT = ({
   offset,
 }: GetMarkingListRequest) =>
   `${API_BASE_URL}/markings/search?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&lat=${lat}&lng=${lng}&sortType=${sortType}&offset=${offset}`;
-
-export const MARKING_THUMBNAIL_ENDPOINT = {
-  DASHBOARD: (nickname: Nickname, pageParams: number) =>
-    `${API_BASE_URL}/markings/marks/${nickname}?offset=${pageParams}`,
-};

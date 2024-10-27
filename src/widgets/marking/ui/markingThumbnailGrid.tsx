@@ -1,7 +1,7 @@
 import { Nickname } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
-import { useGetDashboardMarkingThumbnail } from "../api/getMarkingThumbnail";
+import { useGetDashboardMarkingThumbnail } from "../api";
 
 interface MarkingThumbnailGridProps {
   nickname: Nickname;

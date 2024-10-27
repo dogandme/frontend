@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { MarkingThumbnailGrid } from "@/widgets/marking/ui";
 import { ProfileOverView } from "@/widgets/profile/ui";
-import {
-  MarkingThumbnailGrid,
-  TemporaryMarkingBar,
-} from "@/entities/marking/ui";
+import { TemporaryMarkingBar } from "@/entities/marking/ui";
 import { useGetProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useNicknameParams } from "@/shared/lib/profile";
