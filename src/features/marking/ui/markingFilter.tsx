@@ -44,16 +44,16 @@ const MarkingFilterButton = ({
  * 옵션
  * RECENT: [최신순]
  * POPULAR: [인기순]
- * DISTANCE: [거리순]
+ * DISTANCE: [가까운순]
  *
- * ! 이장소 관련 마킹에서만 [거리순] 옵션 제공하지 않습니다.
+ * ! 이장소 관련 마킹에서만 [가까운순] 옵션 제공하지 않습니다.
  *
- * 내 마킹: [최신순] (기본값), [인기순], [거리순] 제공
- * 동네 마킹: [인기순] (기본값), [최신순], [거리순] 제공
+ * 내 마킹: [최신순] (기본값), [인기순], [가까운순] 제공
+ * 동네 마킹: [인기순] (기본값), [최신순], [가까운순] 제공
  * 이장소 관련 마킹: [인기순] (기본값), [최신순] 제공
  *
- * @param defaultSortType: 기본 정렬 타입
- * @param includeDistanceSortType: [거리순] 옵션 포함 여부
+ * @param options: "RECENT", "POPULAR", "DISTANCE"로 구성된 배열
+ * @param defaultOptionIdx: 기본 옵션 인덱스
  */
 export const SortTypeFilter = ({
   options,
@@ -128,8 +128,8 @@ type MapViewMode = keyof typeof mapViewModeMap;
  * 내 마킹: [전체보기] (기본값), [내 위치 중심], [현재 지도 중심]
  * 동네 마킹: [내 위치 중심] (기본값), [현재 지도 중심]
  *
- * @param defaultMapViewMode: 기본 노출 범위
- * @param includeAllViewMode: [전체보기] 옵션 포함 여부
+ * @param options: "ALL_VIEW", "CURRENT_LOCATION", "MAP_LOCATION"로 구성된 배열
+ * @param defaultOptionIdx: 기본 옵션 인덱스
  */
 export const MapViewModeFilter = ({
   options,
