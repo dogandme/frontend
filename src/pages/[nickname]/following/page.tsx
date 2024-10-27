@@ -1,4 +1,4 @@
-import { FollowList, FollowNavigationBar } from "@/widgets/follow";
+import { FollowItemContainer, FollowNavigationBar } from "@/widgets/follow";
 import { FollowingUserItem } from "@/widgets/follow/followingUserItem";
 import { useGetFollowingList } from "@/entities/follow/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
@@ -35,7 +35,7 @@ export const FollowingPage = () => {
         label={<h1 className="title-1 text-grey-900">{nicknameParams}</h1>}
       />
       <FollowNavigationBar nickname={nicknameParams} />
-      <FollowList>
+      <FollowItemContainer>
         {followingList?.map(({ userId, nickname, pet }) => (
           <FollowingUserItem
             key={userId}
@@ -45,7 +45,7 @@ export const FollowingPage = () => {
             isFollowing={myFollowingIdsMap[userId]}
           />
         ))}
-      </FollowList>
+      </FollowItemContainer>
       <div ref={setNode} />
     </section>
   );

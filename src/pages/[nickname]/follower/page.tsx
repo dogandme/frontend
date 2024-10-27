@@ -1,6 +1,6 @@
 import {
   FollowerUserItem,
-  FollowList,
+  FollowItemContainer,
   FollowNavigationBar,
 } from "@/widgets/follow";
 import { FollowingUserItem } from "@/widgets/follow";
@@ -42,7 +42,7 @@ export const FollowerPage = () => {
         label={<h1 className="title-1 text-grey-900">{nicknameParams}</h1>}
       />
       <FollowNavigationBar nickname={nicknameParams} />
-      <FollowList>
+      <FollowItemContainer>
         {followerList?.map(({ userId, nickname, pet }) =>
           isMyPage ? (
             <FollowerUserItem
@@ -63,7 +63,7 @@ export const FollowerPage = () => {
           ),
         )}
         <div ref={setNode} />
-      </FollowList>
+      </FollowItemContainer>
     </section>
   );
 };
