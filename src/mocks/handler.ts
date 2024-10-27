@@ -16,6 +16,7 @@ import type {
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
+import { Marking, SortType } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 // data
 import { getMockMarkingList } from "./data/markingList";
@@ -1149,14 +1150,77 @@ const getFollowingListHandler = [
   ),
 ];
 
+function deg2rad(deg: number): number {
+  return deg * (Math.PI / 180);
+}
+
+const getDistanceFromLatLonInKm = (
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+) => {
+  const R = 6371; // 지구 반지름 (Km)
+  const dLat = deg2rad(lat2 - lat1); // 위도 차이
+  const dLon = deg2rad(lng2 - lng1); // 경도 차이
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // 거리 (Km)
+
+  return distance;
+};
+
+const markingListDB: Record<string, Marking[]> = {};
+
 const getMarkingListHandler = [
-  http.get(`${API_BASE_URL}/markings/search`, async ({ request }) => {
+  http.get(`${API_BASE_URL}/markings/nearby`, async ({ request }) => {
     const url = new URL(request.url);
+
     const lat = Number(url.searchParams.get("lat"));
     const lng = Number(url.searchParams.get("lng"));
-    const pageNumber = Number(url.searchParams.get("offset") || 0);
+    const southBottomLat = Number(url.searchParams.get("southBottomLat"));
+    const northTopLat = Number(url.searchParams.get("northTopLat"));
+    const southLeftLng = Number(url.searchParams.get("southLeftLng"));
+    const northRightLng = Number(url.searchParams.get("northRightLng"));
 
-    const markingList = getMockMarkingList({ lat, lng });
+    const markingListDBKey = `${southBottomLat}-${northTopLat}-${southLeftLng}-${northRightLng}`;
+
+    if (!markingListDB[markingListDBKey]) {
+      markingListDB[markingListDBKey] = getMockMarkingList({
+        southBottomLat,
+        northTopLat,
+        southLeftLng,
+        northRightLng,
+      });
+    }
+
+    const markingList = markingListDB[markingListDBKey];
+
+    const sortType = url.searchParams.get("sortType") as SortType;
+
+    if (sortType === "POPULARITY") {
+      markingList.sort(
+        (a, b) => b.countData.likedCount - a.countData.likedCount,
+      );
+    } else if (sortType === "RECENT") {
+      markingList.sort(
+        (a, b) => new Date(b.regDt).getTime() - new Date(a.regDt).getTime(),
+      );
+    } else if (sortType === "DISTANCE") {
+      markingList.sort(
+        (a, b) =>
+          getDistanceFromLatLonInKm(lat, lng, a.lat, a.lng) -
+          getDistanceFromLatLonInKm(lat, lng, b.lat, b.lng),
+      );
+    }
+
+    const pageNumber = Number(url.searchParams.get("offset") || 0);
     const totalCount = markingList.length;
     const pageSize = 20;
     const lastPage = Math.ceil(totalCount / pageSize);
@@ -1185,6 +1249,42 @@ const getMarkingListHandler = [
           unpaged: false,
         },
       },
+    });
+  }),
+];
+
+const getBoundaryMarkerListHandler = [
+  http.get(`${API_BASE_URL}/markings/marks`, async ({ request }) => {
+    const url = new URL(request.url);
+    const southBottomLat = Number(url.searchParams.get("southBottomLat"));
+    const northTopLat = Number(url.searchParams.get("northTopLat"));
+    const southLeftLng = Number(url.searchParams.get("southLeftLng"));
+    const northRightLng = Number(url.searchParams.get("northRightLng"));
+
+    const markingListDBKey = `${southBottomLat}-${northTopLat}-${southLeftLng}-${northRightLng}`;
+
+    if (!markingListDB[markingListDBKey]) {
+      markingListDB[markingListDBKey] = getMockMarkingList({
+        southBottomLat,
+        northTopLat,
+        southLeftLng,
+        northRightLng,
+      });
+    }
+
+    const markingList = markingListDB[markingListDBKey];
+
+    const markerList = markingList.map((marking) => ({
+      markingId: marking.markingId,
+      lat: marking.lat,
+      lng: marking.lng,
+      previewImage: marking.previewImage,
+    }));
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: markerList,
     });
   }),
 ];
@@ -1455,6 +1555,7 @@ export const handlers = [
   ...getFollowerListHandler,
   ...getFollowingListHandler,
   ...getMarkingListHandler,
+  ...getBoundaryMarkerListHandler,
   ...postFollowingHandler,
   ...deleteFollowingHandler,
   ...deleteFollowerHandler,

@@ -1,4 +1,7 @@
-import { User, MultiplePin, Cluster } from "@/entities/map/ui";
+import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
+import { useGetBoundaryMarkerList } from "@/entities/marking/api";
+import { API_BASE_URL } from "@/shared/constants";
+import { useResearchMarkingList } from "../hooks";
 // import { useGetMarkingList } from "@/entities/marking/api";
 // import { API_BASE_URL } from "@/shared/constants";
 // import { useResearchMarkingList } from "../hooks";
@@ -18,30 +21,26 @@ export const UserMarker = () => {
 };
 
 export const PinMarker = () => {
-  // todo 맵 마커 api 연결
+  const { bounds } = useResearchMarkingList();
 
-  // const { bounds } = useResearchMarkingList();
-  // const { data: markingList } = useGetMarkingList({
-  //   southWestLat: bounds?.southWest.lat,
-  //   southWestLng: bounds?.southWest.lng,
-  //   northEastLat: bounds?.northEast.lat,
-  //   northEastLng: bounds?.northEast.lng,
-  //   sortType: "RECENT",
-  // });
+  const { data: markerList } = useGetBoundaryMarkerList({
+    southWestLat: bounds?.southWest.lat,
+    southWestLng: bounds?.southWest.lng,
+    northEastLat: bounds?.northEast.lat,
+    northEastLng: bounds?.northEast.lng,
+  });
 
-  // return markingList?.map(({ markingId, lat, lng, images }) => (
-  //   <Pin
-  //     key={markingId}
-  //     position={{
-  //       lat: lat,
-  //       lng: lng,
-  //     }}
-  //     imageUrl={`${API_BASE_URL}/markings/image/${markingId}/${images[0]}`}
-  //     alt={images[0].id.toString()}
-  //   />
-  // ));
-
-  return null;
+  return markerList?.map(({ markingId, lat, lng, previewImage }, idx) => (
+    <Pin
+      key={markingId}
+      position={{
+        lat: lat,
+        lng: lng,
+      }}
+      imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
+      alt={`${markingId}의 ${idx}번째 이미지`}
+    />
+  ));
 };
 
 export const MultiplePinMarker = () => {

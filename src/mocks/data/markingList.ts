@@ -1,11 +1,15 @@
 import type { Marking } from "@/entities/marking/api";
 
 export const getMockMarkingList = ({
-  lat,
-  lng,
+  southBottomLat,
+  northTopLat,
+  southLeftLng,
+  northRightLng,
 }: {
-  lat: number;
-  lng: number;
+  southBottomLat: number;
+  northTopLat: number;
+  southLeftLng: number;
+  northRightLng: number;
 }) => {
   const markingList: Marking[] = Array.from({ length: 140 }, (_, index) => ({
     markingId: index + 1,
@@ -18,8 +22,8 @@ export const getMockMarkingList = ({
     nickName: `User${index + 1}`,
     isOwner: true,
     isTempSaved: false,
-    lat: lat + (Math.random() - 0.5) * 0.01,
-    lng: lng + (Math.random() - 0.5) * 0.01,
+    lat: southBottomLat + Math.random() * (northTopLat - southBottomLat),
+    lng: southLeftLng + Math.random() * (northRightLng - southLeftLng),
     address: {
       id: index + 1,
       province: "**시",
