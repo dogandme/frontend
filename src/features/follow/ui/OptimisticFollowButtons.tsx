@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { Nickname } from "@/entities/profile/api";
-import { useGetMyProfile } from "@/entities/profile/api";
 import { Button } from "@/shared/ui/button";
 import { ButtonProps } from "@/shared/ui/button/Button";
 import { usePostFollowing, useDeleteFollowing } from "../api";
@@ -18,7 +17,6 @@ export const OptimisticFollowButtons = <T extends FollowButtonType>({
   size,
 }: OptimisticFollowButtonsProps<T>) => {
   const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
-  const { data: myNickname } = useGetMyProfile((data) => data.nickname);
 
   const { mutate: postFollowing, isPending: isFollowingPending } =
     usePostFollowing();
@@ -49,9 +47,6 @@ export const OptimisticFollowButtons = <T extends FollowButtonType>({
     });
   };
 
-  if (!myNickname || nickname === myNickname) {
-    return null;
-  }
   if (_isFollowing) {
     return <UnFollowingButton onClick={handleOptimisticUnFollowing} />;
   }
