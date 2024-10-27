@@ -20,10 +20,10 @@ export const useResearchMarkingList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sortTypeParam = searchParams.get("sortType");
-  const sortType =
+  const sortType: SortType =
     typeof sortTypeParam === "string" && sortTypeParam in sortTypeMap
       ? (sortTypeParam as SortType)
-      : "RECENT";
+      : "POPULARITY";
 
   const researchMarkingList = (filter?: Filter) => {
     if (!map) return;
