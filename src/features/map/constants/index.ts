@@ -55,7 +55,7 @@ export const mapOptions = {
 
 export const sortTypeMap: Record<SortType, string> = {
   RECENT: "최신순",
-  DISTANCE: "거리순",
+  DISTANCE: "가까운순",
   POPULARITY: "인기순",
 };
 
