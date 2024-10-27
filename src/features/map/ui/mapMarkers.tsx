@@ -37,7 +37,7 @@ export const PinMarker = () => {
         lat: lat,
         lng: lng,
       }}
-      imageUrl={`${API_BASE_URL}/markings/image/${markingId}/${previewImage}`}
+      imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
       alt={`${markingId}의 ${idx}번째 이미지`}
     />
   ));
