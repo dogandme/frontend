@@ -7,11 +7,13 @@
 import { OptimisticFollowButtons } from "@/features/follow/ui";
 import { ProfileLink } from "@/features/profile/ui";
 import {
+  useGetMyFollowingIdsMap,
   type Nickname,
   type PetName,
   type ProfileImageUrl,
 } from "@/entities/profile/api";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
+import { useNicknameParams } from "@/shared/lib/profile";
 
 interface FollowingUserItemProps {
   nickname: Nickname;
@@ -25,6 +27,14 @@ export const FollowingUserItem = ({
   profile,
   isFollowing,
 }: FollowingUserItemProps) => {
+  const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
+  const { isMyPage } = useNicknameParams();
+
+  // TODO 로딩 페이지 생각 하기
+  if (!myFollowingIdsMap) {
+    return <div>loading..</div>;
+  }
+
   return (
     <ProfileLink
       nickname={nickname}
@@ -41,12 +51,14 @@ export const FollowingUserItem = ({
         <p className="title-2 text-grey-700">{nickname}</p>
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
-      <OptimisticFollowButtons
-        nickname={nickname}
-        isFollowing={isFollowing}
-        followingButtonType="default"
-        size="small"
-      />
+      {!isMyPage || (
+        <OptimisticFollowButtons
+          nickname={nickname}
+          isFollowing={isFollowing}
+          followingButtonType="default"
+          size="small"
+        />
+      )}
     </ProfileLink>
   );
 };
