@@ -4,6 +4,8 @@ import { Button } from "@/shared/ui/button";
 import { ButtonProps } from "@/shared/ui/button/Button";
 import { usePostFollowing, useDeleteFollowing } from "../api";
 
+type FollowingButtonType = "default" | "mini";
+
 interface OptimisticFollowButtonsProps<T extends FollowingButtonType> {
   nickname: Nickname;
   isFollowing: boolean;
@@ -70,8 +72,6 @@ export const OptimisticFollowButtons = <T extends FollowingButtonType>({
     />
   );
 };
-
-type FollowingButtonType = "default" | "mini";
 
 interface FollowingButtonProps<T extends FollowingButtonType>
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
