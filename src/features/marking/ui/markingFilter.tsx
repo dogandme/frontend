@@ -55,18 +55,12 @@ const MarkingFilterButton = ({
  * @param includeDistanceSortType: [거리순] 옵션 포함 여부
  */
 export const SortTypeFilter = ({
-  defaultSortType,
-  includeDistanceSortType = true,
+  options,
+  defaultOptionIdx,
 }: {
-  defaultSortType: SortType;
-  includeDistanceSortType?: boolean;
+  options: SortType[];
+  defaultOptionIdx: number;
 }) => {
-  if (defaultSortType === "DISTANCE" && !includeDistanceSortType) {
-    throw new Error(
-      "defaultSortType가 DISTANCE이면 includeDistanceSortType는 true여야 합니다.",
-    );
-  }
-
   const { sortType: selectedSortType, researchMarkingList } =
     useResearchMarkingList();
 
@@ -76,8 +70,10 @@ export const SortTypeFilter = ({
     });
   };
 
-  const options = Object.entries(sortTypeMap).filter(
-    ([key]) => includeDistanceSortType || key !== "DISTANCE",
+  const defaultOption = options[defaultOptionIdx];
+
+  const nonDefaultOptions = options.filter(
+    (option) => option !== defaultOption,
   );
 
   const { handleOpen, onClose, isOpen } = useModal(() => (
@@ -85,27 +81,25 @@ export const SortTypeFilter = ({
       <Select isOpen={isOpen} onClose={onClose}>
         <Select.OptionList>
           <Select.Option
-            value={defaultSortType}
-            isSelected={defaultSortType === selectedSortType}
-            onClick={() => handleSelect(defaultSortType)}
+            value={defaultOption}
+            isSelected={defaultOption === selectedSortType}
+            onClick={() => handleSelect(defaultOption)}
           >
-            {sortTypeMap[defaultSortType]}
+            {sortTypeMap[defaultOption]}
           </Select.Option>
 
-          {options
-            .filter(([key]) => key !== defaultSortType)
-            .map(([key, value]) => {
-              return (
-                <Select.Option
-                  key={key}
-                  value={key}
-                  onClick={() => handleSelect(key as SortType)}
-                  isSelected={key === selectedSortType}
-                >
-                  {value}
-                </Select.Option>
-              );
-            })}
+          {nonDefaultOptions.map((option) => {
+            return (
+              <Select.Option
+                key={option}
+                value={option}
+                onClick={() => handleSelect(option)}
+                isSelected={option === selectedSortType}
+              >
+                {sortTypeMap[option]}
+              </Select.Option>
+            );
+          })}
         </Select.OptionList>
       </Select>
     </Modal>

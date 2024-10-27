@@ -79,7 +79,10 @@ export const MapBottomSheet = () => {
                   defaultMapViewMode="CURRENT_LOCATION"
                   includeAllViewMode={false}
                 />
-                <SortTypeFilter defaultSortType="POPULARITY" />
+                <SortTypeFilter
+                  options={["POPULARITY", "RECENT", "DISTANCE"]}
+                  defaultOptionIdx={0}
+                />
               </div>
             </div>
 
