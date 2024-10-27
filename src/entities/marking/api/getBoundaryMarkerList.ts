@@ -53,7 +53,7 @@ export const useGetBoundaryMarkerList = ({
 }) => {
   return useQuery({
     queryKey: [
-      "markingList",
+      "boundaryMarkerList",
       southWestLat,
       southWestLng,
       northEastLat,
