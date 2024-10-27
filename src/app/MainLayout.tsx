@@ -6,17 +6,16 @@ import { FooterNavigationBar } from "./FooterNavigationBar";
 import { getAccessTokenByRefreshToken } from "./api";
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
-  const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAccessTokenByRefreshToken().then(({ authorization }) => {
-      setToken(authorization);
+    getAccessTokenByRefreshToken().then(({ authorization, role, nickname }) => {
+      useAuthStore.setState({ token: authorization, role, nickname });
       if (authorization === "ROLE_NONE") {
         navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
       }
     });
-  }, [navigate, setToken]);
+  }, [navigate]);
 
   return (
     <div className="mx-auto my-0 flex h-screen max-w-[37.5rem] flex-col">

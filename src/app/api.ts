@@ -1,8 +1,11 @@
+import { Nickname } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
 import { APP_END_POINT } from "./ReactQueryProvider/constants";
 
 interface getAccessTokenByRefreshTokenResponse {
   authorization: string;
+  role: string;
+  nickname: Nickname;
 }
 
 export const getAccessTokenByRefreshToken = () =>

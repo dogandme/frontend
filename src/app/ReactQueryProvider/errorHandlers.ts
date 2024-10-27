@@ -1,7 +1,7 @@
 import { NavigateFunction } from "react-router-dom";
 import type { QueryClient } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
-import { AuthStore } from "@/shared/store";
+import { AuthStore, useAuthStore } from "@/shared/store";
 import { getAccessTokenByRefreshToken } from "../api";
 import { ERROR_MESSAGE } from "./constants";
 
@@ -11,17 +11,22 @@ export const getValidAuthorization = async ({
 }: {
   queryClient: QueryClient;
   callbackFunctions: {
-    setToken: AuthStore["setToken"];
     resetAuthStore: AuthStore["reset"];
     navigate: NavigateFunction;
   };
 }) => {
-  const { setToken, resetAuthStore, navigate } = callbackFunctions;
+  const { resetAuthStore, navigate } = callbackFunctions;
 
   // 해당 try-catch 문은 access token 을 refresh token 을 이용해 재발급 받는 로직입니다.
   try {
-    const { authorization } = await getAccessTokenByRefreshToken();
-    setToken(authorization);
+    const { authorization, role, nickname } =
+      await getAccessTokenByRefreshToken();
+
+    useAuthStore.setState({
+      token: authorization,
+      role,
+      nickname,
+    });
   } catch (error) {
     if (
       error instanceof Error &&

@@ -7,7 +7,6 @@ import { ERROR_MESSAGE } from "./constants";
 import { getValidAuthorization } from "./errorHandlers";
 
 export const useCreateQueryClient = () => {
-  const setToken = useAuthStore((state) => state.setToken);
   const resetAuthStore = useAuthStore((state) => state.reset);
   const navigate = useNavigate();
   const resetOverlays = useOverlayStore((state) => state.resetOverlays);
@@ -39,7 +38,7 @@ export const useCreateQueryClient = () => {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getValidAuthorization({
                 queryClient,
-                callbackFunctions: { setToken, resetAuthStore, navigate },
+                callbackFunctions: { resetAuthStore, navigate },
               });
               queryClient.invalidateQueries({
                 queryKey: query.queryKey,
@@ -69,7 +68,7 @@ export const useCreateQueryClient = () => {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getValidAuthorization({
                 queryClient,
-                callbackFunctions: { setToken, resetAuthStore, navigate },
+                callbackFunctions: { resetAuthStore, navigate },
               });
               const { options, state } = mutation;
               /**
