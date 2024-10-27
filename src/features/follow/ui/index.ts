@@ -1,2 +1,2 @@
 export * from "./deleteFollowerButton";
-export * from "./FollowingToggle";
+export * from "./followingToggle";
