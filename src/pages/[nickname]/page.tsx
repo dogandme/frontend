@@ -73,7 +73,9 @@ export const ProfilePage = () => {
         {/* TODO isMyPage에 따라 조건부 처리 하기*/}
         {renderProfileOverView()}
         <div className="flex flex-col items-start gap-2 w-full ">
-          <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
+          <h3 className="text-grey-900 text-center title-2">
+            {isMyPage ? "내 마킹" : `${nicknameParams}님의 마킹`}
+          </h3>
           {typeof tempCnt === "number" && tempCnt > 0 && (
             <TemporaryMarkingBar tempCnt={tempCnt} />
           )}
