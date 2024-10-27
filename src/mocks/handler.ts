@@ -577,7 +577,7 @@ export const petInfoFormHandlers = [
   }),
 ];
 
-const getNewAccessTokenHandler = [
+const getValidAuthorizationHandler = [
   http.get(APP_END_POINT.REFRESH_ACCESS_TOKEN, ({ cookies }) => {
     const refreshToken = cookies["Authorization-refresh"];
 
@@ -1364,7 +1364,7 @@ export const handlers = [
   ...addressHandlers,
   ...petInfoFormHandlers,
   ...postLogoutHandlers,
-  ...getNewAccessTokenHandler,
+  ...getValidAuthorizationHandler,
   ...putChangeRegionHandler,
   ...deleteAccountHandlers,
   ...putChangeGenderHandler,

@@ -4,7 +4,7 @@ import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
 import { useAuthStore } from "@/shared/store";
 import { useOverlayStore } from "@/shared/store/overlay";
 import { ERROR_MESSAGE } from "./constants";
-import { getNewAccessToken } from "./errorHandlers";
+import { getValidAuthorization } from "./errorHandlers";
 
 export const useCreateQueryClient = () => {
   const setToken = useAuthStore((state) => state.setToken);
@@ -37,7 +37,7 @@ export const useCreateQueryClient = () => {
         onError: async (error, query) => {
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
-              await getNewAccessToken({
+              await getValidAuthorization({
                 queryClient,
                 callbackFunctions: { setToken, resetAuthStore, navigate },
               });
@@ -67,7 +67,7 @@ export const useCreateQueryClient = () => {
         onError: async (error, variables, context, mutation) => {
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
-              await getNewAccessToken({
+              await getValidAuthorization({
                 queryClient,
                 callbackFunctions: { setToken, resetAuthStore, navigate },
               });

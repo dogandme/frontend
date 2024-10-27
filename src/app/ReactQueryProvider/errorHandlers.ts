@@ -5,7 +5,7 @@ import { AuthStore } from "@/shared/store";
 import { getAccessTokenByRefreshToken } from "../api";
 import { ERROR_MESSAGE } from "./constants";
 
-export const getNewAccessToken = async ({
+export const getValidAuthorization = async ({
   queryClient,
   callbackFunctions,
 }: {
