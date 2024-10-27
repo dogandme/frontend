@@ -1,5 +1,4 @@
-import { Pin } from "@vis.gl/react-google-maps";
-import { User, MultiplePin, Cluster } from "@/entities/map/ui";
+import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
 import { useGetBoundaryMarkerList } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { useResearchMarkingList } from "../hooks";
