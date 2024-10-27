@@ -1,38 +1,32 @@
 import { NavigateFunction } from "react-router-dom";
 import type { QueryClient } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
-import { AuthStore } from "@/shared/store";
-import { APP_END_POINT, ERROR_MESSAGE } from "./constants";
+import { AuthStore, useAuthStore } from "@/shared/store";
+import { getAccessTokenByRefreshToken } from "../api";
+import { ERROR_MESSAGE } from "./constants";
 
-export const getNewAccessToken = async ({
+export const getValidAuthorization = async ({
   queryClient,
   callbackFunctions,
 }: {
   queryClient: QueryClient;
   callbackFunctions: {
-    setToken: AuthStore["setToken"];
     resetAuthStore: AuthStore["reset"];
     navigate: NavigateFunction;
   };
 }) => {
-  const { setToken, resetAuthStore, navigate } = callbackFunctions;
+  const { resetAuthStore, navigate } = callbackFunctions;
 
   // 해당 try-catch 문은 access token 을 refresh token 을 이용해 재발급 받는 로직입니다.
   try {
-    const response = await fetch(APP_END_POINT.REFRESH_ACCESS_TOKEN, {
-      credentials:
-        process.env.NODE_ENV === "development" ? "include" : "same-origin",
+    const { authorization, role, nickname } =
+      await getAccessTokenByRefreshToken();
+
+    useAuthStore.setState({
+      token: authorization,
+      role,
+      nickname,
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message);
-    }
-
-    // 새로운 access token 을 AuthStore 에 저장합니다.
-    // 토큰을 쿼리 키로 갖는 쿼리들은 자연스럽게 새로운 토큰을 사용하게 됩니다.
-    setToken(data.content.authorization);
   } catch (error) {
     if (
       error instanceof Error &&
