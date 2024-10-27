@@ -8,7 +8,7 @@ interface OptimisticFollowButtonsProps<T extends FollowingButtonType> {
   nickname: Nickname;
   isFollowing: boolean;
   followingButtonType: T;
-  size?: T extends "default" ? ButtonProps["size"] : never;
+  size: T extends "default" ? ButtonProps["size"] : never;
 }
 export const OptimisticFollowButtons = <T extends FollowingButtonType>({
   nickname,
@@ -49,11 +49,7 @@ export const OptimisticFollowButtons = <T extends FollowingButtonType>({
 
   if (_isFollowing) {
     return (
-      <UnFollowingButton
-        onClick={handleOptimisticUnFollowing}
-        buttonType={followingButtonType}
-        size={size}
-      />
+      <UnFollowingButton onClick={handleOptimisticUnFollowing} size={size} />
     );
   }
   return (
@@ -109,15 +105,17 @@ export const FollowingButton = <T extends FollowingButtonType>({
   );
 };
 
-export const UnFollowingButton = <T extends FollowingButtonType>({
-  buttonType,
+interface UnFollowingButtonProps
+  extends Omit<ButtonProps, "variant" | "colorType" | "children"> {
+  onClick: () => void;
+}
+
+export const UnFollowingButton = ({
   onClick,
-  size,
   ...props
-}: FollowingButtonProps<T>) => {
+}: UnFollowingButtonProps) => {
   return (
     <Button
-      size={size || "small"}
       variant="outlined"
       colorType="tertiary"
       fullWidth={false}
