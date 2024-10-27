@@ -18,11 +18,11 @@ export const MarkingThumbnailGrid = ({
     }
   });
 
-  if (isLoading) {
+  if (!data || isLoading) {
     return <div>loading..</div>;
   }
 
-  if (!data || data.length === 0) {
+  if (data.length === 0) {
     return <EmptyMarkingThumbnailGrid />;
   }
 
