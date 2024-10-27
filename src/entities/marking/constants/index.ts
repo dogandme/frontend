@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "@/shared/constants";
 import { GetMarkingListRequest } from "../api";
+import { GetBoundaryMarkerListRequest } from "../api/getBoundaryMarkerList";
 
 export const REVERSE_GEOCODING_END_POINT = ({
   lat,
@@ -20,3 +21,13 @@ export const SEARCH_MARKING_END_POINT = ({
   offset,
 }: GetMarkingListRequest) =>
   `${API_BASE_URL}/markings/search?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&lat=${lat}&lng=${lng}&sortType=${sortType}&offset=${offset}`;
+
+export const MARKER_END_POINT = {
+  BOUNDARY: ({
+    southWestLat,
+    southWestLng,
+    northEastLat,
+    northEastLng,
+  }: GetBoundaryMarkerListRequest) =>
+    `${API_BASE_URL}/markings/marks?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}`,
+};
