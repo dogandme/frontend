@@ -9,7 +9,7 @@ interface OptimisticFollowButtonsProps<T extends FollowButtonType> {
   nickname: Nickname;
   isFollowing: boolean;
   followingButtonType: T;
-  size: T extends "default" ? ButtonProps["size"] : never;
+  size?: T extends "default" ? ButtonProps["size"] : never;
 }
 export const OptimisticFollowButtons = <T extends FollowButtonType>({
   nickname,
@@ -70,7 +70,7 @@ interface FollowingButtonProps<T extends FollowButtonType>
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick: () => void;
   buttonType: T;
-  size: T extends "default" ? ButtonProps["size"] : never;
+  size?: T extends "default" ? ButtonProps["size"] : never;
 }
 
 export const FollowingButton = <T extends FollowButtonType>({
@@ -82,7 +82,7 @@ export const FollowingButton = <T extends FollowButtonType>({
   if (buttonType === "default") {
     return (
       <Button
-        size={size}
+        size={size || "small"}
         variant="filled"
         colorType="primary"
         fullWidth={false}
