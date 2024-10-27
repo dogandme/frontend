@@ -1,6 +1,6 @@
 import { useNicknameParams } from "@/shared/lib/profile";
-import { MyProfileDashboard } from "./myProfileDashboard";
-import { OtherProfileDashboard } from "./otherProfileDashboard";
+import { MyProfilePage } from "./myProfilePage";
+import { OtherProfilePage } from "./otherProfilePage";
 
 /**
  * 해당 컴포넌트는 /:nickname 경로로 들어온 사용자의 프로필 페이지를 나타냅니다.
@@ -10,7 +10,7 @@ export const ProfilePage = () => {
   const { isMyPage } = useNicknameParams();
 
   if (isMyPage) {
-    return <MyProfileDashboard />;
+    return <MyProfilePage />;
   }
-  return <OtherProfileDashboard />;
+  return <OtherProfilePage />;
 };

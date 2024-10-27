@@ -15,7 +15,7 @@ import { SettingIcon } from "@/shared/ui/icon";
 import { NavigationBar } from "@/shared/ui/navigationbar";
 import { NotFoundUser } from "./notFoundUser";
 
-export const MyProfileDashboard = () => {
+export const MyProfilePage = () => {
   const { nicknameParams } = useNicknameParams();
   const token = useAuthStore((state) => state.token);
   const navigate = useNavigate();

@@ -10,7 +10,7 @@ import { useAuthStore } from "@/shared/store";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { NotFoundUser } from "./notFoundUser";
 
-export const OtherProfileDashboard = () => {
+export const OtherProfilePage = () => {
   const { nicknameParams } = useNicknameParams();
   const token = useAuthStore((state) => state.token);
   const navigate = useNavigate();
