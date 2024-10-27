@@ -39,6 +39,7 @@ export interface PetInfo {
  * likes, bookmarks, tempCnt , markings는 본인의 페이지 일 때에만 나타납니다.
  */
 interface ProfileInfo {
+  userId: UserId;
   nickname: Nickname;
   socialType: SocialType | null;
   followersIds: FollowerIdList;

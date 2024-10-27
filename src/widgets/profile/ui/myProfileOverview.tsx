@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ProfileEditButton } from "@/features/auth/ui";
 import type {
   FollowerIdList,
@@ -11,7 +12,8 @@ import {
   ProfileHeading,
   ProfileImage,
 } from "@/entities/profile/ui";
-import { useNicknameParams } from "@/shared/lib/profile";
+import { ROUTER_PATH } from "@/shared/constants";
+import { PlusIcon } from "@/shared/ui/icon";
 
 interface ProfileOverviewProps {
   nickname: Nickname;
@@ -20,14 +22,13 @@ interface ProfileOverviewProps {
   followingsIds: FollowingIdList;
 }
 
-export const ProfileOverView = ({
+export const MyProfileOverview = ({
   nickname,
   pet,
   followersIds,
   followingsIds,
 }: ProfileOverviewProps) => {
   const { profile, name, breed, description, personalities } = pet;
-  const { isMyPage } = useNicknameParams();
 
   return (
     <section className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full">
@@ -41,8 +42,9 @@ export const ProfileOverView = ({
           followersIds={followersIds}
           followingsIds={followingsIds}
         />
-        {/* TODO 내 페이지인지, 남의 페이지인지에 따라 다른 버튼을 보여줘야 함 */}
-        {isMyPage ? <ProfileEditButton pet={pet} /> : <button>팔로잉</button>}
+        <div className="flex flex-grow justify-end">
+          <ProfileEditButton pet={pet} />
+        </div>
       </div>
       {/* 반려동물 소개와 성격 리스트 */}
       {description && <PetDescriptionText description={description} />}
@@ -50,5 +52,20 @@ export const ProfileOverView = ({
         <PetPersonalityList personalities={personalities} />
       )}
     </section>
+  );
+};
+
+/**
+ * 해당 컴포넌트는 사용자가 반려동물을 등록하지 않았을 때 MyPage에서 나타나는 컴포넌트 입니다.
+ */
+export const EmptyMyProfileOverView = () => {
+  return (
+    <Link
+      to={ROUTER_PATH.SIGN_UP_PET_INFO}
+      className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full items-center text-grey-500"
+    >
+      <PlusIcon />
+      <p className="title-3">반려동물을 등록해 주세요</p>
+    </Link>
   );
 };

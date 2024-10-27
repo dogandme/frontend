@@ -2,17 +2,17 @@
  * 해당 컴포넌트는 다음과 같은 경우 사용 됩니다.
  * 1. 나의 프로필에서 팔로잉 리스트를 확인 할 때
  * 2. 남의 프로필의 팔로잉 리스트를 확인 할 때
- * 3. 남의 프로필의 팔로워 리스트를 확인 할 로
+ * 3. 남의 프로필의 팔로워 리스트를 확인 할 때
  */
-import { useState } from "react";
-import { useDeleteFollowing, usePostFollowing } from "@/features/follow/api";
-import { FollowingButton, UnFollowingButton } from "@/features/follow/ui";
-import type {
-  Nickname,
-  PetName,
-  ProfileImageUrl,
+import { FollowingToggle } from "@/features/follow/ui";
+import { ProfileLink } from "@/features/profile/ui";
+import {
+  type Nickname,
+  type PetName,
+  type ProfileImageUrl,
 } from "@/entities/profile/api";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
+import { useNicknameParams } from "@/shared/lib/profile";
 
 interface FollowingUserItemProps {
   nickname: Nickname;
@@ -26,39 +26,13 @@ export const FollowingUserItem = ({
   profile,
   isFollowing,
 }: FollowingUserItemProps) => {
-  const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
-
-  const { mutate: postFollowing, isPending: isFollowingPending } =
-    usePostFollowing();
-  const { mutate: deleteFollowing, isPending: isUnFollowingPending } =
-    useDeleteFollowing();
-
-  const handleOptimisticFollowing = () => {
-    if (isUnFollowingPending) {
-      return;
-    }
-    _setIsFollowing(true);
-    postFollowing(nickname, {
-      onError: () => {
-        _setIsFollowing(false);
-      },
-    });
-  };
-
-  const handleOptimisticUnFollowing = () => {
-    if (isFollowingPending) {
-      return;
-    }
-    _setIsFollowing(false);
-    deleteFollowing(nickname, {
-      onError: () => {
-        _setIsFollowing(true);
-      },
-    });
-  };
+  const { isMyPage } = useNicknameParams();
 
   return (
-    <li className="px-4 flex gap-4 overflow-y-auto">
+    <ProfileLink
+      nickname={nickname}
+      className="px-4 flex gap-4 overflow-y-auto"
+    >
       {/* TODO 로딩상태가 함께 있는 ProfileImage 컴포넌트 만들어서 대체하기 */}
       <img
         src={
@@ -70,11 +44,14 @@ export const FollowingUserItem = ({
         <p className="title-2 text-grey-700">{nickname}</p>
         <p className="body-3 text-grey-500">{petName}</p>
       </div>
-      {_isFollowing ? (
-        <UnFollowingButton onClick={handleOptimisticUnFollowing} />
-      ) : (
-        <FollowingButton onClick={handleOptimisticFollowing} />
+      {!isMyPage || (
+        <FollowingToggle
+          nickname={nickname}
+          isFollowing={isFollowing}
+          followingButtonType="default"
+          size="small"
+        />
       )}
-    </li>
+    </ProfileLink>
   );
 };

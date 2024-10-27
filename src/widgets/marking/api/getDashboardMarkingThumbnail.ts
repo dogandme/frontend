@@ -41,7 +41,7 @@ export const useGetDashboardMarkingThumbnail = (
   const token = useAuthStore((state) => state.token);
 
   return useInfiniteQuery({
-    queryKey: [],
+    queryKey: ["dashboardMarkingThumbnail", nickname],
     queryFn: token
       ? ({ pageParam = 0 }) =>
           apiClient.get<GetDashboardMarkingThumbnailResponse>(

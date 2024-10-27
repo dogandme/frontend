@@ -22,6 +22,7 @@ export const User = {
     code: 200,
     message: "success",
     content: {
+      userId: 1,
       nickname: "뽀송송",
       socialType: "EMAIL",
       followersIds: otherUsers
@@ -37,6 +38,7 @@ export const User = {
         ({ markingId }) => markingId,
       ),
       pet: {
+        petId: 1,
         name: "뽀송이",
         breed: "비숑 프리제",
         description:

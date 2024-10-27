@@ -9,7 +9,7 @@ interface MarkingThumbnailGridProps {
 export const MarkingThumbnailGrid = ({
   nickname,
 }: MarkingThumbnailGridProps) => {
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading } =
     useGetDashboardMarkingThumbnail(nickname);
 
   const [setNode] = useInfiniteScroll(() => {
@@ -18,7 +18,7 @@ export const MarkingThumbnailGrid = ({
     }
   });
 
-  if (!data) {
+  if (!data || isLoading) {
     return <div>loading..</div>;
   }
 
