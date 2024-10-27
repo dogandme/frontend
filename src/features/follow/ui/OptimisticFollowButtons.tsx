@@ -28,7 +28,6 @@ export const OptimisticFollowButtons = <T extends FollowingButtonType>({
   const handleOptimisticFollowing = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
-    event.stopPropagation();
     event.preventDefault();
 
     if (isUnFollowingPending) {
@@ -45,7 +44,6 @@ export const OptimisticFollowButtons = <T extends FollowingButtonType>({
   const handleOptimisticUnFollowing = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
-    event.stopPropagation();
     event.preventDefault();
 
     if (isFollowingPending) {

@@ -30,7 +30,6 @@ export const FollowerUserItem = ({
   const handleOptimisticFollowing = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
-    event.stopPropagation();
     event.preventDefault();
 
     _setIsFollowing(true);
@@ -44,7 +43,6 @@ export const FollowerUserItem = ({
   const handleOptimisticDeleteFollower = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
-    event.stopPropagation();
     event.preventDefault();
 
     setIsDeleted(true);
