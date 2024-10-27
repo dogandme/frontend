@@ -1,7 +1,13 @@
 import { useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
+import { SortType } from "@/entities/marking/api";
+import { sortTypeMap } from "../constants";
 import { useMapStore } from "../store";
+
+interface Filter {
+  sortType?: SortType;
+}
 
 export const useResearchMarkingList = () => {
   const queryClient = useQueryClient();
@@ -13,17 +19,25 @@ export const useResearchMarkingList = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const researchMarkingList = () => {
+  const sortTypeParam = searchParams.get("sortType");
+  const sortType: SortType =
+    typeof sortTypeParam === "string" && sortTypeParam in sortTypeMap
+      ? (sortTypeParam as SortType)
+      : "POPULARITY";
+
+  const researchMarkingList = (filter?: Filter) => {
     if (!map) return;
 
+    const mapCenter = map.getCenter();
     const bounds = map.getBounds();
 
     if (!bounds) return;
 
+    const lat = mapCenter.lat();
+    const lng = mapCenter.lng();
+
     const northEast = bounds.getNorthEast();
     const southWest = bounds.getSouthWest();
-
-    if (!northEast || !southWest) return;
 
     const northEastLat = northEast.lat();
     const northEastLng = northEast.lng();
@@ -35,9 +49,14 @@ export const useResearchMarkingList = () => {
       boundsNELng: northEastLng.toString(),
       boundsSWLat: southWestLat.toString(),
       boundsSWLng: southWestLng.toString(),
+      lat: lat.toString(),
+      lng: lng.toString(),
+      sortType: filter?.sortType || sortType,
     });
 
-    setIsLastSearchedLocation(true);
+    setTimeout(() => {
+      setIsLastSearchedLocation(true);
+    }, 0);
 
     queryClient.removeQueries({
       queryKey: ["markingList"],
@@ -71,8 +90,19 @@ export const useResearchMarkingList = () => {
       }
     : null;
 
+  const lat =
+    typeof searchParams.get("lat") === "string"
+      ? Number(searchParams.get("lat"))
+      : null;
+  const lng =
+    typeof searchParams.get("lng") === "string"
+      ? Number(searchParams.get("lng"))
+      : null;
+
   return {
     bounds,
+    center: { lat, lng },
+    sortType,
     researchMarkingList,
   };
 };

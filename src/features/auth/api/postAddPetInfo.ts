@@ -11,7 +11,7 @@ interface PostPetInfoResponse {
   authorization: string;
 }
 
-type PetInfoFormObject = Omit<PetInfo, "profile">;
+type PetInfoFormObject = Omit<PetInfo, "profile" | "petId">;
 
 interface ProfileImage {
   image: File | null;

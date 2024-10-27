@@ -4,6 +4,7 @@ import {
   MapInitializer,
   MapMarkerWidget,
   GoogleMaps,
+  MapBottomSheet,
 } from "@/widgets/map/ui";
 import { NotificationNavigationBar } from "@/widgets/notification/ui";
 
@@ -15,6 +16,7 @@ export const MapPage = () => {
       <GoogleMaps>
         <MapMarkerWidget />
         <MapControlWidget />
+        <MapBottomSheet />
         <GoogleMapsCopyRight />
       </GoogleMaps>
     </>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Marking } from "@/entities/marking/api";
+import type { PetInfo } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -23,10 +24,11 @@ import {
 } from "../api";
 import { useDeleteMarking } from "../api";
 
-type MarkingItemProps = {
+interface MarkingItemProps
+  extends Omit<Marking, "isVisible" | "isTempSaved" | "userId" | "pet"> {
   onRegionClick: () => void;
-} & Omit<Marking, "isVisible" | "isTempSaved" | "userId">;
-
+  pet: Pick<PetInfo, "petId" | "profile" | "name">;
+}
 const MarkingManageButton = ({
   markingId,
 }: Pick<MarkingItemProps, "markingId">) => {

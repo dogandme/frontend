@@ -1,10 +1,10 @@
 import { PetInformationForm } from "@/features/auth/ui";
-import { UserInfo } from "@/entities/profile/api";
+import { PetInfo } from "@/entities/profile/api";
 import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePetInfo } from "../api";
 
-export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
+export const useChangePetInfoModal = (pet: Omit<PetInfo, "petId">) => {
   const { mutate: putChangePetInformation, isPending } = usePutChangePetInfo();
 
   const { handleOpen, onClose } = useModal(() => (
@@ -25,7 +25,7 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
             ...pet,
             profile: {
               name: "",
-              url: pet.profile,
+              url: pet.profile || "",
               file: null,
             },
           }}
@@ -40,7 +40,8 @@ export const useChangePetInfoModal = (pet: NonNullable<UserInfo["pet"]>) => {
               breed,
               personalities,
               description,
-              isChaProfile: !!profile.file || profile.url !== pet.profile,
+              isChaProfile:
+                !!profile.file || profile.url !== (pet.profile || ""),
               image: profile.file,
             });
           }}
