@@ -168,7 +168,7 @@ export const useGetMarkingList = ({
         : skipToken,
 
     getNextPageParam: ({ pageAble: { pageNumber }, totalPages }) => {
-      return pageNumber < totalPages ? pageNumber + 1 : null;
+      return pageNumber < totalPages - 1 ? pageNumber + 1 : null;
     },
     initialPageParam: 0,
     select: (data) => data.pages.flatMap((page) => page.markings),
