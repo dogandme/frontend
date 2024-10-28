@@ -1,5 +1,4 @@
 import { useMap } from "@vis.gl/react-google-maps";
-import { MARKING_FORM_MODAL_ID } from "@/features/marking/constants";
 import { useMarkingFormStore } from "@/features/marking/store";
 import { MarkingFormCloseModal } from "@/features/marking/ui/markingFormCloseModal";
 import { CurrentLocationLoading } from "@/entities/map/ui";
@@ -150,12 +149,9 @@ export const CollectionButton = () => {
 
 /* ----------add mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingFormTriggerButton = () => {
-  const { handleOpen, onClose: onCloseMarkingModal } = useModal(
-    () => <MarkingFormModal onCloseMarkingModal={onCloseMarkingModal} />,
-    {
-      staticId: MARKING_FORM_MODAL_ID,
-    },
-  );
+  const { handleOpen, onClose: onCloseMarkingModal } = useModal(() => (
+    <MarkingFormModal onCloseMarkingModal={onCloseMarkingModal} />
+  ));
 
   return (
     <Button
