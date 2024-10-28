@@ -9,10 +9,13 @@ interface GetDashboardMarkingThumbnailRequest {
   pageParams: number;
 }
 
+export type MarkingId = number;
+export type PreviewImage = string;
+
 // TODO 타입 리팩토링 시 재사용 하기
 export interface MarkingThumbnailInfo {
-  markingId: number;
-  previewImage: string;
+  markingId: MarkingId;
+  previewImage: PreviewImage;
   lat: number;
   lng: number;
 }
