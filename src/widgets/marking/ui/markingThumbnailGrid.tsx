@@ -1,7 +1,7 @@
+import { useGetDashboardMarkingThumbnail } from "@/entities/marking/api";
+import { DashboardMarkingThumbnail } from "@/entities/marking/ui";
 import { Nickname } from "@/entities/profile/api";
-import { API_BASE_URL } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
-import { useGetDashboardMarkingThumbnail } from "../api";
 
 interface MarkingThumbnailGridProps {
   nickname: Nickname;
@@ -31,10 +31,10 @@ export const MarkingThumbnailGrid = ({
       {data.map(({ markingId, previewImage }) => (
         // TODO : 이 장소 마킹 경로 나오면 Link 컴포넌트로 수정 하기
         <div key={markingId} className="aspect-square">
-          <img
-            src={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-            alt={`${nickname}의 ${markingId} 마킹의 썸네일 이미지`}
-            className="w-full h-full object-cover rounded-[1rem]"
+          <DashboardMarkingThumbnail
+            nickname={nickname}
+            markingId={markingId}
+            previewImage={previewImage}
           />
         </div>
       ))}
