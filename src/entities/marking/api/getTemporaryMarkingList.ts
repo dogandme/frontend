@@ -67,5 +67,6 @@ export const useGetTemporaryMarkingList = () => {
       return pageAble.pageNumber < totalPages ? pageAble.pageNumber + 1 : null;
     },
     initialPageParam: 0,
+    select: ({ pages }) => pages.flatMap((page) => page.markings),
   });
 };

@@ -24,6 +24,7 @@ import userInfoData from "./data/myInfo.json";
 import { otherUsers } from "./data/otherUser";
 import { profileMarkingThumbnail } from "./data/profileMarking";
 import regionListData from "./data/regionList.json";
+import { temporaryMarkingList } from "./data/tempMarkingList";
 import { User } from "./data/user";
 
 interface UserInfo {
@@ -1535,6 +1536,41 @@ const getProfileThumbnailHandler = [
   ),
 ];
 
+const getTemporaryMarkingListHandler = [
+  http.get(`${API_BASE_URL}/markings/temporary`, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
+    const url = new URL(request.url);
+
+    const offset = Number(url.searchParams.get("offset")) || 0;
+    const itemPerPage = 20;
+    const start = offset * itemPerPage;
+    const end = start + itemPerPage;
+    const data = temporaryMarkingList.slice(start, end);
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        markings: data,
+        totalElements: temporaryMarkingList.length,
+        totalPages: Math.ceil(temporaryMarkingList.length / itemPerPage),
+        pageAble: {
+          pageNumber: offset,
+          pageSize: itemPerPage,
+          sort: {
+            empty: true,
+            unsorted: true,
+            sorted: false,
+          },
+          offset,
+          unpaged: false,
+          paged: true,
+        },
+      },
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1562,4 +1598,5 @@ export const handlers = [
   ...deleteFollowingHandler,
   ...deleteFollowerHandler,
   ...getProfileThumbnailHandler,
+  ...getTemporaryMarkingListHandler,
 ];
