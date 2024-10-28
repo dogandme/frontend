@@ -45,7 +45,7 @@ export const TempMarkingFormModal = ({
           <TempMarkingTextArea />
         </Modal.Content>
         {/* 제출 버튼들 */}
-        <Modal.Footer axis="row">
+        <Modal.Footer axis="col">
           <TempMarkingSaveButton />
           <TempMarkingTempSaveButton />
         </Modal.Footer>
