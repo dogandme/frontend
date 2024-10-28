@@ -4,6 +4,12 @@ import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MY_MARKING_ENDPOINT } from "../constants";
 
+export interface TempMarkingFileInfo {
+  id: number;
+  imageUrl: string;
+  lank: number;
+  regDt: string;
+}
 // TODO 타입 스크립트 리팩토링 시 변경 하기
 export interface TempMarkingInfo {
   markingId: number;
@@ -29,7 +35,7 @@ export interface TempMarkingInfo {
     likedCount: 0;
     savedCount: 0;
   };
-  images: string[];
+  images: TempMarkingFileInfo[];
 }
 
 export interface GetTemporaryMarkingListResponse {
