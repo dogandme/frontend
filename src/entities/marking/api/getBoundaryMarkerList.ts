@@ -63,10 +63,12 @@ export const useGetBoundaryMarkerList = ({
       northEastLng,
     ],
 
-    enabled: isMapIdle,
-
     queryFn:
-      !!southWestLat && !!southWestLng && !!northEastLat && !!northEastLng
+      isMapIdle &&
+      !!southWestLat &&
+      !!southWestLng &&
+      !!northEastLat &&
+      !!northEastLng
         ? () =>
             getBoundaryMarkerList({
               southWestLat,

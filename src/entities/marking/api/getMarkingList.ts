@@ -150,9 +150,8 @@ export const useGetMarkingList = ({
       sortType,
     ],
 
-    enabled: isMapIdle,
-
     queryFn:
+      isMapIdle &&
       !!southWestLat &&
       !!southWestLng &&
       !!northEastLat &&
