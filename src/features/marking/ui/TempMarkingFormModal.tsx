@@ -124,8 +124,8 @@ const TempPhotoInput = () => {
   const images = useTempMarkingForm((state) => state.images);
   const setImages = useTempMarkingForm((state) => state.setImages);
   const inputKey = useTempMarkingForm((state) => state.inputKey);
-
   const inputRef = useRef<HTMLInputElement>(null);
+  const currentImagesLength = externalImages.length + images.length;
 
   const handleOpenAlbum = () => {
     inputRef.current?.click();
@@ -140,7 +140,7 @@ const TempPhotoInput = () => {
       return;
     }
 
-    if (images.length + newFiles.length > MAX_IMAGE_LENGTH) {
+    if (currentImagesLength + newFiles.length > MAX_IMAGE_LENGTH) {
       // TODO 에러 바운더리에서 처리 하기
       // throw new Error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
       console.error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
@@ -187,9 +187,8 @@ const TempPhotoInput = () => {
           </span>
         </div>
       </label>
-      {/* 담긴 사진들 */}
       <ImgSlider>
-        {images.length < 5 && (
+        {currentImagesLength < 5 && (
           <ImgSlider.Item
             onClick={handleOpenAlbum}
             aria-label="임시저장된 마킹 게시글에 사진 추가하기"
@@ -212,6 +211,7 @@ const TempPhotoInput = () => {
             }}
           />
         ))}
+        {/* 임시 저장 마킹에서 새로 담긴 사진들 */}
         {images.map(({ url, name }) => (
           <ImgSlider.ImgItem
             src={url}
