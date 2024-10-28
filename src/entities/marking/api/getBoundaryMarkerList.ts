@@ -1,4 +1,5 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
+import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKER_END_POINT } from "../constants";
@@ -51,6 +52,8 @@ export const useGetBoundaryMarkerList = ({
   northEastLat?: number;
   northEastLng?: number;
 }) => {
+  const { isIdle: isMapIdle } = useMapStore.getState();
+
   return useQuery({
     queryKey: [
       "boundaryMarkerList",
@@ -59,6 +62,8 @@ export const useGetBoundaryMarkerList = ({
       northEastLat,
       northEastLng,
     ],
+
+    enabled: isMapIdle,
 
     queryFn:
       !!southWestLat && !!southWestLng && !!northEastLat && !!northEastLng
