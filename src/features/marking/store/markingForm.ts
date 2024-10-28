@@ -3,7 +3,7 @@ import type { FileInfo } from "@/features/auth/store";
 import { compressFileImage } from "@/shared/lib";
 import { POST_VISIBILITY_MAP } from "../constants";
 
-interface MarkingFileInfo extends FileInfo {
+export interface MarkingFileInfo extends FileInfo {
   file: NonNullable<FileInfo["file"]>;
 }
 
