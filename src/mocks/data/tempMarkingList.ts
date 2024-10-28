@@ -70,7 +70,12 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
           {
             length: Math.min(Math.ceil(Math.random() * 10), 5),
           },
-          (_, i) => `${i}번째 이미지`,
+          (_, i) => ({
+            id: tempMarkingId - 1 + i,
+            lank: i,
+            imageUrl: `${tempMarkingId - 1 + i} 이미지`,
+            regDt: randomDate.toISOString(),
+          }),
         ),
       };
     },
