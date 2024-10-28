@@ -34,7 +34,6 @@ export const MarkingFormCloseModal = ({
         </Modal.TextButton>
         <Modal.TextButton
           onClick={() => {
-            onCloseExitModal();
             resetOverlays();
             resetMarkingFormStore();
             setMode("view");
