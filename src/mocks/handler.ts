@@ -6,6 +6,8 @@ import {
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
+import { DeleteTemporaryMarkingRequest } from "@/features/follow/api/deleteTemporaryMarking";
+import { MY_MARKING_ENDPOINT } from "@/features/follow/constants";
 import { MARKING_END_POINT } from "@/features/marking/constants";
 import { PostChangeRegionRequest } from "@/features/setting/api";
 import type {
@@ -24,7 +26,7 @@ import userInfoData from "./data/myInfo.json";
 import { otherUsers } from "./data/otherUser";
 import { profileMarkingThumbnail } from "./data/profileMarking";
 import regionListData from "./data/regionList.json";
-import { temporaryMarkingList } from "./data/tempMarkingList";
+import { temporaryMarkingList as _temporaryMarkingList } from "./data/tempMarkingList";
 import { User } from "./data/user";
 
 interface UserInfo {
@@ -58,6 +60,8 @@ const userInfoDB: UserInfoDB = {
   뽀송송_EMAIL: userInfoData["EMAIL"] as MyInfo,
   뽀송송_NAVER: userInfoData["NAVER"] as MyInfo,
 };
+
+let temporaryMarkingList = [..._temporaryMarkingList];
 
 export const signUpByEmailHandlers = [
   http.post<
@@ -1571,6 +1575,39 @@ const getTemporaryMarkingListHandler = [
   }),
 ];
 
+const deleteTemporaryMarkingHandler = [
+  http.delete<PathParams, DeleteTemporaryMarkingRequest>(
+    MY_MARKING_ENDPOINT.DELETE_TEMPORARY_MARKING,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const { id } = await request.json();
+
+      const token = request.headers.get("Authorization");
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      temporaryMarkingList = temporaryMarkingList.filter(
+        (marking) => marking.userId !== id,
+      );
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1599,4 +1636,5 @@ export const handlers = [
   ...deleteFollowerHandler,
   ...getProfileThumbnailHandler,
   ...getTemporaryMarkingListHandler,
+  ...deleteTemporaryMarkingHandler,
 ];
