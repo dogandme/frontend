@@ -1,5 +1,6 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
+import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SEARCH_MARKING_END_POINT } from "../constants";
@@ -137,6 +138,8 @@ export const useGetMarkingList = ({
   const lat = mapCenter?.lat();
   const lng = mapCenter?.lng();
 
+  const { isIdle: isMapIdle } = useMapStore.getState();
+
   return useInfiniteQuery({
     queryKey: [
       "markingList",
@@ -146,6 +149,8 @@ export const useGetMarkingList = ({
       northEastLng,
       sortType,
     ],
+
+    enabled: isMapIdle,
 
     queryFn:
       !!southWestLat &&
