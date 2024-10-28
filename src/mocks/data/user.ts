@@ -1,5 +1,6 @@
 import { otherUsers } from "./otherUser";
 import { profileMarkingThumbnail } from "./profileMarking";
+import { temporaryMarkingList } from "./tempMarkingList";
 
 export const User = {
   ROLE_GUEST: {
@@ -33,7 +34,7 @@ export const User = {
         .map(({ userId }) => userId),
       likes: [],
       bookmarks: [],
-      tempCnt: 3,
+      tempCnt: temporaryMarkingList.length,
       markings: profileMarkingThumbnail["뽀송송"].map(
         ({ markingId }) => markingId,
       ),
