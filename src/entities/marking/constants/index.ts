@@ -1,3 +1,4 @@
+import type { Nickname } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { GetMarkingListRequest } from "../api";
 import { GetBoundaryMarkerListRequest } from "../api/getBoundaryMarkerList";
@@ -30,4 +31,9 @@ export const MARKER_END_POINT = {
     northEastLng,
   }: GetBoundaryMarkerListRequest) =>
     `${API_BASE_URL}/markings/marks?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}`,
+};
+
+export const MARKING_THUMBNAIL_ENDPOINT = {
+  DASHBOARD: (nickname: Nickname, pageParams: number) =>
+    `${API_BASE_URL}/markings/marks/${nickname}?offset=${pageParams}`,
 };

@@ -1,4 +1,4 @@
-import { type MarkingThumbnailInfo } from "@/widgets/marking/api";
+import { MarkingThumbnailInfo } from "@/entities/marking/api";
 import { otherUsers } from "./otherUser";
 
 export const profileMarkingThumbnail: Record<string, MarkingThumbnailInfo[]> = {
