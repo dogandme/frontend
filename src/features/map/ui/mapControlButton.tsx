@@ -169,6 +169,9 @@ export const ExitAddModeButton = () => {
   const { onClose, handleOpen } = useModal(() => (
     <MarkingFormCloseModal onCloseExitModal={onClose} />
   ));
+  const resetMarkingFormStore = useMarkingFormStore(
+    (state) => state.resetMarkingFormStore,
+  );
 
   const setMode = useMapStore((state) => state.setMode);
 
@@ -179,6 +182,7 @@ export const ExitAddModeButton = () => {
       handleOpen();
       return;
     }
+    resetMarkingFormStore();
     setMode("view");
   };
 

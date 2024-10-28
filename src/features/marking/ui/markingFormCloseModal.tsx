@@ -1,7 +1,6 @@
 import { useOverlayStore } from "@/shared/store/overlay";
 import { Modal } from "@/shared/ui/modal";
 import { useMapStore } from "../../map/store";
-import { MARKING_FORM_MODAL_ID } from "../constants";
 import { useMarkingFormStore } from "../store";
 
 export const MarkingFormCloseModal = ({
@@ -9,10 +8,10 @@ export const MarkingFormCloseModal = ({
 }: {
   onCloseExitModal: () => Promise<void>;
 }) => {
-  const removeOverlay = useOverlayStore((state) => state.removeOverlay);
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
   );
+  const resetOverlays = useOverlayStore((state) => state.resetOverlays);
   const setMode = useMapStore((state) => state.setMode);
 
   return (
@@ -36,7 +35,7 @@ export const MarkingFormCloseModal = ({
         <Modal.TextButton
           onClick={() => {
             onCloseExitModal();
-            removeOverlay(MARKING_FORM_MODAL_ID);
+            resetOverlays();
             resetMarkingFormStore();
             setMode("view");
           }}
