@@ -71,7 +71,7 @@ export const useGetTemporaryMarkingList = () => {
       pages.flatMap(({ markings }) => {
         const markingsMap = markings.reduce<Record<string, TempMarkingInfo[]>>(
           (map, temp) => {
-            const date = new Date(temp.regDt).toLocaleDateString();
+            const date = temp.regDt;
             if (!map[date]) {
               map[date] = [];
             }
