@@ -599,6 +599,8 @@ const getValidAuthorizationHandler = [
       message: "success",
       content: {
         authorization: "freshAccessToken",
+        role: "ROLE_USER",
+        nickname: "뽀송송",
       },
     });
   }),
