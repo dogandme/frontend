@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
+import { TempMarkingInfo } from "@/entities/marking/api";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
@@ -8,37 +9,48 @@ import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { MAX_IMAGE_LENGTH, POST_VISIBILITY_MAP } from "../constants";
-import { useTempMarkingForm, useTempMarkingFormContext } from "../store";
+import {
+  TempMarkingFormExternalState,
+  TempMarkingFormProvider,
+  useTempMarkingForm,
+  useTempMarkingFormContext,
+} from "../store";
 
 interface TempMarkingFormModalProps {
   onClose: () => Promise<void>;
+  initialState: TempMarkingFormExternalState;
 }
 
-export const MarkingFormModal = ({ onClose }: TempMarkingFormModalProps) => {
+export const TempMarkingFormModal = ({
+  onClose,
+  initialState,
+}: TempMarkingFormModalProps) => {
   return (
-    <Modal modalType="center">
-      <Modal.Header
-        onClick={onClose}
-        closeButtonAriaLabel="작성중인 임시저장된 마킹 게시글 닫기"
-      >
-        마킹하기
-      </Modal.Header>
-      <Modal.Content>
-        {/* 사용자 현재 위치 */}
-        <TempCurrentLocation />
-        {/* 보기 권한 설정 */}
-        <TempPostVisibilitySelect />
-        {/* 사진 추가하기 */}
-        <TempPhotoInput />
-        {/* 메모하기 */}
-        <TempMarkingTextArea />
-      </Modal.Content>
-      {/* 제출 버튼들 */}
-      <Modal.Footer axis="row">
-        <TempMarkingSaveButton />
-        <TempMarkingTempSaveButton />
-      </Modal.Footer>
-    </Modal>
+    <TempMarkingFormProvider initialState={initialState}>
+      <Modal modalType="center">
+        <Modal.Header
+          onClick={onClose}
+          closeButtonAriaLabel="작성중인 임시저장된 마킹 게시글 닫기"
+        >
+          마킹하기
+        </Modal.Header>
+        <Modal.Content>
+          {/* 사용자 현재 위치 */}
+          <TempCurrentLocation />
+          {/* 보기 권한 설정 */}
+          <TempPostVisibilitySelect />
+          {/* 사진 추가하기 */}
+          <TempPhotoInput />
+          {/* 메모하기 */}
+          <TempMarkingTextArea />
+        </Modal.Content>
+        {/* 제출 버튼들 */}
+        <Modal.Footer axis="row">
+          <TempMarkingSaveButton />
+          <TempMarkingTempSaveButton />
+        </Modal.Footer>
+      </Modal>
+    </TempMarkingFormProvider>
   );
 };
 
@@ -56,14 +68,14 @@ const TempCurrentLocation = () => {
 
 const TempPostVisibilitySelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const VISIBILITY_LIST = Object.keys(POST_VISIBILITY_MAP);
 
   const isVisible = useTempMarkingForm((state) => state.isVisible);
   const setIsVisible = useTempMarkingForm((state) => state.setIsVisible);
 
+  const VISIBILITY_ENTRIES = Object.entries(POST_VISIBILITY_MAP);
   const handleCloseSelectList = () => setIsOpen(false);
 
-  const handleSelect = (value: keyof typeof POST_VISIBILITY_MAP) => {
+  const handleSelect = (value: TempMarkingInfo["isVisible"]) => {
     setIsVisible(value);
     handleCloseSelectList();
   };
@@ -74,24 +86,26 @@ const TempPostVisibilitySelect = () => {
         label="보기권한 설정"
         essential
         onClick={() => setIsOpen(!isOpen)}
-        value={isVisible}
+        value={
+          VISIBILITY_ENTRIES.find(([_, value]) => value === isVisible)?.[0]
+        }
       />
 
       <Select isOpen={isOpen} onClose={handleCloseSelectList}>
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
-          {VISIBILITY_LIST.map((option) => {
+          {VISIBILITY_ENTRIES.map(([name, value]) => {
             return (
               <Select.Option
-                key={option}
-                value={option}
-                isSelected={option === isVisible}
+                key={name}
+                value={value}
+                isSelected={value === isVisible}
                 onClick={() =>
-                  handleSelect(option as keyof typeof POST_VISIBILITY_MAP)
+                  handleSelect(value as TempMarkingInfo["isVisible"])
                 }
               >
-                {option}
+                {name}
               </Select.Option>
             );
           })}
@@ -184,15 +198,15 @@ const TempPhotoInput = () => {
           </ImgSlider.Item>
         )}
         {/* 기존에 존재하던 이미지 */}
-        {externalImages.map(({ url, markingId }) => (
+        {externalImages.map(({ imageUrl, id }) => (
           <ImgSlider.ImgItem
-            src={url}
+            src={imageUrl}
             alt="external image"
-            key={markingId}
+            key={id}
             onRemove={() => {
               setExternalImages(
                 externalImages.filter(
-                  (externalImage) => externalImage.url !== url,
+                  (externalImage) => externalImage.imageUrl !== imageUrl,
                 ),
               );
             }}
