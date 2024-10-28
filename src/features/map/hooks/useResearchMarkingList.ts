@@ -28,13 +28,9 @@ export const useResearchMarkingList = () => {
   const researchMarkingList = (filter?: Filter) => {
     if (!map) return;
 
-    const mapCenter = map.getCenter();
     const bounds = map.getBounds();
 
     if (!bounds) return;
-
-    const lat = mapCenter.lat();
-    const lng = mapCenter.lng();
 
     const northEast = bounds.getNorthEast();
     const southWest = bounds.getSouthWest();
@@ -49,8 +45,6 @@ export const useResearchMarkingList = () => {
       boundsNELng: northEastLng.toString(),
       boundsSWLat: southWestLat.toString(),
       boundsSWLng: southWestLng.toString(),
-      lat: lat.toString(),
-      lng: lng.toString(),
       sortType: filter?.sortType || sortType,
     });
 
@@ -90,18 +84,8 @@ export const useResearchMarkingList = () => {
       }
     : null;
 
-  const lat =
-    typeof searchParams.get("lat") === "string"
-      ? Number(searchParams.get("lat"))
-      : null;
-  const lng =
-    typeof searchParams.get("lng") === "string"
-      ? Number(searchParams.get("lng"))
-      : null;
-
   return {
     bounds,
-    center: { lat, lng },
     sortType,
     researchMarkingList,
   };

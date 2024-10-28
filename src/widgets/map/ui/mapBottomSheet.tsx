@@ -6,6 +6,7 @@ import { useMapStore } from "@/features/map/store";
 import { MapViewModeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
+import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
 import { MarkingList } from "./markingList";
 
@@ -21,12 +22,23 @@ export const MapBottomSheet = () => {
   const snapTo = (i: number) => sheetRef.current?.snapTo(i);
 
   const { bounds, sortType } = useResearchMarkingList();
-  const { data: markingList } = useGetMarkingList({
+  const {
+    data: markingList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetMarkingList({
     southWestLat: bounds?.southWest.lat,
     southWestLng: bounds?.southWest.lng,
     northEastLat: bounds?.northEast.lat,
     northEastLng: bounds?.northEast.lng,
     sortType,
+  });
+
+  const [setNode] = useInfiniteScroll(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
   });
 
   const mapMode = useMapStore((state) => state.mode);
@@ -87,15 +99,21 @@ export const MapBottomSheet = () => {
             <div className="px-4">
               <MarkingList display="grid">
                 {markingList?.map(({ markingId, previewImage }) => (
-                  <button key={markingId} type="button">
+                  <button
+                    key={markingId}
+                    type="button"
+                    className="aspect-square"
+                  >
                     <img
-                      className="aspect-square"
+                      className="w-full h-full object-cover"
                       src={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
                     />
                   </button>
                 ))}
               </MarkingList>
             </div>
+
+            <div className="h-[.125rem]" ref={setNode} />
           </Sheet.Scroller>
         </Sheet.Content>
       </Sheet.Container>
