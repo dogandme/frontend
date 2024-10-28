@@ -1,4 +1,6 @@
 // user.ts 에 존재하는 내 userId 는 1이라고 가정 합니다.
+let markingId = 120;
+
 export const otherUsers = Array.from({ length: 400 }).map((_, i) => ({
   userId: i + 2,
   nickname: `user${i + 2}`,
@@ -6,7 +8,15 @@ export const otherUsers = Array.from({ length: 400 }).map((_, i) => ({
   tempCnt: 0,
   followersIds: Math.random() < 0.3 ? [1] : [],
   followingsIds: i < 200 ? [1] : [],
-  markings: [],
+  markings:
+    i < 5
+      ? []
+      : Array.from(
+          {
+            length: Math.ceil(Math.random() * 100),
+          },
+          () => ++markingId,
+        ),
   pet: {
     petId: i + 2,
     name: `name-${i + 2}`,

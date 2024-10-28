@@ -10,7 +10,7 @@ interface GetDashboardMarkingThumbnailRequest {
 }
 
 // TODO 타입 리팩토링 시 재사용 하기
-interface MarkingThumbnailInfo {
+export interface MarkingThumbnailInfo {
   markingId: number;
   previewImage: string;
   lat: number;
