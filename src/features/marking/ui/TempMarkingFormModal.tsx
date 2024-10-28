@@ -8,6 +8,7 @@ import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
+import { usePutModifyTempMarking } from "../api";
 import { MAX_IMAGE_LENGTH, POST_VISIBILITY_MAP } from "../constants";
 import {
   TempMarkingFormExternalState,
@@ -19,11 +20,13 @@ import {
 interface TempMarkingFormModalProps {
   onClose: () => Promise<void>;
   initialState: TempMarkingFormExternalState;
+  markingId: TempMarkingInfo["markingId"];
 }
 
 export const TempMarkingFormModal = ({
   onClose,
   initialState,
+  markingId,
 }: TempMarkingFormModalProps) => {
   return (
     <TempMarkingFormProvider initialState={initialState}>
@@ -46,8 +49,8 @@ export const TempMarkingFormModal = ({
         </Modal.Content>
         {/* 제출 버튼들 */}
         <Modal.Footer axis="col">
-          <TempMarkingSaveButton />
-          <TempMarkingTempSaveButton />
+          <TempMarkingSaveButton markingId={markingId} />
+          <TempMarkingTempSaveButton markingId={markingId} />
         </Modal.Footer>
       </Modal>
     </TempMarkingFormProvider>
@@ -245,8 +248,23 @@ const TempMarkingTextArea = () => {
   );
 };
 
-const TempMarkingSaveButton = () => {
-  // const store = useTempMarkingFormContext();
+const TempMarkingSaveButton = ({
+  markingId,
+}: Pick<TempMarkingFormModalProps, "markingId">) => {
+  const store = useTempMarkingFormContext();
+  const { mutate: putModifyTempMarking } = usePutModifyTempMarking();
+
+  const handleClick = () => {
+    const { content, removedIds, images, isVisible } = store.getState();
+    putModifyTempMarking({
+      content: content || "",
+      id: markingId,
+      removeIds: removedIds,
+      isTempSaved: false,
+      images: images.map(({ file }) => file),
+      isVisible,
+    });
+  };
 
   return (
     <Button
@@ -254,20 +272,37 @@ const TempMarkingSaveButton = () => {
       size="medium"
       variant="filled"
       type="button"
-      // onClick={handleSave}
+      onClick={handleClick}
     >
       저장하기
     </Button>
   );
 };
-const TempMarkingTempSaveButton = () => {
+const TempMarkingTempSaveButton = ({
+  markingId,
+}: Pick<TempMarkingFormModalProps, "markingId">) => {
+  const store = useTempMarkingFormContext();
+  const { mutate: putModifyTempMarking } = usePutModifyTempMarking();
+
+  const handleClick = () => {
+    const { content, removedIds, images, isVisible } = store.getState();
+    putModifyTempMarking({
+      content: content || "",
+      id: markingId,
+      removeIds: removedIds,
+      isTempSaved: true,
+      images: images.map(({ file }) => file),
+      isVisible,
+    });
+  };
+
   return (
     <Button
       colorType="tertiary"
       size="medium"
       variant="text"
       type="button"
-      // onClick={handleSave}
+      onClick={handleClick}
     >
       임시저장
     </Button>
