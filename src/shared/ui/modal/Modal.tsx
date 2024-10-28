@@ -119,7 +119,7 @@ const FilledButton = ({
       onClick={onClick}
       fullWidth={false}
       {...rest}
-      className={`${axis === "row" && "flex-1"} ${className}`}
+      className={`whitespace-nowrap ${axis === "row" && "flex-1"} ${className}`}
     >
       {children}
     </Button>
@@ -143,7 +143,7 @@ const TextButton = ({
       size={size}
       onClick={onClick}
       fullWidth={false}
-      className={`${axis === "row" && "flex-1"} ${className}`}
+      className={`whitespace-nowrap ${axis === "row" && "flex-1"} ${className}`}
       {...rest}
     >
       {children}
