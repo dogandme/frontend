@@ -1,6 +1,7 @@
 import type { GetTemporaryMarkingListResponse } from "@/entities/marking/api";
 
 let tempMarkingId = 999;
+let hours = 1;
 
 const randomRegions = [
   {
@@ -28,14 +29,17 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
     (_, i) => {
       const regionInfo = randomRegions[Math.ceil(Math.random() * 10) % 3];
       const randomDate = new Date();
-      randomDate.setHours(
-        randomDate.getHours() - Math.floor(Math.random() * 1000),
-      );
+      randomDate.setHours(randomDate.getHours() - hours++ * 5);
 
       return {
         markingId: tempMarkingId++,
         region: regionInfo.region,
-        content: Math.random() > 0.5 ? `임시저장 마킹 ${i + 1}` : null,
+        content:
+          Math.random() > 0.5
+            ? `임시저장 마킹${i}`.repeat(
+                Math.random() > 0.3 ? Math.ceil(Math.random() * 100) : 0,
+              )
+            : null,
         isVisible:
           Math.random() > 0.3
             ? "PUBLIC"
@@ -62,15 +66,12 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
           likedCount: 0,
           savedCount: 0,
         },
-        images:
-          Math.random() > 0.5
-            ? []
-            : Array.from(
-                {
-                  length: Math.min(Math.ceil(Math.random() * 10), 5),
-                },
-                (_, i) => `${i}번째 이미지`,
-              ),
+        images: Array.from(
+          {
+            length: Math.min(Math.ceil(Math.random() * 10), 5),
+          },
+          (_, i) => `${i}번째 이미지`,
+        ),
       };
     },
   );
