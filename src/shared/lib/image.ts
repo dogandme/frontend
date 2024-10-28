@@ -11,7 +11,7 @@ type compressFileImage = (
 
 const defaultCompressOptions: compressFileImageOptions = {
   maxSize: 2 ** 20, // 최대 파일 크기 1MB
-  compactSize: 2 ** 10 * 100, // 압축 후 최대 파일 크기 100KB
+  compactSize: 2 ** 10 * 50, // 압축 후 최대 파일 크기 100KB
   quality: 0.7,
   extension: "webp",
 };
