@@ -24,7 +24,7 @@ import { API_BASE_URL } from "@/shared/constants";
 import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
 import { otherUsers } from "./data/otherUser";
-import { profileMarkingThumbnail } from "./data/profileMarking";
+import { profileMarkingThumbnail as _profileMarkingThumbnail } from "./data/profileMarking";
 import regionListData from "./data/regionList.json";
 import { temporaryMarkingList as _temporaryMarkingList } from "./data/tempMarkingList";
 import { User } from "./data/user";
@@ -62,6 +62,7 @@ const userInfoDB: UserInfoDB = {
 };
 
 let temporaryMarkingList = [..._temporaryMarkingList];
+const profileMarkingThumbnail = _profileMarkingThumbnail;
 
 export const signUpByEmailHandlers = [
   http.post<
@@ -1608,6 +1609,69 @@ const deleteTemporaryMarkingHandler = [
   ),
 ];
 
+const putModifyTempMarkingHandler = [
+  http.put(MARKING_END_POINT.PUT_MODIFY_TEMP_MARKING, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
+    const formData = await request.formData();
+    const { id, content, isVisible, removeIds, isTempSaved } = JSON.parse(
+      formData.get("markingModifyDto") as string,
+    );
+    const images = formData.getAll("images") as File[];
+    const targetTempPost = temporaryMarkingList.find(
+      (marking) => marking.markingId === id,
+    );
+
+    if (!targetTempPost) {
+      return HttpResponse.json(
+        {
+          code: 404,
+          message: "해당하는 임시 마커를 찾을 수 없습니다.",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    if (isTempSaved) {
+      targetTempPost.content = content;
+      targetTempPost.isVisible = isVisible;
+      targetTempPost.images = targetTempPost.images
+        .filter(({ id }) => !removeIds.includes(id))
+        .concat(
+          images.map((image, idx) => ({
+            id: idx,
+            imageUrl: URL.createObjectURL(image),
+            lank: idx,
+            regDt: new Date().toISOString(),
+          })),
+        );
+      temporaryMarkingList = temporaryMarkingList.map((marking) =>
+        marking.markingId === id ? targetTempPost : marking,
+      );
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    }
+    temporaryMarkingList = temporaryMarkingList.filter(
+      (marking) => marking.markingId !== id,
+    );
+
+    profileMarkingThumbnail["뽀송송"].unshift({
+      markingId: id,
+      previewImage: `임시저장에서 저장 된 ${id}의 썸네일`,
+      lat: Math.random() > 0.5 ? 35 + Math.random() : 35 - Math.random(),
+      lng: Math.random() > 0.5 ? 129 + Math.random() : 129 - Math.random(),
+    });
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1637,4 +1701,5 @@ export const handlers = [
   ...getProfileThumbnailHandler,
   ...getTemporaryMarkingListHandler,
   ...deleteTemporaryMarkingHandler,
+  ...putModifyTempMarkingHandler,
 ];
