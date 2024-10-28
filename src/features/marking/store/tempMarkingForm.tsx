@@ -15,7 +15,7 @@ interface TempMarkingFormInternalState {
   isCompressing: boolean;
   inputKey: number;
   images: MarkingFileInfo[];
-  removedImages: TempMarkingFileInfo["id"][];
+  removedIds: TempMarkingFileInfo["id"][];
 }
 
 type TempMarkingFormState = TempMarkingFormExternalState &
@@ -25,7 +25,7 @@ interface TempMarkingFormAction {
   setIsVisible: (isVisible: TempMarkingInfo["isVisible"]) => void;
   setContent: (content: string | null) => void;
   setExternalImages: (images: TempMarkingFileInfo[]) => void;
-  setRemovedImages: (removedImages: TempMarkingFileInfo["id"][]) => void;
+  setRemovedIds: (removedIds: TempMarkingFileInfo["id"][]) => void;
 
   setImages: (images: MarkingFileInfo[]) => void;
   setIsCompressing: (isCompressing: boolean) => void;
@@ -40,12 +40,12 @@ export const createTempMarkingFormState = (
     isCompressing: false,
     inputKey: 0,
     images: [],
-    removedImages: [],
+    removedIds: [],
 
     setIsVisible: (isVisible) => set({ isVisible }),
     setContent: (content) => set({ content }),
     setExternalImages: (externalImages) => set({ externalImages }),
-    setRemovedImages: (removedImages) => set({ removedImages }),
+    setRemovedIds: (removedIds) => set({ removedIds }),
 
     setImages: async (images) => {
       /**
