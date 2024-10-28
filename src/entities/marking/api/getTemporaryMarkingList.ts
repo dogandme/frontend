@@ -67,6 +67,20 @@ export const useGetTemporaryMarkingList = () => {
       return pageAble.pageNumber < totalPages ? pageAble.pageNumber + 1 : null;
     },
     initialPageParam: 0,
-    select: ({ pages }) => pages.flatMap((page) => page.markings),
+    select: ({ pages }) =>
+      pages.flatMap(({ markings }) => {
+        const markingsMap = markings.reduce<Record<string, TempMarkingInfo[]>>(
+          (map, temp) => {
+            const date = new Date(temp.regDt).toLocaleDateString();
+            if (!map[date]) {
+              map[date] = [];
+            }
+            map[date].push(temp);
+            return map;
+          },
+          {},
+        );
+        return Object.entries(markingsMap);
+      }),
   });
 };
