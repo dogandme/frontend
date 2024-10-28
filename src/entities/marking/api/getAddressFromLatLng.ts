@@ -26,9 +26,13 @@ const getAddressFromLatLng = async ({
 export const useGetAddressFromLatLng = ({
   lat,
   lng,
-}: GetAddressFromLatLngRequest) => {
+  enabled = true,
+}: GetAddressFromLatLngRequest & {
+  enabled?: boolean;
+}) => {
   return useQuery({
     queryKey: ["address", lat, lng],
     queryFn: () => getAddressFromLatLng({ lat, lng }),
+    enabled,
   });
 };

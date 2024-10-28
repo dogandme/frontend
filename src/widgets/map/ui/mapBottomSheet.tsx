@@ -1,10 +1,14 @@
 import { useRef } from "react";
 import { Sheet, SheetRef } from "react-modal-sheet";
 import { useLocation } from "react-router-dom";
+import { useMap } from "@vis.gl/react-google-maps";
 import { useResearchMarkingList } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { MapViewModeFilter, SortTypeFilter } from "@/features/marking/ui";
-import { useGetMarkingList } from "@/entities/marking/api";
+import {
+  useGetAddressFromLatLng,
+  useGetMarkingList,
+} from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
@@ -39,6 +43,19 @@ export const MapBottomSheet = () => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
+  });
+
+  const map = useMap();
+
+  const center = map?.getCenter();
+
+  const lat = center.lat();
+  const lng = center.lng();
+
+  const { data } = useGetAddressFromLatLng({
+    lat,
+    lng,
+    enabled: useMapStore.getState().isIdle,
   });
 
   const mapMode = useMapStore((state) => state.mode);
@@ -83,7 +100,7 @@ export const MapBottomSheet = () => {
             <div className="flex justify-between px-4 items-center mb-4">
               <div className="flex gap-1 text-tangerine-500 items-center">
                 <MyLocationIcon width={20} height={20} />
-                <span className="body-2 text-grey-500">영등포 1동 주변</span>
+                <span className="body-2 text-grey-500">{data?.region}</span>
               </div>
 
               <div className="flex">
