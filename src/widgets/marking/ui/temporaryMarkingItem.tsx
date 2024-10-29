@@ -1,6 +1,7 @@
 import { DeleteTemporaryMarkingButton } from "@/features/follow/ui";
 import { TempMarkingFormModal } from "@/features/marking/ui";
 import { TempMarkingInfo } from "@/entities/marking/api";
+import { API_BASE_URL } from "@/shared/constants";
 import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
@@ -40,7 +41,7 @@ export const TemporaryMarkingItem = ({
           {images.map(({ imageUrl, id }, index) => (
             <ImgSlider.ImgItem
               key={id}
-              src={imageUrl}
+              src={`${API_BASE_URL}/markings/image/preview/${id}/${imageUrl}`}
               alt={`${markingId} 의 ${index + 1} 번 째 이미지 `}
             />
           ))}
