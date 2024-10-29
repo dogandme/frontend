@@ -7,7 +7,7 @@ import { MyLocationIcon } from "@/shared/ui/icon";
 import { MarkingList } from "./markingList";
 
 export const LocalMarkingList = () => {
-  const { bounds, sortType } = useResearchMarkingList();
+  const { bounds, sortType, navigatePlace } = useResearchMarkingList();
   const {
     data: markingList,
     fetchNextPage,
@@ -43,8 +43,15 @@ export const LocalMarkingList = () => {
         </div>
       </div>
       <MarkingList display="grid">
-        {markingList?.map(({ markingId, previewImage }) => (
-          <button key={markingId} type="button" className="aspect-square">
+        {markingList?.map(({ markingId, previewImage, lat, lng }) => (
+          <button
+            key={markingId}
+            type="button"
+            className="aspect-square"
+            onClick={() => {
+              navigatePlace({ lat, lng });
+            }}
+          >
             <img
               className="w-full h-full object-cover"
               src={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
