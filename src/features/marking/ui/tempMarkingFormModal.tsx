@@ -263,8 +263,14 @@ const TempMarkingSaveButton = ({
   const { mutate: putModifyTempMarking } = usePutModifyTempMarking();
 
   const handleClick = () => {
-    const { isCompressing, content, removedIds, images, isVisible } =
-      store.getState();
+    const {
+      isCompressing,
+      content,
+      removedIds,
+      images,
+      isVisible,
+      externalImages,
+    } = store.getState();
 
     if (isCompressing) {
       // TODO 에러 바운더리 생성되면 로직 변경하기
@@ -272,7 +278,7 @@ const TempMarkingSaveButton = ({
       return;
     }
 
-    if (images.length === 0) {
+    if (externalImages.length + images.length === 0) {
       // TODO 에러 바운더리 생성되면 로직 변경하기
       console.error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
       return;
