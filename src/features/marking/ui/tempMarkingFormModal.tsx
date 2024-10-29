@@ -10,7 +10,11 @@ import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { usePutModifyTempMarking } from "../api";
-import { MAX_IMAGE_LENGTH, POST_VISIBILITY_MAP } from "../constants";
+import {
+  MARKING_ADD_ERROR_MESSAGE,
+  MAX_IMAGE_LENGTH,
+  POST_VISIBILITY_MAP,
+} from "../constants";
 import {
   TempMarkingFormExternalState,
   TempMarkingFormProvider,
@@ -203,10 +207,10 @@ const TempPhotoInput = () => {
           </ImgSlider.Item>
         )}
         {/* 기존에 존재하던 이미지 */}
-        {externalImages.map(({ imageUrl, id, lank }) => (
+        {externalImages.map(({ imageUrl, id }) => (
           <ImgSlider.ImgItem
             src={`${API_BASE_URL}/markings/image/preview/${id}/${imageUrl}`}
-            alt={`${id} 의 ${lank}번 째 이미지`}
+            alt={`${id} 번의 이미지`}
             key={id}
             onRemove={() => {
               setExternalImages(
@@ -259,7 +263,21 @@ const TempMarkingSaveButton = ({
   const { mutate: putModifyTempMarking } = usePutModifyTempMarking();
 
   const handleClick = () => {
-    const { content, removedIds, images, isVisible } = store.getState();
+    const { isCompressing, content, removedIds, images, isVisible } =
+      store.getState();
+
+    if (isCompressing) {
+      // TODO 에러 바운더리 생성되면 로직 변경하기
+      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      return;
+    }
+
+    if (images.length === 0) {
+      // TODO 에러 바운더리 생성되면 로직 변경하기
+      console.error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
+      return;
+    }
+
     putModifyTempMarking({
       content: content || "",
       id: markingId,
@@ -289,7 +307,15 @@ const TempMarkingTempSaveButton = ({
   const { mutate: putModifyTempMarking } = usePutModifyTempMarking();
 
   const handleClick = () => {
-    const { content, removedIds, images, isVisible } = store.getState();
+    const { isCompressing, content, removedIds, images, isVisible } =
+      store.getState();
+
+    if (isCompressing) {
+      // TODO 에러 바운더리 생성되면 로직 변경하기
+      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      return;
+    }
+
     putModifyTempMarking({
       content: content || "",
       id: markingId,
