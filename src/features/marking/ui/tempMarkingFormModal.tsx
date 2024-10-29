@@ -119,10 +119,12 @@ const TempPostVisibilitySelect = () => {
 };
 
 const TempPhotoInput = () => {
+  const store = useTempMarkingFormContext();
   const externalImages = useTempMarkingForm((state) => state.externalImages);
   const setExternalImages = useTempMarkingForm(
     (state) => state.setExternalImages,
   );
+  const setRemovedIds = useTempMarkingForm((state) => state.setRemovedIds);
 
   const images = useTempMarkingForm((state) => state.images);
   const setImages = useTempMarkingForm((state) => state.setImages);
@@ -200,10 +202,10 @@ const TempPhotoInput = () => {
           </ImgSlider.Item>
         )}
         {/* 기존에 존재하던 이미지 */}
-        {externalImages.map(({ imageUrl, id }) => (
+        {externalImages.map(({ imageUrl, id, lank }) => (
           <ImgSlider.ImgItem
             src={imageUrl}
-            alt="external image"
+            alt={`${id} 의 ${lank}번 째 이미지`}
             key={id}
             onRemove={() => {
               setExternalImages(
@@ -211,6 +213,7 @@ const TempPhotoInput = () => {
                   (externalImage) => externalImage.imageUrl !== imageUrl,
                 ),
               );
+              setRemovedIds([...store.getState().removedIds, id]);
             }}
           />
         ))}
