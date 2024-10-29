@@ -21,25 +21,33 @@ export const MarkingLikeToggle = ({
   const { mutate: deleteLikeMarking, isPending: isDeleteLikeMarkingPending } =
     useDeleteLikeMarking();
 
+  const isPending = isPostLikeMarkingPending || isDeleteLikeMarkingPending;
+
   const handleClickLikeButton = () => {
+    _setIsLiked(true);
+    _setLikedCount((prev) => prev + 1);
+
     postLikeMarking(
       { markingId },
       {
-        onSuccess: () => {
-          _setIsLiked(true);
-          _setLikedCount((prev) => prev + 1);
+        onError: () => {
+          _setIsLiked(false);
+          _setLikedCount((prev) => prev - 1);
         },
       },
     );
   };
 
   const handleClickUnLikeButton = () => {
+    _setIsLiked(false);
+    _setLikedCount((prev) => prev - 1);
+
     deleteLikeMarking(
       { markingId },
       {
-        onSuccess: () => {
-          _setIsLiked(false);
-          _setLikedCount((prev) => prev - 1);
+        onError: () => {
+          _setIsLiked(true);
+          _setLikedCount((prev) => prev + 1);
         },
       },
     );
@@ -51,7 +59,7 @@ export const MarkingLikeToggle = ({
         <button
           aria-label={`${markingId} 번 마킹 좋아요 취소`}
           onClick={handleClickUnLikeButton}
-          disabled={isDeleteLikeMarkingPending}
+          disabled={isPending}
           className="text-tangerine-500"
         >
           <FilledLikeIcon />
@@ -60,7 +68,7 @@ export const MarkingLikeToggle = ({
         <button
           aria-label={`${markingId} 번 마킹 좋아요 추가`}
           onClick={handleClickLikeButton}
-          disabled={isPostLikeMarkingPending}
+          disabled={isPending}
         >
           <LikeIcon />
         </button>
