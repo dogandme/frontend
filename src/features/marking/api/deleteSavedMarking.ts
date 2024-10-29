@@ -15,8 +15,5 @@ const deleteSavedMarking = async ({ markingId }: DeleteSavedMarkingRequest) => {
 export const useDeleteSavedMarking = () => {
   return useMutation<unknown, Error, DeleteSavedMarkingRequest>({
     mutationFn: deleteSavedMarking,
-    onSuccess: () => {
-      // todo 캐시된 데이터 수정
-    },
   });
 };
