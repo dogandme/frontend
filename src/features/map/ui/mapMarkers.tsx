@@ -30,10 +30,7 @@ export const PinMarker = () => {
   return markerList?.map(({ markingId, lat, lng, previewImage }, idx) => (
     <Pin
       key={markingId}
-      position={{
-        lat: lat,
-        lng: lng,
-      }}
+      position={{ lat, lng }}
       imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
       alt={`${markingId}의 ${idx}번째 이미지`}
       onClick={() => {
