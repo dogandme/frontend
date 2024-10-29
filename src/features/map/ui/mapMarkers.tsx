@@ -2,9 +2,6 @@ import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
 import { useGetBoundaryMarkerList } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { useResearchMarkingList } from "../hooks";
-// import { useGetMarkingList } from "@/entities/marking/api";
-// import { API_BASE_URL } from "@/shared/constants";
-// import { useResearchMarkingList } from "../hooks";
 import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
@@ -21,7 +18,7 @@ export const UserMarker = () => {
 };
 
 export const PinMarker = () => {
-  const { bounds } = useResearchMarkingList();
+  const { bounds, navigatePlace } = useResearchMarkingList();
 
   const { data: markerList } = useGetBoundaryMarkerList({
     southWestLat: bounds?.southWest.lat,
@@ -39,6 +36,9 @@ export const PinMarker = () => {
       }}
       imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
       alt={`${markingId}의 ${idx}번째 이미지`}
+      onClick={() => {
+        navigatePlace({ lat, lng });
+      }}
     />
   ));
 };
