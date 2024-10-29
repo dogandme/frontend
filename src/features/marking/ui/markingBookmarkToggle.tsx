@@ -22,26 +22,33 @@ export const MarkingBookmarkToggle = ({
     usePostSaveMarking();
   const { mutate: deleteSaveMarking, isPending: isDeleteSaveMarkingPending } =
     useDeleteSavedMarking();
+  const isPending = isPostSaveMarkingPending || isDeleteSaveMarkingPending;
 
   const handleClickSaveButton = () => {
+    _setIsBookmarked(true);
+    _setSavedCount((prev) => prev + 1);
+
     postSaveMarking(
       { markingId },
       {
-        onSuccess: () => {
-          _setIsBookmarked(true);
-          _setSavedCount((prev) => prev + 1);
+        onError: () => {
+          _setIsBookmarked(false);
+          _setSavedCount((prev) => prev - 1);
         },
       },
     );
   };
 
   const handleClickUnSaveButton = () => {
+    _setIsBookmarked(false);
+    _setSavedCount((prev) => prev - 1);
+
     deleteSaveMarking(
       { markingId },
       {
-        onSuccess: () => {
-          _setIsBookmarked(false);
-          _setSavedCount((prev) => prev - 1);
+        onError: () => {
+          _setIsBookmarked(true);
+          _setSavedCount((prev) => prev + 1);
         },
       },
     );
@@ -53,7 +60,7 @@ export const MarkingBookmarkToggle = ({
         <button
           className="text-tangerine-500"
           onClick={handleClickUnSaveButton}
-          disabled={isDeleteSaveMarkingPending}
+          disabled={isPending}
           aria-label={`${markingId} 번 마킹 저장하기 취소`}
         >
           <FilledBookmarkIcon />
@@ -61,7 +68,7 @@ export const MarkingBookmarkToggle = ({
       ) : (
         <button
           onClick={handleClickSaveButton}
-          disabled={isPostSaveMarkingPending}
+          disabled={isPending}
           aria-label={`${markingId} 번 마킹 저장하기`}
         >
           <BookmarkIcon />
