@@ -37,7 +37,7 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
         content:
           Math.random() > 0.5
             ? `임시저장 마킹${i}`.repeat(
-                Math.random() > 0.3 ? Math.ceil(Math.random() * 100) : 0,
+                Math.random() > 0.3 ? Math.ceil(Math.random() * 10) : 0,
               )
             : null,
         isVisible:
