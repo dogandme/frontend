@@ -6,28 +6,19 @@ import { formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
-import {
-  BookmarkIcon,
-  FilledBookmarkIcon,
-  FilledLikeIcon,
-  LikeIcon,
-  MoreIcon,
-  MyLocationIcon,
-} from "@/shared/ui/icon";
+import { MoreIcon, MyLocationIcon } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
-import {
-  useDeleteSavedMarking,
-  usePostLikeMarking,
-  usePostSaveMarking,
-  useDeleteLikeMarking,
-} from "../api";
 import { useDeleteMarking } from "../api";
+import { MarkingBookmarkToggle } from "./markingBookmarkToggle";
+import { MarkingLikeToggle } from "./markingLikeToggle";
 
 interface MarkingItemProps
   extends Omit<Marking, "isVisible" | "isTempSaved" | "userId" | "pet"> {
   onRegionClick: () => void;
   pet: Pick<PetInfo, "petId" | "profile" | "name">;
+  isLiked: boolean;
+  isBookmarked: boolean;
 }
 const MarkingManageButton = ({
   markingId,
@@ -107,36 +98,10 @@ export const MarkingItem = ({
   content,
   regDt,
   isOwner = false,
+  isLiked,
+  isBookmarked,
   countData: { likedCount, savedCount },
 }: MarkingItemProps) => {
-  // todo 좋아요, 북마크 api 요청하여 얻은 데이터로 판단
-  const isLiked = false;
-  const isBookmarked = false;
-
-  const { mutate: postLikeMarking } = usePostLikeMarking();
-  const { mutate: deleteLikeMarking } = useDeleteLikeMarking();
-
-  const handleLike = () => {
-    const { token, role } = useAuthStore.getState();
-
-    if (!token || role === "ROLE_NONE" || role === null) return;
-
-    if (isLiked) deleteLikeMarking({ markingId });
-    else postLikeMarking({ markingId });
-  };
-
-  const { mutate: postSaveMarking } = usePostSaveMarking();
-  const { mutate: deleteSavedMarking } = useDeleteSavedMarking();
-
-  const handleSave = () => {
-    const { token, role } = useAuthStore.getState();
-
-    if (!token || role === "ROLE_NONE" || role === null) return;
-
-    if (isBookmarked) deleteSavedMarking({ markingId });
-    else postSaveMarking({ markingId });
-  };
-
   return (
     <li className="flex flex-col gap-2">
       <div className="flex justify-between items-center">
@@ -184,33 +149,19 @@ export const MarkingItem = ({
           />
         ))}
       </ImgSlider>
-
       <div className="flex justify-between">
-        <div className="flex gap-2 items-center text-grey-500">
-          <button
-            className={isLiked ? "text-tangerine-500" : ""}
-            aria-label="마킹 좋아요"
-            onClick={handleLike}
-          >
-            {isLiked ? <FilledLikeIcon /> : <LikeIcon />}
-          </button>
-          <span className="title-3">{likedCount > 0 && likedCount}</span>
-        </div>
-
-        <div className="flex gap-2 items-center text-grey-500">
-          <button
-            className={isBookmarked ? "text-tangerine-500" : ""}
-            aria-label="마킹 저장하기"
-            onClick={handleSave}
-          >
-            {isBookmarked ? <FilledBookmarkIcon /> : <BookmarkIcon />}
-          </button>
-          <span className="title-3">{savedCount > 0 && savedCount}</span>
-        </div>
+        <MarkingLikeToggle
+          markingId={markingId}
+          isLiked={isLiked}
+          likedCount={likedCount}
+        />
+        <MarkingBookmarkToggle
+          markingId={markingId}
+          isBookmarked={isBookmarked}
+          savedCount={savedCount}
+        />
       </div>
-
       <p className="text-grey-700 body-2 text-overflow">{content}</p>
-
       <p className="body-3 text-grey-500">{formatDateToYearMonthDay(regDt)}</p>
     </li>
   );
