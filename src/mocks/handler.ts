@@ -1662,17 +1662,17 @@ const putModifyTempMarkingHandler = [
             regDt: new Date().toISOString(),
           })),
         );
+      targetTempPost.regDt = new Date().toISOString();
+
       temporaryMarkingList = temporaryMarkingList.map((marking) =>
         marking.markingId === id ? targetTempPost : marking,
       );
+
       return HttpResponse.json({
         code: 200,
         message: "success",
       });
     }
-    temporaryMarkingList = temporaryMarkingList.filter(
-      (marking) => marking.markingId !== id,
-    );
 
     profileMarkingThumbnail["뽀송송"].unshift({
       markingId: id,
@@ -1680,6 +1680,10 @@ const putModifyTempMarkingHandler = [
       lat: Math.random() > 0.5 ? 35 + Math.random() : 35 - Math.random(),
       lng: Math.random() > 0.5 ? 129 + Math.random() : 129 - Math.random(),
     });
+
+    temporaryMarkingList = temporaryMarkingList.filter(
+      ({ markingId }) => markingId !== id,
+    );
 
     return HttpResponse.json({
       code: 200,
