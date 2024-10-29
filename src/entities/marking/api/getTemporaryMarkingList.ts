@@ -75,6 +75,29 @@ export const useGetTemporaryMarkingList = () => {
         : null;
     },
     initialPageParam: 0,
-    select: ({ pages }) => pages.flatMap(({ markings }) => markings),
+    /**
+     * 페이징 된 데이터를 하나의 객체로 만든 후 엔트리 형태로 변환하여 반환 합니다.
+     * [날짜 , TemporaryMarkingInfo[]] 형태로 반환 합니다.
+     */
+    select: ({ pages }) => {
+      const markings = pages.flatMap((page) => page.markings);
+      const temporaryMarkingMap = markings.reduce<
+        Record<string, TempMarkingInfo[]>
+      >((map, { regDt, ...rest }) => {
+        const year = new Date(regDt).getFullYear();
+        const month = `${new Date(regDt).getMonth() + 1}`.padStart(2, "0");
+        const day = `${new Date(regDt).getDate()}`.padStart(2, "0");
+        const key = `${year}.${month}.${day}`;
+
+        if (!map[key]) {
+          map[key] = [];
+        }
+        map[key] = [...map[key], { regDt, ...rest }].sort(
+          (a, b) => new Date(b.regDt).getTime() - new Date(a.regDt).getTime(),
+        );
+        return map;
+      }, {});
+      return Object.entries(temporaryMarkingMap);
+    },
   });
 };
