@@ -5,3 +5,4 @@ export * from "./mapMarkerWidget";
 export * from "./mapInitializer";
 export * from "./mapBottomSheet";
 export * from "./localMarkingList";
+export * from "./placeMarkingList";
