@@ -1613,9 +1613,10 @@ const putModifyTempMarkingHandler = [
   http.put(MARKING_END_POINT.PUT_MODIFY_TEMP_MARKING, async ({ request }) => {
     await new Promise((res) => setTimeout(res, 1000));
     const formData = await request.formData();
-    const { id, content, isVisible, removeIds, isTempSaved } = JSON.parse(
-      formData.get("markingModifyDto") as string,
-    );
+    const markingModifyDtoBlob = formData.get("markingModifyDto") as Blob;
+    const markingModifyDtoText = await markingModifyDtoBlob.text();
+    const { id, content, isVisible, removeIds, isTempSaved } =
+      JSON.parse(markingModifyDtoText);
     const images = formData.getAll("images") as File[];
     const targetTempPost = temporaryMarkingList.find(
       (marking) => marking.markingId === id,
