@@ -45,9 +45,7 @@ export const TemporaryMarkingPage = () => {
             <p className="text-grey-700 title-2">{date}</p>
             <ul className="flex flex-col gap-8">
               {temporaryMarkingList.map((marking) => (
-                <li key={marking.markingId}>
-                  <TemporaryMarkingItem {...marking} />
-                </li>
+                <TemporaryMarkingItem key={marking.markingId} {...marking} />
               ))}
             </ul>
           </div>

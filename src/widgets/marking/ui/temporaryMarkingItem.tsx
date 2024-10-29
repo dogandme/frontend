@@ -23,7 +23,7 @@ export const TemporaryMarkingItem = ({
   };
 
   return (
-    <section className="py-4 px-4 border border-grey-300 rounded-2xl flex flex-col self-stretch">
+    <li className="py-4 px-4 border border-grey-300 rounded-2xl flex flex-col self-stretch">
       {/* 마킹바 헤더 */}
       <header className="flex gap-4 justify-between items-center">
         <div className="flex gap-1 text-tangerine-500">
@@ -60,7 +60,7 @@ export const TemporaryMarkingItem = ({
           markingId={markingId}
         />
       </footer>
-    </section>
+    </li>
   );
 };
 
