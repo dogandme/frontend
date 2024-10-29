@@ -1,5 +1,5 @@
 import { useResearchMarkingList } from "@/features/map/hooks";
-import { MapViewModeFilter, SortTypeFilter } from "@/features/marking/ui";
+import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
@@ -38,7 +38,7 @@ export const LocalMarkingList = () => {
         </div>
 
         <div className="flex">
-          <MapViewModeFilter options={["CURRENT_LOCATION", "MAP_LOCATION"]} />
+          <RangeFilter options={["CURRENT_LOCATION", "MAP_LOCATION"]} />
           <SortTypeFilter options={["POPULARITY", "RECENT", "DISTANCE"]} />
         </div>
       </div>
