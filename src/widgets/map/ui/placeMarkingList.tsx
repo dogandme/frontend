@@ -43,11 +43,11 @@ export const PlaceMarkingList = () => {
         label={<h1 className="text-grey-900 title-1">이 장소 관련 마킹</h1>}
       />
 
-      <div className="flex justify-end w-full mb-4">
+      <div className="flex justify-end w-full mb-4 px-4">
         <SortTypeFilter options={["POPULARITY", "RECENT"]} />
       </div>
 
-      <MarkingList display="list">
+      <MarkingList display="list" className="px-4">
         {markingList?.map((marking) => (
           <MarkingItem
             key={marking.markingId}

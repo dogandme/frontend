@@ -53,7 +53,6 @@ export const MapBottomSheet = () => {
         >
           <Sheet.Scroller
             draggableAt="both"
-            className="px-4"
             style={{
               height: "calc(100% - 5rem)",
             }}

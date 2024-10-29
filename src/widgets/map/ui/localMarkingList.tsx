@@ -28,7 +28,7 @@ export const LocalMarkingList = () => {
   });
 
   return (
-    <>
+    <div className="px-4">
       {/* todo 버튼 활성화 여부에 따라 내용 바뀜 */}
       <h1 className="title-1 text-grey-900 py-4">동네 마킹</h1>
       <div className="flex justify-between items-center mb-4">
@@ -60,6 +60,6 @@ export const LocalMarkingList = () => {
         ))}
       </MarkingList>
       <div className="h-[.125rem]" ref={setNode} />
-    </>
+    </div>
   );
 };
