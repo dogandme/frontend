@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { TempMarkingInfo } from "@/entities/marking/api";
+import { API_BASE_URL } from "@/shared/constants";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
@@ -204,7 +205,7 @@ const TempPhotoInput = () => {
         {/* 기존에 존재하던 이미지 */}
         {externalImages.map(({ imageUrl, id, lank }) => (
           <ImgSlider.ImgItem
-            src={imageUrl}
+            src={`${API_BASE_URL}/markings/image/preview/${id}/${imageUrl}`}
             alt={`${id} 의 ${lank}번 째 이미지`}
             key={id}
             onRemove={() => {
