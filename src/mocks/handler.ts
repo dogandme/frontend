@@ -305,30 +305,46 @@ export const markingModalHandlers = [
       message: "success",
     });
   }),
-  http.post<PathParams>(`${API_BASE_URL}/markings/like`, () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
-  }),
-  http.delete<PathParams>(`${API_BASE_URL}/markings/like`, () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
-  }),
-  http.post<PathParams>(`${API_BASE_URL}/markings/saves`, () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
-  }),
-  http.delete<PathParams>(`${API_BASE_URL}/markings/saves`, () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
-  }),
+  http.post<PathParams>(
+    `${API_BASE_URL}/markings/likes/:markingId`,
+    async () => {
+      await new Promise((res) => setTimeout(res, 1000));
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+  http.delete<PathParams>(
+    `${API_BASE_URL}/markings/likes/:markingId`,
+    async () => {
+      await new Promise((res) => setTimeout(res, 1000));
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+  http.post<PathParams>(
+    `${API_BASE_URL}/markings/saves/:markingId`,
+    async () => {
+      await new Promise((res) => setTimeout(res, 1000));
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+  http.delete<PathParams>(
+    `${API_BASE_URL}/markings/saves/:markingId`,
+    async () => {
+      await new Promise((res) => setTimeout(res, 1000));
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
   http.post<PathParams>(MARKING_END_POINT.SAVE_TEMP, async ({ request }) => {
     /**
      * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.

@@ -4,6 +4,6 @@ export const MARKING_END_POINT = {
   ADD: `${API_BASE_URL}/markings`,
   SAVE_TEMP: `${API_BASE_URL}/markings/temp`,
   DELETE: "/markings",
-  LIKE: (markingId: number) => `${API_BASE_URL}/markings/like/${markingId}`,
+  LIKE: (markingId: number) => `${API_BASE_URL}/markings/likes/${markingId}`,
   SAVE: (markingId: number) => `${API_BASE_URL}/markings/saves/${markingId}`,
 };
