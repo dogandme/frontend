@@ -1,7 +1,8 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SortType } from "@/entities/marking/api";
+import { ROUTER_PATH } from "@/shared/constants";
 import { sortTypeMap } from "../constants";
 import { useMapStore } from "../store";
 
@@ -74,8 +75,36 @@ export const useResearchMarkingList = () => {
       ? Number(searchParams.get("boundsSWLng"))
       : null;
 
+  const navigate = useNavigate();
+
   const hasBoundsParams =
     northEastLat && northEastLng && southWestLat && southWestLng;
+
+  const navigatePlace = ({ lat, lng }: { lat: number; lng: number }) => {
+    map.setCenter({ lat, lng });
+    map.setZoom(19);
+
+    const bounds = map.getBounds();
+
+    if (!bounds) return;
+
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
+
+    const northEastLat = northEast.lat();
+    const northEastLng = northEast.lng();
+    const southWestLat = southWest.lat();
+    const southWestLng = southWest.lng();
+
+    navigate(ROUTER_PATH.PLACE);
+    setSearchParams({
+      boundsNELat: northEastLat.toString(),
+      boundsNELng: northEastLng.toString(),
+      boundsSWLat: southWestLat.toString(),
+      boundsSWLng: southWestLng.toString(),
+      sortType: "RECENT",
+    });
+  };
 
   const bounds = hasBoundsParams
     ? {
@@ -88,5 +117,6 @@ export const useResearchMarkingList = () => {
     bounds,
     sortType,
     researchMarkingList,
+    navigatePlace,
   };
 };
