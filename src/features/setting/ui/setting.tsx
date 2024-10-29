@@ -16,9 +16,8 @@ export const Report = () => {
       await window.navigator.clipboard.writeText(officialEmail);
       handleOpenSnackbar("문의 사항을 보낼 이메일 주소가 복사되었습니다");
     } catch (error) {
-      // TODO 에러 처리 로직 추가
       console.error(error);
-      throw new Error("이메일 주소를 복사 하던 중 오류가 발생했습니다");
+      handleOpenSnackbar("이메일 주소를 복사 하던 중 오류가 발생했습니다");
     }
   };
   return (
