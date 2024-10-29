@@ -1,5 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type {
+  GetTemporaryMarkingListResponse,
   TempMarkingFileInfo,
   TempMarkingInfo,
 } from "@/entities/marking/api";
@@ -16,10 +21,14 @@ export interface PutModifyTempMarkingRequest
 }
 
 export const usePutModifyTempMarking = () => {
+  const queryClient = useQueryClient();
   return useMutation<unknown, Error, PutModifyTempMarkingRequest>({
     mutationFn: ({ images, ...formObj }: PutModifyTempMarkingRequest) => {
       const formData = new FormData();
-      formData.append("markingModifyDto", JSON.stringify(formObj));
+      formData.append(
+        "markingModifyDto",
+        new Blob([JSON.stringify(formObj)], { type: "application/json" }),
+      );
       images.forEach((image) => {
         formData.append("images", image);
       });
@@ -27,6 +36,33 @@ export const usePutModifyTempMarking = () => {
         withToken: true,
         body: formData,
       });
+    },
+
+    onSuccess: (_data, { isTempSaved, id }) => {
+      if (isTempSaved) {
+        queryClient.invalidateQueries({
+          queryKey: ["temporaryMarkingList"],
+        });
+        return;
+      }
+      queryClient.setQueryData<InfiniteData<GetTemporaryMarkingListResponse>>(
+        ["temporaryMarkingList"],
+        (data) => {
+          if (!data) {
+            return data;
+          }
+          const { pages } = data;
+          const newPages = pages.map((page) => ({
+            ...page,
+            markings: page.markings.filter(({ markingId }) => markingId !== id),
+          }));
+
+          return {
+            ...data,
+            pages: newPages,
+          };
+        },
+      );
     },
   });
 };
