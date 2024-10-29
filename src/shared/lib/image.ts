@@ -2,8 +2,8 @@ interface compressFileImageOptions {
   maxSize: number;
   compactSize: number;
   quality: number;
-  extension: "jpeg" | "webp" | "png";
 }
+
 type compressFileImage = (
   file: File,
   options?: compressFileImageOptions,
@@ -13,7 +13,6 @@ const defaultCompressOptions: compressFileImageOptions = {
   maxSize: 2 ** 20, // 최대 파일 크기 1MB
   compactSize: 2 ** 10 * 100, // 압축 후 최대 파일 크기 100KB
   quality: 0.7,
-  extension: "webp",
 };
 
 /**
@@ -27,7 +26,7 @@ const defaultCompressOptions: compressFileImageOptions = {
  * @param options maxSize: 압축할 파일의 최대 크기, compactSize: 압축된 파일의 최소 크기 , quality: 압축 품질, extension: 압축할 파일의 확장자
  */
 export const compressFileImage: compressFileImage = async (file, options) => {
-  const { maxSize, compactSize, quality, extension } = {
+  const { maxSize, compactSize, quality } = {
     ...defaultCompressOptions,
     ...options,
   };
@@ -77,6 +76,7 @@ export const compressFileImage: compressFileImage = async (file, options) => {
   canvas.height = height * ratio;
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
+  const [fileName, fileExtension] = file.name.split(".");
   const compressedFile: Promise<File> = new Promise((resolve) => {
     canvas.toBlob(
       (blob) => {
@@ -86,13 +86,13 @@ export const compressFileImage: compressFileImage = async (file, options) => {
           return;
         }
         resolve(
-          new File([blob], file.name, {
-            type: `image/${extension}`,
+          new File([blob], fileName, {
+            type: `image/${fileExtension}`,
             lastModified: Date.now(),
           }),
         );
       },
-      `image/${extension}`,
+      `image/${fileExtension}`,
       quality,
     );
   });
