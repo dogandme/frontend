@@ -109,7 +109,6 @@ export const SubmitButton = () => {
 
     if (isEmailEmpty || isPasswordEmpty || !isValidEmail) {
       handleOpenSnackbar("아이디 또는 비밀번호를 모두 입력해 주세요");
-      // TODO : 유효성을 만족하지 않는 경우의 메시지를 디자이너와 상담하여 생성하기
       return;
     }
     postLoginForm({ email, password, persistLogin });
