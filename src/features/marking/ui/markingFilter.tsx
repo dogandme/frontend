@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
-import { mapViewModeMap, sortTypeMap } from "@/features/map/constants";
+import { RangeFilterMap, sortTypeMap } from "@/features/map/constants";
 import {
   useCurrentLocation,
   useResearchMarkingList,
@@ -62,10 +62,20 @@ export const SortTypeFilter = ({
   options: SortType[];
   defaultOptionIdx?: number;
 }) => {
-  const { sortType: selectedSortType, researchMarkingList } =
-    useResearchMarkingList();
+  const {
+    sortType: selectedSortType,
+    researchMarkingList,
+    navigatePlace,
+  } = useResearchMarkingList();
 
   const handleSelect = (sortType: SortType) => {
+    const path = window.location.pathname;
+
+    if (path === "/map/place") {
+      navigatePlace({ sortType });
+      return;
+    }
+
     researchMarkingList({
       sortType,
     });
@@ -113,7 +123,7 @@ export const SortTypeFilter = ({
   );
 };
 
-type MapViewMode = keyof typeof mapViewModeMap;
+type RangeFilter = keyof typeof RangeFilterMap;
 
 /**
  * 마킹 노출 범위 필터
@@ -131,11 +141,11 @@ type MapViewMode = keyof typeof mapViewModeMap;
  * @param options: "ALL_VIEW", "CURRENT_LOCATION", "MAP_LOCATION"로 구성된 배열
  * @param defaultOptionIdx: 기본 옵션 인덱스 (기본값: 0)
  */
-export const MapViewModeFilter = ({
+export const RangeFilter = ({
   options,
   defaultOptionIdx = 0,
 }: {
-  options: MapViewMode[];
+  options: RangeFilter[];
   defaultOptionIdx?: number;
 }) => {
   const setIsCenteredOnMyLocation = useMapStore(
@@ -146,14 +156,14 @@ export const MapViewModeFilter = ({
 
   const map = useMap();
 
-  const [selectedOption, setSelectedOption] = useState<MapViewMode>(
+  const [selectedOption, setSelectedOption] = useState<RangeFilter>(
     options[defaultOptionIdx],
   );
 
-  const handleSelect = (mapViewMode: MapViewMode) => {
-    setSelectedOption(mapViewMode);
+  const handleSelect = (rangeFilter: RangeFilter) => {
+    setSelectedOption(rangeFilter);
 
-    if (mapViewMode === "CURRENT_LOCATION") {
+    if (rangeFilter === "CURRENT_LOCATION") {
       setCurrentLocation({
         onSuccess: ({ coords: { latitude, longitude } }) => {
           map.setCenter({
@@ -172,7 +182,7 @@ export const MapViewModeFilter = ({
       return;
     }
 
-    if (mapViewMode === "MAP_LOCATION") {
+    if (rangeFilter === "MAP_LOCATION") {
       researchMarkingList();
       return;
     }
@@ -194,7 +204,7 @@ export const MapViewModeFilter = ({
             onClick={() => handleSelect(defaultOption)}
             isSelected={selectedOption === defaultOption}
           >
-            {mapViewModeMap[defaultOption]}
+            {RangeFilterMap[defaultOption]}
           </Select.Option>
 
           {nonDefaultOptions.map((option) => {
@@ -205,7 +215,7 @@ export const MapViewModeFilter = ({
                 onClick={() => handleSelect(option)}
                 isSelected={selectedOption === option}
               >
-                {mapViewModeMap[option]}
+                {RangeFilterMap[option]}
               </Select.Option>
             );
           })}
@@ -216,7 +226,7 @@ export const MapViewModeFilter = ({
 
   return (
     <MarkingFilterButton onClick={handleOpen}>
-      {mapViewModeMap[selectedOption]}
+      {RangeFilterMap[selectedOption]}
     </MarkingFilterButton>
   );
 };

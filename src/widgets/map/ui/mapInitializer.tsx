@@ -58,13 +58,14 @@ export const MapInitializer = () => {
 
     if (!boundsParams) return;
 
-    const { southWest, northEast } = boundsParams;
+    const { northEastLat, northEastLng, southWestLat, southWestLng } =
+      boundsParams;
 
     map.fitBounds({
-      south: southWest.lat,
-      west: southWest.lng,
-      north: northEast.lat,
-      east: northEast.lng,
+      south: southWestLat,
+      west: southWestLng,
+      north: northEastLat,
+      east: northEastLng,
     });
 
     researchMarkingList(filterOptions);

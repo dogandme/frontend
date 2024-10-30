@@ -127,10 +127,10 @@ export const useGetMarkingList = ({
   northEastLng,
   sortType,
 }: {
-  southWestLat?: number;
-  southWestLng?: number;
-  northEastLat?: number;
-  northEastLng?: number;
+  southWestLat: number | null;
+  southWestLng: number | null;
+  northEastLat: number | null;
+  northEastLng: number | null;
 } & Pick<GetMarkingListRequest, "sortType">) => {
   const map = useMap();
   const mapCenter = map?.getCenter();
