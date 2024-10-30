@@ -109,25 +109,10 @@ export const useResearchMarkingList = () => {
   const navigate = useNavigate();
 
   const navigatePlace = (filter: Filter) => {
-    navigate(ROUTER_PATH.PLACE);
+    const boundsParams = `boundsNELat=${filter.bounds?.northEastLat || northEastLat}&boundsNELng=${filter.bounds?.northEastLng || northEastLng}&boundsSWLat=${filter.bounds?.southWestLat || southWestLat}&boundsSWLng=${filter.bounds?.southWestLng || southWestLng}`;
+    const sortTypeParam = `sortType=${filter.sortType || sortType}`;
 
-    if (filter.bounds) {
-      setSearchParams({
-        boundsNELat: filter.bounds.northEastLat.toString(),
-        boundsNELng: filter.bounds.northEastLng.toString(),
-        boundsSWLat: filter.bounds.southWestLat.toString(),
-        boundsSWLng: filter.bounds.southWestLng.toString(),
-        sortType: filter.sortType || sortType,
-      });
-    } else {
-      setSearchParams({
-        boundsNELat: northEastLat!.toString(),
-        boundsNELng: northEastLng!.toString(),
-        boundsSWLat: southWestLat!.toString(),
-        boundsSWLng: southWestLng!.toString(),
-        sortType: filter.sortType || sortType,
-      });
-    }
+    navigate(`${ROUTER_PATH.PLACE}?${boundsParams}&${sortTypeParam}`);
 
     setTimeout(() => {
       setIsLastSearchedLocation(true);
