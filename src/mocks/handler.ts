@@ -668,7 +668,7 @@ export const deleteAccountHandlers = [
         return HttpResponse.json(
           {
             code: 400,
-            message: "입력하신 비밀번호가 맞지 않습니다,",
+            message: "비밀번호를 다시 확인해 주세요",
           },
           {
             status: 400,
