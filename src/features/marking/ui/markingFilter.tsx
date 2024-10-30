@@ -62,10 +62,20 @@ export const SortTypeFilter = ({
   options: SortType[];
   defaultOptionIdx?: number;
 }) => {
-  const { sortType: selectedSortType, researchMarkingList } =
-    useResearchMarkingList();
+  const {
+    sortType: selectedSortType,
+    researchMarkingList,
+    navigatePlace,
+  } = useResearchMarkingList();
 
   const handleSelect = (sortType: SortType) => {
+    const path = window.location.pathname;
+
+    if (path === "/map/place") {
+      navigatePlace({ sortType });
+      return;
+    }
+
     researchMarkingList({
       sortType,
     });

@@ -14,10 +14,10 @@ export const LocalMarkingList = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useGetMarkingList({
-    southWestLat: bounds?.southWest.lat,
-    southWestLng: bounds?.southWest.lng,
-    northEastLat: bounds?.northEast.lat,
-    northEastLng: bounds?.northEast.lng,
+    southWestLat: bounds?.southWestLat,
+    southWestLng: bounds?.southWestLng,
+    northEastLat: bounds?.northEastLat,
+    northEastLng: bounds?.northEastLng,
     sortType,
   });
 
@@ -49,7 +49,15 @@ export const LocalMarkingList = () => {
             type="button"
             className="aspect-square"
             onClick={() => {
-              navigatePlace({ lat, lng });
+              // todo 클러스터링 데이터에 있는 bounds로 인수 전달
+              navigatePlace({
+                bounds: {
+                  southWestLat: lat - 0.00001,
+                  southWestLng: lng - 0.00001,
+                  northEastLat: lat + 0.00001,
+                  northEastLng: lng + 0.00001,
+                },
+              });
             }}
           >
             <img

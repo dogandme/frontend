@@ -6,9 +6,37 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { sortTypeMap } from "../constants";
 import { useMapStore } from "../store";
 
+interface Bounds {
+  northEastLat: number;
+  northEastLng: number;
+  southWestLat: number;
+  southWestLng: number;
+}
+
 interface Filter {
   sortType?: SortType;
+  bounds?: Bounds;
 }
+
+const getNumberParam = (
+  key: string,
+  searchParams: URLSearchParams,
+): number | null => {
+  const value = searchParams.get(key);
+
+  if (value === null) {
+    return null;
+  }
+
+  const paramToNumber = Number(value);
+  const isNumber = !Number.isNaN(paramToNumber);
+
+  if (isNumber) {
+    return paramToNumber;
+  }
+
+  return null;
+};
 
 export const useResearchMarkingList = () => {
   const queryClient = useQueryClient();
@@ -20,21 +48,41 @@ export const useResearchMarkingList = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // 경계 좌표 파라미터
+  const northEastLat = getNumberParam("boundsNELat", searchParams);
+  const northEastLng = getNumberParam("boundsNELng", searchParams);
+  const southWestLat = getNumberParam("boundsSWLat", searchParams);
+  const southWestLng = getNumberParam("boundsSWLng", searchParams);
+  const hasBoundsParams =
+    northEastLat && northEastLng && southWestLat && southWestLng;
+
+  const bounds: Bounds | null = hasBoundsParams
+    ? {
+        northEastLat,
+        northEastLng,
+        southWestLat,
+        southWestLng,
+      }
+    : null;
+
+  // 정렬 기준 파라미터
   const sortTypeParam = searchParams.get("sortType");
-  const sortType: SortType =
-    typeof sortTypeParam === "string" && sortTypeParam in sortTypeMap
-      ? (sortTypeParam as SortType)
-      : "POPULARITY";
+  const hasSortTypeParam =
+    typeof sortTypeParam === "string" && sortTypeParam in sortTypeMap;
+
+  const sortType: SortType = hasSortTypeParam
+    ? (sortTypeParam as SortType)
+    : "POPULARITY";
 
   const researchMarkingList = (filter?: Filter) => {
     if (!map) return;
 
-    const bounds = map.getBounds();
+    const mapBounds = map.getBounds();
 
-    if (!bounds) return;
+    if (!mapBounds) return;
 
-    const northEast = bounds.getNorthEast();
-    const southWest = bounds.getSouthWest();
+    const northEast = mapBounds.getNorthEast();
+    const southWest = mapBounds.getSouthWest();
 
     const northEastLat = northEast.lat();
     const northEastLng = northEast.lng();
@@ -58,60 +106,40 @@ export const useResearchMarkingList = () => {
     });
   };
 
-  const northEastLat =
-    typeof searchParams.get("boundsNELat") === "string"
-      ? Number(searchParams.get("boundsNELat"))
-      : null;
-  const northEastLng =
-    typeof searchParams.get("boundsNELng") === "string"
-      ? Number(searchParams.get("boundsNELng"))
-      : null;
-  const southWestLat =
-    typeof searchParams.get("boundsSWLat") === "string"
-      ? Number(searchParams.get("boundsSWLat"))
-      : null;
-  const southWestLng =
-    typeof searchParams.get("boundsSWLng") === "string"
-      ? Number(searchParams.get("boundsSWLng"))
-      : null;
-
   const navigate = useNavigate();
 
-  const hasBoundsParams =
-    northEastLat && northEastLng && southWestLat && southWestLng;
-
-  const navigatePlace = ({ lat, lng }: { lat: number; lng: number }) => {
-    map.setCenter({ lat, lng });
-    map.setZoom(19);
-
-    const bounds = map.getBounds();
-
-    if (!bounds) return;
-
-    const northEast = bounds.getNorthEast();
-    const southWest = bounds.getSouthWest();
-
-    const northEastLat = northEast.lat();
-    const northEastLng = northEast.lng();
-    const southWestLat = southWest.lat();
-    const southWestLng = southWest.lng();
-
+  const navigatePlace = (filter: Filter) => {
     navigate(ROUTER_PATH.PLACE);
-    setSearchParams({
-      boundsNELat: northEastLat.toString(),
-      boundsNELng: northEastLng.toString(),
-      boundsSWLat: southWestLat.toString(),
-      boundsSWLng: southWestLng.toString(),
-      sortType: "RECENT",
+
+    if (filter.bounds) {
+      setSearchParams({
+        boundsNELat: filter.bounds.northEastLat.toString(),
+        boundsNELng: filter.bounds.northEastLng.toString(),
+        boundsSWLat: filter.bounds.southWestLat.toString(),
+        boundsSWLng: filter.bounds.southWestLng.toString(),
+        sortType: filter.sortType || sortType,
+      });
+    } else {
+      setSearchParams({
+        boundsNELat: northEastLat!.toString(),
+        boundsNELng: northEastLng!.toString(),
+        boundsSWLat: southWestLat!.toString(),
+        boundsSWLng: southWestLng!.toString(),
+        sortType: filter.sortType || sortType,
+      });
+    }
+
+    setTimeout(() => {
+      setIsLastSearchedLocation(true);
+    }, 0);
+
+    queryClient.removeQueries({
+      queryKey: ["markingList"],
+    });
+    queryClient.removeQueries({
+      queryKey: ["boundaryMarkerList"],
     });
   };
-
-  const bounds = hasBoundsParams
-    ? {
-        northEast: { lat: northEastLat, lng: northEastLng },
-        southWest: { lat: southWestLat, lng: southWestLng },
-      }
-    : null;
 
   return {
     bounds,

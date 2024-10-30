@@ -21,20 +21,28 @@ export const PinMarker = () => {
   const { bounds, navigatePlace } = useResearchMarkingList();
 
   const { data: markerList } = useGetBoundaryMarkerList({
-    southWestLat: bounds?.southWest.lat,
-    southWestLng: bounds?.southWest.lng,
-    northEastLat: bounds?.northEast.lat,
-    northEastLng: bounds?.northEast.lng,
+    southWestLat: bounds?.southWestLat,
+    southWestLng: bounds?.southWestLng,
+    northEastLat: bounds?.northEastLat,
+    northEastLng: bounds?.northEastLng,
   });
 
-  return markerList?.map(({ markingId, lat, lng, previewImage }, idx) => (
+  return markerList?.map(({ markingId, lat, lng, previewImage }) => (
     <Pin
       key={markingId}
       position={{ lat, lng }}
       imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-      alt={`${markingId}의 ${idx}번째 이미지`}
+      alt={`${markingId}의 이미지`}
       onClick={() => {
-        navigatePlace({ lat, lng });
+        // todo 클러스터링 데이터에 있는 bounds로 인수 전달
+        navigatePlace({
+          bounds: {
+            southWestLat: lat - 0.00001,
+            southWestLng: lng - 0.00001,
+            northEastLat: lat + 0.00001,
+            northEastLng: lng + 0.00001,
+          },
+        });
       }}
     />
   ));
