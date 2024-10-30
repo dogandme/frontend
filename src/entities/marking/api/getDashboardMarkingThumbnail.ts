@@ -57,7 +57,7 @@ export const useGetDashboardMarkingThumbnail = (
     getNextPageParam: ({ totalPages, pageAble }) => {
       return pageAble.pageNumber < totalPages ? pageAble.pageNumber + 1 : null;
     },
-    select: ({ pages }) => pages.flatMap((page) => page.marks),
+    select: ({ pages }) => pages.map((page) => page.marks),
     initialPageParam: 0,
   });
 };
