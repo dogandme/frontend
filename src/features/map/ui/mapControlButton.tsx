@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 import { useModal, useSnackBar } from "@/shared/lib";
@@ -17,28 +18,12 @@ import { useMapStore } from "../store";
 export const MarkingAddButton = () => {
   const setMode = useMapStore((state) => state.setMode);
 
-  const handleOpenSnackbar = useSnackBar();
-
-  const handleClick = () => {
-    setMode("add");
-    // MarkingAddButton 은 핸들 클릭 발생 시 언마운트 됩니다.
-    // 언마운트로 인해 해당 스낵바의 타이머가 제거 되는 것을 방지하기 위해
-    // 모드 변경 후 비동기적으로 스낵바를 띄웁니다.
-    setTimeout(
-      () =>
-        handleOpenSnackbar("마킹 위치를 손가락으로 움직여서 선택해 주세요", {
-          type: "map",
-        }),
-      0,
-    );
-  };
-
   return (
     <Button
       colorType="primary"
       variant="filled"
       size="medium"
-      onClick={handleClick}
+      onClick={() => setMode("add")}
     >
       <span className="btn-3">마킹하기</span>
     </Button>
@@ -159,6 +144,12 @@ export const MarkingFormTriggerButton = () => {
   const { handleOpen, onClose: onCloseMarkingModal } = useModal(() => (
     <MarkingFormModal onCloseMarkingModal={onCloseMarkingModal} />
   ));
+
+  useEffect(() => {
+    handleOpenSnackbar("마킹 위치를 손가락으로 움직여서 선택해 주세요", {
+      type: "map",
+    });
+  }, [handleOpenSnackbar]);
 
   return (
     <Button
