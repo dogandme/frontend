@@ -1,0 +1,73 @@
+import { useResearchMarkingList } from "@/features/map/hooks";
+import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
+import { useGetMarkingList } from "@/entities/marking/api";
+import { API_BASE_URL } from "@/shared/constants";
+import { useInfiniteScroll } from "@/shared/lib";
+import { MyLocationIcon } from "@/shared/ui/icon";
+import { MarkingList } from "./markingList";
+
+export const LocalMarkingList = () => {
+  const { bounds, sortType, navigatePlace } = useResearchMarkingList();
+  const {
+    data: markingList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetMarkingList({
+    southWestLat: bounds?.southWestLat,
+    southWestLng: bounds?.southWestLng,
+    northEastLat: bounds?.northEastLat,
+    northEastLng: bounds?.northEastLng,
+    sortType,
+  });
+
+  const [setNode] = useInfiniteScroll(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  });
+
+  return (
+    <div className="px-4">
+      {/* todo 버튼 활성화 여부에 따라 내용 바뀜 */}
+      <h1 className="title-1 text-grey-900 py-4">동네 마킹</h1>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-1 text-tangerine-500 items-center">
+          <MyLocationIcon width={20} height={20} />
+          <span className="body-2 text-grey-500">영등포 1동 주변</span>
+        </div>
+
+        <div className="flex">
+          <RangeFilter options={["CURRENT_LOCATION", "MAP_LOCATION"]} />
+          <SortTypeFilter options={["POPULARITY", "RECENT", "DISTANCE"]} />
+        </div>
+      </div>
+      <MarkingList display="grid">
+        {markingList?.map(({ markingId, previewImage, lat, lng }) => (
+          <button
+            key={markingId}
+            type="button"
+            className="aspect-square"
+            onClick={() => {
+              // todo 클러스터링 데이터에 있는 bounds로 인수 전달
+              navigatePlace({
+                bounds: {
+                  southWestLat: lat - 0.00001,
+                  southWestLng: lng - 0.00001,
+                  northEastLat: lat + 0.00001,
+                  northEastLng: lng + 0.00001,
+                },
+              });
+            }}
+          >
+            <img
+              className="w-full h-full object-cover"
+              src={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
+            />
+          </button>
+        ))}
+      </MarkingList>
+      <div className="h-[.125rem]" ref={setNode} />
+    </div>
+  );
+};

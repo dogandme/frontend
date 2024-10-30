@@ -37,7 +37,7 @@ export const mapOptions = {
   /**
    * TODO 상의 후 픽스하기
    */
-  maxZoom: 18, // 최대 줌 레벨
+  maxZoom: 19, // 최대 줌 레벨
   minZoom: 10, // 최소 줌 레벨
   // TODO 상의 후 픽스하기
 
