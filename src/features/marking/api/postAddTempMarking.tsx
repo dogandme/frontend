@@ -22,7 +22,7 @@ const postAddTempMarking = async (formObj: PostAddTempMarkingRequestData) => {
       [
         JSON.stringify({
           region,
-          isVisible: isVisible ? POST_VISIBILITY_MAP[isVisible] : null,
+          isVisible: POST_VISIBILITY_MAP[isVisible || "전체 공개"],
           content,
           lat,
           lng,
