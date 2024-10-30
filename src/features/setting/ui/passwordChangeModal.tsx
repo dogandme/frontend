@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
+import { useSnackBar } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePassword } from "../api";
 import { usePasswordChangeFormStore } from "../store";
@@ -112,6 +113,7 @@ export const PasswordChangeModal = ({
   );
 
   const { mutate: putChangePassword, isPending } = usePutChangePassword();
+  const handleSnackbar = useSnackBar();
 
   const handleSave = () => {
     const {
@@ -124,20 +126,17 @@ export const PasswordChangeModal = ({
     } = usePasswordChangeFormStore.getState();
 
     if (!isAllValueFilled) {
-      // TODO 에러바운더리 로직 나오면 변경 하기
-      console.error("항목을 모두 입력해 주세요");
+      handleSnackbar("항목을 모두 입력해 주세요");
       return;
     }
 
     if (!isSameNewPasswordAndConfirmPassword) {
-      // TODO 에러바운더리 로직 나오면 변경 하기
-      console.error("새 비밀번호를 다시 확인해 주세요");
+      handleSnackbar("새 비밀번호를 다시 확인해 주세요");
       return;
     }
 
     if (!isAllValueValid) {
-      // TODO 에러바운더리 로직 나오면 변경 하기
-      console.error("비밀번호 형식에 맞게 입력해 주세요");
+      handleSnackbar("비밀번호 형식에 맞게 입력해 주세요");
       return;
     }
 

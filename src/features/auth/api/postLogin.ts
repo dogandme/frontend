@@ -49,9 +49,5 @@ export const usePostLogin = () => {
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
       navigate(lastNoneAuthRoute);
     },
-    onError: (error) => {
-      // TODO 에러 처리 로직 추가하기
-      throw new Error(error.message);
-    },
   });
 };

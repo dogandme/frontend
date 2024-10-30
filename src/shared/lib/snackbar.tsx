@@ -21,7 +21,7 @@ export const useSnackBar = () => {
   const SNACKBAR_POSITION_CLASS_NAME = {
     default: "absolute top-4 left-1/2 transform -translate-x-1/2",
     map: "absolute top-16 left-1/2 transform -translate-x-1/2 translate-y-1/2",
-  };
+  } as const;
 
   useEffect(() => {
     return () => {
@@ -35,16 +35,22 @@ export const useSnackBar = () => {
     text: React.ReactNode,
     snackbarOptions?: {
       autoHideDuration?: number;
-      type?: "default" | "map";
+      type?: keyof typeof SNACKBAR_POSITION_CLASS_NAME;
     } & Omit<SnackBarProps, "children">,
   ) => {
     // TODO authHideDuration 기간 정하기
+
     const {
-      autoHideDuration = 1000,
+      autoHideDuration,
       type = "default",
-      className = "",
+      className,
       ...snackbarProps
-    } = snackbarOptions || {};
+    } = {
+      autoHideDuration: 1000,
+      type: "default",
+      className: "",
+      ...snackbarOptions,
+    };
     // autoHideDuration 시간 후 스낵바를 닫습니다.
     // 이 때 타이머 발동 전 기존 스낵바가 다시 열리게 되면 clearTimeout을 호출하여 이전 타이머를 초기화 합니다.
     if (timerId.current) {

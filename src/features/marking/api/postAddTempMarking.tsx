@@ -63,7 +63,7 @@ export const usePostAddTempMarking = () => {
       );
     },
     onError: (error) => {
-      throw new Error(error.message);
+      console.error(error);
     },
   });
 };
