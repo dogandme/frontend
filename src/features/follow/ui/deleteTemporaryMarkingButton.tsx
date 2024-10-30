@@ -17,6 +17,7 @@ export const DeleteTemporaryMarkingButton = ({
     <button
       aria-label={`임시 저장 된 ${markingId} 지우기 버튼`}
       onClick={handleOpen}
+      className="text-grey-500"
     >
       <DeleteIcon />
     </button>
