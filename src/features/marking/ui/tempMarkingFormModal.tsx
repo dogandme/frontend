@@ -82,6 +82,10 @@ const TempPostVisibilitySelect = () => {
   const setIsVisible = useTempMarkingForm((state) => state.setIsVisible);
 
   const VISIBILITY_ENTRIES = Object.entries(POST_VISIBILITY_MAP);
+  const selectedValue = VISIBILITY_ENTRIES.find(
+    ([_, value]) => value === isVisible,
+  )?.[0];
+
   const handleCloseSelectList = () => setIsOpen(false);
 
   const handleSelect = (value: TempMarkingInfo["isVisible"]) => {
@@ -95,9 +99,7 @@ const TempPostVisibilitySelect = () => {
         label="보기권한 설정"
         essential
         onClick={() => setIsOpen(!isOpen)}
-        value={
-          VISIBILITY_ENTRIES.find(([_, value]) => value === isVisible)?.[0]
-        }
+        value={selectedValue}
       />
 
       <Select isOpen={isOpen} onClose={handleCloseSelectList}>
