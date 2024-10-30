@@ -8,7 +8,7 @@ import type {
   TempMarkingInfo,
 } from "@/entities/marking/api";
 import { apiClient } from "@/shared/lib";
-import { MY_MARKING_ENDPOINT } from "../constants";
+import { MY_MARKING_ENDPOINT } from "../../follow/constants";
 
 // TODO 타입 markingId import 하여 사용
 export interface DeleteTemporaryMarkingRequest {
