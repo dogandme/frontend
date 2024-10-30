@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 interface compressFileImageOptions {
   maxSize: number;
   compactSize: number;
@@ -98,4 +100,85 @@ export const compressFileImage: compressFileImage = async (file, options) => {
   });
 
   return compressedFile;
+};
+
+export interface LoadImageParams {
+  src: string;
+  alt: string;
+}
+
+interface ImageInfo {
+  src: string;
+  alt: string;
+  isError: boolean;
+  error: Error | null;
+}
+/**
+ * 해당 훅은 srcList 내에 있는 모든 이미지를 로드합니다.
+ * 이 때 srcList 의 로딩 상태는 모든 이미지가 로드 될 때 까지 로딩 중으로 표시됩니다.
+ * @param srcList 로드할 이미지의 src 리스트
+ * @return images 로드된 이미지의 정보
+ * @return images.src 이미지의 src
+ * @return images.isError 이미지 로드 실패 여부
+ * @return images.error 이미지 로드 실패 시 에러 정보
+ *
+ * @return isLoading imageList 배열 로드 중 여부
+ * @return isError imageList 배열 중 한 가지 이상 아이템의 로드 실패 여부
+ */
+export const useLoadImages = (imageList: LoadImageParams[]) => {
+  const [images, setImages] = useState<ImageInfo[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isError, setIsError] = useState<boolean>(false);
+
+  useEffect(() => {
+    const loadImage = async () => {
+      const settledImages = await Promise.allSettled(
+        imageList.map(({ src, alt }) => {
+          return new Promise<ImageInfo>((resolve, reject) => {
+            const image = new Image();
+            image.src = src;
+            image.onload = () =>
+              resolve({
+                src,
+                alt,
+                isError: false,
+                error: null,
+              });
+            image.onerror = (error) =>
+              reject({
+                src,
+                alt,
+                isError: true,
+                error,
+              });
+          });
+        }),
+      );
+
+      setImages(
+        settledImages.map((promise, index) => {
+          if (promise.status === "fulfilled") {
+            return {
+              ...promise.value,
+            };
+          }
+          return {
+            src: imageList[index].src,
+            alt: imageList[index].alt,
+            isLoading: false,
+            isError: true,
+            isSuccess: false,
+            error: promise.reason,
+          };
+        }),
+      );
+      setIsLoading(false);
+      setIsError(
+        settledImages.some((promise) => promise.status === "rejected"),
+      );
+    };
+    loadImage();
+  }, [imageList]);
+
+  return { images, isLoading, isError };
 };
