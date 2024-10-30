@@ -34,5 +34,5 @@ export const MARKER_END_POINT = {
 
 export const MY_MARKING_ENDPOINT = {
   TEMPORARY: (offset: number) =>
-    `${API_BASE_URL}/markings/temp?offset=${offset}`,
+    `${API_BASE_URL}/markings/temps?offset=${offset}`,
 };
