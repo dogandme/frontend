@@ -55,7 +55,9 @@ export const useGetFollowerList = ({ nickname }: GetFollowerListRequest) => {
       ? ({ pageParam = 0 }) => getFollowerList({ nickname, pageParam })
       : skipToken,
     getNextPageParam: ({ totalPages, pageAble }) => {
-      return pageAble.pageNumber < totalPages ? pageAble.pageNumber + 1 : null;
+      return pageAble.pageNumber < totalPages - 1
+        ? pageAble.pageNumber + 1
+        : null;
     },
     initialPageParam: 0,
     select: ({ pages }) => pages.flatMap((page) => page.userInfos),
