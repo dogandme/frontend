@@ -2,7 +2,7 @@ import type { TempMarkingInfo } from "@/entities/marking/api";
 import { useModal } from "@/shared/lib";
 import { DeleteIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
-import { useDeleteTemporaryMarking } from "../api/deleteTemporaryMarking";
+import { useDeleteTemporaryMarking } from "../api";
 
 type DeleteTemporaryMarkingButtonProps = Pick<TempMarkingInfo, "markingId">;
 
