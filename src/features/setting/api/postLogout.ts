@@ -34,7 +34,7 @@ export const usePostLogout = ({ onMutate }: { onMutate: () => void }) => {
       onMutate();
     },
     onError: (error) => {
-      throw new Error(error.message);
+      console.error(error);
     },
   });
 };
