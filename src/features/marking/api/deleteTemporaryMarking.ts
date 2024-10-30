@@ -24,6 +24,7 @@ export const useDeleteTemporaryMarking = () => {
         withToken: true,
         body: { id },
       }),
+    mutationKey: ["deleteTemporaryMarking"],
     onSuccess: (_data, { id }) => {
       queryClient.setQueryData<InfiniteData<GetTemporaryMarkingListResponse>>(
         ["temporaryMarkingList"],
