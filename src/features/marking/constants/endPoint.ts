@@ -7,4 +7,5 @@ export const MARKING_END_POINT = {
   DELETE: `${API_BASE_URL}/markings`,
   SAVE: (markingId: number) => `${API_BASE_URL}/markings/saves/${markingId}`,
   PUT_MODIFY_TEMP_MARKING: `${API_BASE_URL}/markings/temp`,
+  DELETE_TEMPORARY_MARKING: `${API_BASE_URL}/markings/temp`,
 };

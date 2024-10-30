@@ -1594,7 +1594,7 @@ const getTemporaryMarkingListHandler = [
 
 const deleteTemporaryMarkingHandler = [
   http.delete<PathParams, DeleteTemporaryMarkingRequest>(
-    MY_MARKING_ENDPOINT.DELETE_TEMPORARY_MARKING,
+    MARKING_END_POINT.DELETE_TEMPORARY_MARKING,
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));
       const { id } = await request.json();

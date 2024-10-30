@@ -9,7 +9,3 @@ export const FOLLOW_END_POINT = {
   DELETE_FOLLOWER: (nickname: Nickname) =>
     `${API_BASE_URL}/users/follows/my-followers/${nickname}`,
 };
-
-export const MY_MARKING_ENDPOINT = {
-  DELETE_TEMPORARY_MARKING: `${API_BASE_URL}/markings/temp`,
-};
