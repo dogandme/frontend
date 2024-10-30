@@ -39,7 +39,7 @@ export const usePutModifyTempMarking = () => {
     },
 
     onSuccess: (_data, { isTempSaved, id }) => {
-      if (isTempSaved) {
+      if (!isTempSaved) {
         queryClient.setQueryData<InfiniteData<GetTemporaryMarkingListResponse>>(
           ["temporaryMarkingList"],
           (data) => {
@@ -60,12 +60,10 @@ export const usePutModifyTempMarking = () => {
             };
           },
         );
-
-        queryClient.invalidateQueries({
-          queryKey: ["temporaryMarkingList"],
-        });
-        return;
       }
+      queryClient.invalidateQueries({
+        queryKey: ["temporaryMarkingList"],
+      });
     },
   });
 };
