@@ -1,23 +1,10 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { useAuthStore } from "@/shared/store";
-import { markingModalHandlers } from "@/mocks/handler";
 import { MarkingItem } from "./markingItem";
 
 const meta: Meta<typeof MarkingItem> = {
   title: "features/marking/MarkingItem",
   component: MarkingItem,
   tags: ["autodocs"],
-  decorators: [
-    (Story) => {
-      useAuthStore.setState({
-        token: "freshAccessToken",
-      });
-      return <Story />;
-    },
-  ],
-  parameters: {
-    msw: [...markingModalHandlers],
-  },
   argTypes: {
     markingId: {
       description: "마킹 id입니다.",
@@ -58,17 +45,8 @@ const meta: Meta<typeof MarkingItem> = {
       description: "좋아요 개수와 북마크 개수를 나타냅니다.",
       control: "object",
     },
-    isLiked: {
-      description: "좋아요 여부를 나타냅니다.",
-      control: "boolean",
-    },
-    isBookmarked: {
-      description: "북마크 여부를 나타냅니다.",
-      control: "boolean",
-    },
   },
   args: {
-    markingId: 1,
     pet: {
       profile: "",
       name: "펫 이름",
@@ -91,8 +69,6 @@ const meta: Meta<typeof MarkingItem> = {
       likedCount: 1,
       savedCount: 1,
     },
-    isLiked: false,
-    isBookmarked: false,
   },
 };
 
@@ -100,6 +76,4 @@ export default meta;
 
 type Story = StoryObj<typeof MarkingItem>;
 
-export const Default: Story = {
-  render: (args) => <MarkingItem {...args} />,
-};
+export const Default: Story = {};

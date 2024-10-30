@@ -15,5 +15,8 @@ const postSaveMarking = async ({ markingId }: PostSaveMarkingRequest) => {
 export const usePostSaveMarking = () => {
   return useMutation<unknown, Error, PostSaveMarkingRequest>({
     mutationFn: postSaveMarking,
+    onSuccess: () => {
+      // todo 캐시된 데이터 수정
+    },
   });
 };
