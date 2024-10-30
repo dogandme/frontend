@@ -48,7 +48,7 @@ export const TempMarkingFormModal = ({
           {/* 보기 권한 설정 */}
           <TempPostVisibilitySelect />
           {/* 사진 추가하기 */}
-          <TempPhotoInput />
+          <TempPhotoInput markingId={markingId} />
           {/* 메모하기 */}
           <TempMarkingTextArea />
         </Modal.Content>
@@ -123,7 +123,9 @@ const TempPostVisibilitySelect = () => {
   );
 };
 
-const TempPhotoInput = () => {
+const TempPhotoInput = ({
+  markingId,
+}: Pick<TempMarkingFormModalProps, "markingId">) => {
   const store = useTempMarkingFormContext();
   const externalImages = useTempMarkingForm((state) => state.externalImages);
   const setExternalImages = useTempMarkingForm(
@@ -209,8 +211,8 @@ const TempPhotoInput = () => {
         {/* 기존에 존재하던 이미지 */}
         {externalImages.map(({ imageUrl, id }) => (
           <ImgSlider.ImgItem
-            src={`${API_BASE_URL}/markings/image/preview/${id}/${imageUrl}`}
-            alt={`${id} 번의 이미지`}
+            src={`${API_BASE_URL}/markings/image/${markingId}/${imageUrl}`}
+            alt={`${markingId}의 ${id}번의 이미지`}
             key={id}
             onRemove={() => {
               setExternalImages(
