@@ -7,6 +7,7 @@ interface MarkerProps {
     lat: number;
     lng: number;
   };
+  onClick?: () => void;
 }
 
 interface GooglePinProps extends MarkerProps, PinProps {}
@@ -25,9 +26,9 @@ export const User = ({ position }: MarkerProps) => {
   );
 };
 
-export const Pin = ({ position, imageUrl, alt }: GooglePinProps) => {
+export const Pin = ({ position, imageUrl, alt, onClick }: GooglePinProps) => {
   return (
-    <AdvancedMarker position={position}>
+    <AdvancedMarker position={position} onClick={onClick}>
       <_Pin.Default imageUrl={imageUrl} alt={alt} />
     </AdvancedMarker>
   );

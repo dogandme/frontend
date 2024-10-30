@@ -2,9 +2,6 @@ import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
 import { useGetBoundaryMarkerList } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { useResearchMarkingList } from "../hooks";
-// import { useGetMarkingList } from "@/entities/marking/api";
-// import { API_BASE_URL } from "@/shared/constants";
-// import { useResearchMarkingList } from "../hooks";
 import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
@@ -21,24 +18,27 @@ export const UserMarker = () => {
 };
 
 export const PinMarker = () => {
-  const { bounds } = useResearchMarkingList();
+  const { bounds, navigatePlace } = useResearchMarkingList();
 
-  const { data: markerList } = useGetBoundaryMarkerList({
-    southWestLat: bounds?.southWest.lat,
-    southWestLng: bounds?.southWest.lng,
-    northEastLat: bounds?.northEast.lat,
-    northEastLng: bounds?.northEast.lng,
-  });
+  const { data: markerList } = useGetBoundaryMarkerList(bounds);
 
-  return markerList?.map(({ markingId, lat, lng, previewImage }, idx) => (
+  return markerList?.map(({ markingId, lat, lng, previewImage }) => (
     <Pin
       key={markingId}
-      position={{
-        lat: lat,
-        lng: lng,
-      }}
+      position={{ lat, lng }}
       imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-      alt={`${markingId}의 ${idx}번째 이미지`}
+      alt={`${markingId}의 이미지`}
+      onClick={() => {
+        // todo 클러스터링 데이터에 있는 bounds로 인수 전달
+        navigatePlace({
+          bounds: {
+            southWestLat: lat - 0.00001,
+            southWestLng: lng - 0.00001,
+            northEastLat: lat + 0.00001,
+            northEastLng: lng + 0.00001,
+          },
+        });
+      }}
     />
   ));
 };

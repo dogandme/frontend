@@ -1,5 +1,6 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
+import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SEARCH_MARKING_END_POINT } from "../constants";
@@ -126,16 +127,18 @@ export const useGetMarkingList = ({
   northEastLng,
   sortType,
 }: {
-  southWestLat?: number;
-  southWestLng?: number;
-  northEastLat?: number;
-  northEastLng?: number;
+  southWestLat: number | null;
+  southWestLng: number | null;
+  northEastLat: number | null;
+  northEastLng: number | null;
 } & Pick<GetMarkingListRequest, "sortType">) => {
   const map = useMap();
   const mapCenter = map?.getCenter();
 
   const lat = mapCenter?.lat();
   const lng = mapCenter?.lng();
+
+  const { isIdle: isMapIdle } = useMapStore.getState();
 
   return useInfiniteQuery({
     queryKey: [
@@ -148,6 +151,7 @@ export const useGetMarkingList = ({
     ],
 
     queryFn:
+      isMapIdle &&
       !!southWestLat &&
       !!southWestLng &&
       !!northEastLat &&
@@ -168,7 +172,7 @@ export const useGetMarkingList = ({
         : skipToken,
 
     getNextPageParam: ({ pageAble: { pageNumber }, totalPages }) => {
-      return pageNumber < totalPages ? pageNumber + 1 : null;
+      return pageNumber < totalPages - 1 ? pageNumber + 1 : null;
     },
     initialPageParam: 0,
     select: (data) => data.pages.flatMap((page) => page.markings),

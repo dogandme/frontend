@@ -29,15 +29,7 @@ export const FooterNavigationBar = () => {
             </NavLink>
           </li>
           <li className="grow">
-            <NavLink
-              to={ROUTER_PATH.MAP}
-              className={({ isActive }) =>
-                `${isActive ? active : inactive} ${base}`
-              }
-            >
-              <MapIcon />
-              지도
-            </NavLink>
+            <MapPageNavLink />
           </li>
           <li className="grow">
             <MyPageNavLink />
@@ -82,6 +74,32 @@ const MyPageNavLink = () => {
         className="w-6 h-6 rounded-2xl flex-shrink-0"
       />
       My
+    </NavLink>
+  );
+};
+
+const MapPageNavLink = () => {
+  const { active, inactive, base } = footerNavigationBarStyles;
+
+  const getMapPagePath = () => {
+    const { pathname } = window.location;
+
+    const mapPagePaths: string[] = [ROUTER_PATH.MAP, ROUTER_PATH.PLACE];
+
+    if (mapPagePaths.includes(pathname)) {
+      return window.location;
+    }
+
+    return ROUTER_PATH.MAP;
+  };
+
+  return (
+    <NavLink
+      to={getMapPagePath()}
+      className={({ isActive }) => `${isActive ? active : inactive} ${base}`}
+    >
+      <MapIcon />
+      지도
     </NavLink>
   );
 };

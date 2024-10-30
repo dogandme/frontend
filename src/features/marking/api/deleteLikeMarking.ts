@@ -15,8 +15,5 @@ const deleteLikeMarking = async ({ markingId }: DeleteLikeMarkingRequest) => {
 export const useDeleteLikeMarking = () => {
   return useMutation<unknown, Error, DeleteLikeMarkingRequest>({
     mutationFn: deleteLikeMarking,
-    onSuccess: () => {
-      // todo 캐시된 데이터 수정
-    },
   });
 };

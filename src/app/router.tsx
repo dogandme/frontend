@@ -11,6 +11,7 @@ import { AccountManagementPage } from "@/pages/setting/manage-account";
 import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
+import { LocalMarkingList, PlaceMarkingList } from "@/widgets/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { MainPage } from "../pages";
 import { AppProviderLayout } from "./AppProviderLayout";
@@ -27,6 +28,16 @@ export const router = createBrowserRouter([
       {
         path: ROUTER_PATH.MAP,
         element: <MapPage />, // 지도
+        children: [
+          {
+            index: true,
+            element: <LocalMarkingList />,
+          },
+          {
+            path: ROUTER_PATH.PLACE,
+            element: <PlaceMarkingList />,
+          },
+        ],
       },
       {
         path: ROUTER_PATH.PROFILE,
