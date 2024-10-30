@@ -6,3 +6,4 @@ export * from "./deleteLikeMarking";
 export * from "./deleteSavedMarking";
 export * from "./postSaveMarking";
 export * from "./putModifyTempMarking";
+export * from "./deleteTemporaryMarking";

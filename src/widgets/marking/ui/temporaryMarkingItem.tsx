@@ -1,4 +1,4 @@
-import { DeleteTemporaryMarkingButton } from "@/features/follow/ui";
+import { DeleteTemporaryMarkingButton } from "@/features/marking/ui";
 import { TempMarkingFormModal } from "@/features/marking/ui";
 import { TempMarkingInfo } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
