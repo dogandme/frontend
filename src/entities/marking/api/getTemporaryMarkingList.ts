@@ -61,7 +61,7 @@ export const useGetTemporaryMarkingList = () => {
   return useInfiniteQuery({
     queryKey: ["temporaryMarkingList"],
     queryFn: token
-      ? ({ pageParam }: { pageParam: number }) =>
+      ? ({ pageParam }) =>
           apiClient.get<GetTemporaryMarkingListResponse>(
             MY_MARKING_ENDPOINT.TEMPORARY(pageParam),
             {
