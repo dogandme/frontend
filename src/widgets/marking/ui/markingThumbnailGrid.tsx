@@ -1,8 +1,8 @@
 import { useGetDashboardMarkingThumbnail } from "@/entities/marking/api";
-import { ThumbnailList } from "@/entities/marking/ui";
 import { Nickname } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
+import { useLoadImages, type LoadImageParams } from "@/shared/lib";
 
 interface MarkingThumbnailGridProps {
   nickname: Nickname;
@@ -41,6 +41,32 @@ export const MarkingThumbnailGrid = ({
       <div ref={setNode} />
     </section>
   );
+};
+
+interface ThumbnailListProps {
+  imageList: LoadImageParams[];
+}
+export const ThumbnailList = ({ imageList }: ThumbnailListProps) => {
+  const { images, isLoading } = useLoadImages(imageList);
+
+  if (isLoading) {
+    return imageList.map(({ src }) => (
+      <div className="aspect-square" key={src}>
+        <div className="w-full h-full animate-pulse bg-grey-100" />,
+      </div>
+    ));
+  }
+
+  return images.map(({ src, alt, isError }) => (
+    <div className="aspect-square" key={src}>
+      {isError ? (
+        // TODO : errorFallback 에러 컴포넌트 이야기 나누기
+        <div className="w-full h-full">불러오기를 실패한 {alt} 이미지</div>
+      ) : (
+        <img src={src} className="w-full h-full object-cover rounded-[1rem]" />
+      )}
+    </div>
+  ));
 };
 
 const EmptyMarkingThumbnailGrid = () => (
