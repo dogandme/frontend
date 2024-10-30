@@ -55,7 +55,9 @@ export const OtherProfilePage = () => {
           <EmptyMyProfileOverView />
         )}
         <div className="flex flex-col items-start gap-2 w-full ">
-          <h3 className="text-grey-900 text-center title-2">내 마킹</h3>
+          <h3 className="text-grey-900 text-center title-2">
+            {nicknameParams}님의 마킹
+          </h3>
           <MarkingThumbnailGrid nickname={nicknameParams} />
         </div>
       </section>
