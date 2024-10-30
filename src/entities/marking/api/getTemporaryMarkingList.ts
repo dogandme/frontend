@@ -1,6 +1,6 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { Nickname, UserId } from "@/entities/profile/api";
-import { apiClient } from "@/shared/lib";
+import { apiClient, formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MY_MARKING_ENDPOINT } from "../constants";
 
@@ -84,10 +84,7 @@ export const useGetTemporaryMarkingList = () => {
       const temporaryMarkingMap = markings.reduce<
         Record<string, TempMarkingInfo[]>
       >((map, { regDt, ...rest }) => {
-        const year = new Date(regDt).getFullYear();
-        const month = `${new Date(regDt).getMonth() + 1}`.padStart(2, "0");
-        const day = `${new Date(regDt).getDate()}`.padStart(2, "0");
-        const key = `${year}.${month}.${day}`;
+        const key = formatDateToYearMonthDay(regDt);
 
         if (!map[key]) {
           map[key] = [];
@@ -97,6 +94,7 @@ export const useGetTemporaryMarkingList = () => {
         );
         return map;
       }, {});
+
       return Object.entries(temporaryMarkingMap);
     },
   });
