@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
+import { useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { useOverlayStore } from "@/shared/store/overlay";
 import { ERROR_MESSAGE } from "./constants";
@@ -10,6 +11,7 @@ export const useCreateQueryClient = () => {
   const resetAuthStore = useAuthStore((state) => state.reset);
   const navigate = useNavigate();
   const resetOverlays = useOverlayStore((state) => state.resetOverlays);
+  const handleOpenSnackbar = useSnackBar();
 
   const queryClient = useRef(
     new QueryClient({
@@ -46,6 +48,7 @@ export const useCreateQueryClient = () => {
               break;
             }
             default:
+              handleOpenSnackbar(error.message);
               return;
           }
         },
@@ -99,6 +102,7 @@ export const useCreateQueryClient = () => {
                * throw error 가 있을 경우 에러가 mutation.onError 에게 에러가 전달 되지 않고
                * 실행 스택이 중단 되어 mutation.onError 가 호출 되지 않았습니다.
                */
+              handleOpenSnackbar(error.message);
               return;
           }
         },
