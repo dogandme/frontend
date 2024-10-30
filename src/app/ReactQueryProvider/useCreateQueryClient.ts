@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
-import { useSnackBar } from "@/shared/lib";
+import { HttpError, useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { useOverlayStore } from "@/shared/store/overlay";
 import { ERROR_MESSAGE } from "./constants";
@@ -36,6 +36,10 @@ export const useCreateQueryClient = () => {
 
       queryCache: new QueryCache({
         onError: async (error, query) => {
+          if (error instanceof HttpError && error.code === 500) {
+            handleOpenSnackbar(ERROR_MESSAGE.INTERNAL_SERVER_ERROR);
+          }
+
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getValidAuthorization({
@@ -67,6 +71,10 @@ export const useCreateQueryClient = () => {
           }
         },
         onError: async (error, variables, context, mutation) => {
+          if (error instanceof HttpError && error.code === 500) {
+            handleOpenSnackbar(ERROR_MESSAGE.INTERNAL_SERVER_ERROR);
+          }
+
           switch (error.message) {
             case ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED: {
               await getValidAuthorization({
