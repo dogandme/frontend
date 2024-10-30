@@ -1558,7 +1558,7 @@ const getProfileThumbnailHandler = [
 ];
 
 const getTemporaryMarkingListHandler = [
-  http.get(`${API_BASE_URL}/markings/temporary`, async ({ request }) => {
+  http.get(`${API_BASE_URL}/markings/temps`, async ({ request }) => {
     await new Promise((res) => setTimeout(res, 1000));
     const url = new URL(request.url);
 
@@ -1614,7 +1614,7 @@ const deleteTemporaryMarkingHandler = [
       }
 
       temporaryMarkingList = temporaryMarkingList.filter(
-        (marking) => marking.userId !== id,
+        (marking) => marking.markingId !== id,
       );
 
       return HttpResponse.json({
