@@ -15,8 +15,5 @@ const postLikeMarking = async ({ markingId }: PostLikeMarkingRequest) => {
 export const usePostLikeMarking = () => {
   return useMutation<unknown, Error, PostLikeMarkingRequest>({
     mutationFn: postLikeMarking,
-    onSuccess: () => {
-      // todo 캐시된 데이터 수정
-    },
   });
 };
