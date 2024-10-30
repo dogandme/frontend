@@ -16,10 +16,7 @@ export const PlaceMarkingList = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useGetMarkingList({
-    southWestLat: bounds?.southWestLat,
-    southWestLng: bounds?.southWestLng,
-    northEastLat: bounds?.northEastLat,
-    northEastLng: bounds?.northEastLng,
+    ...bounds,
     sortType,
   });
 

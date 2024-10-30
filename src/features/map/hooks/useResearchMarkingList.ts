@@ -7,10 +7,10 @@ import { sortTypeMap } from "../constants";
 import { useMapStore } from "../store";
 
 interface Bounds {
-  northEastLat: number;
-  northEastLng: number;
-  southWestLat: number;
-  southWestLng: number;
+  northEastLat: number | null;
+  northEastLng: number | null;
+  southWestLat: number | null;
+  southWestLng: number | null;
 }
 
 interface Filter {
@@ -56,14 +56,12 @@ export const useResearchMarkingList = () => {
   const hasBoundsParams =
     northEastLat && northEastLng && southWestLat && southWestLng;
 
-  const bounds: Bounds | null = hasBoundsParams
-    ? {
-        northEastLat,
-        northEastLng,
-        southWestLat,
-        southWestLng,
-      }
-    : null;
+  const bounds: Bounds = {
+    northEastLat: hasBoundsParams ? northEastLat : null,
+    northEastLng: hasBoundsParams ? northEastLat : null,
+    southWestLat: hasBoundsParams ? northEastLat : null,
+    southWestLng: hasBoundsParams ? northEastLat : null,
+  };
 
   // 정렬 기준 파라미터
   const sortTypeParam = searchParams.get("sortType");

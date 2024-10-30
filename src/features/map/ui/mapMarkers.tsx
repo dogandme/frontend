@@ -20,12 +20,7 @@ export const UserMarker = () => {
 export const PinMarker = () => {
   const { bounds, navigatePlace } = useResearchMarkingList();
 
-  const { data: markerList } = useGetBoundaryMarkerList({
-    southWestLat: bounds?.southWestLat,
-    southWestLng: bounds?.southWestLng,
-    northEastLat: bounds?.northEastLat,
-    northEastLng: bounds?.northEastLng,
-  });
+  const { data: markerList } = useGetBoundaryMarkerList(bounds);
 
   return markerList?.map(({ markingId, lat, lng, previewImage }) => (
     <Pin
