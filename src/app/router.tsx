@@ -11,6 +11,7 @@ import { AccountManagementPage } from "@/pages/setting/manage-account";
 import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
+import { TemporaryMarkingPage } from "@/pages/temporary-marking";
 import { ROUTER_PATH } from "@/shared/constants";
 import { MainPage } from "../pages";
 import { AppProviderLayout } from "./AppProviderLayout";
@@ -93,6 +94,10 @@ export const router = createBrowserRouter([
             element: <PetInfoPage />,
           },
         ],
+      },
+      {
+        path: ROUTER_PATH.TEMPORARY_MARKING,
+        element: <TemporaryMarkingPage />,
       },
     ],
   },

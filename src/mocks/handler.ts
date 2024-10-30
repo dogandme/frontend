@@ -6,6 +6,8 @@ import {
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
+import { DeleteTemporaryMarkingRequest } from "@/features/follow/api/deleteTemporaryMarking";
+import { MY_MARKING_ENDPOINT } from "@/features/follow/constants";
 import { MARKING_END_POINT } from "@/features/marking/constants";
 import { PostChangeRegionRequest } from "@/features/setting/api";
 import type {
@@ -22,8 +24,9 @@ import { API_BASE_URL } from "@/shared/constants";
 import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
 import { otherUsers } from "./data/otherUser";
-import { profileMarkingThumbnail } from "./data/profileMarking";
+import { profileMarkingThumbnail as _profileMarkingThumbnail } from "./data/profileMarking";
 import regionListData from "./data/regionList.json";
+import { temporaryMarkingList as _temporaryMarkingList } from "./data/tempMarkingList";
 import { User } from "./data/user";
 
 interface UserInfo {
@@ -57,6 +60,9 @@ const userInfoDB: UserInfoDB = {
   뽀송송_EMAIL: userInfoData["EMAIL"] as MyInfo,
   뽀송송_NAVER: userInfoData["NAVER"] as MyInfo,
 };
+
+let temporaryMarkingList = [..._temporaryMarkingList];
+const profileMarkingThumbnail = _profileMarkingThumbnail;
 
 export const signUpByEmailHandlers = [
   http.post<
@@ -1535,6 +1541,142 @@ const getProfileThumbnailHandler = [
   ),
 ];
 
+const getTemporaryMarkingListHandler = [
+  http.get(`${API_BASE_URL}/markings/temporary`, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
+    const url = new URL(request.url);
+
+    const offset = Number(url.searchParams.get("offset")) || 0;
+    const itemPerPage = 20;
+    const start = offset * itemPerPage;
+    const end = start + itemPerPage;
+    const data = temporaryMarkingList.slice(start, end);
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        markings: data,
+        totalElements: temporaryMarkingList.length,
+        totalPages: Math.ceil(temporaryMarkingList.length / itemPerPage),
+        pageAble: {
+          pageNumber: offset,
+          pageSize: itemPerPage,
+          sort: {
+            empty: true,
+            unsorted: true,
+            sorted: false,
+          },
+          offset,
+          unpaged: false,
+          paged: true,
+        },
+      },
+    });
+  }),
+];
+
+const deleteTemporaryMarkingHandler = [
+  http.delete<PathParams, DeleteTemporaryMarkingRequest>(
+    MY_MARKING_ENDPOINT.DELETE_TEMPORARY_MARKING,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const { id } = await request.json();
+
+      const token = request.headers.get("Authorization");
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      temporaryMarkingList = temporaryMarkingList.filter(
+        (marking) => marking.userId !== id,
+      );
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
+const putModifyTempMarkingHandler = [
+  http.put(MARKING_END_POINT.PUT_MODIFY_TEMP_MARKING, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
+    const formData = await request.formData();
+    const markingModifyDtoBlob = formData.get("markingModifyDto") as Blob;
+    const markingModifyDtoText = await markingModifyDtoBlob.text();
+    const { id, content, isVisible, removeIds, isTempSaved } =
+      JSON.parse(markingModifyDtoText);
+    const images = formData.getAll("images") as File[];
+    const targetTempPost = temporaryMarkingList.find(
+      (marking) => marking.markingId === id,
+    );
+
+    if (!targetTempPost) {
+      return HttpResponse.json(
+        {
+          code: 404,
+          message: "해당하는 임시 마커를 찾을 수 없습니다.",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    if (isTempSaved) {
+      targetTempPost.content = content;
+      targetTempPost.isVisible = isVisible;
+      targetTempPost.images = targetTempPost.images
+        .filter(({ id }) => !removeIds.includes(id))
+        .concat(
+          images.map((image, idx) => ({
+            id: idx,
+            imageUrl: URL.createObjectURL(image),
+            lank: idx,
+            regDt: new Date().toISOString(),
+          })),
+        );
+      targetTempPost.regDt = new Date().toISOString();
+
+      temporaryMarkingList = temporaryMarkingList.map((marking) =>
+        marking.markingId === id ? targetTempPost : marking,
+      );
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    }
+
+    profileMarkingThumbnail["뽀송송"].unshift({
+      markingId: id,
+      previewImage: `임시저장에서 저장 된 ${id}의 썸네일`,
+      lat: Math.random() > 0.5 ? 35 + Math.random() : 35 - Math.random(),
+      lng: Math.random() > 0.5 ? 129 + Math.random() : 129 - Math.random(),
+    });
+
+    temporaryMarkingList = temporaryMarkingList.filter(
+      ({ markingId }) => markingId !== id,
+    );
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1562,4 +1704,7 @@ export const handlers = [
   ...deleteFollowingHandler,
   ...deleteFollowerHandler,
   ...getProfileThumbnailHandler,
+  ...getTemporaryMarkingListHandler,
+  ...deleteTemporaryMarkingHandler,
+  ...putModifyTempMarkingHandler,
 ];
