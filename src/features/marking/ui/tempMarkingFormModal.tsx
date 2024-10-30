@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { TempMarkingInfo } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
+import { useSnackBar } from "@/shared/lib";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
@@ -127,15 +128,18 @@ const TempPhotoInput = ({
   markingId,
 }: Pick<TempMarkingFormModalProps, "markingId">) => {
   const store = useTempMarkingFormContext();
+
   const externalImages = useTempMarkingForm((state) => state.externalImages);
   const setExternalImages = useTempMarkingForm(
     (state) => state.setExternalImages,
   );
   const setRemovedIds = useTempMarkingForm((state) => state.setRemovedIds);
-
   const images = useTempMarkingForm((state) => state.images);
   const setImages = useTempMarkingForm((state) => state.setImages);
   const inputKey = useTempMarkingForm((state) => state.inputKey);
+
+  const handleOpen = useSnackBar();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const currentImagesLength = externalImages.length + images.length;
 
@@ -153,9 +157,7 @@ const TempPhotoInput = ({
     }
 
     if (currentImagesLength + newFiles.length > MAX_IMAGE_LENGTH) {
-      // TODO 에러 바운더리에서 처리 하기
-      // throw new Error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
-      console.error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
+      handleOpen(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
     }
 
     const availableNewFileArray = [...newFiles]
@@ -262,6 +264,7 @@ const TempMarkingSaveButton = ({
   markingId,
 }: Pick<TempMarkingFormModalProps, "markingId">) => {
   const store = useTempMarkingFormContext();
+  const handleOpen = useSnackBar();
   const { mutate: putModifyTempMarking } = usePutModifyTempMarking();
 
   const handleClick = () => {
@@ -275,14 +278,12 @@ const TempMarkingSaveButton = ({
     } = store.getState();
 
     if (isCompressing) {
-      // TODO 에러 바운더리 생성되면 로직 변경하기
-      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      handleOpen("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
       return;
     }
 
     if (externalImages.length + images.length === 0) {
-      // TODO 에러 바운더리 생성되면 로직 변경하기
-      console.error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
+      handleOpen(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
       return;
     }
 
@@ -312,6 +313,7 @@ const TempMarkingTempSaveButton = ({
   markingId,
 }: Pick<TempMarkingFormModalProps, "markingId">) => {
   const store = useTempMarkingFormContext();
+  const handleOpen = useSnackBar();
   const { mutate: putModifyTempMarking } = usePutModifyTempMarking();
 
   const handleClick = () => {
@@ -319,8 +321,7 @@ const TempMarkingTempSaveButton = ({
       store.getState();
 
     if (isCompressing) {
-      // TODO 에러 바운더리 생성되면 로직 변경하기
-      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      handleOpen("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
       return;
     }
 
