@@ -40,29 +40,32 @@ export const usePutModifyTempMarking = () => {
 
     onSuccess: (_data, { isTempSaved, id }) => {
       if (isTempSaved) {
+        queryClient.setQueryData<InfiniteData<GetTemporaryMarkingListResponse>>(
+          ["temporaryMarkingList"],
+          (data) => {
+            if (!data) {
+              return data;
+            }
+            const { pages } = data;
+            const newPages = pages.map((page) => ({
+              ...page,
+              markings: page.markings.filter(
+                ({ markingId }) => markingId !== id,
+              ),
+            }));
+
+            return {
+              ...data,
+              pages: newPages,
+            };
+          },
+        );
+
         queryClient.invalidateQueries({
           queryKey: ["temporaryMarkingList"],
         });
         return;
       }
-      queryClient.setQueryData<InfiniteData<GetTemporaryMarkingListResponse>>(
-        ["temporaryMarkingList"],
-        (data) => {
-          if (!data) {
-            return data;
-          }
-          const { pages } = data;
-          const newPages = pages.map((page) => ({
-            ...page,
-            markings: page.markings.filter(({ markingId }) => markingId !== id),
-          }));
-
-          return {
-            ...data,
-            pages: newPages,
-          };
-        },
-      );
     },
   });
 };

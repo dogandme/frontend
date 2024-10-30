@@ -46,6 +46,9 @@ export const useDeleteTemporaryMarking = () => {
           };
         },
       );
+      queryClient.invalidateQueries({
+        queryKey: ["temporaryMarkingList"],
+      });
     },
   });
 };
