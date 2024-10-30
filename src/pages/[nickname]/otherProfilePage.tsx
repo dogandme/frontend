@@ -1,11 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MarkingThumbnailGrid } from "@/widgets/marking/ui";
-import {
-  EmptyMyProfileOverView,
-  EmptyProfileOverView,
-  ProfileOverView,
-} from "@/widgets/profile/ui";
+import { EmptyProfileOverView, ProfileOverView } from "@/widgets/profile/ui";
 import { useGetProfile } from "@/entities/profile/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
