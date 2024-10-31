@@ -4,10 +4,9 @@ interface LatLng {
   lat: number;
   lng: number;
 }
-type Marker = LatLng & Record<"markingId", number>;
 
-class Cluster<T extends Marker> {
-  private markerBuffer: T[] = [];
+class Cluster<T extends LatLng> {
+  private LatLngBuffer: T[] = [];
   private outlierBuffer: T[] = [];
 
   outliers: T[] = [];
@@ -65,8 +64,8 @@ class Cluster<T extends Marker> {
    * 정규화 된 값으로 거리를 계산하면 줌 레벨에 따라 거리의 범위가 일정하게 유지되기에 이상값을 검증하기 위한 지표로 사용 할 수 있습니다.
    */
   private updateStatisticValue() {
-    const scaledLatLngList = this.markers.map((marker) =>
-      this.minMaxScaling(marker),
+    const scaledLatLngList = this.markers.map((LatLng) =>
+      this.minMaxScaling(LatLng),
     );
 
     this.mean = scaledLatLngList.reduce(
@@ -113,11 +112,11 @@ class Cluster<T extends Marker> {
    * ! 오히려 전체 데이터 기준으로 봤을 땐 해당 군집에 어울리는 값일 수 있습니다.
    * ! 이상값을 판단하는 기준은 Z-Score가 3 이상인 경우로 설정 하였습니다. (3시그마 규칙)
    */
-  addMarker(marker: T) {
-    const { lat, lng } = marker;
+  addLatLng(LatLng: T) {
+    const { lat, lng } = LatLng;
     // 초기 시행 시에는 따로 Z-Score를 계산하지 않습니다.
     if (this.std.lat === 0 || this.std.lng === 0) {
-      this.markerBuffer.push(marker);
+      this.LatLngBuffer.push(LatLng);
       return;
     }
     const zScore = this.getZScore({ lat, lng });
@@ -126,10 +125,10 @@ class Cluster<T extends Marker> {
      * 이 때 새로운 군집을 형성하는 기준은 이상값이 아닌 마커들로 구성된 군집입니다.
      */
     if (zScore.lat < 3 || zScore.lng < 3) {
-      this.markerBuffer.push(marker);
+      this.LatLngBuffer.push(LatLng);
       return;
     }
-    this.outlierBuffer.push(marker);
+    this.outlierBuffer.push(LatLng);
   }
   /**
    * 마커의 중심점을 재조정 합니다.
@@ -137,8 +136,8 @@ class Cluster<T extends Marker> {
    */
   revalidateCluster() {
     // 재조정 전 버퍼에 있던 마커 리스트를 복사하고 버퍼를 초기화 합니다.
-    this.markers = [...this.markerBuffer];
-    this.markerBuffer = [];
+    this.markers = [...this.LatLngBuffer];
+    this.LatLngBuffer = [];
     // 재조정 전 버퍼에 있던 이상값 리스트를 복사하고 버퍼를 초기화 합니다.
     this.outliers = [...this.outlierBuffer];
     this.outlierBuffer = [];
@@ -162,7 +161,7 @@ class Cluster<T extends Marker> {
   }
 }
 
-export const useKMeansClustering = <T extends Marker>(
+export const useKMeansClustering = <T extends LatLng>(
   NumOfCluster: number,
   markers?: T[],
 ) => {
@@ -181,10 +180,10 @@ export const useKMeansClustering = <T extends Marker>(
 
   let isChanged = true;
   while (isChanged) {
-    markers.forEach((marker) => {
+    markers.forEach((LatLng) => {
       const [, closestClusterIndex] = clusters.reduce(
         ([minDistance, minClusterIndex], cluster, index) => {
-          const distance = cluster.calculateDistance(marker);
+          const distance = cluster.calculateDistance(LatLng);
           return distance < minDistance
             ? [distance, index]
             : [minDistance, minClusterIndex];
@@ -192,7 +191,7 @@ export const useKMeansClustering = <T extends Marker>(
         [Infinity, -1],
       );
       // 가장 가까운 클러스터에게 마커를 추가합니다.
-      clusters[closestClusterIndex].addMarker(marker);
+      clusters[closestClusterIndex].addLatLng(LatLng);
     });
     // 클러스터의 중심점을 재조정합니다.
     // 이 때 모든 클러스터의 중심점이 재조정 되지 않았다면 반복문을 종료 합니다.
