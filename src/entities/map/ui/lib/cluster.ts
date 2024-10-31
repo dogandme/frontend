@@ -1,3 +1,5 @@
+import { Bounds, useResearchMarkingList } from "@/features/map/hooks";
+
 interface LatLng {
   lat: number;
   lng: number;
@@ -6,36 +8,43 @@ type Marker = LatLng & Record<"markingId", number>;
 
 class Cluster<T extends Marker> {
   private markerBuffer: T[] = [];
-  private outletMap: Record<string, boolean>;
 
   markers: T[];
-  mean: LatLng = { lat: 0, lng: 0 };
+  center: LatLng = { lat: 0, lng: 0 };
   var: LatLng = { lat: 0, lng: 0 };
   std: LatLng = { lat: 0, lng: 0 };
 
   constructor({ lat, lng }: T) {
-    this.mean = { lat, lng };
+    this.center = { lat, lng };
     this.markers = [];
-    this.outletMap = {};
+  }
+  /**
+   * lat , lng 값의 범위가 다르기에 거리 계산 전 표준화를 시행 합니다.
+   */
+  private minMaxScaling({ lat, lng }: LatLng, bounds: Bounds) {
+    const { northEastLat, northEastLng, southWestLat, southWestLng } = bounds;
+    if (!northEastLat || !northEastLng || !southWestLat || !southWestLng) {
+      return { lat, lng };
+    }
+    const scaledLat = (lat - southWestLat) / (northEastLat - southWestLat);
+    const scaledLng = (lng - southWestLng) / (northEastLng - southWestLng);
+    return { lat: scaledLat, lng: scaledLng };
   }
   /**
    * 마커에 대해 맨하탄 거리를 계산하고 클러스터 디스턴스 맵에 저장 합니다.
    */
-  calculateDistance({ lat, lng }: LatLng) {
-    return Math.abs(this.mean.lat - lat + this.mean.lng - lng);
+  calculateDistance({ lat, lng }: LatLng, bounds: Bounds) {
+    const scaledLatLng = this.minMaxScaling({ lat, lng }, bounds);
+    const scaledCenter = this.minMaxScaling(this.center, bounds);
+    return (
+      Math.abs(scaledCenter.lat - scaledLatLng.lat) +
+      Math.abs(scaledCenter.lng - scaledLatLng.lng)
+    );
   }
   /**
    * 특정 마커를 마커 버퍼에 추가 합니다.
    */
   addMarker(marker: T) {
-    const { lat, lng } = marker;
-    if (
-      this.mean.lat - lat > this.std.lat * 3 ||
-      this.mean.lng - lng > this.std.lng * 3
-    ) {
-      this.outletMap[marker.markingId] = true;
-    }
-
     this.markerBuffer.push(marker);
   }
   /**
@@ -47,41 +56,30 @@ class Cluster<T extends Marker> {
     this.markers = [...this.markerBuffer];
     this.markerBuffer = [];
     // 재조정 전 클러스터의 중심점을 캐싱 합니다.
-    const prevLatLng = { ...this.mean };
+    const prevLatLng = { ...this.center };
 
-    this.mean = { lat: 0, lng: 0 };
-    this.var = { lat: 0, lng: 0 };
-
+    this.center = { lat: 0, lng: 0 };
     this.markers.forEach(({ lat, lng }) => {
-      this.mean.lat += lat / this.markers.length;
-      this.mean.lng += lng / this.markers.length;
+      this.center.lat += lat / this.markers.length;
+      this.center.lng += lng / this.markers.length;
     });
 
-    this.var = {
-      lat: this.markers.reduce(
-        (variance, { lat }) =>
-          variance + (lat - this.mean.lat) ** 2 / this.markers.length,
-        0,
-      ),
-      lng: this.markers.reduce(
-        (variance, { lng }) =>
-          variance + (lng - this.mean.lng) ** 2 / this.markers.length,
-        0,
-      ),
-    };
-
-    this.std = {
-      lat: Math.sqrt(this.var.lat),
-      lng: Math.sqrt(this.var.lng),
-    };
-    return prevLatLng.lat !== this.mean.lat || prevLatLng.lng !== this.mean.lng;
+    return (
+      prevLatLng.lat !== this.center.lat || prevLatLng.lng !== this.center.lng
+    );
   }
 }
 
-export const kMeansClustering = <T extends Marker>(
+export const useKMeansClustering = <T extends Marker>(
   NumOfCluster: number,
-  markers: T[],
+  markers?: T[],
 ) => {
+  // 표준화를 위해 mix,max lat,lng 값을 구합니다.
+  const { bounds } = useResearchMarkingList();
+  if (!markers) {
+    return [];
+  }
+
   // K개의 클러스터를 생성합니다.
   // TODO 휴리스틱한 방식으로 초기값 뽑기
   const clusters = Array.from({ length: NumOfCluster }, () => {
@@ -96,7 +94,7 @@ export const kMeansClustering = <T extends Marker>(
       let minClusterIndex = -1;
       // cluster에 대해 맨하탄 거리를 계산하고 가장 가까운 클러스터를 찾습니다.
       clusters.forEach((cluster, index) => {
-        const distance = cluster.calculateDistance(marker);
+        const distance = cluster.calculateDistance(marker, bounds);
         if (distance < minDistance) {
           minDistance = distance;
           minClusterIndex = index;
