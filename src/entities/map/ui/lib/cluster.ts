@@ -8,7 +8,9 @@ type Marker = LatLng & Record<"markingId", number>;
 
 class Cluster<T extends Marker> {
   private markerBuffer: T[] = [];
+  private outlierBuffer: T[] = [];
 
+  outliers: T[] = [];
   markers: T[];
   center: LatLng = { lat: 0, lng: 0 };
   bounds: Bounds;
@@ -62,7 +64,7 @@ class Cluster<T extends Marker> {
    * 정규화를 하는 이유는 줌 레벨에 따라 각 마커들의 거리의 범위가 달라지기 때문입니다.
    * 정규화 된 값으로 거리를 계산하면 줌 레벨에 따라 거리의 범위가 일정하게 유지되기에 이상값을 검증하기 위한 지표로 사용 할 수 있습니다.
    */
-  updateStatisticValue() {
+  private updateStatisticValue() {
     const scaledLatLngList = this.markers.map((marker) =>
       this.minMaxScaling(marker),
     );
@@ -96,11 +98,38 @@ class Cluster<T extends Marker> {
       lng: Math.sqrt(this.var.lng),
     };
   }
+  private getZScore({ lat, lng }: LatLng) {
+    const scaledLatLng = this.minMaxScaling({ lat, lng });
+    return {
+      lat: Math.abs(scaledLatLng.lat - this.mean.lat) / this.std.lat,
+      lng: Math.abs(scaledLatLng.lng - this.mean.lng) / this.std.lng,
+    };
+  }
   /**
    * 특정 마커를 마커 버퍼에 추가 합니다.
+   * 이 때 추가된 마커가 이상값인지 판단하여 이상값 버퍼에 추가 합니다.
+   * ! 이상값으로 판단 된 마커는 클러스터 기준으로 이상값일 뿐
+   * ! 전체 데이터 기준으로 이상값이라고 판단 할 수 없습니다.
+   * ! 오히려 전체 데이터 기준으로 봤을 땐 해당 군집에 어울리는 값일 수 있습니다.
+   * ! 이상값을 판단하는 기준은 Z-Score가 3 이상인 경우로 설정 하였습니다. (3시그마 규칙)
    */
   addMarker(marker: T) {
-    this.markerBuffer.push(marker);
+    const { lat, lng } = marker;
+    // 초기 시행 시에는 따로 Z-Score를 계산하지 않습니다.
+    if (this.std.lat === 0 || this.std.lng === 0) {
+      this.markerBuffer.push(marker);
+      return;
+    }
+    const zScore = this.getZScore({ lat, lng });
+    /**
+     * 새로운 군집을 형성 하기 위해 버퍼에 추가합니다.
+     * 이 때 새로운 군집을 형성하는 기준은 이상값이 아닌 마커들로 구성된 군집입니다.
+     */
+    if (zScore.lat < 3 || zScore.lng < 3) {
+      this.markerBuffer.push(marker);
+      return;
+    }
+    this.outlierBuffer.push(marker);
   }
   /**
    * 마커의 중심점을 재조정 합니다.
@@ -110,6 +139,9 @@ class Cluster<T extends Marker> {
     // 재조정 전 버퍼에 있던 마커 리스트를 복사하고 버퍼를 초기화 합니다.
     this.markers = [...this.markerBuffer];
     this.markerBuffer = [];
+    // 재조정 전 버퍼에 있던 이상값 리스트를 복사하고 버퍼를 초기화 합니다.
+    this.outliers = [...this.outlierBuffer];
+    this.outlierBuffer = [];
     // 재조정 전 클러스터의 중심점을 캐싱 합니다.
     const prevCenter = { ...this.center };
 
