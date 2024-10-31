@@ -51,21 +51,23 @@ class Cluster<T extends Marker> {
    * 마커의 중심점을 재조정 합니다.
    * 이 때 마커의 중심점이 변경 되지 않았다면 false를 반환합니다.
    */
-  recalculateCenter() {
+  revalidateCluster() {
     // 재조정 전 버퍼에 있던 마커 리스트를 복사하고 버퍼를 초기화 합니다.
     this.markers = [...this.markerBuffer];
     this.markerBuffer = [];
     // 재조정 전 클러스터의 중심점을 캐싱 합니다.
-    const prevLatLng = { ...this.center };
+    const prevCenter = { ...this.center };
 
-    this.center = { lat: 0, lng: 0 };
-    this.markers.forEach(({ lat, lng }) => {
-      this.center.lat += lat / this.markers.length;
-      this.center.lng += lng / this.markers.length;
-    });
+    this.center = this.markers.reduce(
+      (center, { lat, lng }) => ({
+        lat: center.lat + lat / this.markers.length,
+        lng: center.lng + lng / this.markers.length,
+      }),
+      { lat: 0, lng: 0 },
+    );
 
     return (
-      prevLatLng.lat !== this.center.lat || prevLatLng.lng !== this.center.lng
+      prevCenter.lat !== this.center.lat || prevCenter.lng !== this.center.lng
     );
   }
 }
@@ -105,7 +107,7 @@ export const useKMeansClustering = <T extends Marker>(
     // 클러스터의 중심점을 재조정합니다.
     // 이 때 모든 클러스터의 중심점이 재조정 되지 않았다면 반복문을 종료 합니다.
     isChanged = clusters.reduce(
-      (isChanged, cluster) => isChanged || cluster.recalculateCenter(),
+      (isChanged, cluster) => isChanged || cluster.revalidateCluster(),
       false,
     );
   }
