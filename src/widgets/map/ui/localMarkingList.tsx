@@ -1,21 +1,24 @@
-import { useResearchMarkingList } from "@/features/map/hooks";
+import { useNavigate } from "react-router-dom";
+import { useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
-import { API_BASE_URL } from "@/shared/constants";
+import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
 import { MarkingList } from "./markingList";
 
 export const LocalMarkingList = () => {
-  const { bounds, sortType, navigatePlace } = useResearchMarkingList();
+  const navigate = useNavigate();
+  const { boundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
   const {
     data: markingList,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useGetMarkingList({
-    ...bounds,
-    sortType,
+    ...boundsParams,
+    sortType: sortTypeParam,
   });
 
   const [setNode] = useInfiniteScroll(() => {
@@ -47,13 +50,15 @@ export const LocalMarkingList = () => {
             className="aspect-square"
             onClick={() => {
               // todo 클러스터링 데이터에 있는 bounds로 인수 전달
-              navigatePlace({
+              navigate(ROUTER_PATH.PLACE);
+              setMapQueryParams({
                 bounds: {
                   southWestLat: lat - 0.00001,
                   southWestLng: lng - 0.00001,
                   northEastLat: lat + 0.00001,
                   northEastLng: lng + 0.00001,
                 },
+                sortType: "POPULARITY",
               });
             }}
           >
