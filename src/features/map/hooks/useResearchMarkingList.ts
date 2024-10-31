@@ -43,8 +43,8 @@ export const useResearchMarkingList = () => {
   const defaultSortType =
     viewMode === "MAP" || viewMode === "PLACE" ? "POPULARITY" : "RECENT";
 
-  // 현재 맵의 bounds로 파라미터를 설정합니다.
-  const searchByCurrentBounds = (newSortType?: SortType) => {
+  // 맵의 bounds로 파라미터를 설정합니다.
+  const searchByMapBounds = (newSortType?: SortType) => {
     const currentBounds = getCurrentBounds();
 
     setMapParams({
@@ -76,9 +76,12 @@ export const useResearchMarkingList = () => {
   const navigate = useNavigate();
 
   // 동네 마킹 바텀 시트를 열었을 때, 현재 bounds로 파라미터를 설정합니다.
+  // 동네 마킹 데이터는 맵의 bounds로 불러옵니다.
+  // 내 위치 중심: 사용자 위치로 맵이 이동한 후, bounds로 데이터를 불러옵니다.
+  // 현재 지도 중심: 현재 지도의 bounds로 데이터를 불러옵니다.
   const searchLocal = (newSortType?: Filter["sortType"]) => {
     navigate(ROUTER_PATH.MAP);
-    searchByCurrentBounds(newSortType);
+    searchByMapBounds(newSortType);
   };
 
   // 이 장소 관련 마킹 마텀 시트를 열었을 때, bounds와 sortType로 파라미터를 설정합니다.
@@ -102,7 +105,7 @@ export const useResearchMarkingList = () => {
     sortType,
     hasBoundsParams,
     hasSortTypeParam,
-    searchByCurrentBounds,
+    searchByMapBounds,
     searchBySortType,
     searchLocal,
     searchPlace,

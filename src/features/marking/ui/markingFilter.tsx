@@ -141,7 +141,7 @@ export const RangeFilter = ({
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
-  const { searchByCurrentBounds } = useResearchMarkingList();
+  const { searchByMapBounds } = useResearchMarkingList();
   const { setCurrentLocation } = useCurrentLocation();
 
   const map = useMap();
@@ -151,6 +151,8 @@ export const RangeFilter = ({
   );
 
   const handleSelect = (rangeFilter: RangeFilter) => {
+    if (selectedOption === rangeFilter) return;
+
     setSelectedOption(rangeFilter);
 
     if (rangeFilter === "CURRENT_LOCATION") {
@@ -165,7 +167,7 @@ export const RangeFilter = ({
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          searchByCurrentBounds();
+          searchByMapBounds();
         },
       });
 
@@ -173,7 +175,7 @@ export const RangeFilter = ({
     }
 
     if (rangeFilter === "MAP_LOCATION") {
-      searchByCurrentBounds();
+      searchByMapBounds();
       return;
     }
 

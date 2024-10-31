@@ -11,7 +11,7 @@ export const MapInitializer = () => {
   const { loading, setCurrentLocation } = useCurrentLocation();
 
   const {
-    searchByCurrentBounds,
+    searchByMapBounds: searchByCurrentBounds,
     bounds: boundsParams,
     hasBoundsParams,
     sortType: sortTypeParam,
