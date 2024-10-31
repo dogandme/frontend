@@ -180,5 +180,7 @@ export const useGetMarkingList = ({
     select: (data) => data.pages.flatMap((page) => page.markings),
 
     refetchOnWindowFocus: false,
+
+    gcTime: 0,
   });
 };

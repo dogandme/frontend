@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 import type { SortType } from "@/entities/marking/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useMapStore } from "../store";
@@ -20,20 +19,9 @@ const getViewMode = () => {
 };
 
 export const useResearchMarkingList = () => {
-  const queryClient = useQueryClient();
-
   const setIsLastSearchedLocation = useMapStore(
     (state) => state.setIsLastSearchedLocation,
   );
-
-  const removeCacheMarkData = () => {
-    queryClient.removeQueries({
-      queryKey: ["markingList"],
-    });
-    queryClient.removeQueries({
-      queryKey: ["boundaryMarkerList"],
-    });
-  };
 
   const { bounds, sortType, setMapParams } = useMapParams();
   const getCurrentBounds = useGetMapCurrentBounds();
@@ -54,8 +42,6 @@ export const useResearchMarkingList = () => {
     setTimeout(() => {
       setIsLastSearchedLocation(true);
     }, 0);
-
-    removeCacheMarkData();
   };
 
   // sortType 파라미터를 변경
@@ -68,8 +54,6 @@ export const useResearchMarkingList = () => {
     setTimeout(() => {
       setIsLastSearchedLocation(true);
     }, 0);
-
-    removeCacheMarkData();
   };
 
   const navigate = useNavigate();
@@ -95,8 +79,6 @@ export const useResearchMarkingList = () => {
     setTimeout(() => {
       setIsLastSearchedLocation(true);
     }, 0);
-
-    removeCacheMarkData();
   };
 
   return {

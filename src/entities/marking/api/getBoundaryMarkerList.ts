@@ -79,5 +79,7 @@ export const useGetBoundaryMarkerList = ({
         : skipToken,
 
     refetchOnWindowFocus: false,
+
+    gcTime: 0,
   });
 };
