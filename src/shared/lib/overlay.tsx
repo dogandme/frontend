@@ -8,7 +8,6 @@ type UseOverlay = (
   handleOpen: () => Promise<void>;
   onClose: () => Promise<void>;
   isOpen: boolean;
-  staticId?: number;
 };
 
 const generateId = () => window.crypto.getRandomValues(new Uint32Array(1))[0];

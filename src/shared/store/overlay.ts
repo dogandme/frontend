@@ -8,8 +8,6 @@ export interface OverlayOptions {
   // 만약 StopCloseFlag 가 true 라면  close 단계를 시행하지 않습니다.
   beforeClose?: () => StopCloseFlag | Promise<StopCloseFlag>;
   afterClose?: () => void | Promise<void>;
-  // 오버레이 선언 시 정적으로 설정 가능한 id 입니다.
-  // 해당 id는 useOverlay 를 호출한 컨텍스트 외부에서 해당 id를 가진 오버레이를 제어 할 때 사용합니다.
 }
 
 export interface OverlayInfo {
