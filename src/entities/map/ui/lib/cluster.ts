@@ -180,10 +180,10 @@ export const useKMeansClustering = <T extends LatLng>(
 
   let isChanged = true;
   while (isChanged) {
-    markers.forEach((LatLng) => {
+    markers.forEach((marker) => {
       const [, closestClusterIndex] = clusters.reduce(
         ([minDistance, minClusterIndex], cluster, index) => {
-          const distance = cluster.calculateDistance(LatLng);
+          const distance = cluster.calculateDistance(marker);
           return distance < minDistance
             ? [distance, index]
             : [minDistance, minClusterIndex];
@@ -191,7 +191,7 @@ export const useKMeansClustering = <T extends LatLng>(
         [Infinity, -1],
       );
       // 가장 가까운 클러스터에게 마커를 추가합니다.
-      clusters[closestClusterIndex].addLatLng(LatLng);
+      clusters[closestClusterIndex].addLatLng(marker);
     });
     // 클러스터의 중심점을 재조정합니다.
     // 이 때 모든 클러스터의 중심점이 재조정 되지 않았다면 반복문을 종료 합니다.
