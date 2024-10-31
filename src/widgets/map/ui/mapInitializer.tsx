@@ -40,7 +40,7 @@ export const MapInitializer = () => {
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          // todo 내 마킹일 경우 sortType을 "RECENT"로 설정
+          // todo 내 마킹일 경우 파라미터 처리
           setMapQueryParams({
             bounds: getMapBounds(),
             sortType: "POPULARITY",
@@ -49,7 +49,7 @@ export const MapInitializer = () => {
       },
       onError: () => {
         if (!hasBoundsParams) {
-          // todo 내 마킹일 경우 sortType을 "RECENT"로 설정
+          // todo 내 마킹일 경우 파라미터 처리
           setMapQueryParams({
             bounds: getMapBounds(),
             sortType: "POPULARITY",
@@ -70,7 +70,7 @@ export const MapInitializer = () => {
       east: northEastLng,
     });
 
-    // todo 내 마킹일 경우 sortType을 "RECENT"로 설정
+    // todo 내 마킹일 경우 파라미터 처리
     setMapQueryParams({
       bounds: getMapBounds(),
       sortType: sortTypeParam || "POPULARITY",
