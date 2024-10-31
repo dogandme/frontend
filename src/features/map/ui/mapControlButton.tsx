@@ -182,7 +182,6 @@ export const ExitAddModeButton = () => {
       handleOpen();
       return;
     }
-    resetMarkingFormStore();
     setMode("view");
   };
 
