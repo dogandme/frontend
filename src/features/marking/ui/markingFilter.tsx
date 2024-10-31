@@ -62,21 +62,13 @@ export const SortTypeFilter = ({
   options: SortType[];
   defaultOptionIdx?: number;
 }) => {
-  const {
-    sortType: selectedSortType,
-    searchByCurrentBounds,
-    searchPlace,
-  } = useResearchMarkingList();
+  const { sortType: selectedSortType, searchBySortType } =
+    useResearchMarkingList();
 
   const handleSelect = (sortType: SortType) => {
-    const path = window.location.pathname;
+    if (selectedSortType === sortType) return;
 
-    if (path === "/map/place") {
-      searchPlace({ sortType });
-      return;
-    }
-
-    searchByCurrentBounds(sortType);
+    searchBySortType(sortType);
   };
 
   const defaultOption = options[defaultOptionIdx];

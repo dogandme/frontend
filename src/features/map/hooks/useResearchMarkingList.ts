@@ -1,9 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import type { SortType } from "@/entities/marking/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useMapStore } from "../store";
 import { useGetMapCurrentBounds } from "./useGetMapCurrentBounds";
 import { type Filter, useMapParams } from "./useMapParams";
+
+const getViewMode = () => {
+  const { pathname } = window.location;
+
+  switch (pathname) {
+    case ROUTER_PATH.MAP:
+      return "MAP";
+    case ROUTER_PATH.PLACE:
+      return "PLACE";
+    default:
+      return "";
+  }
+};
 
 export const useResearchMarkingList = () => {
   const queryClient = useQueryClient();
@@ -25,13 +39,31 @@ export const useResearchMarkingList = () => {
     useMapParams();
   const getCurrentBounds = useGetMapCurrentBounds();
 
+  const viewMode = getViewMode();
+  const defaultSortType =
+    viewMode === "MAP" || viewMode === "PLACE" ? "POPULARITY" : "RECENT";
+
   // 현재 맵의 bounds로 파라미터를 설정합니다.
-  const searchByCurrentBounds = (newSortType?: Filter["sortType"]) => {
+  const searchByCurrentBounds = (newSortType?: SortType) => {
     const currentBounds = getCurrentBounds();
 
     setMapParams({
       bounds: currentBounds,
-      sortType: newSortType || sortType || "POPULARITY",
+      sortType: newSortType || sortType || defaultSortType,
+    });
+
+    setTimeout(() => {
+      setIsLastSearchedLocation(true);
+    }, 0);
+
+    removeCacheMarkData();
+  };
+
+  // sortType 파라미터를 변경
+  const searchBySortType = (newSortType: SortType) => {
+    setMapParams({
+      bounds,
+      sortType: newSortType,
     });
 
     setTimeout(() => {
@@ -71,6 +103,7 @@ export const useResearchMarkingList = () => {
     hasBoundsParams,
     hasSortTypeParam,
     searchByCurrentBounds,
+    searchBySortType,
     searchLocal,
     searchPlace,
   };
