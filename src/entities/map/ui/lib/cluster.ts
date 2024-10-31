@@ -6,7 +6,7 @@ interface LatLng {
 }
 
 class Cluster<T extends LatLng> {
-  private LatLngBuffer: T[] = [];
+  private markerBuffer: T[] = [];
   private outlierBuffer: T[] = [];
 
   outliers: T[] = [];
@@ -116,7 +116,7 @@ class Cluster<T extends LatLng> {
     const { lat, lng } = marker;
     // 초기 시행 시에는 따로 Z-Score를 계산하지 않습니다.
     if (this.std.lat === 0 || this.std.lng === 0) {
-      this.LatLngBuffer.push(marker);
+      this.markerBuffer.push(marker);
       return;
     }
     const zScore = this.getZScore({ lat, lng });
@@ -125,7 +125,7 @@ class Cluster<T extends LatLng> {
      * 이 때 새로운 군집을 형성하는 기준은 이상값이 아닌 마커들로 구성된 군집입니다.
      */
     if (zScore.lat < 3 || zScore.lng < 3) {
-      this.LatLngBuffer.push(marker);
+      this.markerBuffer.push(marker);
       return;
     }
     this.outlierBuffer.push(marker);
@@ -136,8 +136,8 @@ class Cluster<T extends LatLng> {
    */
   revalidateCluster() {
     // 재조정 전 버퍼에 있던 마커 리스트를 복사하고 버퍼를 초기화 합니다.
-    this.markers = [...this.LatLngBuffer];
-    this.LatLngBuffer = [];
+    this.markers = [...this.markerBuffer];
+    this.markerBuffer = [];
     // 재조정 전 버퍼에 있던 이상값 리스트를 복사하고 버퍼를 초기화 합니다.
     this.outliers = [...this.outlierBuffer];
     this.outlierBuffer = [];
