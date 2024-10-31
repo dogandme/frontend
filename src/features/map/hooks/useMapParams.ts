@@ -51,22 +51,22 @@ export const useMapParams = () => {
       mapParams.bounds &&
       Object.values(mapParams.bounds).every((value) => value !== null);
 
-    if (mapParams.bounds && hasNewBoundsParams) {
+    if (hasNewBoundsParams) {
       newSearchParams.set(
         "boundsNELat",
-        mapParams.bounds.northEastLat!.toString(),
+        mapParams.bounds!.northEastLat!.toString(),
       );
       newSearchParams.set(
         "boundsNELng",
-        mapParams.bounds.northEastLng!.toString(),
+        mapParams.bounds!.northEastLng!.toString(),
       );
       newSearchParams.set(
         "boundsSWLat",
-        mapParams.bounds.southWestLat!.toString(),
+        mapParams.bounds!.southWestLat!.toString(),
       );
       newSearchParams.set(
         "boundsSWLng",
-        mapParams.bounds.southWestLng!.toString(),
+        mapParams.bounds!.southWestLng!.toString(),
       );
     }
 
