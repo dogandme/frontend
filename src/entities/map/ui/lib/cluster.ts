@@ -2,9 +2,12 @@ interface LatLng {
   lat: number;
   lng: number;
 }
+type Marker = LatLng & Record<"markingId", number>;
 
-class Cluster<T extends LatLng> {
+class Cluster<T extends Marker> {
   private markerBuffer: T[] = [];
+  private outletMap: Record<string, boolean>;
+
   markers: T[];
   mean: LatLng = { lat: 0, lng: 0 };
   var: LatLng = { lat: 0, lng: 0 };
@@ -13,6 +16,7 @@ class Cluster<T extends LatLng> {
   constructor({ lat, lng }: T) {
     this.mean = { lat, lng };
     this.markers = [];
+    this.outletMap = {};
   }
   /**
    * 마커에 대해 맨하탄 거리를 계산하고 클러스터 디스턴스 맵에 저장 합니다.
@@ -24,6 +28,14 @@ class Cluster<T extends LatLng> {
    * 특정 마커를 마커 버퍼에 추가 합니다.
    */
   addMarker(marker: T) {
+    const { lat, lng } = marker;
+    if (
+      this.mean.lat - lat > this.std.lat * 3 ||
+      this.mean.lng - lng > this.std.lng * 3
+    ) {
+      this.outletMap[marker.markingId] = true;
+    }
+
     this.markerBuffer.push(marker);
   }
   /**
@@ -66,7 +78,7 @@ class Cluster<T extends LatLng> {
   }
 }
 
-export const kMeansClustering = <T extends LatLng>(
+export const kMeansClustering = <T extends Marker>(
   NumOfCluster: number,
   markers: T[],
 ) => {
