@@ -2,7 +2,7 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { Nickname, UserId } from "@/entities/profile/api";
 import { apiClient, formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MY_MARKING_ENDPOINT } from "../constants";
+import { MY_MARKING_END_POINT } from "../constants";
 
 export interface TempMarkingFileInfo {
   id: number;
@@ -63,7 +63,7 @@ export const useGetTemporaryMarkingList = () => {
     queryFn: token
       ? ({ pageParam }) =>
           apiClient.get<GetTemporaryMarkingListResponse>(
-            MY_MARKING_ENDPOINT.TEMPORARY(pageParam),
+            MY_MARKING_END_POINT.TEMPORARY(pageParam),
             {
               withToken: true,
             },
