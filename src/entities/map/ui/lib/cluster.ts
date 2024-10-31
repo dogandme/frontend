@@ -11,18 +11,22 @@ class Cluster<T extends Marker> {
 
   markers: T[];
   center: LatLng = { lat: 0, lng: 0 };
-  var: LatLng = { lat: 0, lng: 0 };
-  std: LatLng = { lat: 0, lng: 0 };
+  bounds: Bounds;
 
-  constructor({ lat, lng }: T) {
+  private mean: number = 0;
+  private std: number = 0;
+
+  constructor({ lat, lng }: T, bounds: Bounds) {
     this.center = { lat, lng };
     this.markers = [];
+    this.bounds = bounds;
   }
   /**
    * lat , lng 값의 범위가 다르기에 거리 계산 전 표준화를 시행 합니다.
    */
-  private minMaxScaling({ lat, lng }: LatLng, bounds: Bounds) {
-    const { northEastLat, northEastLng, southWestLat, southWestLng } = bounds;
+  private minMaxScaling({ lat, lng }: LatLng) {
+    const { northEastLat, northEastLng, southWestLat, southWestLng } =
+      this.bounds;
     if (!northEastLat || !northEastLng || !southWestLat || !southWestLng) {
       return { lat, lng };
     }
@@ -33,9 +37,9 @@ class Cluster<T extends Marker> {
   /**
    * 마커에 대해 맨하탄 거리를 계산하고 클러스터 디스턴스 맵에 저장 합니다.
    */
-  calculateDistance({ lat, lng }: LatLng, bounds: Bounds) {
-    const scaledLatLng = this.minMaxScaling({ lat, lng }, bounds);
-    const scaledCenter = this.minMaxScaling(this.center, bounds);
+  calculateDistance({ lat, lng }: LatLng) {
+    const scaledLatLng = this.minMaxScaling({ lat, lng });
+    const scaledCenter = this.minMaxScaling(this.center);
     return (
       Math.abs(scaledCenter.lat - scaledLatLng.lat) +
       Math.abs(scaledCenter.lng - scaledLatLng.lng)
@@ -66,6 +70,8 @@ class Cluster<T extends Marker> {
       { lat: 0, lng: 0 },
     );
 
+    this.mean = 0;
+
     return (
       prevCenter.lat !== this.center.lat || prevCenter.lng !== this.center.lng
     );
@@ -86,7 +92,7 @@ export const useKMeansClustering = <T extends Marker>(
   // TODO 휴리스틱한 방식으로 초기값 뽑기
   const clusters = Array.from({ length: NumOfCluster }, () => {
     const randomIndex = Math.floor(Math.random() * markers.length);
-    return new Cluster(markers[randomIndex]);
+    return new Cluster(markers[randomIndex], bounds);
   });
 
   let isChanged = true;
@@ -94,7 +100,7 @@ export const useKMeansClustering = <T extends Marker>(
     markers.forEach((marker) => {
       const [, closestClusterIndex] = clusters.reduce(
         ([minDistance, minClusterIndex], cluster, index) => {
-          const distance = cluster.calculateDistance(marker, bounds);
+          const distance = cluster.calculateDistance(marker);
           return distance < minDistance
             ? [distance, index]
             : [minDistance, minClusterIndex];
