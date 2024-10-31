@@ -112,11 +112,11 @@ class Cluster<T extends LatLng> {
    * ! 오히려 전체 데이터 기준으로 봤을 땐 해당 군집에 어울리는 값일 수 있습니다.
    * ! 이상값을 판단하는 기준은 Z-Score가 3 이상인 경우로 설정 하였습니다. (3시그마 규칙)
    */
-  addLatLng(LatLng: T) {
-    const { lat, lng } = LatLng;
+  addMarker(marker: T) {
+    const { lat, lng } = marker;
     // 초기 시행 시에는 따로 Z-Score를 계산하지 않습니다.
     if (this.std.lat === 0 || this.std.lng === 0) {
-      this.LatLngBuffer.push(LatLng);
+      this.LatLngBuffer.push(marker);
       return;
     }
     const zScore = this.getZScore({ lat, lng });
@@ -125,10 +125,10 @@ class Cluster<T extends LatLng> {
      * 이 때 새로운 군집을 형성하는 기준은 이상값이 아닌 마커들로 구성된 군집입니다.
      */
     if (zScore.lat < 3 || zScore.lng < 3) {
-      this.LatLngBuffer.push(LatLng);
+      this.LatLngBuffer.push(marker);
       return;
     }
-    this.outlierBuffer.push(LatLng);
+    this.outlierBuffer.push(marker);
   }
   /**
    * 마커의 중심점을 재조정 합니다.
@@ -191,7 +191,7 @@ export const useKMeansClustering = <T extends LatLng>(
         [Infinity, -1],
       );
       // 가장 가까운 클러스터에게 마커를 추가합니다.
-      clusters[closestClusterIndex].addLatLng(marker);
+      clusters[closestClusterIndex].addMarker(marker);
     });
     // 클러스터의 중심점을 재조정합니다.
     // 이 때 모든 클러스터의 중심점이 재조정 되지 않았다면 반복문을 종료 합니다.
