@@ -7,7 +7,7 @@ export const MarkingResearchButton = () => {
     (state) => state.isLastSearchedLocation,
   );
 
-  const { researchMarkingList } = useResearchMarkingList();
+  const { searchByCurrentBounds } = useResearchMarkingList();
 
   if (isLastSearchedLocation) return null;
 
@@ -15,7 +15,7 @@ export const MarkingResearchButton = () => {
     <button
       className="flex text-tangerine-500 gap-2 pl-2 pr-3 h-8 items-center rounded-2xl bg-grey-0 shadow-custom-1"
       onClick={() => {
-        researchMarkingList();
+        searchByCurrentBounds();
       }}
     >
       <ResetIcon width={20} height={20} />

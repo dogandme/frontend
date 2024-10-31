@@ -1,15 +1,13 @@
-import { useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
 import { useResearchMarkingList } from "@/features/map/hooks";
 import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
-import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { MarkingList } from "./markingList";
 
 export const PlaceMarkingList = () => {
-  const { bounds, sortType, researchMarkingList } = useResearchMarkingList();
+  const { bounds, sortType, searchLocal } = useResearchMarkingList();
   const {
     data: markingList,
     fetchNextPage,
@@ -28,14 +26,11 @@ export const PlaceMarkingList = () => {
 
   const map = useMap();
 
-  const navigate = useNavigate();
-
   return (
     <>
       <BackwardNavigationBar
         onClick={() => {
-          navigate(ROUTER_PATH.MAP);
-          researchMarkingList();
+          searchLocal();
         }}
         label={<h1 className="text-grey-900 title-1">이 장소 관련 마킹</h1>}
       />
@@ -55,6 +50,9 @@ export const PlaceMarkingList = () => {
               });
               map.setZoom(19);
             }}
+            // todo isLiked, isBookmarked 설정
+            isLiked={false}
+            isBookmarked={false}
             {...marking}
           />
         ))}

@@ -1,19 +1,19 @@
 import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
-import { sortTypeMap } from "@/features/map/constants";
 import { useCurrentLocation } from "@/features/map/hooks";
 import { useResearchMarkingList } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
-import { SortType } from "@/entities/marking/api";
 
 export const MapInitializer = () => {
   const map = useMap();
 
   const { loading, setCurrentLocation } = useCurrentLocation();
+
   const {
-    researchMarkingList,
+    searchByCurrentBounds,
     bounds: boundsParams,
+    hasBoundsParams,
     sortType: sortTypeParam,
   } = useResearchMarkingList();
 
@@ -25,12 +25,6 @@ export const MapInitializer = () => {
   useEffect(() => {
     if (!map || !isMapIdle) return;
 
-    const hasSortTypeParam = !!sortTypeParam && sortTypeParam in sortTypeMap;
-
-    const filterOptions = {
-      sortType: hasSortTypeParam ? (sortTypeParam as SortType) : "RECENT",
-    };
-
     // map 인스턴스가 생기고 나서, 현재 위치를 가져옵니다.
     setCurrentLocation({
       onSuccess: ({ coords }) => {
@@ -39,24 +33,24 @@ export const MapInitializer = () => {
         const currentLocationOfUser = { lat: latitude, lng: longitude };
 
         // /map으로 접속했을 때, 현재 위치로 query string를 설정합니다.
-        if (!boundsParams) {
+        if (!hasBoundsParams) {
           map.setCenter(currentLocationOfUser);
 
           setTimeout(() => {
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          researchMarkingList(filterOptions);
+          searchByCurrentBounds("POPULARITY");
         }
       },
       onError: () => {
-        if (!boundsParams) {
-          researchMarkingList(filterOptions);
+        if (!hasBoundsParams) {
+          searchByCurrentBounds("POPULARITY");
         }
       },
     });
 
-    if (!boundsParams) return;
+    if (!hasBoundsParams) return;
 
     const { northEastLat, northEastLng, southWestLat, southWestLng } =
       boundsParams;
@@ -68,7 +62,7 @@ export const MapInitializer = () => {
       east: northEastLng,
     });
 
-    researchMarkingList(filterOptions);
+    searchByCurrentBounds(sortTypeParam || "POPULARITY");
   }, [map, isMapIdle]);
 
   if (!map || loading || !isMapIdle) {

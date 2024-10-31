@@ -7,7 +7,7 @@ import { MyLocationIcon } from "@/shared/ui/icon";
 import { MarkingList } from "./markingList";
 
 export const LocalMarkingList = () => {
-  const { bounds, sortType, navigatePlace } = useResearchMarkingList();
+  const { bounds, sortType, searchPlace } = useResearchMarkingList();
   const {
     data: markingList,
     fetchNextPage,
@@ -47,7 +47,7 @@ export const LocalMarkingList = () => {
             className="aspect-square"
             onClick={() => {
               // todo 클러스터링 데이터에 있는 bounds로 인수 전달
-              navigatePlace({
+              searchPlace({
                 bounds: {
                   southWestLat: lat - 0.00001,
                   southWestLng: lng - 0.00001,

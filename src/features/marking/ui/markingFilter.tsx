@@ -64,21 +64,19 @@ export const SortTypeFilter = ({
 }) => {
   const {
     sortType: selectedSortType,
-    researchMarkingList,
-    navigatePlace,
+    searchByCurrentBounds,
+    searchPlace,
   } = useResearchMarkingList();
 
   const handleSelect = (sortType: SortType) => {
     const path = window.location.pathname;
 
     if (path === "/map/place") {
-      navigatePlace({ sortType });
+      searchPlace({ sortType });
       return;
     }
 
-    researchMarkingList({
-      sortType,
-    });
+    searchByCurrentBounds(sortType);
   };
 
   const defaultOption = options[defaultOptionIdx];
@@ -118,7 +116,7 @@ export const SortTypeFilter = ({
 
   return (
     <MarkingFilterButton onClick={handleOpen}>
-      {sortTypeMap[selectedSortType]}
+      {sortTypeMap[selectedSortType || defaultOption]}
     </MarkingFilterButton>
   );
 };
@@ -151,7 +149,7 @@ export const RangeFilter = ({
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
-  const { researchMarkingList } = useResearchMarkingList();
+  const { searchByCurrentBounds } = useResearchMarkingList();
   const { setCurrentLocation } = useCurrentLocation();
 
   const map = useMap();
@@ -175,7 +173,7 @@ export const RangeFilter = ({
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          researchMarkingList();
+          searchByCurrentBounds();
         },
       });
 
@@ -183,7 +181,7 @@ export const RangeFilter = ({
     }
 
     if (rangeFilter === "MAP_LOCATION") {
-      researchMarkingList();
+      searchByCurrentBounds();
       return;
     }
 

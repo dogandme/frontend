@@ -18,7 +18,7 @@ export const UserMarker = () => {
 };
 
 export const PinMarker = () => {
-  const { bounds, navigatePlace } = useResearchMarkingList();
+  const { bounds, searchPlace } = useResearchMarkingList();
 
   const { data: markerList } = useGetBoundaryMarkerList(bounds);
 
@@ -29,8 +29,7 @@ export const PinMarker = () => {
       imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
       alt={`${markingId}의 이미지`}
       onClick={() => {
-        // todo 클러스터링 데이터에 있는 bounds로 인수 전달
-        navigatePlace({
+        searchPlace({
           bounds: {
             southWestLat: lat - 0.00001,
             southWestLng: lng - 0.00001,
