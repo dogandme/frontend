@@ -63,7 +63,7 @@ export const SortTypeFilter = ({
   options: SortType[];
   defaultOptionIdx?: number;
 }) => {
-  const { sortType: selectedSortType } = useMapParams();
+  const { sortTypeParam: selectedSortType } = useMapParams();
   const { searchBySortType } = useResearchMarkingList();
 
   const handleSelect = (sortType: SortType) => {

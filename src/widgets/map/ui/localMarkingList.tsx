@@ -7,7 +7,7 @@ import { MyLocationIcon } from "@/shared/ui/icon";
 import { MarkingList } from "./markingList";
 
 export const LocalMarkingList = () => {
-  const { bounds, sortType } = useMapParams();
+  const { boundsParams, sortTypeParam } = useMapParams();
   const { searchPlace } = useResearchMarkingList();
   const {
     data: markingList,
@@ -15,8 +15,8 @@ export const LocalMarkingList = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useGetMarkingList({
-    ...bounds,
-    sortType,
+    ...boundsParams,
+    sortType: sortTypeParam,
   });
 
   const [setNode] = useInfiniteScroll(() => {

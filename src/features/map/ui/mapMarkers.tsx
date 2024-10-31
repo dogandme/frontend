@@ -18,10 +18,10 @@ export const UserMarker = () => {
 };
 
 export const PinMarker = () => {
-  const { bounds } = useMapParams();
+  const { boundsParams } = useMapParams();
   const { searchPlace } = useResearchMarkingList();
 
-  const { data: markerList } = useGetBoundaryMarkerList(bounds);
+  const { data: markerList } = useGetBoundaryMarkerList(boundsParams);
 
   return markerList?.map(({ markingId, lat, lng, previewImage }) => (
     <Pin

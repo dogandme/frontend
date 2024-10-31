@@ -78,9 +78,9 @@ export const useMapParams = () => {
   };
 
   return {
-    bounds,
+    boundsParams: bounds,
     hasBoundsParams,
-    sortType,
+    sortTypeParam: sortType,
     hasSortTypeParam,
     setMapParams,
   };

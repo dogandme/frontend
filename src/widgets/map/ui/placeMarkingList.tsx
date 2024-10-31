@@ -7,7 +7,7 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { MarkingList } from "./markingList";
 
 export const PlaceMarkingList = () => {
-  const { bounds, sortType } = useMapParams();
+  const { boundsParams, sortTypeParam } = useMapParams();
   const { searchLocal } = useResearchMarkingList();
   const {
     data: markingList,
@@ -15,8 +15,8 @@ export const PlaceMarkingList = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useGetMarkingList({
-    ...bounds,
-    sortType,
+    ...boundsParams,
+    sortType: sortTypeParam,
   });
 
   const [setNode] = useInfiniteScroll(() => {

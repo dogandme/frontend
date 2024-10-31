@@ -23,7 +23,7 @@ export const useResearchMarkingList = () => {
     (state) => state.setIsLastSearchedLocation,
   );
 
-  const { bounds, sortType, setMapParams } = useMapParams();
+  const { boundsParams, sortTypeParam, setMapParams } = useMapParams();
   const getCurrentBounds = useGetMapCurrentBounds();
 
   const viewMode = getViewMode();
@@ -36,7 +36,7 @@ export const useResearchMarkingList = () => {
 
     setMapParams({
       bounds: currentBounds,
-      sortType: newSortType || sortType || defaultSortType,
+      sortType: newSortType || sortTypeParam || defaultSortType,
     });
 
     setTimeout(() => {
@@ -47,7 +47,7 @@ export const useResearchMarkingList = () => {
   // sortType 파라미터를 변경
   const searchBySortType = (newSortType: SortType) => {
     setMapParams({
-      bounds,
+      bounds: boundsParams,
       sortType: newSortType,
     });
 
@@ -72,7 +72,7 @@ export const useResearchMarkingList = () => {
     navigate(ROUTER_PATH.PLACE);
 
     setMapParams({
-      bounds: filter.bounds || bounds,
+      bounds: filter.bounds || boundsParams,
       sortType: filter.sortType || "POPULARITY",
     });
 

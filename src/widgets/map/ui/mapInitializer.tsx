@@ -10,11 +10,7 @@ export const MapInitializer = () => {
 
   const { loading, setCurrentLocation } = useCurrentLocation();
 
-  const {
-    bounds: boundsParams,
-    hasBoundsParams,
-    sortType: sortTypeParam,
-  } = useMapParams();
+  const { boundsParams, hasBoundsParams, sortTypeParam } = useMapParams();
 
   const { searchByMapBounds } = useResearchMarkingList();
 
