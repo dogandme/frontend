@@ -193,13 +193,13 @@ const PhotoInput = () => {
       console.error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
     }
 
-    const AvailableNewFileArray = [...newFiles]
+    const availableNewFileArray = [...newFiles]
       .filter((newFile) => !images.some(({ name }) => name === newFile.name))
       .slice(0, MAX_IMAGE_LENGTH - images.length);
 
     setImages([
       ...images,
-      ...AvailableNewFileArray.map((file) => ({
+      ...availableNewFileArray.map((file) => ({
         name: file.name,
         url: URL.createObjectURL(file),
         file,

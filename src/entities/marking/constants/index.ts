@@ -31,3 +31,8 @@ export const MARKER_END_POINT = {
   }: GetBoundaryMarkerListRequest) =>
     `${API_BASE_URL}/markings/marks?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}`,
 };
+
+export const MY_MARKING_END_POINT = {
+  TEMPORARY: (offset: number) =>
+    `${API_BASE_URL}/markings/temps?offset=${offset}`,
+};
