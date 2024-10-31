@@ -30,7 +30,7 @@ export interface PetInfo {
   breed: Breed;
   description: PetDescription;
   personalities: PetPersonalities;
-  profile: ProfileImageUrl
+  profile: ProfileImageUrl;
 }
 
 /**
