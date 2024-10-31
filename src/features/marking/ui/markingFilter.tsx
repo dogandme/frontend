@@ -3,6 +3,7 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { RangeFilterMap, sortTypeMap } from "@/features/map/constants";
 import {
   useCurrentLocation,
+  useMapParams,
   useResearchMarkingList,
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
@@ -62,8 +63,8 @@ export const SortTypeFilter = ({
   options: SortType[];
   defaultOptionIdx?: number;
 }) => {
-  const { sortType: selectedSortType, searchBySortType } =
-    useResearchMarkingList();
+  const { sortType: selectedSortType } = useMapParams();
+  const { searchBySortType } = useResearchMarkingList();
 
   const handleSelect = (sortType: SortType) => {
     if (selectedSortType === sortType) return;

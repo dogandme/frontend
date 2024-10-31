@@ -1,4 +1,4 @@
-import { useResearchMarkingList } from "@/features/map/hooks";
+import { useMapParams, useResearchMarkingList } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
@@ -7,7 +7,8 @@ import { MyLocationIcon } from "@/shared/ui/icon";
 import { MarkingList } from "./markingList";
 
 export const LocalMarkingList = () => {
-  const { bounds, sortType, searchPlace } = useResearchMarkingList();
+  const { bounds, sortType } = useMapParams();
+  const { searchPlace } = useResearchMarkingList();
   const {
     data: markingList,
     fetchNextPage,

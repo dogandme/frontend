@@ -1,7 +1,7 @@
 import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
 import { useGetBoundaryMarkerList } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
-import { useResearchMarkingList } from "../hooks";
+import { useMapParams, useResearchMarkingList } from "../hooks";
 import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
@@ -18,7 +18,8 @@ export const UserMarker = () => {
 };
 
 export const PinMarker = () => {
-  const { bounds, searchPlace } = useResearchMarkingList();
+  const { bounds } = useMapParams();
+  const { searchPlace } = useResearchMarkingList();
 
   const { data: markerList } = useGetBoundaryMarkerList(bounds);
 

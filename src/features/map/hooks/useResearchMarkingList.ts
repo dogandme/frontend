@@ -35,8 +35,7 @@ export const useResearchMarkingList = () => {
     });
   };
 
-  const { bounds, sortType, hasBoundsParams, hasSortTypeParam, setMapParams } =
-    useMapParams();
+  const { bounds, sortType, setMapParams } = useMapParams();
   const getCurrentBounds = useGetMapCurrentBounds();
 
   const viewMode = getViewMode();
@@ -101,10 +100,6 @@ export const useResearchMarkingList = () => {
   };
 
   return {
-    bounds,
-    sortType,
-    hasBoundsParams,
-    hasSortTypeParam,
     searchByMapBounds,
     searchBySortType,
     searchLocal,

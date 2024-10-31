@@ -1,5 +1,5 @@
 import { useMap } from "@vis.gl/react-google-maps";
-import { useResearchMarkingList } from "@/features/map/hooks";
+import { useMapParams, useResearchMarkingList } from "@/features/map/hooks";
 import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import { useInfiniteScroll } from "@/shared/lib";
@@ -7,7 +7,8 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { MarkingList } from "./markingList";
 
 export const PlaceMarkingList = () => {
-  const { bounds, sortType, searchLocal } = useResearchMarkingList();
+  const { bounds, sortType } = useMapParams();
+  const { searchLocal } = useResearchMarkingList();
   const {
     data: markingList,
     fetchNextPage,

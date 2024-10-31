@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
-import { useCurrentLocation } from "@/features/map/hooks";
+import { useCurrentLocation, useMapParams } from "@/features/map/hooks";
 import { useResearchMarkingList } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
@@ -11,11 +11,12 @@ export const MapInitializer = () => {
   const { loading, setCurrentLocation } = useCurrentLocation();
 
   const {
-    searchByMapBounds: searchByCurrentBounds,
     bounds: boundsParams,
     hasBoundsParams,
     sortType: sortTypeParam,
-  } = useResearchMarkingList();
+  } = useMapParams();
+
+  const { searchByMapBounds } = useResearchMarkingList();
 
   const isMapIdle = useMapStore((state) => state.isIdle);
   const setIsCenteredOnMyLocation = useMapStore(
@@ -40,12 +41,12 @@ export const MapInitializer = () => {
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          searchByCurrentBounds("POPULARITY");
+          searchByMapBounds("POPULARITY");
         }
       },
       onError: () => {
         if (!hasBoundsParams) {
-          searchByCurrentBounds("POPULARITY");
+          searchByMapBounds("POPULARITY");
         }
       },
     });
@@ -62,7 +63,7 @@ export const MapInitializer = () => {
       east: northEastLng,
     });
 
-    searchByCurrentBounds(sortTypeParam || "POPULARITY");
+    searchByMapBounds(sortTypeParam || "POPULARITY");
   }, [map, isMapIdle]);
 
   if (!map || loading || !isMapIdle) {
