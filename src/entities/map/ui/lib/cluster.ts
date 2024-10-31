@@ -1,4 +1,4 @@
-import { Bounds, useResearchMarkingList } from "@/features/map/hooks";
+import { type Bounds, useGetMapCurrentBounds } from "@/features/map/hooks";
 
 interface LatLng {
   lat: number;
@@ -166,8 +166,8 @@ export const useKMeansClustering = <T extends Marker>(
   NumOfCluster: number,
   markers?: T[],
 ) => {
-  // 표준화를 위해 mix,max lat,lng 값을 구합니다.
-  const { bounds } = useResearchMarkingList();
+  const getCurrentBounds = useGetMapCurrentBounds();
+  const bounds = getCurrentBounds();
   if (!markers) {
     return [];
   }
