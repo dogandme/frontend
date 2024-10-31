@@ -13,8 +13,19 @@ class Cluster<T extends Marker> {
   center: LatLng = { lat: 0, lng: 0 };
   bounds: Bounds;
 
-  private mean: number = 0;
-  private std: number = 0;
+  private mean: LatLng = {
+    lat: 0,
+    lng: 0,
+  };
+
+  private var: LatLng = {
+    lat: 0,
+    lng: 0,
+  };
+  private std: LatLng = {
+    lat: 0,
+    lng: 0,
+  };
 
   constructor({ lat, lng }: T, bounds: Bounds) {
     this.center = { lat, lng };
@@ -40,10 +51,50 @@ class Cluster<T extends Marker> {
   calculateDistance({ lat, lng }: LatLng) {
     const scaledLatLng = this.minMaxScaling({ lat, lng });
     const scaledCenter = this.minMaxScaling(this.center);
+
     return (
-      Math.abs(scaledCenter.lat - scaledLatLng.lat) +
-      Math.abs(scaledCenter.lng - scaledLatLng.lng)
+      Math.abs(scaledLatLng.lat - scaledCenter.lat) +
+      Math.abs(scaledLatLng.lng - scaledCenter.lng)
     );
+  }
+  /**
+   * 정규화 된 값을 이용해 평균 , 분산 , 표준편차를 구합니다.
+   * 정규화를 하는 이유는 줌 레벨에 따라 각 마커들의 거리의 범위가 달라지기 때문입니다.
+   * 정규화 된 값으로 거리를 계산하면 줌 레벨에 따라 거리의 범위가 일정하게 유지되기에 이상값을 검증하기 위한 지표로 사용 할 수 있습니다.
+   */
+  updateStatisticValue() {
+    const scaledLatLngList = this.markers.map((marker) =>
+      this.minMaxScaling(marker),
+    );
+
+    this.mean = scaledLatLngList.reduce(
+      (mean, { lat, lng }) => {
+        return {
+          lat: mean.lat + lat / this.markers.length,
+          lng: mean.lng + lng / this.markers.length,
+        };
+      },
+      { lat: 0, lng: 0 },
+    );
+
+    this.var = scaledLatLngList.reduce(
+      (variance, { lat, lng }) => {
+        return {
+          lat:
+            variance.lat +
+            Math.pow(lat - this.mean.lat, 2) / this.markers.length,
+          lng:
+            variance.lng +
+            Math.pow(lng - this.mean.lng, 2) / this.markers.length,
+        };
+      },
+      { lat: 0, lng: 0 },
+    );
+
+    this.std = {
+      lat: Math.sqrt(this.var.lat),
+      lng: Math.sqrt(this.var.lng),
+    };
   }
   /**
    * 특정 마커를 마커 버퍼에 추가 합니다.
@@ -62,6 +113,7 @@ class Cluster<T extends Marker> {
     // 재조정 전 클러스터의 중심점을 캐싱 합니다.
     const prevCenter = { ...this.center };
 
+    // 클러스터의 마커들을 이용해 새로운 중심점을 계산합니다.
     this.center = this.markers.reduce(
       (center, { lat, lng }) => ({
         lat: center.lat + lat / this.markers.length,
@@ -69,8 +121,8 @@ class Cluster<T extends Marker> {
       }),
       { lat: 0, lng: 0 },
     );
-
-    this.mean = 0;
+    // 새로운 중심점을 이용해 통계값을 계산합니다.
+    this.updateStatisticValue();
 
     return (
       prevCenter.lat !== this.center.lat || prevCenter.lng !== this.center.lng
