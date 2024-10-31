@@ -90,18 +90,17 @@ export const useKMeansClustering = <T extends Marker>(
   let isChanged = true;
   while (isChanged) {
     markers.forEach((marker) => {
-      let minDistance = 9999999999;
-      let minClusterIndex = -1;
-      // cluster에 대해 맨하탄 거리를 계산하고 가장 가까운 클러스터를 찾습니다.
-      clusters.forEach((cluster, index) => {
-        const distance = cluster.calculateDistance(marker, bounds);
-        if (distance < minDistance) {
-          minDistance = distance;
-          minClusterIndex = index;
-        }
-      });
+      const [, closestClusterIndex] = clusters.reduce(
+        ([minDistance, minClusterIndex], cluster, index) => {
+          const distance = cluster.calculateDistance(marker, bounds);
+          return distance < minDistance
+            ? [distance, index]
+            : [minDistance, minClusterIndex];
+        },
+        [Infinity, -1],
+      );
       // 가장 가까운 클러스터에게 마커를 추가합니다.
-      clusters[minClusterIndex].addMarker(marker);
+      clusters[closestClusterIndex].addMarker(marker);
     });
     // 클러스터의 중심점을 재조정합니다.
     // 이 때 모든 클러스터의 중심점이 재조정 되지 않았다면 반복문을 종료 합니다.
