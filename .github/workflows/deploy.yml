@@ -2,10 +2,10 @@ name: Deploy React
 
 on:
   push:
-    branches: main
+    branches: dev
     
 env:
-  S3_BUCKET_NAME : s3버킷명
+  S3_BUCKET_NAME : mungwithme-fe-github-action-s3
 
 
 jobs:
