@@ -37,17 +37,13 @@ export const useMapParams = () => {
     southWestLat: getNumberParam("boundsSWLat", searchParams),
     southWestLng: getNumberParam("boundsSWLng", searchParams),
   };
-
-  const sortTypeParam = searchParams.get("sortType");
-  const sortType =
-    sortTypeParam && sortTypeParam in sortTypeMap
-      ? (sortTypeParam as SortType)
-      : null;
-
   const hasBoundsParams = Object.values(bounds).every(
     (value) => value !== null,
   );
-  const hasSortTypeParam = !!sortType;
+
+  const sortTypeParam = searchParams.get("sortType");
+  const hasSortTypeParam = !!sortTypeParam && sortTypeParam in sortTypeMap;
+  const sortType = hasSortTypeParam ? (sortTypeParam as SortType) : null;
 
   const setMapParams = (mapParams: Filter) => {
     const newSearchParams = new URLSearchParams(searchParams);
