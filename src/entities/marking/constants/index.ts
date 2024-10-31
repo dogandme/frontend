@@ -22,6 +22,19 @@ export const MARKING_END_POINT = {
     offset,
   }: GetMarkingListRequest) =>
     `${API_BASE_URL}/markings/bounds?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&lat=${lat}&lng=${lng}&sortType=${sortType}&offset=${offset}`,
+
+  USER: ({
+    nickname,
+    southWestLat,
+    southWestLng,
+    northEastLat,
+    northEastLng,
+    lat,
+    lng,
+    sortType,
+    offset,
+  }: GetUserMarkingListRequest) =>
+    `${API_BASE_URL}/markings/users/${nickname}?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&lat=${lat}&lng=${lng}&sortType=${sortType}&offset=${offset}`,
 };
 
 export const MARKER_END_POINT = {
