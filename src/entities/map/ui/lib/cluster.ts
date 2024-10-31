@@ -42,7 +42,7 @@ class Cluster<T extends LatLng> {
     if (!northEastLat || !northEastLng || !southWestLat || !southWestLng) {
       return { lat, lng };
     }
-    const scaledLat = (lat - southWestLat) / (northEastLat - southWestLat);
+    const scaledLat = (lat - northEastLat) / (southWestLat - northEastLat);
     const scaledLng = (lng - southWestLng) / (northEastLng - southWestLng);
     return { lat: scaledLat, lng: scaledLng };
   }
@@ -124,15 +124,15 @@ class Cluster<T extends LatLng> {
      * 새로운 군집을 형성 하기 위해 버퍼에 추가합니다.
      * 이 때 새로운 군집을 형성하는 기준은 이상값이 아닌 마커들로 구성된 군집입니다.
      */
-    if (zScore.lat < 3 || zScore.lng < 3) {
-      this.markerBuffer.push(marker);
+    if (zScore.lat > 3 || zScore.lng > 3) {
+      this.outlierBuffer.push(marker);
       return;
     }
-    this.outlierBuffer.push(marker);
+    this.markerBuffer.push(marker);
   }
   /**
    * 마커의 중심점을 재조정 합니다.
-   * 이 때 마커의 중심점이 변경되었다면 true를 반환 합니다.
+   * 이 때 마커의 중심점이 변경 되었다면 true를 반환 합니다.
    */
   revalidateCluster() {
     // 재조정 전 버퍼에 있던 마커 리스트를 복사하고 버퍼를 초기화 합니다.
@@ -154,9 +154,8 @@ class Cluster<T extends LatLng> {
     );
     // 새로운 중심점을 이용해 통계값을 계산합니다.
     this.updateStatisticValue();
-
     return (
-      prevCenter.lat === this.center.lat || prevCenter.lng === this.center.lng
+      prevCenter.lat !== this.center.lat || prevCenter.lng !== this.center.lng
     );
   }
 }
@@ -196,7 +195,7 @@ export const useKMeansClustering = <T extends LatLng>(
     // 클러스터의 중심점을 재조정합니다.
     // 이 때 모든 클러스터의 중심점이 재조정 되지 않았다면 반복문을 종료 합니다.
     isChanged = clusters.reduce(
-      (isChanged, cluster) => isChanged && cluster.revalidateCluster(),
+      (isChanged, cluster) => isChanged || cluster.revalidateCluster(),
       false,
     );
   }
