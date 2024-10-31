@@ -13,7 +13,7 @@ class Cluster<T extends Marker> {
   outliers: T[] = [];
   markers: T[];
   center: LatLng = { lat: 0, lng: 0 };
-  bounds: Bounds;
+  private bounds: Bounds;
 
   private mean: LatLng = {
     lat: 0,
