@@ -1,9 +1,8 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
-import { useMap } from "@vis.gl/react-google-maps";
 import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { SEARCH_MARKING_END_POINT } from "../constants";
+import { MARKING_END_POINT } from "../constants";
 
 interface Address {
   id: number;
@@ -104,7 +103,7 @@ const getMarkingList = async ({
   const hasToken = !!useAuthStore.getState().token;
 
   return apiClient.get<GetMarkingListResponse>(
-    SEARCH_MARKING_END_POINT({
+    MARKING_END_POINT.BOUNDARY({
       southWestLat,
       southWestLng,
       northEastLat,
@@ -133,11 +132,8 @@ export const useGetMarkingList = ({
   northEastLng: number | null;
   sortType: SortType | null;
 }) => {
-  const map = useMap();
-  const mapCenter = map?.getCenter();
-
-  const lat = mapCenter?.lat();
-  const lng = mapCenter?.lng();
+  const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
+  const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
 
   const { isIdle: isMapIdle } = useMapStore.getState();
 
