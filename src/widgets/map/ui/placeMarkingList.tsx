@@ -1,14 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
-import { useMapParams, useResearchMarkingList } from "@/features/map/hooks";
+import { useGetMapCurrentBounds, useMapParams } from "@/features/map/hooks";
 import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { MarkingList } from "./markingList";
 
 export const PlaceMarkingList = () => {
-  const { boundsParams, sortTypeParam } = useMapParams();
-  const { searchLocal } = useResearchMarkingList();
+  const navigate = useNavigate();
+  const { boundsParams, sortTypeParam, setMapParams } = useMapParams();
+  const getMapBounds = useGetMapCurrentBounds();
+
   const {
     data: markingList,
     fetchNextPage,
@@ -31,7 +35,11 @@ export const PlaceMarkingList = () => {
     <>
       <BackwardNavigationBar
         onClick={() => {
-          searchLocal();
+          navigate(ROUTER_PATH.MAP);
+          setMapParams({
+            bounds: getMapBounds(),
+            sortType: "POPULARITY",
+          });
         }}
         label={<h1 className="text-grey-900 title-1">이 장소 관련 마킹</h1>}
       />

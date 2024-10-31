@@ -3,8 +3,8 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { RangeFilterMap, sortTypeMap } from "@/features/map/constants";
 import {
   useCurrentLocation,
+  useGetMapCurrentBounds,
   useMapParams,
-  useResearchMarkingList,
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { SortType } from "@/entities/marking/api";
@@ -63,13 +63,12 @@ export const SortTypeFilter = ({
   options: SortType[];
   defaultOptionIdx?: number;
 }) => {
-  const { sortTypeParam: selectedSortType } = useMapParams();
-  const { searchBySortType } = useResearchMarkingList();
+  const { sortTypeParam: selectedSortType, setMapParams } = useMapParams();
 
   const handleSelect = (sortType: SortType) => {
     if (selectedSortType === sortType) return;
 
-    searchBySortType(sortType);
+    setMapParams({ sortType });
   };
 
   const defaultOption = options[defaultOptionIdx];
@@ -142,8 +141,9 @@ export const RangeFilter = ({
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
-  const { searchByMapBounds } = useResearchMarkingList();
   const { setCurrentLocation } = useCurrentLocation();
+  const { sortTypeParam, setMapParams } = useMapParams();
+  const getMapBounds = useGetMapCurrentBounds();
 
   const map = useMap();
 
@@ -168,7 +168,10 @@ export const RangeFilter = ({
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          searchByMapBounds();
+          setMapParams({
+            bounds: getMapBounds(),
+            sortType: sortTypeParam!,
+          });
         },
       });
 
@@ -176,7 +179,10 @@ export const RangeFilter = ({
     }
 
     if (rangeFilter === "MAP_LOCATION") {
-      searchByMapBounds();
+      setMapParams({
+        bounds: getMapBounds(),
+        sortType: sortTypeParam!,
+      });
       return;
     }
 

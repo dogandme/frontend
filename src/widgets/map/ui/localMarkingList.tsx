@@ -1,14 +1,15 @@
-import { useMapParams, useResearchMarkingList } from "@/features/map/hooks";
+import { useNavigate } from "react-router-dom";
+import { useMapParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
-import { API_BASE_URL } from "@/shared/constants";
+import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
 import { MarkingList } from "./markingList";
 
 export const LocalMarkingList = () => {
-  const { boundsParams, sortTypeParam } = useMapParams();
-  const { searchPlace } = useResearchMarkingList();
+  const navigate = useNavigate();
+  const { boundsParams, sortTypeParam, setMapParams } = useMapParams();
   const {
     data: markingList,
     fetchNextPage,
@@ -48,13 +49,15 @@ export const LocalMarkingList = () => {
             className="aspect-square"
             onClick={() => {
               // todo 클러스터링 데이터에 있는 bounds로 인수 전달
-              searchPlace({
+              navigate(ROUTER_PATH.PLACE);
+              setMapParams({
                 bounds: {
                   southWestLat: lat - 0.00001,
                   southWestLng: lng - 0.00001,
                   northEastLat: lat + 0.00001,
                   northEastLng: lng + 0.00001,
                 },
+                sortType: "POPULARITY",
               });
             }}
           >

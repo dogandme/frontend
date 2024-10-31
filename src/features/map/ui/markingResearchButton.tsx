@@ -1,5 +1,5 @@
 import { ResetIcon } from "@/shared/ui/icon";
-import { useResearchMarkingList } from "../hooks";
+import { useGetMapCurrentBounds, useMapParams } from "../hooks";
 import { useMapStore } from "../store";
 
 export const MarkingResearchButton = () => {
@@ -7,7 +7,8 @@ export const MarkingResearchButton = () => {
     (state) => state.isLastSearchedLocation,
   );
 
-  const { searchByMapBounds } = useResearchMarkingList();
+  const { setMapParams, sortTypeParam } = useMapParams();
+  const getMapBounds = useGetMapCurrentBounds();
 
   if (isLastSearchedLocation) return null;
 
@@ -15,7 +16,10 @@ export const MarkingResearchButton = () => {
     <button
       className="flex text-tangerine-500 gap-2 pl-2 pr-3 h-8 items-center rounded-2xl bg-grey-0 shadow-custom-1"
       onClick={() => {
-        searchByMapBounds();
+        setMapParams({
+          bounds: getMapBounds(),
+          sortType: sortTypeParam!,
+        });
       }}
     >
       <ResetIcon width={20} height={20} />

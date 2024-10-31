@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
-import { useCurrentLocation, useMapParams } from "@/features/map/hooks";
-import { useResearchMarkingList } from "@/features/map/hooks";
+import {
+  useCurrentLocation,
+  useGetMapCurrentBounds,
+  useMapParams,
+} from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 
@@ -10,9 +13,9 @@ export const MapInitializer = () => {
 
   const { loading, setCurrentLocation } = useCurrentLocation();
 
-  const { boundsParams, hasBoundsParams, sortTypeParam } = useMapParams();
-
-  const { searchByMapBounds } = useResearchMarkingList();
+  const { boundsParams, hasBoundsParams, sortTypeParam, setMapParams } =
+    useMapParams();
+  const getMapBounds = useGetMapCurrentBounds();
 
   const isMapIdle = useMapStore((state) => state.isIdle);
   const setIsCenteredOnMyLocation = useMapStore(
@@ -37,12 +40,20 @@ export const MapInitializer = () => {
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          searchByMapBounds("POPULARITY");
+          // todo 내 마킹일 경우 sortType을 "RECENT"로 설정
+          setMapParams({
+            bounds: getMapBounds(),
+            sortType: "POPULARITY",
+          });
         }
       },
       onError: () => {
         if (!hasBoundsParams) {
-          searchByMapBounds("POPULARITY");
+          // todo 내 마킹일 경우 sortType을 "RECENT"로 설정
+          setMapParams({
+            bounds: getMapBounds(),
+            sortType: "POPULARITY",
+          });
         }
       },
     });
@@ -59,7 +70,11 @@ export const MapInitializer = () => {
       east: northEastLng,
     });
 
-    searchByMapBounds(sortTypeParam || "POPULARITY");
+    // todo 내 마킹일 경우 sortType을 "RECENT"로 설정
+    setMapParams({
+      bounds: getMapBounds(),
+      sortType: sortTypeParam || "POPULARITY",
+    });
   }, [map, isMapIdle]);
 
   if (!map || loading || !isMapIdle) {
