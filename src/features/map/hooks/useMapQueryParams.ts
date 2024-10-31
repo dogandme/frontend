@@ -28,7 +28,7 @@ const getNumberParam = (
   return null;
 };
 
-export const useMapParams = () => {
+export const useMapQueryParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const bounds: Bounds = {
@@ -45,7 +45,7 @@ export const useMapParams = () => {
   const hasSortTypeParam = !!sortTypeParam && sortTypeParam in sortTypeMap;
   const sortType = hasSortTypeParam ? (sortTypeParam as SortType) : null;
 
-  const setMapParams = (mapParams: Filter) => {
+  const setMapQueryParams = (mapParams: Filter) => {
     const newSearchParams = new URLSearchParams(searchParams);
     const hasNewBoundsParams =
       mapParams.bounds &&
@@ -82,6 +82,6 @@ export const useMapParams = () => {
     hasBoundsParams,
     sortTypeParam: sortType,
     hasSortTypeParam,
-    setMapParams,
+    setMapQueryParams,
   };
 };

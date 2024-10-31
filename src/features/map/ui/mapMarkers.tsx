@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
 import { useGetBoundaryMarkerList } from "@/entities/marking/api";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
-import { useMapParams } from "../hooks";
+import { useMapQueryParams } from "../hooks";
 import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
@@ -20,7 +20,7 @@ export const UserMarker = () => {
 
 export const PinMarker = () => {
   const navigate = useNavigate();
-  const { boundsParams, setMapParams } = useMapParams();
+  const { boundsParams, setMapQueryParams } = useMapQueryParams();
 
   const { data: markerList } = useGetBoundaryMarkerList(boundsParams);
 
@@ -32,7 +32,7 @@ export const PinMarker = () => {
       alt={`${markingId}의 이미지`}
       onClick={() => {
         navigate(ROUTER_PATH.PLACE);
-        setMapParams({
+        setMapQueryParams({
           bounds: {
             southWestLat: lat - 0.00001,
             southWestLng: lng - 0.00001,

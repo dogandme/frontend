@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useMapParams } from "@/features/map/hooks";
+import { useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
@@ -9,7 +9,8 @@ import { MarkingList } from "./markingList";
 
 export const LocalMarkingList = () => {
   const navigate = useNavigate();
-  const { boundsParams, sortTypeParam, setMapParams } = useMapParams();
+  const { boundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
   const {
     data: markingList,
     fetchNextPage,
@@ -50,7 +51,7 @@ export const LocalMarkingList = () => {
             onClick={() => {
               // todo 클러스터링 데이터에 있는 bounds로 인수 전달
               navigate(ROUTER_PATH.PLACE);
-              setMapParams({
+              setMapQueryParams({
                 bounds: {
                   southWestLat: lat - 0.00001,
                   southWestLng: lng - 0.00001,

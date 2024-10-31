@@ -4,7 +4,7 @@ import { RangeFilterMap, sortTypeMap } from "@/features/map/constants";
 import {
   useCurrentLocation,
   useGetMapCurrentBounds,
-  useMapParams,
+  useMapQueryParams,
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { SortType } from "@/entities/marking/api";
@@ -63,12 +63,13 @@ export const SortTypeFilter = ({
   options: SortType[];
   defaultOptionIdx?: number;
 }) => {
-  const { sortTypeParam: selectedSortType, setMapParams } = useMapParams();
+  const { sortTypeParam: selectedSortType, setMapQueryParams } =
+    useMapQueryParams();
 
   const handleSelect = (sortType: SortType) => {
     if (selectedSortType === sortType) return;
 
-    setMapParams({ sortType });
+    setMapQueryParams({ sortType });
   };
 
   const defaultOption = options[defaultOptionIdx];
@@ -142,7 +143,7 @@ export const RangeFilter = ({
     (state) => state.setIsCenterOnMyLocation,
   );
   const { setCurrentLocation } = useCurrentLocation();
-  const { sortTypeParam, setMapParams } = useMapParams();
+  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
   const map = useMap();
@@ -168,7 +169,7 @@ export const RangeFilter = ({
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          setMapParams({
+          setMapQueryParams({
             bounds: getMapBounds(),
             sortType: sortTypeParam!,
           });
@@ -179,7 +180,7 @@ export const RangeFilter = ({
     }
 
     if (rangeFilter === "MAP_LOCATION") {
-      setMapParams({
+      setMapQueryParams({
         bounds: getMapBounds(),
         sortType: sortTypeParam!,
       });

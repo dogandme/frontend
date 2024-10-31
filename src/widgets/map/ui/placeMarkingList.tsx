@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
-import { useGetMapCurrentBounds, useMapParams } from "@/features/map/hooks";
+import {
+  useGetMapCurrentBounds,
+  useMapQueryParams,
+} from "@/features/map/hooks";
 import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import { ROUTER_PATH } from "@/shared/constants";
@@ -10,7 +13,8 @@ import { MarkingList } from "./markingList";
 
 export const PlaceMarkingList = () => {
   const navigate = useNavigate();
-  const { boundsParams, sortTypeParam, setMapParams } = useMapParams();
+  const { boundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
   const {
@@ -36,7 +40,7 @@ export const PlaceMarkingList = () => {
       <BackwardNavigationBar
         onClick={() => {
           navigate(ROUTER_PATH.MAP);
-          setMapParams({
+          setMapQueryParams({
             bounds: getMapBounds(),
             sortType: "POPULARITY",
           });

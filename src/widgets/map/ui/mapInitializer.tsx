@@ -3,7 +3,7 @@ import { useMap } from "@vis.gl/react-google-maps";
 import {
   useCurrentLocation,
   useGetMapCurrentBounds,
-  useMapParams,
+  useMapQueryParams,
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
@@ -13,8 +13,8 @@ export const MapInitializer = () => {
 
   const { loading, setCurrentLocation } = useCurrentLocation();
 
-  const { boundsParams, hasBoundsParams, sortTypeParam, setMapParams } =
-    useMapParams();
+  const { boundsParams, hasBoundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
   const isMapIdle = useMapStore((state) => state.isIdle);
@@ -41,7 +41,7 @@ export const MapInitializer = () => {
           }, 0);
 
           // todo 내 마킹일 경우 sortType을 "RECENT"로 설정
-          setMapParams({
+          setMapQueryParams({
             bounds: getMapBounds(),
             sortType: "POPULARITY",
           });
@@ -50,7 +50,7 @@ export const MapInitializer = () => {
       onError: () => {
         if (!hasBoundsParams) {
           // todo 내 마킹일 경우 sortType을 "RECENT"로 설정
-          setMapParams({
+          setMapQueryParams({
             bounds: getMapBounds(),
             sortType: "POPULARITY",
           });
@@ -71,7 +71,7 @@ export const MapInitializer = () => {
     });
 
     // todo 내 마킹일 경우 sortType을 "RECENT"로 설정
-    setMapParams({
+    setMapQueryParams({
       bounds: getMapBounds(),
       sortType: sortTypeParam || "POPULARITY",
     });

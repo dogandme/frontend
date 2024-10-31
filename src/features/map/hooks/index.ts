@@ -1,3 +1,3 @@
 export * from "./useCurrentLocation";
 export * from "./useGetMapCurrentBounds";
-export * from "./useMapParams";
+export * from "./useMapQueryParams";
