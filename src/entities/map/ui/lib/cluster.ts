@@ -43,7 +43,7 @@ class Cluster<T extends LatLng> {
     if (!northEastLat || !northEastLng || !southWestLat || !southWestLng) {
       return { lat, lng };
     }
-    const scaledLat = (lat - northEastLat) / (southWestLat - northEastLat);
+    const scaledLat = (lat - southWestLat) / (northEastLat - southWestLat);
     const scaledLng = (lng - southWestLng) / (northEastLng - southWestLng);
     return { lat: scaledLat, lng: scaledLng };
   }
