@@ -6,7 +6,6 @@ import {
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
-import { MY_MARKING_ENDPOINT } from "@/features/follow/constants";
 import { DeleteTemporaryMarkingRequest } from "@/features/marking/api";
 import { MARKING_END_POINT } from "@/features/marking/constants";
 import { PostChangeRegionRequest } from "@/features/setting/api";
@@ -28,6 +27,7 @@ import { profileMarkingThumbnail as _profileMarkingThumbnail } from "./data/prof
 import regionListData from "./data/regionList.json";
 import { temporaryMarkingList as _temporaryMarkingList } from "./data/tempMarkingList";
 import { User } from "./data/user";
+import { getMockUserMarkingList } from "./data/userMarkingList";
 
 interface UserInfo {
   nickname: string;
@@ -1203,7 +1203,7 @@ const getDistanceFromLatLonInKm = (
 const markingListDB: Record<string, Marking[]> = {};
 
 const getMarkingListHandler = [
-  http.get(`${API_BASE_URL}/markings/nearby`, async ({ request }) => {
+  http.get(`${API_BASE_URL}/markings/bounds`, async ({ request }) => {
     const url = new URL(request.url);
 
     const lat = Number(url.searchParams.get("lat"));
@@ -1693,6 +1693,102 @@ const putModifyTempMarkingHandler = [
   }),
 ];
 
+const getUserMarkingListHandler = [
+  http.get(
+    `${API_BASE_URL}/markings/users/:nickname`,
+    async ({ request, params }) => {
+      const { nickname } = params;
+
+      if (typeof nickname !== "string") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "잘못된 요청입니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      const url = new URL(request.url);
+
+      const southBottomLat = Number(url.searchParams.get("southBottomLat"));
+      const northTopLat = Number(url.searchParams.get("northTopLat"));
+      const southLeftLng = Number(url.searchParams.get("southLeftLng"));
+      const northRightLng = Number(url.searchParams.get("northRightLng"));
+
+      const markingList = getMockUserMarkingList({
+        nickname,
+        southBottomLat,
+        northTopLat,
+        southLeftLng,
+        northRightLng,
+      });
+
+      const sortType = url.searchParams.get("sortType") as SortType;
+
+      if (sortType === "POPULARITY") {
+        markingList.sort(
+          (a, b) => b.countData.likedCount - a.countData.likedCount,
+        );
+      } else if (sortType === "RECENT") {
+        markingList.sort(
+          (a, b) => new Date(b.regDt).getTime() - new Date(a.regDt).getTime(),
+        );
+      }
+
+      if (sortType === "DISTANCE") {
+        const lat = url.searchParams.get("lat");
+        const lng = url.searchParams.get("lng");
+
+        if (lat && lng) {
+          markingList.sort(
+            (a, b) =>
+              getDistanceFromLatLonInKm(
+                Number(lat),
+                Number(lng),
+                a.lat,
+                a.lng,
+              ) -
+              getDistanceFromLatLonInKm(Number(lat), Number(lng), b.lat, b.lng),
+          );
+        }
+      }
+
+      const pageNumber = Number(url.searchParams.get("offset") || 0);
+      const totalCount = markingList.length;
+      const pageSize = 20;
+      const lastPage = Math.ceil(totalCount / pageSize);
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          markings: markingList.slice(
+            pageNumber * pageSize,
+            (pageNumber + 1) * pageSize,
+          ),
+          totalElements: totalCount,
+          totalPages: lastPage,
+          pageAble: {
+            pageNumber,
+            pageSize,
+            sort: {
+              sorted: false,
+              unsorted: true,
+              empty: true,
+            },
+            offset: pageNumber,
+            paged: true,
+            unpaged: false,
+          },
+        },
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1723,4 +1819,5 @@ export const handlers = [
   ...getTemporaryMarkingListHandler,
   ...deleteTemporaryMarkingHandler,
   ...putModifyTempMarkingHandler,
+  ...getUserMarkingListHandler,
 ];
