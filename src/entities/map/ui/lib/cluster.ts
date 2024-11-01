@@ -167,8 +167,15 @@ export const useKMeansClustering = <T extends LatLng>(
 
   // K개의 클러스터를 생성합니다.
   // TODO 휴리스틱한 방식으로 초기값 뽑기
+  const randomIndexMap: Record<number, boolean> = {};
   const clusters = Array.from({ length: NumOfCluster }, () => {
-    const randomIndex = Math.floor(Math.random() * markers.length);
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * markers.length);
+    } while (randomIndexMap[randomIndex]);
+    {
+      randomIndexMap[randomIndex] = true;
+    }
     return new Cluster(markers[randomIndex], bounds);
   });
 
