@@ -95,13 +95,10 @@ export const useGetUserMarkingList = ({
 
     queryFn:
       isMapIdle &&
-      nickname &&
       !!southWestLat &&
       !!southWestLng &&
       !!northEastLat &&
       !!northEastLng &&
-      !!lat &&
-      !!lng &&
       !!sortType
         ? ({ pageParam }) =>
             getUserMarkingList({

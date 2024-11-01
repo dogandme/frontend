@@ -65,8 +65,8 @@ export interface GetMarkingListRequest {
   southWestLng: number;
   northEastLat: number;
   northEastLng: number;
-  lat: number;
-  lng: number;
+  lat: number | null;
+  lng: number | null;
   offset: number; // 페이지 번호
   sortType: SortType;
 }
@@ -153,8 +153,6 @@ export const useGetMarkingList = ({
       !!southWestLng &&
       !!northEastLat &&
       !!northEastLng &&
-      !!lat &&
-      !!lng &&
       !!sortType
         ? ({ pageParam }) =>
             getMarkingList({

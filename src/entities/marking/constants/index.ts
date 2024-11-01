@@ -20,8 +20,11 @@ export const MARKING_END_POINT = {
     lng,
     sortType,
     offset,
-  }: GetMarkingListRequest) =>
-    `${API_BASE_URL}/markings/bounds?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&lat=${lat}&lng=${lng}&sortType=${sortType}&offset=${offset}`,
+  }: GetMarkingListRequest) => {
+    const latLngQueryParams = lat && lng ? `&lat=${lat}&lng=${lng}` : "";
+
+    return `${API_BASE_URL}/markings/bounds?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&sortType=${sortType}&offset=${offset}${latLngQueryParams}`;
+  },
 
   USER: ({
     nickname,
@@ -33,8 +36,11 @@ export const MARKING_END_POINT = {
     lng,
     sortType,
     offset,
-  }: GetUserMarkingListRequest) =>
-    `${API_BASE_URL}/markings/users/${nickname}?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&lat=${lat}&lng=${lng}&sortType=${sortType}&offset=${offset}`,
+  }: GetUserMarkingListRequest) => {
+    const latLngQueryParams = lat && lng ? `&lat=${lat}&lng=${lng}` : "";
+
+    return `${API_BASE_URL}/markings/users/${nickname}?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&sortType=${sortType}&offset=${offset}${latLngQueryParams}`;
+  },
 };
 
 export const MARKER_END_POINT = {
