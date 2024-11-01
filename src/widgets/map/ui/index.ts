@@ -6,3 +6,4 @@ export * from "./mapInitializer";
 export * from "./mapBottomSheet";
 export * from "./localMarkingList";
 export * from "./placeMarkingList";
+export * from "./userMarkingList";
