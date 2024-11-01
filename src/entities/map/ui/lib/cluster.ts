@@ -6,9 +6,6 @@ interface LatLng {
 }
 
 class Cluster<T extends LatLng> {
-  private markerBuffer: T[] = [];
-  private outlierBuffer: T[] = [];
-
   outliers: T[] = [];
   markers: T[];
   center: LatLng = { lat: 0, lng: 0 };
@@ -32,6 +29,10 @@ class Cluster<T extends LatLng> {
     this.center = { lat, lng };
     this.markers = [];
     this.bounds = bounds;
+  }
+  clearMarkers() {
+    this.markers = [];
+    this.outliers = [];
   }
   /**
    * lat , lng 값의 범위가 다르기에 거리 계산 전 표준화를 시행 합니다.
@@ -116,7 +117,7 @@ class Cluster<T extends LatLng> {
     const { lat, lng } = marker;
     // 초기 시행 시에는 따로 Z-Score를 계산하지 않습니다.
     if (this.std.lat === 0 || this.std.lng === 0) {
-      this.markerBuffer.push(marker);
+      this.markers.push(marker);
       return;
     }
     const zScore = this.getZScore({ lat, lng });
@@ -125,22 +126,16 @@ class Cluster<T extends LatLng> {
      * 이 때 새로운 군집을 형성하는 기준은 이상값이 아닌 마커들로 구성된 군집입니다.
      */
     if (zScore.lat > 3 || zScore.lng > 3) {
-      this.outlierBuffer.push(marker);
+      this.outliers.push(marker);
       return;
     }
-    this.markerBuffer.push(marker);
+    this.markers.push(marker);
   }
   /**
    * 마커의 중심점을 재조정 합니다.
    * 이 때 마커의 중심점이 변경 되었다면 true를 반환 합니다.
    */
   revalidateCluster() {
-    // 재조정 전 버퍼에 있던 마커 리스트를 복사하고 버퍼를 초기화 합니다.
-    this.markers = [...this.markerBuffer];
-    this.markerBuffer = [];
-    // 재조정 전 버퍼에 있던 이상값 리스트를 복사하고 버퍼를 초기화 합니다.
-    this.outliers = [...this.outlierBuffer];
-    this.outlierBuffer = [];
     // 재조정 전 클러스터의 중심점을 캐싱 합니다.
     const prevCenter = { ...this.center };
 
@@ -179,6 +174,8 @@ export const useKMeansClustering = <T extends LatLng>(
 
   let isChanged = true;
   while (isChanged) {
+    clusters.forEach((cluster) => cluster.clearMarkers());
+
     markers.forEach((marker) => {
       const [, closestClusterIndex] = clusters.reduce(
         ([minDistance, minClusterIndex], cluster, index) => {
