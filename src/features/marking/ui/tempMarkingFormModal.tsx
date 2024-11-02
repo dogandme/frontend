@@ -2,8 +2,9 @@ import { useRef, useState } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { TempMarkingInfo } from "@/entities/marking/api";
 import {
-  POST_VISIBILITY_MAP,
-  PostVisibilityName,
+  MARKING_VISIBILITY_MAP,
+  visibilityEntries,
+  type MarkingVisibilityKey,
 } from "@/entities/marking/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
@@ -82,11 +83,7 @@ const TempPostVisibilitySelect = () => {
   const setIsVisible = useTempMarkingForm((state) => state.setIsVisible);
   const handleCloseSelectList = () => setIsOpen(false);
 
-  const visibilityNames = Object.keys(
-    POST_VISIBILITY_MAP,
-  ) as PostVisibilityName[];
-
-  const handleSelect = (value: PostVisibilityName) => {
+  const handleSelect = (value: MarkingVisibilityKey) => {
     setIsVisible(value);
     handleCloseSelectList();
   };
@@ -97,21 +94,21 @@ const TempPostVisibilitySelect = () => {
         label="보기권한 설정"
         essential
         onClick={() => setIsOpen(!isOpen)}
-        value={isVisible}
+        value={MARKING_VISIBILITY_MAP[isVisible]}
       />
 
       <Select isOpen={isOpen} onClose={handleCloseSelectList}>
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
-          {visibilityNames.map((name) => (
+          {visibilityEntries.map(([key, value]) => (
             <Select.Option
-              key={name}
-              value={name}
-              isSelected={name === isVisible}
-              onClick={() => handleSelect(name)}
+              key={key}
+              value={value}
+              isSelected={key === isVisible}
+              onClick={() => handleSelect(key)}
             >
-              {name}
+              {value}
             </Select.Option>
           ))}
         </Select.OptionList>
@@ -289,7 +286,7 @@ const TempMarkingSaveButton = ({
       removeIds: removedIds,
       isTempSaved: false,
       images: images.map(({ file }) => file),
-      isVisible: POST_VISIBILITY_MAP[isVisible],
+      isVisible,
     });
   };
 
@@ -327,7 +324,7 @@ const TempMarkingTempSaveButton = ({
       removeIds: removedIds,
       isTempSaved: true,
       images: images.map(({ file }) => file),
-      isVisible: POST_VISIBILITY_MAP[isVisible],
+      isVisible,
     });
   };
 

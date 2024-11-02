@@ -2,7 +2,7 @@ import { DeleteTemporaryMarkingButton } from "@/features/marking/ui";
 import { TempMarkingFormModal } from "@/features/marking/ui";
 import { TempMarkingInfo } from "@/entities/marking/api";
 import {
-  REVERSE_POST_VISIBILITY_MAP,
+  REVERSE_MARKING_VISIBILITY_MAP,
   type PostVisibilityName,
 } from "@/entities/marking/constants";
 import { API_BASE_URL } from "@/shared/constants";
@@ -19,7 +19,7 @@ export const TemporaryMarkingItem = ({
   markingId,
   content,
 }: Omit<TempMarkingInfo, "regDt">) => {
-  const isVisibleName = REVERSE_POST_VISIBILITY_MAP[isVisible];
+  const isVisibleName = REVERSE_MARKING_VISIBILITY_MAP[isVisible];
 
   return (
     <li className="py-4 px-4 border border-grey-300 rounded-2xl flex flex-col self-stretch">
