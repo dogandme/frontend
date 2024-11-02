@@ -1,14 +1,16 @@
 import { createContext, useContext, useRef } from "react";
 import { create, useStore } from "zustand";
 import { TempMarkingFileInfo, TempMarkingInfo } from "@/entities/marking/api";
+import type { PostVisibilityName } from "@/entities/marking/constants";
 import { compressFileImage } from "@/shared/lib";
 import { MarkingFileInfo } from "./markingForm";
 
 // TODO 타입 스크립트 리팩토링 시 변경 하기
 
 export interface TempMarkingFormExternalState
-  extends Pick<TempMarkingInfo, "region" | "isVisible" | "content"> {
+  extends Pick<TempMarkingInfo, "region" | "content"> {
   externalImages: TempMarkingFileInfo[];
+  isVisible: PostVisibilityName;
 }
 
 interface TempMarkingFormInternalState {
@@ -22,7 +24,7 @@ type TempMarkingFormState = TempMarkingFormExternalState &
   TempMarkingFormInternalState;
 
 interface TempMarkingFormAction {
-  setIsVisible: (isVisible: TempMarkingInfo["isVisible"]) => void;
+  setIsVisible: (isVisible: PostVisibilityName) => void;
   setContent: (content: string | null) => void;
   setExternalImages: (images: TempMarkingFileInfo[]) => void;
   setRemovedIds: (removedIds: TempMarkingFileInfo["id"][]) => void;
