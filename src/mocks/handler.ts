@@ -6,7 +6,6 @@ import {
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
-import { MY_MARKING_ENDPOINT } from "@/features/follow/constants";
 import { DeleteTemporaryMarkingRequest } from "@/features/marking/api";
 import { MARKING_END_POINT } from "@/features/marking/constants";
 import { PostChangeRegionRequest } from "@/features/setting/api";
