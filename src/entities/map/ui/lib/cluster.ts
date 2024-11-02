@@ -173,9 +173,8 @@ export const useKMeansClustering = <T extends LatLng>(
     do {
       randomIndex = Math.floor(Math.random() * markers.length);
     } while (randomIndexMap[randomIndex]);
-    {
-      randomIndexMap[randomIndex] = true;
-    }
+
+    randomIndexMap[randomIndex] = true;
     return new Cluster(markers[randomIndex], bounds);
   });
 
