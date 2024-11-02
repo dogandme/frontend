@@ -2,7 +2,7 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { Nickname, UserId } from "@/entities/profile/api";
 import { apiClient, formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MY_MARKING_END_POINT, type PostVisibilityValue } from "../constants";
+import { MY_MARKING_END_POINT, type MarkingVisibilityKey } from "../constants";
 
 export interface TempMarkingFileInfo {
   id: number;
@@ -15,7 +15,7 @@ export interface TempMarkingInfo {
   markingId: number;
   region: string;
   content: string | null;
-  isVisible: PostVisibilityValue;
+  isVisible: MarkingVisibilityKey;
   regDt: string;
   previewImage: string | null;
   userId: UserId;

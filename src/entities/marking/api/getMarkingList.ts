@@ -5,7 +5,7 @@ import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import {
   SEARCH_MARKING_END_POINT,
-  type PostVisibilityValue,
+  type MarkingVisibilityKey,
 } from "../constants";
 
 interface Address {
@@ -47,7 +47,7 @@ export interface Marking {
   markingId: number;
   region: string;
   content: string;
-  isVisible: PostVisibilityValue;
+  isVisible: MarkingVisibilityKey;
   regDt: string;
   previewImage: string;
   userId: number;
