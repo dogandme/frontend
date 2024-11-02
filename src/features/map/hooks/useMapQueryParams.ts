@@ -79,7 +79,9 @@ export const useMapQueryParams = () => {
       newSearchParams.set("sortType", mapParams.sortType);
     }
 
-    setIsLastSearchedLocation(true);
+    setTimeout(() => {
+      setIsLastSearchedLocation(true);
+    }, 0);
     setSearchParams(newSearchParams);
   };
 
