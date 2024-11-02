@@ -18,6 +18,7 @@ export const MapInitializer = () => {
   const getMapBounds = useGetMapCurrentBounds();
 
   const isMapIdle = useMapStore((state) => state.isIdle);
+  const setIsMapIdle = useMapStore((state) => state.setIsIdle);
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
@@ -58,23 +59,27 @@ export const MapInitializer = () => {
       },
     });
 
-    if (!hasBoundsParams) return;
+    if (hasBoundsParams) {
+      const { northEastLat, northEastLng, southWestLat, southWestLng } =
+        boundsParams;
 
-    const { northEastLat, northEastLng, southWestLat, southWestLng } =
-      boundsParams;
+      map.fitBounds({
+        south: southWestLat,
+        west: southWestLng,
+        north: northEastLat,
+        east: northEastLng,
+      });
 
-    map.fitBounds({
-      south: southWestLat,
-      west: southWestLng,
-      north: northEastLat,
-      east: northEastLng,
-    });
+      // todo 내 마킹일 경우 파라미터 처리
+      setMapQueryParams({
+        bounds: getMapBounds(),
+        sortType: sortTypeParam || "POPULARITY",
+      });
+    }
 
-    // todo 내 마킹일 경우 파라미터 처리
-    setMapQueryParams({
-      bounds: getMapBounds(),
-      sortType: sortTypeParam || "POPULARITY",
-    });
+    return () => {
+      setIsMapIdle(false);
+    };
   }, [map, isMapIdle]);
 
   if (!map || loading || !isMapIdle) {
