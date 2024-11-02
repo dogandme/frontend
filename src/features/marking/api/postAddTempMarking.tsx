@@ -1,10 +1,7 @@
 // Marking Form 임시 저장 API
 import { useMutation } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
-import {
-  MARKING_VISIBILITY_MAP,
-  MarkingVisibilityKey,
-} from "@/entities/marking/constants";
+import { MarkingVisibilityKey } from "@/entities/marking/constants";
 import { apiClient, useSnackBar } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 import { useMarkingFormStore } from "../store";
@@ -26,7 +23,7 @@ const postAddTempMarking = async (formObj: PostAddTempMarkingRequestData) => {
       [
         JSON.stringify({
           region,
-          isVisible: MARKING_VISIBILITY_MAP[isVisible],
+          isVisible,
           content,
           lat,
           lng,
