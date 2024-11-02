@@ -51,6 +51,8 @@ export const MARKER_END_POINT = {
     northEastLng,
   }: GetBoundaryMarkerListRequest) =>
     `${API_BASE_URL}/markings/marks?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}`,
+
+  MY: `${API_BASE_URL}/markings/my-marks`,
 };
 
 export const MY_MARKING_END_POINT = {
