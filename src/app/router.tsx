@@ -43,7 +43,7 @@ export const router = createBrowserRouter([
             element: <PlaceMarkingList />,
           },
           {
-            path: ROUTER_PATH.USER_MARK,
+            path: ROUTER_PATH.MY_MARK,
             element: <UserMarkingList />,
           },
         ],

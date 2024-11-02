@@ -103,7 +103,7 @@ export const ROUTER_PATH = {
 
   MAP: `/map`,
   PLACE: "/map/place",
-  USER_MARK: "/map/:nickname",
+  MY_MARK: "/map/my",
 
   PROFILE: `/:nickname`,
   FOLLOWINGS: `followings`,
