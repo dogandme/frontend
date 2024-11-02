@@ -1,10 +1,7 @@
 import { DeleteTemporaryMarkingButton } from "@/features/marking/ui";
 import { TempMarkingFormModal } from "@/features/marking/ui";
 import { TempMarkingInfo } from "@/entities/marking/api";
-import {
-  REVERSE_MARKING_VISIBILITY_MAP,
-  type PostVisibilityName,
-} from "@/entities/marking/constants";
+import { MARKING_VISIBILITY_MAP } from "@/entities/marking/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
@@ -19,8 +16,6 @@ export const TemporaryMarkingItem = ({
   markingId,
   content,
 }: Omit<TempMarkingInfo, "regDt">) => {
-  const isVisibleName = REVERSE_MARKING_VISIBILITY_MAP[isVisible];
-
   return (
     <li className="py-4 px-4 border border-grey-300 rounded-2xl flex flex-col self-stretch">
       {/* 마킹바 헤더 */}
@@ -30,7 +25,7 @@ export const TemporaryMarkingItem = ({
           <p className="body-2 text-grey-500">{region}</p>
         </div>
         <div className="flex gap-2">
-          <InfoChip size="small">{isVisibleName}</InfoChip>
+          <InfoChip size="small">{MARKING_VISIBILITY_MAP[isVisible]}</InfoChip>
           <DeleteTemporaryMarkingButton markingId={markingId} />
         </div>
       </header>
@@ -53,7 +48,7 @@ export const TemporaryMarkingItem = ({
       <footer className="mt-4">
         <TempMarkingModalOpenButton
           region={region}
-          isVisible={isVisibleName}
+          isVisible={isVisible}
           content={content}
           images={images}
           markingId={markingId}
@@ -65,10 +60,8 @@ export const TemporaryMarkingItem = ({
 
 type TempMarkingModalOpenButtonProps = Pick<
   TempMarkingInfo,
-  "region" | "content" | "images" | "markingId"
-> & {
-  isVisible: PostVisibilityName;
-};
+  "region" | "content" | "images" | "markingId" | "isVisible"
+>;
 
 const TempMarkingModalOpenButton = ({
   region,
