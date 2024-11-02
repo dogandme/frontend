@@ -139,7 +139,6 @@ const PostVisibilitySelect = () => {
         label="보기권한 설정"
         essential
         onClick={() => setIsOpen(!isOpen)}
-        placeholder="공개 범위를 선택해주세요"
         value={isVisible}
       />
 

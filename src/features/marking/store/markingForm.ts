@@ -9,7 +9,7 @@ export interface MarkingFileInfo extends FileInfo {
 
 interface MarkingFormState {
   region: string;
-  isVisible: keyof typeof POST_VISIBILITY_MAP | "";
+  isVisible: keyof typeof POST_VISIBILITY_MAP;
   content: string;
   images: MarkingFileInfo[];
   isCompressing: boolean;
@@ -26,7 +26,7 @@ interface MarkingFormActions {
 
 const MarkingFormInitialState: MarkingFormState = {
   region: "",
-  isVisible: "",
+  isVisible: "전체 공개",
   content: "",
   images: [],
   isCompressing: false,

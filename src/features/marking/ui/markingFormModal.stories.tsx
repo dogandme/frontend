@@ -24,7 +24,7 @@ type Story = StoryObj<typeof MarkingFormModal>;
 export const Default: Story = {
   decorators: [
     (Story) => {
-      useAuthStore.setState({ token: "Bearer token" });
+      useAuthStore.setState({ token: "freshAccessToken" });
       useMapStore.setState({ mode: "view" });
 
       return (
@@ -136,9 +136,9 @@ export const Default: Story = {
       const $markingModalTriggerButton =
         await canvas.findByText("여기에 마킹하기");
       await userEvent.click($markingModalTriggerButton);
+      const $publicVisibilityElements = await canvas.findAllByText("전체 공개");
 
-      const $postVisibilityOpener =
-        await canvas.findByText(/공개 범위를 선택해주세요/);
+      const $postVisibilityOpener = $publicVisibilityElements[0];
       const $textArea =
         await canvas.findByPlaceholderText(/마킹에 대한 메모를 남겨주세요/);
       const $fileUploadInput = canvasElement.querySelector(
@@ -147,7 +147,7 @@ export const Default: Story = {
 
       // 공개 범위 설정
       await $postVisibilityOpener.click();
-      const $publicVisibility = await canvas.findByText("전체 공개");
+      const $publicVisibility = $publicVisibilityElements[1];
       await $publicVisibility.click();
 
       // 이미지 파일 업로드
@@ -277,7 +277,7 @@ export const Default: Story = {
 
         const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(isVisible).toBe("");
+        expect(isVisible).toBe("전체 공개");
         expect(images).toHaveLength(0);
 
         const $markingButton = await canvas.findByText("마킹하기");
@@ -306,10 +306,10 @@ export const Default: Story = {
         ];
         await userEvent.upload($fileUploadInput, dummyFiles);
 
-        const $postVisibilityOpener =
-          await canvas.findByText(/공개 범위를 선택해주세요/);
+        const $postVisibilityElements = await canvas.findAllByText("전체 공개");
+        const $postVisibilityOpener = $postVisibilityElements[0];
         await $postVisibilityOpener.click();
-        const $publicVisibility = await canvas.findByText("전체 공개");
+        const $publicVisibility = $postVisibilityElements[1];
         await $publicVisibility.click();
 
         const $textArea =
@@ -325,7 +325,7 @@ export const Default: Story = {
 
         const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(isVisible).toBe("");
+        expect(isVisible).toBe("전체 공개");
         expect(images).toHaveLength(0);
       },
     );
@@ -351,10 +351,10 @@ export const Default: Story = {
         ];
         await userEvent.upload($fileUploadInput, dummyFiles);
 
-        const $postVisibilityOpener =
-          await canvas.findByText(/공개 범위를 선택해주세요/);
+        const $postVisibilityElements = await canvas.findAllByText("전체 공개");
+        const $postVisibilityOpener = $postVisibilityElements[0];
         await $postVisibilityOpener.click();
-        const $publicVisibility = await canvas.findByText("전체 공개");
+        const $publicVisibility = $postVisibilityElements[1];
         await $publicVisibility.click();
 
         const $textArea =
@@ -370,7 +370,7 @@ export const Default: Story = {
 
         const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(isVisible).toBe("");
+        expect(isVisible).toBe("전체 공개");
         expect(images).toHaveLength(0);
       },
     );
