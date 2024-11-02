@@ -1,5 +1,7 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
 import { CurrentLocationLoading } from "@/entities/map/ui";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useModal, useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import {
@@ -9,7 +11,7 @@ import {
   MyLocationIcon,
 } from "@/shared/ui/icon";
 import { MarkingFormModal } from "../../marking/ui";
-import { useCurrentLocation } from "../hooks";
+import { useCurrentLocation, useMapQueryParams } from "../hooks";
 import { useMapStore } from "../store";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
@@ -83,8 +85,12 @@ export const MyLocationButton = () => {
 const buttonBaseStyles = "border-none outline-none h-14 px-[.875rem]";
 
 export const ShowMyMarkingButton = () => {
-  // todo 상태 전역으로 관리하기
-  const shouldShowMyMarking = false;
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const shouldShowMyMarking = pathname === ROUTER_PATH.MY_MARK;
+
+  const { boundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
 
   return (
     <Button
@@ -95,7 +101,11 @@ export const ShowMyMarkingButton = () => {
       className={`${buttonBaseStyles} rounded-b-none`}
       aria-label="내 마킹만 보기"
       onClick={() => {
-        // todo 내 마킹 보기로 상태 변경
+        navigate(ROUTER_PATH.MY_MARK);
+        setMapQueryParams({
+          bounds: boundsParams,
+          sortType: sortTypeParam || "POPULARITY",
+        });
       }}
     >
       <img src="/default-image.png" className="w-7 h-7 rounded-full" />
