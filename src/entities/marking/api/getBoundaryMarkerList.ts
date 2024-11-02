@@ -81,7 +81,13 @@ export const useGetBoundaryMarkerList = ({
         : skipToken,
 
     refetchOnWindowFocus: false,
-    enabled,
+    enabled:
+      enabled &&
+      isMapIdle &&
+      !!southWestLat &&
+      !!southWestLng &&
+      !!northEastLat &&
+      !!northEastLng,
 
     gcTime: 0,
   });
