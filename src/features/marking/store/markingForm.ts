@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { FileInfo } from "@/features/auth/store";
-import type { PostVisibilityName } from "@/entities/marking/constants";
+import type { MarkingVisibilityKey } from "@/entities/marking/constants";
 import { compressFileImage } from "@/shared/lib";
 
 export interface MarkingFileInfo extends FileInfo {
@@ -9,7 +9,7 @@ export interface MarkingFileInfo extends FileInfo {
 
 interface MarkingFormState {
   region: string;
-  isVisible: PostVisibilityName;
+  isVisible: MarkingVisibilityKey;
   content: string;
   images: MarkingFileInfo[];
   isCompressing: boolean;
@@ -18,7 +18,7 @@ interface MarkingFormState {
 
 interface MarkingFormActions {
   setRegion: (region: string) => void;
-  setVisibility: (isVisible: PostVisibilityName) => void;
+  setVisibility: (isVisible: MarkingVisibilityKey) => void;
   setContent: (content: string) => void;
   setImages: (images: MarkingFileInfo[]) => void;
   resetMarkingFormStore: () => void;
@@ -26,7 +26,7 @@ interface MarkingFormActions {
 
 const MarkingFormInitialState: MarkingFormState = {
   region: "",
-  isVisible: "전체 공개",
+  isVisible: "PUBLIC",
   content: "",
   images: [],
   isCompressing: false,

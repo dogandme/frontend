@@ -166,7 +166,7 @@ export const Default: Story = {
 
       const { content, isVisible, images } = useMarkingFormStore.getState();
       expect(content).toBe("여기는 진짜 대박이긴 해요");
-      expect(isVisible).toBe("전체 공개");
+      expect(isVisible).toBe("PUBLIC");
       expect(images).toHaveLength(4);
       expect(images.map((file) => file.name)).toEqual(
         dummyFiles.map((file) => file.name),
@@ -277,7 +277,7 @@ export const Default: Story = {
 
         const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(isVisible).toBe("전체 공개");
+        expect(isVisible).toBe("PUBLIC");
         expect(images).toHaveLength(0);
 
         const $markingButton = await canvas.findByText("마킹하기");
@@ -325,7 +325,7 @@ export const Default: Story = {
 
         const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(isVisible).toBe("전체 공개");
+        expect(isVisible).toBe("PUBLIC");
         expect(images).toHaveLength(0);
       },
     );
@@ -370,7 +370,7 @@ export const Default: Story = {
 
         const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(isVisible).toBe("전체 공개");
+        expect(isVisible).toBe("PUBLIC");
         expect(images).toHaveLength(0);
       },
     );

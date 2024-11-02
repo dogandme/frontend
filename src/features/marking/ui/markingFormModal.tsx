@@ -3,8 +3,8 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { useGetAddressFromLatLng } from "@/entities/marking/api";
 import {
-  POST_VISIBILITY_MAP,
-  type PostVisibilityName,
+  MARKING_VISIBILITY_MAP,
+  visibilityEntries,
 } from "@/entities/marking/constants";
 import { useModal } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
@@ -121,16 +121,13 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 
 const PostVisibilitySelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const visibilityNames = Object.keys(
-    POST_VISIBILITY_MAP,
-  ) as PostVisibilityName[];
 
   const isVisible = useMarkingFormStore((state) => state.isVisible);
   const setVisibility = useMarkingFormStore((state) => state.setVisibility);
 
   const handleCloseSelectList = () => setIsOpen(false);
 
-  const handleSelect = (value: keyof typeof POST_VISIBILITY_MAP) => {
+  const handleSelect = (value: keyof typeof MARKING_VISIBILITY_MAP) => {
     setVisibility(value);
     handleCloseSelectList();
   };
@@ -141,24 +138,21 @@ const PostVisibilitySelect = () => {
         label="보기권한 설정"
         essential
         onClick={() => setIsOpen(!isOpen)}
-        value={isVisible}
+        value={MARKING_VISIBILITY_MAP[isVisible]}
       />
-
       <Select isOpen={isOpen} onClose={handleCloseSelectList}>
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
-          {visibilityNames.map((option) => {
+          {visibilityEntries.map(([key, value]) => {
             return (
               <Select.Option
-                key={option}
-                value={option}
-                isSelected={option === isVisible}
-                onClick={() =>
-                  handleSelect(option as keyof typeof POST_VISIBILITY_MAP)
-                }
+                key={key}
+                value={value}
+                isSelected={key === isVisible}
+                onClick={() => handleSelect(key)}
               >
-                {option}
+                {value}
               </Select.Option>
             );
           })}
@@ -368,7 +362,7 @@ const TemporarySaveButton = () => {
       lat,
       lng,
       region,
-      isVisible: isVisible || "전체 공개",
+      isVisible: isVisible,
       images: compressedFiles,
       content,
     });
