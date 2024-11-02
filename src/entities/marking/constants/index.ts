@@ -37,21 +37,12 @@ export const MY_MARKING_END_POINT = {
     `${API_BASE_URL}/markings/temps?offset=${offset}`,
 };
 
-export const POST_VISIBILITY_MAP = {
-  "전체 공개": "PUBLIC",
-  "팔로우 공개": "FOLLOWERS_ONLY",
-  "나만 보기": "PRIVATE",
+export const MARKING_VISIBILITY_MAP = {
+  PUBLIC: "전체 공개",
+  PRIVATE: "나만 보기",
+  FOLLOW_ONLY: "팔로우 공개",
 } as const;
 
-export type PostVisibilityName = keyof typeof POST_VISIBILITY_MAP;
-export type PostVisibilityValue =
-  (typeof POST_VISIBILITY_MAP)[PostVisibilityName];
-
-export const REVERSE_POST_VISIBILITY_MAP: Record<
-  PostVisibilityValue,
-  PostVisibilityName
-> = {
-  PUBLIC: "전체 공개",
-  FOLLOWERS_ONLY: "팔로우 공개",
-  PRIVATE: "나만 보기",
-};
+export type MarkingVisibilityKey = keyof typeof MARKING_VISIBILITY_MAP;
+export type MarkingVisibilityValue =
+  (typeof MARKING_VISIBILITY_MAP)[MarkingVisibilityKey];
