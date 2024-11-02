@@ -42,8 +42,6 @@ const getUserMarkingList = async ({
   sortType,
   offset,
 }: GetUserMarkingListRequest) => {
-  const hasToken = !!useAuthStore.getState().token;
-
   return apiClient.get<GetUserMarkingListResponse>(
     MARKING_END_POINT.USER({
       nickname,
@@ -57,7 +55,7 @@ const getUserMarkingList = async ({
       offset,
     }),
     {
-      withToken: hasToken,
+      withToken: true,
     },
   );
 };
@@ -77,6 +75,8 @@ export const useGetUserMarkingList = ({
   northEastLng: number | null;
   sortType: SortType | null;
 }) => {
+  const token = useAuthStore.getState().token;
+
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
   const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
 
@@ -94,6 +94,7 @@ export const useGetUserMarkingList = ({
     ],
 
     queryFn:
+      token &&
       isMapIdle &&
       !!southWestLat &&
       !!southWestLng &&
