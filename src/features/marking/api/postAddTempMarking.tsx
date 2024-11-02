@@ -2,8 +2,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
 import {
-  POST_VISIBILITY_MAP,
-  type PostVisibilityName,
+  MARKING_VISIBILITY_MAP,
+  MarkingVisibilityKey,
 } from "@/entities/marking/constants";
 import { apiClient, useSnackBar } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
@@ -12,7 +12,7 @@ import type { PostAddMarkingRequest } from "./postAddMarking";
 
 interface PostAddTempMarkingRequestData
   extends Omit<PostAddMarkingRequest, "isVisible"> {
-  isVisible: PostVisibilityName;
+  isVisible: MarkingVisibilityKey;
 }
 
 const postAddTempMarking = async (formObj: PostAddTempMarkingRequestData) => {
@@ -26,7 +26,7 @@ const postAddTempMarking = async (formObj: PostAddTempMarkingRequestData) => {
       [
         JSON.stringify({
           region,
-          isVisible: POST_VISIBILITY_MAP[isVisible],
+          isVisible: MARKING_VISIBILITY_MAP[isVisible],
           content,
           lat,
           lng,
