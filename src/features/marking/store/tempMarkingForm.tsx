@@ -8,9 +8,8 @@ import { MarkingFileInfo } from "./markingForm";
 // TODO 타입 스크립트 리팩토링 시 변경 하기
 
 export interface TempMarkingFormExternalState
-  extends Pick<TempMarkingInfo, "region" | "content"> {
+  extends Pick<TempMarkingInfo, "region" | "isVisible" | "content"> {
   externalImages: TempMarkingFileInfo[];
-  isVisible: MarkingVisibilityKey;
 }
 
 interface TempMarkingFormInternalState {
