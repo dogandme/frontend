@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
-import { useGetBoundaryMarkerList } from "@/entities/marking/api";
+import { useGetMarkerList } from "@/entities/marking/hooks";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useMapQueryParams } from "../hooks";
 import { useMapStore } from "../store";
@@ -22,7 +22,7 @@ export const PinMarker = () => {
   const navigate = useNavigate();
   const { boundsParams, setMapQueryParams } = useMapQueryParams();
 
-  const { data: markerList } = useGetBoundaryMarkerList(boundsParams);
+  const { data: markerList } = useGetMarkerList(boundsParams);
 
   return markerList?.map(({ markingId, lat, lng, previewImage }) => (
     <Pin

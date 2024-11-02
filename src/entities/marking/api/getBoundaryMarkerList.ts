@@ -46,11 +46,13 @@ export const useGetBoundaryMarkerList = ({
   southWestLng,
   northEastLat,
   northEastLng,
+  enabled = true,
 }: {
   southWestLat: number | null;
   southWestLng: number | null;
   northEastLat: number | null;
   northEastLng: number | null;
+  enabled?: boolean;
 }) => {
   const { isIdle: isMapIdle } = useMapStore.getState();
 
@@ -79,6 +81,7 @@ export const useGetBoundaryMarkerList = ({
         : skipToken,
 
     refetchOnWindowFocus: false,
+    enabled,
 
     gcTime: 0,
   });
