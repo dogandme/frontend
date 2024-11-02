@@ -1,14 +1,18 @@
 // Marking Form 임시 저장 API
 import { useMutation } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
+import {
+  POST_VISIBILITY_MAP,
+  type PostVisibilityName,
+} from "@/entities/marking/constants";
 import { apiClient, useSnackBar } from "@/shared/lib";
-import { MARKING_END_POINT, POST_VISIBILITY_MAP } from "../constants";
+import { MARKING_END_POINT } from "../constants";
 import { useMarkingFormStore } from "../store";
 import type { PostAddMarkingRequest } from "./postAddMarking";
 
 interface PostAddTempMarkingRequestData
   extends Omit<PostAddMarkingRequest, "isVisible"> {
-  isVisible: keyof typeof POST_VISIBILITY_MAP | "";
+  isVisible: PostVisibilityName;
 }
 
 const postAddTempMarking = async (formObj: PostAddTempMarkingRequestData) => {
@@ -22,7 +26,7 @@ const postAddTempMarking = async (formObj: PostAddTempMarkingRequestData) => {
       [
         JSON.stringify({
           region,
-          isVisible: POST_VISIBILITY_MAP[isVisible || "전체 공개"],
+          isVisible: POST_VISIBILITY_MAP[isVisible],
           content,
           lat,
           lng,

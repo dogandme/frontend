@@ -1,18 +1,21 @@
 import { useMutation } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
 import type { LatLng } from "@/entities/auth/api";
+import {
+  POST_VISIBILITY_MAP,
+  type PostVisibilityName,
+} from "@/entities/marking/constants";
 import { apiClient, useSnackBar } from "@/shared/lib";
-import { MARKING_END_POINT, POST_VISIBILITY_MAP } from "../constants";
+import { MARKING_END_POINT } from "../constants";
 import { useMarkingFormStore } from "../store";
 
 // Marking Form 저장 API
 export interface PostAddMarkingRequest extends LatLng {
   region: string;
-  isVisible: keyof typeof POST_VISIBILITY_MAP;
+  isVisible: PostVisibilityName;
   content: string;
   images: File[];
 }
-
 const postAddMarking = async (formObj: PostAddMarkingRequest) => {
   const { isVisible, images, ...rest } = formObj;
 
