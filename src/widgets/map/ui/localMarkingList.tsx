@@ -41,7 +41,6 @@ export const LocalMarkingList = () => {
   const { data } = useGetAddressFromLatLng({
     lat,
     lng,
-    enabled: useMapStore.getState().isIdle,
   });
 
   return (

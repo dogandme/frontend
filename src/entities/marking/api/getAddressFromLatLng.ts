@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { REVERSE_GEOCODING_END_POINT } from "../constants";
 
@@ -26,13 +27,10 @@ const getAddressFromLatLng = async ({
 export const useGetAddressFromLatLng = ({
   lat,
   lng,
-  enabled = true,
-}: GetAddressFromLatLngRequest & {
-  enabled?: boolean;
-}) => {
+}: GetAddressFromLatLngRequest) => {
   return useQuery({
     queryKey: ["address", lat, lng],
     queryFn: () => getAddressFromLatLng({ lat, lng }),
-    enabled,
+    enabled: useMapStore.getState().isIdle,
   });
 };
