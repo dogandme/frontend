@@ -12,7 +12,7 @@ import { useInfiniteScroll } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MarkingList } from "./markingList";
 
-export const UserMarkingList = () => {
+export const MyMarkingList = () => {
   const map = useMap();
 
   const { sortTypeParam, boundsParams } = useMapQueryParams();
