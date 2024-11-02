@@ -2,11 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { useGetAddressFromLatLng } from "@/entities/marking/api";
-import { useModal } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
-import { CloseIcon, MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
+import { MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
@@ -18,7 +17,6 @@ import {
   POST_VISIBILITY_MAP,
 } from "../constants";
 import { useMarkingFormStore } from "../store";
-import { MarkingFormCloseModal } from "./markingFormCloseModal";
 
 interface MarkingFormModalProps {
   onCloseMarkingModal: () => Promise<void>;
@@ -29,8 +27,14 @@ export const MarkingFormModal = ({
 }: MarkingFormModalProps) => {
   return (
     <Modal modalType="center">
-      <MarkingModalHeader onCloseMarkingModal={onCloseMarkingModal} />
-      <section className="flex flex-col gap-8">
+      {/* TODO exitConfirmModal 달기 */}
+      <Modal.Header
+        onClick={onCloseMarkingModal}
+        aria-label="작성중인 마킹 게시글 닫기"
+      >
+        마킹하기
+      </Modal.Header>
+      <Modal.Content>
         {/* 사용자 현재 위치 */}
         <CurrentLocation onCloseMarkingModal={onCloseMarkingModal} />
         {/* 보기 권한 설정 */}
@@ -39,43 +43,13 @@ export const MarkingFormModal = ({
         <PhotoInput />
         {/* 메모하기 */}
         <MarkingTextArea />
-        {/* 제출 버튼들 */}
-        <div className="flex flex-col gap-2">
-          <SaveButton />
-          <TemporarySaveButton />
-        </div>
-      </section>
+      </Modal.Content>
+      {/* 제출 버튼들 */}
+      <Modal.Footer axis="col">
+        <SaveButton />
+        <TemporarySaveButton />
+      </Modal.Footer>
     </Modal>
-  );
-};
-
-const MarkingModalHeader = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
-  const { onClose: onCloseExitModal, handleOpen: onOpenExitModal } = useModal(
-    () => (
-      <MarkingFormCloseModal
-        onCloseExitModal={onCloseExitModal}
-        onCloseMarkingModal={onCloseMarkingModal}
-      />
-    ),
-  );
-
-  const handleClose = () => {
-    const { isVisible, images, content } = useMarkingFormStore.getState();
-
-    if (!isVisible && images.length === 0 && !content) {
-      onCloseMarkingModal();
-      return;
-    }
-    onOpenExitModal();
-  };
-
-  return (
-    <header className="flex justify-between">
-      <h1 className="title-1">마킹하기</h1>
-      <button onClick={handleClose} aria-label="작성중인 마킹 게시글 닫기">
-        <CloseIcon />
-      </button>
-    </header>
   );
 };
 
@@ -193,13 +167,13 @@ const PhotoInput = () => {
       console.error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
     }
 
-    const AvailableNewFileArray = [...newFiles]
+    const availableNewFileArray = [...newFiles]
       .filter((newFile) => !images.some(({ name }) => name === newFile.name))
       .slice(0, MAX_IMAGE_LENGTH - images.length);
 
     setImages([
       ...images,
-      ...AvailableNewFileArray.map((file) => ({
+      ...availableNewFileArray.map((file) => ({
         name: file.name,
         url: URL.createObjectURL(file),
         file,

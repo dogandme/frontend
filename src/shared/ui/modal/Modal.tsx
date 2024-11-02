@@ -47,7 +47,7 @@ const Header = ({
 
   return (
     <header
-      className={`flex justify-between ${modalType === "fullPage" && "py-2 pl-4 pr-1"}`}
+      className={`flex justify-between ${modalType === "fullPage" ? "py-2 pl-4 pr-1" : ""}`}
     >
       <h1 className="title-1 text-grey-900">{children}</h1>
       <button
@@ -69,7 +69,7 @@ const Content = ({
 
   return (
     <section
-      className={`flex flex-col gap-8 ${className} ${modalType === "fullPage" && "px-4"}`}
+      className={`flex flex-col gap-8 ${className} ${modalType === "fullPage" ? "px-4" : ""}`}
     >
       {children}
     </section>
@@ -87,7 +87,7 @@ const Footer = ({ children, axis, className = "" }: ModalFooterProps) => {
 
   return (
     <section
-      className={`flex gap-2 flex-${axis} ${modalType === "fullPage" && "px-4"} ${className} `}
+      className={`flex gap-2 flex-${axis} ${modalType === "fullPage" ? "px-4" : ""} ${className} `}
     >
       <ModalFooterAxisContext.Provider value={axis}>
         {children}
@@ -119,7 +119,7 @@ const FilledButton = ({
       onClick={onClick}
       fullWidth={false}
       {...rest}
-      className={`${axis === "row" && "flex-1"} ${className}`}
+      className={`whitespace-nowrap  ${axis === "row" ? "w-1/2" : "w-full"} ${className}`}
     >
       {children}
     </Button>
@@ -143,7 +143,7 @@ const TextButton = ({
       size={size}
       onClick={onClick}
       fullWidth={false}
-      className={`${axis === "row" && "flex-1"} ${className}`}
+      className={`whitespace-nowrap  ${axis === "row" ? "w-1/2" : "w-full"} ${className}`}
       {...rest}
     >
       {children}

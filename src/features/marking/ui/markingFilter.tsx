@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
-import { mapViewModeMap, sortTypeMap } from "@/features/map/constants";
+import { RangeFilterMap, sortTypeMap } from "@/features/map/constants";
 import {
   useCurrentLocation,
-  useResearchMarkingList,
+  useGetMapCurrentBounds,
+  useMapQueryParams,
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { SortType } from "@/entities/marking/api";
@@ -62,13 +63,13 @@ export const SortTypeFilter = ({
   options: SortType[];
   defaultOptionIdx?: number;
 }) => {
-  const { sortType: selectedSortType, researchMarkingList } =
-    useResearchMarkingList();
+  const { sortTypeParam: selectedSortType, setMapQueryParams } =
+    useMapQueryParams();
 
   const handleSelect = (sortType: SortType) => {
-    researchMarkingList({
-      sortType,
-    });
+    if (selectedSortType === sortType) return;
+
+    setMapQueryParams({ sortType });
   };
 
   const defaultOption = options[defaultOptionIdx];
@@ -108,12 +109,12 @@ export const SortTypeFilter = ({
 
   return (
     <MarkingFilterButton onClick={handleOpen}>
-      {sortTypeMap[selectedSortType]}
+      {sortTypeMap[selectedSortType || defaultOption]}
     </MarkingFilterButton>
   );
 };
 
-type MapViewMode = keyof typeof mapViewModeMap;
+type RangeFilter = keyof typeof RangeFilterMap;
 
 /**
  * 마킹 노출 범위 필터
@@ -131,29 +132,32 @@ type MapViewMode = keyof typeof mapViewModeMap;
  * @param options: "ALL_VIEW", "CURRENT_LOCATION", "MAP_LOCATION"로 구성된 배열
  * @param defaultOptionIdx: 기본 옵션 인덱스 (기본값: 0)
  */
-export const MapViewModeFilter = ({
+export const RangeFilter = ({
   options,
   defaultOptionIdx = 0,
 }: {
-  options: MapViewMode[];
+  options: RangeFilter[];
   defaultOptionIdx?: number;
 }) => {
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
-  const { researchMarkingList } = useResearchMarkingList();
   const { setCurrentLocation } = useCurrentLocation();
+  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
+  const getMapBounds = useGetMapCurrentBounds();
 
   const map = useMap();
 
-  const [selectedOption, setSelectedOption] = useState<MapViewMode>(
+  const [selectedOption, setSelectedOption] = useState<RangeFilter>(
     options[defaultOptionIdx],
   );
 
-  const handleSelect = (mapViewMode: MapViewMode) => {
-    setSelectedOption(mapViewMode);
+  const handleSelect = (rangeFilter: RangeFilter) => {
+    if (selectedOption === rangeFilter) return;
 
-    if (mapViewMode === "CURRENT_LOCATION") {
+    setSelectedOption(rangeFilter);
+
+    if (rangeFilter === "CURRENT_LOCATION") {
       setCurrentLocation({
         onSuccess: ({ coords: { latitude, longitude } }) => {
           map.setCenter({
@@ -165,15 +169,21 @@ export const MapViewModeFilter = ({
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          researchMarkingList();
+          setMapQueryParams({
+            bounds: getMapBounds(),
+            sortType: sortTypeParam!,
+          });
         },
       });
 
       return;
     }
 
-    if (mapViewMode === "MAP_LOCATION") {
-      researchMarkingList();
+    if (rangeFilter === "MAP_LOCATION") {
+      setMapQueryParams({
+        bounds: getMapBounds(),
+        sortType: sortTypeParam!,
+      });
       return;
     }
 
@@ -194,7 +204,7 @@ export const MapViewModeFilter = ({
             onClick={() => handleSelect(defaultOption)}
             isSelected={selectedOption === defaultOption}
           >
-            {mapViewModeMap[defaultOption]}
+            {RangeFilterMap[defaultOption]}
           </Select.Option>
 
           {nonDefaultOptions.map((option) => {
@@ -205,7 +215,7 @@ export const MapViewModeFilter = ({
                 onClick={() => handleSelect(option)}
                 isSelected={selectedOption === option}
               >
-                {mapViewModeMap[option]}
+                {RangeFilterMap[option]}
               </Select.Option>
             );
           })}
@@ -216,7 +226,7 @@ export const MapViewModeFilter = ({
 
   return (
     <MarkingFilterButton onClick={handleOpen}>
-      {mapViewModeMap[selectedOption]}
+      {RangeFilterMap[selectedOption]}
     </MarkingFilterButton>
   );
 };
