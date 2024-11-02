@@ -1,7 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { useMap } from "@vis.gl/react-google-maps";
 import { useMapQueryParams } from "@/features/map/hooks";
+import { useMapStore } from "@/features/map/store";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
-import { useGetMarkingList } from "@/entities/marking/api";
+import {
+  useGetAddressFromLatLng,
+  useGetMarkingList,
+} from "@/entities/marking/api";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
@@ -27,6 +32,18 @@ export const LocalMarkingList = () => {
     }
   });
 
+  const map = useMap();
+  const center = map.getCenter();
+
+  const lat = center.lat();
+  const lng = center.lng();
+
+  const { data } = useGetAddressFromLatLng({
+    lat,
+    lng,
+    enabled: useMapStore.getState().isIdle,
+  });
+
   return (
     <div className="px-4">
       {/* todo 버튼 활성화 여부에 따라 내용 바뀜 */}
@@ -34,7 +51,7 @@ export const LocalMarkingList = () => {
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-1 text-tangerine-500 items-center">
           <MyLocationIcon width={20} height={20} />
-          <span className="body-2 text-grey-500">영등포 1동 주변</span>
+          <span className="body-2 text-grey-500">{data?.region}</span>
         </div>
 
         <div className="flex">
