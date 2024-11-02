@@ -198,10 +198,7 @@ export const useKMeansClustering = <T extends LatLng>(
     });
     // 클러스터의 중심점을 재조정합니다.
     // 이 때 모든 클러스터의 중심점이 재조정 되지 않았다면 반복문을 종료 합니다.
-    isChanged = clusters.reduce(
-      (isChanged, cluster) => isChanged || cluster.revalidateCluster(),
-      false,
-    );
+    isChanged = clusters.some((cluster) => cluster.revalidateCluster());
   }
   return clusters;
 };
