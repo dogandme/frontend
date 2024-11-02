@@ -200,5 +200,23 @@ export const useKMeansClustering = <T extends LatLng>(
     // 이 때 모든 클러스터의 중심점이 재조정 되지 않았다면 반복문을 종료 합니다.
     isChanged = clusters.some((cluster) => cluster.revalidateCluster());
   }
-  return clusters;
+
+  // 클러스터링 된 마커들과 단일 마커들을 구분지어 반환 합니다.
+  const [clusteredMarkers, singleMarkers] = clusters.reduce(
+    ([clusteredMarkers, singleMarkers], cluster) => {
+      if (cluster.markers.length === 1) {
+        return [
+          clusteredMarkers,
+          [...singleMarkers, ...cluster.markers, ...cluster.outliers],
+        ];
+      }
+      return [
+        [...clusteredMarkers, cluster],
+        [...singleMarkers, ...cluster.outliers],
+      ];
+    },
+    [[], []] as [Cluster<T>[], T[]],
+  );
+
+  return [clusteredMarkers, singleMarkers];
 };
