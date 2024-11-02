@@ -46,3 +46,7 @@ export const MARKING_VISIBILITY_MAP = {
 export type MarkingVisibilityKey = keyof typeof MARKING_VISIBILITY_MAP;
 export type MarkingVisibilityValue =
   (typeof MARKING_VISIBILITY_MAP)[MarkingVisibilityKey];
+
+export const MARKING_VISIBILITY_ENTRIES = Object.entries(
+  MARKING_VISIBILITY_MAP,
+) as [MarkingVisibilityKey, MarkingVisibilityValue][];

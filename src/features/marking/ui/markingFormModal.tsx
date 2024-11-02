@@ -4,7 +4,7 @@ import { SelectOpener } from "@/entities/auth/ui";
 import { useGetAddressFromLatLng } from "@/entities/marking/api";
 import {
   MARKING_VISIBILITY_MAP,
-  visibilityEntries,
+  MARKING_VISIBILITY_ENTRIES,
 } from "@/entities/marking/constants";
 import { useModal } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
@@ -144,7 +144,7 @@ const PostVisibilitySelect = () => {
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
-          {visibilityEntries.map(([key, value]) => {
+          {MARKING_VISIBILITY_ENTRIES.map(([key, value]) => {
             return (
               <Select.Option
                 key={key}
