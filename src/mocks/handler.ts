@@ -18,10 +18,12 @@ import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import { Marking, SortType } from "@/entities/marking/api";
+import { MARKER_END_POINT } from "@/entities/marking/constants";
 import { API_BASE_URL } from "@/shared/constants";
 // data
 import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
+import { getMyMark } from "./data/myMark";
 import { otherUsers } from "./data/otherUser";
 import { profileMarkingThumbnail as _profileMarkingThumbnail } from "./data/profileMarking";
 import regionListData from "./data/regionList.json";
@@ -1693,6 +1695,8 @@ const putModifyTempMarkingHandler = [
   }),
 ];
 
+const { myMarkerList, myMarkingList } = getMyMark();
+
 const getUserMarkingListHandler = [
   http.get(
     `${API_BASE_URL}/markings/users/:nickname`,
@@ -1718,13 +1722,16 @@ const getUserMarkingListHandler = [
       const southLeftLng = Number(url.searchParams.get("southLeftLng"));
       const northRightLng = Number(url.searchParams.get("northRightLng"));
 
-      const markingList = getMockUserMarkingList({
-        nickname,
-        southBottomLat,
-        northTopLat,
-        southLeftLng,
-        northRightLng,
-      });
+      const markingList =
+        nickname === "뽀송송"
+          ? myMarkingList
+          : getMockUserMarkingList({
+              nickname,
+              southBottomLat,
+              northTopLat,
+              southLeftLng,
+              northRightLng,
+            });
 
       const sortType = url.searchParams.get("sortType") as SortType;
 
@@ -1789,6 +1796,30 @@ const getUserMarkingListHandler = [
   ),
 ];
 
+const getMyMarkerList = [
+  http.get(MARKER_END_POINT.MY, ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (!token || token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "토큰 검증에 실패 했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: myMarkerList,
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1820,4 +1851,5 @@ export const handlers = [
   ...deleteTemporaryMarkingHandler,
   ...putModifyTempMarkingHandler,
   ...getUserMarkingListHandler,
+  ...getMyMarkerList,
 ];
