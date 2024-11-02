@@ -9,21 +9,17 @@ import { useGetUserMarkingList } from "@/entities/marking/api";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
 import { useGetProfile } from "@/entities/profile/api";
 import { useInfiniteScroll } from "@/shared/lib";
-import { useNicknameParams } from "@/shared/lib/profile";
 import { useAuthStore } from "@/shared/store";
 import { MarkingList } from "./markingList";
 
 export const UserMarkingList = () => {
   const map = useMap();
-  const { nicknameParams } = useNicknameParams();
 
   const { sortTypeParam, boundsParams } = useMapQueryParams();
 
-  const myNickname = useAuthStore.getState().nickname;
+  const nickname = useAuthStore.getState().nickname;
 
-  const { data: profile } = useGetProfile({
-    nickname: nicknameParams,
-  });
+  const { data: profile } = useGetProfile({ nickname });
   const {
     data: markingList,
     fetchNextPage,
@@ -31,7 +27,7 @@ export const UserMarkingList = () => {
     isFetchingNextPage,
   } = useGetUserMarkingList({
     ...boundsParams,
-    nickname: nicknameParams,
+    nickname: nickname || "",
     sortType: sortTypeParam,
   });
 
@@ -41,21 +37,20 @@ export const UserMarkingList = () => {
     }
   });
 
+  // todo 회원이 아닐 경우
+  if (!nickname) return null;
+
   return (
     <div className="px-4">
       {/* todo 버튼 활성화 여부에 따라 내용 바뀜 */}
-      <h1 className="title-1 text-grey-900 py-4">
-        {nicknameParams === myNickname ? "내 마킹" : `${nicknameParams}의 마킹`}
-      </h1>
+      <h1 className="title-1 text-grey-900 py-4">내 마킹</h1>
 
       <section className="pb-4 flex flex-col gap-4">
-        {nicknameParams === myNickname &&
-          typeof profile?.tempCnt === "number" &&
-          profile.tempCnt > 0 && (
-            <div className="pt-4">
-              <TemporaryMarkingBar tempCnt={profile.tempCnt} />
-            </div>
-          )}
+        {typeof profile?.tempCnt === "number" && profile.tempCnt > 0 && (
+          <div className="pt-4">
+            <TemporaryMarkingBar tempCnt={profile.tempCnt} />
+          </div>
+        )}
 
         <div className="flex w-full justify-end">
           <RangeFilter options={["CURRENT_LOCATION", "MAP_LOCATION"]} />

@@ -1,6 +1,6 @@
 // 맵에 보여줄 마커를 반환하는 훅
-import { useParams } from "react-router-dom";
-import { useAuthStore } from "@/shared/store";
+import { useLocation } from "react-router-dom";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useGetBoundaryMarkerList } from "../api";
 import { useGetMyMakerList } from "../api/getMyMakerList";
 
@@ -10,16 +10,14 @@ export const useGetMarkerList = (boundsParams: {
   northEastLat: number | null;
   northEastLng: number | null;
 }) => {
-  const { nickname } = useParams<{ nickname: string }>();
+  const { pathname } = useLocation();
+
+  const isMyPage = pathname === ROUTER_PATH.MY_MARK;
 
   const boundaryMarkerListResult = useGetBoundaryMarkerList({
     ...boundsParams,
-    enabled: !nickname,
+    enabled: !isMyPage,
   });
-
-  const nicknameParams = nickname ? decodeURI(nickname.slice(1)) : null;
-  const isMyPage = nicknameParams === useAuthStore.getState().nickname;
-
   const myMarkerListResult = useGetMyMakerList();
 
   if (isMyPage) return myMarkerListResult;
