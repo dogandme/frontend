@@ -2,7 +2,7 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import type { Nickname, PetInfo, UserId } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { FOLLOW_ENDPOINT } from "../constants";
+import { FOLLOW_END_POINT } from "../constants";
 
 // TODO 리팩토링 시 해당 타입 정의 위치 의논
 interface PageAbleInformation {
@@ -39,7 +39,7 @@ const getFollowerList = ({
   nickname,
 }: GetFollowerListRequest & { pageParam: number }) => {
   return apiClient.get<GetFollowerListResponse>(
-    FOLLOW_ENDPOINT.FOLLOWER_LIST(nickname, pageParam),
+    FOLLOW_END_POINT.FOLLOWER_LIST(nickname, pageParam),
     {
       withToken: true,
     },

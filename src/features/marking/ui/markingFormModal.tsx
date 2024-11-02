@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { useGetAddressFromLatLng } from "@/entities/marking/api";
+import {
+  MARKING_VISIBILITY_MAP,
+  MARKING_VISIBILITY_ENTRIES,
+} from "@/entities/marking/constants";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -11,11 +15,7 @@ import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { usePostAddMarking, usePostAddTempMarking } from "../api";
-import {
-  MARKING_ADD_ERROR_MESSAGE,
-  MAX_IMAGE_LENGTH,
-  POST_VISIBILITY_MAP,
-} from "../constants";
+import { MARKING_ADD_ERROR_MESSAGE, MAX_IMAGE_LENGTH } from "../constants";
 import { useMarkingFormStore } from "../store";
 
 interface MarkingFormModalProps {
@@ -95,14 +95,13 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 
 const PostVisibilitySelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const VISIBILITY_LIST = Object.keys(POST_VISIBILITY_MAP);
 
   const isVisible = useMarkingFormStore((state) => state.isVisible);
   const setVisibility = useMarkingFormStore((state) => state.setVisibility);
 
   const handleCloseSelectList = () => setIsOpen(false);
 
-  const handleSelect = (value: keyof typeof POST_VISIBILITY_MAP) => {
+  const handleSelect = (value: keyof typeof MARKING_VISIBILITY_MAP) => {
     setVisibility(value);
     handleCloseSelectList();
   };
@@ -113,25 +112,21 @@ const PostVisibilitySelect = () => {
         label="보기권한 설정"
         essential
         onClick={() => setIsOpen(!isOpen)}
-        placeholder="공개 범위를 선택해주세요"
-        value={isVisible}
+        value={MARKING_VISIBILITY_MAP[isVisible]}
       />
-
       <Select isOpen={isOpen} onClose={handleCloseSelectList}>
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
-          {VISIBILITY_LIST.map((option) => {
+          {MARKING_VISIBILITY_ENTRIES.map(([key, value]) => {
             return (
               <Select.Option
-                key={option}
-                value={option}
-                isSelected={option === isVisible}
-                onClick={() =>
-                  handleSelect(option as keyof typeof POST_VISIBILITY_MAP)
-                }
+                key={key}
+                value={value}
+                isSelected={key === isVisible}
+                onClick={() => handleSelect(key)}
               >
-                {option}
+                {value}
               </Select.Option>
             );
           })}
@@ -341,7 +336,7 @@ const TemporarySaveButton = () => {
       lat,
       lng,
       region,
-      isVisible: isVisible || "전체 공개",
+      isVisible: isVisible,
       images: compressedFiles,
       content,
     });

@@ -1,6 +1,7 @@
 import { createContext, useContext, useRef } from "react";
 import { create, useStore } from "zustand";
 import { TempMarkingFileInfo, TempMarkingInfo } from "@/entities/marking/api";
+import type { MarkingVisibilityKey } from "@/entities/marking/constants";
 import { compressFileImage } from "@/shared/lib";
 import { MarkingFileInfo } from "./markingForm";
 
@@ -22,7 +23,7 @@ type TempMarkingFormState = TempMarkingFormExternalState &
   TempMarkingFormInternalState;
 
 interface TempMarkingFormAction {
-  setIsVisible: (isVisible: TempMarkingInfo["isVisible"]) => void;
+  setIsVisible: (isVisible: MarkingVisibilityKey) => void;
   setContent: (content: string | null) => void;
   setExternalImages: (images: TempMarkingFileInfo[]) => void;
   setRemovedIds: (removedIds: TempMarkingFileInfo["id"][]) => void;
