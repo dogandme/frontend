@@ -11,7 +11,11 @@ import {
   MyLocationIcon,
 } from "@/shared/ui/icon";
 import { MarkingFormModal } from "../../marking/ui";
-import { useCurrentLocation, useMapQueryParams } from "../hooks";
+import {
+  useCurrentLocation,
+  useGetMapCurrentBounds,
+  useMapQueryParams,
+} from "../hooks";
 import { useMapStore } from "../store";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
@@ -87,10 +91,11 @@ const buttonBaseStyles = "border-none outline-none h-14 px-[.875rem]";
 export const ShowMyMarkingButton = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const shouldShowMyMarking = pathname === ROUTER_PATH.MY_MARK;
+  const map = useMap();
 
-  const { boundsParams, sortTypeParam, setMapQueryParams } =
-    useMapQueryParams();
+  const shouldShowMyMarking = pathname === ROUTER_PATH.MY_MARK;
+  const { setMapQueryParams } = useMapQueryParams();
+  const getCurrentBounds = useGetMapCurrentBounds();
 
   return (
     <Button
@@ -101,10 +106,11 @@ export const ShowMyMarkingButton = () => {
       className={`${buttonBaseStyles} rounded-b-none`}
       aria-label="내 마킹만 보기"
       onClick={() => {
+        map.setZoom(10);
         navigate(ROUTER_PATH.MY_MARK);
         setMapQueryParams({
-          bounds: boundsParams,
-          sortType: sortTypeParam || "POPULARITY",
+          bounds: getCurrentBounds(),
+          sortType: "POPULARITY",
         });
       }}
     >
