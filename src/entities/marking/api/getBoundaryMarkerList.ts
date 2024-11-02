@@ -66,6 +66,7 @@ export const useGetBoundaryMarkerList = ({
     ],
 
     queryFn:
+      enabled &&
       isMapIdle &&
       !!southWestLat &&
       !!southWestLng &&
@@ -81,13 +82,6 @@ export const useGetBoundaryMarkerList = ({
         : skipToken,
 
     refetchOnWindowFocus: false,
-    enabled:
-      enabled &&
-      isMapIdle &&
-      !!southWestLat &&
-      !!southWestLng &&
-      !!northEastLat &&
-      !!northEastLng,
 
     gcTime: 0,
   });
