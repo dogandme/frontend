@@ -53,7 +53,9 @@ export const MyMarkingList = () => {
         )}
 
         <div className="flex w-full justify-end">
-          <RangeFilter options={["CURRENT_LOCATION", "MAP_LOCATION"]} />
+          <RangeFilter
+            options={["ALL_VIEW", "CURRENT_LOCATION", "MAP_LOCATION"]}
+          />
           <SortTypeFilter options={["POPULARITY", "RECENT", "DISTANCE"]} />
         </div>
 
