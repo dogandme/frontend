@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { useGetAddressFromLatLng } from "@/entities/marking/api";
+import {
+  POST_VISIBILITY_MAP,
+  type PostVisibilityName,
+} from "@/entities/marking/constants";
 import { useModal } from "@/shared/lib/overlay";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -12,11 +16,7 @@ import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { usePostAddMarking, usePostAddTempMarking } from "../api";
-import {
-  MARKING_ADD_ERROR_MESSAGE,
-  MAX_IMAGE_LENGTH,
-  POST_VISIBILITY_MAP,
-} from "../constants";
+import { MARKING_ADD_ERROR_MESSAGE, MAX_IMAGE_LENGTH } from "../constants";
 import { useMarkingFormStore } from "../store";
 import { MarkingFormCloseModal } from "./markingFormCloseModal";
 
@@ -40,7 +40,7 @@ export const MarkingFormModal = ({
         {/* 메모하기 */}
         <MarkingTextArea />
         {/* 제출 버튼들 */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gapS-2">
           <SaveButton />
           <TemporarySaveButton />
         </div>
@@ -121,7 +121,9 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
 
 const PostVisibilitySelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const VISIBILITY_LIST = Object.keys(POST_VISIBILITY_MAP);
+  const visibilityNames = Object.keys(
+    POST_VISIBILITY_MAP,
+  ) as PostVisibilityName[];
 
   const isVisible = useMarkingFormStore((state) => state.isVisible);
   const setVisibility = useMarkingFormStore((state) => state.setVisibility);
@@ -146,7 +148,7 @@ const PostVisibilitySelect = () => {
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
-          {VISIBILITY_LIST.map((option) => {
+          {visibilityNames.map((option) => {
             return (
               <Select.Option
                 key={option}

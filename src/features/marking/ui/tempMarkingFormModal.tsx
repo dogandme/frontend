@@ -1,6 +1,10 @@
 import { useRef, useState } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { TempMarkingInfo } from "@/entities/marking/api";
+import {
+  POST_VISIBILITY_MAP,
+  PostVisibilityName,
+} from "@/entities/marking/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
 import { Badge } from "@/shared/ui/badge";
@@ -11,11 +15,7 @@ import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { usePutModifyTempMarking } from "../api";
-import {
-  MARKING_ADD_ERROR_MESSAGE,
-  MAX_IMAGE_LENGTH,
-  POST_VISIBILITY_MAP,
-} from "../constants";
+import { MARKING_ADD_ERROR_MESSAGE, MAX_IMAGE_LENGTH } from "../constants";
 import {
   TempMarkingFormExternalState,
   TempMarkingFormProvider,
@@ -80,15 +80,13 @@ const TempPostVisibilitySelect = () => {
 
   const isVisible = useTempMarkingForm((state) => state.isVisible);
   const setIsVisible = useTempMarkingForm((state) => state.setIsVisible);
-
-  const VISIBILITY_ENTRIES = Object.entries(POST_VISIBILITY_MAP);
-  const selectedValue = VISIBILITY_ENTRIES.find(
-    ([_, value]) => value === isVisible,
-  )?.[0];
-
   const handleCloseSelectList = () => setIsOpen(false);
 
-  const handleSelect = (value: TempMarkingInfo["isVisible"]) => {
+  const visibilityNames = Object.keys(
+    POST_VISIBILITY_MAP,
+  ) as PostVisibilityName[];
+
+  const handleSelect = (value: PostVisibilityName) => {
     setIsVisible(value);
     handleCloseSelectList();
   };
@@ -99,27 +97,23 @@ const TempPostVisibilitySelect = () => {
         label="보기권한 설정"
         essential
         onClick={() => setIsOpen(!isOpen)}
-        value={selectedValue}
+        value={isVisible}
       />
 
       <Select isOpen={isOpen} onClose={handleCloseSelectList}>
         <Select.OptionList
           className={` ${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] w-full bg-grey-0 z-[9999]`}
         >
-          {VISIBILITY_ENTRIES.map(([name, value]) => {
-            return (
-              <Select.Option
-                key={name}
-                value={value}
-                isSelected={value === isVisible}
-                onClick={() =>
-                  handleSelect(value as TempMarkingInfo["isVisible"])
-                }
-              >
-                {name}
-              </Select.Option>
-            );
-          })}
+          {visibilityNames.map((name) => (
+            <Select.Option
+              key={name}
+              value={name}
+              isSelected={name === isVisible}
+              onClick={() => handleSelect(name)}
+            >
+              {name}
+            </Select.Option>
+          ))}
         </Select.OptionList>
       </Select>
     </div>
@@ -295,7 +289,7 @@ const TempMarkingSaveButton = ({
       removeIds: removedIds,
       isTempSaved: false,
       images: images.map(({ file }) => file),
-      isVisible,
+      isVisible: POST_VISIBILITY_MAP[isVisible],
     });
   };
 
@@ -333,7 +327,7 @@ const TempMarkingTempSaveButton = ({
       removeIds: removedIds,
       isTempSaved: true,
       images: images.map(({ file }) => file),
-      isVisible,
+      isVisible: POST_VISIBILITY_MAP[isVisible],
     });
   };
 
