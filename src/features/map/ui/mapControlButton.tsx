@@ -13,11 +13,7 @@ import {
   MyLocationIcon,
 } from "@/shared/ui/icon";
 import { MarkingFormModal } from "../../marking/ui";
-import {
-  useCurrentLocation,
-  useGetMapCurrentBounds,
-  useMapQueryParams,
-} from "../hooks";
+import { useCurrentLocation, useGetMapCurrentBounds } from "../hooks";
 import { useMapStore } from "../store";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
@@ -96,7 +92,6 @@ export const ShowMyMarkingButton = () => {
   const map = useMap();
 
   const shouldShowMyMarking = pathname === ROUTER_PATH.MY_MARK;
-  const { setMapQueryParams } = useMapQueryParams();
   const getCurrentBounds = useGetMapCurrentBounds();
 
   return (
@@ -109,11 +104,12 @@ export const ShowMyMarkingButton = () => {
       aria-label="내 마킹만 보기"
       onClick={() => {
         map.setZoom(10);
-        navigate(ROUTER_PATH.MY_MARK);
-        setMapQueryParams({
-          bounds: getCurrentBounds(),
-          sortType: "POPULARITY",
-        });
+        const { northEastLat, northEastLng, southWestLat, southWestLng } =
+          getCurrentBounds();
+
+        navigate(
+          `${ROUTER_PATH.MY_MARK}?boundsNELat=${northEastLat}&boundsNELng=${northEastLng}&boundsSWLat=${southWestLat}&boundsSWLng=${southWestLng}&sortType=POPULARITY`,
+        );
       }}
     >
       <img src="/default-image.png" className="w-7 h-7 rounded-full" />
