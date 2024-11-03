@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { Marking } from "@/entities/marking/api";
 import type { PetInfo } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
@@ -16,19 +16,25 @@ import { MarkingLikeToggle } from "./markingLikeToggle";
 interface MarkingItemProps
   extends Omit<Marking, "isVisible" | "isTempSaved" | "userId" | "pet"> {
   onRegionClick: () => void;
+  onDelete?: () => void;
   pet: Pick<PetInfo, "petId" | "profile" | "name">;
   isLiked: boolean;
   isBookmarked: boolean;
 }
 const MarkingManageButton = ({
   markingId,
-}: Pick<MarkingItemProps, "markingId">) => {
+  onDelete,
+}: Pick<MarkingItemProps, "markingId" | "onDelete">) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useClickOutside(ref, () => setIsOpen(false));
 
-  const { mutate: deleteMarking } = useDeleteMarking();
+  const { mutate: deleteMarking } = useDeleteMarking({
+    onSuccess: () => {
+      onDelete?.();
+    },
+  });
 
   const handleDeleteMarking = () => {
     const { token, role } = useAuthStore.getState();
@@ -76,6 +82,7 @@ const MarkingManageButton = ({
 export const MarkingItem = ({
   markingId,
   onRegionClick,
+  onDelete,
   nickName,
   region,
   pet,
@@ -100,7 +107,9 @@ export const MarkingItem = ({
           <h2 className="btn-2 text-grey-900">{region}</h2>
         </div>
 
-        {isOwner && <MarkingManageButton markingId={markingId} />}
+        {isOwner && (
+          <MarkingManageButton markingId={markingId} onDelete={onDelete} />
+        )}
       </div>
 
       <div className="flex justify-between items-center gap-1 flex-1">
