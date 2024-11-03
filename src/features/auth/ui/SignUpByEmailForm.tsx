@@ -391,7 +391,7 @@ const PasswordConfirm = () => {
   let statusText = "";
 
   if (isValidPassword) {
-    if (isValidConfirmPassword) statusText = "사용가능한 비밀번호 입니다";
+    if (isValidConfirmPassword) statusText = "비밀번호가 일치합니다";
     else statusText = "비밀번호가 서로 일치하지 않습니다";
   } else {
     if (isValidConfirmPassword) statusText = "";
