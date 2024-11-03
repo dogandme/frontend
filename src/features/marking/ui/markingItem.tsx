@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Marking } from "@/entities/marking/api";
 import type { PetInfo } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
-import { formatDateToYearMonthDay } from "@/shared/lib";
+import { formatDateToYearMonthDay, useClickOutside } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
@@ -24,24 +24,9 @@ const MarkingManageButton = ({
   markingId,
 }: Pick<MarkingItemProps, "markingId">) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const ref = useRef<HTMLDivElement>(null);
 
-  const handleClickOutside = (e: MouseEvent) => {
-    const isClickedOutside =
-      ref.current && !ref.current.contains(e.target as Node);
-
-    if (isClickedOutside) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
+  useClickOutside(ref, () => setIsOpen(false));
 
   const { mutate: deleteMarking } = useDeleteMarking();
 
