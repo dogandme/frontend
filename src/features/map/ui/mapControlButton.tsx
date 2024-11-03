@@ -1,5 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
+import { useMarkingFormStore } from "@/features/marking/store";
+import { MarkingFormCloseModal } from "@/features/marking/ui/markingFormCloseModal";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useModal, useSnackBar } from "@/shared/lib";
@@ -180,8 +182,22 @@ export const MarkingFormTriggerButton = () => {
 };
 
 export const ExitAddModeButton = () => {
+  const { onClose, handleOpen } = useModal(() => (
+    <MarkingFormCloseModal onCloseExitModal={onClose} />
+  ));
+  const resetMarkingFormStore = useMarkingFormStore(
+    (state) => state.resetMarkingFormStore,
+  );
+
   const setMode = useMapStore((state) => state.setMode);
+
   const handleClick = () => {
+    const { images, isVisible, content } = useMarkingFormStore.getState();
+
+    if (images.length > 0 || content || isVisible) {
+      handleOpen();
+      return;
+    }
     setMode("view");
   };
 

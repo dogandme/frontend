@@ -24,7 +24,7 @@ type Story = StoryObj<typeof MarkingFormModal>;
 export const Default: Story = {
   decorators: [
     (Story) => {
-      useAuthStore.setState({ token: "Bearer token" });
+      useAuthStore.setState({ token: "freshAccessToken" });
       useMapStore.setState({ mode: "view" });
 
       return (
@@ -79,19 +79,25 @@ export const Default: Story = {
       expect($addModeSnackbar).toBeVisible();
     });
 
-    await step("exit 버튼을 누르면 view 모드로 변경 된다.", async () => {
-      const $markingModalTriggerButton =
-        await canvas.findByText("여기에 마킹하기")!;
-      const $addModeExitButton =
-        await canvas.findByLabelText("마커 추가 모드 종료하기")!;
+    await step(
+      "exit 버튼을 누르면 마킹 나가기 확인 모달이 나타난다.",
+      async () => {
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기")!;
+        const $addModeExitButton =
+          await canvas.findByLabelText("마커 추가 모드 종료하기")!;
+        await userEvent.click($addModeExitButton);
 
-      await userEvent.click($addModeExitButton);
+        const $exitButton = await canvas.findByText("나가기");
+        expect($exitButton).toBeVisible();
+        await userEvent.click($exitButton);
 
-      const $markingButton = await canvas.findByText("마킹하기");
-      expect($markingButton).toBeVisible();
-      expect($markingModalTriggerButton).not.toBeInTheDocument();
-      expect($addModeExitButton).not.toBeInTheDocument();
-    });
+        const $markingButton = await canvas.findByText(/마킹하기/);
+        expect($markingButton).toBeVisible();
+        expect($markingModalTriggerButton).not.toBeInTheDocument();
+        expect($addModeExitButton).not.toBeInTheDocument();
+      },
+    );
 
     await step(
       "add 모드에서 여기에 마킹하기 버튼을 클릭하면 모달 폼이 나타난다.",
@@ -136,9 +142,9 @@ export const Default: Story = {
       const $markingModalTriggerButton =
         await canvas.findByText("여기에 마킹하기");
       await userEvent.click($markingModalTriggerButton);
+      const $publicVisibilityElements = await canvas.findAllByText("전체 공개");
 
-      const $postVisibilityOpener =
-        await canvas.findByText(/공개 범위를 선택해주세요/);
+      const $postVisibilityOpener = $publicVisibilityElements[0];
       const $textArea =
         await canvas.findByPlaceholderText(/마킹에 대한 메모를 남겨주세요/);
       const $fileUploadInput = canvasElement.querySelector(
@@ -147,7 +153,7 @@ export const Default: Story = {
 
       // 공개 범위 설정
       await $postVisibilityOpener.click();
-      const $publicVisibility = await canvas.findByText("전체 공개");
+      const $publicVisibility = $publicVisibilityElements[1];
       await $publicVisibility.click();
 
       // 이미지 파일 업로드
@@ -166,7 +172,7 @@ export const Default: Story = {
 
       const { content, isVisible, images } = useMarkingFormStore.getState();
       expect(content).toBe("여기는 진짜 대박이긴 해요");
-      expect(isVisible).toBe("전체 공개");
+      expect(isVisible).toBe("PUBLIC");
       expect(images).toHaveLength(4);
       expect(images.map((file) => file.name)).toEqual(
         dummyFiles.map((file) => file.name),
@@ -234,18 +240,6 @@ export const Default: Story = {
       },
     );
 
-    await step("나가기 버튼을 클릭하면 확인 모달이 나타난다.", async () => {
-      const $exitButton = canvas.getByLabelText("작성중인 마킹 게시글 닫기");
-      await userEvent.click($exitButton);
-
-      const $confirmModal = await canvas.findByText("화면을 나가시겠습니까");
-      await expect($confirmModal).toBeVisible();
-
-      const $cancelButton = await canvas.findByText("취소");
-      await userEvent.click($cancelButton);
-      await expect($confirmModal).not.toBeVisible();
-    });
-
     await step(
       "add 모드를 유지한 채로 나갔다가 다시 모달을 열어도 내용이 유지 된다.",
       async () => {
@@ -265,19 +259,20 @@ export const Default: Story = {
     await step(
       "나갈 때 view 모드로 나갈 경우엔 모달 내부 내용이 초기화 된다.",
       async () => {
-        const $exitButton =
-          await canvas.findByLabelText("작성중인 마킹 게시글 닫기");
+        const $exitButton = await canvas.findByLabelText(/모달창 닫기/);
         await userEvent.click($exitButton);
 
-        const $confirmModal = await canvas.findByText("화면을 나가시겠습니까");
-        await expect($confirmModal).toBeVisible();
+        const $addModeExitButton =
+          await canvas.findByLabelText("마커 추가 모드 종료하기")!;
+        await userEvent.click($addModeExitButton);
 
-        const $exitAddModeButton = await canvas.findByText("나가기");
-        await userEvent.click($exitAddModeButton);
+        const $exitButtonInModal = await canvas.findByText("나가기");
+        expect($exitButtonInModal).toBeVisible();
+        await userEvent.click($exitButtonInModal);
 
         const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(isVisible).toBe("");
+        expect(isVisible).toBe("PUBLIC");
         expect(images).toHaveLength(0);
 
         const $markingButton = await canvas.findByText("마킹하기");
@@ -306,10 +301,10 @@ export const Default: Story = {
         ];
         await userEvent.upload($fileUploadInput, dummyFiles);
 
-        const $postVisibilityOpener =
-          await canvas.findByText(/공개 범위를 선택해주세요/);
+        const $postVisibilityElements = await canvas.findAllByText("전체 공개");
+        const $postVisibilityOpener = $postVisibilityElements[0];
         await $postVisibilityOpener.click();
-        const $publicVisibility = await canvas.findByText("전체 공개");
+        const $publicVisibility = $postVisibilityElements[1];
         await $publicVisibility.click();
 
         const $textArea =
@@ -325,7 +320,7 @@ export const Default: Story = {
 
         const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(isVisible).toBe("");
+        expect(isVisible).toBe("PUBLIC");
         expect(images).toHaveLength(0);
       },
     );
@@ -351,10 +346,10 @@ export const Default: Story = {
         ];
         await userEvent.upload($fileUploadInput, dummyFiles);
 
-        const $postVisibilityOpener =
-          await canvas.findByText(/공개 범위를 선택해주세요/);
+        const $postVisibilityElements = await canvas.findAllByText("전체 공개");
+        const $postVisibilityOpener = $postVisibilityElements[0];
         await $postVisibilityOpener.click();
-        const $publicVisibility = await canvas.findByText("전체 공개");
+        const $publicVisibility = $postVisibilityElements[1];
         await $publicVisibility.click();
 
         const $textArea =
@@ -370,7 +365,7 @@ export const Default: Story = {
 
         const { content, isVisible, images } = useMarkingFormStore.getState();
         expect(content).toBe("");
-        expect(isVisible).toBe("");
+        expect(isVisible).toBe("PUBLIC");
         expect(images).toHaveLength(0);
       },
     );

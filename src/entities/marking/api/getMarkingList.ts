@@ -2,7 +2,7 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_END_POINT } from "../constants";
+import { MARKING_END_POINT, type MarkingVisibilityKey } from "../constants";
 
 interface Address {
   id: number;
@@ -43,7 +43,7 @@ export interface Marking {
   markingId: number;
   region: string;
   content: string;
-  isVisible: "PUBLIC" | "FOLLOWERS_ONLY" | "PRIVATE";
+  isVisible: MarkingVisibilityKey;
   regDt: string;
   previewImage: string;
   userId: number;

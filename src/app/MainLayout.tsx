@@ -9,6 +9,15 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (
+      (
+        window as Window &
+          typeof globalThis & { __STORYBOOK_ADDONS_CHANNEL__?: unknown }
+      ).__STORYBOOK_ADDONS_CHANNEL__
+    ) {
+      return;
+    }
+
     getAccessTokenByRefreshToken().then(({ authorization, role, nickname }) => {
       useAuthStore.setState({ token: authorization, role, nickname });
       if (authorization === "ROLE_NONE") {
