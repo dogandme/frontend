@@ -50,33 +50,23 @@ export const useMapQueryParams = () => {
   const hasSortTypeParam = !!sortTypeParam && sortTypeParam in sortTypeMap;
   const sortType = hasSortTypeParam ? (sortTypeParam as SortType) : null;
 
-  const setMapQueryParams = (mapParams: Filter) => {
+  const setMapQueryParams = ({ bounds, sortType }: Filter) => {
     const newSearchParams = new URLSearchParams(searchParams);
+
+    const { northEastLat, northEastLng, southWestLat, southWestLng } =
+      bounds || {};
     const hasNewBoundsParams =
-      mapParams.bounds &&
-      Object.values(mapParams.bounds).every((value) => value !== null);
+      northEastLat && northEastLng && southWestLat && southWestLng;
 
     if (hasNewBoundsParams) {
-      newSearchParams.set(
-        "boundsNELat",
-        mapParams.bounds!.northEastLat!.toString(),
-      );
-      newSearchParams.set(
-        "boundsNELng",
-        mapParams.bounds!.northEastLng!.toString(),
-      );
-      newSearchParams.set(
-        "boundsSWLat",
-        mapParams.bounds!.southWestLat!.toString(),
-      );
-      newSearchParams.set(
-        "boundsSWLng",
-        mapParams.bounds!.southWestLng!.toString(),
-      );
+      newSearchParams.set("boundsNELat", northEastLat.toString());
+      newSearchParams.set("boundsNELng", northEastLng.toString());
+      newSearchParams.set("boundsSWLat", southWestLat.toString());
+      newSearchParams.set("boundsSWLng", southWestLng.toString());
     }
 
-    if (mapParams.sortType) {
-      newSearchParams.set("sortType", mapParams.sortType);
+    if (sortType) {
+      newSearchParams.set("sortType", sortType);
     }
 
     setTimeout(() => {
