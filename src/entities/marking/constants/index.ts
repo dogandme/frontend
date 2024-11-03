@@ -1,6 +1,7 @@
 import { API_BASE_URL } from "@/shared/constants";
-import { GetMarkingListRequest, GetUserMarkingListRequest } from "../api";
-import { GetBoundaryMarkerListRequest } from "../api/getBoundaryMarkerList";
+import type { GetMarkingListRequest, GetUserMarkingListRequest } from "../api";
+import type { GetBoundaryMarkerListRequest } from "../api/getBoundaryMarkerList";
+import type { GetMyLikedMarkingListRequest } from "../api/getMyLikedMarkingList";
 
 export const REVERSE_GEOCODING_END_POINT = ({
   lat,
@@ -41,6 +42,9 @@ export const MARKING_END_POINT = {
 
     return `${API_BASE_URL}/markings/users/${nickname}?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&sortType=${sortType}&offset=${offset}${latLngQueryParams}`;
   },
+
+  MY_LIKED: ({ offset }: GetMyLikedMarkingListRequest) =>
+    `${API_BASE_URL}/markings/likes?offset=${offset}`,
 };
 
 export const MARKER_END_POINT = {
