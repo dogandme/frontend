@@ -16,6 +16,7 @@ import {
   LocalMarkingList,
   PlaceMarkingList,
   MyMarkingList,
+  MyActivityList,
 } from "@/widgets/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { MainPage } from "../pages";
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
           {
             path: ROUTER_PATH.MY_MARK,
             element: <MyMarkingList />,
+          },
+          {
+            path: ROUTER_PATH.MY_ACTIVITY,
+            element: <MyActivityList />,
           },
         ],
       },
