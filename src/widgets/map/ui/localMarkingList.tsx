@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
 import { useMapQueryParams } from "@/features/map/hooks";
-import { useMapStore } from "@/features/map/store";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import {
   useGetAddressFromLatLng,

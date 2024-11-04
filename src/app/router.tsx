@@ -4,7 +4,7 @@ import { FollowerPage } from "@/pages/[nickname]/follower";
 import { FollowingPage } from "@/pages/[nickname]/following";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
-import { MapPage } from "@/pages/map";
+import { MapLayout, MapPage } from "@/pages/map";
 import { SettingPage } from "@/pages/setting";
 import { EditInfoPage } from "@/pages/setting/edit-info/page";
 import { AccountManagementPage } from "@/pages/setting/manage-account";
@@ -13,7 +13,6 @@ import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { TemporaryMarkingPage } from "@/pages/temporary-marking";
 import {
-  LocalMarkingList,
   PlaceMarkingList,
   MyMarkingList,
   MyActivityList,
@@ -33,11 +32,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTER_PATH.MAP,
-        element: <MapPage />, // 지도
+        element: <MapLayout />, // 지도
         children: [
           {
             index: true,
-            element: <LocalMarkingList />,
+            element: <MapPage />,
           },
           {
             path: ROUTER_PATH.PLACE,
