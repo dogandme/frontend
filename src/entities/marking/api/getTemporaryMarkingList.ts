@@ -19,7 +19,7 @@ export interface TempMarkingInfo {
   regDt: string;
   previewImage: string | null;
   userId: UserId;
-  nickname: Nickname;
+  nickName: Nickname;
   isOwner: true;
   isTempSaved: true;
   lat: number;
