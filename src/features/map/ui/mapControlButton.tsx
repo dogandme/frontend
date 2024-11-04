@@ -17,13 +17,22 @@ import { useMapStore } from "../store";
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingAddButton = () => {
   const setMode = useMapStore((state) => state.setMode);
+  const handleOpenSnackbar = useSnackBar();
 
   return (
     <Button
       colorType="primary"
       variant="filled"
       size="medium"
-      onClick={() => setMode("add")}
+      onClick={() => {
+        if (!useAuthStore.getState().token) {
+          handleOpenSnackbar("로그인 후 이용해 주세요", {
+            type: "map",
+          });
+          return;
+        }
+        setMode("add");
+      }}
     >
       <span className="btn-3">마킹하기</span>
     </Button>
@@ -149,20 +158,14 @@ export const MarkingFormTriggerButton = () => {
     handleOpenSnackbar("마킹 위치를 손가락으로 움직여서 선택해 주세요", {
       type: "map",
     });
-  }, [handleOpenSnackbar]);
+  }, []);
 
   return (
     <Button
       colorType="primary"
       variant="filled"
       size="medium"
-      onClick={() => {
-        if (!useAuthStore.getState().token) {
-          handleOpenSnackbar("로그인 후 이용해 주세요");
-          return;
-        }
-        handleOpen();
-      }}
+      onClick={handleOpen}
     >
       <span className="btn-3">여기에 마킹하기</span>
     </Button>
