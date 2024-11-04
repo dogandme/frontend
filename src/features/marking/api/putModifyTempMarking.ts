@@ -23,6 +23,7 @@ export interface PutModifyTempMarkingRequest
 export const usePutModifyTempMarking = () => {
   const queryClient = useQueryClient();
   return useMutation<unknown, Error, PutModifyTempMarkingRequest>({
+    mutationKey: ["markingFormModal"],
     mutationFn: ({ images, ...formObj }: PutModifyTempMarkingRequest) => {
       const formData = new FormData();
       formData.append(

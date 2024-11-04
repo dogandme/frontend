@@ -1,9 +1,9 @@
+import { useMarkingFormModal } from "@/features/marking/lib";
 import { DeleteTemporaryMarkingButton } from "@/features/marking/ui";
 import { EditMarkingFormModal } from "@/features/marking/ui";
 import { TempMarkingInfo } from "@/entities/marking/api";
 import { MARKING_VISIBILITY_MAP } from "@/entities/marking/constants";
 import { API_BASE_URL } from "@/shared/constants";
-import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { MyLocationIcon } from "@/shared/ui/icon";
@@ -70,7 +70,7 @@ const EditMarkingModalOpenButton = ({
   images,
   markingId,
 }: EditMarkingModalOpenButtonProps) => {
-  const { handleOpen, onClose } = useModal(() => (
+  const { handleOpen, onClose } = useMarkingFormModal(() => (
     <EditMarkingFormModal
       onClose={onClose}
       markingId={markingId}
