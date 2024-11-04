@@ -66,6 +66,10 @@ const meta: Meta<typeof MarkingItem> = {
       description: "북마크 여부를 나타냅니다.",
       control: "boolean",
     },
+    isFollowing: {
+      description: "팔로잉 여부를 나타냅니다.",
+      control: "boolean",
+    },
   },
   args: {
     markingId: 1,
@@ -93,6 +97,7 @@ const meta: Meta<typeof MarkingItem> = {
     },
     isLiked: false,
     isBookmarked: false,
+    isFollowing: false,
   },
 };
 

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { FollowingToggle } from "@/features/follow/ui";
 import type { Marking } from "@/entities/marking/api";
 import type { PetInfo } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
 import { MoreIcon, MyLocationIcon } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
@@ -19,6 +19,7 @@ interface MarkingItemProps
   pet: Pick<PetInfo, "petId" | "profile" | "name">;
   isLiked: boolean;
   isBookmarked: boolean;
+  isFollowing: boolean;
 }
 const MarkingManageButton = ({
   markingId,
@@ -100,6 +101,7 @@ export const MarkingItem = ({
   isOwner = false,
   isLiked,
   isBookmarked,
+  isFollowing,
   countData: { likedCount, savedCount },
 }: MarkingItemProps) => {
   return (
@@ -129,14 +131,11 @@ export const MarkingItem = ({
         <span className="flex-1 body-2 text-grey-500">{pet.name}</span>
 
         {!isOwner && (
-          <Button
-            colorType="tertiary"
+          <FollowingToggle
+            nickname={nickName}
             size="xSmall"
-            variant="outlined"
-            fullWidth={false}
-          >
-            팔로우
-          </Button>
+            isFollowing={isFollowing}
+          />
         )}
       </div>
 
