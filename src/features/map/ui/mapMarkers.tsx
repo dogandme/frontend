@@ -1,8 +1,8 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
 import { useGetMarkerList } from "@/entities/marking/hooks";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
-import { useMapQueryParams } from "../hooks";
+import { useMapMode, useMapQueryParams } from "../hooks";
 import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
@@ -20,7 +20,7 @@ export const UserMarker = () => {
 
 export const PinMarker = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const mapMode = useMapMode();
   const { boundsParams, setMapQueryParams } = useMapQueryParams();
 
   const { data: markerList } = useGetMarkerList(boundsParams);
@@ -32,7 +32,7 @@ export const PinMarker = () => {
       imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
       alt={`${markingId}의 이미지`}
       onClick={() => {
-        if (pathname === ROUTER_PATH.MAP) {
+        if (mapMode === "MAP") {
           navigate(ROUTER_PATH.PLACE);
           setMapQueryParams({
             bounds: {

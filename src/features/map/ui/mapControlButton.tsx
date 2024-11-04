@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
 import { useMarkingFormStore } from "@/features/marking/store";
 import { MarkingFormCloseModal } from "@/features/marking/ui/markingFormCloseModal";
@@ -92,10 +92,10 @@ const buttonBaseStyles = "border-none outline-none h-14 px-[.875rem]";
 
 export const ShowMyMarkingButton = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const mapMode = useMapMode();
   const map = useMap();
 
-  const shouldShowMyMarking = pathname === ROUTER_PATH.MY_MARK;
+  const shouldShowMyMarking = mapMode === "MY_MARK";
   const getCurrentBounds = useGetMapCurrentBounds();
 
   return (
