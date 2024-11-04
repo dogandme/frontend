@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { FollowingToggle } from "@/features/follow/ui";
 import type { Marking } from "@/entities/marking/api";
 import type { PetInfo } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
-import { formatDateToYearMonthDay, useClickOutside } from "@/shared/lib";
+import { formatDateToYearMonthDay, useDropdown } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { MoreIcon, MyLocationIcon } from "@/shared/ui/icon";
@@ -26,10 +26,8 @@ const MarkingManageButton = ({
   markingId,
   onDelete,
 }: Pick<MarkingItemProps, "markingId" | "onDelete">) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  useClickOutside(ref, () => setIsOpen(false));
+  const { isOpen, setIsOpen } = useDropdown(ref);
 
   const { mutate: deleteMarking } = useDeleteMarking({
     onSuccess: () => {

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 /**
  * 요소 외부를 클릭했을 때 실행할 함수를 등록하는 Hook
@@ -7,14 +7,13 @@ import { useEffect } from "react";
  * @param onOutsideClick 외부를 클릭했을 때 실행할 함수
  */
 
-export const useClickOutside = (
-  ref: React.RefObject<HTMLElement>,
-  onOutsideClick: (event?: MouseEvent) => void,
-) => {
+export const useDropdown = (ref: RefObject<HTMLElement>) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
-        onOutsideClick(event);
+        setIsOpen(false);
       }
     };
 
@@ -24,4 +23,6 @@ export const useClickOutside = (
       document.removeEventListener("click", handleClickOutside);
     };
   }, [ref, onOutsideClick]);
+
+  return { isOpen, setIsOpen };
 };

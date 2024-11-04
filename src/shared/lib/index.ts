@@ -7,4 +7,4 @@ export * from "./apiClient";
 export * from "./error";
 export * from "./snackbar";
 export * from "./scroll";
-export * from "./clickOutside";
+export * from "./dropdown";
