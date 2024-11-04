@@ -10,11 +10,13 @@ import { MoreIcon, MyLocationIcon } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
 import { useDeleteMarking } from "../api";
+import { useMarkingFormModal } from "../lib";
+import { EditMarkingFormModal } from "./editMarkingFormModal";
 import { MarkingBookmarkToggle } from "./markingBookmarkToggle";
 import { MarkingLikeToggle } from "./markingLikeToggle";
 
 interface MarkingItemProps
-  extends Omit<Marking, "isVisible" | "isTempSaved" | "userId" | "pet"> {
+  extends Omit<Marking, "isTempSaved" | "userId" | "pet"> {
   onRegionClick: () => void;
   onDelete?: () => void;
   pet: Pick<PetInfo, "petId" | "profile" | "name">;
@@ -22,10 +24,17 @@ interface MarkingItemProps
   isBookmarked: boolean;
   isFollowing: boolean;
 }
+
+interface MarkingManageButtonProps
+  extends Omit<EditMyMarkingModalOpenItemProps, "handleCloseDropDown"> {
+  onDelete?: () => void;
+}
+
 const MarkingManageButton = ({
   markingId,
   onDelete,
-}: Pick<MarkingItemProps, "markingId" | "onDelete">) => {
+  ...editMarkingProps
+}: MarkingManageButtonProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const { isOpen, setIsOpen } = useDropdown(ref);
 
@@ -45,10 +54,6 @@ const MarkingManageButton = ({
     setIsOpen(false);
   };
 
-  const handleModifyMarking = () => {
-    setIsOpen(false);
-  };
-
   return (
     <div className="relative h-fit flex" ref={ref}>
       <button
@@ -60,21 +65,70 @@ const MarkingManageButton = ({
       >
         <MoreIcon />
       </button>
-
       <List
         className={`${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] right-0 bg-grey-0 p-4`}
         style={{
           width: "11.625rem",
         }}
       >
-        <List.Item style={{ height: "3rem" }} onClick={handleModifyMarking}>
-          수정하기
-        </List.Item>
+        <EditMyMarkingModalOpenItem
+          markingId={markingId}
+          handleCloseDropDown={() => setIsOpen(false)}
+          {...editMarkingProps}
+        />
         <List.Item style={{ height: "3rem" }} onClick={handleDeleteMarking}>
           삭제하기
         </List.Item>
       </List>
     </div>
+  );
+};
+
+interface EditMyMarkingModalOpenItemProps
+  extends Pick<
+    MarkingItemProps,
+    "markingId" | "region" | "content" | "images" | "isVisible"
+  > {
+  handleCloseDropDown: () => void;
+}
+
+const EditMyMarkingModalOpenItem = ({
+  markingId,
+  region,
+  isVisible,
+  content,
+  images,
+  handleCloseDropDown,
+}: EditMyMarkingModalOpenItemProps) => {
+  const { handleOpen: handleOpenMarkingModal, onClose } = useMarkingFormModal(
+    () => (
+      <EditMarkingFormModal
+        onClose={onClose}
+        markingId={markingId}
+        initialState={{
+          region,
+          content,
+          isVisible,
+          externalImages: images,
+        }}
+        putModifyMarkingArgumets={{
+          endPoint: "PUT_MODIFY_MARKING",
+          queryKey: ["myMarkerList"],
+        }}
+      />
+    ),
+  );
+
+  return (
+    <List.Item
+      style={{ height: "3rem" }}
+      onClick={() => {
+        handleCloseDropDown();
+        handleOpenMarkingModal();
+      }}
+    >
+      수정하기
+    </List.Item>
   );
 };
 
@@ -92,6 +146,7 @@ export const MarkingItem = ({
   isLiked,
   isBookmarked,
   isFollowing,
+  isVisible,
   countData: { likedCount, savedCount },
 }: MarkingItemProps) => {
   return (
@@ -108,7 +163,14 @@ export const MarkingItem = ({
         </div>
 
         {isOwner && (
-          <MarkingManageButton markingId={markingId} onDelete={onDelete} />
+          <MarkingManageButton
+            markingId={markingId}
+            onDelete={onDelete}
+            region={region}
+            isVisible={isVisible}
+            content={content}
+            images={images}
+          />
         )}
       </div>
 
