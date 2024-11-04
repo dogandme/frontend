@@ -157,6 +157,16 @@ export const RangeFilter = ({
 
     setSelectedOption(rangeFilter);
 
+    if (rangeFilter === "ALL_VIEW") {
+      map.setZoom(10);
+      setMapQueryParams({
+        bounds: getMapBounds(),
+        sortType: sortTypeParam!,
+      });
+
+      return;
+    }
+
     if (rangeFilter === "CURRENT_LOCATION") {
       setCurrentLocation({
         onSuccess: ({ coords: { latitude, longitude } }) => {
