@@ -8,7 +8,7 @@ export interface GetMyLikedMarkingListRequest {
   offset: number;
 }
 
-interface GetMyLikedMarkingListResponse {
+export interface GetMyLikedMarkingListResponse {
   markings: Marking[];
   totalElements: number;
   totalPages: number;
