@@ -1,29 +1,19 @@
-import type { Marking } from "@/entities/marking/api";
+import { profileMarkingThumbnail } from "./profileMarking";
 
-export const getMockMarkingList = ({
-  southBottomLat,
-  northTopLat,
-  southLeftLng,
-  northRightLng,
-}: {
-  southBottomLat: number;
-  northTopLat: number;
-  southLeftLng: number;
-  northRightLng: number;
-}) => {
-  const markingList: Marking[] = Array.from({ length: 140 }, (_, index) => ({
-    markingId: index + 1,
+export const getMyMark = () => {
+  // 뽀송송의 마커 리스트
+  const myMarkerList = profileMarkingThumbnail["뽀송송"];
+  // 뽀송송의 마커 리스트를 가공하여 마킹 리스트 반환
+  const myMarkingList = myMarkerList.map((thumbnail, index) => ({
+    ...thumbnail,
     region: "**시 **구 **동",
     content: `Marking content ${index + 1}`,
-    previewImage: "fa805c91-8228-4ec4-927f-9eb876a480c3",
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
+    nickName: "뽀송송",
     userId: index + 1,
-    nickName: `User${index + 1}`,
-    isOwner: index === 0 ? true : false,
+    isOwner: true,
     isTempSaved: false,
-    lat: southBottomLat + Math.random() * (northTopLat - southBottomLat),
-    lng: southLeftLng + Math.random() * (northRightLng - southLeftLng),
     address: {
       id: index + 1,
       province: "**시",
@@ -36,11 +26,11 @@ export const getMockMarkingList = ({
       savedCount: Math.floor(Math.random() * 100),
     },
     pet: {
-      petId: index + 1,
-      name: `Pet${index + 1}`,
+      petId: 1,
+      name: `뽀송송 Pet`,
       description: `Pet description ${index + 1}`,
       profile: `profile_url_${index + 1}`,
-      breed: `Breed${index + 1}`,
+      breed: `뽀송송 Breed`,
       personalities: ["personality1", "personality2"],
     },
     images: [
@@ -53,5 +43,8 @@ export const getMockMarkingList = ({
     ],
   }));
 
-  return markingList;
+  return {
+    myMarkerList,
+    myMarkingList,
+  };
 };

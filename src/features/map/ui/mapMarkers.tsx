@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
-import { useGetBoundaryMarkerList } from "@/entities/marking/api";
+import { useGetMarkerList } from "@/entities/marking/hooks";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useMapQueryParams } from "../hooks";
 import { useMapStore } from "../store";
@@ -20,9 +20,10 @@ export const UserMarker = () => {
 
 export const PinMarker = () => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { boundsParams, setMapQueryParams } = useMapQueryParams();
 
-  const { data: markerList } = useGetBoundaryMarkerList(boundsParams);
+  const { data: markerList } = useGetMarkerList(boundsParams);
 
   return markerList?.map(({ markingId, lat, lng, previewImage }) => (
     <Pin
@@ -31,16 +32,18 @@ export const PinMarker = () => {
       imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
       alt={`${markingId}의 이미지`}
       onClick={() => {
-        navigate(ROUTER_PATH.PLACE);
-        setMapQueryParams({
-          bounds: {
-            southWestLat: lat - 0.00001,
-            southWestLng: lng - 0.00001,
-            northEastLat: lat + 0.00001,
-            northEastLng: lng + 0.00001,
-          },
-          sortType: "POPULARITY",
-        });
+        if (pathname === ROUTER_PATH.MAP) {
+          navigate(ROUTER_PATH.PLACE);
+          setMapQueryParams({
+            bounds: {
+              southWestLat: lat - 0.00001,
+              southWestLng: lng - 0.00001,
+              northEastLat: lat + 0.00001,
+              northEastLng: lng + 0.00001,
+            },
+            sortType: "POPULARITY",
+          });
+        }
       }}
     />
   ));

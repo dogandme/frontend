@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDeleteFollower, usePostFollowing } from "@/features/follow/api";
-import { FollowingButton, DeleteFollowerButton } from "@/features/follow/ui";
+import { DeleteFollowerButton } from "@/features/follow/ui";
 import { ProfileLink } from "@/features/profile/ui";
 import type {
   Nickname,
@@ -73,10 +73,12 @@ export const FollowerUserItem = ({
         <div className="flex gap-2">
           <p className="title-2 text-grey-700">{nickname}</p>
           {!_isFollowing && (
-            <FollowingButton
-              buttonType="mini"
+            <button
+              className="btn-3 text-tangerine-500"
               onClick={handleOptimisticFollowing}
-            />
+            >
+              팔로우
+            </button>
           )}
         </div>
         <p className="body-3 text-grey-500">{petName}</p>

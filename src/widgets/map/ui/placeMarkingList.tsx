@@ -7,6 +7,7 @@ import {
 } from "@/features/map/hooks";
 import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
+import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
@@ -17,6 +18,7 @@ export const PlaceMarkingList = () => {
   const navigate = useNavigate();
   const { boundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
+  const { data: myFollowingMap } = useGetMyFollowingIdsMap();
   const getMapBounds = useGetMapCurrentBounds();
 
   const {
@@ -34,6 +36,11 @@ export const PlaceMarkingList = () => {
       fetchNextPage();
     }
   });
+
+  // TODO 로딩 상태 구현 하기
+  if (!markingList || !myFollowingMap) {
+    return null;
+  }
 
   const map = useMap();
 
@@ -73,6 +80,7 @@ export const PlaceMarkingList = () => {
             // todo isLiked, isBookmarked 설정
             isLiked={false}
             isBookmarked={false}
+            isFollowing={myFollowingMap[marking.userId]}
             {...marking}
           />
         ))}

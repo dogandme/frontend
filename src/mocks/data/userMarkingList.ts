@@ -1,11 +1,13 @@
 import type { Marking } from "@/entities/marking/api";
 
-export const getMockMarkingList = ({
+export const getMockUserMarkingList = ({
+  nickname,
   southBottomLat,
   northTopLat,
   southLeftLng,
   northRightLng,
 }: {
+  nickname: string;
   southBottomLat: number;
   northTopLat: number;
   southLeftLng: number;
@@ -18,9 +20,9 @@ export const getMockMarkingList = ({
     previewImage: "fa805c91-8228-4ec4-927f-9eb876a480c3",
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
+    nickName: nickname,
     userId: index + 1,
-    nickName: `User${index + 1}`,
-    isOwner: index === 0 ? true : false,
+    isOwner: true,
     isTempSaved: false,
     lat: southBottomLat + Math.random() * (northTopLat - southBottomLat),
     lng: southLeftLng + Math.random() * (northRightLng - southLeftLng),
@@ -36,11 +38,11 @@ export const getMockMarkingList = ({
       savedCount: Math.floor(Math.random() * 100),
     },
     pet: {
-      petId: index + 1,
-      name: `Pet${index + 1}`,
+      petId: 1,
+      name: `${nickname} Pet`,
       description: `Pet description ${index + 1}`,
       profile: `profile_url_${index + 1}`,
-      breed: `Breed${index + 1}`,
+      breed: `${nickname} Breed`,
       personalities: ["personality1", "personality2"],
     },
     images: [

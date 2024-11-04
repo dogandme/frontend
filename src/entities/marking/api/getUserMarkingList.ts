@@ -2,77 +2,14 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_END_POINT, type MarkingVisibilityKey } from "../constants";
+import { MARKING_END_POINT } from "../constants";
+import type {
+  GetMarkingListRequest,
+  Marking,
+  SortType,
+} from "./getMarkingList";
 
-interface Address {
-  id: number;
-  province: string;
-  cityCounty: string;
-  district: string | null;
-  subDistrict: string;
-}
-
-type PetName = string;
-type Breed = string;
-type PetDescription = string | null;
-type ProfileImageUrl = string | null;
-type PetPersonalities = string[];
-
-interface Pet {
-  petId: number;
-  name: PetName;
-  description: PetDescription;
-  profile: ProfileImageUrl;
-  breed: Breed;
-  personalities: PetPersonalities;
-}
-
-interface Image {
-  id: number;
-  imageUrl: string;
-  lank: number;
-  regDt: string;
-}
-
-interface Count {
-  likedCount: number;
-  savedCount: number;
-}
-
-export interface Marking {
-  markingId: number;
-  region: string;
-  content: string;
-  isVisible: MarkingVisibilityKey;
-  regDt: string;
-  previewImage: string;
-  userId: number;
-  nickName: string;
-  isOwner: boolean;
-  isTempSaved: boolean;
-  lat: number;
-  lng: number;
-  address: Address;
-  countData: Count;
-  pet: Pet;
-  images: Image[];
-}
-
-export type SortType = "RECENT" | "DISTANCE" | "POPULARITY";
-
-export interface GetMarkingListRequest {
-  southWestLat: number;
-  southWestLng: number;
-  northEastLat: number;
-  northEastLng: number;
-  lat: number | null;
-  lng: number | null;
-  offset: number; // 페이지 번호
-  sortType: SortType;
-}
-
-// sort, paged, unpaged은 사용하지 x
-interface GetMarkingListResponse {
+interface GetUserMarkingListResponse {
   markings: Marking[];
   totalElements: number;
   totalPages: number;
@@ -90,7 +27,12 @@ interface GetMarkingListResponse {
   };
 }
 
-const getMarkingList = async ({
+export type GetUserMarkingListRequest = GetMarkingListRequest & {
+  nickname: string;
+};
+
+const getUserMarkingList = async ({
+  nickname,
   southWestLat,
   southWestLng,
   northEastLat,
@@ -99,11 +41,10 @@ const getMarkingList = async ({
   lng,
   sortType,
   offset,
-}: GetMarkingListRequest) => {
-  const hasToken = !!useAuthStore.getState().token;
-
-  return apiClient.get<GetMarkingListResponse>(
-    MARKING_END_POINT.BOUNDARY({
+}: GetUserMarkingListRequest) => {
+  return apiClient.get<GetUserMarkingListResponse>(
+    MARKING_END_POINT.USER({
+      nickname,
       southWestLat,
       southWestLng,
       northEastLat,
@@ -114,24 +55,28 @@ const getMarkingList = async ({
       offset,
     }),
     {
-      withToken: hasToken,
+      withToken: true,
     },
   );
 };
 
-export const useGetMarkingList = ({
+export const useGetUserMarkingList = ({
+  nickname,
   southWestLat,
   southWestLng,
   northEastLat,
   northEastLng,
   sortType,
 }: {
+  nickname: string;
   southWestLat: number | null;
   southWestLng: number | null;
   northEastLat: number | null;
   northEastLng: number | null;
   sortType: SortType | null;
 }) => {
+  const token = useAuthStore.getState().token;
+
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
   const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
 
@@ -139,6 +84,7 @@ export const useGetMarkingList = ({
 
   return useInfiniteQuery({
     queryKey: [
+      nickname,
       "markingList",
       southWestLat,
       southWestLng,
@@ -148,14 +94,17 @@ export const useGetMarkingList = ({
     ],
 
     queryFn:
+      token &&
       isMapIdle &&
+      !!nickname &&
       !!southWestLat &&
       !!southWestLng &&
       !!northEastLat &&
       !!northEastLng &&
       !!sortType
         ? ({ pageParam }) =>
-            getMarkingList({
+            getUserMarkingList({
+              nickname,
               southWestLat,
               southWestLng,
               northEastLat,
