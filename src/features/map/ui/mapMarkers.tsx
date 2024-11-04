@@ -1,8 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
-import { useGetMarkerList } from "@/entities/marking/hooks";
-import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
-import { useMapMode, useMapQueryParams } from "../hooks";
+import { User } from "@/entities/map/ui";
 import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
@@ -16,75 +12,6 @@ export const UserMarker = () => {
   if (!hasLocationPermission || lat === null || lng === null) return null;
 
   return <User position={{ lat, lng }} />;
-};
-
-export const PinMarker = () => {
-  const navigate = useNavigate();
-  const mapMode = useMapMode();
-  const { boundsParams, setMapQueryParams } = useMapQueryParams();
-
-  const { data: markerList } = useGetMarkerList(boundsParams);
-
-  return markerList?.map(({ markingId, lat, lng, previewImage }) => (
-    <Pin
-      key={markingId}
-      position={{ lat, lng }}
-      imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-      alt={`${markingId}의 이미지`}
-      onClick={() => {
-        if (mapMode === "MAP") {
-          navigate(ROUTER_PATH.PLACE);
-          setMapQueryParams({
-            bounds: {
-              southWestLat: lat - 0.00001,
-              southWestLng: lng - 0.00001,
-              northEastLat: lat + 0.00001,
-              northEastLng: lng + 0.00001,
-            },
-            sortType: "POPULARITY",
-          });
-        }
-      }}
-    />
-  ));
-};
-
-export const MultiplePinMarker = () => {
-  // TODO API 요청으로 가져오기 ? 혹은 가져온 markersInfo를 이용하여 클러스터링 하기
-  const multiMarkerInfo = [
-    {
-      position: { lat: 37.5664, lng: 126.974 },
-      imageUrl: "/default-image.png",
-      alt: "test",
-      markerCount: 2,
-    },
-    {
-      position: { lat: 37.5663, lng: 126.972 },
-      imageUrl: "/default-image.png",
-      alt: "test",
-      markerCount: 500,
-    },
-  ];
-
-  return multiMarkerInfo.map((markerInfo, idx) => (
-    <MultiplePin {...markerInfo} key={idx} />
-  ));
-};
-
-export const ClusterMarker = () => {
-  // TODO API 요청으로 가져오기 ? 혹은 가져온 markersInfo를 이용하여 클러스터링 하기
-  const clusterInfo = [
-    {
-      position: { lat: 37.5662, lng: 126.97 },
-      markerCount: 16,
-    },
-    {
-      position: { lat: 37.5661, lng: 126.968 },
-      markerCount: 32,
-    },
-  ];
-
-  return clusterInfo.map((cluster, idx) => <Cluster {...cluster} key={idx} />);
 };
 
 /* 해당 컴포넌트는 add mode 일 때 사용되는 마커입니다. AdvancedMarker 를 이용하지 않습니다.*/
