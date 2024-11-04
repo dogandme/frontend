@@ -57,7 +57,7 @@ const EmptyMarkingThumbnailGrid = () => {
       <div className="text-center body-2 text-grey-500">
         {isMyPage ? (
           <>
-            <p>함께 한 특별한 장소를 마킹하고</p>
+            <p>함께한 특별한 장소를 마킹하고</p>
             <p>추억을 남겨보세요</p>
           </>
         ) : (
