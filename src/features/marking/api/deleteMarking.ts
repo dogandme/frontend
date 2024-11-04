@@ -13,11 +13,14 @@ const deleteMarking = async ({ markingId }: DeleteMarkingRequest) => {
   });
 };
 
-export const useDeleteMarking = () => {
+export const useDeleteMarking = ({ onSuccess }: { onSuccess?: () => void }) => {
   return useMutation<unknown, Error, DeleteMarkingRequest>({
     mutationFn: deleteMarking,
     onSuccess: () => {
-      // todo 기존에 캐시된 내 마킹 데이터 삭제하기
+      onSuccess?.();
+    },
+    onError: () => {
+      // todo: 에러 핸들링
     },
   });
 };

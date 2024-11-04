@@ -1,10 +1,8 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import { User, MultiplePin, Cluster, Pin } from "@/entities/map/ui";
-import { useGetBoundaryMarkerList } from "@/entities/marking/api";
-import { API_BASE_URL } from "@/shared/constants";
-import { useResearchMarkingList } from "../hooks";
-// import { useGetMarkingList } from "@/entities/marking/api";
-// import { API_BASE_URL } from "@/shared/constants";
-// import { useResearchMarkingList } from "../hooks";
+import { useGetMarkerList } from "@/entities/marking/hooks";
+import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
+import { useMapQueryParams } from "../hooks";
 import { useMapStore } from "../store";
 
 /*---------- default mode 일 때에만 사용되는 마커입니다. ---------- */
@@ -21,24 +19,32 @@ export const UserMarker = () => {
 };
 
 export const PinMarker = () => {
-  const { bounds } = useResearchMarkingList();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { boundsParams, setMapQueryParams } = useMapQueryParams();
 
-  const { data: markerList } = useGetBoundaryMarkerList({
-    southWestLat: bounds?.southWest.lat,
-    southWestLng: bounds?.southWest.lng,
-    northEastLat: bounds?.northEast.lat,
-    northEastLng: bounds?.northEast.lng,
-  });
+  const { data: markerList } = useGetMarkerList(boundsParams);
 
-  return markerList?.map(({ markingId, lat, lng, previewImage }, idx) => (
+  return markerList?.map(({ markingId, lat, lng, previewImage }) => (
     <Pin
       key={markingId}
-      position={{
-        lat: lat,
-        lng: lng,
-      }}
+      position={{ lat, lng }}
       imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-      alt={`${markingId}의 ${idx}번째 이미지`}
+      alt={`${markingId}의 이미지`}
+      onClick={() => {
+        if (pathname === ROUTER_PATH.MAP) {
+          navigate(ROUTER_PATH.PLACE);
+          setMapQueryParams({
+            bounds: {
+              southWestLat: lat - 0.00001,
+              southWestLng: lng - 0.00001,
+              northEastLat: lat + 0.00001,
+              northEastLng: lng + 0.00001,
+            },
+            sortType: "POPULARITY",
+          });
+        }
+      }}
     />
   ));
 };

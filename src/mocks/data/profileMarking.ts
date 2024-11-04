@@ -13,4 +13,5 @@ export const profileMarkingThumbnail: Record<
       lng: Math.random() > 0.5 ? 129 + Math.random() : 129 - Math.random(),
     }),
   ),
+  나는야게스트: [],
 };

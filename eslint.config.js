@@ -23,15 +23,6 @@ export default tseslint.config(
         "warn",
         { allowConstantExport: true },
       ],
-      "no-unused-vars": [
-        "error",
-        {
-          vars: "all",
-          args: "after-used",
-          ignoreRestSiblings: true,
-          argsIgnorePattern: "^_", // 언더스코어로 시작하는 매개변수는 무시
-        },
-      ],
       "@typescript-eslint/no-unused-vars": [
         "error",
         {

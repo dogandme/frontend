@@ -2,7 +2,7 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import type { Nickname, PetInfo, UserId } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { FOLLOW_ENDPOINT } from "../constants";
+import { FOLLOW_END_POINT } from "../constants";
 
 // TODO 리팩토링 시 해당 타입 정의 위치 의논
 interface PageAbleInformation {
@@ -39,7 +39,7 @@ const getFollowingList = ({
   nickname,
 }: GetFollowingListRequest & { pageParam: number }) => {
   return apiClient.get<GetFollowingListResponse>(
-    FOLLOW_ENDPOINT.FOLLOWING_LIST(nickname, pageParam),
+    FOLLOW_END_POINT.FOLLOWING_LIST(nickname, pageParam),
     {
       withToken: true,
     },
@@ -54,9 +54,8 @@ export const useGetFollowingList = ({ nickname }: GetFollowingListRequest) => {
     queryFn: token
       ? ({ pageParam = 0 }) => getFollowingList({ nickname, pageParam })
       : skipToken,
-    getNextPageParam: ({ totalPages, pageAble }) => {
-      return pageAble.pageNumber < totalPages ? pageAble.pageNumber + 1 : null;
-    },
+    getNextPageParam: ({ totalPages, pageAble }) =>
+      pageAble.pageNumber < totalPages - 1 ? pageAble.pageNumber + 1 : null,
     initialPageParam: 0,
     select: ({ pages }) => pages.flatMap((page) => page.userInfos),
   });

@@ -1,35 +1,30 @@
 import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
-import { sortTypeMap } from "@/features/map/constants";
-import { useCurrentLocation } from "@/features/map/hooks";
-import { useResearchMarkingList } from "@/features/map/hooks";
+import {
+  useCurrentLocation,
+  useGetMapCurrentBounds,
+  useMapQueryParams,
+} from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
-import { SortType } from "@/entities/marking/api";
 
 export const MapInitializer = () => {
   const map = useMap();
 
   const { loading, setCurrentLocation } = useCurrentLocation();
-  const {
-    researchMarkingList,
-    bounds: boundsParams,
-    sortType: sortTypeParam,
-  } = useResearchMarkingList();
+
+  const { boundsParams, hasBoundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
+  const getMapBounds = useGetMapCurrentBounds();
 
   const isMapIdle = useMapStore((state) => state.isIdle);
+  const setIsMapIdle = useMapStore((state) => state.setIsIdle);
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
 
   useEffect(() => {
     if (!map || !isMapIdle) return;
-
-    const hasSortTypeParam = !!sortTypeParam && sortTypeParam in sortTypeMap;
-
-    const filterOptions = {
-      sortType: hasSortTypeParam ? (sortTypeParam as SortType) : "RECENT",
-    };
 
     // map 인스턴스가 생기고 나서, 현재 위치를 가져옵니다.
     setCurrentLocation({
@@ -39,35 +34,52 @@ export const MapInitializer = () => {
         const currentLocationOfUser = { lat: latitude, lng: longitude };
 
         // /map으로 접속했을 때, 현재 위치로 query string를 설정합니다.
-        if (!boundsParams) {
+        if (!hasBoundsParams) {
           map.setCenter(currentLocationOfUser);
 
           setTimeout(() => {
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          researchMarkingList(filterOptions);
+          // todo 내 마킹일 경우 파라미터 처리
+          setMapQueryParams({
+            bounds: getMapBounds(),
+            sortType: "POPULARITY",
+          });
         }
       },
       onError: () => {
-        if (!boundsParams) {
-          researchMarkingList(filterOptions);
+        if (!hasBoundsParams) {
+          // todo 내 마킹일 경우 파라미터 처리
+          setMapQueryParams({
+            bounds: getMapBounds(),
+            sortType: "POPULARITY",
+          });
         }
       },
     });
 
-    if (!boundsParams) return;
+    if (hasBoundsParams) {
+      const { northEastLat, northEastLng, southWestLat, southWestLng } =
+        boundsParams;
 
-    const { southWest, northEast } = boundsParams;
+      map.fitBounds({
+        south: southWestLat,
+        west: southWestLng,
+        north: northEastLat,
+        east: northEastLng,
+      });
 
-    map.fitBounds({
-      south: southWest.lat,
-      west: southWest.lng,
-      north: northEast.lat,
-      east: northEast.lng,
-    });
+      // todo 내 마킹일 경우 파라미터 처리
+      setMapQueryParams({
+        bounds: getMapBounds(),
+        sortType: sortTypeParam || "POPULARITY",
+      });
+    }
 
-    researchMarkingList(filterOptions);
+    return () => {
+      setIsMapIdle(false);
+    };
   }, [map, isMapIdle]);
 
   if (!map || loading || !isMapIdle) {

@@ -1,6 +1,10 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
+import { useMarkingFormStore } from "@/features/marking/store";
+import { MarkingFormCloseModal } from "@/features/marking/ui/markingFormCloseModal";
 import { CurrentLocationLoading } from "@/entities/map/ui";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useModal, useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
@@ -11,7 +15,7 @@ import {
   MyLocationIcon,
 } from "@/shared/ui/icon";
 import { MarkingFormModal } from "../../marking/ui";
-import { useCurrentLocation } from "../hooks";
+import { useCurrentLocation, useGetMapCurrentBounds } from "../hooks";
 import { useMapStore } from "../store";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
@@ -85,8 +89,12 @@ export const MyLocationButton = () => {
 const buttonBaseStyles = "border-none outline-none h-14 px-[.875rem]";
 
 export const ShowMyMarkingButton = () => {
-  // todo 상태 전역으로 관리하기
-  const shouldShowMyMarking = false;
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const map = useMap();
+
+  const shouldShowMyMarking = pathname === ROUTER_PATH.MY_MARK;
+  const getCurrentBounds = useGetMapCurrentBounds();
 
   return (
     <Button
@@ -97,7 +105,13 @@ export const ShowMyMarkingButton = () => {
       className={`${buttonBaseStyles} rounded-b-none`}
       aria-label="내 마킹만 보기"
       onClick={() => {
-        // todo 내 마킹 보기로 상태 변경
+        map.setZoom(10);
+        const { northEastLat, northEastLng, southWestLat, southWestLng } =
+          getCurrentBounds();
+
+        navigate(
+          `${ROUTER_PATH.MY_MARK}?boundsNELat=${northEastLat}&boundsNELng=${northEastLng}&boundsSWLat=${southWestLat}&boundsSWLng=${southWestLng}&sortType=POPULARITY`,
+        );
       }}
     >
       <img src="/default-image.png" className="w-7 h-7 rounded-full" />
@@ -173,8 +187,22 @@ export const MarkingFormTriggerButton = () => {
 };
 
 export const ExitAddModeButton = () => {
+  const { onClose, handleOpen } = useModal(() => (
+    <MarkingFormCloseModal onCloseExitModal={onClose} />
+  ));
+  const resetMarkingFormStore = useMarkingFormStore(
+    (state) => state.resetMarkingFormStore,
+  );
+
   const setMode = useMapStore((state) => state.setMode);
+
   const handleClick = () => {
+    const { images, isVisible, content } = useMarkingFormStore.getState();
+
+    if (images.length > 0 || content || isVisible) {
+      handleOpen();
+      return;
+    }
     setMode("view");
   };
 

@@ -6,6 +6,7 @@ import {
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
+import { DeleteTemporaryMarkingRequest } from "@/features/marking/api";
 import { MARKING_END_POINT } from "@/features/marking/constants";
 import { PostChangeRegionRequest } from "@/features/setting/api";
 import type {
@@ -17,14 +18,18 @@ import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import { Marking, SortType } from "@/entities/marking/api";
+import { MARKER_END_POINT } from "@/entities/marking/constants";
 import { API_BASE_URL } from "@/shared/constants";
 // data
 import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
-import { otherUsers } from "./data/otherUser";
-import { profileMarkingThumbnail } from "./data/profileMarking";
+import { getMyMark } from "./data/myMark";
+import { otherUsers, roleGuestUser } from "./data/otherUser";
+import { profileMarkingThumbnail as _profileMarkingThumbnail } from "./data/profileMarking";
 import regionListData from "./data/regionList.json";
+import { temporaryMarkingList as _temporaryMarkingList } from "./data/tempMarkingList";
 import { User } from "./data/user";
+import { getMockUserMarkingList } from "./data/userMarkingList";
 
 interface UserInfo {
   nickname: string;
@@ -57,6 +62,9 @@ const userInfoDB: UserInfoDB = {
   뽀송송_EMAIL: userInfoData["EMAIL"] as MyInfo,
   뽀송송_NAVER: userInfoData["NAVER"] as MyInfo,
 };
+
+let temporaryMarkingList = [..._temporaryMarkingList];
+const profileMarkingThumbnail = _profileMarkingThumbnail;
 
 export const signUpByEmailHandlers = [
   http.post<
@@ -305,30 +313,46 @@ export const markingModalHandlers = [
       message: "success",
     });
   }),
-  http.post<PathParams>(`${API_BASE_URL}/markings/like`, () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
-  }),
-  http.delete<PathParams>(`${API_BASE_URL}/markings/like`, () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
-  }),
-  http.post<PathParams>(`${API_BASE_URL}/markings/saves`, () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
-  }),
-  http.delete<PathParams>(`${API_BASE_URL}/markings/saves`, () => {
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-    });
-  }),
+  http.post<PathParams>(
+    `${API_BASE_URL}/markings/likes/:markingId`,
+    async () => {
+      await new Promise((res) => setTimeout(res, 1000));
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+  http.delete<PathParams>(
+    `${API_BASE_URL}/markings/likes/:markingId`,
+    async () => {
+      await new Promise((res) => setTimeout(res, 1000));
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+  http.post<PathParams>(
+    `${API_BASE_URL}/markings/saves/:markingId`,
+    async () => {
+      await new Promise((res) => setTimeout(res, 1000));
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+  http.delete<PathParams>(
+    `${API_BASE_URL}/markings/saves/:markingId`,
+    async () => {
+      await new Promise((res) => setTimeout(res, 1000));
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
   http.post<PathParams>(MARKING_END_POINT.SAVE_TEMP, async ({ request }) => {
     /**
      * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
@@ -425,6 +449,14 @@ export const getProfileHandlers = [
 
     if (token?.split("-")[0] === "freshAccessToken" && nickname === "뽀송송") {
       return HttpResponse.json(User["ROLE_USER"]);
+    }
+
+    if (nickname === "나는야게스트") {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: roleGuestUser,
+      });
     }
 
     const userInfo = otherUsers.find((user) => user.nickname === nickname);
@@ -1181,7 +1213,7 @@ const getDistanceFromLatLonInKm = (
 const markingListDB: Record<string, Marking[]> = {};
 
 const getMarkingListHandler = [
-  http.get(`${API_BASE_URL}/markings/nearby`, async ({ request }) => {
+  http.get(`${API_BASE_URL}/markings/bounds`, async ({ request }) => {
     const url = new URL(request.url);
 
     const lat = Number(url.searchParams.get("lat"));
@@ -1535,6 +1567,267 @@ const getProfileThumbnailHandler = [
   ),
 ];
 
+const getTemporaryMarkingListHandler = [
+  http.get(`${API_BASE_URL}/markings/temps`, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
+    const url = new URL(request.url);
+
+    const offset = Number(url.searchParams.get("offset")) || 0;
+    const itemPerPage = 20;
+    const start = offset * itemPerPage;
+    const end = start + itemPerPage;
+    const data = temporaryMarkingList.slice(start, end);
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        markings: data,
+        totalElements: temporaryMarkingList.length,
+        totalPages: Math.ceil(temporaryMarkingList.length / itemPerPage),
+        pageAble: {
+          pageNumber: offset,
+          pageSize: itemPerPage,
+          sort: {
+            empty: true,
+            unsorted: true,
+            sorted: false,
+          },
+          offset,
+          unpaged: false,
+          paged: true,
+        },
+      },
+    });
+  }),
+];
+
+const deleteTemporaryMarkingHandler = [
+  http.delete<PathParams, DeleteTemporaryMarkingRequest>(
+    MARKING_END_POINT.DELETE_TEMPORARY_MARKING,
+    async ({ request }) => {
+      await new Promise((res) => setTimeout(res, 1000));
+      const { id } = await request.json();
+
+      const token = request.headers.get("Authorization");
+
+      if (token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      temporaryMarkingList = temporaryMarkingList.filter(
+        (marking) => marking.markingId !== id,
+      );
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    },
+  ),
+];
+
+const putModifyTempMarkingHandler = [
+  http.put(MARKING_END_POINT.PUT_MODIFY_TEMP_MARKING, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
+    const formData = await request.formData();
+    const markingModifyDtoBlob = formData.get("markingModifyDto") as Blob;
+    const markingModifyDtoText = await markingModifyDtoBlob.text();
+    const { id, content, isVisible, removeIds, isTempSaved } =
+      JSON.parse(markingModifyDtoText);
+    const images = formData.getAll("images") as File[];
+    const targetTempPost = temporaryMarkingList.find(
+      (marking) => marking.markingId === id,
+    );
+
+    if (!targetTempPost) {
+      return HttpResponse.json(
+        {
+          code: 404,
+          message: "해당하는 임시 마커를 찾을 수 없습니다.",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    if (isTempSaved) {
+      targetTempPost.content = content;
+      targetTempPost.isVisible = isVisible;
+      targetTempPost.images = targetTempPost.images
+        .filter(({ id }) => !removeIds.includes(id))
+        .concat(
+          images.map((image, idx) => ({
+            id: idx,
+            imageUrl: URL.createObjectURL(image),
+            lank: idx,
+            regDt: new Date().toISOString(),
+          })),
+        );
+      targetTempPost.regDt = new Date().toISOString();
+
+      temporaryMarkingList = temporaryMarkingList.map((marking) =>
+        marking.markingId === id ? targetTempPost : marking,
+      );
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+      });
+    }
+
+    profileMarkingThumbnail["뽀송송"].unshift({
+      markingId: id,
+      previewImage: `임시저장에서 저장 된 ${id}의 썸네일`,
+      lat: Math.random() > 0.5 ? 35 + Math.random() : 35 - Math.random(),
+      lng: Math.random() > 0.5 ? 129 + Math.random() : 129 - Math.random(),
+    });
+
+    temporaryMarkingList = temporaryMarkingList.filter(
+      ({ markingId }) => markingId !== id,
+    );
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
+  }),
+];
+
+const { myMarkerList, myMarkingList } = getMyMark();
+
+const getUserMarkingListHandler = [
+  http.get(
+    `${API_BASE_URL}/markings/users/:nickname`,
+    async ({ request, params }) => {
+      const { nickname } = params;
+
+      if (typeof nickname !== "string") {
+        return HttpResponse.json(
+          {
+            code: 400,
+            message: "잘못된 요청입니다.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+
+      const url = new URL(request.url);
+
+      const southBottomLat = Number(url.searchParams.get("southBottomLat"));
+      const northTopLat = Number(url.searchParams.get("northTopLat"));
+      const southLeftLng = Number(url.searchParams.get("southLeftLng"));
+      const northRightLng = Number(url.searchParams.get("northRightLng"));
+
+      const markingList =
+        nickname === "뽀송송"
+          ? myMarkingList
+          : getMockUserMarkingList({
+              nickname,
+              southBottomLat,
+              northTopLat,
+              southLeftLng,
+              northRightLng,
+            });
+
+      const sortType = url.searchParams.get("sortType") as SortType;
+
+      if (sortType === "POPULARITY") {
+        markingList.sort(
+          (a, b) => b.countData.likedCount - a.countData.likedCount,
+        );
+      } else if (sortType === "RECENT") {
+        markingList.sort(
+          (a, b) => new Date(b.regDt).getTime() - new Date(a.regDt).getTime(),
+        );
+      }
+
+      if (sortType === "DISTANCE") {
+        const lat = url.searchParams.get("lat");
+        const lng = url.searchParams.get("lng");
+
+        if (lat && lng) {
+          markingList.sort(
+            (a, b) =>
+              getDistanceFromLatLonInKm(
+                Number(lat),
+                Number(lng),
+                a.lat,
+                a.lng,
+              ) -
+              getDistanceFromLatLonInKm(Number(lat), Number(lng), b.lat, b.lng),
+          );
+        }
+      }
+
+      const pageNumber = Number(url.searchParams.get("offset") || 0);
+      const totalCount = markingList.length;
+      const pageSize = 20;
+      const lastPage = Math.ceil(totalCount / pageSize);
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: {
+          markings: markingList.slice(
+            pageNumber * pageSize,
+            (pageNumber + 1) * pageSize,
+          ),
+          totalElements: totalCount,
+          totalPages: lastPage,
+          pageAble: {
+            pageNumber,
+            pageSize,
+            sort: {
+              sorted: false,
+              unsorted: true,
+              empty: true,
+            },
+            offset: pageNumber,
+            paged: true,
+            unpaged: false,
+          },
+        },
+      });
+    },
+  ),
+];
+
+const getMyMarkerList = [
+  http.get(MARKER_END_POINT.MY, ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (!token || token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "토큰 검증에 실패 했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: myMarkerList,
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1562,4 +1855,9 @@ export const handlers = [
   ...deleteFollowingHandler,
   ...deleteFollowerHandler,
   ...getProfileThumbnailHandler,
+  ...getTemporaryMarkingListHandler,
+  ...deleteTemporaryMarkingHandler,
+  ...putModifyTempMarkingHandler,
+  ...getUserMarkingListHandler,
+  ...getMyMarkerList,
 ];

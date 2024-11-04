@@ -100,7 +100,10 @@ export const colors = {
 
 export const ROUTER_PATH = {
   MAIN: "/",
+
   MAP: `/map`,
+  PLACE: "/map/place",
+  MY_MARK: "/map/my",
 
   PROFILE: `/:nickname`,
   FOLLOWINGS: `followings`,
@@ -117,6 +120,8 @@ export const ROUTER_PATH = {
   SIGN_UP: `/sign-up`,
   SIGN_UP_USER_INFO: `/sign-up/user-info`,
   SIGN_UP_PET_INFO: `/sign-up/pet-info`,
+
+  TEMPORARY_MARKING: "/temporary-marking",
 } as const;
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;

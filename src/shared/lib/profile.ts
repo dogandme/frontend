@@ -18,7 +18,7 @@ export const useNicknameParams = () => {
     throw new Error("parameter에 nickname이 없습니다.");
   }
 
-  const nicknameParams = nickname.slice(1);
+  const nicknameParams = decodeURI(nickname.slice(1));
   const isMyPage = nicknameParams === useAuthStore.getState().nickname;
 
   return { nicknameParams, isMyPage };

@@ -48,7 +48,6 @@ export const FollowingUserItem = ({
         <FollowingToggle
           nickname={nickname}
           isFollowing={isFollowing}
-          followingButtonType="default"
           size="small"
         />
       )}
