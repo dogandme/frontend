@@ -5,6 +5,7 @@ import { FollowingPage } from "@/pages/[nickname]/following";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
 import { MapLayout, MapPage } from "@/pages/map";
+import { MyMarkingPage } from "@/pages/map/my";
 import { SettingPage } from "@/pages/setting";
 import { EditInfoPage } from "@/pages/setting/edit-info/page";
 import { AccountManagementPage } from "@/pages/setting/manage-account";
@@ -12,11 +13,7 @@ import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { TemporaryMarkingPage } from "@/pages/temporary-marking";
-import {
-  PlaceMarkingList,
-  MyMarkingList,
-  MyActivityList,
-} from "@/widgets/map/ui";
+import { PlaceMarkingList, MyActivityList } from "@/widgets/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { MainPage } from "../pages";
 import { AppProviderLayout } from "./AppProviderLayout";
@@ -44,7 +41,7 @@ export const router = createBrowserRouter([
           },
           {
             path: ROUTER_PATH.MY_MARK,
-            element: <MyMarkingList />,
+            element: <MyMarkingPage />,
           },
           {
             path: ROUTER_PATH.MY_ACTIVITY,
