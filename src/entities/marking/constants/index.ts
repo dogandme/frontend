@@ -1,7 +1,10 @@
 import { API_BASE_URL } from "@/shared/constants";
-import type { GetMarkingListRequest, GetUserMarkingListRequest } from "../api";
-import type { GetBoundaryMarkerListRequest } from "../api/getBoundaryMarkerList";
-import type { GetMyLikedMarkingListRequest } from "../api/getMyLikedMarkingList";
+import type {
+  GetMarkingListRequest,
+  GetUserMarkingListRequest,
+  GetBoundaryMarkerListRequest,
+  GetMyLikedMarkingListRequest,
+} from "../api";
 
 export const REVERSE_GEOCODING_END_POINT = ({
   lat,
