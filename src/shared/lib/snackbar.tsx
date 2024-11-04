@@ -10,7 +10,7 @@ import { Snackbar, SnackBarProps } from "../ui/snackbar";
  * @returns {Function} handleOpenSnackbar - 스낵바를 여는 함수.
  * @param {React.ReactNode} text - 스낵바에 표시할 텍스트.
  * @param {Object} [snackbarOptions] - 스낵바 옵션.
- * @param {number} [snackbarOptions.autoHideDuratio sn=1000] - 스낵바가 자동으로 닫히기까지의 시간(ms).
+ * @param {number} [snackbarOptions.autoHideDuratio] - 스낵바가 자동으로 닫히기까지의 시간(ms).
  * @param {Omit<SnackBarProps, "children">} [snackbarOptions] - 스낵바 컴포넌트의 기타 속성.
  */
 export const useSnackBar = () => {
