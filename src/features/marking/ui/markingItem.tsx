@@ -22,7 +22,7 @@ interface MarkingItemProps
   pet: Pick<PetInfo, "petId" | "profile" | "name">;
   isLiked: boolean;
   isBookmarked: boolean;
-  isFollowing: boolean;
+  isFollowing?: boolean;
 }
 
 interface MarkingManageButtonProps
@@ -184,7 +184,7 @@ export const MarkingItem = ({
         <DividerLine axis="col" />
         <span className="flex-1 body-2 text-grey-500">{pet.name}</span>
 
-        {!isOwner && (
+        {!isOwner && typeof isFollowing === "boolean" && (
           <FollowingToggle
             nickname={nickName}
             size="xSmall"
