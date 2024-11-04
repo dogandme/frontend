@@ -76,7 +76,8 @@ export const compressFileImage: compressFileImage = async (file, options) => {
   canvas.height = height * ratio;
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-  const [fileName, fileExtension] = file.name.split(".");
+  const [fileExtension, ...fileName] = file.name.split(".").reverse();
+
   const compressedFile: Promise<File> = new Promise((resolve) => {
     canvas.toBlob(
       (blob) => {
@@ -86,7 +87,7 @@ export const compressFileImage: compressFileImage = async (file, options) => {
           return;
         }
         resolve(
-          new File([blob], fileName, {
+          new File([blob], fileName.join("."), {
             type: `image/${fileExtension}`,
             lastModified: Date.now(),
           }),
