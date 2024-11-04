@@ -1,10 +1,11 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useState } from "react";
 
 /**
- * 요소 외부를 클릭했을 때 실행할 함수를 등록하는 Hook
+ * 드롭다운 요소를 관리하는 커스텀 훅
+ * 외부를 클릭하면 요소를 표시하지 않습니다.
  *
- * @param ref ref가 참조하는 요소 외부를 클릭했을 때 onOutsideClick 실행
- * @param onOutsideClick 외부를 클릭했을 때 실행할 함수
+ * @param isOpen 요소 표시 여부
+ * @param setIsOpen 요소 표시 여부를 변경하는 함수
  */
 
 export const useDropdown = (ref: RefObject<HTMLElement>) => {
