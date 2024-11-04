@@ -23,7 +23,7 @@ export const useDropdown = (ref: RefObject<HTMLElement>) => {
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [ref, onOutsideClick]);
+  }, [ref]);
 
   return { isOpen, setIsOpen };
 };
