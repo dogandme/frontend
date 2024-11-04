@@ -13,7 +13,11 @@ import {
   MyLocationIcon,
 } from "@/shared/ui/icon";
 import { MarkingFormModal } from "../../marking/ui";
-import { useCurrentLocation, useGetMapCurrentBounds } from "../hooks";
+import {
+  useCurrentLocation,
+  useGetMapCurrentBounds,
+  useMapMode,
+} from "../hooks";
 import { useMapStore } from "../store";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
@@ -139,8 +143,9 @@ export const ShowAroundMarkingButton = () => {
 };
 
 export const CollectionButton = () => {
-  // todo 상태 전역으로 관리하기
-  const isCollectionActive = false;
+  const navigate = useNavigate();
+  const mode = useMapMode();
+  const isCollectionActive = mode === "MY_ACTIVITY";
 
   return (
     <Button
@@ -151,7 +156,7 @@ export const CollectionButton = () => {
       className="shadow-custom-1 border-none"
       aria-label="좋아요를 눌렀거나 저장한 마킹들 나타내기"
       onClick={() => {
-        // todo 좋아요 / 저장됨 마킹 보기로 상태 변경
+        navigate(ROUTER_PATH.MY_ACTIVITY);
       }}
     >
       <BookmarkIcon />
@@ -181,9 +186,6 @@ export const ExitAddModeButton = () => {
   const { onClose, handleOpen } = useModal(() => (
     <MarkingFormCloseModal onCloseExitModal={onClose} />
   ));
-  const resetMarkingFormStore = useMarkingFormStore(
-    (state) => state.resetMarkingFormStore,
-  );
 
   const setMode = useMapStore((state) => state.setMode);
 
