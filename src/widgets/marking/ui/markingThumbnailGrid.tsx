@@ -2,8 +2,8 @@ import { useGetDashboardMarkingThumbnail } from "@/entities/marking/api";
 import { Nickname } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
-import { useNicknameParams } from "@/shared/lib/profile";
 import { useLoadImages, type LoadImageParams } from "@/shared/lib";
+import { useNicknameParams } from "@/shared/lib/profile";
 
 interface MarkingThumbnailGridProps {
   nickname: Nickname;
@@ -53,7 +53,7 @@ export const ThumbnailList = ({ imageList }: ThumbnailListProps) => {
   if (isLoading) {
     return imageList.map(({ src }) => (
       <div className="aspect-square" key={src}>
-        <div className="w-full h-full animate-pulse bg-grey-100" />,
+        <div className="w-full h-full animate-pulse bg-grey-100" />
       </div>
     ));
   }

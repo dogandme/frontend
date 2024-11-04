@@ -75,7 +75,7 @@ export const MARKING_VISIBILITY_ENTRIES = Object.entries(
   MARKING_VISIBILITY_MAP,
 ) as [MarkingVisibilityKey, MarkingVisibilityValue][];
 
-export const MARKING_THUMBNAIL_ENDPOINT = {
+export const MARKING_THUMBNAIL_END_POINT = {
   DASHBOARD: (nickname: Nickname, pageParams: number) =>
     `${API_BASE_URL}/markings/marks/${nickname}?offset=${pageParams}`,
 };
