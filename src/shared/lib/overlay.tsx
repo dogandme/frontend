@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { OverlayOptions, useOverlayStore } from "../store/overlay";
 
+export type CreateOveralyComponent = (
+  onClose: () => Promise<void>,
+) => JSX.Element;
+
 type UseOverlay = (
-  createOverlayComponent: (onClose: () => Promise<void>) => JSX.Element,
+  createOverlayComponent: CreateOveralyComponent,
   options?: OverlayOptions,
 ) => {
   handleOpen: () => Promise<void>;
