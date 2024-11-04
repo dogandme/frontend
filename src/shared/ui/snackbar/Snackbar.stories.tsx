@@ -74,8 +74,7 @@ export const Default: Story = {
           className="px-2 py-2 bg-grey-200"
           onClick={() =>
             handleOpenSnackbar("2번 스낵바 오픈", {
-              className:
-                "absolute top-16 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-grey-200",
+              type: "map",
             })
           }
         >
