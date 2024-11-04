@@ -80,6 +80,10 @@ const EditMarkingModalOpenButton = ({
         content,
         externalImages: images,
       }}
+      putModifyMarkingArgumets={{
+        endPoint: "PUT_MODIFY_TEMP_MARKING",
+        queryKey: ["temporaryMarkingList"],
+      }}
     />
   ));
 
@@ -89,7 +93,7 @@ const EditMarkingModalOpenButton = ({
       size="small"
       variant="filled"
       onClick={handleOpen}
-    >
+    >     
       마킹 마저하기
     </Button>
   );

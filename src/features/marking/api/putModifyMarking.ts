@@ -11,7 +11,7 @@ import type {
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
-export interface PutModifyTempMarkingRequest
+export interface PutModifyMarkingRequest
   extends Pick<TempMarkingInfo, "isVisible"> {
   content: NonNullable<TempMarkingInfo["content"]>;
   id: TempMarkingInfo["markingId"];
@@ -20,11 +20,25 @@ export interface PutModifyTempMarkingRequest
   images: File[];
 }
 
-export const usePutModifyTempMarking = () => {
+type ModifyMarkingEndPoint = Extract<
+  keyof typeof MARKING_END_POINT,
+  "PUT_MODIFY_TEMP_MARKING" | "PUT_MODIFY_MARKING"
+>;
+type InvalidateQueryKey = "temporaryMarkingList"[] | "myMarkerList"[];
+
+export interface PutModifyMarkingArguments {
+  endPoint: ModifyMarkingEndPoint;
+  queryKey: InvalidateQueryKey;
+}
+
+export const usePutModifyMarking = ({
+  endPoint,
+  queryKey,
+}: PutModifyMarkingArguments) => {
   const queryClient = useQueryClient();
-  return useMutation<unknown, Error, PutModifyTempMarkingRequest>({
+  return useMutation<unknown, Error, PutModifyMarkingRequest>({
     mutationKey: ["markingFormModal"],
-    mutationFn: ({ images, ...formObj }: PutModifyTempMarkingRequest) => {
+    mutationFn: ({ images, ...formObj }: PutModifyMarkingRequest) => {
       const formData = new FormData();
       formData.append(
         "markingModifyDto",
@@ -33,7 +47,7 @@ export const usePutModifyTempMarking = () => {
       images.forEach((image) => {
         formData.append("images", image);
       });
-      return apiClient.put(MARKING_END_POINT.PUT_MODIFY_TEMP_MARKING, {
+      return apiClient.put(MARKING_END_POINT[endPoint], {
         withToken: true,
         body: formData,
       });
@@ -42,7 +56,7 @@ export const usePutModifyTempMarking = () => {
     onSuccess: (_data, { isTempSaved, id }) => {
       if (!isTempSaved) {
         queryClient.setQueryData<InfiniteData<GetTemporaryMarkingListResponse>>(
-          ["temporaryMarkingList"],
+          queryKey,
           (data) => {
             if (!data) {
               return data;
