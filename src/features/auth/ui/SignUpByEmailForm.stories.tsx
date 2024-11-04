@@ -481,7 +481,7 @@ export const Test: Story = {
             await userEvent.type($passwordConfirmInput, validPassword);
 
             const $statusText =
-              await canvas.findByText("사용가능한 비밀번호 입니다");
+              await canvas.findByText("비밀번호가 일치합니다");
 
             expect($statusText).toBeInTheDocument();
             expect($statusText).toHaveClass(statusTextColor.valid);

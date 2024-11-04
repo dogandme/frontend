@@ -1,15 +1,15 @@
 import { create } from "zustand";
 import type { FileInfo } from "@/features/auth/store";
+import type { MarkingVisibilityKey } from "@/entities/marking/constants";
 import { compressFileImage } from "@/shared/lib";
-import { POST_VISIBILITY_MAP } from "../constants";
 
-interface MarkingFileInfo extends FileInfo {
+export interface MarkingFileInfo extends FileInfo {
   file: NonNullable<FileInfo["file"]>;
 }
 
 interface MarkingFormState {
   region: string;
-  isVisible: keyof typeof POST_VISIBILITY_MAP | "";
+  isVisible: MarkingVisibilityKey;
   content: string;
   images: MarkingFileInfo[];
   isCompressing: boolean;
@@ -18,7 +18,7 @@ interface MarkingFormState {
 
 interface MarkingFormActions {
   setRegion: (region: string) => void;
-  setVisibility: (isVisible: keyof typeof POST_VISIBILITY_MAP) => void;
+  setVisibility: (isVisible: MarkingVisibilityKey) => void;
   setContent: (content: string) => void;
   setImages: (images: MarkingFileInfo[]) => void;
   resetMarkingFormStore: () => void;
@@ -26,7 +26,7 @@ interface MarkingFormActions {
 
 const MarkingFormInitialState: MarkingFormState = {
   region: "",
-  isVisible: "",
+  isVisible: "PUBLIC",
   content: "",
   images: [],
   isCompressing: false,

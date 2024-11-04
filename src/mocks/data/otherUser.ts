@@ -34,3 +34,14 @@ export const otherUsers = Array.from({ length: 400 }).map((_, i) => ({
     ),
   },
 }));
+
+export const roleGuestUser = {
+  userId: 999999,
+  nickname: "나는야게스트",
+  pet: null,    
+  socialType: null,
+  tembCnt: 0,
+  followersIds: [],
+  followingsIds: [],
+  markings: [],
+};

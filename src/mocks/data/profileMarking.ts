@@ -13,6 +13,7 @@ export const profileMarkingThumbnail: Record<string, MarkingThumbnailInfo[]> = {
       lng: Math.random() > 0.5 ? 129 + Math.random() : 129 - Math.random(),
     }),
   ),
+  나는야게스트: [],
   ...otherUsers.reduce<Record<string, MarkingThumbnailInfo[]>>((data, user) => {
     data[user.nickname] = user.markings.map((markingId) => ({
       markingId,

@@ -1,23 +1,32 @@
 import { useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
-import { useResearchMarkingList } from "@/features/map/hooks";
+import {
+  useGetMapCurrentBounds,
+  useMapQueryParams,
+} from "@/features/map/hooks";
 import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
+import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { MarkingList } from "./markingList";
 
 export const PlaceMarkingList = () => {
-  const { bounds, sortType, researchMarkingList } = useResearchMarkingList();
+  const navigate = useNavigate();
+  const { boundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
+  const { data: myFollowingMap } = useGetMyFollowingIdsMap();
+  const getMapBounds = useGetMapCurrentBounds();
+
   const {
     data: markingList,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useGetMarkingList({
-    ...bounds,
-    sortType,
+    ...boundsParams,
+    sortType: sortTypeParam,
   });
 
   const [setNode] = useInfiniteScroll(() => {
@@ -26,16 +35,22 @@ export const PlaceMarkingList = () => {
     }
   });
 
-  const map = useMap();
+  // TODO 로딩 상태 구현 하기
+  if (!markingList || !myFollowingMap) {
+    return null;
+  }
 
-  const navigate = useNavigate();
+  const map = useMap();
 
   return (
     <>
       <BackwardNavigationBar
         onClick={() => {
           navigate(ROUTER_PATH.MAP);
-          researchMarkingList();
+          setMapQueryParams({
+            bounds: getMapBounds(),
+            sortType: "POPULARITY",
+          });
         }}
         label={<h1 className="text-grey-900 title-1">이 장소 관련 마킹</h1>}
       />
@@ -55,6 +70,10 @@ export const PlaceMarkingList = () => {
               });
               map.setZoom(19);
             }}
+            // todo isLiked, isBookmarked 설정
+            isLiked={false}
+            isBookmarked={false}
+            isFollowing={myFollowingMap[marking.userId]}
             {...marking}
           />
         ))}

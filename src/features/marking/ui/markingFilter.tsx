@@ -3,7 +3,8 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { RangeFilterMap, sortTypeMap } from "@/features/map/constants";
 import {
   useCurrentLocation,
-  useResearchMarkingList,
+  useGetMapCurrentBounds,
+  useMapQueryParams,
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { SortType } from "@/entities/marking/api";
@@ -62,23 +63,13 @@ export const SortTypeFilter = ({
   options: SortType[];
   defaultOptionIdx?: number;
 }) => {
-  const {
-    sortType: selectedSortType,
-    researchMarkingList,
-    navigatePlace,
-  } = useResearchMarkingList();
+  const { sortTypeParam: selectedSortType, setMapQueryParams } =
+    useMapQueryParams();
 
   const handleSelect = (sortType: SortType) => {
-    const path = window.location.pathname;
+    if (selectedSortType === sortType) return;
 
-    if (path === "/map/place") {
-      navigatePlace({ sortType });
-      return;
-    }
-
-    researchMarkingList({
-      sortType,
-    });
+    setMapQueryParams({ sortType });
   };
 
   const defaultOption = options[defaultOptionIdx];
@@ -118,7 +109,7 @@ export const SortTypeFilter = ({
 
   return (
     <MarkingFilterButton onClick={handleOpen}>
-      {sortTypeMap[selectedSortType]}
+      {sortTypeMap[selectedSortType || defaultOption]}
     </MarkingFilterButton>
   );
 };
@@ -151,8 +142,9 @@ export const RangeFilter = ({
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
-  const { researchMarkingList } = useResearchMarkingList();
   const { setCurrentLocation } = useCurrentLocation();
+  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
+  const getMapBounds = useGetMapCurrentBounds();
 
   const map = useMap();
 
@@ -161,7 +153,19 @@ export const RangeFilter = ({
   );
 
   const handleSelect = (rangeFilter: RangeFilter) => {
+    if (selectedOption === rangeFilter) return;
+
     setSelectedOption(rangeFilter);
+
+    if (rangeFilter === "ALL_VIEW") {
+      map.setZoom(10);
+      setMapQueryParams({
+        bounds: getMapBounds(),
+        sortType: sortTypeParam!,
+      });
+
+      return;
+    }
 
     if (rangeFilter === "CURRENT_LOCATION") {
       setCurrentLocation({
@@ -175,7 +179,10 @@ export const RangeFilter = ({
             setIsCenteredOnMyLocation(true);
           }, 0);
 
-          researchMarkingList();
+          setMapQueryParams({
+            bounds: getMapBounds(),
+            sortType: sortTypeParam!,
+          });
         },
       });
 
@@ -183,7 +190,10 @@ export const RangeFilter = ({
     }
 
     if (rangeFilter === "MAP_LOCATION") {
-      researchMarkingList();
+      setMapQueryParams({
+        bounds: getMapBounds(),
+        sortType: sortTypeParam!,
+      });
       return;
     }
 

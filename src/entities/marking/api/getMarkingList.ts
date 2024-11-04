@@ -1,9 +1,8 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
-import { useMap } from "@vis.gl/react-google-maps";
 import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { SEARCH_MARKING_END_POINT } from "../constants";
+import { MARKING_END_POINT, type MarkingVisibilityKey } from "../constants";
 
 interface Address {
   id: number;
@@ -44,7 +43,7 @@ export interface Marking {
   markingId: number;
   region: string;
   content: string;
-  isVisible: "PUBLIC" | "FOLLOWERS_ONLY" | "PRIVATE";
+  isVisible: MarkingVisibilityKey;
   regDt: string;
   previewImage: string;
   userId: number;
@@ -66,8 +65,8 @@ export interface GetMarkingListRequest {
   southWestLng: number;
   northEastLat: number;
   northEastLng: number;
-  lat: number;
-  lng: number;
+  lat: number | null;
+  lng: number | null;
   offset: number; // 페이지 번호
   sortType: SortType;
 }
@@ -104,7 +103,7 @@ const getMarkingList = async ({
   const hasToken = !!useAuthStore.getState().token;
 
   return apiClient.get<GetMarkingListResponse>(
-    SEARCH_MARKING_END_POINT({
+    MARKING_END_POINT.BOUNDARY({
       southWestLat,
       southWestLng,
       northEastLat,
@@ -131,12 +130,10 @@ export const useGetMarkingList = ({
   southWestLng: number | null;
   northEastLat: number | null;
   northEastLng: number | null;
-} & Pick<GetMarkingListRequest, "sortType">) => {
-  const map = useMap();
-  const mapCenter = map?.getCenter();
-
-  const lat = mapCenter?.lat();
-  const lng = mapCenter?.lng();
+  sortType: SortType | null;
+}) => {
+  const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
+  const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
 
   const { isIdle: isMapIdle } = useMapStore.getState();
 
@@ -156,8 +153,7 @@ export const useGetMarkingList = ({
       !!southWestLng &&
       !!northEastLat &&
       !!northEastLng &&
-      !!lat &&
-      !!lng
+      !!sortType
         ? ({ pageParam }) =>
             getMarkingList({
               southWestLat,
@@ -178,5 +174,7 @@ export const useGetMarkingList = ({
     select: (data) => data.pages.flatMap((page) => page.markings),
 
     refetchOnWindowFocus: false,
+
+    gcTime: 0,
   });
 };

@@ -1,27 +1,46 @@
-import { useResearchMarkingList } from "@/features/map/hooks";
+import { useNavigate } from "react-router-dom";
+import { useMap } from "@vis.gl/react-google-maps";
+import { useMapQueryParams } from "@/features/map/hooks";
+import { useMapStore } from "@/features/map/store";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
-import { useGetMarkingList } from "@/entities/marking/api";
-import { API_BASE_URL } from "@/shared/constants";
+import {
+  useGetAddressFromLatLng,
+  useGetMarkingList,
+} from "@/entities/marking/api";
+import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
 import { MarkingList } from "./markingList";
 
 export const LocalMarkingList = () => {
-  const { bounds, sortType, navigatePlace } = useResearchMarkingList();
+  const navigate = useNavigate();
+  const { boundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
   const {
     data: markingList,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useGetMarkingList({
-    ...bounds,
-    sortType,
+    ...boundsParams,
+    sortType: sortTypeParam,
   });
 
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
+  });
+
+  const map = useMap();
+  const center = map.getCenter();
+
+  const lat = center.lat();
+  const lng = center.lng();
+
+  const { data } = useGetAddressFromLatLng({
+    lat,
+    lng,
   });
 
   return (
@@ -31,7 +50,7 @@ export const LocalMarkingList = () => {
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-1 text-tangerine-500 items-center">
           <MyLocationIcon width={20} height={20} />
-          <span className="body-2 text-grey-500">영등포 1동 주변</span>
+          <span className="body-2 text-grey-500">{data?.region}</span>
         </div>
 
         <div className="flex">
@@ -47,13 +66,15 @@ export const LocalMarkingList = () => {
             className="aspect-square"
             onClick={() => {
               // todo 클러스터링 데이터에 있는 bounds로 인수 전달
-              navigatePlace({
+              navigate(ROUTER_PATH.PLACE);
+              setMapQueryParams({
                 bounds: {
                   southWestLat: lat - 0.00001,
                   southWestLng: lng - 0.00001,
                   northEastLat: lat + 0.00001,
                   northEastLng: lng + 0.00001,
                 },
+                sortType: "POPULARITY",
               });
             }}
           >
