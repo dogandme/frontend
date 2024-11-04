@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import {
   useGetMapCurrentBounds,
@@ -13,6 +14,7 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { MarkingList } from "./markingList";
 
 export const PlaceMarkingList = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { boundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
@@ -69,6 +71,11 @@ export const PlaceMarkingList = () => {
                 lng: marking.lng,
               });
               map.setZoom(19);
+            }}
+            onDelete={() => {
+              queryClient.invalidateQueries({
+                queryKey: ["markingList"],
+              });
             }}
             // todo isLiked, isBookmarked 설정
             isLiked={false}
