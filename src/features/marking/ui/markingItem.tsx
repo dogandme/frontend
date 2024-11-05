@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { FollowingToggle } from "@/features/follow/ui";
 import type { Marking } from "@/entities/marking/api";
 import type { PetInfo } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
-import { formatDateToYearMonthDay } from "@/shared/lib";
+import { formatDateToYearMonthDay, useDropdown } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
 import { MoreIcon, MyLocationIcon } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
@@ -16,34 +16,24 @@ import { MarkingLikeToggle } from "./markingLikeToggle";
 interface MarkingItemProps
   extends Omit<Marking, "isVisible" | "isTempSaved" | "userId" | "pet"> {
   onRegionClick: () => void;
+  onDelete?: () => void;
   pet: Pick<PetInfo, "petId" | "profile" | "name">;
   isLiked: boolean;
   isBookmarked: boolean;
+  isFollowing: boolean;
 }
 const MarkingManageButton = ({
   markingId,
-}: Pick<MarkingItemProps, "markingId">) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  onDelete,
+}: Pick<MarkingItemProps, "markingId" | "onDelete">) => {
   const ref = useRef<HTMLDivElement>(null);
+  const { isOpen, setIsOpen } = useDropdown(ref);
 
-  const handleClickOutside = (e: MouseEvent) => {
-    const isClickedOutside =
-      ref.current && !ref.current.contains(e.target as Node);
-
-    if (isClickedOutside) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
-  const { mutate: deleteMarking } = useDeleteMarking();
+  const { mutate: deleteMarking } = useDeleteMarking({
+    onSuccess: () => {
+      onDelete?.();
+    },
+  });
 
   const handleDeleteMarking = () => {
     const { token, role } = useAuthStore.getState();
@@ -91,6 +81,7 @@ const MarkingManageButton = ({
 export const MarkingItem = ({
   markingId,
   onRegionClick,
+  onDelete,
   nickName,
   region,
   pet,
@@ -100,6 +91,7 @@ export const MarkingItem = ({
   isOwner = false,
   isLiked,
   isBookmarked,
+  isFollowing,
   countData: { likedCount, savedCount },
 }: MarkingItemProps) => {
   return (
@@ -115,7 +107,9 @@ export const MarkingItem = ({
           <h2 className="btn-2 text-grey-900">{region}</h2>
         </div>
 
-        {isOwner && <MarkingManageButton markingId={markingId} />}
+        {isOwner && (
+          <MarkingManageButton markingId={markingId} onDelete={onDelete} />
+        )}
       </div>
 
       <div className="flex justify-between items-center gap-1 flex-1">
@@ -129,14 +123,11 @@ export const MarkingItem = ({
         <span className="flex-1 body-2 text-grey-500">{pet.name}</span>
 
         {!isOwner && (
-          <Button
-            colorType="tertiary"
+          <FollowingToggle
+            nickname={nickName}
             size="xSmall"
-            variant="outlined"
-            fullWidth={false}
-          >
-            팔로우
-          </Button>
+            isFollowing={isFollowing}
+          />
         )}
       </div>
 

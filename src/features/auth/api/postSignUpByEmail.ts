@@ -45,8 +45,7 @@ export const usePostSignUpByEmail = () => {
       navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
     },
     onError: (error) => {
-      // todo: snackbar 띄우기
-      alert(error.message);
+      console.error(error);
     },
   });
 };

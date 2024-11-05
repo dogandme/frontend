@@ -56,9 +56,8 @@ export const usePostAddPetInfo = () => {
       setToken(token);
       navigate(lastNoneAuthRoute);
     },
-
     onError: (error) => {
-      throw new Error(error.message);
+      console.error(error);
     },
   });
 };

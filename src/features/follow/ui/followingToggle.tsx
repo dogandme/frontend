@@ -4,20 +4,16 @@ import { Button } from "@/shared/ui/button";
 import { ButtonProps } from "@/shared/ui/button/Button";
 import { usePostFollowing, useDeleteFollowing } from "../api";
 
-type FollowingButtonType = "default" | "mini";
-
-interface FollowingToggleProps<T extends FollowingButtonType> {
+interface FollowingToggleProps {
   nickname: Nickname;
   isFollowing: boolean;
-  followingButtonType: T;
-  size: T extends "default" ? ButtonProps["size"] : never;
+  size: Extract<ButtonProps["size"], "small" | "xSmall">;
 }
-export const FollowingToggle = <T extends FollowingButtonType>({
+export const FollowingToggle = ({
   nickname,
   isFollowing,
-  followingButtonType,
   size,
-}: FollowingToggleProps<T>) => {
+}: FollowingToggleProps) => {
   const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
 
   const { mutate: postFollowing, isPending: isFollowingPending } =
@@ -59,60 +55,26 @@ export const FollowingToggle = <T extends FollowingButtonType>({
 
   if (_isFollowing) {
     return (
-      <UnFollowingButton onClick={handleOptimisticUnFollowing} size={size} />
-    );
-  }
-  return (
-    <FollowingButton
-      onClick={handleOptimisticFollowing}
-      buttonType={followingButtonType}
-      size={size}
-    />
-  );
-};
-
-interface FollowingButtonProps<T extends FollowingButtonType>
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  buttonType: T;
-  size?: T extends "default" ? ButtonProps["size"] : never;
-}
-
-export const FollowingButton = <T extends FollowingButtonType>({
-  buttonType,
-  size,
-  ...props
-}: FollowingButtonProps<T>) => {
-  if (buttonType === "default") {
-    return (
       <Button
-        size={size || "small"}
-        variant="filled"
-        colorType="primary"
+        variant="outlined"
+        colorType="tertiary"
         fullWidth={false}
-        {...props}
+        size={size}
+        onClick={handleOptimisticUnFollowing}
       >
-        팔로우
+        팔로잉
       </Button>
     );
   }
   return (
-    <button className="btn-3 text-tangerine-500" {...props}>
-      팔로우
-    </button>
-  );
-};
-
-export const UnFollowingButton = (
-  props: Omit<ButtonProps, "variant" | "colorType" | "children">,
-) => {
-  return (
     <Button
-      variant="outlined"
-      colorType="tertiary"
+      size={size}
+      variant="filled"
+      colorType="primary"
       fullWidth={false}
-      {...props}
+      onClick={handleOptimisticFollowing}
     >
-      팔로잉
+      팔로우
     </Button>
   );
 };

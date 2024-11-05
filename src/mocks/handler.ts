@@ -24,7 +24,7 @@ import { API_BASE_URL } from "@/shared/constants";
 import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
 import { getMyMark } from "./data/myMark";
-import { otherUsers } from "./data/otherUser";
+import { otherUsers, roleGuestUser } from "./data/otherUser";
 import { profileMarkingThumbnail as _profileMarkingThumbnail } from "./data/profileMarking";
 import regionListData from "./data/regionList.json";
 import { temporaryMarkingList as _temporaryMarkingList } from "./data/tempMarkingList";
@@ -451,6 +451,14 @@ export const getProfileHandlers = [
       return HttpResponse.json(User["ROLE_USER"]);
     }
 
+    if (nickname === "나는야게스트") {
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content: roleGuestUser,
+      });
+    }
+
     const userInfo = otherUsers.find((user) => user.nickname === nickname);
     if (!userInfo) {
       return HttpResponse.json(
@@ -692,7 +700,7 @@ export const deleteAccountHandlers = [
         return HttpResponse.json(
           {
             code: 400,
-            message: "입력하신 비밀번호가 맞지 않습니다,",
+            message: "비밀번호를 다시 확인해 주세요",
           },
           {
             status: 400,

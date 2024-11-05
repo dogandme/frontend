@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import {
   useGetMapCurrentBounds,
@@ -6,15 +7,18 @@ import {
 } from "@/features/map/hooks";
 import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
+import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { MarkingList } from "./markingList";
 
 export const PlaceMarkingList = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { boundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
+  const { data: myFollowingMap } = useGetMyFollowingIdsMap();
   const getMapBounds = useGetMapCurrentBounds();
 
   const {
@@ -32,6 +36,11 @@ export const PlaceMarkingList = () => {
       fetchNextPage();
     }
   });
+
+  // TODO 로딩 상태 구현 하기
+  if (!markingList || !myFollowingMap) {
+    return null;
+  }
 
   const map = useMap();
 
@@ -63,9 +72,15 @@ export const PlaceMarkingList = () => {
               });
               map.setZoom(19);
             }}
+            onDelete={() => {
+              queryClient.invalidateQueries({
+                queryKey: ["markingList"],
+              });
+            }}
             // todo isLiked, isBookmarked 설정
             isLiked={false}
             isBookmarked={false}
+            isFollowing={myFollowingMap[marking.userId]}
             {...marking}
           />
         ))}

@@ -20,7 +20,7 @@ export const getMockMarkingList = ({
     regDt: new Date().toISOString(),
     userId: index + 1,
     nickName: `User${index + 1}`,
-    isOwner: true,
+    isOwner: index === 0 ? true : false,
     isTempSaved: false,
     lat: southBottomLat + Math.random() * (northTopLat - southBottomLat),
     lng: southLeftLng + Math.random() * (northRightLng - southLeftLng),

@@ -45,7 +45,6 @@ export const ProfileOverView = ({
           <FollowingToggle
             nickname={nickname}
             isFollowing={isFollowing}
-            followingButtonType="default"
             size="xSmall"
           />
         </div>
