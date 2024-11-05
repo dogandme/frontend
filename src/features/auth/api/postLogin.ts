@@ -49,5 +49,8 @@ export const usePostLogin = () => {
       const { lastNoneAuthRoute } = useRouteHistoryStore.getState();
       navigate(lastNoneAuthRoute);
     },
+    onError: (error) => {
+      console.error(error);
+    },
   });
 };
