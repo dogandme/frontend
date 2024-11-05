@@ -1,15 +1,19 @@
 import { useLocation } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
 
-type MapMode = "MAP" | "PLACE" | "MY_MARK" | "MY_ACTIVITY";
-
-export const useMapMode = (): MapMode | null => {
+export const useMapMode = () => {
   const { pathname } = useLocation();
 
-  if (pathname === ROUTER_PATH.MAP) return "MAP";
-  if (pathname === ROUTER_PATH.PLACE) return "PLACE";
-  if (pathname === ROUTER_PATH.MY_MARK) return "MY_MARK";
-  if (pathname === ROUTER_PATH.MY_ACTIVITY) return "MY_ACTIVITY";
+  const mapMode = {
+    [ROUTER_PATH.MAP]: "MAP",
+    [ROUTER_PATH.PLACE]: "PLACE",
+    [ROUTER_PATH.MY_MARK]: "MY_MARK",
+    [ROUTER_PATH.MY_ACTIVITY]: "MY_ACTIVITY",
+  } as const;
+
+  if (pathname in mapMode) {
+    return mapMode[pathname as keyof typeof mapMode];
+  }
 
   return null;
 };
