@@ -23,12 +23,14 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const setIsLastSearchedLocation = useMapStore(
     (state) => state.setIsLastSearchedLocation,
   );
+  const setZoom = useMapStore((state) => state.setZoom);
 
-  const handleMapChange = () => {
+  const handleMapChange = ({ detail }) => {
     if (!isTilesLoadedRef.current) return;
 
     setIsLastSearchedLocation(false);
     setIsMapCenteredOnMyLocation(false);
+    setZoom(detail.zoom);
   };
 
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.

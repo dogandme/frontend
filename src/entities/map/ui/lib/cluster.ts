@@ -158,7 +158,7 @@ class Cluster<T extends LatLng> {
 export const useKMeansClustering = <T extends LatLng>(
   numOfCluster: number,
   markers?: T[],
-) => {
+): [Cluster<T>[], T[]] => {
   const getCurrentBounds = useGetMapCurrentBounds();
   const bounds = getCurrentBounds();
   if (!markers) {
