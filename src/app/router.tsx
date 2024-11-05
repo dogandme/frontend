@@ -4,7 +4,9 @@ import { FollowerPage } from "@/pages/[nickname]/follower";
 import { FollowingPage } from "@/pages/[nickname]/following";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
-import { MapPage } from "@/pages/map";
+import { MapLayout, MapPage } from "@/pages/map";
+import { MyMarkingPage } from "@/pages/map/my";
+import { PlaceMarkingPage } from "@/pages/map/place";
 import { SettingPage } from "@/pages/setting";
 import { EditInfoPage } from "@/pages/setting/edit-info/page";
 import { AccountManagementPage } from "@/pages/setting/manage-account";
@@ -12,11 +14,7 @@ import { SignUpPage } from "@/pages/sign-up";
 import PetInfoPage from "@/pages/sign-up/pet-info/page";
 import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { TemporaryMarkingPage } from "@/pages/temporary-marking";
-import {
-  LocalMarkingList,
-  PlaceMarkingList,
-  MyMarkingList,
-} from "@/widgets/map/ui";
+import { MyActivityList } from "@/widgets/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { MainPage } from "../pages";
 import { AppProviderLayout } from "./AppProviderLayout";
@@ -32,19 +30,23 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTER_PATH.MAP,
-        element: <MapPage />, // 지도
+        element: <MapLayout />, // 지도
         children: [
           {
             index: true,
-            element: <LocalMarkingList />,
+            element: <MapPage />,
           },
           {
             path: ROUTER_PATH.PLACE,
-            element: <PlaceMarkingList />,
+            element: <PlaceMarkingPage />,
           },
           {
             path: ROUTER_PATH.MY_MARK,
-            element: <MyMarkingList />,
+            element: <MyMarkingPage />,
+          },
+          {
+            path: ROUTER_PATH.MY_ACTIVITY,
+            element: <MyActivityList />,
           },
         ],
       },

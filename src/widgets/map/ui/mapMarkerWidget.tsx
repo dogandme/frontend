@@ -1,31 +1,14 @@
 import { useMapStore } from "@/features/map/store/map";
-import {
-  UserMarker,
-  PinMarker,
-  MultiplePinMarker,
-  ClusterMarker,
-  MarkingAddPin,
-} from "@/features/map/ui";
+import { UserMarker, MarkingAddPin } from "@/features/map/ui";
 
 export const MapMarkerWidget = () => {
   const mode = useMapStore((state) => state.mode);
 
   if (mode === "view") {
-    return (
-      <>
-        <UserMarker />
-        <PinMarker />
-        <MultiplePinMarker />
-        <ClusterMarker />
-      </>
-    );
+    return <UserMarker />;
   }
   if (mode === "add") {
-    return (
-      <>
-        <MarkingAddPin />
-      </>
-    );
+    return <MarkingAddPin />;
   }
 
   throw new Error(
