@@ -44,7 +44,7 @@ export const usePutAddUserInfo = ({ onSuccess }: { onSuccess: () => void }) => {
       onSuccess();
     },
     onError: (error) => {
-      throw new Error(error.message);
+      console.error(error);
     },
   });
 };

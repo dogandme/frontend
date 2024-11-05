@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { useGetAddressFromLatLng } from "@/entities/marking/api";
+import { useSnackBar } from "@/shared/lib";
 import {
   MARKING_VISIBILITY_MAP,
   MARKING_VISIBILITY_ENTRIES,
@@ -55,16 +56,11 @@ export const MarkingFormModal = ({
 
 const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
+  const handleOpenSnackbar = useSnackBar();
   const center = map.getCenter();
 
   const lat = center.lat();
   const lng = center.lng();
-
-  const { token } = useAuthStore.getState();
-
-  if (!token) {
-    throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
-  }
 
   const { data, isSuccess } = useGetAddressFromLatLng({ lat, lng });
   const setRegion = useMarkingFormStore((state) => state.setRegion);
@@ -75,6 +71,11 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     }
     setRegion(data.region);
   }, [data, isSuccess, setRegion]);
+
+  if (!useAuthStore.getState().token) {
+    handleOpenSnackbar(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
+    return;
+  }
 
   return (
     <button
@@ -146,6 +147,7 @@ const PhotoInput = () => {
   const handleOpenAlbum = () => {
     inputRef.current?.click();
   };
+  const handleOpen = useSnackBar();
 
   const handleChange = async ({
     target,
@@ -157,9 +159,7 @@ const PhotoInput = () => {
     }
 
     if (images.length + newFiles.length > MAX_IMAGE_LENGTH) {
-      // TODO 에러 바운더리에서 처리 하기
-      // throw new Error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
-      console.error(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
+      handleOpen(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
     }
 
     const availableNewFileArray = [...newFiles]
@@ -252,12 +252,14 @@ const SaveButton = () => {
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
 
   const { mutate: postMarkingData } = usePostAddMarking();
+  const handleOpen = useSnackBar();
 
   const handleSave = async () => {
     const { token } = useAuthStore.getState();
 
     if (!token) {
-      throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
+      handleOpen(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
+      return;
     }
 
     const { region, isVisible, images, content } =
@@ -272,11 +274,13 @@ const SaveButton = () => {
     const center = map.getCenter();
 
     if (!region) {
-      throw new Error(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
+      handleOpen(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
+      return;
     }
 
     if (!isVisible || images.length === 0) {
-      throw new Error(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
+      handleOpen(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
+      return;
     }
 
     const lat = center.lat();
@@ -307,7 +311,7 @@ const SaveButton = () => {
 const TemporarySaveButton = () => {
   const map = useMap();
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
-
+  const handleOpen = useSnackBar();
   const { mutate: postAddTempMarking } = usePostAddTempMarking();
 
   const handleSave = () => {
@@ -316,12 +320,11 @@ const TemporarySaveButton = () => {
       useMarkingFormStore.getState();
 
     if (!token) {
-      throw new Error(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
+      handleOpen(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     }
 
     if (isCompressing) {
-      // TODO 에러 바운더리 생성되면 로직 변경하기
-      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      handleOpen("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
       return;
     }
 

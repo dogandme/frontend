@@ -319,15 +319,13 @@ const SubmitButton = ({
     } = petInfoForm;
 
     if (isCompressing) {
-      // TODO 에러 바운더리 생성되면 로직 변경하기
-      console.error("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      handleOpenSnackbar("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
       return;
     }
 
     const isNameEmpty = name.length === 0;
     const isBreedEmpty = breed.length === 0;
 
-    // TODO 에러 바운더리 생성되면 로직 변경하기
     if (!isValidName || isNameEmpty || isBreedEmpty) {
       handleOpenSnackbar("필수 항목을 모두 입력해 주세요");
       return;

@@ -23,7 +23,6 @@ export const useDeleteAccount = () => {
       window.location.href = ROUTER_PATH.MAIN;
     },
     onError: (error) => {
-      // TODO 에러바운더리 로직 나오면 변경 하기
       console.error(error);
     },
   });
