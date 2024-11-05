@@ -1,11 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useTransition, useEffect } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { SelectChip } from "@/shared/ui/chip";
-import { EditIcon } from "@/shared/ui/icon";
+import { EditIcon, SearchIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
@@ -204,9 +204,6 @@ const BreedInput = () => {
   const setBreed = usePetInformationFormStore((state) => state.setBreed);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const onOpen = () => setIsOpen(true);
-  const onClose = () => setIsOpen(false);
-
   return (
     <>
       <div className="flex w-full flex-col gap-[10px]">
@@ -216,7 +213,7 @@ const BreedInput = () => {
           essential
           value={breed}
           placeholder="품종을 선택해 주세요"
-          onClick={onOpen}
+          onClick={() => setIsOpen(true)}
           disabled={breed === "모르겠어요"}
         />
         <Checkbox
@@ -234,24 +231,85 @@ const BreedInput = () => {
           <span className="btn-3 text-center text-grey-500">모르겠어요</span>
         </Checkbox>
       </div>
-      <Select isOpen={isOpen} onClose={onClose}>
-        <Select.BottomSheet>
-          <Input id="search" componentType="searchText" />
-          <Select.OptionList>
-            {dogBreeds.map((value, idx) => (
-              <Select.Option
-                key={idx}
-                id={value}
-                onClick={() => setBreed(value)}
-                isSelected={value === breed}
-              >
-                {value}
-              </Select.Option>
-            ))}
-          </Select.OptionList>
-        </Select.BottomSheet>
-      </Select>
+      <BreedBottomSheet
+        breed={breed}
+        handleSelect={setBreed}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
     </>
+  );
+};
+
+interface BreedBottomSheetProps {
+  breed: PetInformationFormExternalState["breed"];
+  handleSelect: (breed: PetInformationFormExternalState["breed"]) => void;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const BreedBottomSheet = ({
+  breed,
+  handleSelect,
+  onClose,
+  isOpen,
+}: BreedBottomSheetProps) => {
+  const [text, setText] = useState<string>("");
+  const [, startTransition] = useTransition();
+
+  const searchedBreeds = dogBreeds.filter((breed) => {
+    if (text.length === 0) {
+      return true;
+    }
+    const trimedBreed = breed.replace(/\s/g, "");
+    return trimedBreed.includes(text.replace(/\s/g, ""));
+  });
+
+  useEffect(() => {
+    if (!isOpen) {
+      setText("");
+    }
+  }, [isOpen]);
+
+  return (
+    <Select isOpen={isOpen} onClose={onClose}>
+      <Select.BottomSheet>
+        <Input
+          id="search"
+          componentType="searchText"
+          placeholder="찾으시는 품종을 입력해주세요"
+          leadingNode={<SearchIcon />}
+          onChange={({ target }) => {
+            startTransition(() => {
+              setText(target.value);
+            });
+          }}
+        />
+        <Select.OptionList
+          className="h-screen"
+          style={{
+            justifyContent: "start",
+          }}
+        >
+          <Select.Option
+            onClick={() => handleSelect("해당하는 품종 없음")}
+            isSelected={breed === "해당하는 품종 없음"}
+          >
+            해당하는 품종 없음
+          </Select.Option>
+          {searchedBreeds.map((value, idx) => (
+            <Select.Option
+              key={idx}
+              id={value}
+              onClick={() => handleSelect(value)}
+              isSelected={value === breed}
+            >
+              {value}
+            </Select.Option>
+          ))}
+        </Select.OptionList>
+      </Select.BottomSheet>
+    </Select>
   );
 };
 
