@@ -86,7 +86,7 @@ const ProfileInput = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const backgroundUrl = profile.url
-    ? profile.url.startsWith("blob")
+    ? profile.url.startsWith("blob") || profile.url === "/default-image.png"
       ? profile.url
       : `${API_BASE_URL}/pets/image/${profile.url}`
     : MASCOT_IMAGE_URL;
@@ -236,6 +236,7 @@ const BreedInput = () => {
       </div>
       <Select isOpen={isOpen} onClose={onClose}>
         <Select.BottomSheet>
+          <Input id="search" componentType="searchText" />
           <Select.OptionList>
             {dogBreeds.map((value, idx) => (
               <Select.Option
