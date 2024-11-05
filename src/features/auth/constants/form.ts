@@ -76,7 +76,6 @@ export const ageRangeOptionList = [
 ] as const;
 
 export const dogBreeds = [
-  "해당하는 품종 없음",
   "가스콘 세인트 종",
   "가스코뉴 푸아트방",
   "가이아나쿠르세르",
