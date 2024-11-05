@@ -26,20 +26,21 @@ export interface GetMyLikedMarkingListResponse {
   };
 }
 
-export const useGetMyLikedMarkingList = () => {
+export const useGetMyLikedMarkingList = ({ enabled }: { enabled: boolean }) => {
   const { token } = useAuthStore.getState();
 
   return useInfiniteQuery({
     queryKey: ["myLikedMarkingList"],
-    queryFn: token
-      ? ({ pageParam = 0 }) =>
-          apiClient.get<GetMyLikedMarkingListResponse>(
-            MARKING_END_POINT.MY_LIKED({ offset: pageParam }),
-            {
-              withToken: true,
-            },
-          )
-      : skipToken,
+    queryFn:
+      token && enabled
+        ? ({ pageParam = 0 }) =>
+            apiClient.get<GetMyLikedMarkingListResponse>(
+              MARKING_END_POINT.MY_LIKED({ offset: pageParam }),
+              {
+                withToken: true,
+              },
+            )
+        : skipToken,
     getNextPageParam: ({ totalPages, pageAble }) => {
       return pageAble.pageNumber < totalPages - 1
         ? pageAble.pageNumber + 1
@@ -47,9 +48,7 @@ export const useGetMyLikedMarkingList = () => {
     },
     initialPageParam: 0,
     select: (data) => data.pages.flatMap((page) => page.markings),
-
     refetchOnWindowFocus: false,
-
     gcTime: 0,
   });
 };
