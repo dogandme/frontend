@@ -1,4 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import {
+  type InfiniteData,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useMapMode } from "@/features/map/hooks";
+import { GetMySavedMarkingListResponse } from "@/entities/marking/api";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
@@ -13,7 +19,37 @@ const deleteSavedMarking = async ({ markingId }: DeleteSavedMarkingRequest) => {
 };
 
 export const useDeleteSavedMarking = () => {
+  const queryClient = useQueryClient();
+  const mode = useMapMode();
+
   return useMutation<unknown, Error, DeleteSavedMarkingRequest>({
     mutationFn: deleteSavedMarking,
+    onSuccess: (_, { markingId }) => {
+      if (mode === "MY_ACTIVITY") {
+        queryClient.setQueryData<InfiniteData<GetMySavedMarkingListResponse>>(
+          ["mySavedMarkingList"],
+          (oldData) => {
+            if (!oldData) return oldData;
+
+            const { pages } = oldData;
+            const newPages = pages.map((page) => ({
+              ...page,
+              markings: page.markings.filter(
+                (marking) => marking.markingId !== markingId,
+              ),
+            }));
+
+            return {
+              ...oldData,
+              pages: newPages,
+            };
+          },
+        );
+
+        queryClient.invalidateQueries({
+          queryKey: ["mySavedMarkingList"],
+        });
+      }
+    },
   });
 };

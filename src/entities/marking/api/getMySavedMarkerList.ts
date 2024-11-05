@@ -4,11 +4,11 @@ import { useAuthStore } from "@/shared/store";
 import { MARKING_END_POINT } from "../constants";
 import type { Marking } from "./getMarkingList";
 
-export interface GetMyLikedMarkingListRequest {
+export interface GetMySavedMarkingListRequest {
   offset: number;
 }
 
-export interface GetMyLikedMarkingListResponse {
+export interface GetMySavedMarkingListResponse {
   markings: Marking[];
   totalElements: number;
   totalPages: number;
@@ -26,15 +26,15 @@ export interface GetMyLikedMarkingListResponse {
   };
 }
 
-export const useGetMyLikedMarkingList = ({ enabled }: { enabled: boolean }) => {
+export const useGetMySavedMarkingList = ({ enabled }: { enabled: boolean }) => {
   const { token } = useAuthStore.getState();
 
   return useInfiniteQuery({
-    queryKey: ["myLikedMarkingList"],
+    queryKey: ["mySavedMarkingList"],
     queryFn:
       token && enabled
         ? ({ pageParam = 0 }) =>
-            apiClient.get<GetMyLikedMarkingListResponse>(
+            apiClient.get<GetMySavedMarkingListResponse>(
               MARKING_END_POINT.MY_LIKED({ offset: pageParam }),
               {
                 withToken: true,
@@ -48,6 +48,8 @@ export const useGetMyLikedMarkingList = ({ enabled }: { enabled: boolean }) => {
     },
     initialPageParam: 0,
     select: (data) => data.pages.flatMap((page) => page.markings),
+
+    enabled,
     refetchOnWindowFocus: false,
     gcTime: 0,
   });

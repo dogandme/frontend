@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem } from "@/features/marking/ui";
-import { useGetMyLikedMarkingList } from "@/entities/marking/api";
+import { useGetMyActivityMarkingList } from "@/entities/marking/hooks";
 import { useInfiniteScroll } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MarkingList } from "./markingList";
@@ -9,12 +10,14 @@ export const MyActivityList = () => {
   const map = useMap();
   const token = useAuthStore((state) => state.token);
 
+  const [activeTab, setActiveTab] = useState<"LIKED" | "SAVED">("LIKED");
+
   const {
-    data: myLikedMarkingList,
+    data: markingList,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetMyLikedMarkingList();
+  } = useGetMyActivityMarkingList(activeTab);
 
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -30,16 +33,24 @@ export const MyActivityList = () => {
   return (
     <div className="px-4">
       <div className="p-4 flex gap-4">
-        <button type="button" className="title-1 text-grey-900">
+        <button
+          type="button"
+          className={`title-1 ${activeTab === "LIKED" ? "text-grey-900" : "text-grey-300"}`}
+          onClick={() => setActiveTab("LIKED")}
+        >
           좋아요
         </button>
-        <button type="button" className="title-1 text-grey-300">
+        <button
+          type="button"
+          className={`title-1 ${activeTab === "SAVED" ? "text-grey-900" : "text-grey-300"}`}
+          onClick={() => setActiveTab("SAVED")}
+        >
           저장됨
         </button>
       </div>
 
       <MarkingList display="list">
-        {myLikedMarkingList?.map((marking) => (
+        {markingList?.map((marking) => (
           <MarkingItem
             key={marking.markingId}
             onRegionClick={() => {
@@ -52,6 +63,8 @@ export const MyActivityList = () => {
             // todo isLiked, isBookmarked 설정
             isLiked={false}
             isBookmarked={false}
+            // todo isFollowing 삭제
+            isFollowing={false}
             {...marking}
           />
         ))}
