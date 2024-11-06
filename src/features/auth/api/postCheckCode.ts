@@ -1,4 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import {
+  type MutationState,
+  useMutation,
+  useMutationState,
+} from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { SIGN_UP_END_POINT } from "../constants";
 
@@ -14,10 +18,27 @@ const postCheckCode = async ({ email, authNum }: PostCheckCodeRequest) => {
   });
 };
 
+const mutationKey = ["checkVerificationCode"];
+
 export const usePostCheckCode = () => {
   return useMutation<unknown, Error, PostCheckCodeRequest>({
+    mutationKey,
     mutationFn: postCheckCode,
-    mutationKey: ["checkVerificationCode"],
     gcTime: 0,
   });
+};
+
+export const usePostCheckCodeState = () => {
+  const mutationState = useMutationState<
+    MutationState<unknown, Error, PostCheckCodeRequest>
+  >({
+    filters: {
+      mutationKey,
+      exact: true,
+    },
+  });
+
+  const lastMutationState = mutationState[mutationState.length - 1];
+
+  return lastMutationState;
 };
