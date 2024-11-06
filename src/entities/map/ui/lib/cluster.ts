@@ -258,6 +258,11 @@ export const useKMeansClustering = <T extends Marker>() => {
     // 클러스터링 된 마커들과 단일 마커들을 구분지어 반환 합니다.
     const [clusteredMarkers, singleMarker] = clusters.reduce(
       ([clusteredMarkers, singleMarkers], cluster) => {
+        // 줌 레벨이 특정 값 이하일 때는 모든 데이터를 클러스터로 표현합니다.
+        if (zoom <= 14) {
+          return [[...clusteredMarkers, cluster], singleMarkers];
+        }
+
         if (cluster.markers.length === 1) {
           return [
             clusteredMarkers,
