@@ -37,12 +37,12 @@ export const PlaceMarkingList = () => {
     }
   });
 
+  const map = useMap();
+
   // TODO 로딩 상태 구현 하기
   if (!markingList || !myFollowingMap) {
     return null;
   }
-
-  const map = useMap();
 
   return (
     <>

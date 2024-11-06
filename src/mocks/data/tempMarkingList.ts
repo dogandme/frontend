@@ -44,7 +44,7 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
           Math.random() > 0.3
             ? "PUBLIC"
             : Math.random() > 0.3
-              ? "FOLLOWERS_ONLY"
+              ? "FOLLOW_ONLY"
               : "PRIVATE",
         regDt: randomDate.toISOString(),
         previewImage:
