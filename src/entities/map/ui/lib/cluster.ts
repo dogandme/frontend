@@ -1,11 +1,17 @@
 import { type Bounds } from "@/features/map/hooks";
+import { useMapStore } from "@/features/map/store";
 
 interface LatLng {
   lat: number;
   lng: number;
 }
 
-class Cluster<T extends LatLng> {
+export interface Marker extends LatLng {
+  markingId: number;
+  previewImage: string;
+}
+
+export class Cluster<T extends Marker> {
   outliers: T[] = [];
   markers: T[];
   center: LatLng = { lat: 0, lng: 0 };
@@ -13,6 +19,9 @@ class Cluster<T extends LatLng> {
   // bounds는 해당 클러스터 내부 마커들의 바운더리를 의미합니다.
   markerBounds: Bounds;
   bounds: Bounds;
+  markerCount: number = 0;
+  previewImage: string = "";
+  markingId: number = 0;
 
   private mean: LatLng = {
     lat: 0,
@@ -40,10 +49,11 @@ class Cluster<T extends LatLng> {
   }
   /**
    * lat , lng 값의 범위가 다르기에 거리 계산 전 표준화를 시행 합니다.
+   *
    */
   private minMaxScaling({ lat, lng }: LatLng) {
     const { northEastLat, northEastLng, southWestLat, southWestLng } =
-      this.bounds;
+      this.markerBounds;
     if (!northEastLat || !northEastLng || !southWestLat || !southWestLng) {
       return { lat, lng };
     }
@@ -176,71 +186,94 @@ class Cluster<T extends LatLng> {
     );
     // 새로운 중심점을 이용해 통계값을 계산합니다.
     this.updateStatisticValue();
-    // 모인 마커들을 이용해 해당 클러스터의 bounds 계산합니다.
+
     this.bounds = Cluster.getBounds(this.markers);
+    this.markerCount = this.markers.length;
+    this.previewImage = this.markers[0]?.previewImage;
+    this.markingId = this.markers[0]?.markingId;
+
     return (
       prevCenter.lat !== this.center.lat || prevCenter.lng !== this.center.lng
     );
   }
 }
 
-export const getClusteredMarkers = <T extends LatLng>(
-  markers: T[],
-  numOfCluster: number,
-): [Cluster<T>[], T[]] => {
-  // 존재하는 마커들의 바운스를 계산합니다.
-  const bounds = Cluster.getBounds(markers);
-  // K개의 클러스터를 생성합니다.
-  // TODO 휴리스틱한 방식으로 초기값 뽑기
-  const randomIndexMap: Record<number, boolean> = {};
-  const clusters = Array.from({ length: numOfCluster }, () => {
-    let randomIndex;
-    do {
-      randomIndex = Math.floor(Math.random() * markers.length);
-    } while (randomIndexMap[randomIndex]);
+const CLUSTER_NUM_MAP: { [key: number]: number } = {
+  10: 7,
+  11: 7,
+  12: 8,
+  13: 8,
+  14: 9,
+  15: 9,
+  16: 20,
+  17: 24,
+  18: 34,
+  19: 40,
+};
 
-    randomIndexMap[randomIndex] = true;
-    return new Cluster(markers[randomIndex], bounds);
-  });
+export const useKMeansClustering = <T extends Marker>() => {
+  const zoom = useMapStore((state) => state.zoom);
 
-  let isChanged = true;
-  while (isChanged) {
-    clusters.forEach((cluster) => cluster.clearMarkers());
+  const getClusteredMarkers = (
+    markers: T[],
+  ): { clusteredMarkers: Cluster<T>[]; singleMarker: T[] } => {
+    const numOfCluster = Math.min(CLUSTER_NUM_MAP[zoom], markers.length);
+    const bounds = Cluster.getBounds(markers);
 
-    markers.forEach((marker) => {
-      const [, closestClusterIndex] = clusters.reduce(
-        ([minDistance, minClusterIndex], cluster, index) => {
-          const distance = cluster.calculateDistance(marker);
-          return distance < minDistance
-            ? [distance, index]
-            : [minDistance, minClusterIndex];
-        },
-        [Infinity, -1],
-      );
-      // 가장 가까운 클러스터에게 마커를 추가합니다.
-      clusters[closestClusterIndex].addMarker(marker);
+    // K개의 클러스터를 생성합니다.
+    // TODO 휴리스틱한 방식으로 초기값 뽑기
+    const randomIndexMap: Record<number, boolean> = {};
+    const clusters = Array.from({ length: numOfCluster }, () => {
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * markers.length);
+      } while (randomIndexMap[randomIndex]);
+
+      randomIndexMap[randomIndex] = true;
+      return new Cluster(markers[randomIndex], bounds);
     });
-    // 클러스터의 중심점을 재조정합니다.
-    // 이 때 모든 클러스터의 중심점이 재조정 되지 않았다면 반복문을 종료 합니다.
-    isChanged = clusters.some((cluster) => cluster.revalidateCluster());
-  }
 
-  // 클러스터링 된 마커들과 단일 마커들을 구분지어 반환 합니다.
-  const [clusteredMarkers, singleMarkers] = clusters.reduce(
-    ([clusteredMarkers, singleMarkers], cluster) => {
-      if (cluster.markers.length === 1) {
+    let isChanged = true;
+    while (isChanged) {
+      clusters.forEach((cluster) => cluster.clearMarkers());
+
+      markers.forEach((marker) => {
+        const [, closestClusterIndex] = clusters.reduce(
+          ([minDistance, minClusterIndex], cluster, index) => {
+            const distance = cluster.calculateDistance(marker);
+            return distance < minDistance
+              ? [distance, index]
+              : [minDistance, minClusterIndex];
+          },
+          [Infinity, -1],
+        );
+        // 가장 가까운 클러스터에게 마커를 추가합니다.
+        clusters[closestClusterIndex].addMarker(marker);
+      });
+      // 클러스터의 중심점을 재조정합니다.
+      // 이 때 모든 클러스터의 중심점이 재조정 되지 않았다면 반복문을 종료 합니다.
+      isChanged = clusters.some((cluster) => cluster.revalidateCluster());
+    }
+
+    // 클러스터링 된 마커들과 단일 마커들을 구분지어 반환 합니다.
+    const [clusteredMarkers, singleMarker] = clusters.reduce(
+      ([clusteredMarkers, singleMarkers], cluster) => {
+        if (cluster.markers.length === 1) {
+          return [
+            clusteredMarkers,
+            [...singleMarkers, ...cluster.markers, ...cluster.outliers],
+          ];
+        }
         return [
-          clusteredMarkers,
-          [...singleMarkers, ...cluster.markers, ...cluster.outliers],
+          [...clusteredMarkers, cluster],
+          [...singleMarkers, ...cluster.outliers],
         ];
-      }
-      return [
-        [...clusteredMarkers, cluster],
-        [...singleMarkers, ...cluster.outliers],
-      ];
-    },
-    [[], []] as [Cluster<T>[], T[]],
-  );
+      },
+      [[], []] as [Cluster<T>[], T[]],
+    );
 
-  return [clusteredMarkers, singleMarkers];
+    return { clusteredMarkers, singleMarker };
+  };
+
+  return getClusteredMarkers;
 };
