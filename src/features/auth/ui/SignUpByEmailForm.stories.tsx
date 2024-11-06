@@ -3,7 +3,7 @@ import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { signUpByEmailHandlers } from "@/mocks/handler";
-import SignUpByEmailForm from "./SignUpByEmailForm";
+import { SignUpByEmailForm } from "./signUpByEmailForm";
 
 const meta: Meta<typeof SignUpByEmailForm> = {
   title: "features/auth/SignUpByEmailForm",
