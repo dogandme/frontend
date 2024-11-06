@@ -24,18 +24,25 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const setIsLastSearchedLocation = useMapStore(
     (state) => state.setIsLastSearchedLocation,
   );
-  const setZoom = useMapStore((state) => state.setZoom);
-  const debouncedZoomChange = debounce(
-    (zoom: number) => setZoom(Math.floor(zoom)),
-    500,
-  );
+  const setMapInfo = useMapStore((state) => state.setMapInfo);
+  const debouncedSetMapInfo = debounce(setMapInfo, 1000);
 
   const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
     if (!isTilesLoadedRef.current) return;
+    const { center, zoom, bounds } = detail;
 
     setIsLastSearchedLocation(false);
     setIsMapCenteredOnMyLocation(false);
-    debouncedZoomChange(detail.zoom);
+    debouncedSetMapInfo({
+      center: center,
+      zoom: Math.floor(zoom),
+      bounds: {
+        northEastLat: bounds.north,
+        northEastLng: bounds.east,
+        southWestLat: bounds.south,
+        southWestLng: bounds.west,
+      },
+    });
   };
 
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.

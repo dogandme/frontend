@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import { MAP_INITIAL_ZOOM } from "../constants";
+import {
+  MAP_INITIAL_BOUNDS,
+  MAP_INITIAL_CENTER,
+  MAP_INITIAL_ZOOM,
+} from "../constants";
+import { Bounds } from "../hooks";
 
 export interface LatLng {
   lat: number;
@@ -8,6 +13,7 @@ export interface LatLng {
 export interface MapInfo {
   center: LatLng;
   zoom: number;
+  bounds: NonNullableBounds;
 }
 type Mode = "view" | "add";
 
@@ -19,13 +25,17 @@ interface UserInfo {
   hasLocationPermission: boolean;
 }
 
+export type NonNullableBounds = {
+  [key in keyof Bounds]: NonNullable<Bounds[key]>;
+};
+
 interface MapState {
   isIdle: boolean;
   userInfo: UserInfo;
   mode: Mode;
   isCenterOnMyLocation: boolean;
   isLastSearchedLocation: boolean;
-  zoom: number;
+  mapInfo: MapInfo;
 }
 
 interface MapActions {
@@ -34,7 +44,7 @@ interface MapActions {
   setMode: (mode: Mode) => void;
   setIsCenterOnMyLocation: (isCenterOnMyLocation: boolean) => void;
   setIsLastSearchedLocation: (isLastSearchedLocation: boolean) => void;
-  setZoom: (zoom: number) => void;
+  setMapInfo: (mapInfo: MapInfo) => void;
 }
 
 const mapStoreInitialState: MapState = {
@@ -46,7 +56,16 @@ const mapStoreInitialState: MapState = {
   mode: "view",
   isCenterOnMyLocation: false,
   isLastSearchedLocation: true,
-  zoom: MAP_INITIAL_ZOOM,
+  mapInfo: {
+    center: MAP_INITIAL_CENTER,
+    zoom: MAP_INITIAL_ZOOM,
+    bounds: {
+      northEastLat: MAP_INITIAL_BOUNDS.east,
+      northEastLng: MAP_INITIAL_BOUNDS.north,
+      southWestLat: MAP_INITIAL_BOUNDS.west,
+      southWestLng: MAP_INITIAL_BOUNDS.south,
+    },
+  },
 };
 
 export const useMapStore = create<MapState & MapActions>((set) => ({
@@ -58,5 +77,5 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setIsLastSearchedLocation: (isLastSearchedLocation) =>
     set({ isLastSearchedLocation }),
   setIsIdle: (isIdle) => set({ isIdle }),
-  setZoom: (zoom) => set({ zoom }),
+  setMapInfo: (mapInfo) => set({ mapInfo }),
 }));
