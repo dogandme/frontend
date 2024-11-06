@@ -13,6 +13,41 @@ import {
 } from "../api";
 import { useSignUpByEmailFormStore } from "../store";
 
+const Timer = () => {
+  const INTERVAL = 1000;
+
+  const timeLeft = useSignUpByEmailFormStore((state) => state.timeLeft);
+  const setTimeLeft = useSignUpByEmailFormStore((state) => state.setTimeLeft);
+
+  const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
+    2,
+    "0",
+  );
+  const seconds = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(timeLeft - INTERVAL);
+    }, INTERVAL);
+
+    if (timeLeft === 0) {
+      clearInterval(timer);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [timeLeft, setTimeLeft]);
+
+  return (
+    <span
+      className={`body-2 ${timeLeft === 0 ? "text-pink-500" : "text-grey-700"}`}
+    >
+      {minutes}:{seconds}
+    </span>
+  );
+};
+
 const Email = () => {
   const handleOpenSnackbar = useSnackBar();
 
@@ -172,13 +207,11 @@ const VerificationCode = () => {
     (state) => state.setVerificationCode,
   );
   const timeLeft = useSignUpByEmailFormStore((state) => state.timeLeft);
-  const setTimeLeft = useSignUpByEmailFormStore((state) => state.setTimeLeft);
 
   const verificationCodeRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const CODE_LENGTH = 7;
-  const INTERVAL = 1000;
 
   const {
     mutate: postCheckCode,
@@ -237,33 +270,10 @@ const VerificationCode = () => {
   useEffect(() => {
     if (!isSuccessSendCode || isSuccessCheckCode) return;
 
-    const timer = setInterval(() => {
-      setTimeLeft(timeLeft - INTERVAL);
-    }, INTERVAL);
-
-    if (isTimeOver || hasEmailChangedSinceSendCodeRequest) {
+    if (isTimeOver) {
       setVerificationCode("");
-      clearInterval(timer);
     }
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [
-    timeLeft,
-    setTimeLeft,
-    isSuccessSendCode,
-    setVerificationCode,
-    isTimeOver,
-    hasEmailChangedSinceSendCodeRequest,
-    isSuccessCheckCode,
-  ]);
-
-  const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
-    2,
-    "0",
-  );
-  const seconds = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
+  }, [isSuccessSendCode, isTimeOver, isSuccessCheckCode, setVerificationCode]);
 
   let statusText = "인증코드 7자리를 입력해 주세요";
   if (isSuccessCheckCode) statusText = "인증되었습니다";
@@ -294,16 +304,7 @@ const VerificationCode = () => {
             (isSuccessSendCode && hasEmailChangedSinceSendCodeRequest) ||
             isSuccessCheckCode
           }
-          trailingNode={
-            isSuccessSendCode &&
-            !isSuccessCheckCode && (
-              <span
-                className={`body-2 ${isTimeOver ? "text-pink-500" : "text-grey-700"}`}
-              >
-                {minutes}:{seconds}
-              </span>
-            )
-          }
+          trailingNode={isSuccessSendCode && !isSuccessCheckCode && <Timer />}
         />
         <Button
           type="button"
