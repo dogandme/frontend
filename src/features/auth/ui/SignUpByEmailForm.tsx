@@ -432,6 +432,9 @@ const PasswordConfirm = () => {
 };
 
 const SignUpByEmailForm = () => {
+  const resetStore = useSignUpByEmailFormStore(
+    (state) => state.resetSignUpByEmailFormStore,
+  );
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
 
   const handleOpenSnackbar = useSnackBar();
@@ -467,6 +470,10 @@ const SignUpByEmailForm = () => {
 
     if (canSignUp) postSignUpByEmail({ email, password });
   };
+
+  useEffect(() => {
+    resetStore();
+  }, []);
 
   return (
     <form className="flex flex-col gap-8 self-stretch" onSubmit={handleSubmit}>
