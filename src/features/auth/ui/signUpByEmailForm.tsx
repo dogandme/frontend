@@ -210,9 +210,10 @@ const VerificationCode = () => {
     variables?.authNum !== verificationCode;
 
   const sendCodeState = usePostSendCodeState();
-  const isErrorSendCode = sendCodeState?.status === "error";
-  const isSuccessSendCode = sendCodeState?.status === "success";
-  const hasSentCode = !!sendCodeState?.variables;
+  const isErrorSendCode = sendCodeState?.status === "error" && !isEmailModified;
+  const isSuccessSendCode =
+    sendCodeState?.status === "success" && !isEmailModified;
+  const hasSentCode = !!sendCodeState?.variables && !isEmailModified;
 
   const isTimeOver = timeLeft === 0 && isSuccessSendCode;
 
