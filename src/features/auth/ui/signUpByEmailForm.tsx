@@ -48,8 +48,6 @@ const Timer = () => {
 };
 
 const Email = () => {
-  const handleOpenSnackbar = useSnackBar();
-
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const isEmailEmpty = useSignUpByEmailFormStore((state) => state.isEmailEmpty);
@@ -57,20 +55,16 @@ const Email = () => {
   const isEmailModified = useSignUpByEmailFormStore(
     (state) => state.isEmailModified,
   );
-  const isTimeLeftLessThanOneMinute = useSignUpByEmailFormStore(
-    (state) => state.isTimeLeftLessThanOneMinute,
+  const { setEmail, setIsEmailModified } = useSignUpByEmailFormStore(
+    (state) => state.actions,
   );
-  const { setEmail, setIsEmailModified, setTimeLeft } =
-    useSignUpByEmailFormStore((state) => state.actions);
 
-  const {
-    mutate: postVerificationCode,
-    isSuccess: isSuccessSendCode,
-    isIdle: isIdleSendCode,
-    variables,
-    error,
-  } = usePostSendCode();
+  // 인증 코드 전송 상태
+  const sendCodeState = usePostSendCodeState();
+  const isDuplicateEmail =
+    sendCodeState?.error?.code === 409 && !isEmailModified;
 
+  // 인증 코드 확인 상태
   const checkCodeState = usePostCheckCodeState();
   const isSuccessCheckCode = checkCodeState?.status === "success";
 
@@ -79,34 +73,9 @@ const Email = () => {
 
     setEmail(email);
 
-    if (typeof variables !== "undefined") {
-      setIsEmailModified(variables.email !== email);
+    if (typeof sendCodeState?.variables !== "undefined") {
+      setIsEmailModified(sendCodeState?.variables?.email !== email);
     }
-  };
-
-  const isDuplicateEmail = error?.code === 409 && !isEmailModified;
-
-  const canNotResendCode =
-    isSuccessSendCode &&
-    !isEmailModified &&
-    (!isTimeLeftLessThanOneMinute || isSuccessCheckCode);
-
-  const handleSendVerificationCode = () => {
-    const { email } = useSignUpByEmailFormStore.getState();
-
-    postVerificationCode(
-      { email },
-      {
-        onSuccess: () => {
-          handleOpenSnackbar("메일로 인증코드가 전송되었습니다");
-          setTimeLeft(1000 * 60 * 3);
-          setIsEmailModified(false);
-        },
-        onError: () => {
-          setIsEmailModified(false);
-        },
-      },
-    );
   };
 
   const shouldShowEmailStatusText =
@@ -140,38 +109,7 @@ const Email = () => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
-        {isIdleSendCode ? (
-          <Button
-            type="button"
-            colorType="secondary"
-            variant="filled"
-            size="medium"
-            fullWidth={false}
-            className="w-[6.5rem]"
-            onClick={handleSendVerificationCode}
-            disabled={!isValidEmail || isDuplicateEmail || isSuccessCheckCode}
-          >
-            코드전송
-          </Button>
-        ) : (
-          <Button
-            type="button"
-            colorType="secondary"
-            variant="filled"
-            size="medium"
-            fullWidth={false}
-            className="w-[6.5rem]"
-            onClick={handleSendVerificationCode}
-            disabled={
-              !isValidEmail ||
-              isDuplicateEmail ||
-              isSuccessCheckCode ||
-              canNotResendCode
-            }
-          >
-            재전송
-          </Button>
-        )}
+        <SendCodeButton />
       </div>
       {shouldShowEmailStatusText && (
         <p className={`body-3 pl-1 pr-3 pt-1 h-6 ${statusTextColorStyle}`}>
@@ -179,6 +117,88 @@ const Email = () => {
         </p>
       )}
     </div>
+  );
+};
+
+const SendCodeButton = () => {
+  const handleOpenSnackbar = useSnackBar();
+
+  const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
+  const isEmailModified = useSignUpByEmailFormStore(
+    (state) => state.isEmailModified,
+  );
+  const isTimeLeftLessThanOneMinute = useSignUpByEmailFormStore(
+    (state) => state.isTimeLeftLessThanOneMinute,
+  );
+  const { setIsEmailModified, setTimeLeft } = useSignUpByEmailFormStore(
+    (state) => state.actions,
+  );
+
+  const {
+    mutate: postVerificationCode,
+    isSuccess,
+    isIdle,
+    error,
+  } = usePostSendCode();
+  const isSuccessSendCode = isSuccess && !isEmailModified;
+  const isDuplicateEmail = error?.code === 409 && !isEmailModified;
+
+  const checkCodeState = usePostCheckCodeState();
+  const isSuccessCheckCode = checkCodeState?.status === "success";
+
+  const handleSendVerificationCode = () => {
+    const { email } = useSignUpByEmailFormStore.getState();
+
+    postVerificationCode(
+      { email },
+      {
+        onSuccess: () => {
+          handleOpenSnackbar("메일로 인증코드가 전송되었습니다");
+          setTimeLeft(1000 * 60 * 3);
+          setIsEmailModified(false);
+        },
+        onError: () => {
+          setIsEmailModified(false);
+        },
+      },
+    );
+  };
+
+  const canSendCode = isValidEmail && !isDuplicateEmail;
+
+  if (isIdle) {
+    return (
+      <Button
+        type="button"
+        colorType="secondary"
+        variant="filled"
+        size="medium"
+        fullWidth={false}
+        className="w-[6.5rem]"
+        onClick={handleSendVerificationCode}
+        disabled={!canSendCode || isSuccessCheckCode}
+      >
+        코드전송
+      </Button>
+    );
+  }
+
+  const canResendCode =
+    isEmailModified || (isSuccessSendCode && isTimeLeftLessThanOneMinute);
+
+  return (
+    <Button
+      type="button"
+      colorType="secondary"
+      variant="filled"
+      size="medium"
+      fullWidth={false}
+      className="w-[6.5rem]"
+      onClick={handleSendVerificationCode}
+      disabled={!canSendCode || !canResendCode || isSuccessCheckCode}
+    >
+      재전송
+    </Button>
   );
 };
 
@@ -244,12 +264,19 @@ const VerificationCode = () => {
   };
 
   useEffect(() => {
+    if (isEmailModified) setVerificationCode("");
     if (!isSuccessSendCode || isSuccessCheckCode) return;
 
     if (isTimeOver) {
       setVerificationCode("");
     }
-  }, [isSuccessSendCode, isTimeOver, isSuccessCheckCode, setVerificationCode]);
+  }, [
+    isSuccessSendCode,
+    isEmailModified,
+    isTimeOver,
+    isSuccessCheckCode,
+    setVerificationCode,
+  ]);
 
   let statusText = "인증코드 7자리를 입력해 주세요";
   if (isSuccessCheckCode) statusText = "인증되었습니다";

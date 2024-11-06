@@ -28,7 +28,7 @@ export const usePostSendCode = () => {
 
 export const usePostSendCodeState = () => {
   const mutationState = useMutationState<
-    MutationState<unknown, Error, PostSendCodeRequest>
+    MutationState<unknown, HttpError, PostSendCodeRequest>
   >({
     filters: {
       mutationKey,
