@@ -16,5 +16,6 @@ export const usePostSendCode = () => {
   return useMutation<unknown, Error, PostSendCodeRequest>({
     mutationFn: postSendCode,
     mutationKey: ["sendVerificationCode"],
+    gcTime: 0,
   });
 };

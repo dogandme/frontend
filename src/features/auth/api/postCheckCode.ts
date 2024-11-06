@@ -18,5 +18,6 @@ export const usePostCheckCode = () => {
   return useMutation<unknown, Error, PostCheckCodeRequest>({
     mutationFn: postCheckCode,
     mutationKey: ["checkVerificationCode"],
+    gcTime: 0,
   });
 };
