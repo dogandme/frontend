@@ -16,10 +16,8 @@ import { useSignUpByEmailFormStore } from "../store";
 const Timer = () => {
   const INTERVAL = 1000;
 
-  const { timeLeft, setTimeLeft } = useSignUpByEmailFormStore((state) => ({
-    timeLeft: state.timeLeft,
-    setTimeLeft: state.setTimeLeft,
-  }));
+  const timeLeft = useSignUpByEmailFormStore((state) => state.timeLeft);
+  const { setTimeLeft } = useSignUpByEmailFormStore((state) => state.actions);
 
   const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
     2,
@@ -60,20 +58,16 @@ const Email = () => {
     isValidEmail,
     hasEmailChangedSinceSendCodeRequest,
     isTimeLeftLessThanOneMinute,
-    setEmail,
-    setHasEmailChangedSinceCodeRequest,
-    setTimeLeft,
   } = useSignUpByEmailFormStore((state) => ({
     isEmailEmpty: state.isEmailEmpty,
     isValidEmail: state.isValidEmail,
     hasEmailChangedSinceSendCodeRequest:
       state.hasEmailChangedSinceSendCodeRequest,
     isTimeLeftLessThanOneMinute: state.isTimeLeftLessThanOneMinute,
-    setEmail: state.setEmail,
-    setHasEmailChangedSinceCodeRequest:
-      state.setHasEmailChangedSinceSendCodeRequest,
-    setTimeLeft: state.setTimeLeft,
   }));
+
+  const { setEmail, setHasEmailChangedSinceSendCodeRequest, setTimeLeft } =
+    useSignUpByEmailFormStore((state) => state.actions);
 
   const {
     mutate: postVerificationCode,
@@ -101,7 +95,7 @@ const Email = () => {
     setEmail(email);
 
     if (typeof variables !== "undefined") {
-      setHasEmailChangedSinceCodeRequest(variables.email !== email);
+      setHasEmailChangedSinceSendCodeRequest(variables.email !== email);
     }
   };
 
@@ -122,10 +116,10 @@ const Email = () => {
         onSuccess: () => {
           handleOpenSnackbar("메일로 인증코드가 전송되었습니다");
           setTimeLeft(1000 * 60 * 3);
-          setHasEmailChangedSinceCodeRequest(false);
+          setHasEmailChangedSinceSendCodeRequest(false);
         },
         onError: () => {
-          setHasEmailChangedSinceCodeRequest(false);
+          setHasEmailChangedSinceSendCodeRequest(false);
         },
       },
     );
@@ -205,18 +199,16 @@ const Email = () => {
 };
 
 const VerificationCode = () => {
-  const {
-    hasEmailChangedSinceSendCodeRequest,
-    verificationCode,
-    setVerificationCode,
-    timeLeft,
-  } = useSignUpByEmailFormStore((state) => ({
-    hasEmailChangedSinceSendCodeRequest:
-      state.hasEmailChangedSinceSendCodeRequest,
-    verificationCode: state.verificationCode,
-    setVerificationCode: state.setVerificationCode,
-    timeLeft: state.timeLeft,
-  }));
+  const { hasEmailChangedSinceSendCodeRequest, verificationCode, timeLeft } =
+    useSignUpByEmailFormStore((state) => ({
+      hasEmailChangedSinceSendCodeRequest:
+        state.hasEmailChangedSinceSendCodeRequest,
+      verificationCode: state.verificationCode,
+      timeLeft: state.timeLeft,
+    }));
+  const { setVerificationCode } = useSignUpByEmailFormStore(
+    (state) => state.actions,
+  );
 
   const verificationCodeRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -345,12 +337,13 @@ const VerificationCode = () => {
 };
 
 const Password = () => {
-  const { setPassword, isPasswordEmpty, isValidPassword } =
-    useSignUpByEmailFormStore((state) => ({
-      setPassword: state.setPassword,
+  const { isPasswordEmpty, isValidPassword } = useSignUpByEmailFormStore(
+    (state) => ({
       isPasswordEmpty: state.isPasswordEmpty,
       isValidPassword: state.isValidPassword,
-    }));
+    }),
+  );
+  const { setPassword } = useSignUpByEmailFormStore((state) => state.actions);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: password } = e.target;
@@ -381,17 +374,18 @@ const Password = () => {
 const PasswordConfirm = () => {
   const {
     confirmPassword,
-    setConfirmPassword,
     isConfirmPasswordEmpty,
     isValidPassword,
     isValidConfirmPassword,
   } = useSignUpByEmailFormStore((state) => ({
     confirmPassword: state.confirmPassword,
-    setConfirmPassword: state.setConfirmPassword,
     isConfirmPasswordEmpty: state.isConfirmPasswordEmpty,
     isValidPassword: state.isValidPassword,
     isValidConfirmPassword: state.isValidConfirmPassword,
   }));
+  const { setConfirmPassword } = useSignUpByEmailFormStore(
+    (state) => state.actions,
+  );
 
   let statusText = "";
 
@@ -437,8 +431,8 @@ const PasswordConfirm = () => {
 };
 
 export const SignUpByEmailForm = () => {
-  const resetStore = useSignUpByEmailFormStore(
-    (state) => state.resetSignUpByEmailFormStore,
+  const { resetSignUpByEmailFormStore } = useSignUpByEmailFormStore(
+    (state) => state.actions,
   );
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
 
@@ -477,7 +471,7 @@ export const SignUpByEmailForm = () => {
   };
 
   useEffect(() => {
-    resetStore();
+    resetSignUpByEmailFormStore();
   }, []);
 
   return (
