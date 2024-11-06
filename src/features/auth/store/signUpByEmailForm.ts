@@ -5,6 +5,7 @@ interface SignUpByEmailFormState {
   email: string;
   isEmailEmpty: boolean;
   isValidEmail: boolean;
+  isEmailModified: boolean;
 
   verificationCode: string;
 
@@ -18,8 +19,6 @@ interface SignUpByEmailFormState {
   confirmPassword: string;
   isConfirmPasswordEmpty: boolean;
   isValidConfirmPassword: boolean;
-
-  hasEmailChangedSinceSendCodeRequest: boolean;
 }
 
 interface SignUpByEmailFormActions {
@@ -33,9 +32,7 @@ interface SignUpByEmailFormActions {
     resetSignUpByEmailFormStore: () => void;
 
     // validation
-    setHasEmailChangedSinceSendCodeRequest: (
-      hasEmailChangedSinceSendCodeRequest: boolean,
-    ) => void;
+    setIsEmailModified: (isEmailModified: boolean) => void;
   };
 }
 
@@ -57,7 +54,7 @@ const initSignUpByEmailFormStore: SignUpByEmailFormState = {
   isConfirmPasswordEmpty: true,
   isValidConfirmPassword: false,
 
-  hasEmailChangedSinceSendCodeRequest: false,
+  isEmailModified: false,
 };
 
 export const useSignUpByEmailFormStore = create<
@@ -96,11 +93,6 @@ export const useSignUpByEmailFormStore = create<
     },
     resetSignUpByEmailFormStore: () => set({ ...initSignUpByEmailFormStore }),
 
-    setHasEmailChangedSinceSendCodeRequest: (
-      hasEmailChangedSinceSendCodeRequest,
-    ) =>
-      set({
-        hasEmailChangedSinceSendCodeRequest,
-      }),
+    setIsEmailModified: (isEmailModified) => set({ isEmailModified }),
   },
 }));

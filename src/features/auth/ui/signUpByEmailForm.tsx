@@ -54,21 +54,21 @@ const Email = () => {
 
   const isEmailEmpty = useSignUpByEmailFormStore((state) => state.isEmailEmpty);
   const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
-  const hasEmailChangedSinceSendCodeRequest = useSignUpByEmailFormStore(
-    (state) => state.hasEmailChangedSinceSendCodeRequest,
+  const isEmailModified = useSignUpByEmailFormStore(
+    (state) => state.isEmailModified,
   );
   const isTimeLeftLessThanOneMinute = useSignUpByEmailFormStore(
     (state) => state.isTimeLeftLessThanOneMinute,
   );
-  const { setEmail, setHasEmailChangedSinceSendCodeRequest, setTimeLeft } =
+  const { setEmail, setIsEmailModified, setTimeLeft } =
     useSignUpByEmailFormStore((state) => state.actions);
 
   const {
     mutate: postVerificationCode,
-    isError: isErrorSendCode,
     isSuccess: isSuccessSendCode,
     isIdle: isIdleSendCode,
     variables,
+    error,
   } = usePostSendCode();
 
   const checkCodeState = usePostCheckCodeState();
@@ -80,16 +80,15 @@ const Email = () => {
     setEmail(email);
 
     if (typeof variables !== "undefined") {
-      setHasEmailChangedSinceSendCodeRequest(variables.email !== email);
+      setIsEmailModified(variables.email !== email);
     }
   };
 
-  const isDuplicateEmail =
-    isErrorSendCode && !hasEmailChangedSinceSendCodeRequest;
+  const isDuplicateEmail = error?.code === 409 && !isEmailModified;
 
   const canNotResendCode =
     isSuccessSendCode &&
-    !hasEmailChangedSinceSendCodeRequest &&
+    !isEmailModified &&
     (!isTimeLeftLessThanOneMinute || isSuccessCheckCode);
 
   const handleSendVerificationCode = () => {
@@ -101,10 +100,10 @@ const Email = () => {
         onSuccess: () => {
           handleOpenSnackbar("메일로 인증코드가 전송되었습니다");
           setTimeLeft(1000 * 60 * 3);
-          setHasEmailChangedSinceSendCodeRequest(false);
+          setIsEmailModified(false);
         },
         onError: () => {
-          setHasEmailChangedSinceSendCodeRequest(false);
+          setIsEmailModified(false);
         },
       },
     );
@@ -184,8 +183,8 @@ const Email = () => {
 };
 
 const VerificationCode = () => {
-  const hasEmailChangedSinceSendCodeRequest = useSignUpByEmailFormStore(
-    (state) => state.hasEmailChangedSinceSendCodeRequest,
+  const isEmailModified = useSignUpByEmailFormStore(
+    (state) => state.isEmailModified,
   );
   const verificationCode = useSignUpByEmailFormStore(
     (state) => state.verificationCode,
@@ -219,7 +218,7 @@ const VerificationCode = () => {
 
   const isCodeNotMatched =
     isErrorCheckCode &&
-    !hasEmailChangedSinceSendCodeRequest &&
+    !isEmailModified &&
     !hasCodeChangedSinceCheckCodeRequest;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -277,7 +276,7 @@ const VerificationCode = () => {
           disabled={
             !hasSentCode ||
             isErrorSendCode ||
-            (isSuccessSendCode && hasEmailChangedSinceSendCodeRequest) ||
+            (isSuccessSendCode && isEmailModified) ||
             isSuccessCheckCode
           }
           trailingNode={isSuccessSendCode && !isSuccessCheckCode && <Timer />}
