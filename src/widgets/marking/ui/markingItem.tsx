@@ -10,7 +10,7 @@ import {
   usePostSaveMarking,
 } from "@/features/marking/api";
 import { useMarkingFormModal } from "@/features/marking/lib";
-import { EditMarkingFormModal } from "@/features/marking/ui/editMarkingFormModal";
+import { EditMarkingFormModal } from "@/features/marking/ui";
 import { API_BASE_URL } from "@/shared/constants";
 import { formatDateToYearMonthDay, useDropdown } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
