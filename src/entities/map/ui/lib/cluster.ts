@@ -155,16 +155,11 @@ class Cluster<T extends LatLng> {
   }
 }
 
-export const useKMeansClustering = <T extends LatLng>(
+export const getClusteredMarkers = <T extends LatLng>(
+  markers: T[],
   numOfCluster: number,
-  markers?: T[],
-) => {
-  const getCurrentBounds = useGetMapCurrentBounds();
-  const bounds = getCurrentBounds();
-  if (!markers) {
-    return [];
-  }
-
+  bounds: Bounds,
+): [Cluster<T>[], T[]] => {
   // K개의 클러스터를 생성합니다.
   // TODO 휴리스틱한 방식으로 초기값 뽑기
   const randomIndexMap: Record<number, boolean> = {};
@@ -180,7 +175,7 @@ export const useKMeansClustering = <T extends LatLng>(
 
   let isChanged = true;
   while (isChanged) {
-    clusters.forEach((cluster) => cluster.clearMarkers());
+    clusters.forEach((cluster) => cluster.clearMarkers()) ;
 
     markers.forEach((marker) => {
       const [, closestClusterIndex] = clusters.reduce(
