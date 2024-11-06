@@ -70,8 +70,14 @@ export const useSignUpByEmailFormStore = create<
         isValidEmail: validateEmail(email),
       }),
     setVerificationCode: (verificationCode) => set({ verificationCode }),
-    setTimeLeft: (timeLeft) =>
-      set({ timeLeft, isTimeLeftLessThanOneMinute: timeLeft <= 1000 * 60 }),
+    setTimeLeft: (timeLeft) => {
+      // 시간이 다 지나면 verificationCode 초기화
+      if (timeLeft === 0) {
+        set({ verificationCode: "" });
+      }
+
+      set({ timeLeft, isTimeLeftLessThanOneMinute: timeLeft <= 1000 * 60 });
+    },
     setPassword: (password) => {
       const { confirmPassword } = get();
 
@@ -93,6 +99,13 @@ export const useSignUpByEmailFormStore = create<
     },
     resetSignUpByEmailFormStore: () => set({ ...initSignUpByEmailFormStore }),
 
-    setIsEmailModified: (isEmailModified) => set({ isEmailModified }),
+    setIsEmailModified: (isEmailModified) => {
+      // 이메일이 수정됐을 경우, verificationCode와 timeLeft 초기화
+      if (isEmailModified) {
+        set({ verificationCode: "", timeLeft: 0 });
+      }
+
+      set({ isEmailModified });
+    },
   },
 }));

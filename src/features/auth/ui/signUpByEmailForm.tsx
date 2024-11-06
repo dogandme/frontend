@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
@@ -92,6 +93,15 @@ const Email = () => {
     : isDuplicateEmail
       ? "이미 가입된 이메일 입니다"
       : "올바른 이메일 형식입니다";
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    // 이메일이 수정되면, mutationKey는 캐시에서 제거됩니다.
+    if (isEmailModified) {
+      queryClient.clear();
+    }
+  }, [isEmailModified, queryClient]);
 
   return (
     <div>
@@ -262,21 +272,6 @@ const VerificationCode = () => {
       },
     );
   };
-
-  useEffect(() => {
-    if (isEmailModified) setVerificationCode("");
-    if (!isSuccessSendCode || isSuccessCheckCode) return;
-
-    if (isTimeOver) {
-      setVerificationCode("");
-    }
-  }, [
-    isSuccessSendCode,
-    isEmailModified,
-    isTimeOver,
-    isSuccessCheckCode,
-    setVerificationCode,
-  ]);
 
   let statusText = "인증코드 7자리를 입력해 주세요";
   if (isSuccessCheckCode) statusText = "인증되었습니다";
@@ -470,7 +465,7 @@ export const SignUpByEmailForm = () => {
 
   useEffect(() => {
     resetSignUpByEmailFormStore();
-  }, []);
+  }, [resetSignUpByEmailFormStore]);
 
   return (
     <form className="flex flex-col gap-8 self-stretch" onSubmit={handleSubmit}>
