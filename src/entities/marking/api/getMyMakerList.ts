@@ -16,7 +16,7 @@ export const useGetMyMakerList = () => {
   const { token } = useAuthStore.getState();
 
   return useQuery({
-    queryKey: ["myMarkerList"],
+    queryKey: ["marker", "myMarkerList"],
     queryFn: token
       ? () => {
           return apiClient.get<GetMyMarkerListResponse>(MARKER_END_POINT.MY, {

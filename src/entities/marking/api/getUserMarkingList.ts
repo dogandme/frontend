@@ -84,8 +84,8 @@ export const useGetUserMarkingList = ({
 
   return useInfiniteQuery({
     queryKey: [
-      nickname,
       "markingList",
+      nickname,
       southWestLat,
       southWestLng,
       northEastLat,

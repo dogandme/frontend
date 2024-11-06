@@ -30,7 +30,7 @@ export const useGetMyLikedMarkingList = ({ enabled }: { enabled: boolean }) => {
   const { token } = useAuthStore.getState();
 
   return useInfiniteQuery({
-    queryKey: ["myLikedMarkingList"],
+    queryKey: ["markingList", "myLikedMarkingList"],
     queryFn:
       token && enabled
         ? ({ pageParam = 0 }) =>
