@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { MutationState, useMutationState } from "@tanstack/react-query";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import {
-  PostSendCodeRequest,
   usePostCheckCode,
   usePostCheckCodeState,
   usePostSendCode,
+  usePostSendCodeState,
   usePostSignUpByEmail,
 } from "../api";
 import { useSignUpByEmailFormStore } from "../store";
@@ -211,21 +210,10 @@ const VerificationCode = () => {
   const hasCodeChangedSinceCheckCodeRequest =
     variables?.authNum !== verificationCode;
 
-  // 인증 코드 전송 요청에 대한 응답 캐시
-  const sendCodeResponseCacheArr = useMutationState<
-    MutationState<unknown, Error, PostSendCodeRequest>
-  >({
-    filters: {
-      mutationKey: ["sendVerificationCode"],
-    },
-  });
-
-  const lastSendCodeResponse =
-    sendCodeResponseCacheArr[sendCodeResponseCacheArr.length - 1];
-  const sendCodeStatus = lastSendCodeResponse?.status;
-  const isErrorSendCode = sendCodeStatus === "error";
-  const isSuccessSendCode = sendCodeStatus === "success";
-  const hasSentCode = !!lastSendCodeResponse?.variables;
+  const sendCodeState = usePostSendCodeState();
+  const isErrorSendCode = sendCodeState?.status === "error";
+  const isSuccessSendCode = sendCodeState?.status === "success";
+  const hasSentCode = !!sendCodeState?.variables;
 
   const isTimeOver = timeLeft === 0 && isSuccessSendCode;
 
