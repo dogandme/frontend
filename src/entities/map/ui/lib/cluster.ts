@@ -1,4 +1,4 @@
-import { type Bounds, useGetMapCurrentBounds } from "@/features/map/hooks";
+import { type Bounds } from "@/features/map/hooks";
 
 interface LatLng {
   lat: number;
@@ -9,7 +9,10 @@ class Cluster<T extends LatLng> {
   outliers: T[] = [];
   markers: T[];
   center: LatLng = { lat: 0, lng: 0 };
-  private bounds: Bounds;
+  // markerBounds는 클러스터링을 시행한 마커들이 존재하는 범위를 의미합니다.
+  // bounds는 해당 클러스터 내부 마커들의 바운더리를 의미합니다.
+  markerBounds: Bounds;
+  bounds: Bounds;
 
   private mean: LatLng = {
     lat: 0,
@@ -25,10 +28,11 @@ class Cluster<T extends LatLng> {
     lng: 0,
   };
 
-  constructor({ lat, lng }: T, bounds: Bounds) {
+  constructor({ lat, lng }: T, markerBounds: Bounds) {
     this.center = { lat, lng };
     this.markers = [];
-    this.bounds = bounds;
+    this.markerBounds = markerBounds;
+    this.bounds = markerBounds;
   }
   clearMarkers() {
     this.markers = [];
@@ -131,6 +135,29 @@ class Cluster<T extends LatLng> {
     }
     this.markers.push(marker);
   }
+  static getBounds(markers: LatLng[]) {
+    const northEast = markers.reduce(
+      (prev, { lat, lng }) => ({
+        lat: Math.max(prev.lat, lat),
+        lng: Math.max(prev.lng, lng),
+      }),
+      { lat: -Infinity, lng: -Infinity },
+    );
+
+    const southWest = markers.reduce(
+      (prev, { lat, lng }) => ({
+        lat: Math.min(prev.lat, lat),
+        lng: Math.min(prev.lng, lng),
+      }),
+      { lat: Infinity, lng: Infinity },
+    );
+    return {
+      northEastLat: northEast.lat,
+      northEastLng: northEast.lng,
+      southWestLat: southWest.lat,
+      southWestLng: southWest.lng,
+    };
+  }
   /**
    * 마커의 중심점을 재조정 합니다.
    * 이 때 마커의 중심점이 변경 되었다면 true를 반환 합니다.
@@ -149,6 +176,8 @@ class Cluster<T extends LatLng> {
     );
     // 새로운 중심점을 이용해 통계값을 계산합니다.
     this.updateStatisticValue();
+    // 모인 마커들을 이용해 해당 클러스터의 bounds 계산합니다.
+    this.bounds = Cluster.getBounds(this.markers);
     return (
       prevCenter.lat !== this.center.lat || prevCenter.lng !== this.center.lng
     );
@@ -158,8 +187,9 @@ class Cluster<T extends LatLng> {
 export const getClusteredMarkers = <T extends LatLng>(
   markers: T[],
   numOfCluster: number,
-  bounds: Bounds,
 ): [Cluster<T>[], T[]] => {
+  // 존재하는 마커들의 바운스를 계산합니다.
+  const bounds = Cluster.getBounds(markers);
   // K개의 클러스터를 생성합니다.
   // TODO 휴리스틱한 방식으로 초기값 뽑기
   const randomIndexMap: Record<number, boolean> = {};
@@ -175,7 +205,7 @@ export const getClusteredMarkers = <T extends LatLng>(
 
   let isChanged = true;
   while (isChanged) {
-    clusters.forEach((cluster) => cluster.clearMarkers()) ;
+    clusters.forEach((cluster) => cluster.clearMarkers());
 
     markers.forEach((marker) => {
       const [, closestClusterIndex] = clusters.reduce(
