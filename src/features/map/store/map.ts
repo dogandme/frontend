@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { MAP_INITIAL_ZOOM } from "../constants";
 
 export interface LatLng {
   lat: number;
@@ -24,6 +25,7 @@ interface MapState {
   mode: Mode;
   isCenterOnMyLocation: boolean;
   isLastSearchedLocation: boolean;
+  zoom: number;
 }
 
 interface MapActions {
@@ -32,6 +34,7 @@ interface MapActions {
   setMode: (mode: Mode) => void;
   setIsCenterOnMyLocation: (isCenterOnMyLocation: boolean) => void;
   setIsLastSearchedLocation: (isLastSearchedLocation: boolean) => void;
+  setZoom: (zoom: number) => void;
 }
 
 const mapStoreInitialState: MapState = {
@@ -43,6 +46,7 @@ const mapStoreInitialState: MapState = {
   mode: "view",
   isCenterOnMyLocation: false,
   isLastSearchedLocation: true,
+  zoom: MAP_INITIAL_ZOOM,
 };
 
 export const useMapStore = create<MapState & MapActions>((set) => ({
@@ -54,4 +58,5 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setIsLastSearchedLocation: (isLastSearchedLocation) =>
     set({ isLastSearchedLocation }),
   setIsIdle: (isIdle) => set({ isIdle }),
+  setZoom: (zoom) => set({ zoom }),
 }));

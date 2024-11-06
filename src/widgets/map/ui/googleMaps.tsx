@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import { Map } from "@vis.gl/react-google-maps";
+import { Map, MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
 import { useMapStore } from "@/features/map/store/map";
+import { debounce } from "@/shared/lib";
 import { mapOptions } from "../constants";
 
 const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
@@ -23,12 +24,18 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const setIsLastSearchedLocation = useMapStore(
     (state) => state.setIsLastSearchedLocation,
   );
+  const setZoom = useMapStore((state) => state.setZoom);
+  const debouncedZoomChange = debounce(
+    (zoom: number) => setZoom(Math.floor(zoom)),
+    500,
+  );
 
-  const handleMapChange = () => {
+  const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
     if (!isTilesLoadedRef.current) return;
 
     setIsLastSearchedLocation(false);
     setIsMapCenteredOnMyLocation(false);
+    debouncedZoomChange(detail.zoom);
   };
 
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.
