@@ -5,9 +5,9 @@ import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import {
-  PostCheckCodeRequest,
   PostSendCodeRequest,
   usePostCheckCode,
+  usePostCheckCodeState,
   usePostSendCode,
   usePostSignUpByEmail,
 } from "../api";
@@ -77,17 +77,8 @@ const Email = () => {
     variables,
   } = usePostSendCode();
 
-  const checkCodeResponseCacheArr = useMutationState<
-    MutationState<unknown, Error, PostCheckCodeRequest>
-  >({
-    filters: {
-      mutationKey: ["checkVerificationCode"],
-    },
-  });
-  const lastCheckCodeResponse =
-    checkCodeResponseCacheArr[checkCodeResponseCacheArr.length - 1];
-  const checkCodeStatus = lastCheckCodeResponse?.status;
-  const isSuccessCheckCode = checkCodeStatus === "success";
+  const checkCodeState = usePostCheckCodeState();
+  const isSuccessCheckCode = checkCodeState?.status === "success";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: email } = e.target;
