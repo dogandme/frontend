@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
-import { MarkingItem } from "@/features/marking/ui";
+import { MarkingItem } from "@/widgets/marking/ui";
 import { useGetMyActivityMarkingList } from "@/entities/marking/hooks";
 import { useInfiniteScroll } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";

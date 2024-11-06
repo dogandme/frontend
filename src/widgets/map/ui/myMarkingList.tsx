@@ -1,10 +1,7 @@
 import { useMap } from "@vis.gl/react-google-maps";
+import { MarkingItem } from "@/widgets/marking/ui";
 import { useMapQueryParams } from "@/features/map/hooks";
-import {
-  MarkingItem,
-  RangeFilter,
-  SortTypeFilter,
-} from "@/features/marking/ui";
+import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { useGetUserMarkingList } from "@/entities/marking/api";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
 import { useGetProfile } from "@/entities/profile/api";

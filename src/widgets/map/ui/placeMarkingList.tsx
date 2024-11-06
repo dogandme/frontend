@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
+import { MarkingItem } from "@/widgets/marking/ui";
 import {
   useGetMapCurrentBounds,
   useMapQueryParams,
 } from "@/features/map/hooks";
-import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
+import { SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";

@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
+import type { Marking } from "@/entities/marking/api";
 import type { PetInfo } from "@/entities/profile/api";
-import type { Marking } from "../api";
 
 /**
  * 해당 컨텍스트는 MarkingItem 컴포넌트의 props drilling 문제를 해결하기 위해 생성되었습니다.

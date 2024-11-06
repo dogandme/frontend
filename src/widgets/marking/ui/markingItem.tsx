@@ -1,10 +1,16 @@
 import { useState, useRef } from "react";
 import { FollowingToggle } from "@/features/follow/ui";
+import { useDeleteMarking } from "@/features/marking/api";
 import {
-  type MarkingItemProps,
-  MarkingItemContext,
-  useMarkingItemProps,
-} from "@/entities/marking/store";
+  useDeleteLikeMarking,
+  usePostLikeMarking,
+} from "@/features/marking/api";
+import {
+  useDeleteSavedMarking,
+  usePostSaveMarking,
+} from "@/features/marking/api";
+import { useMarkingFormModal } from "@/features/marking/lib";
+import { EditMarkingFormModal } from "@/features/marking/ui/editMarkingFormModal";
 import { API_BASE_URL } from "@/shared/constants";
 import { formatDateToYearMonthDay, useDropdown } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -14,11 +20,11 @@ import { FilledLikeIcon, LikeIcon } from "@/shared/ui/icon";
 import { BookmarkIcon, FilledBookmarkIcon } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
-import { useDeleteMarking } from "../api";
-import { useDeleteLikeMarking, usePostLikeMarking } from "../api";
-import { useDeleteSavedMarking, usePostSaveMarking } from "../api";
-import { useMarkingFormModal } from "../lib";
-import { EditMarkingFormModal } from "./editMarkingFormModal";
+import {
+  type MarkingItemProps,
+  MarkingItemContext,
+  useMarkingItemProps,
+} from "../store";
 
 interface MarkingItemProviderProps {
   children: React.ReactNode;
