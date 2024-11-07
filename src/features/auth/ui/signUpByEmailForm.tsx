@@ -138,11 +138,10 @@ const SendCodeButton = () => {
 
   const {
     mutate: postVerificationCode,
-    isSuccess,
+    isSuccess: isSuccessSendCode,
     isIdle,
     error,
   } = usePostSendCode();
-  const isSuccessSendCode = isSuccess;
   const isDuplicateEmail = error?.code === 409;
 
   const checkCodeState = usePostCheckCodeState();
@@ -162,8 +161,6 @@ const SendCodeButton = () => {
     );
   };
 
-  const canSendCode = isValidEmail && !isDuplicateEmail;
-
   if (isIdle) {
     return (
       <Button
@@ -174,7 +171,7 @@ const SendCodeButton = () => {
         fullWidth={false}
         className="w-[6.5rem]"
         onClick={handleSendVerificationCode}
-        disabled={!canSendCode || isSuccessCheckCode}
+        disabled={!isValidEmail || isDuplicateEmail || isSuccessCheckCode}
       >
         코드전송
       </Button>
@@ -192,7 +189,12 @@ const SendCodeButton = () => {
       fullWidth={false}
       className="w-[6.5rem]"
       onClick={handleSendVerificationCode}
-      disabled={!canSendCode || !canResendCode || isSuccessCheckCode}
+      disabled={
+        !isValidEmail ||
+        isDuplicateEmail ||
+        !canResendCode ||
+        isSuccessCheckCode
+      }
     >
       재전송
     </Button>
