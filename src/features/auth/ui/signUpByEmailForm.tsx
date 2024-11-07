@@ -202,6 +202,8 @@ const SendCodeButton = () => {
 };
 
 const VerificationCode = () => {
+  const CODE_LENGTH = 7;
+
   const verificationCode = useSignUpByEmailFormStore(
     (state) => state.verificationCode,
   );
@@ -213,27 +215,21 @@ const VerificationCode = () => {
   const verificationCodeRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  const CODE_LENGTH = 7;
-
   const {
     mutate: postCheckCode,
-    isError: isErrorCheckCode,
     isSuccess: isSuccessCheckCode,
     variables,
+    error,
   } = usePostCheckCode();
+  const isErrorCheckCode =
+    error?.code === 400 && variables?.authNum === verificationCode;
 
-  const hasCodeChangedSinceCheckCodeRequest =
-    variables?.authNum !== verificationCode;
-
+  // 인증 코드 전송 상태
   const sendCodeState = usePostSendCodeState();
   const isErrorSendCode = sendCodeState?.status === "error";
   const isSuccessSendCode = sendCodeState?.status === "success";
-  const hasSentCode = !!sendCodeState?.variables;
 
   const isTimeOver = timeLeft === 0 && isSuccessSendCode;
-
-  const isCodeNotMatched =
-    isErrorCheckCode && !hasCodeChangedSinceCheckCodeRequest;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: verificationCode } = e.target;
@@ -258,7 +254,7 @@ const VerificationCode = () => {
 
   let statusText = "인증코드 7자리를 입력해 주세요";
   if (isSuccessCheckCode) statusText = "인증되었습니다";
-  if (isCodeNotMatched) statusText = "인증코드를 다시 확인해 주세요";
+  if (isErrorCheckCode) statusText = "인증코드를 다시 확인해 주세요";
   if (isTimeOver)
     statusText = "인증시간이 만료되었습니다. 재전송 버튼을 눌러주세요";
 
@@ -278,8 +274,8 @@ const VerificationCode = () => {
           onChange={handleChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          isError={isTimeOver || isCodeNotMatched}
-          disabled={!hasSentCode || isErrorSendCode || isSuccessCheckCode}
+          isError={isTimeOver || isErrorCheckCode}
+          disabled={!sendCodeState || isErrorSendCode || isSuccessCheckCode}
           trailingNode={isSuccessSendCode && !isSuccessCheckCode && <Timer />}
         />
         <Button
@@ -291,9 +287,9 @@ const VerificationCode = () => {
           className="w-[6.5rem]"
           onClick={handleCheckButtonClick}
           disabled={
-            isCodeNotMatched ||
             isTimeOver ||
             verificationCode.length < CODE_LENGTH ||
+            isErrorCheckCode ||
             isSuccessCheckCode
           }
         >
@@ -301,9 +297,9 @@ const VerificationCode = () => {
         </Button>
       </div>
       <p
-        className={`body-3 pl-1 pr-3 pt-1 h-6 ${isTimeOver || isCodeNotMatched ? "text-pink-500" : "text-grey-500"}`}
+        className={`body-3 pl-1 pr-3 pt-1 h-6 ${isTimeOver || isErrorCheckCode ? "text-pink-500" : "text-grey-500"}`}
       >
-        {(isFocused || isSuccessCheckCode || isTimeOver || isCodeNotMatched) &&
+        {(isFocused || isTimeOver || isErrorCheckCode || isSuccessCheckCode) &&
           statusText}
       </p>
     </div>
