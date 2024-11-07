@@ -58,7 +58,12 @@ export const PlaceMarkingList = () => {
       />
 
       <div className="flex justify-end w-full mb-4 px-4">
-        <SortTypeFilter options={["POPULARITY", "RECENT"]} />
+        <SortTypeFilter
+          options={["POPULARITY", "RECENT"]}
+          onSelect={(sortType) => {
+            setMapQueryParams({ sortType });
+          }}
+        />
       </div>
 
       <MarkingList display="list" className="px-4">

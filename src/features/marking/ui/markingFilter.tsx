@@ -59,17 +59,21 @@ const MarkingFilterButton = ({
 export const SortTypeFilter = ({
   options,
   defaultOptionIdx = 0,
+  onSelect,
 }: {
   options: SortType[];
   defaultOptionIdx?: number;
+  onSelect?: (sortType: SortType) => void;
 }) => {
-  const { sortTypeParam: selectedSortType, setMapQueryParams } =
-    useMapQueryParams();
+  const [selectedOption, setSelectedOption] = useState<SortType>(
+    options[defaultOptionIdx],
+  );
 
   const handleSelect = (sortType: SortType) => {
-    if (selectedSortType === sortType) return;
+    if (selectedOption === sortType) return;
 
-    setMapQueryParams({ sortType });
+    setSelectedOption(sortType);
+    onSelect?.(sortType);
   };
 
   const defaultOption = options[defaultOptionIdx];
@@ -84,7 +88,7 @@ export const SortTypeFilter = ({
         <Select.OptionList>
           <Select.Option
             value={defaultOption}
-            isSelected={defaultOption === selectedSortType}
+            isSelected={defaultOption === selectedOption}
             onClick={() => handleSelect(defaultOption)}
           >
             {sortTypeMap[defaultOption]}
@@ -96,7 +100,7 @@ export const SortTypeFilter = ({
                 key={option}
                 value={option}
                 onClick={() => handleSelect(option)}
-                isSelected={option === selectedSortType}
+                isSelected={option === selectedOption}
               >
                 {sortTypeMap[option]}
               </Select.Option>
@@ -109,7 +113,7 @@ export const SortTypeFilter = ({
 
   return (
     <MarkingFilterButton onClick={handleOpen}>
-      {sortTypeMap[selectedSortType || defaultOption]}
+      {sortTypeMap[selectedOption || defaultOption]}
     </MarkingFilterButton>
   );
 };
