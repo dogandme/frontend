@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { MarkingList } from "@/widgets/map/ui/markingList";
-import { useMapQueryParams } from "@/features/map/hooks";
 import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
 import {
+  SortType,
+  useGetAllMarkingsOfUser,
   useGetMarkingDetail,
-  useGetUserMarkingList,
 } from "@/entities/marking/api";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
 import {
@@ -22,9 +23,16 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 export const UserMarkingPage = () => {
   const { state } = useLocation() as { state: null | { markingId: number } };
 
+  const sortTypeOptions: Exclude<SortType, "DISTANCE">[] = [
+    "RECENT",
+    "POPULARITY",
+  ];
+  const [selectedSortType, setSelectedSortType] = useState<
+    Exclude<SortType, "DISTANCE">
+  >(sortTypeOptions[0]);
+
   const markingId = state?.markingId;
   const { nicknameParams } = useNicknameParams();
-  const { sortTypeParam, boundsParams } = useMapQueryParams();
 
   const { nickname: myNickname, token } = useAuthStore.getState();
 
@@ -38,10 +46,9 @@ export const UserMarkingPage = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetUserMarkingList({
-    ...boundsParams,
+  } = useGetAllMarkingsOfUser({
     nickname: nicknameParams,
-    sortType: sortTypeParam,
+    sortType: selectedSortType,
   });
 
   const [setNode] = useInfiniteScroll(() => {
@@ -91,8 +98,10 @@ export const UserMarkingPage = () => {
 
         <div className="flex w-full justify-end">
           <SortTypeFilter
-            options={["RECENT", "POPULARITY"]}
-            defaultOptionIdx={0}
+            options={sortTypeOptions}
+            onSelect={(sortType) => {
+              setSelectedSortType(sortType as Exclude<SortType, "DISTANCE">);
+            }}
           />
         </div>
 

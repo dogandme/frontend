@@ -127,3 +127,45 @@ export const useGetUserMarkingList = ({
     gcTime: 0,
   });
 };
+
+export interface GetAllMarkingsOfUserRequest {
+  nickname: string;
+  sortType: Exclude<SortType, "DISTANCE">;
+  offset: number;
+}
+
+export const useGetAllMarkingsOfUser = ({
+  nickname,
+  sortType,
+}: Omit<GetAllMarkingsOfUserRequest, "offset">) => {
+  const token = useAuthStore.getState().token;
+
+  return useInfiniteQuery({
+    queryKey: [nickname, "markingList", null, null, null, null, sortType],
+
+    queryFn:
+      token && !!nickname && !!sortType
+        ? ({ pageParam }) =>
+            apiClient.get<GetUserMarkingListResponse>(
+              MARKING_END_POINT.ALL_MARKINGS_OF_USER({
+                nickname,
+                sortType,
+                offset: pageParam,
+              }),
+              {
+                withToken: true,
+              },
+            )
+        : skipToken,
+
+    getNextPageParam: ({ pageAble: { pageNumber }, totalPages }) => {
+      return pageNumber < totalPages - 1 ? pageNumber + 1 : null;
+    },
+    initialPageParam: 0,
+    select: (data) => data.pages.flatMap((page) => page.markings),
+
+    refetchOnWindowFocus: false,
+
+    gcTime: 0,
+  });
+};
