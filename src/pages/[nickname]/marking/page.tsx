@@ -99,6 +99,7 @@ export const UserMarkingPage = () => {
         <div className="flex w-full justify-end">
           <SortTypeFilter
             options={sortTypeOptions}
+            selectedOption={selectedSortType}
             onSelect={(sortType) => {
               setSelectedSortType(sortType as Exclude<SortType, "DISTANCE">);
             }}

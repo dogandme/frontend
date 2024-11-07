@@ -56,6 +56,7 @@ export const LocalMarkingList = () => {
           <RangeFilter options={["CURRENT_LOCATION", "MAP_LOCATION"]} />
           <SortTypeFilter
             options={["POPULARITY", "RECENT", "DISTANCE"]}
+            selectedOption={sortTypeParam || "POPULARITY"}
             onSelect={(sortType) => {
               setMapQueryParams({ sortType });
             }}

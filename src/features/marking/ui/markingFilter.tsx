@@ -55,24 +55,23 @@ const MarkingFilterButton = ({
  *
  * @param options: "RECENT", "POPULAR", "DISTANCE"로 구성된 배열
  * @param defaultOptionIdx: 기본 옵션 인덱스 (기본값: 0)
+ * @param selectedOption: 선택된 옵션
+ * @param onSelect: 옵션 선택 시 호출되는 콜백
  */
 export const SortTypeFilter = ({
   options,
   defaultOptionIdx = 0,
+  selectedOption,
   onSelect,
 }: {
   options: SortType[];
   defaultOptionIdx?: number;
+  selectedOption: SortType;
   onSelect?: (sortType: SortType) => void;
 }) => {
-  const [selectedOption, setSelectedOption] = useState<SortType>(
-    options[defaultOptionIdx],
-  );
-
   const handleSelect = (sortType: SortType) => {
-    if (selectedOption === sortType) return;
+    if (sortType === selectedOption) return;
 
-    setSelectedOption(sortType);
     onSelect?.(sortType);
   };
 

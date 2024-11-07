@@ -56,7 +56,10 @@ export const MyMarkingList = () => {
           <RangeFilter
             options={["ALL_VIEW", "CURRENT_LOCATION", "MAP_LOCATION"]}
           />
-          <SortTypeFilter options={["POPULARITY", "RECENT", "DISTANCE"]} />
+          <SortTypeFilter
+            options={["RECENT", "POPULARITY", "DISTANCE"]}
+            selectedOption={sortTypeParam || "RECENT"}
+          />
         </div>
 
         <MarkingList display="list">
