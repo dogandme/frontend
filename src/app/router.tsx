@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { ProfilePage } from "@/pages/[nickname]";
 import { FollowerPage } from "@/pages/[nickname]/follower";
 import { FollowingPage } from "@/pages/[nickname]/following";
+import { UserMarkingPage } from "@/pages/[nickname]/marking";
 import { LoginPage, LoginLayout } from "@/pages/login";
 import { EmailLoginPage } from "@/pages/login/email";
 import { MapLayout, MapPage } from "@/pages/map";
@@ -56,6 +57,10 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <ProfilePage />,
+          },
+          {
+            path: ROUTER_PATH.USER_MARKING,
+            element: <UserMarkingPage />,
           },
           {
             path: ROUTER_PATH.FOLLOWINGS,
