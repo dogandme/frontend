@@ -4,6 +4,7 @@ import type {
   GetUserMarkingListRequest,
   GetBoundaryMarkerListRequest,
   GetMyLikedMarkingListRequest,
+  GetMySavedMarkingListRequest,
 } from "../api";
 
 export const REVERSE_GEOCODING_END_POINT = ({
@@ -48,6 +49,8 @@ export const MARKING_END_POINT = {
 
   MY_LIKED: ({ offset }: GetMyLikedMarkingListRequest) =>
     `${API_BASE_URL}/markings/likes?offset=${offset}`,
+  MY_SAVED: ({ offset }: GetMySavedMarkingListRequest) =>
+    `${API_BASE_URL}/markings/saves?offset=${offset}`,
 };
 
 export const MARKER_END_POINT = {
