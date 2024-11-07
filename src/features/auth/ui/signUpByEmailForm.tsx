@@ -49,21 +49,18 @@ const Timer = () => {
 };
 
 const Email = () => {
+  const queryClient = useQueryClient();
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const isEmailEmpty = useSignUpByEmailFormStore((state) => state.isEmailEmpty);
   const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
-  const isEmailModified = useSignUpByEmailFormStore(
-    (state) => state.isEmailModified,
-  );
-  const { setEmail, setIsEmailModified } = useSignUpByEmailFormStore(
+  const { setEmail, resetState } = useSignUpByEmailFormStore(
     (state) => state.actions,
   );
 
   // 인증 코드 전송 상태
   const sendCodeState = usePostSendCodeState();
-  const isDuplicateEmail =
-    sendCodeState?.error?.code === 409 && !isEmailModified;
+  const isDuplicateEmail = sendCodeState?.error?.code === 409;
 
   // 인증 코드 확인 상태
   const checkCodeState = usePostCheckCodeState();
@@ -75,7 +72,16 @@ const Email = () => {
     setEmail(email);
 
     if (typeof sendCodeState?.variables !== "undefined") {
-      setIsEmailModified(sendCodeState?.variables?.email !== email);
+      const isModified = sendCodeState.variables?.email !== email;
+
+      if (isModified) {
+        resetState([
+          "verificationCode",
+          "timeLeft",
+          "isTimeLeftLessThanOneMinute",
+        ]);
+        queryClient.clear();
+      }
     }
   };
 
@@ -93,15 +99,6 @@ const Email = () => {
     : isDuplicateEmail
       ? "이미 가입된 이메일 입니다"
       : "올바른 이메일 형식입니다";
-
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    // 이메일이 수정되면, mutationKey는 캐시에서 제거됩니다.
-    if (isEmailModified) {
-      queryClient.clear();
-    }
-  }, [isEmailModified, queryClient]);
 
   return (
     <div>
@@ -134,15 +131,10 @@ const SendCodeButton = () => {
   const handleOpenSnackbar = useSnackBar();
 
   const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
-  const isEmailModified = useSignUpByEmailFormStore(
-    (state) => state.isEmailModified,
-  );
   const isTimeLeftLessThanOneMinute = useSignUpByEmailFormStore(
     (state) => state.isTimeLeftLessThanOneMinute,
   );
-  const { setIsEmailModified, setTimeLeft } = useSignUpByEmailFormStore(
-    (state) => state.actions,
-  );
+  const { setTimeLeft } = useSignUpByEmailFormStore((state) => state.actions);
 
   const {
     mutate: postVerificationCode,
@@ -150,8 +142,8 @@ const SendCodeButton = () => {
     isIdle,
     error,
   } = usePostSendCode();
-  const isSuccessSendCode = isSuccess && !isEmailModified;
-  const isDuplicateEmail = error?.code === 409 && !isEmailModified;
+  const isSuccessSendCode = isSuccess;
+  const isDuplicateEmail = error?.code === 409;
 
   const checkCodeState = usePostCheckCodeState();
   const isSuccessCheckCode = checkCodeState?.status === "success";
@@ -165,10 +157,6 @@ const SendCodeButton = () => {
         onSuccess: () => {
           handleOpenSnackbar("메일로 인증코드가 전송되었습니다");
           setTimeLeft(1000 * 60 * 3);
-          setIsEmailModified(false);
-        },
-        onError: () => {
-          setIsEmailModified(false);
         },
       },
     );
@@ -193,8 +181,7 @@ const SendCodeButton = () => {
     );
   }
 
-  const canResendCode =
-    isEmailModified || (isSuccessSendCode && isTimeLeftLessThanOneMinute);
+  const canResendCode = isSuccessSendCode && isTimeLeftLessThanOneMinute;
 
   return (
     <Button
@@ -213,9 +200,6 @@ const SendCodeButton = () => {
 };
 
 const VerificationCode = () => {
-  const isEmailModified = useSignUpByEmailFormStore(
-    (state) => state.isEmailModified,
-  );
   const verificationCode = useSignUpByEmailFormStore(
     (state) => state.verificationCode,
   );
@@ -240,17 +224,14 @@ const VerificationCode = () => {
     variables?.authNum !== verificationCode;
 
   const sendCodeState = usePostSendCodeState();
-  const isErrorSendCode = sendCodeState?.status === "error" && !isEmailModified;
-  const isSuccessSendCode =
-    sendCodeState?.status === "success" && !isEmailModified;
-  const hasSentCode = !!sendCodeState?.variables && !isEmailModified;
+  const isErrorSendCode = sendCodeState?.status === "error";
+  const isSuccessSendCode = sendCodeState?.status === "success";
+  const hasSentCode = !!sendCodeState?.variables;
 
   const isTimeOver = timeLeft === 0 && isSuccessSendCode;
 
   const isCodeNotMatched =
-    isErrorCheckCode &&
-    !isEmailModified &&
-    !hasCodeChangedSinceCheckCodeRequest;
+    isErrorCheckCode && !hasCodeChangedSinceCheckCodeRequest;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: verificationCode } = e.target;
@@ -296,12 +277,7 @@ const VerificationCode = () => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           isError={isTimeOver || isCodeNotMatched}
-          disabled={
-            !hasSentCode ||
-            isErrorSendCode ||
-            (isSuccessSendCode && isEmailModified) ||
-            isSuccessCheckCode
-          }
+          disabled={!hasSentCode || isErrorSendCode || isSuccessCheckCode}
           trailingNode={isSuccessSendCode && !isSuccessCheckCode && <Timer />}
         />
         <Button
@@ -424,9 +400,7 @@ const PasswordConfirm = () => {
 };
 
 export const SignUpByEmailForm = () => {
-  const { resetSignUpByEmailFormStore } = useSignUpByEmailFormStore(
-    (state) => state.actions,
-  );
+  const { resetState } = useSignUpByEmailFormStore((state) => state.actions);
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
 
   const handleOpenSnackbar = useSnackBar();
@@ -464,8 +438,8 @@ export const SignUpByEmailForm = () => {
   };
 
   useEffect(() => {
-    resetSignUpByEmailFormStore();
-  }, [resetSignUpByEmailFormStore]);
+    resetState();
+  }, [resetState]);
 
   return (
     <form className="flex flex-col gap-8 self-stretch" onSubmit={handleSubmit}>

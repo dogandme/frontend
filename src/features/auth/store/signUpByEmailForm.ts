@@ -5,7 +5,6 @@ interface SignUpByEmailFormState {
   email: string;
   isEmailEmpty: boolean;
   isValidEmail: boolean;
-  isEmailModified: boolean;
 
   verificationCode: string;
 
@@ -29,10 +28,8 @@ interface SignUpByEmailFormActions {
 
     setPassword: (password: string) => void;
     setConfirmPassword: (passwordConfirm: string) => void;
-    resetSignUpByEmailFormStore: () => void;
 
-    // validation
-    setIsEmailModified: (isEmailModified: boolean) => void;
+    resetState: (keys?: (keyof SignUpByEmailFormState)[]) => void;
   };
 }
 
@@ -53,8 +50,6 @@ const initSignUpByEmailFormStore: SignUpByEmailFormState = {
   confirmPassword: "",
   isConfirmPasswordEmpty: true,
   isValidConfirmPassword: false,
-
-  isEmailModified: false,
 };
 
 export const useSignUpByEmailFormStore = create<
@@ -97,19 +92,17 @@ export const useSignUpByEmailFormStore = create<
         isValidConfirmPassword: password === passwordConfirm,
       });
     },
-    resetSignUpByEmailFormStore: () => set({ ...initSignUpByEmailFormStore }),
-
-    setIsEmailModified: (isEmailModified) => {
-      // 이메일이 수정됐을 경우, verificationCode와 timeLeft 초기화
-      if (isEmailModified) {
-        set({
-          verificationCode: "",
-          timeLeft: 0,
-          isTimeLeftLessThanOneMinute: true,
-        });
+    resetState: (keys) => {
+      // 전체 상태 초기화
+      if (!keys) {
+        set(initSignUpByEmailFormStore);
+        return;
       }
 
-      set({ isEmailModified });
+      // 일부 상태 초기화
+      keys.forEach((key) => {
+        set({ [key]: initSignUpByEmailFormStore[key] });
+      });
     },
   },
 }));
