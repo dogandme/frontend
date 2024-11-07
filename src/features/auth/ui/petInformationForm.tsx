@@ -265,14 +265,14 @@ const BreedBottomSheet = ({
     return trimedBreed.includes(text.replace(/\s/g, ""));
   });
 
-  useEffect(() => {
-    if (!isOpen) {
-      setText("");
-    }
-  }, [isOpen]);
-
   return (
-    <Select isOpen={isOpen} onClose={onClose}>
+    <Select
+      isOpen={isOpen}
+      onClose={() => {
+        onClose();
+        setText("");
+      }}
+    >
       <Select.BottomSheet>
         <Input
           id="search"
