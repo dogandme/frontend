@@ -101,9 +101,10 @@ export const colors = {
 export const ROUTER_PATH = {
   MAIN: "/",
 
-  MAP: `/map`,
+  MAP: "/map",
   PLACE: "/map/place",
   MY_MARK: "/map/my",
+  MY_ACTIVITY: "/map/my-activity",
 
   PROFILE: `/:nickname`,
   FOLLOWINGS: `followings`,

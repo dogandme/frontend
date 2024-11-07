@@ -7,3 +7,4 @@ export * from "./mapBottomSheet";
 export * from "./localMarkingList";
 export * from "./placeMarkingList";
 export * from "./myMarkingList";
+export * from "./myActivityList";

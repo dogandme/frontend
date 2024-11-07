@@ -26,7 +26,6 @@ export const usePostChangeRegion = () => {
       });
     },
     onError: (error) => {
-      // TODO 스낵바 로직 나오면 변경 하기
       console.error(error);
     },
   });

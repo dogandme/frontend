@@ -1,10 +1,10 @@
-import { LocalMarkingList } from "@/widgets/map/ui";
+import { Pin } from "@vis.gl/react-google-maps";
+import { PlaceMarkingList } from "@/widgets/map/ui";
 import { useMapQueryParams } from "@/features/map/hooks";
-import { Pin } from "@/entities/map/ui";
 import { useGetBoundaryMarkerList } from "@/entities/marking/api";
 import { API_BASE_URL } from "@/shared/constants";
 
-export const MapPage = () => {
+export const PlaceMarkingPage = () => {
   const { boundsParams } = useMapQueryParams();
   const { data: markerList } = useGetBoundaryMarkerList({
     ...boundsParams,
@@ -21,7 +21,7 @@ export const MapPage = () => {
         />
       ))}
 
-      <LocalMarkingList />
+      <PlaceMarkingList />
     </>
   );
 };

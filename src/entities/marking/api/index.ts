@@ -4,4 +4,7 @@ export * from "./getBoundaryMarkerList";
 export * from "./getTemporaryMarkingList";
 export * from "./getUserMarkingList";
 export * from "./getMyMakerList";
+export * from "./getMyLikedMarkingList";
+export * from "./getMyLikedMarkingList";
+export * from "./getMySavedMarkerList";
 export * from "./getDashboardMarkingThumbnail";

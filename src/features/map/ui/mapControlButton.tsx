@@ -1,10 +1,11 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
 import { useMarkingFormStore } from "@/features/marking/store";
 import { MarkingFormCloseModal } from "@/features/marking/ui/markingFormCloseModal";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useModal, useSnackBar } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import {
   BookmarkIcon,
@@ -13,28 +14,32 @@ import {
   MyLocationIcon,
 } from "@/shared/ui/icon";
 import { MarkingFormModal } from "../../marking/ui";
-import { useCurrentLocation, useGetMapCurrentBounds } from "../hooks";
+import {
+  useCurrentLocation,
+  useGetMapCurrentBounds,
+  useMapMode,
+} from "../hooks";
 import { useMapStore } from "../store";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingAddButton = () => {
   const setMode = useMapStore((state) => state.setMode);
-
   const handleOpenSnackbar = useSnackBar();
-
-  const handleClick = () => {
-    handleOpenSnackbar("마킹 위치를 손가락으로 움직여서 선택해 주세요", {
-      type: "map",
-    });
-    setMode("add");
-  };
 
   return (
     <Button
       colorType="primary"
       variant="filled"
       size="medium"
-      onClick={handleClick}
+      onClick={() => {
+        if (!useAuthStore.getState().token) {
+          handleOpenSnackbar("로그인 후 이용해 주세요", {
+            type: "map",
+          });
+          return;
+        }
+        setMode("add");
+      }}
     >
       <span className="btn-3">마킹하기</span>
     </Button>
@@ -88,10 +93,10 @@ const buttonBaseStyles = "border-none outline-none h-14 px-[.875rem]";
 
 export const ShowMyMarkingButton = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const mapMode = useMapMode();
   const map = useMap();
 
-  const shouldShowMyMarking = pathname === ROUTER_PATH.MY_MARK;
+  const shouldShowMyMarking = mapMode === "MY_MARK";
   const getCurrentBounds = useGetMapCurrentBounds();
 
   return (
@@ -139,8 +144,9 @@ export const ShowAroundMarkingButton = () => {
 };
 
 export const CollectionButton = () => {
-  // todo 상태 전역으로 관리하기
-  const isCollectionActive = false;
+  const navigate = useNavigate();
+  const mode = useMapMode();
+  const isCollectionActive = mode === "MY_ACTIVITY";
 
   return (
     <Button
@@ -151,7 +157,7 @@ export const CollectionButton = () => {
       className="shadow-custom-1 border-none"
       aria-label="좋아요를 눌렀거나 저장한 마킹들 나타내기"
       onClick={() => {
-        // todo 좋아요 / 저장됨 마킹 보기로 상태 변경
+        navigate(ROUTER_PATH.MY_ACTIVITY);
       }}
     >
       <BookmarkIcon />
@@ -161,9 +167,16 @@ export const CollectionButton = () => {
 
 /* ----------add mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingFormTriggerButton = () => {
+  const handleOpenSnackbar = useSnackBar();
   const { handleOpen, onClose: onCloseMarkingModal } = useModal(() => (
     <MarkingFormModal onCloseMarkingModal={onCloseMarkingModal} />
   ));
+
+  useEffect(() => {
+    handleOpenSnackbar("마킹 위치를 손가락으로 움직여서 선택해 주세요", {
+      type: "map",
+    });
+  }, []);
 
   return (
     <Button
@@ -181,9 +194,6 @@ export const ExitAddModeButton = () => {
   const { onClose, handleOpen } = useModal(() => (
     <MarkingFormCloseModal onCloseExitModal={onClose} />
   ));
-  const resetMarkingFormStore = useMarkingFormStore(
-    (state) => state.resetMarkingFormStore,
-  );
 
   const setMode = useMapStore((state) => state.setMode);
 

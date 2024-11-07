@@ -82,7 +82,6 @@ export const createPetInformationFormState = (
           const compressedImage = await compressFileImage(profile.file);
           set({ profile: { ...profile, file: compressedImage } });
         } catch (error) {
-          // TODO 에러 바운더리 로직 나오면 변경하기
           console.error(`
           ${profile.name}을 압축하는데 실패했습니다.
           ${error}`);
