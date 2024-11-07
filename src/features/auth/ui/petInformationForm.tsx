@@ -257,13 +257,13 @@ const BreedBottomSheet = ({
   const [text, setText] = useState<string>("");
   const [, startTransition] = useTransition();
 
-  const searchedBreeds = dogBreeds.filter((breed) => {
-    if (text.length === 0) {
-      return true;
-    }
-    const trimedBreed = breed.replace(/\s/g, "");
-    return trimedBreed.includes(text.replace(/\s/g, ""));
-  });
+  const searchedBreeds =
+    text.length === 0
+      ? dogBreeds
+      : dogBreeds.filter((breed) => {
+          const trimedBreed = breed.replace(/\s/g, "");
+          return trimedBreed.includes(text.replace(/\s/g, ""));
+        });
 
   return (
     <Select
