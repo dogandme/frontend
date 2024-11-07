@@ -86,7 +86,7 @@ const ProfileInput = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const backgroundUrl = profile.url
-    ? profile.url.startsWith("blob") || profile.url === "/default-image.png"
+    ? profile.url.startsWith("blob")
       ? profile.url
       : `${API_BASE_URL}/pets/image/${profile.url}`
     : MASCOT_IMAGE_URL;
@@ -115,7 +115,7 @@ const ProfileInput = () => {
     setProfile({
       file: null,
       name: "",
-      url: MASCOT_IMAGE_URL,
+      url: "",
     });
   };
 
