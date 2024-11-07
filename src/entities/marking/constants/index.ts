@@ -51,6 +51,9 @@ export const MARKING_END_POINT = {
     `${API_BASE_URL}/markings/likes?offset=${offset}`,
   MY_SAVED: ({ offset }: GetMySavedMarkingListRequest) =>
     `${API_BASE_URL}/markings/saves?offset=${offset}`,
+
+  DETAIL: ({ markingId }: { markingId: number }) =>
+    `${API_BASE_URL}/markings/${markingId}`,
 };
 
 export const MARKER_END_POINT = {

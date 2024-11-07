@@ -7,3 +7,4 @@ export * from "./getMyMakerList";
 export * from "./getMyLikedMarkingList";
 export * from "./getMyLikedMarkingList";
 export * from "./getMySavedMarkerList";
+export * from "./getMarkingDetail";
