@@ -233,7 +233,7 @@ const BreedInput = () => {
       </div>
       <BreedBottomSheet
         breed={breed}
-        handleSelect={setBreed}
+        onSelect={setBreed}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       />
@@ -243,14 +243,14 @@ const BreedInput = () => {
 
 interface BreedBottomSheetProps {
   breed: PetInformationFormExternalState["breed"];
-  handleSelect: (breed: PetInformationFormExternalState["breed"]) => void;
+  onSelect: (breed: PetInformationFormExternalState["breed"]) => void;
   isOpen: boolean;
   onClose: () => void;
 }
 
 const BreedBottomSheet = ({
   breed,
-  handleSelect,
+  onSelect,
   onClose,
   isOpen,
 }: BreedBottomSheetProps) => {
@@ -292,7 +292,7 @@ const BreedBottomSheet = ({
           }}
         >
           <Select.Option
-            onClick={() => handleSelect("해당하는 품종 없음")}
+            onClick={() => onSelect("해당하는 품종 없음")}
             isSelected={breed === "해당하는 품종 없음"}
           >
             해당하는 품종 없음
@@ -301,7 +301,7 @@ const BreedBottomSheet = ({
             <Select.Option
               key={idx}
               id={value}
-              onClick={() => handleSelect(value)}
+              onClick={() => onSelect(value)}
               isSelected={value === breed}
             >
               {value}
