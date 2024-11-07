@@ -99,3 +99,31 @@ export const useGetMyFollowingIdsMap = () => {
     );
   });
 };
+
+export const useGetMyBookmarkIdsMap = () => {
+  return useGetMyProfile((data) => {
+    const bookmarks = data?.bookmarks || [];
+
+    return bookmarks.reduce(
+      (map, id) => {
+        map[id] = true;
+        return map;
+      },
+      {} as Record<number, boolean>,
+    );
+  });
+};
+
+export const useGetMyLikedIdsMap = () => {
+  return useGetMyProfile((data) => {
+    const likes = data?.likes || [];
+
+    return likes.reduce(
+      (map, id) => {
+        map[id] = true;
+        return map;
+      },
+      {} as Record<number, boolean>,
+    );
+  });
+};

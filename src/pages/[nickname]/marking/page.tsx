@@ -7,7 +7,12 @@ import {
   useGetUserMarkingList,
 } from "@/entities/marking/api";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
-import { useGetMyFollowingIdsMap, useGetProfile } from "@/entities/profile/api";
+import {
+  useGetMyBookmarkIdsMap,
+  useGetMyFollowingIdsMap,
+  useGetMyLikedIdsMap,
+  useGetProfile,
+} from "@/entities/profile/api";
 import { useInfiniteScroll } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -23,6 +28,8 @@ export const UserMarkingPage = () => {
 
   const { nickname: myNickname, token } = useAuthStore.getState();
 
+  const { data: myBookmarkIdsMap } = useGetMyBookmarkIdsMap();
+  const { data: myLikedIdsMap } = useGetMyLikedIdsMap();
   const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
   const { data: profile } = useGetProfile({ nickname: myNickname });
   const { data: clickedMarking } = useGetMarkingDetail({ markingId });
@@ -44,7 +51,8 @@ export const UserMarkingPage = () => {
   });
 
   // todo 회원이 아닐 경우
-  if (!token || !myFollowingIdsMap) return null;
+  if (!token || !myFollowingIdsMap || !myBookmarkIdsMap || !myLikedIdsMap)
+    return null;
 
   return (
     <div className="px-4">
@@ -73,9 +81,9 @@ export const UserMarkingPage = () => {
                 // todo 맵 페이지로 이동
               }}
               // todo 수정하기
-              isFollowing={false}
-              isLiked={false}
-              isBookmarked={false}
+              isFollowing={myFollowingIdsMap[clickedMarking.userId]}
+              isLiked={myLikedIdsMap[clickedMarking.markingId]}
+              isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
             />
             <DividerLine axis="row" />
           </>
@@ -99,8 +107,8 @@ export const UserMarkingPage = () => {
                   // todo 맵 페이지로 이동
                 }}
                 // todo isLiked, isBookmarked 설정
-                isLiked={false}
-                isBookmarked={false}
+                isLiked={myLikedIdsMap[marking.markingId]}
+                isBookmarked={myBookmarkIdsMap[marking.markingId]}
                 isFollowing={myFollowingIdsMap[marking.userId]}
                 {...marking}
               />
