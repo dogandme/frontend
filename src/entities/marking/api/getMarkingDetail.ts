@@ -5,7 +5,7 @@ import { MARKING_END_POINT } from "../constants";
 import type { Marking } from "./getMarkingList";
 
 export interface GetMarkingDetailRequest {
-  markingId: string;
+  markingId?: number;
 }
 
 export const useGetMarkingDetail = ({ markingId }: GetMarkingDetailRequest) => {
@@ -13,14 +13,12 @@ export const useGetMarkingDetail = ({ markingId }: GetMarkingDetailRequest) => {
 
   return useQuery({
     queryKey: ["markingList", markingId],
-    queryFn: token
-      ? () =>
-          apiClient.get<Marking>(
-            MARKING_END_POINT.DETAIL({ markingId: Number(markingId) }),
-            {
+    queryFn:
+      token && markingId !== undefined
+        ? () =>
+            apiClient.get<Marking>(MARKING_END_POINT.DETAIL({ markingId }), {
               withToken: true,
-            },
-          )
-      : skipToken,
+            })
+        : skipToken,
   });
 };
