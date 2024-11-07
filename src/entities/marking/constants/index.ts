@@ -53,7 +53,7 @@ export const MARKING_END_POINT = {
     sortType,
     offset,
   }: GetAllMarkingsOfUserRequest) => {
-    return `${API_BASE_URL}/markings/users/${nickname}?sortType=${sortType}&offset=${offset}`;
+    return `${API_BASE_URL}/markings/users/${nickname}?sortType=${sortType}&offset=${offset}&mapViewMode=ALL_VIEW`;
   },
 
   MY_LIKED: ({ offset }: GetMyLikedMarkingListRequest) =>
