@@ -102,7 +102,11 @@ export const useSignUpByEmailFormStore = create<
     setIsEmailModified: (isEmailModified) => {
       // 이메일이 수정됐을 경우, verificationCode와 timeLeft 초기화
       if (isEmailModified) {
-        set({ verificationCode: "", timeLeft: 0 });
+        set({
+          verificationCode: "",
+          timeLeft: 0,
+          isTimeLeftLessThanOneMinute: true,
+        });
       }
 
       set({ isEmailModified });
