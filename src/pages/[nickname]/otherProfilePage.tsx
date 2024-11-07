@@ -5,7 +5,7 @@ import { ProfileOverView } from "@/widgets/profile/ui";
 import { useGetProfile } from "@/entities/profile/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useNicknameParams } from "@/shared/lib/profile";
+import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { NotFoundUser } from "./notFoundUser";

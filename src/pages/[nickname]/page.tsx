@@ -1,4 +1,4 @@
-import { useNicknameParams } from "@/shared/lib/profile";
+import { useNicknameParams } from "@/shared/lib";
 import { MyProfilePage } from "./myProfilePage";
 import { OtherProfilePage } from "./otherProfilePage";
 

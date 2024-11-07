@@ -12,7 +12,7 @@ import {
   type ProfileImageUrl,
 } from "@/entities/profile/api";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
-import { useNicknameParams } from "@/shared/lib/profile";
+import { useNicknameParams } from "@/shared/lib";
 
 interface FollowingUserItemProps {
   nickname: Nickname;

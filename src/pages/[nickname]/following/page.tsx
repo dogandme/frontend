@@ -2,8 +2,7 @@ import { FollowItemContainer, FollowNavigationBar } from "@/widgets/follow";
 import { FollowingUserItem } from "@/widgets/follow/followingUserItem";
 import { useGetFollowingList } from "@/entities/follow/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
-import { useInfiniteScroll } from "@/shared/lib";
-import { useNicknameParams } from "@/shared/lib/profile";
+import { useInfiniteScroll, useNicknameParams } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const FollowingPage = () => {
