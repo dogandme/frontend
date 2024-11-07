@@ -57,7 +57,7 @@ export const UserMarkingPage = () => {
     }
   });
 
-  // todo 회원이 아닐 경우
+  // todo ui 표시
   if (!token || !myFollowingIdsMap || !myBookmarkIdsMap || !myLikedIdsMap)
     return null;
 
@@ -87,7 +87,6 @@ export const UserMarkingPage = () => {
               onRegionClick={() => {
                 // todo 맵 페이지로 이동
               }}
-              // todo 수정하기
               isFollowing={myFollowingIdsMap[clickedMarking.userId]}
               isLiked={myLikedIdsMap[clickedMarking.markingId]}
               isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
@@ -116,7 +115,6 @@ export const UserMarkingPage = () => {
                 onRegionClick={() => {
                   // todo 맵 페이지로 이동
                 }}
-                // todo isLiked, isBookmarked 설정
                 isLiked={myLikedIdsMap[marking.markingId]}
                 isBookmarked={myBookmarkIdsMap[marking.markingId]}
                 isFollowing={myFollowingIdsMap[marking.userId]}

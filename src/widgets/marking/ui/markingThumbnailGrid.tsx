@@ -32,7 +32,6 @@ export const MarkingThumbnailGrid = ({
   return (
     <section className="w-full grid grid-cols-3 gap-2">
       {data.map(({ markingId, previewImage }) => (
-        // TODO : 이 장소 마킹 경로 나오면 Link 컴포넌트로 수정 하기
         <Link
           to={`/@${nicknameParams}/markings`}
           key={markingId}
