@@ -55,21 +55,24 @@ const MarkingFilterButton = ({
  *
  * @param options: "RECENT", "POPULAR", "DISTANCE"로 구성된 배열
  * @param defaultOptionIdx: 기본 옵션 인덱스 (기본값: 0)
+ * @param selectedOption: 선택된 옵션
+ * @param onSelect: 옵션 선택 시 호출되는 콜백
  */
 export const SortTypeFilter = ({
   options,
   defaultOptionIdx = 0,
+  selectedOption,
+  onSelect,
 }: {
   options: SortType[];
   defaultOptionIdx?: number;
+  selectedOption: SortType;
+  onSelect?: (sortType: SortType) => void;
 }) => {
-  const { sortTypeParam: selectedSortType, setMapQueryParams } =
-    useMapQueryParams();
-
   const handleSelect = (sortType: SortType) => {
-    if (selectedSortType === sortType) return;
+    if (sortType === selectedOption) return;
 
-    setMapQueryParams({ sortType });
+    onSelect?.(sortType);
   };
 
   const defaultOption = options[defaultOptionIdx];
@@ -84,7 +87,7 @@ export const SortTypeFilter = ({
         <Select.OptionList>
           <Select.Option
             value={defaultOption}
-            isSelected={defaultOption === selectedSortType}
+            isSelected={defaultOption === selectedOption}
             onClick={() => handleSelect(defaultOption)}
           >
             {sortTypeMap[defaultOption]}
@@ -96,7 +99,7 @@ export const SortTypeFilter = ({
                 key={option}
                 value={option}
                 onClick={() => handleSelect(option)}
-                isSelected={option === selectedSortType}
+                isSelected={option === selectedOption}
               >
                 {sortTypeMap[option]}
               </Select.Option>
@@ -109,7 +112,7 @@ export const SortTypeFilter = ({
 
   return (
     <MarkingFilterButton onClick={handleOpen}>
-      {sortTypeMap[selectedSortType || defaultOption]}
+      {sortTypeMap[selectedOption || defaultOption]}
     </MarkingFilterButton>
   );
 };

@@ -1,7 +1,7 @@
+import { Link } from "react-router-dom";
 import { Nickname } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
-import { useInfiniteScroll } from "@/shared/lib";
-import { useNicknameParams } from "@/shared/lib/profile";
+import { useInfiniteScroll, useNicknameParams } from "@/shared/lib";
 import { useGetDashboardMarkingThumbnail } from "../api";
 
 interface MarkingThumbnailGridProps {
@@ -19,6 +19,8 @@ export const MarkingThumbnailGrid = ({
     }
   });
 
+  const { nicknameParams } = useNicknameParams();
+
   if (!data || isLoading) {
     return <div>loading..</div>;
   }
@@ -30,14 +32,18 @@ export const MarkingThumbnailGrid = ({
   return (
     <section className="w-full grid grid-cols-3 gap-2">
       {data.map(({ markingId, previewImage }) => (
-        // TODO : 이 장소 마킹 경로 나오면 Link 컴포넌트로 수정 하기
-        <div key={markingId} className="aspect-square">
+        <Link
+          to={`/@${nicknameParams}/markings`}
+          key={markingId}
+          className="aspect-square"
+          state={{ markingId }}
+        >
           <img
             src={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
             alt={`${nickname}의 ${markingId} 마킹의 썸네일 이미지`}
             className="w-full h-full object-cover rounded-[1rem]"
           />
-        </div>
+        </Link>
       ))}
       <div ref={setNode} />
     </section>

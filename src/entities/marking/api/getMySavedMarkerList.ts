@@ -35,7 +35,7 @@ export const useGetMySavedMarkingList = ({ enabled }: { enabled: boolean }) => {
       token && enabled
         ? ({ pageParam = 0 }) =>
             apiClient.get<GetMySavedMarkingListResponse>(
-              MARKING_END_POINT.MY_LIKED({ offset: pageParam }),
+              MARKING_END_POINT.MY_SAVED({ offset: pageParam }),
               {
                 withToken: true,
               },

@@ -54,7 +54,13 @@ export const LocalMarkingList = () => {
 
         <div className="flex">
           <RangeFilter options={["CURRENT_LOCATION", "MAP_LOCATION"]} />
-          <SortTypeFilter options={["POPULARITY", "RECENT", "DISTANCE"]} />
+          <SortTypeFilter
+            options={["POPULARITY", "RECENT", "DISTANCE"]}
+            selectedOption={sortTypeParam || "POPULARITY"}
+            onSelect={(sortType) => {
+              setMapQueryParams({ sortType });
+            }}
+          />
         </div>
       </div>
       <MarkingList display="grid">

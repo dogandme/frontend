@@ -107,6 +107,7 @@ export const ROUTER_PATH = {
   MY_ACTIVITY: "/map/my-activity",
 
   PROFILE: `/:nickname`,
+  USER_MARKING: "markings",
   FOLLOWINGS: `followings`,
   FOLLOWERS: `followers`,
 

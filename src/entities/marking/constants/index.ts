@@ -4,6 +4,9 @@ import type {
   GetUserMarkingListRequest,
   GetBoundaryMarkerListRequest,
   GetMyLikedMarkingListRequest,
+  GetMySavedMarkingListRequest,
+  GetMarkingDetailRequest,
+  GetAllMarkingsOfUserRequest,
 } from "../api";
 
 export const REVERSE_GEOCODING_END_POINT = ({
@@ -45,9 +48,24 @@ export const MARKING_END_POINT = {
 
     return `${API_BASE_URL}/markings/users/${nickname}?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&sortType=${sortType}&offset=${offset}${latLngQueryParams}`;
   },
+  ALL_MARKINGS_OF_USER: ({
+    nickname,
+    sortType,
+    offset,
+  }: GetAllMarkingsOfUserRequest) => {
+    return `${API_BASE_URL}/markings/users/${nickname}?sortType=${sortType}&offset=${offset}&mapViewMode=ALL_VIEW`;
+  },
 
   MY_LIKED: ({ offset }: GetMyLikedMarkingListRequest) =>
     `${API_BASE_URL}/markings/likes?offset=${offset}`,
+  MY_SAVED: ({ offset }: GetMySavedMarkingListRequest) =>
+    `${API_BASE_URL}/markings/saves?offset=${offset}`,
+
+  DETAIL: ({
+    markingId,
+  }: {
+    markingId: NonNullable<GetMarkingDetailRequest["markingId"]>;
+  }) => `${API_BASE_URL}/markings/${markingId}`,
 };
 
 export const MARKER_END_POINT = {
