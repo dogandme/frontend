@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignUpByEmailFormStore } from "@/features/auth/store";
 import { SignUpByEmailForm } from "@/features/auth/ui";
@@ -11,9 +10,6 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
-  const resetSignUpByEmailFormStore = useSignUpByEmailFormStore(
-    (state) => state.resetSignUpByEmailFormStore,
-  );
 
   const { handleOpen, onClose } = useModal(() => {
     return (
@@ -61,7 +57,6 @@ const SignUpPage = () => {
   const goOutsideCurrentPage = () => {
     navigate(ROUTER_PATH.LOGIN);
     onClose();
-    resetSignUpByEmailFormStore();
   };
 
   const handleCloseButtonClick = () => {
@@ -86,10 +81,6 @@ const SignUpPage = () => {
 
     handleOpen();
   };
-
-  useEffect(() => {
-    resetSignUpByEmailFormStore();
-  }, [resetSignUpByEmailFormStore]);
 
   return (
     <div className="pb-32">

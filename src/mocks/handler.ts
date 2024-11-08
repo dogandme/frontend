@@ -116,7 +116,13 @@ export const signUpByEmailHandlers = [
       });
     }
 
-    return new HttpResponse(null, { status: 401 });
+    return HttpResponse.json(
+      {
+        code: 400,
+        message: "이메일 인증에 실패했습니다.",
+      },
+      { status: 400 },
+    );
   }),
   http.post<
     PathParams,
