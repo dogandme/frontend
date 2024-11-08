@@ -25,7 +25,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
     (state) => state.setIsLastSearchedLocation,
   );
   const setMapInfo = useMapStore((state) => state.setMapInfo);
-  const debouncedSetMapInfo = debounce(setMapInfo, 1000);
+  const debouncedSetMapInfo = debounce(setMapInfo, 500);
 
   const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
     if (!isTilesLoadedRef.current) return;
