@@ -73,9 +73,10 @@ export const MyMarkingList = () => {
                 });
                 map.setZoom(19);
               }}
-              // todo isLiked, isBookmarked 설정
+              // todo isLiked, isBookmarked, isFollowing 설정
               isLiked={false}
               isBookmarked={false}
+              isFollowing={false}
               {...marking}
             />
           ))}
