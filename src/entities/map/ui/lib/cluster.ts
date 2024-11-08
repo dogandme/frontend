@@ -233,8 +233,7 @@ type Serializable =
 type ClusterKey = Serializable | undefined;
 
 export const useKMeansClustering = <T extends Marker>() => {
-  const mapInfo = useMapStore((state) => state.mapInfo);
-  const { zoom, bounds } = mapInfo;
+  const { zoom, bounds } = useMapStore((state) => state.mapInfo);
 
   const clusterKey = useRef<string>("");
   const cachedMarkerIdsMap = useRef<CachedMarkerIdsMap>({});
