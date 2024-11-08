@@ -1,5 +1,6 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
+import { useKMeansClustering } from "@/entities/map/ui/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKER_END_POINT } from "../constants";
@@ -53,6 +54,7 @@ export const useGetBoundaryMarkerList = ({
   northEastLng: number | null;
 }) => {
   const { isIdle: isMapIdle } = useMapStore.getState();
+  const getClusteredMarkers = useKMeansClustering();
 
   return useQuery({
     queryKey: [
@@ -79,6 +81,13 @@ export const useGetBoundaryMarkerList = ({
         : skipToken,
 
     refetchOnWindowFocus: false,
+    select: (data) =>
+      getClusteredMarkers(data, {
+        southWestLat,
+        southWestLng,
+        northEastLat,
+        northEastLng,
+      }),
 
     gcTime: 0,
   });
