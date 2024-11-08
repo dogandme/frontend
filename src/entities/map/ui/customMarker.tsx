@@ -1,6 +1,9 @@
 import { AdvancedMarker } from "@vis.gl/react-google-maps";
-import * as _Pin from "./pin";
-import type { PinProps } from "./pin";
+import { useMapStore } from "@/features/map/store";
+import { API_BASE_URL } from "@/shared/constants";
+import { Badge } from "@/shared/ui/badge";
+import { PinShadowIcon } from "@/shared/ui/icon";
+import { Cluster, Marker } from "./lib";
 
 interface MarkerProps {
   position: {
@@ -10,8 +13,12 @@ interface MarkerProps {
   onClick?: () => void;
 }
 
-interface GooglePinProps extends MarkerProps, PinProps {}
+interface PinProps {
+  imageUrl: string;
+  alt: string;
+}
 
+interface GooglePinProps extends MarkerProps, PinProps {}
 /**
  * 해당 컴포넌트는 지도 중심에 존재하는 사용자의 위치를 표시하기 위한 컴포넌트 입니다.
  */
@@ -26,15 +33,32 @@ export const User = ({ position }: MarkerProps) => {
   );
 };
 
-export const Pin = ({ position, imageUrl, alt, onClick }: GooglePinProps) => {
+const Pin = ({ imageUrl, alt }: PinProps) => (
+  <div className="relative">
+    <div
+      className={
+        "pin relative flex h-[2.75rem] w-8 items-center justify-center bg-tangerine-500"
+      }
+    >
+      <div className="h-[1.625rem] w-[1.625rem] translate-y-[-0.375rem] rounded-full bg-grey-0">
+        <img src={imageUrl} alt={alt} className="h-full w-full rounded-2xl" />
+      </div>
+    </div>
+    <span className="absolute translate-x-[0.25rem] translate-y-[-0.5rem]">
+      <PinShadowIcon fill="tangerine-900" />
+    </span>
+  </div>
+);
+
+const SinglePin = ({ position, imageUrl, alt, onClick }: GooglePinProps) => {
   return (
     <AdvancedMarker position={position} onClick={onClick}>
-      <_Pin.Default imageUrl={imageUrl} alt={alt} />
+      <Pin imageUrl={imageUrl} alt={alt} />
     </AdvancedMarker>
   );
 };
 
-export const MultiplePin = ({
+const MultiplePin = ({
   position,
   imageUrl,
   alt,
@@ -42,18 +66,63 @@ export const MultiplePin = ({
 }: GooglePinProps & { markerCount: number }) => {
   return (
     <AdvancedMarker position={position}>
-      <_Pin.Multiple imageUrl={imageUrl} alt={alt} markerCount={markerCount} />
+      <div className="relative">
+        <Pin imageUrl={imageUrl} alt={alt} />
+        <div className="absolute left-[0.75rem] top-[0.7rem]">
+          <Badge colorType="secondary">{`+${Math.min(markerCount, 99)}`}</Badge>
+        </div>
+      </div>
     </AdvancedMarker>
   );
 };
 
-export const Cluster = ({
+const ClusterPin = ({
   position,
   markerCount,
 }: MarkerProps & { markerCount: number }) => {
   return (
     <AdvancedMarker position={position}>
-      <_Pin.Cluster markerCount={markerCount} />
+      <span className="btn-2 bg-translucent-tangerine flex h-[3.75rem] w-[3.75rem] items-center justify-center rounded-full text-center text-tangerine-900">
+        {markerCount}
+      </span>
     </AdvancedMarker>
+  );
+};
+
+interface MarkingPinsProps {
+  clusteredMarkers: Cluster<Marker>[];
+  singleMarker: Marker[];
+}
+
+export const MarkingPins = ({
+  clusteredMarkers,
+  singleMarker,
+}: MarkingPinsProps) => {
+  const zoom = useMapStore((state) => state.mapInfo.zoom);
+
+  return (
+    <>
+      {clusteredMarkers.map(
+        ({ center, markerCount, previewImage, markingId }) =>
+          zoom < 14 ? (
+            <ClusterPin position={center} markerCount={markerCount} />
+          ) : (
+            <MultiplePin
+              position={center}
+              markerCount={markerCount}
+              imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
+              alt={`${markerCount}개 군집의 첫 번째 이미지`}
+            />
+          ),
+      )}
+      {singleMarker.map(({ markingId, lat, lng, previewImage }) => (
+        <SinglePin
+          key={markingId}
+          position={{ lat, lng }}
+          imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
+          alt={`${markingId}의 이미지`}
+        />
+      ))}
+    </>
   );
 };
