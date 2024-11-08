@@ -36,7 +36,7 @@ interface PetInformationFormActions {
 }
 
 const defaultExternalState: PetInformationFormExternalState = {
-  profile: { name: "", url: MASCOT_IMAGE_URL, file: null },
+   profile: { name: "", url: "", file: null },
   name: "",
   breed: "",
   personalities: [],
