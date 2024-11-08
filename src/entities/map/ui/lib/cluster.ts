@@ -226,7 +226,7 @@ export const useKMeansClustering = <T extends Marker>() => {
   const mapInfo = useMapStore((state) => state.mapInfo);
   const { zoom, bounds } = mapInfo;
 
-  const clusterKey = useRef<NonNullableBounds>(bounds);
+  const clusterKey = useRef<string>("");
   const cachedMarkerIdsMap = useRef<CachedMarkerIdsMap>({});
   const cachedClusteredMarkersMap = useRef<CachedClusterdMarkersMap<T>>({});
   const cachedSingleMarkersMap = useRef<CachedSingleMarkersMap<T>>({});
@@ -259,15 +259,24 @@ export const useKMeansClustering = <T extends Marker>() => {
     });
   };
 
+  type Serializable =
+    | null
+    | boolean
+    | number
+    | string
+    | Serializable[]
+    | { [key: string]: Serializable };
+
+  type ClusterKey = Serializable | undefined;
   const getClusteredMarkers = (
     markers: T[],
-    _clusterKey: NonNullableBounds,
+    _clusterKey: ClusterKey = "",
   ): { clusteredMarkers: Cluster<T>[]; singleMarker: T[] } => {
-    if (JSON.stringify(_clusterKey) !== JSON.stringify(clusterKey.current)) {
+    if (JSON.stringify(_clusterKey) !== clusterKey.current) {
       cachedMarkerIdsMap.current = {};
       cachedClusteredMarkersMap.current = {};
       cachedSingleMarkersMap.current = {};
-      clusterKey.current = _clusterKey;
+      clusterKey.current = JSON.stringify(_clusterKey);
     }
 
     const innerBoundaryMarkers = markers.filter(filterInnerBoundary);
