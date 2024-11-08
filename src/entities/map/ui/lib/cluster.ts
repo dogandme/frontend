@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { type Bounds } from "@/features/map/hooks";
-import { NonNullableBounds, useMapStore } from "@/features/map/store";
+import { useMapStore } from "@/features/map/store";
 
 interface LatLng {
   lat: number;
@@ -16,8 +16,8 @@ export class Cluster<T extends Marker> {
   outliers: T[] = [];
   markers: T[];
   center: LatLng = { lat: 0, lng: 0 };
-  // markerBounds는 클러스터링을 시행한 마커들이 존재하는 범위를 의미합니다.
-  // bounds는 해당 클러스터 내부 마커들의 바운더리를 의미합니다.
+  // markerBounds는 클러스터링을 시행한 전체 마커들이 존재하는 범위를 의미합니다. 클러스터링 생성 시 정규화에 사용 됩니다.
+  // bounds는 해당 클러스터 내부 마커들의 바운더리를 의미합니다. 해당 클러스터에 포함되는 마커들의 영역을 의미 합니다.
   markerBounds: Bounds;
   bounds: Bounds;
   markerCount: number = 0;
