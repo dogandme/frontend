@@ -1,7 +1,6 @@
 import { createContext, useContext } from "react";
 import { create, useStore } from "zustand";
 import { PetInfo } from "@/entities/profile/api";
-import { MASCOT_IMAGE_URL } from "@/shared/constants";
 import { compressFileImage } from "@/shared/lib";
 
 export interface FileInfo {
@@ -36,7 +35,7 @@ interface PetInformationFormActions {
 }
 
 const defaultExternalState: PetInformationFormExternalState = {
-   profile: { name: "", url: "", file: null },
+  profile: { name: "", url: "", file: null },
   name: "",
   breed: "",
   personalities: [],

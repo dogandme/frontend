@@ -1,4 +1,4 @@
-import { useState, useRef, useTransition, useEffect } from "react";
+import { useState, useRef, useTransition } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
