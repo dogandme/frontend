@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { type Bounds } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 
@@ -209,16 +210,89 @@ const CLUSTER_NUM_MAP: { [key: number]: number } = {
   17: 24,
   18: 34,
   19: 40,
+} as const;
+
+type CachedMarkerIdsMap = {
+  [key in number]: Record<number, boolean>;
+};
+type CachedClusterdMarkersMap<T extends Marker> = {
+  [key in number]: Cluster<T>[];
+};
+type CachedSingleMarkersMap<T extends Marker> = {
+  [key in number]: T[];
 };
 
 export const useKMeansClustering = <T extends Marker>() => {
-  const zoom = useMapStore((state) => state.zoom);
+  const mapInfo = useMapStore((state) => state.mapInfo);
+  const { zoom, bounds } = mapInfo;
+
+  const cachedMarkerIdsMap = useRef<CachedMarkerIdsMap>({});
+  const cachedClusteredMarkersMap = useRef<CachedClusterdMarkersMap<T>>({});
+  const cachedSingleMarkersMap = useRef<CachedSingleMarkersMap<T>>({});
+
+  /**
+   * 특정 위경도 좌표가 바운더리 내부에 있는지 판단 합니다.
+   * 해당 메소드는 클러스터들을 필터링 하거나 , 마커를 필터링 할 때 사용 됩니다.
+   */
+  const filterInnerBoundary = ({ lat, lng }: LatLng) => {
+    const { northEastLat, northEastLng, southWestLat, southWestLng } = bounds;
+    return (
+      lat >= southWestLat &&
+      lat <= northEastLat &&
+      lng >= southWestLng &&
+      lng <= northEastLng
+    );
+  };
+
+  /**
+   * 인수로 들어온 마커들의 마킹 아이디를 캐싱 합니다.
+   * 이후 이전에 캐싱 되지 않았던 새로운 마커들만 필터링 하여 반환합니다.
+   */
+  const filterNonCachedMarker = <T extends Marker>(markers: T[]): T[] => {
+    const previousCachedMarkerIdsMap = { ...cachedMarkerIdsMap.current[zoom] };
+
+    cachedMarkerIdsMap.current[zoom] = {};
+    return markers.filter(({ markingId }) => {
+      cachedMarkerIdsMap.current[zoom][markingId] = true;
+      return !previousCachedMarkerIdsMap[markingId];
+    });
+  };
 
   const getClusteredMarkers = (
     markers: T[],
   ): { clusteredMarkers: Cluster<T>[]; singleMarker: T[] } => {
-    const numOfCluster = Math.min(CLUSTER_NUM_MAP[zoom], markers.length);
-    const bounds = Cluster.getBounds(markers);
+    const innerBoundaryMarkers = markers.filter(filterInnerBoundary);
+    const nonCachedMarker = filterNonCachedMarker(innerBoundaryMarkers);
+
+    // 이전에 캐싱 해둔 클러스터 중 현재 바운더리 내부에 있는 클러스터만 필터링 합니다.
+    cachedClusteredMarkersMap.current[zoom] = cachedClusteredMarkersMap.current[
+      zoom
+    ]
+      ? cachedClusteredMarkersMap.current[zoom].filter(({ center }) =>
+          filterInnerBoundary(center),
+        )
+      : [];
+
+    // 이전에 캐싱 해둔 싱글마커 중 현재 바운더리 내부에 있는 마커만 필터링 합니다.
+    cachedSingleMarkersMap.current[zoom] = cachedSingleMarkersMap.current[zoom]
+      ? cachedSingleMarkersMap.current[zoom].filter(filterInnerBoundary)
+      : [];
+
+    const cachedClusteredMarkers = cachedClusteredMarkersMap.current[zoom];
+    const cachedSingleMarkers = cachedSingleMarkersMap.current[zoom];
+
+    if (nonCachedMarker.length === 0) {
+      return {
+        clusteredMarkers: cachedClusteredMarkers,
+        singleMarker: cachedSingleMarkers,
+      };
+    }
+
+    const numOfCluster = Math.min(
+      CLUSTER_NUM_MAP[zoom],
+      nonCachedMarker.length,
+    );
+    const bounds = Cluster.getBounds(nonCachedMarker);
 
     // K개의 클러스터를 생성합니다.
     // TODO 휴리스틱한 방식으로 초기값 뽑기
@@ -226,18 +300,18 @@ export const useKMeansClustering = <T extends Marker>() => {
     const clusters = Array.from({ length: numOfCluster }, () => {
       let randomIndex;
       do {
-        randomIndex = Math.floor(Math.random() * markers.length);
+        randomIndex = Math.floor(Math.random() * nonCachedMarker.length);
       } while (randomIndexMap[randomIndex]);
 
       randomIndexMap[randomIndex] = true;
-      return new Cluster(markers[randomIndex], bounds);
+      return new Cluster(nonCachedMarker[randomIndex], bounds);
     });
 
     let isChanged = true;
     while (isChanged) {
       clusters.forEach((cluster) => cluster.clearMarkers());
 
-      markers.forEach((marker) => {
+      nonCachedMarker.forEach((marker) => {
         const [, closestClusterIndex] = clusters.reduce(
           ([minDistance, minClusterIndex], cluster, index) => {
             const distance = cluster.calculateDistance(marker);
@@ -256,7 +330,7 @@ export const useKMeansClustering = <T extends Marker>() => {
     }
 
     // 클러스터링 된 마커들과 단일 마커들을 구분지어 반환 합니다.
-    const [clusteredMarkers, singleMarker] = clusters.reduce(
+    let [clusteredMarkers, singleMarker] = clusters.reduce(
       ([clusteredMarkers, singleMarkers], cluster) => {
         // 줌 레벨이 특정 값 이하일 때는 모든 데이터를 클러스터로 표현합니다.
         if (zoom <= 14) {
@@ -276,6 +350,12 @@ export const useKMeansClustering = <T extends Marker>() => {
       },
       [[], []] as [Cluster<T>[], T[]],
     );
+
+    clusteredMarkers = [...clusteredMarkers, ...cachedClusteredMarkers];
+    singleMarker = [...singleMarker, ...cachedSingleMarkers];
+
+    cachedClusteredMarkersMap.current[zoom] = clusteredMarkers;
+    cachedSingleMarkersMap.current[zoom] = singleMarker;
 
     return { clusteredMarkers, singleMarker };
   };
