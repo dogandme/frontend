@@ -307,7 +307,7 @@ export const useKMeansClustering = <T extends Marker>() => {
     }
 
     const numOfCluster = Math.min(
-      CLUSTER_NUM_MAP[zoom],
+      CLUSTER_NUM_MAP[zoom] - cachedClusteredMarkers.length,
       nonCachedMarker.length,
     );
     const bounds = Cluster.getBounds(nonCachedMarker);
