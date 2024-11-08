@@ -4,7 +4,11 @@ import { useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { useGetUserMarkingList } from "@/entities/marking/api";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
-import { useGetProfile } from "@/entities/profile/api";
+import {
+  useGetMyBookmarkIdsMap,
+  useGetMyLikedIdsMap,
+  useGetProfile,
+} from "@/entities/profile/api";
 import { useInfiniteScroll } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MarkingList } from "./markingList";
@@ -27,12 +31,16 @@ export const MyMarkingList = () => {
     nickname: nickname || "",
     sortType: sortTypeParam,
   });
+  const { data: myBookmarkedMap } = useGetMyBookmarkIdsMap();
+  const { data: myLikedMap } = useGetMyLikedIdsMap();
 
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   });
+
+  if (!myBookmarkedMap || !myLikedMap) return null;
 
   // todo 회원이 아닐 경우
   if (!nickname) return null;
@@ -70,10 +78,9 @@ export const MyMarkingList = () => {
                 });
                 map.setZoom(19);
               }}
-              // todo isLiked, isBookmarked, isFollowing 설정
-              isLiked={false}
-              isBookmarked={false}
-              isFollowing={false}
+              isLiked={myLikedMap[marking.markingId]}
+              isBookmarked={myBookmarkedMap[marking.markingId]}
+              queryKeys={["marker", "markingList"]}
               {...marking}
             />
           ))}
