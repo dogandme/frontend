@@ -222,6 +222,16 @@ type CachedSingleMarkersMap<T extends Marker> = {
   [key in number]: T[];
 };
 
+// 직렬화 가능한 모든 타입을 클러스터키로 사용 합니다.
+type Serializable =
+  | null
+  | boolean
+  | number
+  | string
+  | Serializable[]
+  | { [key: string]: Serializable };
+type ClusterKey = Serializable | undefined;
+
 export const useKMeansClustering = <T extends Marker>() => {
   const mapInfo = useMapStore((state) => state.mapInfo);
   const { zoom, bounds } = mapInfo;
@@ -244,7 +254,6 @@ export const useKMeansClustering = <T extends Marker>() => {
       lng <= northEastLng
     );
   };
-
   /**
    * 인수로 들어온 마커들의 마킹 아이디를 캐싱 합니다.
    * 이후 이전에 캐싱 되지 않았던 새로운 마커들만 필터링 하여 반환합니다.
@@ -259,19 +268,11 @@ export const useKMeansClustering = <T extends Marker>() => {
     });
   };
 
-  type Serializable =
-    | null
-    | boolean
-    | number
-    | string
-    | Serializable[]
-    | { [key: string]: Serializable };
-
-  type ClusterKey = Serializable | undefined;
   const getClusteredMarkers = (
     markers: T[],
     _clusterKey: ClusterKey = "",
   ): { clusteredMarkers: Cluster<T>[]; singleMarker: T[] } => {
+    // 만약 클러스터 키가 변경된 경우 캐싱된 데이터를 초기화 합니다.
     if (JSON.stringify(_clusterKey) !== clusterKey.current) {
       cachedMarkerIdsMap.current = {};
       cachedClusteredMarkersMap.current = {};
@@ -310,7 +311,8 @@ export const useKMeansClustering = <T extends Marker>() => {
       CLUSTER_NUM_MAP[zoom] - cachedClusteredMarkers.length,
       nonCachedMarker.length,
     );
-    const bounds = Cluster.getBounds(nonCachedMarker);
+    // 클러스터링을 시행 할 마커 좌표의 최대,최소 값을 계산합니다.
+    const nonCachedMarkerBounds = Cluster.getBounds(nonCachedMarker);
 
     // K개의 클러스터를 생성합니다.
     // TODO 휴리스틱한 방식으로 초기값 뽑기
@@ -322,7 +324,7 @@ export const useKMeansClustering = <T extends Marker>() => {
       } while (randomIndexMap[randomIndex]);
 
       randomIndexMap[randomIndex] = true;
-      return new Cluster(nonCachedMarker[randomIndex], bounds);
+      return new Cluster(nonCachedMarker[randomIndex], nonCachedMarkerBounds);
     });
 
     let isChanged = true;
