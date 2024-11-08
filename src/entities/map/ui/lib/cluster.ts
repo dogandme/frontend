@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { type Bounds } from "@/features/map/hooks";
-import { useMapStore } from "@/features/map/store";
+import { NonNullableBounds, useMapStore } from "@/features/map/store";
 
 interface LatLng {
   lat: number;
@@ -226,6 +226,7 @@ export const useKMeansClustering = <T extends Marker>() => {
   const mapInfo = useMapStore((state) => state.mapInfo);
   const { zoom, bounds } = mapInfo;
 
+  const clusterKey = useRef<NonNullableBounds>(bounds);
   const cachedMarkerIdsMap = useRef<CachedMarkerIdsMap>({});
   const cachedClusteredMarkersMap = useRef<CachedClusterdMarkersMap<T>>({});
   const cachedSingleMarkersMap = useRef<CachedSingleMarkersMap<T>>({});
@@ -260,7 +261,15 @@ export const useKMeansClustering = <T extends Marker>() => {
 
   const getClusteredMarkers = (
     markers: T[],
+    _clusterKey: NonNullableBounds,
   ): { clusteredMarkers: Cluster<T>[]; singleMarker: T[] } => {
+    if (JSON.stringify(_clusterKey) !== JSON.stringify(clusterKey.current)) {
+      cachedMarkerIdsMap.current = {};
+      cachedClusteredMarkersMap.current = {};
+      cachedSingleMarkersMap.current = {};
+      clusterKey.current = _clusterKey;
+    }
+
     const innerBoundaryMarkers = markers.filter(filterInnerBoundary);
     const nonCachedMarker = filterNonCachedMarker(innerBoundaryMarkers);
 
