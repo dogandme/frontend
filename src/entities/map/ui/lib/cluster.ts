@@ -316,15 +316,21 @@ export const useKMeansClustering = <T extends Marker>() => {
     // K개의 클러스터를 생성합니다.
     // TODO 휴리스틱한 방식으로 초기값 뽑기
     const randomIndexMap: Record<number, boolean> = {};
-    const clusters = Array.from({ length: numOfCluster }, () => {
-      let randomIndex;
-      do {
-        randomIndex = Math.floor(Math.random() * nonCachedMarker.length);
-      } while (randomIndexMap[randomIndex]);
+    const clusters =
+      numOfCluster === markers.length
+        ? markers.map((marker) => new Cluster(marker, nonCachedMarkerBounds))
+        : Array.from({ length: numOfCluster }, () => {
+            let randomIndex;
+            do {
+              randomIndex = Math.floor(Math.random() * nonCachedMarker.length);
+            } while (randomIndexMap[randomIndex]);
 
-      randomIndexMap[randomIndex] = true;
-      return new Cluster(nonCachedMarker[randomIndex], nonCachedMarkerBounds);
-    });
+            randomIndexMap[randomIndex] = true;
+            return new Cluster(
+              nonCachedMarker[randomIndex],
+              nonCachedMarkerBounds,
+            );
+          });
 
     let isChanged = true;
     while (isChanged) {
