@@ -1,9 +1,14 @@
-import { AdvancedMarker, AdvancedMarkerProps } from "@vis.gl/react-google-maps";
-import { useMapStore } from "@/features/map/store";
+import { useCallback } from "react";
+import {
+  AdvancedMarker,
+  AdvancedMarkerProps,
+  useMap,
+} from "@vis.gl/react-google-maps";
+import { NonNullableBounds, useMapStore } from "@/features/map/store";
 import { API_BASE_URL } from "@/shared/constants";
 import { Badge } from "@/shared/ui/badge";
 import { PinShadowIcon } from "@/shared/ui/icon";
-import { Cluster, Marker } from "./lib";
+import { Cluster, Marker } from "../lib";
 
 /**
  * 해당 컴포넌트는 지도 중심에 존재하는 사용자의 위치를 표시하기 위한 컴포넌트 입니다.
@@ -40,10 +45,10 @@ const SinglePin = ({
   position,
   imageUrl,
   alt,
-  onClick,
+  ...props
 }: AdvancedMarkerProps) => {
   return (
-    <AdvancedMarker position={position} onClick={onClick}>
+    <AdvancedMarker position={position} {...props}>
       <Pin imageUrl={imageUrl} alt={alt} />
     </AdvancedMarker>
   );
@@ -70,7 +75,7 @@ const MultiplePin = ({
   );
 };
 
-const ClusterPin = ({ position, children, props }: AdvancedMarkerProps) => {
+const ClusterPin = ({ position, children, ...props }: AdvancedMarkerProps) => {
   return (
     <AdvancedMarker position={position} {...props}>
       <span className="btn-2 bg-translucent-tangerine flex h-[3.75rem] w-[3.75rem] items-center justify-center rounded-full text-center text-tangerine-900">
@@ -90,13 +95,28 @@ export const MarkingPins = ({
   singleMarker,
 }: MarkingPinsProps) => {
   const zoom = useMapStore((state) => state.mapInfo.zoom);
+  const map = useMap();
+
+  const handleClick = (bounds: NonNullableBounds) => {
+    const { northEastLat, northEastLng, southWestLat, southWestLng } = bounds;
+    map.fitBounds({
+      south: southWestLat,
+      west: southWestLng,
+      north: northEastLat,
+      east: northEastLng,
+    });
+  };
 
   return (
     <>
       {clusteredMarkers.map(
         ({ center, markerCount, previewImage, markingId, bounds }) =>
           zoom < 14 ? (
-            <ClusterPin position={center} markerCount={markerCount}>
+            <ClusterPin
+              position={center}
+              markerCount={markerCount}
+              onClick={() => handleClick(bounds)}
+            >
               {markerCount}
             </ClusterPin>
           ) : (
@@ -105,7 +125,7 @@ export const MarkingPins = ({
               markerCount={markerCount}
               imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
               alt={`${markerCount}개 군집의 첫 번째 이미지`}
-              bounds={bounds}
+              onClick={() => handleClick(bounds)}
             >
               {markerCount}
             </MultiplePin>
@@ -117,6 +137,10 @@ export const MarkingPins = ({
           position={{ lat, lng }}
           imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
           alt={`${markingId}의 이미지`}
+          onClick={() => {
+            map.setCenter({ lat, lng });
+            map.setZoom(18);
+          }}
         />
       ))}
     </>

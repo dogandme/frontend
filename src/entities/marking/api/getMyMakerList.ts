@@ -1,5 +1,5 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
-import { useKMeansClustering } from "@/entities/map/ui/lib";
+import { useKMeansClustering } from "@/entities/map/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKER_END_POINT } from "../constants";
