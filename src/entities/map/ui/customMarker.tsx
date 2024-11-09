@@ -1,28 +1,14 @@
-import { AdvancedMarker } from "@vis.gl/react-google-maps";
+import { AdvancedMarker, AdvancedMarkerProps } from "@vis.gl/react-google-maps";
 import { useMapStore } from "@/features/map/store";
 import { API_BASE_URL } from "@/shared/constants";
 import { Badge } from "@/shared/ui/badge";
 import { PinShadowIcon } from "@/shared/ui/icon";
 import { Cluster, Marker } from "./lib";
 
-interface MarkerProps {
-  position: {
-    lat: number;
-    lng: number;
-  };
-  onClick?: () => void;
-}
-
-interface PinProps {
-  imageUrl: string;
-  alt: string;
-}
-
-interface GooglePinProps extends MarkerProps, PinProps {}
 /**
  * 해당 컴포넌트는 지도 중심에 존재하는 사용자의 위치를 표시하기 위한 컴포넌트 입니다.
  */
-export const User = ({ position }: MarkerProps) => {
+export const User = ({ position }: AdvancedMarkerProps) => {
   return (
     <AdvancedMarker position={position}>
       <div className="relative">
@@ -33,7 +19,7 @@ export const User = ({ position }: MarkerProps) => {
   );
 };
 
-const Pin = ({ imageUrl, alt }: PinProps) => (
+const Pin = ({ imageUrl, alt }: AdvancedMarkerProps) => (
   <div className="relative">
     <div
       className={
@@ -50,7 +36,12 @@ const Pin = ({ imageUrl, alt }: PinProps) => (
   </div>
 );
 
-const SinglePin = ({ position, imageUrl, alt, onClick }: GooglePinProps) => {
+const SinglePin = ({
+  position,
+  imageUrl,
+  alt,
+  onClick,
+}: AdvancedMarkerProps) => {
   return (
     <AdvancedMarker position={position} onClick={onClick}>
       <Pin imageUrl={imageUrl} alt={alt} />
@@ -62,28 +53,28 @@ const MultiplePin = ({
   position,
   imageUrl,
   alt,
-  markerCount,
-}: GooglePinProps & { markerCount: number }) => {
+  children,
+  ...props
+}: AdvancedMarkerProps & {
+  children: number;
+}) => {
   return (
-    <AdvancedMarker position={position}>
+    <AdvancedMarker position={position} {...props}>
       <div className="relative">
         <Pin imageUrl={imageUrl} alt={alt} />
         <div className="absolute left-[0.75rem] top-[0.7rem]">
-          <Badge colorType="secondary">{`+${Math.min(markerCount, 99)}`}</Badge>
+          <Badge colorType="secondary">{`+${Math.min(children, 99)}`}</Badge>
         </div>
       </div>
     </AdvancedMarker>
   );
 };
 
-const ClusterPin = ({
-  position,
-  markerCount,
-}: MarkerProps & { markerCount: number }) => {
+const ClusterPin = ({ position, children, props }: AdvancedMarkerProps) => {
   return (
-    <AdvancedMarker position={position}>
+    <AdvancedMarker position={position} {...props}>
       <span className="btn-2 bg-translucent-tangerine flex h-[3.75rem] w-[3.75rem] items-center justify-center rounded-full text-center text-tangerine-900">
-        {markerCount}
+        {children}
       </span>
     </AdvancedMarker>
   );
@@ -103,16 +94,21 @@ export const MarkingPins = ({
   return (
     <>
       {clusteredMarkers.map(
-        ({ center, markerCount, previewImage, markingId }) =>
+        ({ center, markerCount, previewImage, markingId, bounds }) =>
           zoom < 14 ? (
-            <ClusterPin position={center} markerCount={markerCount} />
+            <ClusterPin position={center} markerCount={markerCount}>
+              {markerCount}
+            </ClusterPin>
           ) : (
             <MultiplePin
               position={center}
               markerCount={markerCount}
               imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
               alt={`${markerCount}개 군집의 첫 번째 이미지`}
-            />
+              bounds={bounds}
+            >
+              {markerCount}
+            </MultiplePin>
           ),
       )}
       {singleMarker.map(({ markingId, lat, lng, previewImage }) => (
