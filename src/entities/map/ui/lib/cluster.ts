@@ -213,13 +213,13 @@ const CLUSTER_NUM_MAP: { [key: number]: number } = {
 } as const;
 
 type CachedMarkerIdsMap = {
-  [key in number]: Record<number, boolean>;
+  [key in keyof typeof CLUSTER_NUM_MAP]: Record<Marker["markingId"], boolean>;
 };
 type CachedClusterdMarkersMap<T extends Marker> = {
-  [key in number]: Cluster<T>[];
+  [key in keyof typeof CLUSTER_NUM_MAP]: Cluster<T>[];
 };
 type CachedSingleMarkersMap<T extends Marker> = {
-  [key in number]: T[];
+  [key in keyof typeof CLUSTER_NUM_MAP]: T[];
 };
 
 // 직렬화 가능한 모든 타입을 클러스터키로 사용 합니다.
