@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { MarkingList } from "@/widgets/map/ui/markingList";
-import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
+import { MarkingItem } from "@/widgets/marking/ui";
+import { SortTypeFilter } from "@/features/marking/ui";
 import {
   SortType,
   useGetAllMarkingsOfUser,
