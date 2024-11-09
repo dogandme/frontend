@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { Map, MapCameraChangedEvent } from "@vis.gl/react-google-maps";
+import { Map, MapEvent } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
 import { useMapStore } from "@/features/map/store/map";
-import { debounce } from "@/shared/lib";
 import { mapOptions } from "../constants";
 
 const GOOGLE_MAPS_MAP_ID = import.meta.env.VITE_GOOGLE_MAPS_ID;
@@ -25,22 +24,26 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
     (state) => state.setIsLastSearchedLocation,
   );
   const setMapInfo = useMapStore((state) => state.setMapInfo);
-  const debouncedSetMapInfo = debounce(setMapInfo, 500);
 
-  const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
+  const handleMapChange = () => {
     if (!isTilesLoadedRef.current) return;
-    const { center, zoom, bounds } = detail;
-
     setIsLastSearchedLocation(false);
     setIsMapCenteredOnMyLocation(false);
-    debouncedSetMapInfo({
-      center: center,
+  };
+
+  const handleMapIdle = ({ map }: MapEvent) => {
+    const center = map.getCenter();
+    const zoom = map.getZoom();
+    const bounds = map.getBounds();
+    setIsIdle(true);
+    setMapInfo({
+      center: { lat: center.lat(), lng: center.lng() },
       zoom: Math.floor(zoom),
       bounds: {
-        northEastLat: bounds.north,
-        northEastLng: bounds.east,
-        southWestLat: bounds.south,
-        southWestLng: bounds.west,
+        northEastLat: bounds.getNorthEast().lat(),
+        northEastLng: bounds.getNorthEast().lng(),
+        southWestLat: bounds.getSouthWest().lat(),
+        southWestLng: bounds.getSouthWest().lng(),
       },
     });
   };
@@ -74,10 +77,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       defaultZoom={MAP_INITIAL_ZOOM}
       reuseMaps // Map 컴포넌트가 unmount 되었다가 다시 mount 될 때 기존의 map instance 를 재사용 하여 memory leak을 방지합니다.
       onCameraChanged={handleMapChange}
-      onIdle={() => {
-        // 이동이나 확대/축소 후 지도가 멈추었을 때 호출
-        setIsIdle(true);
-      }}
+      onIdle={handleMapIdle}
       onTilesLoaded={() => {
         isTilesLoadedRef.current = true;
       }}
