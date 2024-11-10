@@ -1,14 +1,13 @@
-import { useCallback } from "react";
 import {
   AdvancedMarker,
   AdvancedMarkerProps,
   useMap,
 } from "@vis.gl/react-google-maps";
-import { NonNullableBounds, useMapStore } from "@/features/map/store";
+import { mapOptions } from "@/widgets/map/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import { Badge } from "@/shared/ui/badge";
 import { PinShadowIcon } from "@/shared/ui/icon";
-import { Cluster, Marker } from "../lib";
+import { Tile } from "../lib";
 
 /**
  * 해당 컴포넌트는 지도 중심에 존재하는 사용자의 위치를 표시하기 위한 컴포넌트 입니다.
@@ -85,64 +84,66 @@ const ClusterPin = ({ position, children, ...props }: AdvancedMarkerProps) => {
   );
 };
 
-interface MarkingPinsProps {
-  clusteredMarkers: Cluster<Marker>[];
-  singleMarker: Marker[];
+interface MarkingPinProps {
+  tiles: Tile[];
+  clusterDensity?: number;
 }
-
 export const MarkingPins = ({
-  clusteredMarkers,
-  singleMarker,
-}: MarkingPinsProps) => {
-  const zoom = useMapStore((state) => state.mapInfo.zoom);
+  tiles,
+  clusterDensity = tiles.length / 3,
+}: MarkingPinProps) => {
   const map = useMap();
+  const zoom = map.getZoom();
 
-  const handleClick = (bounds: NonNullableBounds) => {
-    const { northEastLat, northEastLng, southWestLat, southWestLng } = bounds;
-    map.fitBounds({
-      south: southWestLat,
-      west: southWestLng,
-      north: northEastLat,
-      east: northEastLng,
-    });
+  const handleClickSingleMarker = (position: Tile["position"]) => {
+    map.setCenter(position);
+    map.setZoom(mapOptions.maxZoom);
   };
 
-  return (
-    <>
-      {clusteredMarkers.map(
-        ({ center, markerCount, previewImage, markingId, bounds }) =>
-          zoom < 14 ? (
-            <ClusterPin
-              position={center}
-              markerCount={markerCount}
-              onClick={() => handleClick(bounds)}
-            >
-              {markerCount}
-            </ClusterPin>
-          ) : (
-            <MultiplePin
-              position={center}
-              markerCount={markerCount}
-              imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-              alt={`${markerCount}개 군집의 첫 번째 이미지`}
-              onClick={() => handleClick(bounds)}
-            >
-              {markerCount}
-            </MultiplePin>
-          ),
-      )}
-      {singleMarker.map(({ markingId, lat, lng, previewImage }) => (
+  const handleClickMultipleMarker = (position: Tile["position"]) => {
+    map.setCenter(position);
+    map.setZoom(Math.min(zoom + 1, mapOptions.maxZoom));
+  };
+
+  return tiles.map(({ markingId, markerCount, position, previewImage }) => {
+    if (markerCount < 1) {
+      return null;
+    }
+
+    if (markerCount === 1) {
+      return (
         <SinglePin
           key={markingId}
-          position={{ lat, lng }}
+          position={position}
           imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-          alt={`${markingId}의 이미지`}
-          onClick={() => {
-            map.setCenter({ lat, lng });
-            map.setZoom(18);
-          }}
+          alt={`marking-${markingId} 마커를 나타내는 핀`}
+          onClick={() => handleClickSingleMarker(position)}
         />
-      ))}
-    </>
-  );
+      );
+    }
+
+    if (markerCount < clusterDensity) {
+      return (
+        <MultiplePin
+          key={markingId}
+          position={position}
+          imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
+          alt={`${markerCount}개의 마커를 담은 멀티핀`}
+          onClick={() => handleClickMultipleMarker(position)}
+        >
+          {markerCount}
+        </MultiplePin>
+      );
+    }
+    return (
+      <ClusterPin
+        key={markingId}
+        position={position}
+        onClick={() => handleClickMultipleMarker(position)}
+        aira-label={`${markerCount}개의 마커를 포함한 클러스터`}
+      >
+        {markerCount}
+      </ClusterPin>
+    );
+  });
 };
