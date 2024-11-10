@@ -155,7 +155,6 @@ type Serializable =
   | string
   | Serializable[]
   | { [key: string]: Serializable };
-
 type TilingKey = Serializable | undefined;
 
 export const useTiling = () => {
@@ -171,10 +170,15 @@ export const useTiling = () => {
    * @description 마커들을 받아 해당 마커들을 타일에 분배합니다.
    * @returns 2차원 배열로 분배된 타일들을 1차원 배열로 반환합니다.
    */
-  const getTiles = (_markers: Marker[], _tilingKey = "") => {
+  const getTiles = (_markers: Marker[], _tilingKey: TilingKey = "") => {
     // 만약 줌이 변경되었거나 타일 키가 변경된 경우엔 캐시된 타일을 초기화 합니다.
-    if (zoom !== previousZoom.current || _tilingKey !== tilingKey.current) {
+    const stringfiedTilingKey = JSON.stringify(_tilingKey);
+    if (
+      zoom !== previousZoom.current ||
+      stringfiedTilingKey !== tilingKey.current
+    ) {
       cachedTiles.current = [];
+      tilingKey.current = stringfiedTilingKey;
     }
     previousZoom.current = zoom;
 
