@@ -1,10 +1,10 @@
 import { create } from "zustand";
+import { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import {
   MAP_INITIAL_BOUNDS,
   MAP_INITIAL_CENTER,
   MAP_INITIAL_ZOOM,
 } from "../constants";
-import { Bounds } from "../hooks";
 
 export interface LatLng {
   lat: number;
@@ -13,7 +13,7 @@ export interface LatLng {
 export interface MapInfo {
   center: LatLng;
   zoom: number;
-  bounds: NonNullableBounds;
+  bounds: MapCameraChangedEvent["detail"]["bounds"];
 }
 type Mode = "view" | "add";
 
@@ -24,10 +24,6 @@ interface UserInfo {
   };
   hasLocationPermission: boolean;
 }
-
-export type NonNullableBounds = {
-  [key in keyof Bounds]: NonNullable<Bounds[key]>;
-};
 
 interface MapState {
   isIdle: boolean;
@@ -59,12 +55,7 @@ const mapStoreInitialState: MapState = {
   mapInfo: {
     center: MAP_INITIAL_CENTER,
     zoom: MAP_INITIAL_ZOOM,
-    bounds: {
-      northEastLat: MAP_INITIAL_BOUNDS.east,
-      northEastLng: MAP_INITIAL_BOUNDS.north,
-      southWestLat: MAP_INITIAL_BOUNDS.west,
-      southWestLng: MAP_INITIAL_BOUNDS.south,
-    },
+    bounds: MAP_INITIAL_BOUNDS,
   },
 };
 

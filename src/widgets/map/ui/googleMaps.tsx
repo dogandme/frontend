@@ -35,15 +35,19 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
     const center = map.getCenter();
     const zoom = map.getZoom();
     const bounds = map.getBounds();
+
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
+
     setIsIdle(true);
     setMapInfo({
       center: { lat: center.lat(), lng: center.lng() },
-      zoom: Math.floor(zoom),
+      zoom: zoom,
       bounds: {
-        northEastLat: bounds.getNorthEast().lat(),
-        northEastLng: bounds.getNorthEast().lng(),
-        southWestLat: bounds.getSouthWest().lat(),
-        southWestLng: bounds.getSouthWest().lng(),
+        east: northEast.lng(),
+        north: northEast.lat(),
+        west: southWest.lng(),
+        south: southWest.lat(),
       },
     });
   };
