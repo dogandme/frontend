@@ -1,5 +1,5 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
-import { useKMeansClustering } from "@/entities/map/lib";
+import { useTiling } from "@/entities/map/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKER_END_POINT } from "../constants";
@@ -15,7 +15,7 @@ type GetMyMarkerListResponse = Marker[];
 
 export const useGetMyMakerList = () => {
   const { token } = useAuthStore.getState();
-  const getClusteredMarkers = useKMeansClustering();
+  const getTiles = useTiling();
 
   return useQuery({
     queryKey: ["myMarkerList"],
@@ -26,6 +26,6 @@ export const useGetMyMakerList = () => {
           });
         }
       : skipToken,
-    select: (data) => getClusteredMarkers(data),
+    select: (data) => getTiles(data),
   });
 };

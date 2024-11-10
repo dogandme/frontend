@@ -11,7 +11,7 @@ export const MapPage = () => {
 
   return (
     <>
-      {data && <MarkingPins {...data} />}
+      {data && <MarkingPins tiles={data} />}
       <LocalMarkingList />
     </>
   );

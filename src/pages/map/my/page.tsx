@@ -7,7 +7,7 @@ export const MyMarkingPage = () => {
 
   return (
     <>
-      {data && <MarkingPins {...data} />}
+      {data && <MarkingPins tiles={data} />}
       <MyMarkingList />
     </>
   );
