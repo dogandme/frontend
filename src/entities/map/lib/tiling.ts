@@ -40,7 +40,7 @@ export class Tile {
     this.bounds = bounds;
   }
 
-  pushMarker({ lat, lng, previewImage, markingId }: Marker) {
+  addMarker({ lat, lng, previewImage, markingId }: Marker) {
     // 처음 삽입되는 마커의 썸네일과 마킹 아이디를 저장 합니다.
     if (this.markerCount < 1) {
       this.previewImage = previewImage;
@@ -78,10 +78,10 @@ interface TileArea {
 }
 const getTileArea = (
   bounds: MapBounds,
-  [numOfLowTiles, numOfColTiles]: NumOfTiles,
+  [numOfRowTiles, numOfColTiles]: NumOfTiles,
 ): TileArea => {
   return {
-    width: (bounds.east - bounds.west) / numOfLowTiles,
+    width: (bounds.east - bounds.west) / numOfRowTiles,
     height: (bounds.north - bounds.south) / numOfColTiles,
   };
 };
@@ -103,9 +103,9 @@ const createTiles = (bounds: MapBounds, numOfTiles: NumOfTiles): Tile[][] => {
     });
   };
 
-  return Array.from({ length: numOfRowTiles }, (_, rowIndex) =>
-    Array.from({ length: numOfColTiles }, (_, colIndex) =>
-      createTile(rowIndex, colIndex),
+  return Array.from({ length: numOfRowTiles }, (_, lngIndex) =>
+    Array.from({ length: numOfColTiles }, (_, latIndex) =>
+      createTile(lngIndex, latIndex),
     ),
   );
 };
@@ -172,7 +172,7 @@ export const useTiling = () => {
    * @returns 2차원 배열로 분배된 타일들을 1차원 배열로 반환합니다.
    */
   const getTiles = (_markers: Marker[], _tilingKey = "") => {
-    // 만약 줌이 변경된 경우엔 캐시된 타일을 초기화 합니다.
+    // 만약 줌이 변경되었거나 타일 키가 변경된 경우엔 캐시된 타일을 초기화 합니다.
     if (zoom !== previousZoom.current || _tilingKey !== tilingKey.current) {
       cachedTiles.current = [];
     }
@@ -205,7 +205,7 @@ export const useTiling = () => {
 
     markers.forEach((marker) => {
       const [lngIndex, latIndex] = calculateTileIndex(marker, tileArea, bounds);
-      tiles.current[lngIndex][latIndex].pushMarker(marker);
+      tiles.current[lngIndex][latIndex].addMarker(marker);
     });
 
     tiles.current.forEach((tiles) => {
