@@ -102,7 +102,7 @@ export const MarkingPins = ({
 
   const handleClickMultipleMarker = (position: Tile["position"]) => {
     map.setCenter(position);
-    map.setZoom(Math.min(zoom + 1, mapOptions.maxZoom));
+    map.setZoom(zoom + 1);
   };
 
   return tiles.map(({ markingId, markerCount, position, previewImage }) => {
