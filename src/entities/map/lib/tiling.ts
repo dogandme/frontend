@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { MapCameraChangedEvent, useMap } from "@vis.gl/react-google-maps";
+import { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import { useMapStore } from "@/features/map/store";
 import { NUM_OF_TILE_MAP } from "../constants";
 
@@ -31,6 +31,7 @@ export class Tile {
 
   private totalLat: number = 0;
   private totalLng: number = 0;
+  markerMap: Map<Marker["markingId"], boolean> = new Map();
 
   previewImage: Marker["previewImage"] = "";
   markingId: Marker["markingId"] = 0;
@@ -46,6 +47,7 @@ export class Tile {
       this.markingId = markingId;
     }
 
+    this.markerMap.set(markingId, true);
     this.markerCount += 1;
     this.totalLat += lat;
     this.totalLng += lng;
@@ -134,20 +136,54 @@ const filterInnerBoundary = ({ lat, lng }: LatLng, bounds: MapBounds) => {
   );
 };
 
+const filterIntercsectedTiles = (
+  mapBounds: MapBounds,
+  bounds: Tile["bounds"],
+) => {
+  return (
+    mapBounds.north > bounds.south &&
+    mapBounds.south < bounds.north &&
+    mapBounds.east > bounds.west &&
+    mapBounds.west < bounds.east
+  );
+};
+
 export const useTiling = () => {
   const bounds = useMapStore((state) => state.mapInfo.bounds);
-
   const zoom = useMapStore((state) => state.mapInfo.zoom);
+
   const tiles = useRef<Tile[][]>([]);
+  const cachedTiles = useRef<Tile[]>([]);
+  const previousZoom = useRef<number>(zoom);
 
   /**
    * @description 마커들을 받아 해당 마커들을 타일에 분배합니다.
    * @returns 2차원 배열로 분배된 타일들을 1차원 배열로 반환합니다.
    */
   const getTiles = (_markers: Marker[]) => {
-    const markers = _markers.filter((marker) =>
+    // 만약 줌이 변경된 경우엔 캐시된 타일을 초기화 합니다.
+    if (zoom !== previousZoom.current) {
+      cachedTiles.current = [];
+    }
+    previousZoom.current = zoom;
+
+    const intersectedCachedTiles = cachedTiles.current.filter((tile) =>
+      filterIntercsectedTiles(bounds, tile.bounds),
+    );
+
+    const innerBoundaryMarkers = _markers.filter((marker) =>
       filterInnerBoundary(marker, bounds),
     );
+
+    const markers = innerBoundaryMarkers.filter(({ markingId }) => {
+      return !intersectedCachedTiles.some((tile) =>
+        tile.markerMap.has(markingId),
+      );
+    });
+
+    if (markers.length < 1) {
+      return cachedTiles.current;
+    }
 
     const TileZoomLevel = Math.floor(zoom) as TileZoomLevel;
     const numOfTiles = NUM_OF_TILE_MAP[TileZoomLevel];
@@ -165,13 +201,19 @@ export const useTiling = () => {
       tiles.forEach((tile) => tile.calculatePosition());
     });
 
-    return tiles.current.flatMap((tiles) => {
-      tiles.forEach((tile) => {
-        tile.calculatePosition();
-      });
+    const newTiles = tiles.current
+      .flatMap((tiles) => {
+        tiles.forEach((tile) => {
+          tile.calculatePosition();
+        });
 
-      return tiles;
-    });
+        return tiles;
+      })
+      .concat(intersectedCachedTiles);
+
+    cachedTiles.current = newTiles;
+
+    return newTiles;
   };
 
   return getTiles;
