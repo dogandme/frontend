@@ -138,14 +138,7 @@ const filterIntercsectedTiles = (
   );
 };
 
-type Serializable =
-  | null
-  | boolean
-  | number
-  | string
-  | Serializable[]
-  | { [key: string]: Serializable };
-type TilingKey = Serializable | undefined;
+type TilingKey = string | { [key: string]: number } | undefined;
 
 export const useTiling = () => {
   const bounds = useMapStore((state) => state.mapInfo.bounds);

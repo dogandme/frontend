@@ -83,10 +83,10 @@ export const useGetBoundaryMarkerList = ({
     refetchOnWindowFocus: false,
     select: (data) => {
       return getTiles(data, {
-        southWestLat,
-        southWestLng,
-        northEastLat,
-        northEastLng,
+        southWestLat: southWestLat!,
+        southWestLng: southWestLng!,
+        northEastLat: northEastLat!,
+        northEastLng: northEastLng!,
       });
     },
 
