@@ -26,7 +26,8 @@ jobs:
 
       - name: Install Dependencies
         run: yarn
-        
+
+      # 필요한 .env 파일 생성
       - name: Set .env file
         run: |
           touch .env
