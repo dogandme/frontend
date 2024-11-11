@@ -3,10 +3,9 @@ name: Deploy React
 on:
   push:
     branches: dev
-    
-env:
-  S3_BUCKET_NAME : mungwithme-fe-github-action-s3
 
+env:
+  S3_BUCKET_NAME: mungwithme-fe-github-action-s3
 
 jobs:
   build:
@@ -19,31 +18,28 @@ jobs:
         uses: actions/cache@v1
         with:
           path: node_modules
-          key: ${{ runner.OS }}-master-build-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.OS }}-master-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
 
       - name: Install Dependencies
-        run: yarn
+        run: npm ci
 
-      # 필요한 .env 파일 생성
       - name: Set .env file
         run: |
           touch .env
           echo "${{ secrets.FRONT_SECRETS }}" > .env
 
       - name: Build
-        run: yarn build
-        env:
-          CI: ""
-          
+        run: npm run build
+
       - name: Configure AWS credentials
         uses: aws-action/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
-          aws-region: ${{ secrets.AWS_REGION }} 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload to S3
         run: |
