@@ -20,6 +20,7 @@ import { MY_INFO_END_POINT } from "@/entities/auth/constants";
 import { Marking, SortType } from "@/entities/marking/api";
 import { MARKER_END_POINT } from "@/entities/marking/constants";
 import { API_BASE_URL } from "@/shared/constants";
+import { getMockMarkerList } from "./data/markerList";
 // data
 import { getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
@@ -1834,6 +1835,54 @@ const getMyMarkerList = [
   }),
 ];
 
+const getLikedMarkerListHandler = [
+  http.get(`${API_BASE_URL}/markings/marks/likes`, async ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (!token || token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "토큰 검증에 실패 했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: getMockMarkerList(),
+    });
+  }),
+];
+
+const getSavedMarkerListHandler = [
+  http.get(`${API_BASE_URL}/markings/marks/saves`, async ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (!token || token === "staleAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "토큰 검증에 실패 했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: getMockMarkerList(),
+    });
+  }),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1860,10 +1909,12 @@ export const handlers = [
   ...postFollowingHandler,
   ...deleteFollowingHandler,
   ...deleteFollowerHandler,
-  ...getProfileThumbnailHandler,
   ...getTemporaryMarkingListHandler,
   ...deleteTemporaryMarkingHandler,
   ...putModifyTempMarkingHandler,
   ...getUserMarkingListHandler,
   ...getMyMarkerList,
+  ...getLikedMarkerListHandler,
+  ...getSavedMarkerListHandler,
+  ...getProfileThumbnailHandler,
 ];
