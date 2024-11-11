@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useMap } from "@vis.gl/react-google-maps";
 import { useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import {
@@ -31,11 +30,17 @@ export const LocalMarkingList = () => {
     }
   });
 
-  const map = useMap();
-  const center = map.getCenter();
+  const { northEastLat, northEastLng, southWestLat, southWestLng } =
+    boundsParams;
 
-  const lat = center.lat();
-  const lng = center.lng();
+  const lat =
+    typeof northEastLat === "number" && typeof southWestLat === "number"
+      ? (northEastLat + southWestLat) / 2
+      : null;
+  const lng =
+    typeof northEastLng === "number" && typeof southWestLng === "number"
+      ? (northEastLng + southWestLng) / 2
+      : null;
 
   const { data } = useGetAddressFromLatLng({
     lat,
