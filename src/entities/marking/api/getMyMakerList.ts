@@ -18,7 +18,7 @@ export const useGetMyMakerList = () => {
   const getTiles = useTiling();
 
   return useQuery({
-    queryKey: ["myMarkerList"],
+    queryKey: ["marker", "myMarkerList"],
     queryFn: token
       ? () => {
           return apiClient.get<GetMyMarkerListResponse>(MARKER_END_POINT.MY, {

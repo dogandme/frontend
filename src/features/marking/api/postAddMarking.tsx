@@ -42,6 +42,7 @@ export const usePostAddMarking = () => {
   const handleOpenSnackbar = useSnackBar();
 
   return useMutation<unknown, Error, PostAddMarkingRequest>({
+    mutationKey: ["markingFormModal"],
     mutationFn: postAddMarking,
     onSuccess: () => {
       resetMarkingFormStore();

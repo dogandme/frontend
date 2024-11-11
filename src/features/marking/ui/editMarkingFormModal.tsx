@@ -15,28 +15,30 @@ import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
-import { usePutModifyTempMarking } from "../api";
+import { usePutModifyMarking, type PutModifyMarkingArguments } from "../api";
 import { MARKING_ADD_ERROR_MESSAGE, MAX_IMAGE_LENGTH } from "../constants";
 import {
-  TempMarkingFormExternalState,
-  TempMarkingFormProvider,
-  useTempMarkingForm,
-  useTempMarkingFormContext,
+  type EditMarkingFormExternalState,
+  EditMarkingFormProvider,
+  useEditMarkingForm,
+  useEditMarkingFormContext,
 } from "../store";
 
-interface TempMarkingFormModalProps {
+interface EditMarkingFormModalProps {
   onClose: () => Promise<void>;
-  initialState: TempMarkingFormExternalState;
+  initialState: EditMarkingFormExternalState;
   markingId: TempMarkingInfo["markingId"];
+  putModifyMarkingArgumets: PutModifyMarkingArguments;
 }
 
-export const TempMarkingFormModal = ({
+export const EditMarkingFormModal = ({
   onClose,
   initialState,
   markingId,
-}: TempMarkingFormModalProps) => {
+  putModifyMarkingArgumets,
+}: EditMarkingFormModalProps) => {
   return (
-    <TempMarkingFormProvider initialState={initialState}>
+    <EditMarkingFormProvider initialState={initialState}>
       <Modal modalType="center">
         <Modal.Header
           onClick={onClose}
@@ -46,26 +48,32 @@ export const TempMarkingFormModal = ({
         </Modal.Header>
         <Modal.Content>
           {/* 사용자 현재 위치 */}
-          <TempCurrentLocation />
+          <EditCurrentLocation />
           {/* 보기 권한 설정 */}
-          <TempPostVisibilitySelect />
+          <EditPostVisibilitySelect />
           {/* 사진 추가하기 */}
-          <TempPhotoInput markingId={markingId} />
+          <EditPhotoInput markingId={markingId} />
           {/* 메모하기 */}
-          <TempMarkingTextArea />
+          <EditMarkingTextArea />
         </Modal.Content>
         {/* 제출 버튼들 */}
         <Modal.Footer axis="col">
-          <TempMarkingSaveButton markingId={markingId} />
-          <TempMarkingTempSaveButton markingId={markingId} />
+          <EditMarkingSaveButton
+            markingId={markingId}
+            putModifyMarkingArgumets={putModifyMarkingArgumets}
+          />
+          <EditMarkingTempSaveButton
+            markingId={markingId}
+            putModifyMarkingArgumets={putModifyMarkingArgumets}
+          />
         </Modal.Footer>
       </Modal>
-    </TempMarkingFormProvider>
+    </EditMarkingFormProvider>
   );
 };
 
-const TempCurrentLocation = () => {
-  const store = useTempMarkingFormContext();
+const EditCurrentLocation = () => {
+  const store = useEditMarkingFormContext();
   return (
     <div className="flex gap-[0.625rem] items-center">
       <span className="text-tangerine-500">
@@ -76,11 +84,11 @@ const TempCurrentLocation = () => {
   );
 };
 
-const TempPostVisibilitySelect = () => {
+const EditPostVisibilitySelect = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const isVisible = useTempMarkingForm((state) => state.isVisible);
-  const setIsVisible = useTempMarkingForm((state) => state.setIsVisible);
+  const isVisible = useEditMarkingForm((state) => state.isVisible);
+  const setIsVisible = useEditMarkingForm((state) => state.setIsVisible);
   const handleCloseSelectList = () => setIsOpen(false);
 
   const handleSelect = (value: MarkingVisibilityKey) => {
@@ -117,19 +125,19 @@ const TempPostVisibilitySelect = () => {
   );
 };
 
-const TempPhotoInput = ({
+const EditPhotoInput = ({
   markingId,
-}: Pick<TempMarkingFormModalProps, "markingId">) => {
-  const store = useTempMarkingFormContext();
+}: Pick<EditMarkingFormModalProps, "markingId">) => {
+  const store = useEditMarkingFormContext();
 
-  const externalImages = useTempMarkingForm((state) => state.externalImages);
-  const setExternalImages = useTempMarkingForm(
+  const externalImages = useEditMarkingForm((state) => state.externalImages);
+  const setExternalImages = useEditMarkingForm(
     (state) => state.setExternalImages,
   );
-  const setRemovedIds = useTempMarkingForm((state) => state.setRemovedIds);
-  const images = useTempMarkingForm((state) => state.images);
-  const setImages = useTempMarkingForm((state) => state.setImages);
-  const inputKey = useTempMarkingForm((state) => state.inputKey);
+  const setRemovedIds = useEditMarkingForm((state) => state.setRemovedIds);
+  const images = useEditMarkingForm((state) => state.images);
+  const setImages = useEditMarkingForm((state) => state.setImages);
+  const inputKey = useEditMarkingForm((state) => state.inputKey);
 
   const handleOpen = useSnackBar();
 
@@ -233,9 +241,9 @@ const TempPhotoInput = ({
   );
 };
 
-const TempMarkingTextArea = () => {
-  const store = useTempMarkingFormContext();
-  const setContent = useTempMarkingForm((state) => state.setContent);
+const EditMarkingTextArea = () => {
+  const store = useEditMarkingFormContext();
+  const setContent = useEditMarkingForm((state) => state.setContent);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
@@ -253,12 +261,15 @@ const TempMarkingTextArea = () => {
   );
 };
 
-const TempMarkingSaveButton = ({
+const EditMarkingSaveButton = ({
   markingId,
-}: Pick<TempMarkingFormModalProps, "markingId">) => {
-  const store = useTempMarkingFormContext();
+  putModifyMarkingArgumets,
+}: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
+  const store = useEditMarkingFormContext();
   const handleOpen = useSnackBar();
-  const { mutate: putModifyTempMarking } = usePutModifyTempMarking();
+  const { mutate: putModifyTempMarking } = usePutModifyMarking(
+    putModifyMarkingArgumets,
+  );
 
   const handleClick = () => {
     const {
@@ -302,12 +313,15 @@ const TempMarkingSaveButton = ({
     </Button>
   );
 };
-const TempMarkingTempSaveButton = ({
+const EditMarkingTempSaveButton = ({
   markingId,
-}: Pick<TempMarkingFormModalProps, "markingId">) => {
-  const store = useTempMarkingFormContext();
+  putModifyMarkingArgumets,
+}: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
+  const store = useEditMarkingFormContext();
   const handleOpen = useSnackBar();
-  const { mutate: putModifyTempMarking } = usePutModifyTempMarking();
+  const { mutate: putModifyTempMarking } = usePutModifyMarking(
+    putModifyMarkingArgumets,
+  );
 
   const handleClick = () => {
     const { isCompressing, content, removedIds, images, isVisible } =

@@ -7,22 +7,22 @@ import { MarkingFileInfo } from "./markingForm";
 
 // TODO 타입 스크립트 리팩토링 시 변경 하기
 
-export interface TempMarkingFormExternalState
+export interface EditMarkingFormExternalState
   extends Pick<TempMarkingInfo, "region" | "isVisible" | "content"> {
   externalImages: TempMarkingFileInfo[];
 }
 
-interface TempMarkingFormInternalState {
+interface EditMarkingFormInternalState {
   isCompressing: boolean;
   inputKey: number;
   images: MarkingFileInfo[];
   removedIds: TempMarkingFileInfo["id"][];
 }
 
-type TempMarkingFormState = TempMarkingFormExternalState &
-  TempMarkingFormInternalState;
+type EditMarkingFormState = EditMarkingFormExternalState &
+  EditMarkingFormInternalState;
 
-interface TempMarkingFormAction {
+interface EditMarkingFormAction {
   setIsVisible: (isVisible: MarkingVisibilityKey) => void;
   setContent: (content: string | null) => void;
   setExternalImages: (images: TempMarkingFileInfo[]) => void;
@@ -33,10 +33,10 @@ interface TempMarkingFormAction {
   setInputKey: (inputKey: number) => void;
 }
 
-export const createTempMarkingFormState = (
-  initialState: TempMarkingFormExternalState,
+export const createEditMarkingFormState = (
+  initialState: EditMarkingFormExternalState,
 ) => {
-  return create<TempMarkingFormState & TempMarkingFormAction>((set, get) => ({
+  return create<EditMarkingFormState & EditMarkingFormAction>((set, get) => ({
     ...initialState,
     isCompressing: false,
     inputKey: 0,
@@ -103,40 +103,40 @@ export const createTempMarkingFormState = (
   }));
 };
 
-type TempMarkingFormStore = ReturnType<typeof createTempMarkingFormState>;
+type EditMarkingFormStore = ReturnType<typeof createEditMarkingFormState>;
 
-export const TempMarkingFormContext =
-  createContext<TempMarkingFormStore | null>(null);
+export const EditMarkingFormContext =
+  createContext<EditMarkingFormStore | null>(null);
 
-export const TempMarkingFormProvider = ({
+export const EditMarkingFormProvider = ({
   children,
   initialState,
 }: {
   children: React.ReactNode;
-  initialState: TempMarkingFormExternalState;
+  initialState: EditMarkingFormExternalState;
 }) => {
-  const store = useRef(createTempMarkingFormState(initialState)).current;
+  const store = useRef(createEditMarkingFormState(initialState)).current;
 
   return (
-    <TempMarkingFormContext.Provider value={store}>
+    <EditMarkingFormContext.Provider value={store}>
       {children}
-    </TempMarkingFormContext.Provider>
+    </EditMarkingFormContext.Provider>
   );
 };
 
-export const useTempMarkingFormContext = () => {
-  const store = useContext(TempMarkingFormContext);
+export const useEditMarkingFormContext = () => {
+  const store = useContext(EditMarkingFormContext);
   if (!store) {
     throw new Error(
-      "useTempMarkingFormContext는 TempMarkingFormProvider 내에서 사용되어야 합니다.",
+      "useEditMarkingFormContext는 EditMarkingFormProvider 내에서 사용되어야 합니다.",
     );
   }
   return store;
 };
 
-export const useTempMarkingForm = <T,>(
-  selector: (state: TempMarkingFormState & TempMarkingFormAction) => T,
+export const useEditMarkingForm = <T,>(
+  selector: (state: EditMarkingFormState & EditMarkingFormAction) => T,
 ): T => {
-  const store = useTempMarkingFormContext();
+  const store = useEditMarkingFormContext();
   return useStore(store, selector);
 };

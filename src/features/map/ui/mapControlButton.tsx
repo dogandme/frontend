@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
+import { useMarkingFormModal } from "@/features/marking/lib";
 import { useMarkingFormStore } from "@/features/marking/store";
 import { MarkingFormCloseModal } from "@/features/marking/ui/markingFormCloseModal";
 import { CurrentLocationLoading } from "@/entities/map/ui";
@@ -175,8 +176,8 @@ export const CollectionButton = () => {
 /* ----------add mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingFormTriggerButton = () => {
   const handleOpenSnackbar = useSnackBar();
-  const { handleOpen, onClose: onCloseMarkingModal } = useModal(() => (
-    <MarkingFormModal onCloseMarkingModal={onCloseMarkingModal} />
+  const { handleOpen, onClose } = useMarkingFormModal(() => (
+    <MarkingFormModal onCloseMarkingModal={onClose} />
   ));
 
   useEffect(() => {

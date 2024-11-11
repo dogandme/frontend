@@ -30,7 +30,7 @@ export const useGetMySavedMarkingList = ({ enabled }: { enabled: boolean }) => {
   const { token } = useAuthStore.getState();
 
   return useInfiniteQuery({
-    queryKey: ["mySavedMarkingList"],
+    queryKey: ["markingList", "mySavedMarkingList"],
     queryFn:
       token && enabled
         ? ({ pageParam = 0 }) =>

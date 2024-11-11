@@ -1,0 +1,382 @@
+import { useState, useRef } from "react";
+import { FollowingToggle } from "@/features/follow/ui";
+import { useDeleteMarking } from "@/features/marking/api";
+import {
+  useDeleteLikeMarking,
+  usePostLikeMarking,
+} from "@/features/marking/api";
+import {
+  useDeleteSavedMarking,
+  usePostSaveMarking,
+} from "@/features/marking/api";
+import { useMarkingFormModal } from "@/features/marking/lib";
+import { EditMarkingFormModal } from "@/features/marking/ui";
+import { API_BASE_URL } from "@/shared/constants";
+import { formatDateToYearMonthDay, useDropdown } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store";
+import { DividerLine } from "@/shared/ui/divider";
+import { MoreIcon, MyLocationIcon } from "@/shared/ui/icon";
+import { FilledLikeIcon, LikeIcon } from "@/shared/ui/icon";
+import { BookmarkIcon, FilledBookmarkIcon } from "@/shared/ui/icon";
+import { ImgSlider } from "@/shared/ui/imgSlider";
+import { List } from "@/shared/ui/list";
+import {
+  type MarkingItemProps,
+  MarkingItemContext,
+  useMarkingItemProps,
+} from "../store";
+
+interface MarkingItemProviderProps {
+  children: React.ReactNode;
+  props: MarkingItemProps;
+}
+
+const MarkingItemPropsProvider = ({
+  children,
+  props,
+}: MarkingItemProviderProps) => (
+  <MarkingItemContext.Provider value={props}>
+    {children}
+  </MarkingItemContext.Provider>
+);
+
+export const MarkingItem = (props: MarkingItemProps) => {
+  const { nickName, isOwner = false, isFollowing } = props;
+
+  return (
+    <MarkingItemPropsProvider props={props}>
+      <li className="flex flex-col gap-2">
+        <div className="flex justify-between items-center">
+          <MarkingItemRegion />
+          {isOwner && <MarkingManageButton />}
+        </div>
+
+        <header className="flex items-center justify-between">
+          <div className="flex justify-between items-center gap-1 ">
+            <MarkingItemProfileImage />
+            <MarkingItemNickname />
+            <DividerLine axis="col" />
+            <MarkingItemPetName />
+          </div>
+          {!isOwner && typeof isFollowing === "boolean" && (
+            <FollowingToggle
+              nickname={nickName}
+              size="xSmall"
+              isFollowing={isFollowing}
+            />
+          )}
+        </header>
+        <main className="flex flex-col gap-2">
+          <MarkingItemImages />
+          <div className="flex justify-between">
+            <MarkingItemLikeToggle />
+            <MarkingItemBookmarkToggle />
+          </div>
+        </main>
+        <footer className="flex flex-col gap-2">
+          <MarkingItemContent />
+          <MarkingItemDate />
+        </footer>
+      </li>
+    </MarkingItemPropsProvider>
+  );
+};
+
+const MarkingItemLikeToggle = () => {
+  const { markingId, countData, isLiked } = useMarkingItemProps();
+  const [_isLiked, _setIsLiked] = useState<boolean>(() => isLiked);
+  const [_likedCount, _setLikedCount] = useState<number>(
+    () => countData.likedCount,
+  );
+
+  const { mutate: postLikeMarking, isPending: isPostLikeMarkingPending } =
+    usePostLikeMarking();
+  const { mutate: deleteLikeMarking, isPending: isDeleteLikeMarkingPending } =
+    useDeleteLikeMarking();
+
+  const isPending = isPostLikeMarkingPending || isDeleteLikeMarkingPending;
+
+  const handleClickLikeButton = () => {
+    _setIsLiked(true);
+    _setLikedCount((prev) => prev + 1);
+
+    postLikeMarking(
+      { markingId },
+      {
+        onError: () => {
+          _setIsLiked(false);
+          _setLikedCount((prev) => prev - 1);
+        },
+      },
+    );
+  };
+
+  const handleClickUnLikeButton = () => {
+    _setIsLiked(false);
+    _setLikedCount((prev) => prev - 1);
+
+    deleteLikeMarking(
+      { markingId },
+      {
+        onError: () => {
+          _setIsLiked(true);
+          _setLikedCount((prev) => prev + 1);
+        },
+      },
+    );
+  };
+
+  return (
+    <div className="flex gap-2 items-center text-grey-500">
+      {_isLiked ? (
+        <button
+          aria-label={`${markingId} 번 마킹 좋아요 취소`}
+          onClick={handleClickUnLikeButton}
+          disabled={isPending}
+          className="text-tangerine-500"
+        >
+          <FilledLikeIcon />
+        </button>
+      ) : (
+        <button
+          aria-label={`${markingId} 번 마킹 좋아요 추가`}
+          onClick={handleClickLikeButton}
+          disabled={isPending}
+        >
+          <LikeIcon />
+        </button>
+      )}
+      <span className="title-3">{_likedCount > 0 && _likedCount}</span>
+    </div>
+  );
+};
+
+const MarkingItemBookmarkToggle = () => {
+  const { isBookmarked, markingId, countData } = useMarkingItemProps();
+  const [_isBookmarked, _setIsBookmarked] = useState<boolean>(
+    () => isBookmarked,
+  );
+  const [_savedCount, _setSavedCount] = useState<number>(
+    () => countData.savedCount,
+  );
+
+  const { mutate: postSaveMarking, isPending: isPostSaveMarkingPending } =
+    usePostSaveMarking();
+  const { mutate: deleteSaveMarking, isPending: isDeleteSaveMarkingPending } =
+    useDeleteSavedMarking();
+  const isPending = isPostSaveMarkingPending || isDeleteSaveMarkingPending;
+
+  const handleClickSaveButton = () => {
+    _setIsBookmarked(true);
+    _setSavedCount((prev) => prev + 1);
+
+    postSaveMarking(
+      { markingId },
+      {
+        onError: () => {
+          _setIsBookmarked(false);
+          _setSavedCount((prev) => prev - 1);
+        },
+      },
+    );
+  };
+
+  const handleClickUnSaveButton = () => {
+    _setIsBookmarked(false);
+    _setSavedCount((prev) => prev - 1);
+
+    deleteSaveMarking(
+      { markingId },
+      {
+        onError: () => {
+          _setIsBookmarked(true);
+          _setSavedCount((prev) => prev + 1);
+        },
+      },
+    );
+  };
+
+  return (
+    <div className="flex gap-2 items-center text-grey-500">
+      {_isBookmarked ? (
+        <button
+          className="text-tangerine-500"
+          onClick={handleClickUnSaveButton}
+          disabled={isPending}
+          aria-label={`${markingId} 번 마킹 저장하기 취소`}
+        >
+          <FilledBookmarkIcon />
+        </button>
+      ) : (
+        <button
+          onClick={handleClickSaveButton}
+          disabled={isPending}
+          aria-label={`${markingId} 번 마킹 저장하기`}
+        >
+          <BookmarkIcon />
+        </button>
+      )}
+      <span className="title-3">{_savedCount > 0 && _savedCount}</span>
+    </div>
+  );
+};
+
+const MarkingManageButton = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { isOpen, setIsOpen } = useDropdown(ref);
+  const { markingId, onDelete } = useMarkingItemProps();
+
+  const { mutate: deleteMarking } = useDeleteMarking({
+    onSuccess: () => {
+      onDelete?.();
+    },
+  });
+
+  const handleDeleteMarking = () => {
+    const { token, role } = useAuthStore.getState();
+
+    if (token && role === "ROLE_USER") {
+      deleteMarking({ markingId });
+    }
+
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative h-fit flex" ref={ref}>
+      <button
+        className="text-grey-500"
+        aria-label="마킹 수정 및 삭제하기 모달을 여는 버튼"
+        onClick={() => {
+          setIsOpen((prev) => !prev);
+        }}
+      >
+        <MoreIcon />
+      </button>
+      <List
+        className={`${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] right-0 bg-grey-0 p-4`}
+        style={{
+          width: "11.625rem",
+        }}
+      >
+        <EditMyMarkingModalOpenItem
+          handleCloseDropDown={() => setIsOpen(false)}
+        />
+        <List.Item style={{ height: "3rem" }} onClick={handleDeleteMarking}>
+          삭제하기
+        </List.Item>
+      </List>
+    </div>
+  );
+};
+
+interface EditMyMarkingModalOpenItemProps {
+  handleCloseDropDown: () => void;
+}
+
+const EditMyMarkingModalOpenItem = ({
+  handleCloseDropDown,
+}: EditMyMarkingModalOpenItemProps) => {
+  const {
+    markingId,
+    region,
+    content,
+    images,
+    isVisible,
+    queryKeys = [],
+  } = useMarkingItemProps();
+
+  const { handleOpen: handleOpenMarkingModal, onClose } = useMarkingFormModal(
+    () => (
+      <EditMarkingFormModal
+        onClose={onClose}
+        markingId={markingId}
+        initialState={{
+          region,
+          content,
+          isVisible,
+          externalImages: images,
+        }}
+        putModifyMarkingArgumets={{
+          endPoint: "PUT_MODIFY_MARKING",
+          queryKeys,
+        }}
+      />
+    ),
+  );
+
+  return (
+    <List.Item
+      style={{ height: "3rem" }}
+      onClick={() => {
+        handleCloseDropDown();
+        handleOpenMarkingModal();
+      }}
+    >
+      수정하기
+    </List.Item>
+  );
+};
+
+const MarkingItemImages = () => {
+  const { images, pet, markingId } = useMarkingItemProps();
+  return (
+    <ImgSlider>
+      {images.map(({ imageUrl, id }) => (
+        <ImgSlider.ImgItem
+          key={id}
+          src={`${API_BASE_URL}/markings/image/${markingId}/${imageUrl}`}
+          alt={`${pet.name}의 마킹 이미지`}
+        />
+      ))}
+    </ImgSlider>
+  );
+};
+
+const MarkingItemRegion = () => {
+  const { onRegionClick, region } = useMarkingItemProps();
+  return (
+    <div
+      className="flex pr-4 justify-center items-center gap-[.625rem] h-8 text-tangerine-500 cursor-pointer"
+      onClick={() => {
+        onRegionClick?.();
+      }}
+    >
+      <MyLocationIcon />
+      <h2 className="btn-2 text-grey-900">{region}</h2>
+    </div>
+  );
+};
+
+const MarkingItemProfileImage = () => {
+  const { pet } = useMarkingItemProps();
+  return (
+    <img
+      className="w-8 h-8 rounded-2xl object-cover"
+      src={`${API_BASE_URL}/pets/image/${pet.profile}`}
+      alt={`${pet.name}-profile`}
+    />
+  );
+};
+
+const MarkingItemNickname = () => {
+  const { nickName } = useMarkingItemProps();
+  return <span className="title-3 text-grey-700">{nickName}</span>;
+};
+
+const MarkingItemPetName = () => {
+  const { pet } = useMarkingItemProps();
+  return <span className="body-2 text-grey-500">{pet.name}</span>;
+};
+
+const MarkingItemContent = () => {
+  const { content } = useMarkingItemProps();
+  return <p className="text-grey-700 body-2 text-overflow">{content}</p>;
+};
+
+const MarkingItemDate = () => {
+  const { regDt } = useMarkingItemProps();
+  return (
+    <p className="body-3 text-grey-500">{formatDateToYearMonthDay(regDt)}</p>
+  );
+};

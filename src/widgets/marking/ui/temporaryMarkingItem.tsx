@@ -1,9 +1,9 @@
+import { useMarkingFormModal } from "@/features/marking/lib";
 import { DeleteTemporaryMarkingButton } from "@/features/marking/ui";
-import { TempMarkingFormModal } from "@/features/marking/ui";
+import { EditMarkingFormModal } from "@/features/marking/ui";
 import { TempMarkingInfo } from "@/entities/marking/api";
 import { MARKING_VISIBILITY_MAP } from "@/entities/marking/constants";
 import { API_BASE_URL } from "@/shared/constants";
-import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { MyLocationIcon } from "@/shared/ui/icon";
@@ -46,7 +46,7 @@ export const TemporaryMarkingItem = ({
         </p>
       </main>
       <footer className="mt-4">
-        <TempMarkingModalOpenButton
+        <EditMarkingModalOpenButton
           region={region}
           isVisible={isVisible}
           content={content}
@@ -58,20 +58,20 @@ export const TemporaryMarkingItem = ({
   );
 };
 
-type TempMarkingModalOpenButtonProps = Pick<
+type EditMarkingModalOpenButtonProps = Pick<
   TempMarkingInfo,
   "region" | "content" | "images" | "markingId" | "isVisible"
 >;
 
-const TempMarkingModalOpenButton = ({
+const EditMarkingModalOpenButton = ({
   region,
   isVisible,
   content,
   images,
   markingId,
-}: TempMarkingModalOpenButtonProps) => {
-  const { handleOpen, onClose } = useModal(() => (
-    <TempMarkingFormModal
+}: EditMarkingModalOpenButtonProps) => {
+  const { handleOpen, onClose } = useMarkingFormModal(() => (
+    <EditMarkingFormModal
       onClose={onClose}
       markingId={markingId}
       initialState={{
@@ -79,6 +79,10 @@ const TempMarkingModalOpenButton = ({
         isVisible,
         content,
         externalImages: images,
+      }}
+      putModifyMarkingArgumets={{
+        endPoint: "PUT_MODIFY_TEMP_MARKING",
+        queryKeys: ["markingList"],
       }}
     />
   ));

@@ -1,13 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
+import { MarkingItem } from "@/widgets/marking/ui";
 import {
   useGetMapCurrentBounds,
   useMapQueryParams,
 } from "@/features/map/hooks";
-import { MarkingItem, SortTypeFilter } from "@/features/marking/ui";
+import { SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
-import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
+import {
+  useGetMyFollowingIdsMap,
+  useGetMyBookmarkIdsMap,
+  useGetMyLikedIdsMap,
+} from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
@@ -19,6 +24,8 @@ export const PlaceMarkingList = () => {
   const { boundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
   const { data: myFollowingMap } = useGetMyFollowingIdsMap();
+  const { data: myBookmarkedMap } = useGetMyBookmarkIdsMap();
+  const { data: myLikedMap } = useGetMyLikedIdsMap();
   const getMapBounds = useGetMapCurrentBounds();
 
   const {
@@ -41,7 +48,7 @@ export const PlaceMarkingList = () => {
   const map = useMap();
 
   // TODO 로딩 상태 구현 하기
-  if (!markingList || !myFollowingMap) {
+  if (!markingList || !myFollowingMap || !myBookmarkedMap || !myLikedMap) {
     return null;
   }
 
@@ -84,9 +91,9 @@ export const PlaceMarkingList = () => {
                 queryKey: ["markingList"],
               });
             }}
-            // todo isLiked, isBookmarked 설정
-            isLiked={false}
-            isBookmarked={false}
+            queryKeys={["marker", "markingList"]}
+            isLiked={myLikedMap[marking.markingId]}
+            isBookmarked={myBookmarkedMap[marking.markingId]}
             isFollowing={myFollowingMap[marking.userId]}
             {...marking}
           />

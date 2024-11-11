@@ -59,7 +59,7 @@ export interface GetTemporaryMarkingListResponse {
 export const useGetTemporaryMarkingList = () => {
   const token = useAuthStore((state) => state.token);
   return useInfiniteQuery({
-    queryKey: ["temporaryMarkingList"],
+    queryKey: ["markingList", "temporaryMarkingList"],
     queryFn: token
       ? ({ pageParam }) =>
           apiClient.get<GetTemporaryMarkingListResponse>(
