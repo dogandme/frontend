@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Map } from "@vis.gl/react-google-maps";
+import { Map, MapEvent } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
 import { useMapStore } from "@/features/map/store/map";
 import { mapOptions } from "../constants";
@@ -23,12 +23,33 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const setIsLastSearchedLocation = useMapStore(
     (state) => state.setIsLastSearchedLocation,
   );
+  const setMapInfo = useMapStore((state) => state.setMapInfo);
 
   const handleMapChange = () => {
     if (!isTilesLoadedRef.current) return;
-
     setIsLastSearchedLocation(false);
     setIsMapCenteredOnMyLocation(false);
+  };
+
+  const handleMapIdle = ({ map }: MapEvent) => {
+    const center = map.getCenter();
+    const zoom = map.getZoom();
+    const bounds = map.getBounds();
+
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
+
+    setIsIdle(true);
+    setMapInfo({
+      center: { lat: center.lat(), lng: center.lng() },
+      zoom: zoom,
+      bounds: {
+        east: northEast.lng(),
+        north: northEast.lat(),
+        west: southWest.lng(),
+        south: southWest.lat(),
+      },
+    });
   };
 
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.
@@ -60,10 +81,7 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       defaultZoom={MAP_INITIAL_ZOOM}
       reuseMaps // Map 컴포넌트가 unmount 되었다가 다시 mount 될 때 기존의 map instance 를 재사용 하여 memory leak을 방지합니다.
       onCameraChanged={handleMapChange}
-      onIdle={() => {
-        // 이동이나 확대/축소 후 지도가 멈추었을 때 호출
-        setIsIdle(true);
-      }}
+      onIdle={handleMapIdle}
       onTilesLoaded={() => {
         isTilesLoadedRef.current = true;
       }}

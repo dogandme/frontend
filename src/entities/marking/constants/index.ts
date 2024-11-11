@@ -27,10 +27,11 @@ export const MARKING_END_POINT = {
     lng,
     sortType,
     offset,
+    searchType,
   }: GetMarkingListRequest) => {
     const latLngQueryParams = lat && lng ? `&lat=${lat}&lng=${lng}` : "";
 
-    return `${API_BASE_URL}/markings/bounds?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&sortType=${sortType}&offset=${offset}${latLngQueryParams}`;
+    return `${API_BASE_URL}/markings/bounds?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}&sortType=${sortType}&searchType=${searchType}&offset=${offset}${latLngQueryParams}`;
   },
 
   USER: ({
@@ -78,6 +79,8 @@ export const MARKER_END_POINT = {
     `${API_BASE_URL}/markings/marks?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}`,
 
   MY: `${API_BASE_URL}/markings/my-marks`,
+  MY_ACTIVITY: (activity: "likes" | "saves") =>
+    `${API_BASE_URL}/markings/marks/${activity}`,
 };
 
 export const MY_MARKING_END_POINT = {

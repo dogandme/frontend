@@ -36,6 +36,7 @@ export const PlaceMarkingList = () => {
   } = useGetMarkingList({
     ...boundsParams,
     sortType: sortTypeParam,
+    searchType: "LOCATION",
   });
 
   const [setNode] = useInfiniteScroll(() => {

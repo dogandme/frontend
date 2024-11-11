@@ -11,7 +11,7 @@ export const getMockMarkingList = ({
   southLeftLng: number;
   northRightLng: number;
 }) => {
-  const markingList: Marking[] = Array.from({ length: 140 }, (_, index) => ({
+  const markingList: Marking[] = Array.from({ length: 1000 }, (_, index) => ({
     markingId: index + 1,
     region: "**시 **구 **동",
     content: `Marking content ${index + 1}`,

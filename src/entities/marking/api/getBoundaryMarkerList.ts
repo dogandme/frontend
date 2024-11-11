@@ -1,5 +1,6 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
+import { useTiling } from "@/entities/map/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKER_END_POINT } from "../constants";
@@ -53,6 +54,7 @@ export const useGetBoundaryMarkerList = ({
   northEastLng: number | null;
 }) => {
   const { isIdle: isMapIdle } = useMapStore.getState();
+  const getTiles = useTiling();
 
   return useQuery({
     queryKey: [
@@ -80,6 +82,14 @@ export const useGetBoundaryMarkerList = ({
         : skipToken,
 
     refetchOnWindowFocus: false,
+    select: (data) => {
+      return getTiles(data, {
+        southWestLat: southWestLat!,
+        southWestLng: southWestLng!,
+        northEastLat: northEastLat!,
+        northEastLng: northEastLng!,
+      });
+    },
 
     gcTime: 0,
   });
