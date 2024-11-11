@@ -29,8 +29,6 @@ export class Tile {
   markerCount: number = 0;
   position: LatLng = { lat: 0, lng: 0 };
 
-  private totalLat: number = 0;
-  private totalLng: number = 0;
   markerMap: Map<Marker["markingId"], boolean> = new Map();
 
   previewImage: Marker["previewImage"] = "";
@@ -49,18 +47,10 @@ export class Tile {
 
     this.markerMap.set(markingId, true);
     this.markerCount += 1;
-    this.totalLat += lat;
-    this.totalLng += lng;
-  }
-
-  calculatePosition() {
-    if (this.markerCount < 1) {
-      return;
-    }
 
     this.position = {
-      lat: this.totalLat / this.markerCount,
-      lng: this.totalLng / this.markerCount,
+      lat: this.position.lat + (lat - this.position.lat) / this.markerCount,
+      lng: this.position.lng + (lng - this.position.lng) / this.markerCount,
     };
   }
 }
@@ -212,19 +202,7 @@ export const useTiling = () => {
       tiles.current[lngIndex][latIndex].addMarker(marker);
     });
 
-    tiles.current.forEach((tiles) => {
-      tiles.forEach((tile) => tile.calculatePosition());
-    });
-
-    const newTiles = tiles.current
-      .flatMap((tiles) => {
-        tiles.forEach((tile) => {
-          tile.calculatePosition();
-        });
-
-        return tiles;
-      })
-      .concat(intersectedCachedTiles);
+    const newTiles = tiles.current.flat().concat(intersectedCachedTiles);
 
     cachedTiles.current = newTiles;
 
