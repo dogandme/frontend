@@ -15,7 +15,8 @@ import { MarkingList } from "./markingList";
 export const MyMarkingList = () => {
   const map = useMap();
 
-  const { sortTypeParam, boundsParams } = useMapQueryParams();
+  const { sortTypeParam, boundsParams, setMapQueryParams } =
+    useMapQueryParams();
 
   const nickname = useAuthStore.getState().nickname;
 
@@ -59,6 +60,9 @@ export const MyMarkingList = () => {
           <SortTypeFilter
             options={["RECENT", "POPULARITY", "DISTANCE"]}
             selectedOption={sortTypeParam || "RECENT"}
+            onSelect={(sortType) => {
+              setMapQueryParams({ sortType });
+            }}
           />
         </div>
 
