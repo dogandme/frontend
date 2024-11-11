@@ -3,11 +3,19 @@ import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKING_END_POINT } from "../constants";
-import type {
-  GetMarkingListRequest,
-  Marking,
-  SortType,
-} from "./getMarkingList";
+import type { Marking, SortType } from "./getMarkingList";
+
+export interface GetUserMarkingListRequest {
+  nickname: string;
+  southWestLat: number;
+  southWestLng: number;
+  northEastLat: number;
+  northEastLng: number;
+  lat: number | null;
+  lng: number | null;
+  offset: number; // 페이지 번호
+  sortType: SortType;
+}
 
 interface GetUserMarkingListResponse {
   markings: Marking[];
@@ -26,10 +34,6 @@ interface GetUserMarkingListResponse {
     unpaged: boolean;
   };
 }
-
-export type GetUserMarkingListRequest = GetMarkingListRequest & {
-  nickname: string;
-};
 
 const getUserMarkingList = async ({
   nickname,

@@ -59,6 +59,7 @@ export interface Marking {
 }
 
 export type SortType = "RECENT" | "DISTANCE" | "POPULARITY";
+export type SearchType = "NEARBY" | "LOCATION";
 
 export interface GetMarkingListRequest {
   southWestLat: number;
@@ -69,6 +70,7 @@ export interface GetMarkingListRequest {
   lng: number | null;
   offset: number; // 페이지 번호
   sortType: SortType;
+  searchType: SearchType;
 }
 
 // sort, paged, unpaged은 사용하지 x
@@ -98,6 +100,7 @@ const getMarkingList = async ({
   lat,
   lng,
   sortType,
+  searchType,
   offset,
 }: GetMarkingListRequest) => {
   const hasToken = !!useAuthStore.getState().token;
@@ -111,6 +114,7 @@ const getMarkingList = async ({
       lat,
       lng,
       sortType,
+      searchType,
       offset,
     }),
     {
@@ -125,12 +129,14 @@ export const useGetMarkingList = ({
   northEastLat,
   northEastLng,
   sortType,
+  searchType,
 }: {
   southWestLat: number | null;
   southWestLng: number | null;
   northEastLat: number | null;
   northEastLng: number | null;
   sortType: SortType | null;
+  searchType: SearchType;
 }) => {
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
   const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
@@ -164,6 +170,7 @@ export const useGetMarkingList = ({
               lng,
               offset: pageParam,
               sortType,
+              searchType,
             })
         : skipToken,
 

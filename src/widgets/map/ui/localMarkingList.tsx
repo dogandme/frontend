@@ -14,6 +14,7 @@ export const LocalMarkingList = () => {
   const navigate = useNavigate();
   const { boundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
+
   const {
     data: markingList,
     fetchNextPage,
@@ -22,6 +23,7 @@ export const LocalMarkingList = () => {
   } = useGetMarkingList({
     ...boundsParams,
     sortType: sortTypeParam,
+    searchType: "NEARBY",
   });
 
   const [setNode] = useInfiniteScroll(() => {
