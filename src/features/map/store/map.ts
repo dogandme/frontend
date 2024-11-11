@@ -1,4 +1,10 @@
 import { create } from "zustand";
+import { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
+import {
+  MAP_INITIAL_BOUNDS,
+  MAP_INITIAL_CENTER,
+  MAP_INITIAL_ZOOM,
+} from "../constants";
 
 export interface LatLng {
   lat: number;
@@ -7,6 +13,7 @@ export interface LatLng {
 export interface MapInfo {
   center: LatLng;
   zoom: number;
+  bounds: MapCameraChangedEvent["detail"]["bounds"];
 }
 type Mode = "view" | "add";
 
@@ -24,6 +31,7 @@ interface MapState {
   mode: Mode;
   isCenterOnMyLocation: boolean;
   isLastSearchedLocation: boolean;
+  mapInfo: MapInfo;
 }
 
 interface MapActions {
@@ -32,6 +40,7 @@ interface MapActions {
   setMode: (mode: Mode) => void;
   setIsCenterOnMyLocation: (isCenterOnMyLocation: boolean) => void;
   setIsLastSearchedLocation: (isLastSearchedLocation: boolean) => void;
+  setMapInfo: (mapInfo: MapInfo) => void;
 }
 
 const mapStoreInitialState: MapState = {
@@ -43,6 +52,11 @@ const mapStoreInitialState: MapState = {
   mode: "view",
   isCenterOnMyLocation: false,
   isLastSearchedLocation: true,
+  mapInfo: {
+    center: MAP_INITIAL_CENTER,
+    zoom: MAP_INITIAL_ZOOM,
+    bounds: MAP_INITIAL_BOUNDS,
+  },
 };
 
 export const useMapStore = create<MapState & MapActions>((set) => ({
@@ -54,4 +68,5 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setIsLastSearchedLocation: (isLastSearchedLocation) =>
     set({ isLastSearchedLocation }),
   setIsIdle: (isIdle) => set({ isIdle }),
+  setMapInfo: (mapInfo) => set({ mapInfo }),
 }));
