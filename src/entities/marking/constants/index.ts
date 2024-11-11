@@ -79,6 +79,8 @@ export const MARKER_END_POINT = {
     `${API_BASE_URL}/markings/marks?southBottomLat=${southWestLat}&northTopLat=${northEastLat}&southLeftLng=${southWestLng}&northRightLng=${northEastLng}`,
 
   MY: `${API_BASE_URL}/markings/my-marks`,
+  MY_ACTIVITY: (activity: "likes" | "saves") =>
+    `${API_BASE_URL}/markings/marks/${activity}`,
 };
 
 export const MY_MARKING_END_POINT = {
