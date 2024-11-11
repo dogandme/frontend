@@ -19,6 +19,7 @@ import {
   useCurrentLocation,
   useGetMapCurrentBounds,
   useMapMode,
+  useMapQueryParams,
 } from "../hooks";
 import { useMapStore } from "../store";
 
@@ -124,8 +125,11 @@ export const ShowMyMarkingButton = () => {
 };
 
 export const ShowAroundMarkingButton = () => {
-  // todo 상태 전역으로 관리하기
-  const shouldShowAroundMarking = false;
+  const navigate = useNavigate();
+  const mapMode = useMapMode();
+  const { boundsParams } = useMapQueryParams();
+
+  const shouldShowAroundMarking = mapMode === "MAP";
 
   return (
     <Button
@@ -136,7 +140,9 @@ export const ShowAroundMarkingButton = () => {
       className={`${buttonBaseStyles} rounded-t-none`}
       aria-label="주변 마킹 보기"
       onClick={() => {
-        // todo 주변 마킹 보기로 상태 변경
+        navigate(
+          `${ROUTER_PATH.MAP}?boundsNELat=${boundsParams.northEastLat}&boundsNELng=${boundsParams.northEastLng}&boundsSWLat=${boundsParams.southWestLat}&boundsSWLng=${boundsParams.southWestLng}&sortType=POPULARITY`,
+        );
       }}
     >
       <DogFootIcon />
