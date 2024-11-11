@@ -82,7 +82,7 @@ const EditMarkingModalOpenButton = ({
       }}
       putModifyMarkingArgumets={{
         endPoint: "PUT_MODIFY_TEMP_MARKING",
-        queryKey: ["temporaryMarkingList"],
+        queryKeys: ["markingList"],
       }}
     />
   ));
@@ -93,7 +93,7 @@ const EditMarkingModalOpenButton = ({
       size="small"
       variant="filled"
       onClick={handleOpen}
-    >     
+    >
       마킹 마저하기
     </Button>
   );

@@ -277,8 +277,14 @@ interface EditMyMarkingModalOpenItemProps {
 const EditMyMarkingModalOpenItem = ({
   handleCloseDropDown,
 }: EditMyMarkingModalOpenItemProps) => {
-  const { markingId, region, content, images, isVisible } =
-    useMarkingItemProps();
+  const {
+    markingId,
+    region,
+    content,
+    images,
+    isVisible,
+    queryKeys = [],
+  } = useMarkingItemProps();
 
   const { handleOpen: handleOpenMarkingModal, onClose } = useMarkingFormModal(
     () => (
@@ -293,7 +299,7 @@ const EditMyMarkingModalOpenItem = ({
         }}
         putModifyMarkingArgumets={{
           endPoint: "PUT_MODIFY_MARKING",
-          queryKey: ["myMarkerList"],
+          queryKeys,
         }}
       />
     ),

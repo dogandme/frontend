@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { PutModifyMarkingArguments } from "@/features/marking/api";
 import type { Marking } from "@/entities/marking/api";
 import type { PetInfo } from "@/entities/profile/api";
 
@@ -13,6 +14,7 @@ export interface MarkingItemProps
   isLiked: boolean;
   isBookmarked: boolean;
   isFollowing?: boolean;
+  queryKeys?: PutModifyMarkingArguments["queryKeys"];
 }
 
 export const MarkingItemContext = createContext<MarkingItemProps | null>(null);
