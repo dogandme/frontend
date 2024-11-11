@@ -114,7 +114,7 @@ export const ShowMyMarkingButton = () => {
           getCurrentBounds();
 
         navigate(
-          `${ROUTER_PATH.MY_MARK}?boundsNELat=${northEastLat}&boundsNELng=${northEastLng}&boundsSWLat=${southWestLat}&boundsSWLng=${southWestLng}&sortType=POPULARITY`,
+          `${ROUTER_PATH.MY_MARK}?boundsNELat=${northEastLat}&boundsNELng=${northEastLng}&boundsSWLat=${southWestLat}&boundsSWLng=${southWestLng}&sortType=RECENT`,
         );
       }}
     >
