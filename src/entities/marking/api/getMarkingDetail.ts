@@ -1,7 +1,7 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_END_POINT } from "../constants";
+import { MARKING_END_POINT, markingQueryKey } from "../constants";
 import type { Marking } from "./getMarkingList";
 
 export interface GetMarkingDetailRequest {
@@ -12,7 +12,7 @@ export const useGetMarkingDetail = ({ markingId }: GetMarkingDetailRequest) => {
   const { token } = useAuthStore.getState();
 
   return useQuery({
-    queryKey: ["markingList", markingId],
+    queryKey: markingQueryKey.detail(markingId as number),
     queryFn:
       token && markingId !== undefined
         ? () =>

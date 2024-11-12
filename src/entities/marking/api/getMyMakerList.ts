@@ -2,7 +2,7 @@ import { skipToken, useQuery } from "@tanstack/react-query";
 import { useTiling } from "@/entities/map/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKER_END_POINT } from "../constants";
+import { MARKER_END_POINT, markingQueryKey } from "../constants";
 
 interface Marker {
   markingId: number;
@@ -18,7 +18,7 @@ export const useGetMyMakerList = () => {
   const getTiles = useTiling();
 
   return useQuery({
-    queryKey: ["marker", "myMarkerList"],
+    queryKey: markingQueryKey.myMarker(),
     queryFn: token
       ? () => {
           return apiClient.get<GetMyMarkerListResponse>(MARKER_END_POINT.MY, {

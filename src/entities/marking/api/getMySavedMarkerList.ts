@@ -1,7 +1,7 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_END_POINT } from "../constants";
+import { MARKING_END_POINT, markingQueryKey } from "../constants";
 import type { Marking } from "./getMarkingList";
 
 export interface GetMySavedMarkingListRequest {
@@ -30,7 +30,7 @@ export const useGetMySavedMarkingList = ({ enabled }: { enabled: boolean }) => {
   const { token } = useAuthStore.getState();
 
   return useInfiniteQuery({
-    queryKey: ["markingList", "mySavedMarkingList"],
+    queryKey: markingQueryKey.myActivityMarkingList("SAVED"),
     queryFn:
       token && enabled
         ? ({ pageParam = 0 }) =>
