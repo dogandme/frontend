@@ -21,14 +21,11 @@ const OverlayWrapper = ({ overlayInfo }: { overlayInfo: OverlayInfo }) => {
   // 만약 disabledInteraction 이 false인 경우 (Overlay와 함께 인터렉션을 할 경우)에는
   // OverlayController 영역을 최소화 합니다.
   const overlayAreaClass = disableInteraction
-    ? "h-screen w-screen bg-translucent-gray"
+    ? "h-screen w-[37.5rem] mx-auto bg-translucent-gray"
     : "w-screen h-fit";
 
   return (
-    <div
-      onClick={handleWrapperClick}
-      className={`absolute ${overlayAreaClass}`}
-    >
+    <div onClick={handleWrapperClick} className={`${overlayAreaClass}`}>
       {component}
     </div>
   );
