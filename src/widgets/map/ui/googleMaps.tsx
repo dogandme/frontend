@@ -27,29 +27,38 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
 
   const handleMapChange = () => {
     if (!isTilesLoadedRef.current) return;
-    setIsLastSearchedLocation(false);
+
     setIsMapCenteredOnMyLocation(false);
   };
 
   const handleMapIdle = ({ map }: MapEvent) => {
     const center = map.getCenter();
     const zoom = map.getZoom();
-    const bounds = map.getBounds();
+    const northEast = map.getBounds().getNorthEast();
+    const southWest = map.getBounds().getSouthWest();
 
-    const northEast = bounds.getNorthEast();
-    const southWest = bounds.getSouthWest();
+    const bounds = {
+      east: northEast.lng(),
+      north: northEast.lat(),
+      west: southWest.lng(),
+      south: southWest.lat(),
+    };
 
     setIsIdle(true);
     setMapInfo({
       center: { lat: center.lat(), lng: center.lng() },
       zoom: zoom,
-      bounds: {
-        east: northEast.lng(),
-        north: northEast.lat(),
-        west: southWest.lng(),
-        south: southWest.lat(),
-      },
+      bounds,
     });
+
+    const { east, north, south, west } =
+      useMapStore.getState().searchedBoundary;
+    setIsLastSearchedLocation(
+      bounds.north <= north &&
+        bounds.south >= south &&
+        bounds.west >= west &&
+        bounds.east <= east,
+    );
   };
 
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.

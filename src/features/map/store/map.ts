@@ -32,6 +32,7 @@ interface MapState {
   isCenterOnMyLocation: boolean;
   isLastSearchedLocation: boolean;
   mapInfo: MapInfo;
+  searchedBoundary: MapInfo["bounds"];
 }
 
 interface MapActions {
@@ -41,6 +42,7 @@ interface MapActions {
   setIsCenterOnMyLocation: (isCenterOnMyLocation: boolean) => void;
   setIsLastSearchedLocation: (isLastSearchedLocation: boolean) => void;
   setMapInfo: (mapInfo: MapInfo) => void;
+  setSearchedBoundary: (searchedBoundary: MapInfo["bounds"]) => void;
 }
 
 const mapStoreInitialState: MapState = {
@@ -57,6 +59,7 @@ const mapStoreInitialState: MapState = {
     zoom: MAP_INITIAL_ZOOM,
     bounds: MAP_INITIAL_BOUNDS,
   },
+  searchedBoundary: MAP_INITIAL_BOUNDS,
 };
 
 export const useMapStore = create<MapState & MapActions>((set) => ({
@@ -69,4 +72,5 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
     set({ isLastSearchedLocation }),
   setIsIdle: (isIdle) => set({ isIdle }),
   setMapInfo: (mapInfo) => set({ mapInfo }),
+  setSearchedBoundary: (searchedBoundary) => set({ searchedBoundary }),
 }));

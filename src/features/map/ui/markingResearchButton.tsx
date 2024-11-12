@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ResetIcon } from "@/shared/ui/icon";
 import { useGetMapCurrentBounds, useMapQueryParams } from "../hooks";
 import { useMapStore } from "../store";
@@ -13,13 +13,22 @@ export const MarkingResearchButton = () => {
   const setIsLastSearchedLocation = useMapStore(
     (state) => state.setIsLastSearchedLocation,
   );
+  const setSearchedBoundary = useMapStore((state) => state.setSearchedBoundary);
 
   const { boundsParams, setMapQueryParams, sortTypeParam } =
     useMapQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
   useEffect(() => {
+    const { northEastLat, northEastLng, southWestLat, southWestLng } =
+      boundsParams;
     setIsLastSearchedLocation(true);
+    setSearchedBoundary({
+      east: northEastLng!,
+      north: northEastLat!,
+      south: southWestLat!,
+      west: southWestLng!,
+    });
   }, [JSON.stringify(boundsParams)]);
 
   if (pathname !== "/map" || isLastSearchedLocation) return null;
