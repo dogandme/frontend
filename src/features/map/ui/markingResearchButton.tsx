@@ -13,19 +13,21 @@ export const MarkingResearchButton = () => {
   if (isLastSearchedLocation) return null;
 
   return (
-    <button
-      className="flex text-tangerine-500 gap-2 pl-2 pr-3 h-8 items-center rounded-2xl bg-grey-0 shadow-custom-1"
-      onClick={() => {
-        setMapQueryParams({
-          bounds: getMapBounds(),
-          sortType: sortTypeParam!,
-        });
-      }}
-    >
-      <ResetIcon width={20} height={20} />
-      <span className="text-grey-500 btn-3 text-center">
-        현 지도에서 재검색
-      </span>
-    </button>
+    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+      <button
+        className="flex text-tangerine-500 gap-2 pl-2 pr-3 h-8 items-center rounded-2xl bg-grey-0 shadow-custom-1"
+        onClick={() => {
+          setMapQueryParams({
+            bounds: getMapBounds(),
+            sortType: sortTypeParam!,
+          });
+        }}
+      >
+        <ResetIcon width={20} height={20} />
+        <span className="text-grey-500 btn-3 text-center">
+          현 지도에서 재검색
+        </span>
+      </button>
+    </div>
   );
 };
