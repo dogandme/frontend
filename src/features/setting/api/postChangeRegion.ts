@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Region } from "@/entities/auth/api";
+import { authQueryKey } from "@/entities/auth/constants";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
@@ -22,7 +23,7 @@ export const usePostChangeRegion = () => {
     mutationKey: ["postChangeRegion"],
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["myInfo"],
+        queryKey: authQueryKey.myInfo(),
       });
     },
     onError: (error) => {

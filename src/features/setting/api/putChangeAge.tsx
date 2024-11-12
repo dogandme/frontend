@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MyInfo } from "@/entities/auth/api";
+import { authQueryKey } from "@/entities/auth/constants";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
@@ -29,7 +30,7 @@ export const usePutChangeAge = () => {
       ].reverse()[0];
 
       if (cachedMutation?.state.status === "pending") {
-        queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+        queryClient.invalidateQueries({ queryKey: authQueryKey.myInfo() });
       }
     };
   }, [queryClient]);
@@ -40,25 +41,30 @@ export const usePutChangeAge = () => {
 
     /* 낙관적 업데이트 시행 */
     onMutate: async ({ age }) => {
-      await queryClient.cancelQueries({ queryKey: ["myInfo"] });
-      const prevQueryData = queryClient.getQueryData<MyInfo>(["myInfo"]);
+      await queryClient.cancelQueries({ queryKey: authQueryKey.myInfo() });
+      const prevQueryData = queryClient.getQueryData<MyInfo>(
+        authQueryKey.myInfo(),
+      );
 
-      queryClient.setQueryData(["myInfo"], (prevQueryData?: MyInfo) => {
-        if (!prevQueryData) return prevQueryData;
+      queryClient.setQueryData(
+        authQueryKey.myInfo(),
+        (prevQueryData?: MyInfo) => {
+          if (!prevQueryData) return prevQueryData;
 
-        return {
-          ...prevQueryData,
-          age,
-        };
-      });
+          return {
+            ...prevQueryData,
+            age,
+          };
+        },
+      );
 
       return prevQueryData;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+      queryClient.invalidateQueries({ queryKey: authQueryKey.myInfo() });
     },
     onError: (_error, _variable, context) => {
-      queryClient.setQueryData(["myInfo"], context);
+      queryClient.setQueryData(authQueryKey.myInfo(), context);
     },
   });
 };
