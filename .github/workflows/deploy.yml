@@ -5,7 +5,7 @@ on:
     branches: dev
 
 env:
-  S3_BUCKET_NAME: mungwithme-fe-github-action-s3
+  S3_BUCKET_NAME: mungwithme.site
 
 jobs:
   build:
