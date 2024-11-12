@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { PetInfo } from "@/entities/profile/api";
+import { profileQueryKey } from "@/entities/profile/constants";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
@@ -34,13 +35,14 @@ const putChangePetInfo = async ({
 
 export const usePutChangePetInfo = () => {
   const queryClient = useQueryClient();
+  const nickname = useAuthStore((state) => state.nickname);
 
   return useMutation<unknown, Error, PutChangePetInfoRequest>({
     mutationFn: putChangePetInfo,
     mutationKey: ["putChangePetInfo"],
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["profile", useAuthStore.getState().nickname],
+        queryKey: profileQueryKey.profile(nickname!),
       });
     },
     onError: (error) => {
