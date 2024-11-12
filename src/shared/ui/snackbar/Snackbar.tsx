@@ -1,10 +1,12 @@
+import { useState, useRef, useEffect } from "react";
 import { SNACKBAR_ID } from "@/shared/constants";
 import { useOverlayStore } from "@/shared/store/overlay";
 import { CloseIcon } from "../icon";
 
 export interface SnackBarProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-  autoHideDuration?: number | null;
+  children?: React.ReactNode;
+  type?: "default" | "map";
+  autoHideDuration?: number;
   className?: string;
 }
 
@@ -15,16 +17,47 @@ export interface SnackBarProps extends React.HTMLAttributes<HTMLDivElement> {
  */
 export const Snackbar = ({
   children,
-  className = "absolute top-4 left-1/2 transform -translate-x-1/2",
+  autoHideDuration = 2000,
+  type = "default",
+  className = "",
   ...props
 }: SnackBarProps) => {
+  const [isOpen, setIsOpen] = useState<boolean>(true);
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
+  const ANIMATION_DURATION = 500;
+  // 스낵바가 닫히는 애니메이션을 위한 타이머
+  const closeAnimationTimeId = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  // 스낵바가 닫히는 타이머
+  const closeTimerId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const baseClassName =
-    "shadow-custom-2 inline-flex min-w-[328px] max-w-96 items-center justify-between rounded-2xl bg-grey-0 py-1 pl-4 pr-3";
+  useEffect(() => {
+    closeAnimationTimeId.current = setTimeout(() => {
+      setIsOpen(false);
+    }, autoHideDuration - ANIMATION_DURATION);
+
+    closeTimerId.current = setTimeout(() => {
+      removeOverlay(SNACKBAR_ID);
+    }, autoHideDuration);
+
+    return () => {
+      if (closeAnimationTimeId.current) {
+        clearTimeout(closeAnimationTimeId.current);
+      }
+      if (closeTimerId.current) {
+        clearTimeout(closeTimerId.current);
+      }
+    };
+  }, []);
 
   return (
-    <div className={`${baseClassName} ${className}`} {...props}>
+    <div
+      className={`${isOpen ? `snackbar-open-${type}` : `snackbar-close-${type}`} 
+      fixed left-1/2 top-0 shadow-custom-2 inline-flex min-w-[328px] max-w-96 items-center justify-between rounded-2xl bg-grey-0 py-1 pl-4 pr-3
+      ${className}`}
+      {...props}
+    >
       <div className="body-2 text-grey-700 flex flex-col">{children}</div>
       <button
         className="h-10"
