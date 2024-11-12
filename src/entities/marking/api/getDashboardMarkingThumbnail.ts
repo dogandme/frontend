@@ -1,11 +1,10 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
-import { Nickname } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_THUMBNAIL_END_POINT } from "../constants";
+import { MARKING_THUMBNAIL_END_POINT, markingQueryKey } from "../constants";
 
 interface GetDashboardMarkingThumbnailRequest {
-  nickname: Nickname;
+  nickname: string;
   pageParams: number;
 }
 
@@ -41,7 +40,7 @@ export const useGetDashboardMarkingThumbnail = (
   const token = useAuthStore((state) => state.token);
 
   return useInfiniteQuery({
-    queryKey: ["dashboardMarkingThumbnail", nickname],
+    queryKey: markingQueryKey.markerThumbnail(nickname),
     queryFn: token
       ? ({ pageParam = 0 }) =>
           apiClient.get<GetDashboardMarkingThumbnailResponse>(

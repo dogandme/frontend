@@ -89,6 +89,11 @@ export const MY_MARKING_END_POINT = {
     `${API_BASE_URL}/markings/temps?offset=${offset}`,
 };
 
+export const MARKING_THUMBNAIL_END_POINT = {
+  DASHBOARD: (nickname: string, pageParams: number) =>
+    `${API_BASE_URL}/markings/marks/${nickname}?offset=${pageParams}`,
+};
+
 export const MARKING_VISIBILITY_MAP = {
   PUBLIC: "전체 공개",
   PRIVATE: "나만 보기",

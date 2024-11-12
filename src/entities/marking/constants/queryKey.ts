@@ -26,6 +26,8 @@ export const markingQueryKey = {
   myActivityMarker: (activity: Activity) =>
     [...markingQueryKey.markerAll(), { activity }] as const,
   myMarker: () => [...markingQueryKey.markerAll(), "myMarker"] as const,
+  markerThumbnail: (nickname: string) =>
+    [...markingQueryKey.markerAll(), "dashboard", { nickname }] as const,
 
   detail: (markingId: number) =>
     [...markingQueryKey.markingListAll(), { markingId }] as const,

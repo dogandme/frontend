@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
+import { useGetDashboardMarkingThumbnail } from "@/entities/marking/api";
 import { Nickname } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { useInfiniteScroll, useNicknameParams } from "@/shared/lib";
-import { useGetDashboardMarkingThumbnail } from "../api";
 
 interface MarkingThumbnailGridProps {
   nickname: Nickname;
