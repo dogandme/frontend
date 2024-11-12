@@ -1,7 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import type { SortType } from "@/entities/marking/api";
 import { sortTypeMap } from "../constants";
-import { useMapStore } from "../store";
 import type { Bounds } from "./useGetMapCurrentBounds";
 
 export interface Filter {
@@ -31,10 +30,6 @@ const getNumberParam = (
 
 export const useMapQueryParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const setIsLastSearchedLocation = useMapStore(
-    (state) => state.setIsLastSearchedLocation,
-  );
 
   const bounds: Bounds = {
     northEastLat: getNumberParam("boundsNELat", searchParams),
@@ -69,9 +64,6 @@ export const useMapQueryParams = () => {
       newSearchParams.set("sortType", sortType);
     }
 
-    setTimeout(() => {
-      setIsLastSearchedLocation(true);
-    }, 0);
     setSearchParams(newSearchParams);
   };
 
