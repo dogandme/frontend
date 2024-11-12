@@ -1,4 +1,4 @@
-import { flushSync } from "react-dom";
+import { useEffect, useState } from "react";
 import { SNACKBAR_ID } from "../constants";
 import { useOverlayStore } from "../store/overlay";
 import { Snackbar, SnackBarProps } from "../ui/snackbar";
@@ -10,29 +10,38 @@ import { Snackbar, SnackBarProps } from "../ui/snackbar";
  * @returns {Function} handleOpenSnackbar - 스낵바를 여는 함수.
  * @param {React.ReactNode} text - 스낵바에 표시할 텍스트.
  * @param {Object} [snackbarOptions] - 스낵바 옵션.
- * @param {number} [snackbarOptions.autoHideDuratio] - 스낵바가 자동으로 닫히기까지의 시간(ms).
+ * @param {number} [snackbarOptions.autoHideDuration] - 스낵바가 자동으로 닫히기까지의 시간(ms).
  * @param {Omit<SnackBarProps, "children">} [snackbarOptions] - 스낵바 컴포넌트의 기타 속성.
  */
 export const useSnackBar = () => {
   const addOverlay = useOverlayStore((state) => state.addOverlay);
   const removeOverlay = useOverlayStore((state) => state.removeOverlay);
+  const [snackbarProps, setSnackbarProps] = useState<SnackBarProps | null>(
+    null,
+  );
 
-  const handleOpenSnackbar = (
-    text: React.ReactNode,
-    snackbarOptions?: Omit<SnackBarProps, "children">,
-  ) => {
-    // 열려있는 스낵바가 있다면 제거합니다.
-    // ! handleOpenSnackbar 함수는 동기적으로 동작해야 하므로 flushSync를 사용합니다.
-    flushSync(() => {
-      removeOverlay(SNACKBAR_ID);
-    });
+  useEffect(() => {
+    if (snackbarProps === null) return;
 
+    const { children, ...snackbarOptions } = snackbarProps;
     addOverlay({
       id: SNACKBAR_ID,
-      component: <Snackbar {...snackbarOptions}>{text}</Snackbar>,
+      component: <Snackbar {...snackbarOptions}>{children}</Snackbar>,
       options: {
         disableInteraction: false,
       },
+    });
+  }, [snackbarProps]);
+
+  const handleOpenSnackbar = (
+    children: React.ReactNode,
+    snackbarOptions?: Omit<SnackBarProps, "children">,
+  ) => {
+    removeOverlay(SNACKBAR_ID);
+
+    setSnackbarProps({
+      ...snackbarOptions,
+      children,
     });
   };
 
