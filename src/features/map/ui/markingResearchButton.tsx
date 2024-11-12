@@ -1,8 +1,11 @@
+import { useLocation } from "react-router-dom";
 import { ResetIcon } from "@/shared/ui/icon";
 import { useGetMapCurrentBounds, useMapQueryParams } from "../hooks";
 import { useMapStore } from "../store";
 
 export const MarkingResearchButton = () => {
+  const { pathname } = useLocation();
+
   const isLastSearchedLocation = useMapStore(
     (state) => state.isLastSearchedLocation,
   );
@@ -10,7 +13,7 @@ export const MarkingResearchButton = () => {
   const { setMapQueryParams, sortTypeParam } = useMapQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
-  if (isLastSearchedLocation) return null;
+  if (pathname !== "/map" || isLastSearchedLocation) return null;
 
   return (
     <div className="absolute top-4 left-1/2 transform -translate-x-1/2 translate-y-1/2">
