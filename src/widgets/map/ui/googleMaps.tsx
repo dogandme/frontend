@@ -15,13 +15,10 @@ interface GoogleMapProps {
  */
 export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const isTilesLoadedRef = useRef<boolean>(false);
-  const setIsIdle = useMapStore((state) => state.setIsIdle);
 
+  const setIsIdle = useMapStore((state) => state.setIsIdle);
   const setIsMapCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
-  );
-  const setIsLastSearchedLocation = useMapStore(
-    (state) => state.setIsLastSearchedLocation,
   );
   const setMapInfo = useMapStore((state) => state.setMapInfo);
 
@@ -50,15 +47,6 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
       zoom: zoom,
       bounds,
     });
-
-    const { east, north, south, west } =
-      useMapStore.getState().searchedBoundary;
-    setIsLastSearchedLocation(
-      bounds.north <= north &&
-        bounds.south >= south &&
-        bounds.west >= west &&
-        bounds.east <= east,
-    );
   };
 
   // 해당 useEffect는 Google Maps API를 사용할 때, 기본적으로 제공되는 outline을 제거하기 위한 코드입니다.
