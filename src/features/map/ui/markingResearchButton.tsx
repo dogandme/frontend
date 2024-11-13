@@ -1,18 +1,23 @@
-import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { ResetIcon } from "@/shared/ui/icon";
 import { useGetMapCurrentBounds, useMapQueryParams } from "../hooks";
+import { useMapStore } from "../store";
 
 export const MarkingResearchButton = () => {
   const { pathname } = useLocation();
-
-  const { boundsParams, setMapQueryParams, sortTypeParam } =
+  const { bounds } = useMapStore((state) => state.mapInfo);
+  const { boundsParams, setMapQueryParams, sortTypeParam, hasBoundsParams } =
     useMapQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
-  useEffect(() => {}, [JSON.stringify(boundsParams)]);
+  const isBoundInBoundsParams =
+    hasBoundsParams &&
+    bounds.east <= boundsParams.northEastLng! &&
+    bounds.west >= boundsParams.southWestLng! &&
+    bounds.north <= boundsParams.northEastLat! &&
+    bounds.south >= boundsParams.southWestLat!;
 
-  if (pathname !== "/map") return null;
+  if (pathname !== "/map" || isBoundInBoundsParams) return null;
 
   return (
     <div className="absolute top-4 left-1/2 transform -translate-x-1/2 translate-y-1/2">
