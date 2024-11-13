@@ -3,7 +3,7 @@ import { skipToken, useQuery } from "@tanstack/react-query";
 import { useTiling } from "@/entities/map/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKER_END_POINT, markingQueryKey } from "../constants";
+import { MARKER_END_POINT, markerQueryKey } from "../constants";
 
 interface Marker {
   markingId: number;
@@ -26,7 +26,7 @@ export const useGetMyActivityMarkerList = (
   const token = useAuthStore((state) => state.token);
 
   return useQuery({
-    queryKey: markingQueryKey.myActivityMarker(activity),
+    queryKey: markerQueryKey.myActivityMarker(activity),
     queryFn: token
       ? () =>
           apiClient.get<GetMyActivityMarkerListResponse>(

@@ -17,21 +17,9 @@ type Activity = "LIKED" | "SAVED";
 
 export const markingQueryKey = {
   address: (latLng: LatLng) => ["address", { latLng }] as const,
-
-  markerAll: () => ["marker"] as const,
   markingListAll: () => ["marking"] as const,
-
-  boundaryMarker: (bounds: Bounds) =>
-    [...markingQueryKey.markerAll(), { bounds }] as const,
-  myActivityMarker: (activity: Activity) =>
-    [...markingQueryKey.markerAll(), { activity }] as const,
-  myMarker: () => [...markingQueryKey.markerAll(), "myMarker"] as const,
-  markerThumbnail: (nickname: string) =>
-    [...markingQueryKey.markerAll(), "dashboard", { nickname }] as const,
-
   detail: (markingId: number) =>
     [...markingQueryKey.markingListAll(), { markingId }] as const,
-
   boundaryMarkingList: (
     bounds: Bounds,
     latLng: LatLng,
@@ -63,3 +51,15 @@ export const markingQueryKey = {
       { sortType },
     ] as const,
 } as const;
+
+export const markerQueryKey = {
+  markerAll: () => ["marker"] as const,
+
+  boundaryMarker: (bounds: Bounds) =>
+    [...markerQueryKey.markerAll(), { bounds }] as const,
+  myActivityMarker: (activity: Activity) =>
+    [...markerQueryKey.markerAll(), { activity }] as const,
+  myMarker: () => [...markerQueryKey.markerAll(), "myMarker"] as const,
+  markerThumbnail: (nickname: string) =>
+    [...markerQueryKey.markerAll(), "dashboard", { nickname }] as const,
+};
