@@ -16,7 +16,7 @@ type SearchType = "NEARBY" | "LOCATION";
 type Activity = "LIKED" | "SAVED";
 
 export const markingQueryKey = {
-  address: (latLng: LatLng) => ["address", latLng] as const,
+  address: (latLng: LatLng) => ["address", { latLng }] as const,
 
   markerAll: () => ["marker"] as const,
   markingListAll: () => ["marking"] as const,

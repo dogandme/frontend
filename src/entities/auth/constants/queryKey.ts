@@ -8,7 +8,7 @@ export const authQueryKey = {
   myInfo: () => ["myInfo"] as const,
   regionAll: () => ["regions"] as const,
   regionKeyword: (keyword: string) =>
-    [...authQueryKey.regionAll(), keyword] as const,
-  regionLatLng: ({ lat, lng }: LatLng) =>
-    [...authQueryKey.regionAll(), lat, lng] as const,
+    [...authQueryKey.regionAll(), { keyword }] as const,
+  regionLatLng: (latLng: LatLng) =>
+    [...authQueryKey.regionAll(), { latLng }] as const,
 } as const;
