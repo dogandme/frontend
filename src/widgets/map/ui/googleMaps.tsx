@@ -1,5 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { Map, MapEvent } from "@vis.gl/react-google-maps";
+import {
+  Map,
+  MapCameraChangedEvent,
+  MapEvent,
+} from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
 import { useMapStore } from "@/features/map/store/map";
 import { mapOptions } from "../constants";
@@ -22,10 +26,13 @@ export const GoogleMaps = ({ children }: GoogleMapProps) => {
   );
   const setMapInfo = useMapStore((state) => state.setMapInfo);
 
-  const handleMapChange = () => {
+  const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
     if (!isTilesLoadedRef.current) return;
-
-    setIsMapCenteredOnMyLocation(false);
+    const { center } = detail;
+    const { currentLocation } = useMapStore.getState().userInfo;
+    setIsMapCenteredOnMyLocation(
+      center.lat === currentLocation.lat && center.lng === currentLocation.lng,
+    );
   };
 
   const handleMapIdle = ({ map }: MapEvent) => {

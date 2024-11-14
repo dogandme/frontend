@@ -39,10 +39,10 @@ export const MapInitializer = () => {
 
         if (!hasBoundsParams) {
           map.setCenter(currentLocationOfUser);
-
-          setTimeout(() => {
-            setIsCenteredOnMyLocation(true);
-          }, 0);
+          // 현재 위치를 기준으로 중앙에 위치하도록 설정합니다.
+          // 원래 setIsCenteredOnMyLocation 의 경우 GoogleMap 컴포넌트 내부의 handleCameraChange 에서 처리하도록 되어 있습니다.
+          // 하지만, 초기화 단계에서는 handleCameraChange 가 호출되지 않아서, 초기화 단계에서 처리합니다.
+          setIsCenteredOnMyLocation(true);
 
           setMapQueryParams({
             bounds: getMapBounds(),
