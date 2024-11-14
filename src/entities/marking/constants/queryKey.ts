@@ -17,7 +17,7 @@ type Activity = "LIKED" | "SAVED";
 
 export const markingQueryKey = {
   address: (latLng: LatLng) => ["address", { latLng }] as const,
-  markingListAll: () => ["marking"] as const,
+  markingListAll: () => ["markingList"] as const,
   detail: (markingId: number) =>
     [...markingQueryKey.markingListAll(), { markingId }] as const,
   boundaryMarkingList: (
@@ -36,7 +36,7 @@ export const markingQueryKey = {
   myActivityMarkingList: (activity: Activity) =>
     [...markingQueryKey.markingListAll(), { activity }] as const,
   myTemporaryMarkingList: () =>
-    [...markingQueryKey.markingListAll(), "myTemporaryMarker"] as const,
+    [...markingQueryKey.markingListAll(), "temporary"] as const,
   userMarkingList: (
     nickname: string,
     bounds: Bounds,
