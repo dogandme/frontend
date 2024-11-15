@@ -74,24 +74,11 @@ const MultiplePin = ({
   );
 };
 
-const ClusterPin = ({ position, children, ...props }: AdvancedMarkerProps) => {
-  return (
-    <AdvancedMarker position={position} {...props}>
-      <span className="btn-2 bg-translucent-tangerine flex h-[3.75rem] w-[3.75rem] items-center justify-center rounded-full text-center text-tangerine-900">
-        {children}
-      </span>
-    </AdvancedMarker>
-  );
-};
-
 interface MarkingPinProps {
   tiles: Tile[];
   clusterDensity?: number;
 }
-export const MarkingPins = ({
-  tiles,
-  clusterDensity = tiles.length / 3,
-}: MarkingPinProps) => {
+export const MarkingPins = ({ tiles }: MarkingPinProps) => {
   const map = useMap();
   const zoom = map.getZoom();
 
@@ -122,28 +109,16 @@ export const MarkingPins = ({
       );
     }
 
-    if (markerCount < clusterDensity) {
-      return (
-        <MultiplePin
-          key={markingId}
-          position={position}
-          imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-          alt={`${markerCount}개의 마커를 담은 멀티핀`}
-          onClick={() => handleClickMultipleMarker(position)}
-        >
-          {markerCount}
-        </MultiplePin>
-      );
-    }
     return (
-      <ClusterPin
+      <MultiplePin
         key={markingId}
         position={position}
+        imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
+        alt={`${markerCount}개의 마커를 담은 멀티핀`}
         onClick={() => handleClickMultipleMarker(position)}
-        aira-label={`${markerCount}개의 마커를 포함한 클러스터`}
       >
         {markerCount}
-      </ClusterPin>
+      </MultiplePin>
     );
   });
 };
