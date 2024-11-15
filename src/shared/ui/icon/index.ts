@@ -49,7 +49,6 @@ export const ArrowDropDownIcon = withIcon(ArrowDropDown);
 export const StarIcon = withIcon(StarSVG);
 export const LocationIcon = withIcon(LocationSVG);
 export const MyLocationIcon = withIcon(MyLocationSVG);
-export const NotificationIcon = withIcon(NotificationSVG);
 export const MapIcon = withIcon(MapSVG);
 export const CommunityIcon = withIcon(CommunitySVG);
 export const PinShadowIcon = withIcon(PinShadowSVG);
