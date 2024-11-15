@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 import {
   GoogleMapsCopyRight,
   MapControlWidget,
@@ -17,7 +18,9 @@ export const MapLayout = () => {
       <GoogleMaps>
         <MapMarkerWidget />
         <MapControlWidget />
-        <MapBottomSheet />
+        <MapBottomSheet>
+          <Outlet />
+        </MapBottomSheet>
         <GoogleMapsCopyRight />
       </GoogleMaps>
     </>

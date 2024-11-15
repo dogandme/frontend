@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Sheet, SheetRef } from "react-modal-sheet";
-import { Outlet } from "react-router-dom";
 import { useMapStore } from "@/features/map/store";
 
-export const MapBottomSheet = () => {
+export const MapBottomSheet = ({ children }: { children: React.ReactNode }) => {
   const sheetRef = useRef<SheetRef>();
 
   const snapPoints = [-50, 0.5, 116];
@@ -57,7 +56,7 @@ export const MapBottomSheet = () => {
               height: "calc(100% - 5rem)",
             }}
           >
-            <Outlet />
+            {children}
           </Sheet.Scroller>
         </Sheet.Content>
       </Sheet.Container>
