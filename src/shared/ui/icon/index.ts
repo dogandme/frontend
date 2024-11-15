@@ -22,7 +22,6 @@ import MapLocationSearching from "@/shared/assets/map-location-searching.svg";
 import MapSVG from "@/shared/assets/map.svg";
 import MoreSvg from "@/shared/assets/more.svg";
 import MyLocationSVG from "@/shared/assets/my-location.svg";
-import NotificationSVG from "@/shared/assets/notification.svg";
 import PinShadowSVG from "@/shared/assets/pin-shadow.svg";
 import PlusSVG from "@/shared/assets/plus.svg";
 import ResetSvg from "@/shared/assets/reset.svg";
