@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useGetProfile } from "@/entities/profile/api";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
-import { CompassIcon, MapIcon } from "@/shared/ui/icon";
+import { MapIcon } from "@/shared/ui/icon";
 
 const footerNavigationBarStyles = {
   active: "text-tangerine-500",
@@ -11,23 +11,10 @@ const footerNavigationBarStyles = {
 };
 
 export const FooterNavigationBar = () => {
-  const { active, inactive, base } = footerNavigationBarStyles;
-
   return (
     <footer className="relative">
       <nav className="relative z-10">
         <ul className="flex justify-between items-center gap-2 bg-grey-0 px-2 h-20">
-          <li className="grow">
-            <NavLink
-              to={ROUTER_PATH.MAIN}
-              className={({ isActive }) =>
-                `${isActive ? active : inactive} ${base}`
-              }
-            >
-              <CompassIcon />
-              발견
-            </NavLink>
-          </li>
           <li className="grow">
             <MapPageNavLink />
           </li>

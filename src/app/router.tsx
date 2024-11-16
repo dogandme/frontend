@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <MainPage />, // 탐색
+        element: <MainPage />, // 지도로 라우팅 시키는 경로 , 추후 탐색 페이지로 변경 되어야 함
       },
       {
         path: ROUTER_PATH.MAP,

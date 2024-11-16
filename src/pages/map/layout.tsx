@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 import {
   GoogleMapsCopyRight,
   MapControlWidget,
@@ -6,17 +7,20 @@ import {
   GoogleMaps,
   MapBottomSheet,
 } from "@/widgets/map/ui";
-import { NotificationNavigationBar } from "@/widgets/notification/ui";
 
 export const MapLayout = () => {
   return (
     <>
-      <NotificationNavigationBar />
+      <header className="bg-tangerine-500 px-8 py-5">
+        <h1 className="title-1 text-grey-0">MUNGWITHME</h1>
+      </header>
       <MapInitializer />
       <GoogleMaps>
         <MapMarkerWidget />
         <MapControlWidget />
-        <MapBottomSheet />
+        <MapBottomSheet>
+          <Outlet />
+        </MapBottomSheet>
         <GoogleMapsCopyRight />
       </GoogleMaps>
     </>
