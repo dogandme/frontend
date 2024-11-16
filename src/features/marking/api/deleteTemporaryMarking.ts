@@ -7,6 +7,7 @@ import type {
   GetTemporaryMarkingListResponse,
   TempMarkingInfo,
 } from "@/entities/marking/api";
+import { markingQueryKey } from "@/entities/marking/constants";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
@@ -27,7 +28,7 @@ export const useDeleteTemporaryMarking = () => {
     mutationKey: ["deleteTemporaryMarking"],
     onSuccess: (_data, { id }) => {
       queryClient.setQueryData<InfiniteData<GetTemporaryMarkingListResponse>>(
-        ["temporaryMarkingList"],
+        markingQueryKey.myTemporaryMarkingList(),
         (data) => {
           if (!data) {
             return data;
@@ -47,7 +48,7 @@ export const useDeleteTemporaryMarking = () => {
         },
       );
       queryClient.invalidateQueries({
-        queryKey: ["temporaryMarkingList"],
+        queryKey: markingQueryKey.myTemporaryMarkingList(),
       });
     },
   });

@@ -9,6 +9,7 @@ import type {
   GetAllMarkingsOfUserRequest,
 } from "../api";
 
+export * from "./queryKey";
 export const REVERSE_GEOCODING_END_POINT = ({
   lat,
   lng,
@@ -86,6 +87,11 @@ export const MARKER_END_POINT = {
 export const MY_MARKING_END_POINT = {
   TEMPORARY: (offset: number) =>
     `${API_BASE_URL}/markings/temps?offset=${offset}`,
+};
+
+export const MARKING_THUMBNAIL_END_POINT = {
+  DASHBOARD: (nickname: string, pageParams: number) =>
+    `${API_BASE_URL}/markings/marks/${nickname}?offset=${pageParams}`,
 };
 
 export const MARKING_VISIBILITY_MAP = {

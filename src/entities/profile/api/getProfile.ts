@@ -1,7 +1,7 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { apiClient, HttpError } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { PROFILE_END_POINT } from "../constants";
+import { PROFILE_END_POINT, profileQueryKey } from "../constants";
 
 // 유저 정보
 export type Nickname = string;
@@ -67,7 +67,7 @@ export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
   const token = useAuthStore((state) => state.token);
 
   return useQuery<GetProfileResponse, HttpError>({
-    queryKey: ["profile", nickname],
+    queryKey: profileQueryKey.profile(nickname!),
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
     gcTime: 0,
   });
@@ -80,7 +80,7 @@ export const useGetMyProfile = <TResult = GetProfileResponse>(
   const nickname = useAuthStore((state) => state.nickname);
 
   return useQuery({
-    queryKey: ["profile", nickname],
+    queryKey: profileQueryKey.profile(nickname!),
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
     gcTime: 0,
     select,

@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { useMapMode } from "@/features/map/hooks";
 import { GetMySavedMarkingListResponse } from "@/entities/marking/api";
+import { markingQueryKey } from "@/entities/marking/constants";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
@@ -27,7 +28,7 @@ export const useDeleteSavedMarking = () => {
     onSuccess: (_, { markingId }) => {
       if (mode === "MY_ACTIVITY") {
         queryClient.setQueryData<InfiniteData<GetMySavedMarkingListResponse>>(
-          ["mySavedMarkingList"],
+          markingQueryKey.myActivityMarkingList("SAVED"),
           (oldData) => {
             if (!oldData) return oldData;
 
@@ -47,7 +48,7 @@ export const useDeleteSavedMarking = () => {
         );
 
         queryClient.invalidateQueries({
-          queryKey: ["mySavedMarkingList"],
+          queryKey: markingQueryKey.myActivityMarkingList("SAVED"),
         });
       }
     },

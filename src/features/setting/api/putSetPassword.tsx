@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
+import { authQueryKey } from "@/entities/auth/constants";
 import { apiClient, useSnackBar } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordSetFormStore } from "../store";
@@ -27,7 +28,7 @@ export const usePutSetPassword = () => {
     mutationKey: ["putSetPassword"],
     onSuccess: () => {
       /* isPasswordSet 값의 mutation 이 일어났기 때문에 새로운 데이터를 패치 해옵니다. */
-      queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+      queryClient.invalidateQueries({ queryKey: authQueryKey.myInfo() });
       resetPasswordSetForm();
       handleOpenSnackbar("비밀번호가 설정 되었습니다.");
     },

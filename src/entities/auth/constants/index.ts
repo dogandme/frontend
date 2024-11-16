@@ -14,3 +14,5 @@ export const REGION_END_POINT = {
   REGION_LIST: (keyword: string) =>
     `${API_BASE_URL}/addresses?keyword=${keyword}`,
 };
+
+export * from "./queryKey";

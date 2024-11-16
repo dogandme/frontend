@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { useMapMode } from "@/features/map/hooks";
 import type { GetMyLikedMarkingListResponse } from "@/entities/marking/api";
+import { markingQueryKey } from "@/entities/marking/constants";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
@@ -27,7 +28,7 @@ export const useDeleteLikeMarking = () => {
     onSuccess: (_, { markingId }) => {
       if (mode === "MY_ACTIVITY") {
         queryClient.setQueryData<InfiniteData<GetMyLikedMarkingListResponse>>(
-          ["myLikedMarkingList"],
+          markingQueryKey.myActivityMarkingList("LIKED"),
           (oldData) => {
             if (!oldData) return oldData;
 
@@ -47,7 +48,7 @@ export const useDeleteLikeMarking = () => {
         );
 
         queryClient.invalidateQueries({
-          queryKey: ["myLikedMarkingList"],
+          queryKey: markingQueryKey.myActivityMarkingList("LIKED"),
         });
       }
     },

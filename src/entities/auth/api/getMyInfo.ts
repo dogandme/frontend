@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { MY_INFO_END_POINT, SOCIAL_TYPE } from "../constants";
+import { authQueryKey } from "../constants";
 import type { Region } from "./getRegion";
 
 export interface MyInfo {
@@ -21,7 +22,7 @@ const getMyInfo = async () => {
 
 export const useGetMyInfo = () => {
   return useQuery({
-    queryKey: ["myInfo"],
+    queryKey: authQueryKey.myInfo(),
     queryFn: getMyInfo,
   });
 };

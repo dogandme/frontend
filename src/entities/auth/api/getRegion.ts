@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { REGION_END_POINT } from "../constants";
+import { authQueryKey } from "../constants";
 
 export interface LatLng {
   lat: number;
@@ -33,7 +34,7 @@ export const useGetRegionByKeyword = ({
   enabled: boolean;
 }) => {
   return useQuery({
-    queryKey: ["regions", keyword],
+    queryKey: authQueryKey.regionKeyword(keyword),
     queryFn: () => getRegionByKeyword(keyword),
     enabled,
     staleTime: 1000 * 60 * 5,
@@ -52,7 +53,7 @@ export const useGetRegionByLatLng = ({
   enabled = false,
 }: LatLng & { enabled: boolean }) => {
   return useQuery({
-    queryKey: ["regions", lat, lng],
+    queryKey: authQueryKey.regionLatLng({ lat, lng }),
     queryFn: () => getRegionByLatLng({ lat, lng }),
     enabled,
     staleTime: 1000 * 60 * 5,

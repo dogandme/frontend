@@ -2,7 +2,11 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_END_POINT, type MarkingVisibilityKey } from "../constants";
+import {
+  MARKING_END_POINT,
+  markingQueryKey,
+  type MarkingVisibilityKey,
+} from "../constants";
 
 interface Address {
   id: number;
@@ -144,14 +148,17 @@ export const useGetMarkingList = ({
   const { isIdle: isMapIdle } = useMapStore.getState();
 
   return useInfiniteQuery({
-    queryKey: [
-      "markingList",
-      southWestLat,
-      southWestLng,
-      northEastLat,
-      northEastLng,
-      sortType,
-    ],
+    queryKey: markingQueryKey.boundaryMarkingList(
+      {
+        southWestLat: southWestLat!,
+        southWestLng: southWestLng!,
+        northEastLat: northEastLat!,
+        northEastLng: northEastLng!,
+      },
+      { lat: lat!, lng: lng! },
+      sortType!,
+      searchType,
+    ),
 
     queryFn:
       isMapIdle &&

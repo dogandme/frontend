@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { authQueryKey } from "@/entities/auth/constants";
 import { apiClient } from "@/shared/lib";
 import { AuthStore, useAuthStore } from "@/shared/store/auth";
 import { CHANGE_USER_INFO_END_POINT } from "../constants";
@@ -25,7 +26,7 @@ export const usePutChangeNickname = () => {
       setNickname(variables.nickname);
 
       queryClient.invalidateQueries({
-        queryKey: ["myInfo"],
+        queryKey: authQueryKey.myInfo(),
       });
     },
   });

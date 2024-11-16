@@ -3,7 +3,7 @@ import { useMapStore } from "@/features/map/store";
 import { useTiling } from "@/entities/map/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKER_END_POINT } from "../constants";
+import { MARKER_END_POINT, markerQueryKey } from "../constants";
 
 interface Marker {
   markingId: number;
@@ -57,14 +57,12 @@ export const useGetBoundaryMarkerList = ({
   const getTiles = useTiling();
 
   return useQuery({
-    queryKey: [
-      "marker",
-      "boundaryMarkerList",
-      southWestLat,
-      southWestLng,
-      northEastLat,
-      northEastLng,
-    ],
+    queryKey: markerQueryKey.boundaryMarker({
+      southWestLat: southWestLat!,
+      southWestLng: southWestLng!,
+      northEastLat: northEastLat!,
+      northEastLng: northEastLng!,
+    }),
 
     queryFn:
       isMapIdle &&
