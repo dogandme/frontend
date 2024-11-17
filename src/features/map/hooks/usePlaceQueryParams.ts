@@ -48,8 +48,8 @@ export const usePlaceQueryParams = () => {
     }
     // lat , lng 가 유효하지 않은 경우 boundsParams 의 중심값을 사용합니다.
     setPlaceQueryParams({
-      lat: northEastLat - (northEastLat - southWestLat) / 2,
-      lng: northEastLng - (northEastLng - southWestLng) / 2,
+      lat: (northEastLat + southWestLat) / 2,
+      lng: (northEastLng + southWestLng) / 2,
     });
   }, [pathname, JSON.stringify(boundsParams)]);
 
