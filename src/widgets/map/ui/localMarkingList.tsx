@@ -15,12 +15,26 @@ import { MyLocationIcon } from "@/shared/ui/icon";
 import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 
-export const LocalMarkingList = () => {
-  const map = useMap();
-  const getCurrentMapBounds = useGetMapCurrentBounds();
+export const LocalMarkingListBottomSheet = () => {
+  return (
+    <div className="px-4">
+      {/* todo 버튼 활성화 여부에 따라 내용 바뀜 */}
+      <h1 className="title-1 text-grey-900 py-4">동네 마킹</h1>
+      <div className="flex justify-between items-center mb-4">
+        <LocalMarkingListBottomSheetHeader />
+        <LocationMarkingListFilter />
+      </div>
+      <LocalMarkingList />
+    </div>
+  );
+};
+
+const LocalMarkingList = () => {
   const navigate = useNavigate();
+  const map = useMap();
   const { boundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
+  const getCurrentMapBounds = useGetMapCurrentBounds();
 
   const {
     data: markingList,
@@ -39,44 +53,8 @@ export const LocalMarkingList = () => {
     }
   });
 
-  const { northEastLat, northEastLng, southWestLat, southWestLng } =
-    boundsParams;
-
-  const lat =
-    typeof northEastLat === "number" && typeof southWestLat === "number"
-      ? (northEastLat + southWestLat) / 2
-      : null;
-  const lng =
-    typeof northEastLng === "number" && typeof southWestLng === "number"
-      ? (northEastLng + southWestLng) / 2
-      : null;
-
-  const { data } = useGetAddressFromLatLng({
-    lat,
-    lng,
-  });
-
   return (
-    <div className="px-4">
-      {/* todo 버튼 활성화 여부에 따라 내용 바뀜 */}
-      <h1 className="title-1 text-grey-900 py-4">동네 마킹</h1>
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex gap-1 text-tangerine-500 items-center">
-          <MyLocationIcon width={20} height={20} />
-          <span className="body-2 text-grey-500">{data?.region}</span>
-        </div>
-
-        <div className="flex">
-          <RangeFilter options={["CURRENT_LOCATION", "MAP_LOCATION"]} />
-          <SortTypeFilter
-            options={["POPULARITY", "RECENT", "DISTANCE"]}
-            selectedOption={sortTypeParam || "POPULARITY"}
-            onSelect={(sortType) => {
-              setMapQueryParams({ sortType });
-            }}
-          />
-        </div>
-      </div>
+    <>
       <MarkingList display="grid">
         {markingList?.map(({ markingId, previewImage, lat, lng }) => (
           <button
@@ -101,6 +79,51 @@ export const LocalMarkingList = () => {
         ))}
       </MarkingList>
       <div className="h-[.125rem]" ref={setNode} />
+    </>
+  );
+};
+
+const LocalMarkingListBottomSheetHeader = () => {
+  const { boundsParams } = useMapQueryParams();
+
+  const { northEastLat, northEastLng, southWestLat, southWestLng } =
+    boundsParams;
+
+  const lat =
+    typeof northEastLat === "number" && typeof southWestLat === "number"
+      ? (northEastLat + southWestLat) / 2
+      : null;
+  const lng =
+    typeof northEastLng === "number" && typeof southWestLng === "number"
+      ? (northEastLng + southWestLng) / 2
+      : null;
+
+  const { data } = useGetAddressFromLatLng({
+    lat,
+    lng,
+  });
+
+  return (
+    <div className="flex gap-1 text-tangerine-500 items-center">
+      <MyLocationIcon width={20} height={20} />
+      <span className="body-2 text-grey-500">{data?.region}</span>
+    </div>
+  );
+};
+
+const LocationMarkingListFilter = () => {
+  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
+
+  return (
+    <div className="flex">
+      <RangeFilter options={["CURRENT_LOCATION", "MAP_LOCATION"]} />
+      <SortTypeFilter
+        options={["POPULARITY", "RECENT", "DISTANCE"]}
+        selectedOption={sortTypeParam || "POPULARITY"}
+        onSelect={(sortType) => {
+          setMapQueryParams({ sortType });
+        }}
+      />
     </div>
   );
 };
