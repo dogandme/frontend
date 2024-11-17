@@ -5,6 +5,7 @@ import { MarkingItem } from "@/widgets/marking/ui";
 import {
   useGetMapCurrentBounds,
   useMapQueryParams,
+  usePlaceQueryParams,
 } from "@/features/map/hooks";
 import { SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
@@ -21,11 +22,13 @@ import { MarkingList } from "./markingList";
 export const PlaceMarkingList = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { boundsParams, sortTypeParam, setMapQueryParams } =
-    useMapQueryParams();
+  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
+  const { latLng100meterBounds } = usePlaceQueryParams();
+
   const { data: myFollowingMap } = useGetMyFollowingIdsMap();
   const { data: myBookmarkedMap } = useGetMyBookmarkIdsMap();
   const { data: myLikedMap } = useGetMyLikedIdsMap();
+
   const getMapBounds = useGetMapCurrentBounds();
 
   const {
@@ -34,7 +37,7 @@ export const PlaceMarkingList = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useGetMarkingList({
-    ...boundsParams,
+    ...latLng100meterBounds,
     sortType: sortTypeParam,
     searchType: "LOCATION",
   });
