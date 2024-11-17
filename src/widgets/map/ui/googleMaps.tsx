@@ -1,5 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { Map, MapEvent } from "@vis.gl/react-google-maps";
+import {
+  Map,
+  MapCameraChangedEvent,
+  MapEvent,
+} from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "@/features/map/constants";
 import { useMapStore } from "@/features/map/store/map";
 import { mapOptions } from "../constants";
@@ -15,40 +19,40 @@ interface GoogleMapProps {
  */
 export const GoogleMaps = ({ children }: GoogleMapProps) => {
   const isTilesLoadedRef = useRef<boolean>(false);
-  const setIsIdle = useMapStore((state) => state.setIsIdle);
 
+  const setIsIdle = useMapStore((state) => state.setIsIdle);
   const setIsMapCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
-  const setIsLastSearchedLocation = useMapStore(
-    (state) => state.setIsLastSearchedLocation,
-  );
   const setMapInfo = useMapStore((state) => state.setMapInfo);
 
-  const handleMapChange = () => {
+  const handleMapChange = ({ detail }: MapCameraChangedEvent) => {
     if (!isTilesLoadedRef.current) return;
-    setIsLastSearchedLocation(false);
-    setIsMapCenteredOnMyLocation(false);
+    const { center } = detail;
+    const { currentLocation } = useMapStore.getState().userInfo;
+    setIsMapCenteredOnMyLocation(
+      center.lat === currentLocation.lat && center.lng === currentLocation.lng,
+    );
   };
 
   const handleMapIdle = ({ map }: MapEvent) => {
     const center = map.getCenter();
     const zoom = map.getZoom();
-    const bounds = map.getBounds();
+    const northEast = map.getBounds().getNorthEast();
+    const southWest = map.getBounds().getSouthWest();
 
-    const northEast = bounds.getNorthEast();
-    const southWest = bounds.getSouthWest();
+    const bounds = {
+      east: northEast.lng(),
+      north: northEast.lat(),
+      west: southWest.lng(),
+      south: southWest.lat(),
+    };
 
     setIsIdle(true);
     setMapInfo({
       center: { lat: center.lat(), lng: center.lng() },
       zoom: zoom,
-      bounds: {
-        east: northEast.lng(),
-        north: northEast.lat(),
-        west: southWest.lng(),
-        south: southWest.lat(),
-      },
+      bounds,
     });
   };
 

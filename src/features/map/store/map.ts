@@ -30,7 +30,6 @@ interface MapState {
   userInfo: UserInfo;
   mode: Mode;
   isCenterOnMyLocation: boolean;
-  isLastSearchedLocation: boolean;
   mapInfo: MapInfo;
 }
 
@@ -39,7 +38,6 @@ interface MapActions {
   setUserInfo: (userInfo: UserInfo) => void;
   setMode: (mode: Mode) => void;
   setIsCenterOnMyLocation: (isCenterOnMyLocation: boolean) => void;
-  setIsLastSearchedLocation: (isLastSearchedLocation: boolean) => void;
   setMapInfo: (mapInfo: MapInfo) => void;
 }
 
@@ -51,7 +49,6 @@ const mapStoreInitialState: MapState = {
   },
   mode: "view",
   isCenterOnMyLocation: false,
-  isLastSearchedLocation: true,
   mapInfo: {
     center: MAP_INITIAL_CENTER,
     zoom: MAP_INITIAL_ZOOM,
@@ -65,8 +62,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setMode: (mode) => set({ mode }),
   setIsCenterOnMyLocation: (isCenterOnMyLocation) =>
     set({ isCenterOnMyLocation }),
-  setIsLastSearchedLocation: (isLastSearchedLocation) =>
-    set({ isLastSearchedLocation }),
+
   setIsIdle: (isIdle) => set({ isIdle }),
   setMapInfo: (mapInfo) => set({ mapInfo }),
 }));

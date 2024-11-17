@@ -21,9 +21,7 @@ export const MapControlWidget = () => {
     return (
       <>
         {/* Map 최하단에 렌더링 될 컨트롤 버튼들 */}
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 translate-y-1/2">
-          <MarkingResearchButton />
-        </div>
+        <MarkingResearchButton />
         <div className="absolute bottom-[6.875rem] left-4">
           <MyLocationButton />
         </div>
