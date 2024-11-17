@@ -7,7 +7,7 @@ import { getNumberParam, useMapQueryParams } from "./useMapQueryParams";
 export const usePlaceQueryParams = () => {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { boundsParams, hasBoundsParams } = useMapQueryParams();
+  const { boundsParams } = useMapQueryParams();
 
   const setPlaceQueryParams = ({ lat, lng }: { lat: number; lng: number }) => {
     setSearchParams((prevSearchParams) => {
@@ -35,7 +35,13 @@ export const usePlaceQueryParams = () => {
   };
 
   useEffect(() => {
-    if (pathname !== ROUTER_PATH.PLACE || !hasBoundsParams) {
+    const { northEastLat, northEastLng, southWestLat, southWestLng } =
+      boundsParams;
+
+    if (
+      !(northEastLat && northEastLng && southWestLat && southWestLng) ||
+      pathname !== ROUTER_PATH.PLACE
+    ) {
       return;
     }
 
@@ -46,21 +52,12 @@ export const usePlaceQueryParams = () => {
     if (lat && lng && filterInnerBoundary({ lat, lng }, boundsParams)) {
       return;
     }
-
-    // 만약 유효하지 않은 lat , lng 값을 가지고 있는 경우엔 boundsParams 의 중심으로 lat , lng 값을 지정합니다.
-    const { northEastLat, northEastLng, southWestLat, southWestLng } =
-      boundsParams;
-
-    // hasBoundsParams 가 true 이면 해당 값들은 항상 true 입니다.
-    // 타입 단언을 사용하여 값이 존재한다는 것을 명시적으로 표현합니다.
-
-    if (northEastLat && northEastLng && southWestLat && southWestLng) {
-      setPlaceQueryParams({
-        lat: northEastLat - (northEastLat - southWestLat) / 2,
-        lng: northEastLng - (northEastLng - southWestLng) / 2,
-      });
-    }
-  }, [pathname, JSON.stringify(boundsParams), hasBoundsParams]);
+    // lat , lng 가 유효하지 않은 경우 boundsParams 의 중심값을 사용합니다.
+    setPlaceQueryParams({
+      lat: northEastLat - (northEastLat - southWestLat) / 2,
+      lng: northEastLng - (northEastLng - southWestLng) / 2,
+    });
+  }, [pathname, JSON.stringify(boundsParams)]);
 
   return { placeParams, setPlaceQueryParams, latLng100meterBounds };
 };
