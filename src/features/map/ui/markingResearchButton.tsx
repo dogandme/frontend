@@ -10,14 +10,14 @@ export const MarkingResearchButton = () => {
     useMapQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
-  const isBoundInBoundsParams =
+  const isMapInsideBoundsParams =
     hasBoundsParams &&
     bounds.east <= boundsParams.northEastLng! &&
     bounds.west >= boundsParams.southWestLng! &&
     bounds.north <= boundsParams.northEastLat! &&
     bounds.south >= boundsParams.southWestLat!;
 
-  if (pathname !== "/map" || isBoundInBoundsParams) return null;
+  if (pathname !== "/map" || isMapInsideBoundsParams) return null;
 
   return (
     <div className="absolute top-4 left-1/2 transform -translate-x-1/2 translate-y-1/2">
