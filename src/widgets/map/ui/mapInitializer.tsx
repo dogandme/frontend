@@ -35,18 +35,14 @@ export const MapInitializer = () => {
 
     // map 인스턴스가 생기고 나서, 현재 위치를 가져옵니다.
     setCurrentLocation({
-      onSuccess: ({ coords }) => {
+      onSuccess: async ({ coords }) => {
         const { latitude, longitude } = coords;
-
         const currentLocationOfUser = { lat: latitude, lng: longitude };
 
         if (!hasBoundsParams) {
-          map.setCenter(currentLocationOfUser);
-          // 현재 위치를 기준으로 중앙에 위치하도록 설정합니다.
-          // 원래 setIsCenteredOnMyLocation 의 경우 GoogleMap 컴포넌트 내부의 handleCameraChange 에서 처리하도록 되어 있습니다.
-          // 하지만, 초기화 단계에서는 handleCameraChange 가 호출되지 않아서, 초기화 단계에서 처리합니다.
-          setIsCenteredOnMyLocation(true);
+          await map.setCenter(currentLocationOfUser);
 
+          setIsCenteredOnMyLocation(true);
           setMapQueryParams({
             bounds: getMapBounds(),
             sortType: defaultSortType,
@@ -64,20 +60,22 @@ export const MapInitializer = () => {
     });
 
     if (hasBoundsParams) {
-      const { northEastLat, northEastLng, southWestLat, southWestLng } =
-        boundsParams;
+      (async function () {
+        const { northEastLat, northEastLng, southWestLat, southWestLng } =
+          boundsParams;
 
-      map.fitBounds({
-        south: southWestLat,
-        west: southWestLng,
-        north: northEastLat,
-        east: northEastLng,
-      });
+        await map.fitBounds({
+          south: southWestLat,
+          west: southWestLng,
+          north: northEastLat,
+          east: northEastLng,
+        });
 
-      setMapQueryParams({
-        bounds: getMapBounds(),
-        sortType: sortTypeParam ?? defaultSortType,
-      });
+        setMapQueryParams({
+          bounds: getMapBounds(),
+          sortType: sortTypeParam ?? defaultSortType,
+        });
+      })();
     }
 
     return () => {
