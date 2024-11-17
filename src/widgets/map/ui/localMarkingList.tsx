@@ -1,9 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
-import {
-  useGetMapCurrentBounds,
-  useMapQueryParams,
-} from "@/features/map/hooks";
+import { useMapQueryParams, usePlaceQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import {
   useGetAddressFromLatLng,
@@ -32,9 +29,8 @@ export const LocalMarkingListBottomSheet = () => {
 const LocalMarkingList = () => {
   const navigate = useNavigate();
   const map = useMap();
-  const { boundsParams, sortTypeParam, setMapQueryParams } =
-    useMapQueryParams();
-  const getCurrentMapBounds = useGetMapCurrentBounds();
+  const { boundsParams, sortTypeParam } = useMapQueryParams();
+  const { setPlaceQueryParams } = usePlaceQueryParams();
 
   const {
     data: markingList,
@@ -63,12 +59,9 @@ const LocalMarkingList = () => {
             className="aspect-square"
             onClick={async () => {
               navigate(ROUTER_PATH.PLACE);
-              await map.setCenter({ lat, lng });
-              await map.setZoom(mapOptions.maxZoom);
-              setMapQueryParams({
-                bounds: getCurrentMapBounds(),
-                sortType: "POPULARITY",
-              });
+              map.setCenter({ lat, lng });
+              map.setZoom(mapOptions.maxZoom);
+              setPlaceQueryParams({ lat, lng });
             }}
           >
             <img
