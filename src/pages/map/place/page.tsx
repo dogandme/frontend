@@ -18,13 +18,13 @@ export const PlaceMarkingPage = () => {
 
   // 이 장소 마킹으로 초기 진입한 경우에는 maxZoom 으로 변경합니다.
   useEffect(() => {
-    if (!isIdle) return;
+    if (!map || !isIdle) return;
 
     const { zoom } = useMapStore.getState().mapInfo;
     if (zoom === MAP_INITIAL_ZOOM) {
       map.setZoom(mapOptions.maxZoom);
     }
-  }, [isIdle]);
+  }, [map, isIdle]);
 
   return (
     <>
