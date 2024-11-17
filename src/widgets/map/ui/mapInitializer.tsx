@@ -8,6 +8,7 @@ import {
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
+import { useSnackBar } from "@/shared/lib";
 
 export const MapInitializer = () => {
   const map = useMap();
@@ -18,6 +19,8 @@ export const MapInitializer = () => {
   const { boundsParams, hasBoundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
+
+  const handleOpen = useSnackBar();
 
   const isMapIdle = useMapStore((state) => state.isIdle);
   const setIsMapIdle = useMapStore((state) => state.setIsIdle);
@@ -81,6 +84,13 @@ export const MapInitializer = () => {
       setIsMapIdle(false);
     };
   }, [map, isMapIdle]);
+
+  useEffect(() => {
+    if (!hasBoundsParams) {
+      return;
+    }
+    handleOpen("스팟을 발견하고 마킹으로 추억을 남겨보세요", { type: "map" });
+  }, [hasBoundsParams]);
 
   if (!map || loading || !isMapIdle) {
     return <CurrentLocationLoading />;
