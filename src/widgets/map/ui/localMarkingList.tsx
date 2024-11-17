@@ -57,7 +57,7 @@ const LocalMarkingList = () => {
             key={markingId}
             type="button"
             className="aspect-square"
-            onClick={async () => {
+            onClick={() => {
               navigate(ROUTER_PATH.PLACE);
               map.setCenter({ lat, lng });
               map.setZoom(mapOptions.maxZoom);
