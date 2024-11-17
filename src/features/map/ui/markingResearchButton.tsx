@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { ROUTER_PATH } from "@/shared/constants";
 import { ResetIcon } from "@/shared/ui/icon";
 import { useGetMapCurrentBounds, useMapQueryParams } from "../hooks";
 import { useMapStore } from "../store";
@@ -17,7 +18,10 @@ export const MarkingResearchButton = () => {
     bounds.north <= boundsParams.northEastLat! &&
     bounds.south >= boundsParams.southWestLat!;
 
-  if (pathname !== "/map" || isMapInsideBoundsParams) return null;
+  const isValidPath =
+    pathname === ROUTER_PATH.MAP || pathname === ROUTER_PATH.PLACE;
+
+  if (!isValidPath || isMapInsideBoundsParams) return null;
 
   return (
     <div className="absolute top-4 left-1/2 transform -translate-x-1/2 translate-y-1/2">
