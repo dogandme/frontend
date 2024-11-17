@@ -20,14 +20,10 @@ export const usePlaceQueryParams = () => {
 
   const lat = getNumberParam("lat", searchParams);
   const lng = getNumberParam("lng", searchParams);
-  const placeParams = {
-    lat,
-    lng,
-  };
 
   // lat , lng 로부터 반경 100m의 경계값을 계산합니다.
   // 100m 는 0.0009이기에 중심으로부터 0.00045씩 떨어진 값을 사용합니다.
-  const latLng100meterBounds = {
+  const boundsAdjacentPlace = {
     northEastLat: lat && lat + 0.00045,
     northEastLng: lng && lng + 0.00045,
     southWestLat: lat && lat - 0.00045,
@@ -47,8 +43,6 @@ export const usePlaceQueryParams = () => {
 
     // searchParameter 에 lat, lng 가 있고, 현재 검색된 boundsParams 내부에 존재하는
     // 유효한 경계값이라면, 해당 값을 사용합니다.
-    const lat = getNumberParam("lat", searchParams);
-    const lng = getNumberParam("lng", searchParams);
     if (lat && lng && filterInnerBoundary({ lat, lng }, boundsParams)) {
       return;
     }
@@ -59,5 +53,9 @@ export const usePlaceQueryParams = () => {
     });
   }, [pathname, JSON.stringify(boundsParams)]);
 
-  return { placeParams, setPlaceQueryParams, latLng100meterBounds };
+  return {
+    placeParams: { lat, lng },
+    setPlaceQueryParams,
+    boundsAdjacentPlace,
+  };
 };

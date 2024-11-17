@@ -23,7 +23,7 @@ export const PlaceMarkingList = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
-  const { latLng100meterBounds } = usePlaceQueryParams();
+  const { boundsAdjacentPlace } = usePlaceQueryParams();
 
   const { data: myFollowingMap } = useGetMyFollowingIdsMap();
   const { data: myBookmarkedMap } = useGetMyBookmarkIdsMap();
@@ -37,7 +37,7 @@ export const PlaceMarkingList = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useGetMarkingList({
-    ...latLng100meterBounds,
+    ...boundsAdjacentPlace,
     sortType: sortTypeParam,
     searchType: "LOCATION",
   });
