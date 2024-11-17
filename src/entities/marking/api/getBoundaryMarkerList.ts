@@ -88,7 +88,6 @@ export const useGetBoundaryMarkerList = ({
         northEastLng: northEastLng!,
       });
     },
-
-    gcTime: 0,
+    staleTime: 1000 * 60 * 1,
   });
 };

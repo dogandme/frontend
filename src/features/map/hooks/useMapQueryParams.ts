@@ -8,7 +8,7 @@ export interface Filter {
   bounds?: Bounds;
 }
 
-const getNumberParam = (
+export const getNumberParam = (
   key: string,
   searchParams: URLSearchParams,
 ): number | null => {
