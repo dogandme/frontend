@@ -1,10 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import {
   AdvancedMarker,
   AdvancedMarkerProps,
   useMap,
 } from "@vis.gl/react-google-maps";
 import { mapOptions } from "@/widgets/map/constants";
-import { API_BASE_URL } from "@/shared/constants";
+import { usePlaceQueryParams } from "@/features/map/hooks";
+import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { Badge } from "@/shared/ui/badge";
 import { PinShadowIcon } from "@/shared/ui/icon";
 import { Tile } from "../lib";
@@ -81,15 +83,28 @@ interface MarkingPinProps {
 export const MarkingPins = ({ tiles }: MarkingPinProps) => {
   const map = useMap();
   const zoom = map.getZoom();
+  const navigate = useNavigate();
+
+  const { placeParams, setPlaceQueryParams } = usePlaceQueryParams();
+
+  const isMarkerInBottomSheet = (position: Tile["position"]) => {
+    return placeParams.lat === position.lat && placeParams.lng === position.lng;
+  };
 
   const handleClickSingleMarker = (position: Tile["position"]) => {
     map.setCenter(position);
     map.setZoom(mapOptions.maxZoom);
+    navigate(ROUTER_PATH.PLACE);
+    setPlaceQueryParams(position);
   };
 
-  const handleClickMultipleMarker = (position: Tile["position"]) => {
+  const handleClickMultipleMarker = async (position: Tile["position"]) => {
     map.setCenter(position);
     map.setZoom(zoom + 1);
+    if (mapOptions.maxZoom === zoom) {
+      navigate(ROUTER_PATH.PLACE);
+      setPlaceQueryParams(position);
+    }
   };
 
   return tiles.map(({ markingId, markerCount, position, previewImage }) => {
@@ -105,6 +120,7 @@ export const MarkingPins = ({ tiles }: MarkingPinProps) => {
           imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
           alt={`marking-${markingId} 마커를 나타내는 핀`}
           onClick={() => handleClickSingleMarker(position)}
+          className={`${isMarkerInBottomSheet(position) ? "scale-[2]" : ""}`}
         />
       );
     }
@@ -116,6 +132,7 @@ export const MarkingPins = ({ tiles }: MarkingPinProps) => {
         imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
         alt={`${markerCount}개의 마커를 담은 멀티핀`}
         onClick={() => handleClickMultipleMarker(position)}
+        className={`${isMarkerInBottomSheet(position) ? "scale-[2]" : ""}`}
       >
         {markerCount}
       </MultiplePin>
