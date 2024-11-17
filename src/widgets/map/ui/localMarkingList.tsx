@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { useMapQueryParams } from "@/features/map/hooks";
+import { useMap } from "@vis.gl/react-google-maps";
+import {
+  useGetMapCurrentBounds,
+  useMapQueryParams,
+} from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import {
   useGetAddressFromLatLng,
@@ -8,9 +12,12 @@ import {
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
+import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 
 export const LocalMarkingList = () => {
+  const map = useMap();
+  const getCurrentMapBounds = useGetMapCurrentBounds();
   const navigate = useNavigate();
   const { boundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
@@ -76,16 +83,12 @@ export const LocalMarkingList = () => {
             key={markingId}
             type="button"
             className="aspect-square"
-            onClick={() => {
-              // todo 클러스터링 데이터에 있는 bounds로 인수 전달
+            onClick={async () => {
               navigate(ROUTER_PATH.PLACE);
+              await map.setCenter({ lat, lng });
+              await map.setZoom(mapOptions.maxZoom);
               setMapQueryParams({
-                bounds: {
-                  southWestLat: lat - 0.00001,
-                  southWestLng: lng - 0.00001,
-                  northEastLat: lat + 0.00001,
-                  northEastLng: lng + 0.00001,
-                },
+                bounds: getCurrentMapBounds(),
                 sortType: "POPULARITY",
               });
             }}
