@@ -1,2 +1,2 @@
 export { default as MainPage } from "./page";
-export * from "./404";
+export * from "./notFound";
