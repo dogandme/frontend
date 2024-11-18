@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
+import { MAP_INITIAL_BOUNDS } from "@/features/map/constants";
 import {
   useCurrentLocation,
   useGetMapCurrentBounds,
@@ -33,52 +34,52 @@ export const MapInitializer = () => {
 
     const defaultSortType = mapMode === "MY_MARK" ? "RECENT" : "POPULARITY";
 
-    // map 인스턴스가 생기고 나서, 현재 위치를 가져옵니다.
-    setCurrentLocation({
-      onSuccess: ({ coords }) => {
-        const { latitude, longitude } = coords;
+    // boundsParams 가 존재할 경우 해당 boundsParams 로 맵을 이동 시킨 후 boundsParams 를 변경합니다.
+    // 기기마다 boundsParams가 다르게 나올 수 있기 때문에 비동기적으로 동기화 과정을 거칩니다.
+    if (hasBoundsParams) {
+      (async function () {
+        const { northEastLat, northEastLng, southWestLat, southWestLng } =
+          boundsParams;
 
+        await map.fitBounds({
+          south: southWestLat,
+          west: southWestLng,
+          north: northEastLat,
+          east: northEastLng,
+        });
+
+        setMapQueryParams({
+          bounds: getMapBounds(),
+          sortType: sortTypeParam ?? defaultSortType,
+        });
+      })();
+      return;
+    }
+
+    // 만약 boundsParams가 없다면 사용자의 현재 위치로 boundsParams 를 설정합니다.
+    // 사용자의 위치를 가져오는데 실패했다면 기본 boundsParams 를 설정합니다.
+    setCurrentLocation({
+      onSuccess: async ({ coords }) => {
+        const { latitude, longitude } = coords;
         const currentLocationOfUser = { lat: latitude, lng: longitude };
 
-        if (!hasBoundsParams) {
-          map.setCenter(currentLocationOfUser);
-          // 현재 위치를 기준으로 중앙에 위치하도록 설정합니다.
-          // 원래 setIsCenteredOnMyLocation 의 경우 GoogleMap 컴포넌트 내부의 handleCameraChange 에서 처리하도록 되어 있습니다.
-          // 하지만, 초기화 단계에서는 handleCameraChange 가 호출되지 않아서, 초기화 단계에서 처리합니다.
-          setIsCenteredOnMyLocation(true);
+        await map.setCenter(currentLocationOfUser);
 
-          setMapQueryParams({
-            bounds: getMapBounds(),
-            sortType: defaultSortType,
-          });
-        }
+        setIsCenteredOnMyLocation(true);
+        setMapQueryParams({
+          bounds: getMapBounds(),
+          sortType: defaultSortType,
+        });
       },
-      onError: () => {
-        if (!hasBoundsParams) {
-          setMapQueryParams({
-            bounds: getMapBounds(),
-            sortType: defaultSortType,
-          });
-        }
+      onError: async () => {
+        await map.fitBounds(MAP_INITIAL_BOUNDS);
+
+        setMapQueryParams({
+          bounds: getMapBounds(),
+          sortType: defaultSortType,
+        });
       },
     });
-
-    if (hasBoundsParams) {
-      const { northEastLat, northEastLng, southWestLat, southWestLng } =
-        boundsParams;
-
-      map.fitBounds({
-        south: southWestLat,
-        west: southWestLng,
-        north: northEastLat,
-        east: northEastLng,
-      });
-
-      setMapQueryParams({
-        bounds: getMapBounds(),
-        sortType: sortTypeParam ?? defaultSortType,
-      });
-    }
 
     return () => {
       setIsMapIdle(false);

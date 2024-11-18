@@ -2,10 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem } from "@/widgets/marking/ui";
-import {
-  useGetMapCurrentBounds,
-  useMapQueryParams,
-} from "@/features/map/hooks";
+import { useMapQueryParams, usePlaceQueryParams } from "@/features/map/hooks";
 import { SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import {
@@ -23,10 +20,11 @@ export const PlaceMarkingList = () => {
   const navigate = useNavigate();
   const { boundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
+  const { boundsAdjacentPlace } = usePlaceQueryParams();
+
   const { data: myFollowingMap } = useGetMyFollowingIdsMap();
   const { data: myBookmarkedMap } = useGetMyBookmarkIdsMap();
   const { data: myLikedMap } = useGetMyLikedIdsMap();
-  const getMapBounds = useGetMapCurrentBounds();
 
   const {
     data: markingList,
@@ -34,7 +32,7 @@ export const PlaceMarkingList = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useGetMarkingList({
-    ...boundsParams,
+    ...boundsAdjacentPlace,
     sortType: sortTypeParam,
     searchType: "LOCATION",
   });
@@ -58,7 +56,7 @@ export const PlaceMarkingList = () => {
         onClick={() => {
           navigate(ROUTER_PATH.MAP);
           setMapQueryParams({
-            bounds: getMapBounds(),
+            bounds: boundsParams,
             sortType: "POPULARITY",
           });
         }}

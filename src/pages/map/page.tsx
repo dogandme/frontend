@@ -1,4 +1,4 @@
-import { LocalMarkingList } from "@/widgets/map/ui";
+import { LocalMarkingListBottomSheet } from "@/widgets/map/ui";
 import { useMapQueryParams } from "@/features/map/hooks";
 import { MarkingPins } from "@/entities/map/ui";
 import { useGetBoundaryMarkerList } from "@/entities/marking/api";
@@ -12,7 +12,7 @@ export const MapPage = () => {
   return (
     <>
       {data && <MarkingPins tiles={data} />}
-      <LocalMarkingList />
+      <LocalMarkingListBottomSheet />
     </>
   );
 };
