@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -11,15 +11,21 @@ import { OtherProfilePage } from "./otherProfilePage";
  * @:nickname: 해당 닉네임을 가진 사용자의 프로필 페이지, 만약 AuthStore에 저장된 닉네임과 같다면 마이페이지처럼 이용 가능 합니다.
  */
 export const ProfilePage = () => {
-  const token = useAuthStore((state) => state.token);
+  const { nickname } = useParams<{ nickname: string }>();
   const navigate = useNavigate();
+
+  const token = useAuthStore((state) => state.token);
   const { isMyPage } = useNicknameParams();
 
   useEffect(() => {
+    if (!nickname?.startsWith("@")) {
+      throw new Error("존재하지 않은 경로입니다.");
+    }
+
     if (!token) {
       navigate(ROUTER_PATH.LOGIN);
     }
-  }, [token, navigate]);
+  }, [token, navigate, nickname]);
 
   if (isMyPage) {
     return <MyProfilePage />;
