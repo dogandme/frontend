@@ -126,7 +126,7 @@ const filterInnerBoundary = ({ lat, lng }: LatLng, bounds: MapBounds) => {
   );
 };
 
-const filterIntercsectedTiles = (
+const filterIntersectedTiles = (
   mapBounds: MapBounds,
   bounds: Tile["bounds"],
 ) => {
@@ -166,7 +166,7 @@ export const useTiling = () => {
     previousZoom.current = zoom;
 
     const intersectedCachedTiles = cachedTiles.current.filter((tile) =>
-      filterIntercsectedTiles(bounds, tile.bounds),
+      filterIntersectedTiles(bounds, tile.bounds),
     );
 
     const innerBoundaryMarkers = _markers.filter((marker) =>
