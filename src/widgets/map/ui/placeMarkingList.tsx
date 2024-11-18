@@ -13,6 +13,7 @@ import {
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 
 export const PlaceMarkingList = () => {
@@ -25,6 +26,8 @@ export const PlaceMarkingList = () => {
   const { data: myFollowingMap = {} } = useGetMyFollowingIdsMap();
   const { data: myBookmarkedMap = {} } = useGetMyBookmarkIdsMap();
   const { data: myLikedMap = {} } = useGetMyLikedIdsMap();
+
+  const { setPlaceQueryParams } = usePlaceQueryParams();
 
   const {
     data: markingList = [],
@@ -72,12 +75,16 @@ export const PlaceMarkingList = () => {
         {markingList?.map((marking) => (
           <MarkingItem
             key={marking.markingId}
-            onRegionClick={() => {
-              map.setCenter({
+            onRegionClick={async () => {
+              await map.setCenter({
                 lat: marking.lat,
                 lng: marking.lng,
               });
-              map.setZoom(19);
+              await map.setZoom(mapOptions.maxZoom);
+              setPlaceQueryParams({
+                lat: marking.lat,
+                lng: marking.lng,
+              });
             }}
             onDelete={() => {
               queryClient.invalidateQueries({
