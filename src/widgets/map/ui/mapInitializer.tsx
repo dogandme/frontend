@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_BOUNDS } from "@/features/map/constants";
 import {
@@ -13,7 +12,6 @@ import { CurrentLocationLoading } from "@/entities/map/ui";
 import { useSnackBar } from "@/shared/lib";
 
 export const MapInitializer = () => {
-  const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const map = useMap();
   const mapMode = useMapMode();
 
@@ -54,8 +52,6 @@ export const MapInitializer = () => {
           bounds: getMapBounds(),
           sortType: sortTypeParam ?? defaultSortType,
         });
-
-        setIsInitialized(true);
       })();
       return;
     }
@@ -74,7 +70,6 @@ export const MapInitializer = () => {
           bounds: getMapBounds(),
           sortType: defaultSortType,
         });
-        setIsInitialized(true);
       },
       onError: async () => {
         await map.fitBounds(MAP_INITIAL_BOUNDS);
@@ -83,7 +78,6 @@ export const MapInitializer = () => {
           bounds: getMapBounds(),
           sortType: defaultSortType,
         });
-        setIsInitialized(true);
       },
     });
 
@@ -93,11 +87,11 @@ export const MapInitializer = () => {
   }, [map, isMapIdle]);
 
   useEffect(() => {
-    if (!isInitialized) {
+    if (!hasBoundsParams) {
       return;
     }
     handleOpen("스팟을 발견하고 마킹으로 추억을 남겨보세요", { type: "map" });
-  }, [isInitialized]);
+  }, [hasBoundsParams]);
 
   if (!map || loading || !isMapIdle) {
     return <CurrentLocationLoading />;
