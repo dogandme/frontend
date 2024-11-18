@@ -394,7 +394,7 @@ const MarkingItemContent = () => {
               className="min-h-4 text-ellipsis overflow-hidden text-nowrap"
               key={index}
             >
-              {line}
+              {line.trim() === "" ? "..." : line}
             </p>
           ))}
         </p>
