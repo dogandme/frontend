@@ -1,31 +1,19 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { MarkingThumbnailGrid } from "@/widgets/marking/ui";
 import { ProfileOverView } from "@/widgets/profile/ui";
 import { useGetProfile } from "@/entities/profile/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
-import { ROUTER_PATH } from "@/shared/constants";
 import { useNicknameParams } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 import { NotFoundUser } from "./notFoundUser";
 
 export const OtherProfilePage = () => {
   const { nicknameParams } = useNicknameParams();
-  const token = useAuthStore((state) => state.token);
-  const navigate = useNavigate();
   // TODO 404 와 같은 양식의 디자인 사용하는건 어떤지 디자이너와 상의
   const { data, isLoading, isError, error } = useGetProfile({
     nickname: nicknameParams,
   });
   const { data: myFollowingIdsMap, isLoading: isMyFollowingIdsMapLoading } =
     useGetMyFollowingIdsMap();
-
-  useEffect(() => {
-    if (!token) {
-      navigate(ROUTER_PATH.LOGIN);
-    }
-  }, [token, navigate]);
 
   if (isError && error.code === 404) {
     return <NotFoundUser />;

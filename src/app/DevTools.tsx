@@ -165,6 +165,44 @@ export const DevTools = () => {
           colorType="primary"
           variant="filled"
           size="small"
+          onClick={() => {
+            useAuthStore.setState({
+              role: "ROLE_USER",
+              token: "invalidAccessToken",
+              nickname,
+            });
+            document.cookie =
+              "Authorization-refresh=freshRefreshToken; path=/; max-age=3600";
+          }}
+        >
+          <p className="flex flex-col">
+            <span>ROLE_USER</span>
+            <span>invalid AT & valid RT</span>
+          </p>
+        </Button>
+        <Button
+          colorType="primary"
+          variant="filled"
+          size="small"
+          onClick={() => {
+            useAuthStore.setState({
+              role: "ROLE_USER",
+              token: "invalidAccessToken",
+              nickname,
+            });
+            document.cookie =
+              "Authorization-refresh=invalidRefreshToken; path=/; max-age=3600";
+          }}
+        >
+          <p className="flex flex-col">
+            <span>ROLE_USER</span>
+            <span>invalid AT & invalid RT</span>
+          </p>
+        </Button>
+        <Button
+          colorType="primary"
+          variant="filled"
+          size="small"
           onClick={setSocialUser}
         >
           <p className="flex flex-col">

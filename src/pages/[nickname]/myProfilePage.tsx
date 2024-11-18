@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { MarkingThumbnailGrid } from "@/widgets/marking/ui";
 import {
@@ -17,18 +15,10 @@ import { NotFoundUser } from "./notFoundUser";
 
 export const MyProfilePage = () => {
   const { nicknameParams } = useNicknameParams();
-  const token = useAuthStore((state) => state.token);
-  const navigate = useNavigate();
   // TODO 404 와 같은 양식의 디자인 사용하는건 어떤지 디자이너와 상의
   const { data, isLoading, isError, error } = useGetProfile({
     nickname: nicknameParams,
   });
-
-  useEffect(() => {
-    if (!token) {
-      navigate(ROUTER_PATH.LOGIN);
-    }
-  }, [token, navigate]);
 
   if (isError && error.code === 404) {
     return <NotFoundUser />;
