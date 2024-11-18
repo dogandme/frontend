@@ -377,8 +377,6 @@ const MarkingItemPetName = () => {
 const MarkingItemContent = () => {
   const { content } = useMarkingItemProps();
   const [isSummary, setIsSummary] = useState<boolean>(true);
-  const [isMultiLineSummaryEllipsis, setIsMultiLineSummaryEllipsis] =
-    useState<boolean>(false);
 
   const contentRef = useRef<HTMLParagraphElement>(null);
   const multiLineSummaryRef = useRef<HTMLParagraphElement>(null);
@@ -390,12 +388,15 @@ const MarkingItemContent = () => {
   const renderMarkingContent = () => {
     if (isMultiLine) {
       return isSummary ? (
-        <p
-          className="body-2 min-h-4 text-ellipsis overflow-hidden text-nowrap"
-          ref={multiLineSummaryRef}
-        >
-          {multiLineContent[0]}
-          {!isMultiLineSummaryEllipsis && "..."}
+        <p className="body-2" ref={multiLineSummaryRef}>
+          {multiLineContent.slice(0, 2).map((line, index) => (
+            <p
+              className="min-h-4 text-ellipsis overflow-hidden text-nowrap"
+              key={index}
+            >
+              {line}
+            </p>
+          ))}
         </p>
       ) : (
         multiLineContent.map((line, index) => (
@@ -407,15 +408,6 @@ const MarkingItemContent = () => {
     }
     return content;
   };
-
-  useEffect(() => {
-    if (multiLineSummaryRef.current === null) {
-      return;
-    }
-
-    const $p = multiLineSummaryRef.current;
-    setIsMultiLineSummaryEllipsis($p.scrollWidth > $p.clientWidth);
-  }, []);
 
   return (
     <p
