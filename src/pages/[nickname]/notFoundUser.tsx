@@ -14,7 +14,7 @@ export const NotFoundUser = () => {
   );
 
   return (
-    <section className="flex flex-col gap-4 pt-[12.5rem] pb-4 bg-grey-50 items-center flex-1 self-stretch ">
+    <section className="flex flex-col gap-4 bg-grey-50 items-center flex-1 self-stretch justify-center">
       <img
         src={MASCOT_IMAGE_URL}
         alt="멍윗미 마스코트 이미지"
