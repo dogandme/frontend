@@ -22,12 +22,12 @@ export const PlaceMarkingList = () => {
     useMapQueryParams();
   const { boundsAdjacentPlace } = usePlaceQueryParams();
 
-  const { data: myFollowingMap } = useGetMyFollowingIdsMap();
-  const { data: myBookmarkedMap } = useGetMyBookmarkIdsMap();
-  const { data: myLikedMap } = useGetMyLikedIdsMap();
+  const { data: myFollowingMap = {} } = useGetMyFollowingIdsMap();
+  const { data: myBookmarkedMap = {} } = useGetMyBookmarkIdsMap();
+  const { data: myLikedMap = {} } = useGetMyLikedIdsMap();
 
   const {
-    data: markingList,
+    data: markingList = [],
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -44,11 +44,6 @@ export const PlaceMarkingList = () => {
   });
 
   const map = useMap();
-
-  // TODO 로딩 상태 구현 하기
-  if (!markingList || !myFollowingMap || !myBookmarkedMap || !myLikedMap) {
-    return null;
-  }
 
   return (
     <>
