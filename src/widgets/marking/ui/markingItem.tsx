@@ -20,7 +20,6 @@ import {
   LikeIcon,
   BookmarkIcon,
   FilledBookmarkIcon,
-  DropDownIcon,
   MoreIcon,
   MyLocationIcon,
 } from "@/shared/ui/icon";

@@ -8,7 +8,6 @@ import { API_BASE_URL } from "@/shared/constants";
 import { Button } from "@/shared/ui/button";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { MyLocationIcon } from "@/shared/ui/icon";
-import { DropDownIcon } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 
 export const TemporaryMarkingItem = ({
@@ -62,7 +61,6 @@ export const TemporaryMarkingItem = ({
 
 const TempMarkingContent = ({
   content,
-  markingId,
 }: {
   content: NonNullable<TempMarkingInfo["content"]>;
   markingId: TempMarkingInfo["markingId"];
