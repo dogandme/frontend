@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { apiClient, HttpError } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
