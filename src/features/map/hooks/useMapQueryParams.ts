@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { SortType } from "@/entities/marking/api";
 import { sortTypeMap } from "../constants";
@@ -31,12 +32,21 @@ export const getNumberParam = (
 export const useMapQueryParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const bounds: Bounds = {
-    northEastLat: getNumberParam("boundsNELat", searchParams),
-    northEastLng: getNumberParam("boundsNELng", searchParams),
-    southWestLat: getNumberParam("boundsSWLat", searchParams),
-    southWestLng: getNumberParam("boundsSWLng", searchParams),
-  };
+  const northEastLat = getNumberParam("boundsNELat", searchParams);
+  const northEastLng = getNumberParam("boundsNELng", searchParams);
+  const southWestLat = getNumberParam("boundsSWLat", searchParams);
+  const southWestLng = getNumberParam("boundsSWLng", searchParams);
+
+  const bounds: Bounds = useMemo(
+    () => ({
+      northEastLat,
+      northEastLng,
+      southWestLat,
+      southWestLng,
+    }),
+    [northEastLat, northEastLng, southWestLat, southWestLng],
+  );
+
   const hasBoundsParams = Object.values(bounds).every(
     (value) => value !== null,
   );

@@ -51,7 +51,7 @@ export const usePlaceQueryParams = () => {
       lat: (northEastLat + southWestLat) / 2,
       lng: (northEastLng + southWestLng) / 2,
     });
-  }, [pathname, JSON.stringify(boundsParams)]);
+  }, [pathname, boundsParams]);
 
   return {
     placeParams: { lat, lng },
