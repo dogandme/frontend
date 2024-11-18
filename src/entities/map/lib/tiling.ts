@@ -126,7 +126,7 @@ const filterInnerBoundary = ({ lat, lng }: LatLng, bounds: MapBounds) => {
   );
 };
 
-const filterIntercsectedTiles = (
+const filterIntersectedTiles = (
   mapBounds: MapBounds,
   bounds: Tile["bounds"],
 ) => {
@@ -155,18 +155,18 @@ export const useTiling = () => {
    */
   const getTiles = (_markers: Marker[], _tilingKey: TilingKey = "") => {
     // 만약 줌이 변경되었거나 타일 키가 변경된 경우엔 캐시된 타일을 초기화 합니다.
-    const stringfiedTilingKey = JSON.stringify(_tilingKey);
+    const stringifiedTilingKey = JSON.stringify(_tilingKey);
     if (
       zoom !== previousZoom.current ||
-      stringfiedTilingKey !== tilingKey.current
+      stringifiedTilingKey !== tilingKey.current
     ) {
       cachedTiles.current = [];
-      tilingKey.current = stringfiedTilingKey;
+      tilingKey.current = stringifiedTilingKey;
     }
     previousZoom.current = zoom;
 
     const intersectedCachedTiles = cachedTiles.current.filter((tile) =>
-      filterIntercsectedTiles(bounds, tile.bounds),
+      filterIntersectedTiles(bounds, tile.bounds),
     );
 
     const innerBoundaryMarkers = _markers.filter((marker) =>
