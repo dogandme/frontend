@@ -622,6 +622,18 @@ const getValidAuthorizationHandler = [
   http.get(APP_END_POINT.REFRESH_ACCESS_TOKEN, ({ cookies }) => {
     const refreshToken = cookies["Authorization-refresh"];
 
+    if (!refreshToken) {
+      return HttpResponse.json(
+        {
+          code: 400,
+          message: "RefreshToken이 존재하지 않습니다.",
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
     if (refreshToken !== "freshRefreshToken") {
       return HttpResponse.json(
         {
@@ -1222,6 +1234,19 @@ const markingListDB: Record<string, Marking[]> = {};
 const getMarkingListHandler = [
   http.get(`${API_BASE_URL}/markings/bounds`, async ({ request }) => {
     const url = new URL(request.url);
+    const token = request.headers.get("Authorization");
+
+    if (token === "invalidAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
 
     const lat = Number(url.searchParams.get("lat"));
     const lng = Number(url.searchParams.get("lng"));
@@ -1297,6 +1322,20 @@ const getMarkingListHandler = [
 const getBoundaryMarkerListHandler = [
   http.get(`${API_BASE_URL}/markings/marks`, async ({ request }) => {
     const url = new URL(request.url);
+    const token = request.headers.get("Authorization");
+
+    if (token === "invalidAccessToken") {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
     const southBottomLat = Number(url.searchParams.get("southBottomLat"));
     const northTopLat = Number(url.searchParams.get("northTopLat"));
     const southLeftLng = Number(url.searchParams.get("southLeftLng"));
