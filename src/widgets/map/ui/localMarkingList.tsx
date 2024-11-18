@@ -64,7 +64,6 @@ const LocalMarkingList = () => {
               map.setZoom(mapOptions.maxZoom);
               setPlaceQueryParams({ lat, lng });
               setMapQueryParams({
-                bounds: boundsParams,
                 sortType: "POPULARITY",
               });
             }}
