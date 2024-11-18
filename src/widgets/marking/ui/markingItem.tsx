@@ -376,10 +376,13 @@ const MarkingItemPetName = () => {
 };
 
 const MarkingItemContent = () => {
-  const { content, markingId } = useMarkingItemProps();
+  const { content } = useMarkingItemProps();
   const [isSummary, setIsSummary] = useState<boolean>(true);
-  const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
+  const [isMultiLineSummaryEllipsis, setIsMultiLineSummaryEllipsis] =
+    useState<boolean>(false);
+
   const contentRef = useRef<HTMLParagraphElement>(null);
+  const multiLineSummaryRef = useRef<HTMLParagraphElement>(null);
 
   // 줄바꿈이 적용된 배열
   const multiLineContent = content.split("\n");
@@ -387,44 +390,42 @@ const MarkingItemContent = () => {
 
   const renderMarkingContent = () => {
     if (isMultiLine) {
-      return isSummary
-        ? multiLineContent[0]
-        : multiLineContent.map((line, index) => (
-            <p className="min-h-4" key={index}>
-              {line}
-            </p>
-          ));
+      return isSummary ? (
+        <p
+          className="body-2 min-h-4 text-ellipsis overflow-hidden text-nowrap"
+          ref={multiLineSummaryRef}
+        >
+          {multiLineContent[0]}
+          {!isMultiLineSummaryEllipsis && "..."}
+        </p>
+      ) : (
+        multiLineContent.map((line, index) => (
+          <p className="min-h-4" key={index}>
+            {line}
+          </p>
+        ))
+      );
     }
     return content;
   };
 
   useEffect(() => {
-    const $p = contentRef.current!;
-    setIsEllipsis($p.scrollWidth > $p.clientWidth);
-  }, []);
+    if (multiLineSummaryRef.current === null) {
+      return;
+    }
+
+    const $p = multiLineSummaryRef.current!;
+    setIsMultiLineSummaryEllipsis($p.scrollWidth > $p.clientWidth);
+  }, [multiLineContent]);
 
   return (
-      <p
+    <p
       className={`body-2  text-grey-700 ${isSummary ? "line-clamp-2 text-ellipsis overflow-hidden" : ""}`}
-        ref={contentRef}
+      ref={contentRef}
       onClick={() => setIsSummary((prev) => !prev)}
-      >
-        {renderMarkingContent()}
-      </p>
-      {(isMultiLine || isEllipsis) && (
-        <button
-          className="w-4 h-4 "
-          onClick={() => setIsSummary((prev) => !prev)}
-          aria-label={
-            isSummary
-              ? `${markingId} 번 마킹 내용 더 보기`
-              : `${markingId} 번 마킹 내용 접기`
-          }
-        >
-          <DropDownIcon />
-        </button>
-      )}
-    </div>
+    >
+      {renderMarkingContent()}
+    </p>
   );
 };
 
