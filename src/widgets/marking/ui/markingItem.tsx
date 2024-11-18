@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { FollowingToggle } from "@/features/follow/ui";
 import { useDeleteMarking } from "@/features/marking/api";
 import {
