@@ -14,10 +14,7 @@ export const getMockMarkingList = ({
   const markingList: Marking[] = Array.from({ length: 1000 }, (_, index) => ({
     markingId: index + 1,
     region: "**시 **구 **동",
-    content: Array.from(
-      { length: Math.random() * 30 },
-      (_, index) => `content ${index + 1}`,
-    ).join(" "),
+    content: `content ${index + 1} `.repeat(Math.random() * 30),
     previewImage: "fa805c91-8228-4ec4-927f-9eb876a480c3",
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
