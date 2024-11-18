@@ -221,23 +221,6 @@ const MarkingItemBookmarkToggle = () => {
   const { mutate: deleteSaveMarking, isPending: isDeleteSaveMarkingPending } =
     useDeleteSavedMarking();
 
-  const token = useAuthStore((state) => state.token);
-  const handleOpenSnackbar = useSnackBar();
-
-  if (!token) {
-    return (
-      <button
-        className="text-grey-500"
-        aria-label={`${markingId} 번 마킹 저장하기`}
-        onClick={() =>
-          handleOpenSnackbar("로그인 후 이용해 주세요", { type: "map" })
-        }
-      >
-        <BookmarkIcon />
-      </button>
-    );
-  }
-
   const isPending = isPostSaveMarkingPending || isDeleteSaveMarkingPending;
 
   const handleClickSaveButton = () => {
