@@ -404,10 +404,10 @@ const MarkingItemContent = () => {
   }, []);
 
   return (
-    <div className="flex gap-4 justify-between text-grey-700">
       <p
-        className={`body-2  ${isSummary ? "text-ellipsis overflow-hidden text-nowrap" : ""}`}
+      className={`body-2  text-grey-700 ${isSummary ? "line-clamp-2 text-ellipsis overflow-hidden" : ""}`}
         ref={contentRef}
+      onClick={() => setIsSummary((prev) => !prev)}
       >
         {renderMarkingContent()}
       </p>
