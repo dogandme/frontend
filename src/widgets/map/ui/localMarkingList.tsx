@@ -29,7 +29,8 @@ export const LocalMarkingListBottomSheet = () => {
 const LocalMarkingList = () => {
   const navigate = useNavigate();
   const map = useMap();
-  const { boundsParams, sortTypeParam } = useMapQueryParams();
+  const { boundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
   const { setPlaceQueryParams } = usePlaceQueryParams();
 
   const {
@@ -62,6 +63,10 @@ const LocalMarkingList = () => {
               map.setCenter({ lat, lng });
               map.setZoom(mapOptions.maxZoom);
               setPlaceQueryParams({ lat, lng });
+              setMapQueryParams({
+                bounds: boundsParams,
+                sortType: "POPULARITY",
+              });
             }}
           >
             <img
