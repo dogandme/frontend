@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { apiClient, HttpError } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -61,15 +62,19 @@ interface GetProfileRequest {
 export const getProfile = ({ nickname }: GetProfileRequest) =>
   apiClient.get<GetProfileResponse>(PROFILE_END_POINT.PROFILE(nickname), {
     withToken: true,
+    snackbarOnError: ({ code }) => code !== 404,
   });
 
 export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
   const token = useAuthStore((state) => state.token);
+  const { nickname: nicknameParams } = useParams<{ nickname: string }>();
 
   return useQuery<GetProfileResponse, HttpError>({
     queryKey: profileQueryKey.profile(nickname!),
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
     gcTime: 0,
+    throwOnError: (error) =>
+      error.code === 404 && !!nicknameParams?.startsWith("@"),
   });
 };
 

@@ -1,8 +1,14 @@
-import { Link } from "react-router-dom";
-import { MASCOT_IMAGE_URL } from "@/shared/constants";
+import { Link, useRouteError } from "react-router-dom";
+import { MASCOT_IMAGE_URL, NOT_FOUND_ERROR_MESSAGE } from "@/shared/constants";
 import { useRouteHistoryStore } from "@/shared/store/history";
 
 export const NotFoundUser = () => {
+  const error = useRouteError();
+
+  if (error instanceof Error && error.message === NOT_FOUND_ERROR_MESSAGE) {
+    throw new Error(NOT_FOUND_ERROR_MESSAGE);
+  }
+
   const lastNoneAuthPage = useRouteHistoryStore(
     (state) => state.lastNoneAuthRoute,
   );

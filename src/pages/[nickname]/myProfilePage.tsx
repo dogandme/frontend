@@ -11,18 +11,12 @@ import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
 import { NavigationBar } from "@/shared/ui/navigationbar";
-import { NotFoundUser } from "./notFoundUser";
 
 export const MyProfilePage = () => {
   const { nicknameParams } = useNicknameParams();
-  // TODO 404 와 같은 양식의 디자인 사용하는건 어떤지 디자이너와 상의
-  const { data, isLoading, isError, error } = useGetProfile({
+  const { data, isLoading } = useGetProfile({
     nickname: nicknameParams,
   });
-
-  if (isError && error.code === 404) {
-    return <NotFoundUser />;
-  }
 
   if (!data || isLoading) {
     return <div>Loading...</div>;

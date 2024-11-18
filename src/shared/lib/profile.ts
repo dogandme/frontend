@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { NOT_FOUND_ERROR_MESSAGE } from "../constants";
 import { useAuthStore } from "../store";
 
 /**
@@ -14,8 +15,8 @@ import { useAuthStore } from "../store";
 export const useNicknameParams = () => {
   const { nickname } = useParams<{ nickname: string }>();
 
-  if (!nickname) {
-    throw new Error("parameter에 nickname이 없습니다.");
+  if (!nickname?.startsWith("@")) {
+    throw new Error(NOT_FOUND_ERROR_MESSAGE);
   }
 
   const nicknameParams = decodeURI(nickname.slice(1));

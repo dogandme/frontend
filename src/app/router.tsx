@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { ProfilePage } from "@/pages/[nickname]";
+import { NotFoundUser, ProfilePage } from "@/pages/[nickname]";
 import { FollowerPage } from "@/pages/[nickname]/follower";
 import { FollowingPage } from "@/pages/[nickname]/following";
 import { UserMarkingPage } from "@/pages/[nickname]/marking";
@@ -54,6 +54,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTER_PATH.PROFILE,
+        errorElement: <NotFoundUser />,
         children: [
           {
             index: true,
