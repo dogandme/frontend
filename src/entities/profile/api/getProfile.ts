@@ -89,7 +89,7 @@ export const useGetMyProfile = <TResult = GetProfileResponse>(
 
 export const useGetMyFollowingIdsMap = () => {
   return useGetMyProfile((data) => {
-    const followingsIds = data?.followingsIds || [];
+    const followingsIds = data.followingsIds || [];
     return followingsIds.reduce(
       (map, id) => {
         map[id] = true;
@@ -102,7 +102,7 @@ export const useGetMyFollowingIdsMap = () => {
 
 export const useGetMyBookmarkIdsMap = () => {
   return useGetMyProfile((data) => {
-    const bookmarks = data?.bookmarks || [];
+    const bookmarks = data.bookmarks || [];
 
     return bookmarks.reduce(
       (map, id) => {
@@ -116,7 +116,7 @@ export const useGetMyBookmarkIdsMap = () => {
 
 export const useGetMyLikedIdsMap = () => {
   return useGetMyProfile((data) => {
-    const likes = data?.likes || [];
+    const likes = data.likes || [];
 
     return likes.reduce(
       (map, id) => {
