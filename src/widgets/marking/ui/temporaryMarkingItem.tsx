@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { useMarkingFormModal } from "@/features/marking/lib";
 import { DeleteTemporaryMarkingButton } from "@/features/marking/ui";
 import { EditMarkingFormModal } from "@/features/marking/ui";
@@ -7,6 +8,7 @@ import { API_BASE_URL } from "@/shared/constants";
 import { Button } from "@/shared/ui/button";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { MyLocationIcon } from "@/shared/ui/icon";
+import { DropDownIcon } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 
 export const TemporaryMarkingItem = ({
@@ -41,9 +43,9 @@ export const TemporaryMarkingItem = ({
           ))}
         </ImgSlider>
         {/* 내용 */}
-        <p className="body-2 text-grey-700 text-ellipsis line-clamp-2">
-          {content}
-        </p>
+        {content && (
+          <TempMarkingContent content={content} markingId={markingId} />
+        )}
       </main>
       <footer className="mt-4">
         <EditMarkingModalOpenButton
@@ -55,6 +57,64 @@ export const TemporaryMarkingItem = ({
         />
       </footer>
     </li>
+  );
+};
+
+const TempMarkingContent = ({
+  content,
+  markingId,
+}: {
+  content: NonNullable<TempMarkingInfo["content"]>;
+  markingId: TempMarkingInfo["markingId"];
+}) => {
+  const [isSummary, setIsSummary] = useState<boolean>(true);
+  const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
+  const contentRef = useRef<HTMLParagraphElement>(null);
+
+  // 줄바꿈이 적용된 배열
+  const multiLineContent = content.split("\n");
+  const isMultiLine = multiLineContent.length > 1;
+
+  const renderMarkingContent = () => {
+    if (isMultiLine) {
+      return isSummary
+        ? multiLineContent[0]
+        : multiLineContent.map((line, index) => (
+            <p className="min-h-4" key={index}>
+              {line}
+            </p>
+          ));
+    }
+    return content;
+  };
+
+  useEffect(() => {
+    const $p = contentRef.current!;
+    setIsEllipsis($p.scrollWidth > $p.clientWidth);
+  }, []);
+
+  return (
+    <div className="flex gap-4 text-grey-700">
+      <p
+        className={`body-2  ${isSummary ? "text-ellipsis overflow-hidden text-nowrap" : ""}`}
+        ref={contentRef}
+      >
+        {renderMarkingContent()}
+      </p>
+      {(isMultiLine || isEllipsis) && (
+        <button
+          className="w-4 h-4 "
+          onClick={() => setIsSummary((prev) => !prev)}
+          aria-label={
+            isSummary
+              ? `${markingId} 번 마킹 내용 더 보기`
+              : `${markingId} 번 마킹 내용 접기`
+          }
+        >
+          <DropDownIcon />
+        </button>
+      )}
+    </div>
   );
 };
 
