@@ -67,14 +67,12 @@ export const getProfile = ({ nickname }: GetProfileRequest) =>
 
 export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
   const token = useAuthStore((state) => state.token);
-  const { nickname: nicknameParams } = useParams<{ nickname: string }>();
 
   return useQuery<GetProfileResponse, HttpError>({
     queryKey: profileQueryKey.profile(nickname!),
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
     gcTime: 0,
-    throwOnError: (error) =>
-      error.code === 404 && !!nicknameParams?.startsWith("@"),
+    throwOnError: (error) => error.code === 404,
   });
 };
 
