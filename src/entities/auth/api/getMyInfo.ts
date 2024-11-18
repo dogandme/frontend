@@ -24,5 +24,7 @@ export const useGetMyInfo = () => {
   return useQuery({
     queryKey: authQueryKey.myInfo(),
     queryFn: getMyInfo,
+    staleTime: Infinity,
+    gcTime: Infinity,
   });
 };
