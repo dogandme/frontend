@@ -13,6 +13,7 @@ export interface PostSendCodeRequest {
 const postSendCode = async ({ email }: PostSendCodeRequest) => {
   return apiClient.post(SIGN_UP_END_POINT.VERIFICATION_CODE, {
     body: { email },
+    snackbarOnError: ({ code }) => code !== 409,
   });
 };
 
