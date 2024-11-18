@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FollowingToggle } from "@/features/follow/ui";
 import { useDeleteMarking } from "@/features/marking/api";
 import {
@@ -15,9 +15,15 @@ import { API_BASE_URL } from "@/shared/constants";
 import { formatDateToYearMonthDay, useDropdown } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
-import { MoreIcon, MyLocationIcon } from "@/shared/ui/icon";
-import { FilledLikeIcon, LikeIcon } from "@/shared/ui/icon";
-import { BookmarkIcon, FilledBookmarkIcon } from "@/shared/ui/icon";
+import {
+  FilledLikeIcon,
+  LikeIcon,
+  BookmarkIcon,
+  FilledBookmarkIcon,
+  DropDownIcon,
+  MoreIcon,
+  MyLocationIcon,
+} from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
 import {
@@ -370,8 +376,56 @@ const MarkingItemPetName = () => {
 };
 
 const MarkingItemContent = () => {
-  const { content } = useMarkingItemProps();
-  return <p className="text-grey-700 body-2 text-overflow">{content}</p>;
+  const { content, markingId } = useMarkingItemProps();
+  const [isSummary, setIsSummary] = useState<boolean>(true);
+  const [isEllipsis, setIsEllipsis] = useState<boolean>(false);
+  const contentRef = useRef<HTMLParagraphElement>(null);
+
+  // 줄바꿈이 적용된 배열
+  const multiLineContent = content.split("\n");
+  const isMultiLine = multiLineContent.length > 1;
+
+  const renderMarkingContent = () => {
+    if (isMultiLine) {
+      return isSummary
+        ? multiLineContent[0]
+        : multiLineContent.map((line, index) => (
+            <p className="min-h-4" key={index}>
+              {line}
+            </p>
+          ));
+    }
+    return content;
+  };
+
+  useEffect(() => {
+    const $p = contentRef.current!;
+    setIsEllipsis($p.scrollWidth > $p.clientWidth);
+  }, []);
+
+  return (
+    <div className="flex gap-4 text-grey-700">
+      <p
+        className={`body-2  ${isSummary ? "text-ellipsis overflow-hidden text-nowrap" : ""}`}
+        ref={contentRef}
+      >
+        {renderMarkingContent()}
+      </p>
+      {(isMultiLine || isEllipsis) && (
+        <button
+          className="w-4 h-4 "
+          onClick={() => setIsSummary((prev) => !prev)}
+          aria-label={
+            isSummary
+              ? `${markingId} 번 마킹 내용 더 보기`
+              : `${markingId} 번 마킹 내용 접기`
+          }
+        >
+          <DropDownIcon />
+        </button>
+      )}
+    </div>
+  );
 };
 
 const MarkingItemDate = () => {
