@@ -22,7 +22,7 @@ import { MarkingList } from "./markingList";
 export const PlaceMarkingList = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
+  const { boundsParams, sortTypeParam, setMapQueryParams } = useMapQueryParams();
   const { boundsAdjacentPlace } = usePlaceQueryParams();
 
   const { data: myFollowingMap } = useGetMyFollowingIdsMap();
@@ -61,7 +61,7 @@ export const PlaceMarkingList = () => {
         onClick={() => {
           navigate(ROUTER_PATH.MAP);
           setMapQueryParams({
-            bounds: getMapBounds(),
+            bounds: boundsParams,
             sortType: "POPULARITY",
           });
         }}
