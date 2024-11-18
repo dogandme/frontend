@@ -2,11 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem } from "@/widgets/marking/ui";
-import {
-  useGetMapCurrentBounds,
-  useMapQueryParams,
-  usePlaceQueryParams,
-} from "@/features/map/hooks";
+import { useMapQueryParams, usePlaceQueryParams } from "@/features/map/hooks";
 import { SortTypeFilter } from "@/features/marking/ui";
 import { useGetMarkingList } from "@/entities/marking/api";
 import {
@@ -22,14 +18,13 @@ import { MarkingList } from "./markingList";
 export const PlaceMarkingList = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { boundsParams, sortTypeParam, setMapQueryParams } = useMapQueryParams();
+  const { boundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
   const { boundsAdjacentPlace } = usePlaceQueryParams();
 
   const { data: myFollowingMap } = useGetMyFollowingIdsMap();
   const { data: myBookmarkedMap } = useGetMyBookmarkIdsMap();
   const { data: myLikedMap } = useGetMyLikedIdsMap();
-
-  const getMapBounds = useGetMapCurrentBounds();
 
   const {
     data: markingList,
