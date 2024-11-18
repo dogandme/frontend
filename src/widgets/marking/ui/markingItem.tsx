@@ -413,9 +413,9 @@ const MarkingItemContent = () => {
       return;
     }
 
-    const $p = multiLineSummaryRef.current!;
+    const $p = multiLineSummaryRef.current;
     setIsMultiLineSummaryEllipsis($p.scrollWidth > $p.clientWidth);
-  }, [multiLineContent]);
+  }, []);
 
   return (
     <p
