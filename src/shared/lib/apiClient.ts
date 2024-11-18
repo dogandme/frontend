@@ -18,6 +18,7 @@ interface FetcherOptions {
   body?: unknown;
   credentials?: RequestInit["credentials"];
   withToken?: boolean;
+  snackbarOnError?: boolean | ((error: Response) => boolean);
 }
 
 /**
@@ -44,6 +45,7 @@ const fetcher = async <T>(
       withToken = false,
       body,
       credentials,
+      snackbarOnError = true,
     } = fetcherOptions || {};
 
     const httpHeaders = new Headers(headers || {});
@@ -73,7 +75,14 @@ const fetcher = async <T>(
     if (!response.ok) {
       const { code, message }: Response = await response.json();
 
-      throw new HttpError({ code, message });
+      throw new HttpError({
+        code,
+        message,
+        snackbarOnError:
+          typeof snackbarOnError === "function"
+            ? snackbarOnError({ code, message })
+            : snackbarOnError,
+      });
     }
 
     const { content }: SuccessResponse<T> = await response.json();
