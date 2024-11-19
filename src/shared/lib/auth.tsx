@@ -41,10 +41,10 @@ export const withAuth = <P extends Record<string, unknown>>(
       }),
     );
 
-    if (currentLevel < maxLevel) {
-      throw new Error(getAuthErrorMessage(userRole));
+    if (currentLevel > maxLevel) {
+      throw new Error(AUTH_ERROR_MESSAGE.NON_AUTHORIZED);
     }
 
-    throw new Error(AUTH_ERROR_MESSAGE.NON_AUTHORIZED);
+    throw new Error(getAuthErrorMessage(userRole));
   };
 };
