@@ -382,20 +382,18 @@ const MarkingItemContent = () => {
 
   const multiLineSummaryRef = useRef<HTMLParagraphElement>(null);
 
-  // 줄바꿈이 적용된 배열
-  const multiLineContent = content.split("\n");
-  const isMultiLine = multiLineContent.length > 1;
-
   const renderMarkingContent = () => {
-    if (isMultiLine) {
+    const multiLineContent = content.split("\n");
+
+    if (multiLineContent.length > 1) {
       return isSummary ? (
-        <div>
+        <>
           <p>{multiLineContent[0]}</p>
           <p ref={multiLineSummaryRef}>
             {multiLineContent[1]}
             {!isMultiLineSummaryEllipsis && "..."}
           </p>
-        </div>
+        </>
       ) : (
         multiLineContent.map((line, index) => (
           <p className="min-h-4" key={index}>
