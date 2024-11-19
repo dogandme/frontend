@@ -30,6 +30,6 @@ const PetInfoPage = withAuth(() => {
       </main>
     </div>
   );
-}, ["ROLE_GUEST", "ROLE_USER"]);
+}, ["ROLE_GUEST"]);
 
 export default PetInfoPage;
