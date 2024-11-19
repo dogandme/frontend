@@ -25,7 +25,7 @@ export const ChangeNicknameModal = ({
 
   const { mutate: putChangeNickname, isPending: isChangeNicknamePending } =
     usePutChangeNickname();
-  const { isDuplicateNickname, isPending: isDuplicateCheckPending } =
+  const { isPending: isDuplicateCheckPending } =
     usePostCheckDuplicateNicknameState();
 
   const handleSubmit = () => {
@@ -55,11 +55,6 @@ export const ChangeNicknameModal = ({
 
     if (!canChange) {
       handleOpenSnackbar("한달 이후 닉네임을 변경해 주세요");
-      return;
-    }
-
-    if (isDuplicateNickname || isDuplicateCheckPending) {
-      handleOpenSnackbar("이미 존재하는 닉네임 입니다");
       return;
     }
 

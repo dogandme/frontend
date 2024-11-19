@@ -16,6 +16,7 @@ const postCheckDuplicateNickname = async ({
   return apiClient.post(SIGN_UP_END_POINT.DUPLICATE_NICKNAME, {
     withToken: true,
     body: { nickname },
+    snackbarOnError: ({ code }) => code !== 409,
   });
 };
 

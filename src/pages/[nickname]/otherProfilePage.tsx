@@ -4,20 +4,14 @@ import { useGetProfile } from "@/entities/profile/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
 import { useNicknameParams } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
-import { NotFoundUser } from "./notFoundUser";
 
 export const OtherProfilePage = () => {
   const { nicknameParams } = useNicknameParams();
-  // TODO 404 와 같은 양식의 디자인 사용하는건 어떤지 디자이너와 상의
-  const { data, isLoading, isError, error } = useGetProfile({
+  const { data, isLoading } = useGetProfile({
     nickname: nicknameParams,
   });
   const { data: myFollowingIdsMap, isLoading: isMyFollowingIdsMapLoading } =
     useGetMyFollowingIdsMap();
-
-  if (isError && error.code === 404) {
-    return <NotFoundUser />;
-  }
 
   if (!data || isLoading || !myFollowingIdsMap || isMyFollowingIdsMapLoading) {
     return <div>Loading...</div>;

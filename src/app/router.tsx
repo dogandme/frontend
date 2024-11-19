@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { ProfilePage } from "@/pages/[nickname]";
+import { NotFoundUser, ProfilePage } from "@/pages/[nickname]";
 import { FollowerPage } from "@/pages/[nickname]/follower";
 import { FollowingPage } from "@/pages/[nickname]/following";
 import { UserMarkingPage } from "@/pages/[nickname]/marking";
@@ -17,13 +17,14 @@ import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { TemporaryMarkingPage } from "@/pages/temporary-marking";
 import { MyActivityList } from "@/widgets/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
-import { MainPage } from "../pages";
+import { MainPage, NotFound } from "../pages";
 import { AppProviderLayout } from "./AppProviderLayout";
 
 export const router = createBrowserRouter([
   {
     path: ROUTER_PATH.MAIN,
     element: <AppProviderLayout />,
+    errorElement: <NotFound />,
     children: [
       {
         index: true,
@@ -53,6 +54,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTER_PATH.PROFILE,
+        errorElement: <NotFoundUser />,
         children: [
           {
             index: true,

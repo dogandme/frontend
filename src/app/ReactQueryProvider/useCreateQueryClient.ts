@@ -1,11 +1,12 @@
 import { useRef } from "react";
 import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
-import { HttpError } from "@/shared/lib";
+import { HttpError, useSnackBar } from "@/shared/lib";
 import { useOverlayStore } from "@/shared/store/overlay";
 import { useRefreshToken } from "./errorHandlers";
 
 export const useCreateQueryClient = () => {
   const resetOverlays = useOverlayStore((state) => state.resetOverlays);
+  const openSnackbar = useSnackBar();
   const { refreshTokenAndRetry } = useRefreshToken();
 
   const queryClient = useRef(
@@ -35,6 +36,10 @@ export const useCreateQueryClient = () => {
             refreshTokenAndRetry(queryClient, query);
             return;
           }
+
+          if (error instanceof HttpError && error.snackbarOnError) {
+            openSnackbar(error.message);
+          }
         },
       }),
       mutationCache: new MutationCache({
@@ -54,6 +59,10 @@ export const useCreateQueryClient = () => {
           if (error instanceof HttpError && error.code === 401) {
             refreshTokenAndRetry(queryClient, undefined, mutation, variables);
             return;
+          }
+
+          if (error instanceof HttpError && error.snackbarOnError) {
+            openSnackbar(error.message);
           }
         },
       }),

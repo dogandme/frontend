@@ -61,6 +61,7 @@ interface GetProfileRequest {
 export const getProfile = ({ nickname }: GetProfileRequest) =>
   apiClient.get<GetProfileResponse>(PROFILE_END_POINT.PROFILE(nickname), {
     withToken: true,
+    snackbarOnError: ({ code }) => code !== 404,
   });
 
 export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
@@ -70,6 +71,7 @@ export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
     queryKey: profileQueryKey.profile(nickname!),
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
     gcTime: 0,
+    throwOnError: (error) => error.code === 404,
   });
 };
 

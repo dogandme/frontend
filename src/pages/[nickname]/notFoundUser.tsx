@@ -1,14 +1,20 @@
-import { Link } from "react-router-dom";
-import { MASCOT_IMAGE_URL } from "@/shared/constants";
+import { Link, useRouteError } from "react-router-dom";
+import { MASCOT_IMAGE_URL, NOT_FOUND_ERROR_MESSAGE } from "@/shared/constants";
 import { useRouteHistoryStore } from "@/shared/store/history";
 
 export const NotFoundUser = () => {
+  const error = useRouteError();
+
+  if (error instanceof Error && error.message === NOT_FOUND_ERROR_MESSAGE) {
+    throw new Error(NOT_FOUND_ERROR_MESSAGE);
+  }
+
   const lastNoneAuthPage = useRouteHistoryStore(
     (state) => state.lastNoneAuthRoute,
   );
 
   return (
-    <section className="flex flex-col gap-4 pt-[12.5rem] pb-4 bg-grey-50 items-center flex-1 self-stretch ">
+    <section className="flex flex-col gap-4 bg-grey-50 items-center flex-1 self-stretch justify-center">
       <img
         src={MASCOT_IMAGE_URL}
         alt="멍윗미 마스코트 이미지"
