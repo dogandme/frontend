@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FollowingToggle } from "@/features/follow/ui";
 import { useDeleteMarking } from "@/features/marking/api";
 import {
@@ -377,6 +377,8 @@ const MarkingItemPetName = () => {
 const MarkingItemContent = () => {
   const { content } = useMarkingItemProps();
   const [isSummary, setIsSummary] = useState<boolean>(true);
+  const [isMultiLineEllipsis, setIsMultiLineEllipsis] =
+    useState<boolean>(false);
 
   const contentRef = useRef<HTMLParagraphElement>(null);
   const multiLineSummaryRef = useRef<HTMLParagraphElement>(null);
@@ -388,16 +390,18 @@ const MarkingItemContent = () => {
   const renderMarkingContent = () => {
     if (isMultiLine) {
       return isSummary ? (
-        <p className="body-2" ref={multiLineSummaryRef}>
-          {multiLineContent.slice(0, 2).map((line, index) => (
-            <p
-              className="min-h-4 text-ellipsis overflow-hidden text-nowrap"
-              key={index}
-            >
-              {line.trim() === "" ? "..." : line}
-            </p>
-          ))}
-        </p>
+        <>
+          <p className="body-2 min-h-4 text-ellipsis overflow-hidden text-nowrap">
+            {multiLineContent[0]}
+          </p>
+          <p
+            className="body-2 min-h-4 text-ellipsis overflow-hidden text-nowrap"
+            ref={multiLineSummaryRef}
+          >
+            {multiLineContent[1]}
+            {!isMultiLineEllipsis && "..."}
+          </p>
+        </>
       ) : (
         multiLineContent.map((line, index) => (
           <p className="min-h-4" key={index}>
@@ -408,6 +412,18 @@ const MarkingItemContent = () => {
     }
     return content;
   };
+
+  // 멀티 라인의 두 번째 줄에는 필수적으로 ... 를 붙혀 하위에 렌더링 되지 않은 줄이 있음을 표현 해줍니다.
+  // 이를 위해 멀티라인의 두 번쨰 줄이 ellipsis 되었는지 확인하고 , 그렇지 않다면 인위적으로 ...을 붙혀주기 위해 상태를 변경합니다.
+  useEffect(() => {
+    const $multiLineSummaryText = multiLineSummaryRef.current;
+
+    if ($multiLineSummaryText) {
+      setIsMultiLineEllipsis(
+        $multiLineSummaryText.scrollWidth > $multiLineSummaryText.clientWidth,
+      );
+    }
+  }, []);
 
   return (
     <p
