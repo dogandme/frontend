@@ -79,13 +79,18 @@ const TempMarkingContent = ({
   const renderMarkingContent = () => {
     if (isMultiLine) {
       return isSummary ? (
-        <p
-          className="body-2 min-h-4 text-ellipsis overflow-hidden text-nowrap"
-          ref={multiLineSummaryRef}
-        >
-          {multiLineContent[0]}
-          {!isMultiLineSummaryEllipsis && "..."}
-        </p>
+        <>
+          <p className="body-2 min-h-4 text-ellipsis overflow-hidden text-nowrap">
+            {multiLineContent[0]}
+          </p>
+          <p
+            className="body-2 min-h-4 text-ellipsis overflow-hidden text-nowrap"
+            ref={multiLineSummaryRef}
+          >
+            {multiLineContent[1]}
+            {!isMultiLineSummaryEllipsis && "..."}
+          </p>
+        </>
       ) : (
         multiLineContent.map((line, index) => (
           <p className="min-h-4" key={index}>
@@ -97,14 +102,18 @@ const TempMarkingContent = ({
     return content;
   };
 
+  // 멀티 라인의 두 번째 줄에는 필수적으로 ... 를 붙혀 하위에 렌더링 되지 않은 줄이 있음을 표현 해줍니다.
+  // 이를 위해 멀티라인의 두 번쨰 줄이 ellipsis 되었는지 확인하고 , 그렇지 않다면 인위적으로 ...을 붙혀주기 위해 상태를 변경합니다.
   useEffect(() => {
-    if (multiLineSummaryRef.current === null) {
-      return;
-    }
+    const $multiLineSummaryText = multiLineSummaryRef.current;
 
-    const $p = multiLineSummaryRef.current!;
-    setIsMultiLineSummaryEllipsis($p.scrollWidth > $p.clientWidth);
-  }, [multiLineContent]);
+    if ($multiLineSummaryText) {
+      setIsMultiLineSummaryEllipsis(
+        $multiLineSummaryText.scrollWidth > $multiLineSummaryText.clientWidth,
+      );
+    }
+  }, []);
+
   return (
     <p
       className={`body-2  text-grey-700 ${isSummary ? "line-clamp-2 text-ellipsis overflow-hidden" : ""}`}

@@ -377,7 +377,7 @@ const MarkingItemPetName = () => {
 const MarkingItemContent = () => {
   const { content } = useMarkingItemProps();
   const [isSummary, setIsSummary] = useState<boolean>(true);
-  const [isMultiLineEllipsis, setIsMultiLineEllipsis] =
+  const [isMultiLineSummaryEllipsis, setIsMultiLineSummaryEllipsis] =
     useState<boolean>(false);
 
   const contentRef = useRef<HTMLParagraphElement>(null);
@@ -399,7 +399,7 @@ const MarkingItemContent = () => {
             ref={multiLineSummaryRef}
           >
             {multiLineContent[1]}
-            {!isMultiLineEllipsis && "..."}
+            {!isMultiLineSummaryEllipsis && "..."}
           </p>
         </>
       ) : (
@@ -419,7 +419,7 @@ const MarkingItemContent = () => {
     const $multiLineSummaryText = multiLineSummaryRef.current;
 
     if ($multiLineSummaryText) {
-      setIsMultiLineEllipsis(
+      setIsMultiLineSummaryEllipsis(
         $multiLineSummaryText.scrollWidth > $multiLineSummaryText.clientWidth,
       );
     }
