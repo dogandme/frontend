@@ -80,16 +80,12 @@ const TempMarkingContent = ({
     if (isMultiLine) {
       return isSummary ? (
         <>
-          <p className="body-2 min-h-4 text-ellipsis overflow-hidden text-nowrap">
-            {multiLineContent[0]}
-          </p>
-          <p
-            className="body-2 min-h-4 text-ellipsis overflow-hidden text-nowrap"
-            ref={multiLineSummaryRef}
-          >
+          <span>{multiLineContent[0]}</span>
+          <br />
+          <span ref={multiLineSummaryRef}>
             {multiLineContent[1]}
             {!isMultiLineSummaryEllipsis && "..."}
-          </p>
+          </span>
         </>
       ) : (
         multiLineContent.map((line, index) => (
@@ -116,7 +112,7 @@ const TempMarkingContent = ({
 
   return (
     <p
-      className={`body-2  text-grey-700 ${isSummary ? "line-clamp-2 text-ellipsis overflow-hidden" : ""}`}
+      className={`body-2  text-grey-700 ${isSummary ? "line-clamp-2" : ""}`}
       ref={contentRef}
       onClick={() => setIsSummary((prev) => !prev)}
     >
