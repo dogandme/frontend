@@ -41,7 +41,7 @@ export const withAuth = <P extends Record<string, unknown>>(
       }),
     );
 
-    if (currentLevel <= maxLevel) {
+    if (currentLevel < maxLevel) {
       throw new Error(getAuthErrorMessage(userRole));
     }
 
