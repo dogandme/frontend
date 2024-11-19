@@ -1,7 +1,8 @@
 import { UserInfoRegistrationForm } from "@/features/auth/ui";
 import { AuthNavigationBar } from "@/features/auth/ui";
+import { withAuth } from "@/shared/lib";
 
-const UserInfoRegistrationPage = () => {
+const UserInfoRegistrationPage = withAuth(() => {
   return (
     <div>
       <AuthNavigationBar />
@@ -13,6 +14,6 @@ const UserInfoRegistrationPage = () => {
       </main>
     </div>
   );
-};
+}, ["ROLE_NONE", "ROLE_GUEST", "ROLE_USER"]);
 
 export default UserInfoRegistrationPage;

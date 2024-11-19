@@ -1,8 +1,9 @@
 import { MyMarkingList } from "@/widgets/map/ui";
 import { MarkingPins } from "@/entities/map/ui";
 import { useGetMyMakerList } from "@/entities/marking/api";
+import { withAuth } from "@/shared/lib";
 
-export const MyMarkingPage = () => {
+export const MyMarkingPage = withAuth(() => {
   const { data } = useGetMyMakerList();
 
   return (
@@ -11,4 +12,4 @@ export const MyMarkingPage = () => {
       <MyMarkingList />
     </>
   );
-};
+}, ["ROLE_USER"]);

@@ -1,8 +1,9 @@
 import { usePostAddPetInfo } from "@/features/auth/api";
 import { PetInformationForm } from "@/features/auth/ui";
 import { AuthNavigationBar } from "@/features/auth/ui";
+import { withAuth } from "@/shared/lib";
 
-const PetInfoPage = () => {
+const PetInfoPage = withAuth(() => {
   const { mutate: postAddPetInfo, isPending } = usePostAddPetInfo();
 
   return (
@@ -29,6 +30,6 @@ const PetInfoPage = () => {
       </main>
     </div>
   );
-};
+}, ["ROLE_GUEST", "ROLE_USER"]);
 
 export default PetInfoPage;

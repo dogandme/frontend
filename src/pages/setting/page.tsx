@@ -1,19 +1,12 @@
 import { Link } from "react-router-dom";
-import { useSettingPermission } from "@/features/setting/hooks";
 import { Report, LogoutButton } from "@/features/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
+import { withAuth } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
-export const SettingPage = () => {
-  const hasPermission = useSettingPermission("NONE");
-
-  // TODO 권한 없으면 보일 페이지 디자이너와 상의 하기
-  if (!hasPermission) {
-    return null;
-  }
-
+export const SettingPage = withAuth(() => {
   return (
     <>
       <section>
@@ -36,7 +29,7 @@ export const SettingPage = () => {
       </section>
     </>
   );
-};
+}, ["ROLE_GUEST", "ROLE_USER"]);
 
 const AccountManagement = () => (
   <Link to={ROUTER_PATH.MANAGE_ACCOUNT} className="setting-item">

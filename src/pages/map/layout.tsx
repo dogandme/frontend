@@ -7,8 +7,9 @@ import {
   GoogleMaps,
   MapBottomSheet,
 } from "@/widgets/map/ui";
+import { withAuth } from "@/shared/lib";
 
-export const MapLayout = () => {
+export const MapLayout = withAuth(() => {
   return (
     <>
       <header className="bg-tangerine-500 px-8 py-5">
@@ -25,4 +26,4 @@ export const MapLayout = () => {
       </GoogleMaps>
     </>
   );
-};
+}, ["ROLE_GUEST", "ROLE_USER", null]);

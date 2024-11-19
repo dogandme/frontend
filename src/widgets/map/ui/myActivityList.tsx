@@ -4,13 +4,11 @@ import { MarkingItem } from "@/widgets/marking/ui";
 import { MarkingPins } from "@/entities/map/ui";
 import { useGetMyActivityMarkerList } from "@/entities/marking/api";
 import { useGetMyActivityMarkingList } from "@/entities/marking/hooks";
-import { useInfiniteScroll } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { MarkingList } from "./markingList";
 
-export const MyActivityList = () => {
+export const MyActivityList = withAuth(() => {
   const map = useMap();
-  const token = useAuthStore((state) => state.token);
 
   const [activeTab, setActiveTab] = useState<"LIKED" | "SAVED">("LIKED");
 
@@ -28,11 +26,6 @@ export const MyActivityList = () => {
       fetchNextPage();
     }
   });
-
-  // todo token이 null일 때 view 처리
-  if (token === null) {
-    return null;
-  }
 
   return (
     <>
@@ -79,4 +72,4 @@ export const MyActivityList = () => {
       </div>
     </>
   );
-};
+}, ["ROLE_GUEST", "ROLE_USER"]);
