@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { useSettingPermission } from "@/features/setting/hooks";
 import { Report, LogoutButton } from "@/features/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
+import { useSnackBar } from "@/shared/lib";
+import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
@@ -58,7 +60,10 @@ const EditMyInfo = () => (
 
 // 내 활동 내역을 보는 컴포넌트
 const MyActivity = () => (
-  <Link to="." className="setting-item">
+  <Link
+    to={`/@${useAuthStore.getState().nickname}/${ROUTER_PATH.USER_MARKING}`}
+    className="setting-item"
+  >
     <p>내 활동</p>
     <span className="text-grey-500">
       <ArrowRightIcon />
@@ -67,14 +72,21 @@ const MyActivity = () => (
 );
 
 // 알림
-const Notification = () => (
-  <Link to="." className="setting-item">
-    <p>알림</p>
-    <span className="text-grey-500">
-      <ArrowRightIcon />
-    </span>
-  </Link>
-);
+const Notification = () => {
+  const handleOpenSnackbar = useSnackBar();
+
+  return (
+    <button
+      onClick={() => handleOpenSnackbar("아직 출시 되지 않은 기능입니다")}
+      className="setting-item"
+    >
+      <p>알림</p>
+      <span className="text-grey-500">
+        <ArrowRightIcon />
+      </span>
+    </button>
+  );
+};
 
 // 이용 약관
 const TermsOfService = () => (
