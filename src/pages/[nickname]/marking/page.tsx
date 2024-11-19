@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MarkingList } from "@/widgets/map/ui/markingList";
 import { MarkingItem } from "@/widgets/marking/ui";
 import { SortTypeFilter } from "@/features/marking/ui";
@@ -15,6 +15,7 @@ import {
   useGetMyLikedIdsMap,
   useGetProfile,
 } from "@/entities/profile/api";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -23,6 +24,7 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const UserMarkingPage = withAuth(() => {
   const { state } = useLocation() as { state: null | { markingId: number } };
+  const navigate = useNavigate();
 
   const sortTypeOptions: Exclude<SortType, "DISTANCE">[] = [
     "RECENT",
@@ -33,7 +35,7 @@ export const UserMarkingPage = withAuth(() => {
   >(sortTypeOptions[0]);
 
   const markingId = state?.markingId;
-  const { nicknameParams } = useNicknameParams();
+  const { nicknameParams, isMyPage } = useNicknameParams();
 
   const { nickname: myNickname, token } = useAuthStore.getState();
 
@@ -86,7 +88,17 @@ export const UserMarkingPage = withAuth(() => {
             <MarkingItem
               {...clickedMarking}
               onRegionClick={() => {
-                // todo 맵 페이지로 이동
+                navigate(isMyPage ? ROUTER_PATH.MY_MARK : ROUTER_PATH.PLACE, {
+                  state: {
+                    markingInfo: {
+                      position: {
+                        lat: clickedMarking.lat,
+                        lng: clickedMarking.lng,
+                      },
+                      markingId: clickedMarking.markingId,
+                    },
+                  },
+                });
               }}
               isFollowing={myFollowingIdsMap[clickedMarking.userId]}
               isLiked={myLikedIdsMap[clickedMarking.markingId]}
@@ -114,7 +126,17 @@ export const UserMarkingPage = withAuth(() => {
               <MarkingItem
                 key={marking.markingId}
                 onRegionClick={() => {
-                  // todo 맵 페이지로 이동
+                  navigate(isMyPage ? ROUTER_PATH.MY_MARK : ROUTER_PATH.PLACE, {
+                    state: {
+                      markingInfo: {
+                        position: {
+                          lat: marking.lat,
+                          lng: marking.lng,
+                        },
+                        markingId: marking.markingId,
+                      },
+                    },
+                  });
                 }}
                 isLiked={myLikedIdsMap[marking.markingId]}
                 isBookmarked={myBookmarkIdsMap[marking.markingId]}
