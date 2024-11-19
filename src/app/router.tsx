@@ -17,14 +17,14 @@ import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
 import { TemporaryMarkingPage } from "@/pages/temporary-marking";
 import { MyActivityList } from "@/widgets/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
-import { MainPage, NotFound } from "../pages";
+import { ErrorBoundary, MainPage } from "../pages";
 import { AppProviderLayout } from "./AppProviderLayout";
 
 export const router = createBrowserRouter([
   {
     path: ROUTER_PATH.MAIN,
     element: <AppProviderLayout />,
-    errorElement: <NotFound />,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         index: true,
