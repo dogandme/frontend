@@ -78,14 +78,13 @@ const TempMarkingContent = ({
   const renderMarkingContent = () => {
     if (isMultiLine) {
       return isSummary ? (
-        <>
-          <span>{multiLineContent[0]}</span>
-          <br />
-          <span ref={multiLineSummaryRef}>
+        <div>
+          <p>{multiLineContent[0]}</p>
+          <p ref={multiLineSummaryRef}>
             {multiLineContent[1]}
             {!isMultiLineSummaryEllipsis && "..."}
-          </span>
-        </>
+          </p>
+        </div>
       ) : (
         multiLineContent.map((line, index) => (
           <p className="min-h-4" key={index}>
@@ -110,12 +109,12 @@ const TempMarkingContent = ({
   }, []);
 
   return (
-    <p
+    <div
       className={`body-2  text-grey-700 ${isSummary ? "line-clamp-2" : ""}`}
       onClick={() => setIsSummary((prev) => !prev)}
     >
       {renderMarkingContent()}
-    </p>
+    </div>
   );
 };
 
