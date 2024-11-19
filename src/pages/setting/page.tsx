@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useSettingPermission } from "@/features/setting/hooks";
 import { Report, LogoutButton } from "@/features/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
+import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
@@ -58,7 +59,10 @@ const EditMyInfo = () => (
 
 // 내 활동 내역을 보는 컴포넌트
 const MyActivity = () => (
-  <Link to="." className="setting-item">
+  <Link
+    to={`/@${useAuthStore.getState().nickname}/${ROUTER_PATH.USER_MARKING}`}
+    className="setting-item"
+  >
     <p>내 활동</p>
     <span className="text-grey-500">
       <ArrowRightIcon />
