@@ -380,7 +380,6 @@ const MarkingItemContent = () => {
   const [isMultiLineSummaryEllipsis, setIsMultiLineSummaryEllipsis] =
     useState<boolean>(false);
 
-  const contentRef = useRef<HTMLParagraphElement>(null);
   const multiLineSummaryRef = useRef<HTMLParagraphElement>(null);
 
   // 줄바꿈이 적용된 배열
@@ -424,7 +423,6 @@ const MarkingItemContent = () => {
   return (
     <p
       className={`body-2  text-grey-700 ${isSummary ? "line-clamp-2" : ""}`}
-      ref={contentRef}
       onClick={() => setIsSummary((prev) => !prev)}
     >
       {renderMarkingContent()}
