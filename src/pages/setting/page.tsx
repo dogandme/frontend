@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import { Report, LogoutButton } from "@/features/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
-import { withAuth } from "@/shared/lib";
-import { useSnackBar } from "@/shared/lib";
+import { withAuth, useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
