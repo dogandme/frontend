@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_BOUNDS } from "@/features/map/constants";
 import {
@@ -6,12 +7,25 @@ import {
   useGetMapCurrentBounds,
   useMapMode,
   useMapQueryParams,
+  usePlaceQueryParams,
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
+import { Marking } from "@/entities/marking/api";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
 
+interface MarkingInfo {
+  position: {
+    lat: Marking["lat"];
+    lng: Marking["lng"];
+  };
+  markingId: Marking["markingId"];
+}
+
 export const MapInitializer = () => {
+  const { state, pathname } = useLocation();
+
   const map = useMap();
   const mapMode = useMapMode();
 
@@ -19,6 +33,7 @@ export const MapInitializer = () => {
 
   const { boundsParams, hasBoundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
+  const { setPlaceQueryParams } = usePlaceQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
   const handleOpen = useSnackBar();
@@ -29,8 +44,28 @@ export const MapInitializer = () => {
     (state) => state.setIsCenterOnMyLocation,
   );
 
+  // 해당 이펙트는 /:nickname 에서 state 를 통해 마킹 정보를 전달 받은 경우 실행됩니다.
+  // state.markingInfo.position 으로 맵을 이동 시킨 후 해당 위치의 마킹을 불러옵니다.
   useEffect(() => {
-    if (!map || !isMapIdle) return;
+    if (!state || !state.markingInfo || !isMapIdle || !map) {
+      return;
+    }
+
+    (async function () {
+      const { position } = state.markingInfo as MarkingInfo;
+      await map.setCenter(position);
+      setPlaceQueryParams(position);
+      setMapQueryParams({
+        bounds: getMapBounds(),
+        sortType: pathname === ROUTER_PATH.MY_MARK ? "RECENT" : "POPULARITY",
+      });
+    })();
+  }, [map, isMapIdle, state]);
+
+  // 해당 이펙트는 Link 나 navigate 등으로 라우팅 될 때 router state 가 존재하지 않는 경우 실행됩니다.
+  // 즉 , 초기진입 했을 때에만 실행 됩니다.
+  useEffect(() => {
+    if (!map || !isMapIdle || state) return;
 
     const defaultSortType = mapMode === "MY_MARK" ? "RECENT" : "POPULARITY";
 
@@ -86,12 +121,14 @@ export const MapInitializer = () => {
     };
   }, [map, isMapIdle]);
 
+  // 해당 이펙트는 Link 나 navigate 등으로 라우팅 될 때 router state 가 존재하지 않는 경우 실행됩니다.
+  // 즉 , 초기진입 했을 때에만 실행 됩니다.
   useEffect(() => {
-    if (!hasBoundsParams) {
+    if (!hasBoundsParams || state) {
       return;
     }
     handleOpen("스팟을 발견하고 마킹으로 추억을 남겨보세요", { type: "map" });
-  }, [hasBoundsParams]);
+  }, [hasBoundsParams, state]);
 
   if (!map || loading || !isMapIdle) {
     return <CurrentLocationLoading />;
