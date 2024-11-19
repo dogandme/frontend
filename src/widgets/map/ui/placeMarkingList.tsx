@@ -30,7 +30,7 @@ export const PlaceMarkingList = () => {
   const { setPlaceQueryParams } = usePlaceQueryParams();
 
   const {
-    data: markingList = [],
+    data: markingList,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
