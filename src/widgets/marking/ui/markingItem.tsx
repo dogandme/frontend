@@ -13,7 +13,9 @@ import { useMarkingFormModal } from "@/features/marking/lib";
 import { EditMarkingFormModal } from "@/features/marking/ui";
 import { API_BASE_URL } from "@/shared/constants";
 import { formatDateToYearMonthDay, useDropdown } from "@/shared/lib";
+import { useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
+import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
 import { MoreIcon, MyLocationIcon } from "@/shared/ui/icon";
 import { FilledLikeIcon, LikeIcon } from "@/shared/ui/icon";
@@ -42,6 +44,25 @@ const MarkingItemPropsProvider = ({
 
 export const MarkingItem = (props: MarkingItemProps) => {
   const { nickName, isOwner = false, isFollowing } = props;
+  const token = useAuthStore((state) => state.token);
+
+  const renderFollowingToggle = () => {
+    if (!token) {
+      return <UnAuthorizedFollowingButton />;
+    }
+
+    if (isOwner) {
+      return null;
+    }
+
+    return (
+      <FollowingToggle
+        nickname={nickName}
+        size="xSmall"
+        isFollowing={!!isFollowing}
+      />
+    );
+  };
 
   return (
     <MarkingItemPropsProvider props={props}>
@@ -50,7 +71,6 @@ export const MarkingItem = (props: MarkingItemProps) => {
           <MarkingItemRegion />
           {isOwner && <MarkingManageButton />}
         </div>
-
         <header className="flex items-center justify-between">
           <div className="flex justify-between items-center gap-1 ">
             <MarkingItemProfileImage />
@@ -58,19 +78,17 @@ export const MarkingItem = (props: MarkingItemProps) => {
             <DividerLine axis="col" />
             <MarkingItemPetName />
           </div>
-          {!isOwner && typeof isFollowing === "boolean" && (
-            <FollowingToggle
-              nickname={nickName}
-              size="xSmall"
-              isFollowing={isFollowing}
-            />
-          )}
+          {renderFollowingToggle()}
         </header>
         <main className="flex flex-col gap-2">
           <MarkingItemImages />
           <div className="flex justify-between">
-            <MarkingItemLikeToggle />
-            <MarkingItemBookmarkToggle />
+            {token ? <MarkingItemLikeToggle /> : <UnauthorizedLikeButton />}
+            {token ? (
+              <MarkingItemBookmarkToggle />
+            ) : (
+              <UnAuthorizedBookmarkButton />
+            )}
           </div>
         </main>
         <footer className="flex flex-col gap-2">
@@ -79,6 +97,24 @@ export const MarkingItem = (props: MarkingItemProps) => {
         </footer>
       </li>
     </MarkingItemPropsProvider>
+  );
+};
+
+const UnAuthorizedFollowingButton = () => {
+  const handleOpenSnackbar = useSnackBar();
+
+  return (
+    <Button
+      variant="filled"
+      colorType="primary"
+      fullWidth={false}
+      size="xSmall"
+      onClick={() =>
+        handleOpenSnackbar("로그인 후 이용해 주세요", { type: "map" })
+      }
+    >
+      팔로우
+    </Button>
   );
 };
 
@@ -151,6 +187,26 @@ const MarkingItemLikeToggle = () => {
   );
 };
 
+const UnauthorizedLikeButton = () => {
+  const { markingId, countData } = useMarkingItemProps();
+  const { likedCount } = countData;
+  const handleOpenSnackbar = useSnackBar();
+
+  return (
+    <div className="flex gap-2 items-center text-grey-500">
+      <button
+        aria-label={`${markingId} 번 마킹 좋아요 추가`}
+        onClick={() =>
+          handleOpenSnackbar("로그인 후 이용해 주세요", { type: "map" })
+        }
+      >
+        <LikeIcon />
+      </button>
+      <span className="title-3">{likedCount > 0 && countData.likedCount}</span>
+    </div>
+  );
+};
+
 const MarkingItemBookmarkToggle = () => {
   const { isBookmarked, markingId, countData } = useMarkingItemProps();
   const [_isBookmarked, _setIsBookmarked] = useState<boolean>(
@@ -164,6 +220,7 @@ const MarkingItemBookmarkToggle = () => {
     usePostSaveMarking();
   const { mutate: deleteSaveMarking, isPending: isDeleteSaveMarkingPending } =
     useDeleteSavedMarking();
+
   const isPending = isPostSaveMarkingPending || isDeleteSaveMarkingPending;
 
   const handleClickSaveButton = () => {
@@ -217,6 +274,27 @@ const MarkingItemBookmarkToggle = () => {
         </button>
       )}
       <span className="title-3">{_savedCount > 0 && _savedCount}</span>
+    </div>
+  );
+};
+
+const UnAuthorizedBookmarkButton = () => {
+  const { markingId, countData } = useMarkingItemProps();
+  const { savedCount } = countData;
+  const handleOpenSnackbar = useSnackBar();
+
+  return (
+    <div className="flex gap-2 items-center text-grey-500">
+      <button
+        className="text-grey-500"
+        aria-label={`${markingId} 번 마킹 저장하기`}
+        onClick={() =>
+          handleOpenSnackbar("로그인 후 이용해 주세요", { type: "map" })
+        }
+      >
+        <BookmarkIcon />
+      </button>
+      <span className="title-3">{savedCount > 0 && savedCount}</span>
     </div>
   );
 };
