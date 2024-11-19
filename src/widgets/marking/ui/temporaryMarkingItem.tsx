@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { useMarkingFormModal } from "@/features/marking/lib";
 import { DeleteTemporaryMarkingButton } from "@/features/marking/ui";
 import { EditMarkingFormModal } from "@/features/marking/ui";
@@ -41,9 +42,9 @@ export const TemporaryMarkingItem = ({
           ))}
         </ImgSlider>
         {/* 내용 */}
-        <p className="body-2 text-grey-700 text-ellipsis line-clamp-2">
-          {content}
-        </p>
+        {content && (
+          <TempMarkingContent content={content} markingId={markingId} />
+        )}
       </main>
       <footer className="mt-4">
         <EditMarkingModalOpenButton
@@ -55,6 +56,64 @@ export const TemporaryMarkingItem = ({
         />
       </footer>
     </li>
+  );
+};
+
+const TempMarkingContent = ({
+  content,
+}: {
+  content: NonNullable<TempMarkingInfo["content"]>;
+  markingId: TempMarkingInfo["markingId"];
+}) => {
+  const [isSummary, setIsSummary] = useState<boolean>(true);
+  const [isMultiLineSummaryEllipsis, setIsMultiLineSummaryEllipsis] =
+    useState<boolean>(false);
+
+  const multiLineSummaryRef = useRef<HTMLParagraphElement>(null);
+
+  const renderMarkingContent = () => {
+    const multiLineContent = content.split("\n");
+    const multiLineLength = multiLineContent.length;
+
+    if (multiLineLength > 1) {
+      return isSummary ? (
+        <>
+          <p>{multiLineContent[0]}</p>
+          <p ref={multiLineSummaryRef}>
+            {multiLineContent[1]}
+            {!isMultiLineSummaryEllipsis && multiLineLength > 2 && "..."}
+          </p>
+        </>
+      ) : (
+        multiLineContent.map((line, index) => (
+          <p className="min-h-4" key={index}>
+            {line}
+          </p>
+        ))
+      );
+    }
+    return content;
+  };
+
+  // 멀티 라인의 두 번째 줄에는 필수적으로 ... 를 붙혀 하위에 렌더링 되지 않은 줄이 있음을 표현 해줍니다.
+  // 이를 위해 멀티라인의 두 번쨰 줄이 ellipsis 되었는지 확인하고 , 그렇지 않다면 인위적으로 ...을 붙혀주기 위해 상태를 변경합니다.
+  useEffect(() => {
+    const $multiLineSummaryText = multiLineSummaryRef.current;
+
+    if ($multiLineSummaryText) {
+      setIsMultiLineSummaryEllipsis(
+        $multiLineSummaryText.scrollWidth > $multiLineSummaryText.clientWidth,
+      );
+    }
+  }, []);
+
+  return (
+    <div
+      className={`body-2  text-grey-700 ${isSummary ? "line-clamp-2" : ""}`}
+      onClick={() => setIsSummary((prev) => !prev)}
+    >
+      {renderMarkingContent()}
+    </div>
   );
 };
 

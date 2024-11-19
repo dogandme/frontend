@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FollowingToggle } from "@/features/follow/ui";
 import { useDeleteMarking } from "@/features/marking/api";
 import {
@@ -17,9 +17,14 @@ import { useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
-import { MoreIcon, MyLocationIcon } from "@/shared/ui/icon";
-import { FilledLikeIcon, LikeIcon } from "@/shared/ui/icon";
-import { BookmarkIcon, FilledBookmarkIcon } from "@/shared/ui/icon";
+import {
+  FilledLikeIcon,
+  LikeIcon,
+  BookmarkIcon,
+  FilledBookmarkIcon,
+  MoreIcon,
+  MyLocationIcon,
+} from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
 import {
@@ -449,7 +454,56 @@ const MarkingItemPetName = () => {
 
 const MarkingItemContent = () => {
   const { content } = useMarkingItemProps();
-  return <p className="text-grey-700 body-2 text-overflow">{content}</p>;
+  const [isSummary, setIsSummary] = useState<boolean>(true);
+  const [isMultiLineSummaryEllipsis, setIsMultiLineSummaryEllipsis] =
+    useState<boolean>(false);
+
+  const multiLineSummaryRef = useRef<HTMLParagraphElement>(null);
+
+  const renderMarkingContent = () => {
+    const multiLineContent = content.split("\n");
+    const multiLineLength = multiLineContent.length;
+
+    if (multiLineLength > 1) {
+      return isSummary ? (
+        <>
+          <p>{multiLineContent[0]}</p>
+          <p ref={multiLineSummaryRef}>
+            {multiLineContent[1]}
+            {!isMultiLineSummaryEllipsis && multiLineLength > 2 && "..."}
+          </p>
+        </>
+      ) : (
+        multiLineContent.map((line, index) => (
+          <p className="min-h-4" key={index}>
+            {line}
+          </p>
+        ))
+      );
+    }
+    return content;
+  };
+
+  // 멀티 라인의 두 번째 줄에는 필수적으로 ... 를 붙혀 하위에 렌더링 되지 않은 줄이 있음을 표현 해줍니다.
+  // 이를 위해 멀티라인의 두 번쨰 줄이 ellipsis 되었는지 확인하고 , 그렇지 않다면 인위적으로 ...을 붙혀주기 위해 상태를 변경합니다.
+  useEffect(() => {
+    const $multiLineSummaryText = multiLineSummaryRef.current;
+
+    if ($multiLineSummaryText) {
+      setIsMultiLineSummaryEllipsis(
+        $multiLineSummaryText.scrollWidth > $multiLineSummaryText.clientWidth,
+      );
+    }
+  }, []);
+
+  return (
+    <div
+      className={`body-2  text-grey-700 ${isSummary ? "line-clamp-2" : ""}`}
+      onClick={() => setIsSummary((prev) => !prev)}
+    >
+      {renderMarkingContent()}
+    </div>
+  );
 };
 
 const MarkingItemDate = () => {
