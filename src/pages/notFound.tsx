@@ -11,8 +11,8 @@ export const NotFound = () => {
       <h1 className="title-1 text-grey-700">404 ERROR</h1>
 
       <div className="flex flex-col items-center body-2 text-grey-500">
-        <span>찾으시는 사용자의 계정이 변경 또는 삭제로</span>
-        <span>페이지를 찾을 수 없습니다.</span>
+        <span>존재하지 않은 주소를 입력하셨거나,</span>
+        <span>요청하신 페이지 주소가 변경, 삭제되어 찾을 수 없습니다.</span>
       </div>
 
       <Button
