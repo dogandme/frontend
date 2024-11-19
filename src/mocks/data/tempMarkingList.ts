@@ -26,7 +26,7 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
     {
       length: 100,
     },
-    (_, i) => {
+    (_, index) => {
       const regionInfo = randomRegions[Math.ceil(Math.random() * 10) % 3];
       const randomDate = new Date();
       randomDate.setHours(randomDate.getHours() - hours++ * 5);
@@ -35,11 +35,9 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
         markingId: tempMarkingId++,
         region: regionInfo.region,
         content:
-          Math.random() > 0.5
-            ? `임시저장 마킹${i}`.repeat(
-                Math.random() > 0.3 ? Math.ceil(Math.random() * 10) : 0,
-              )
-            : null,
+          index % 2
+            ? `${`content ${index + 1}`.repeat(Math.random() * 30)} \n\n ${`content ${index + 1}`.repeat(Math.random() * 30)}`
+            : `content ${index + 1} `.repeat(Math.random() * 30),
         isVisible:
           Math.random() > 0.3
             ? "PUBLIC"
