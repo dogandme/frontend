@@ -13,18 +13,30 @@ export const withAuth = <P extends Record<string, unknown>>(
       return <Component {...props} />;
     }
 
-    if (userRole === null) {
+    const roleLevels = {
+      null: 0,
+      ROLE_NONE: 1,
+      ROLE_GUEST: 2,
+      ROLE_USER: 3,
+    };
+
+    const currentLevel = roleLevels[userRole === null ? "null" : userRole];
+    const maxLevel = role.reduce((max, cur) => {
+      return Math.max(max, roleLevels[cur === null ? "null" : cur]);
+    }, 0);
+
+    if (userRole === null && currentLevel <= maxLevel) {
       throw new Error(AUTH_ERROR_MESSAGE.NON_LOGIN);
     }
 
-    if (userRole === "ROLE_NONE") {
+    if (userRole === "ROLE_NONE" && currentLevel <= maxLevel) {
       throw new Error(AUTH_ERROR_MESSAGE.NON_USER_INFO);
     }
 
-    if (userRole === "ROLE_GUEST") {
+    if (userRole === "ROLE_GUEST" && currentLevel <= maxLevel) {
       throw new Error(AUTH_ERROR_MESSAGE.NON_PET_INFO);
     }
 
-    return <Component {...props} />;
+    throw new Error(AUTH_ERROR_MESSAGE.NON_AUTHORIZED);
   };
 };

@@ -1,6 +1,6 @@
 import { useRouteError } from "react-router-dom";
 import { AUTH_ERROR_MESSAGE } from "@/shared/constants";
-import { NonLogin, NonPetInfo, NonUserInfo } from "./authError";
+import { NonAuthorized, NonLogin, NonPetInfo, NonUserInfo } from "./authError";
 import { NotFound } from "./notFound";
 
 export const ErrorBoundary = () => {
@@ -25,6 +25,13 @@ export const ErrorBoundary = () => {
     error.message === AUTH_ERROR_MESSAGE.NON_PET_INFO
   ) {
     return <NonPetInfo />;
+  }
+
+  if (
+    error instanceof Error &&
+    error.message === AUTH_ERROR_MESSAGE.NON_AUTHORIZED
+  ) {
+    return <NonAuthorized />;
   }
 
   return <NotFound />;
