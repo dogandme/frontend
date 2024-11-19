@@ -384,14 +384,15 @@ const MarkingItemContent = () => {
 
   const renderMarkingContent = () => {
     const multiLineContent = content.split("\n");
+    const multiLineLength = multiLineContent.length;
 
-    if (multiLineContent.length > 1) {
+    if (multiLineLength > 1) {
       return isSummary ? (
         <>
           <p>{multiLineContent[0]}</p>
           <p ref={multiLineSummaryRef}>
             {multiLineContent[1]}
-            {!isMultiLineSummaryEllipsis && "..."}
+            {!isMultiLineSummaryEllipsis && multiLineLength > 2 && "..."}
           </p>
         </>
       ) : (
