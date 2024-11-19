@@ -2,12 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { PetInfo } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store/auth";
+import { ROLE, useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";
 
 interface PostPetInfoResponse {
-  role: string;
+  role: NonNullable<ROLE>;
   authorization: string;
 }
 

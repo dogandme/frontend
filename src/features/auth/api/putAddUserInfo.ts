@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { type ROLE, useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
 interface PostAddUserInfoRequest {
@@ -13,7 +13,7 @@ interface PostAddUserInfoRequest {
 }
 
 interface PostAddUserInfoResponse {
-  role: string;
+  role: NonNullable<ROLE>;
   nickname: string;
   authorization: string;
 }

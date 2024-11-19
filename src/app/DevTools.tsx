@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuthStore } from "@/shared/store";
+import { type ROLE, useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 
 // ! TODO
@@ -34,9 +34,9 @@ export const DevTools = () => {
   }
 
   // 눌리는 버튼에 따라 상태 변경
-  const setAuthStore = (ROLE: string) => {
-    switch (ROLE) {
-      case "ROLE_NULL":
+  const setAuthStore = (role: ROLE) => {
+    switch (role) {
+      case null:
         useAuthStore.setState({
           token: null,
           role: null,
@@ -110,7 +110,7 @@ export const DevTools = () => {
           colorType="primary"
           variant="filled"
           size="small"
-          onClick={() => setAuthStore("ROLE_NULL")}
+          onClick={() => setAuthStore(null)}
         >
           SET ROLE_NULL
         </Button>
