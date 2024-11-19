@@ -2,12 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
-import { type ROLE, useAuthStore } from "@/shared/store";
+import { type Role, useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
 interface PostSignUpByEmailResponse {
   authorization: string;
-  role: NonNullable<ROLE>;
+  role: NonNullable<Role>;
   userId: number;
 }
 

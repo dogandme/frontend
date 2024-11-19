@@ -1,8 +1,8 @@
 import { type ComponentType } from "react";
 import { AUTH_ERROR_MESSAGE } from "../constants";
-import { type ROLE, useAuthStore } from "../store";
+import { type Role, useAuthStore } from "../store";
 
-const getAuthErrorMessage = (role: ROLE) => {
+const getAuthErrorMessage = (role: Role) => {
   switch (role) {
     case null:
       return AUTH_ERROR_MESSAGE.NON_LOGIN;
@@ -17,7 +17,7 @@ const getAuthErrorMessage = (role: ROLE) => {
 
 export const withAuth = <P extends Record<string, unknown>>(
   Component: ComponentType<P>,
-  role: ROLE[],
+  role: Role[],
 ) => {
   return (props: P) => {
     const userRole = useAuthStore((state) => state.role);

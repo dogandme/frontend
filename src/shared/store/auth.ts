@@ -1,14 +1,14 @@
 import { create } from "zustand";
 
-export type ROLE = null | "ROLE_NONE" | "ROLE_GUEST" | "ROLE_USER";
+export type Role = null | "ROLE_NONE" | "ROLE_GUEST" | "ROLE_USER";
 
 export type AuthStore = {
   token: string | null;
-  role: ROLE;
+  role: Role;
   nickname: string | null;
 
   setToken: (token: string | null) => void;
-  setRole: (role: ROLE) => void;
+  setRole: (role: Role) => void;
   setNickname: (nickname: string | null) => void;
   reset: () => void;
 };

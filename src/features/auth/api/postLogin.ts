@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
-import { type ROLE, useAuthStore } from "@/shared/store";
+import { type Role, useAuthStore } from "@/shared/store";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
 
 interface EmailLoginResponse {
   authorization: string;
-  role: NonNullable<ROLE>;
+  role: NonNullable<Role>;
   userId: number | null;
   nickname: string | null;
 }
