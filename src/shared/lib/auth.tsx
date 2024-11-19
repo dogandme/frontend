@@ -34,9 +34,12 @@ export const withAuth = <P extends Record<string, unknown>>(
     };
 
     const currentLevel = roleLevels[userRole === null ? "null" : userRole];
-    const maxLevel = role.reduce((max, cur) => {
-      return Math.max(max, roleLevels[cur === null ? "null" : cur]);
-    }, 0);
+    const maxLevel = Math.max(
+      ...role.map((key) => {
+        if (key === null) return roleLevels.null;
+        return roleLevels[key];
+      }),
+    );
 
     if (currentLevel <= maxLevel) {
       throw new Error(getAuthErrorMessage(userRole));
