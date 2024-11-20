@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
-import { useMapQueryParams, usePlaceQueryParams } from "@/features/map/hooks";
+import { useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import {
+  Marking,
   useGetAddressFromLatLng,
   useGetMarkingList,
 } from "@/entities/marking/api";
@@ -27,11 +28,10 @@ export const LocalMarkingListBottomSheet = () => {
 };
 
 const LocalMarkingList = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const map = useMap();
-  const { boundsParams, sortTypeParam, setMapQueryParams } =
-    useMapQueryParams();
-  const { setPlaceQueryParams } = usePlaceQueryParams();
+  const { boundsParams, sortTypeParam } = useMapQueryParams();
 
   const {
     data: markingList,
@@ -50,6 +50,37 @@ const LocalMarkingList = () => {
     }
   });
 
+  // 동네 마킹에서 특정 썸네일을 클릭하면 해당 썸네일을 중심으로 하는 이 장소 마킹 페이지로 이동합니다.
+  const handleClick = ({
+    lat,
+    lng,
+    markingId,
+  }: Pick<Marking, "lat" | "lng" | "markingId">) => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("lat", lat.toString());
+    searchParams.set("lng", lng.toString());
+    searchParams.set("sortType", "POPULARITY");
+    navigate(
+      {
+        pathname: ROUTER_PATH.PLACE,
+        search: searchParams.toString(),
+      },
+      {
+        state: {
+          markingInfo: {
+            position: {
+              lat,
+              lng,
+            },
+            markingId,
+          },
+        },
+      },
+    );
+    map.setCenter({ lat, lng });
+    map.setZoom(mapOptions.maxZoom);
+  };
+
   return (
     <>
       <MarkingList display="grid">
@@ -58,15 +89,7 @@ const LocalMarkingList = () => {
             key={markingId}
             type="button"
             className="aspect-square"
-            onClick={() => {
-              navigate(ROUTER_PATH.PLACE);
-              map.setCenter({ lat, lng });
-              map.setZoom(mapOptions.maxZoom);
-              setPlaceQueryParams({ lat, lng });
-              setMapQueryParams({
-                sortType: "POPULARITY",
-              });
-            }}
+            onClick={() => handleClick({ lat, lng, markingId })}
           >
             <img
               className="w-full h-full object-cover"
