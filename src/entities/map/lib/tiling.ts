@@ -117,7 +117,7 @@ const calculateTileIndex = (
   return [lngIndex, latIndex];
 };
 
-export const filterInnerBoundary = (
+ const filterInnerBoundary = (
   { lat, lng }: LatLng,
   bounds: MapBounds,
 ) => {

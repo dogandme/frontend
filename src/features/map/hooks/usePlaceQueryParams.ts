@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { filterInnerBoundary } from "@/entities/map/lib";
 import { ROUTER_PATH } from "@/shared/constants";
 import { getNumberParam, useMapQueryParams } from "./useMapQueryParams";
 
@@ -34,6 +33,7 @@ export const usePlaceQueryParams = () => {
     const { northEastLat, northEastLng, southWestLat, southWestLng } =
       boundsParams;
 
+    // 이 장소 마킹이 아니거나 boundsParams 가 유효하지 않은 경우 lat , lng 값을 재조정 하지 않습니다.
     if (
       !(northEastLat && northEastLng && southWestLat && southWestLng) ||
       pathname !== ROUTER_PATH.PLACE
@@ -41,11 +41,18 @@ export const usePlaceQueryParams = () => {
       return;
     }
 
-    // searchParameter 에 lat, lng 가 있고, 현재 검색된 boundsParams 내부에 존재하는
-    // 유효한 경계값이라면, 해당 값을 사용합니다.
-    if (lat && lng && filterInnerBoundary({ lat, lng }, boundsParams)) {
+    // 만약 lat , lng 서치파라미터 값을 포함한 경우 경우 boundsParams 의 경계값을 벗어나지 않는지 확인합니다.
+    if (
+      lat &&
+      lng &&
+      lat > southWestLat &&
+      lat < northEastLat &&
+      lng > southWestLng &&
+      lng < northEastLng
+    ) {
       return;
     }
+
     // lat , lng 가 유효하지 않은 경우 boundsParams 의 중심값을 사용합니다.
     setPlaceQueryParams({
       lat: (northEastLat + southWestLat) / 2,
