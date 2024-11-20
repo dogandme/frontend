@@ -7,6 +7,7 @@ import {
   useGetMapCurrentBounds,
   useMapMode,
   useMapQueryParams,
+  usePlaceQueryParams,
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
@@ -35,6 +36,7 @@ export const MapInitializer = () => {
 
   const { boundsParams, hasBoundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
+  const { placeParams, setPlaceQueryParams } = usePlaceQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
   const handleOpen = useSnackBar();
@@ -87,6 +89,7 @@ export const MapInitializer = () => {
 
   // 해당 이펙트는 Link 나 navigate 등으로 라우팅 될 때 router state 가 존재하지 않는 경우 실행됩니다.
   // 즉 , 초기진입 했을 때에만 실행 됩니다.
+  // boundsParams 를 적절한 값으로 업데이트 합니다.
   useEffect(() => {
     if (!map || !isMapIdle || state) return;
 
@@ -143,6 +146,41 @@ export const MapInitializer = () => {
       setIsMapIdle(false);
     };
   }, [map, isMapIdle]);
+
+  // 해당 이펙트는 place가 ROUTER_PATH.PLACE 면서 state가 없을 때 실행됩니다.
+  // 이펙트의 용도는 placeParams의 값이 존재하지 않거나 boundsParams의 범위를 벗어난 경우에 placeParams 값을 boundsParams의 중심으로 설정하기 위함입니다.
+  useEffect(() => {
+    const { southWestLat, northEastLat, southWestLng, northEastLng } =
+      boundsParams;
+
+    if (!(southWestLat && northEastLat && southWestLng && northEastLng)) {
+      return;
+    }
+
+    if (ROUTER_PATH.PLACE === pathname && !state) {
+      const { lat, lng } = placeParams;
+
+      if (!(southWestLat && northEastLat && southWestLng && northEastLng)) {
+        return;
+      }
+
+      if (
+        lat &&
+        lng &&
+        lat >= southWestLat &&
+        lat <= northEastLat &&
+        lng >= southWestLng &&
+        lng <= northEastLng
+      ) {
+        return;
+      }
+
+      setPlaceQueryParams({
+        lat: (southWestLat + northEastLat) / 2,
+        lng: (southWestLng + northEastLng) / 2,
+      });
+    }
+  }, [pathname, state, boundsParams]);
 
   // 해당 이펙트는 Link 나 navigate 등으로 라우팅 될 때 router state 가 존재하지 않는 경우 실행됩니다.
   // 즉 , 초기진입 했을 때에만 실행 됩니다.
