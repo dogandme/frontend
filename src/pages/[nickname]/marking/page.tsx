@@ -4,7 +4,8 @@ import { MarkingList } from "@/widgets/map/ui/markingList";
 import { MarkingItem } from "@/widgets/marking/ui";
 import { SortTypeFilter } from "@/features/marking/ui";
 import {
-  SortType,
+  type Marking,
+  type SortType,
   useGetAllMarkingsOfUser,
   useGetMarkingDetail,
 } from "@/entities/marking/api";
@@ -60,6 +61,24 @@ export const UserMarkingPage = withAuth(() => {
     }
   });
 
+  const handleRegionClick = ({
+    markingId,
+    lat,
+    lng,
+  }: Pick<Marking, "markingId" | "lat" | "lng">) => {
+    navigate(isMyPage ? ROUTER_PATH.MY_MARK : ROUTER_PATH.PLACE, {
+      state: {
+        markingInfo: {
+          position: {
+            lat,
+            lng,
+          },
+          markingId,
+        },
+      },
+    });
+  };
+
   // todo ui 표시
   if (!token || !myFollowingIdsMap || !myBookmarkIdsMap || !myLikedIdsMap)
     return null;
@@ -87,19 +106,13 @@ export const UserMarkingPage = withAuth(() => {
           <>
             <MarkingItem
               {...clickedMarking}
-              onRegionClick={() => {
-                navigate(isMyPage ? ROUTER_PATH.MY_MARK : ROUTER_PATH.PLACE, {
-                  state: {
-                    markingInfo: {
-                      position: {
-                        lat: clickedMarking.lat,
-                        lng: clickedMarking.lng,
-                      },
-                      markingId: clickedMarking.markingId,
-                    },
-                  },
-                });
-              }}
+              onRegionClick={() =>
+                handleRegionClick({
+                  markingId: clickedMarking.markingId,
+                  lat: clickedMarking.lat,
+                  lng: clickedMarking.lng,
+                })
+              }
               isFollowing={myFollowingIdsMap[clickedMarking.userId]}
               isLiked={myLikedIdsMap[clickedMarking.markingId]}
               isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
@@ -125,19 +138,13 @@ export const UserMarkingPage = withAuth(() => {
             return (
               <MarkingItem
                 key={marking.markingId}
-                onRegionClick={() => {
-                  navigate(isMyPage ? ROUTER_PATH.MY_MARK : ROUTER_PATH.PLACE, {
-                    state: {
-                      markingInfo: {
-                        position: {
-                          lat: marking.lat,
-                          lng: marking.lng,
-                        },
-                        markingId: marking.markingId,
-                      },
-                    },
-                  });
-                }}
+                onRegionClick={() =>
+                  handleRegionClick({
+                    markingId: marking.markingId,
+                    lat: marking.lat,
+                    lng: marking.lng,
+                  })
+                }
                 isLiked={myLikedIdsMap[marking.markingId]}
                 isBookmarked={myBookmarkIdsMap[marking.markingId]}
                 isFollowing={myFollowingIdsMap[marking.userId]}
