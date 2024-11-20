@@ -1,27 +1,19 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useSettingPermission } from "@/features/setting/hooks";
 import { AccountCancellationModal } from "@/features/setting/ui";
 import { PasswordChangeModal } from "@/features/setting/ui";
 import { PasswordSetModal } from "@/features/setting/ui";
 import type { MyInfo } from "@/entities/auth/api";
 import { useGetMyInfo } from "@/entities/auth/api";
 import { SOCIAL_TYPE } from "@/entities/auth/constants";
-import { useModal } from "@/shared/lib";
+import { useModal, withAuth } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
-export const AccountManagementPage = () => {
-  const hasPermission = useSettingPermission("NONE");
-
+export const AccountManagementPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
 
   if (!myInfo) {
-    return null;
-  }
-
-  // TODO 권한 없으면 보일 페이지 디자이너와 상의 하기
-  if (!hasPermission) {
     return null;
   }
 
@@ -40,7 +32,7 @@ export const AccountManagementPage = () => {
       </section>
     </>
   );
-};
+}, ["ROLE_GUEST", "ROLE_USER"]);
 
 const AccountEmail = ({
   socialType,

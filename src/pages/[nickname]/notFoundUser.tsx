@@ -1,9 +1,20 @@
 import { Link, useRouteError } from "react-router-dom";
-import { MASCOT_IMAGE_URL, NOT_FOUND_ERROR_MESSAGE } from "@/shared/constants";
+import {
+  AUTH_ERROR_MESSAGE,
+  MASCOT_IMAGE_URL,
+  NOT_FOUND_ERROR_MESSAGE,
+} from "@/shared/constants";
 import { useRouteHistoryStore } from "@/shared/store/history";
 
 export const NotFoundUser = () => {
   const error = useRouteError();
+
+  if (
+    error instanceof Error &&
+    Object.values(AUTH_ERROR_MESSAGE).includes(error.message)
+  ) {
+    throw new Error(error.message);
+  }
 
   if (error instanceof Error && error.message === NOT_FOUND_ERROR_MESSAGE) {
     throw new Error(NOT_FOUND_ERROR_MESSAGE);

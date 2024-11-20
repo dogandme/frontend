@@ -5,7 +5,7 @@ import { NaverIcon, GoogleIcon } from "@/entities/auth/assets";
 import { getProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { deleteCookie, getCookie } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store/auth";
+import { type Role, useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { EmailIcon } from "@/shared/ui/icon";
 import { LOGIN_END_POINT } from "../constants";
@@ -97,7 +97,7 @@ export const OAuthLoginHyperLinks = () => {
     }
 
     setToken(tokenOnCookie);
-    setRole(roleOnCookie);
+    setRole(roleOnCookie as NonNullable<Role>);
 
     // 사용자가 추가 정보를 입력하지 않은 경우엔 추가 정보 입력 페이지로 이동 시킵니다.
     if (!nicknameOnCookie) {

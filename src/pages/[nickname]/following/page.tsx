@@ -2,10 +2,10 @@ import { FollowItemContainer, FollowNavigationBar } from "@/widgets/follow";
 import { FollowingUserItem } from "@/widgets/follow/followingUserItem";
 import { useGetFollowingList } from "@/entities/follow/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
-import { useInfiniteScroll, useNicknameParams } from "@/shared/lib";
+import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
-export const FollowingPage = () => {
+export const FollowingPage = withAuth(() => {
   const { nicknameParams } = useNicknameParams();
 
   const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
@@ -48,4 +48,4 @@ export const FollowingPage = () => {
       <div ref={setNode} />
     </section>
   );
-};
+}, ["ROLE_GUEST", "ROLE_USER"]);

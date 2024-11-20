@@ -6,12 +6,12 @@ import { ChangeAgeButton } from "@/features/setting/ui";
 import { RegionChangeButton } from "@/features/setting/ui";
 import { useGetMyInfo } from "@/entities/auth/api";
 import type { MyInfo } from "@/entities/auth/api";
-import { useModal } from "@/shared/lib";
+import { useModal, withAuth } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
-export const EditInfoPage = () => {
+export const EditInfoPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
   const hasPermission = useSettingPermission("GUEST");
   if (!myInfo) return null;
@@ -35,7 +35,7 @@ export const EditInfoPage = () => {
       </section>
     </>
   );
-};
+}, ["ROLE_GUEST", "ROLE_USER"]);
 
 const NicknameButton = ({
   nickLastModDt,

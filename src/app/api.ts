@@ -1,10 +1,11 @@
 import { Nickname } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
+import type { Role } from "@/shared/store";
 import { APP_END_POINT } from "./ReactQueryProvider/constants";
 
 interface GetAccessTokenByRefreshTokenResponse {
   authorization: string;
-  role: string;
+  role: NonNullable<Role>;
   nickname: Nickname;
 }
 

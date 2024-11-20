@@ -2,13 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSignUpByEmailFormStore } from "@/features/auth/store";
 import { SignUpByEmailForm } from "@/features/auth/ui";
 import { ROUTER_PATH } from "@/shared/constants";
+import { withAuth } from "@/shared/lib";
 import { useModal } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
-const SignUpPage = () => {
+const SignUpPage = withAuth(() => {
   const navigate = useNavigate();
 
   const { handleOpen, onClose } = useModal(() => {
@@ -100,6 +101,6 @@ const SignUpPage = () => {
       </footer>
     </div>
   );
-};
+}, [null]);
 
 export default SignUpPage;

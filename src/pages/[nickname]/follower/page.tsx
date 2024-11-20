@@ -6,14 +6,14 @@ import {
 import { FollowingUserItem } from "@/widgets/follow";
 import { useGetFollowerList } from "@/entities/follow/api";
 import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
-import { useInfiniteScroll, useNicknameParams } from "@/shared/lib";
+import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 /**
  * 팔로워 페이지의 경우 나의 페이지일 경우엔 팔로워 리스트를 보여주고
  * 남의 페이지의 경우엔 남의 팔로워를 보여주나 , 나와의 팔로잉 상태를 보여줘야 합니다.
  */
-export const FollowerPage = () => {
+export const FollowerPage = withAuth(() => {
   const { nicknameParams, isMyPage } = useNicknameParams();
   const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
   const {
@@ -65,4 +65,4 @@ export const FollowerPage = () => {
       </FollowItemContainer>
     </section>
   );
-};
+}, ["ROLE_GUEST", "ROLE_USER"]);

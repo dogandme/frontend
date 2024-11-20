@@ -131,3 +131,9 @@ export const MASCOT_IMAGE_URL = "/default-image.png";
 export const SNACKBAR_ID = 999999999;
 
 export const NOT_FOUND_ERROR_MESSAGE = "존재하지 않은 경로입니다.";
+export const AUTH_ERROR_MESSAGE = {
+  NON_LOGIN: "로그인이 필요합니다.",
+  NON_USER_INFO: "기본 정보 입력이 필요합니다.",
+  NON_PET_INFO: "펫 정보 입력이 필요합니다.",
+  NON_AUTHORIZED: "리소스에 접근할 수 없습니다.",
+};

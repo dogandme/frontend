@@ -15,13 +15,13 @@ import {
   useGetMyLikedIdsMap,
   useGetProfile,
 } from "@/entities/profile/api";
-import { useInfiniteScroll } from "@/shared/lib";
+import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
-export const UserMarkingPage = () => {
+export const UserMarkingPage = withAuth(() => {
   const { state } = useLocation() as { state: null | { markingId: number } };
 
   const sortTypeOptions: Exclude<SortType, "DISTANCE">[] = [
@@ -128,4 +128,4 @@ export const UserMarkingPage = () => {
       </section>
     </div>
   );
-};
+}, ["ROLE_GUEST", "ROLE_USER"]);

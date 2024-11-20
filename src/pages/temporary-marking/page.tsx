@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { TemporaryMarkingItem } from "@/widgets/marking/ui";
 import { useGetTemporaryMarkingList } from "@/entities/marking/api";
-import { useInfiniteScroll } from "@/shared/lib";
+import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
-export const TemporaryMarkingPage = () => {
+export const TemporaryMarkingPage = withAuth(() => {
   const navigate = useNavigate();
 
   const nickname = useAuthStore((state) => state.nickname);
@@ -54,4 +54,4 @@ export const TemporaryMarkingPage = () => {
       </section>
     </>
   );
-};
+}, ["ROLE_USER"]);
