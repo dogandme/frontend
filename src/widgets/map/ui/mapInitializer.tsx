@@ -58,7 +58,6 @@ export const MapInitializer = () => {
 
       await map.setCenter(position);
       const bounds = map.getBounds();
-
       const newSearchParams = new URLSearchParams({
         // bounds 에 에 대한 searchParams
         boundsNELat: bounds.getNorthEast().lat().toString(),
@@ -68,6 +67,7 @@ export const MapInitializer = () => {
         // 정렬에 대한 searchParams
         sortType: pathname === ROUTER_PATH.MY_MARK ? "RECENT" : "POPULARITY",
       });
+      // 이 장소 마킹에서는 lat , lng 에 대한 서치 파라미터도 업데이트 합니다.
       if (pathname === ROUTER_PATH.PLACE) {
         newSearchParams.set("lat", position.lat.toString());
         newSearchParams.set("lng", position.lng.toString());
