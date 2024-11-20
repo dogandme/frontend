@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MAP_INITIAL_BOUNDS } from "@/features/map/constants";
 import {
@@ -7,7 +7,6 @@ import {
   useGetMapCurrentBounds,
   useMapMode,
   useMapQueryParams,
-  usePlaceQueryParams,
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
@@ -24,7 +23,10 @@ interface MarkingInfo {
 }
 
 export const MapInitializer = () => {
-  const { state, pathname } = useLocation();
+  const location = useLocation();
+  const { state, pathname } = location;
+
+  const navigate = useNavigate();
 
   const map = useMap();
   const mapMode = useMapMode();
@@ -33,7 +35,6 @@ export const MapInitializer = () => {
 
   const { boundsParams, hasBoundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
-  const { setPlaceQueryParams } = usePlaceQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
   const handleOpen = useSnackBar();
@@ -46,6 +47,7 @@ export const MapInitializer = () => {
 
   // 해당 이펙트는 /:nickname 에서 state 를 통해 마킹 정보를 전달 받은 경우 실행됩니다.
   // state.markingInfo.position 으로 맵을 이동 시킨 후 해당 위치의 마킹을 불러옵니다.
+  // ! state 를 유지 한 채로 initialize 하기 위해 navigate 를 사용하여 초기화 합니다.
   useEffect(() => {
     if (!state || !state.markingInfo || !isMapIdle || !map) {
       return;
@@ -53,12 +55,33 @@ export const MapInitializer = () => {
 
     (async function () {
       const { position } = state.markingInfo as MarkingInfo;
+
       await map.setCenter(position);
-      setPlaceQueryParams(position);
-      setMapQueryParams({
-        bounds: getMapBounds(),
+      const bounds = map.getBounds();
+
+      const newSearchParams = new URLSearchParams({
+        // bounds 에 에 대한 searchParams
+        boundsNELat: bounds.getNorthEast().lat().toString(),
+        boundsNELng: bounds.getNorthEast().lng().toString(),
+        boundsSWLat: bounds.getSouthWest().lat().toString(),
+        boundsSWLng: bounds.getSouthWest().lng().toString(),
+        // 정렬에 대한 searchParams
         sortType: pathname === ROUTER_PATH.MY_MARK ? "RECENT" : "POPULARITY",
       });
+      if (pathname === ROUTER_PATH.PLACE) {
+        newSearchParams.set("lat", position.lat.toString());
+        newSearchParams.set("lng", position.lng.toString());
+      }
+
+      navigate(
+        {
+          ...location,
+          search: newSearchParams.toString(),
+        },
+        {
+          state,
+        },
+      );
     })();
   }, [map, isMapIdle, state]);
 
