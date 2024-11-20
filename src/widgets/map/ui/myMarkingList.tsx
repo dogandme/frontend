@@ -75,24 +75,6 @@ export const MyMarkingList = () => {
           </div>
         )}
 
-        {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
-        {clickedMarking && (
-          <>
-            <MarkingItem
-              {...clickedMarking}
-              onRegionClick={() =>
-                handleRegionClick({
-                  lat: clickedMarking.lat,
-                  lng: clickedMarking.lng,
-                })
-              }
-              isLiked={myLikedIdsMap[clickedMarking.markingId]}
-              isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
-            />
-            <DividerLine axis="row" />
-          </>
-        )}
-
         <div className="flex w-full justify-end">
           <RangeFilter
             options={["ALL_VIEW", "CURRENT_LOCATION", "MAP_LOCATION"]}
@@ -107,6 +89,23 @@ export const MyMarkingList = () => {
         </div>
 
         <MarkingList display="list">
+          {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
+          {clickedMarking && (
+            <>
+              <MarkingItem
+                {...clickedMarking}
+                onRegionClick={() =>
+                  handleRegionClick({
+                    lat: clickedMarking.lat,
+                    lng: clickedMarking.lng,
+                  })
+                }
+                isLiked={myLikedIdsMap[clickedMarking.markingId]}
+                isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
+              />
+              <DividerLine axis="row" />
+            </>
+          )}
           {markingList?.map((marking) => (
             <MarkingItem
               key={marking.markingId}

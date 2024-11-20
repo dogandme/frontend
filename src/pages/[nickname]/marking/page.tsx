@@ -102,25 +102,6 @@ export const UserMarkingPage = withAuth(() => {
             </div>
           )}
 
-        {clickedMarking && (
-          <>
-            <MarkingItem
-              {...clickedMarking}
-              onRegionClick={() =>
-                handleRegionClick({
-                  markingId: clickedMarking.markingId,
-                  lat: clickedMarking.lat,
-                  lng: clickedMarking.lng,
-                })
-              }
-              isFollowing={myFollowingIdsMap[clickedMarking.userId]}
-              isLiked={myLikedIdsMap[clickedMarking.markingId]}
-              isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
-            />
-            <DividerLine axis="row" />
-          </>
-        )}
-
         <div className="flex w-full justify-end">
           <SortTypeFilter
             options={sortTypeOptions}
@@ -132,6 +113,24 @@ export const UserMarkingPage = withAuth(() => {
         </div>
 
         <MarkingList display="list">
+          {clickedMarking && (
+            <>
+              <MarkingItem
+                {...clickedMarking}
+                onRegionClick={() =>
+                  handleRegionClick({
+                    markingId: clickedMarking.markingId,
+                    lat: clickedMarking.lat,
+                    lng: clickedMarking.lng,
+                  })
+                }
+                isFollowing={myFollowingIdsMap[clickedMarking.userId]}
+                isLiked={myLikedIdsMap[clickedMarking.markingId]}
+                isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
+              />
+              <DividerLine axis="row" />
+            </>
+          )}
           {markingList?.map((marking) => {
             if (marking.markingId === markingId) return;
 

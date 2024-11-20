@@ -80,7 +80,17 @@ export const PlaceMarkingList = () => {
         label={<h1 className="text-grey-900 title-1">이 장소 관련 마킹</h1>}
       />
 
-      <section className="px-4 pb-4 flex flex-col gap-4">
+      <div className="flex justify-end w-full px-4 mb-4">
+        <SortTypeFilter
+          options={["POPULARITY", "RECENT"]}
+          selectedOption={sortTypeParam || "POPULARITY"}
+          onSelect={(sortType) => {
+            setMapQueryParams({ sortType });
+          }}
+        />
+      </div>
+
+      <MarkingList display="list" className="px-4">
         {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
         {clickedMarking && (
           <>
@@ -98,45 +108,32 @@ export const PlaceMarkingList = () => {
             <DividerLine axis="row" />
           </>
         )}
+        {markingList?.map((marking) => {
+          if (clickedMarking?.markingId === marking.markingId) {
+            return null;
+          }
 
-        <div className="flex justify-end w-full">
-          <SortTypeFilter
-            options={["POPULARITY", "RECENT"]}
-            selectedOption={sortTypeParam || "POPULARITY"}
-            onSelect={(sortType) => {
-              setMapQueryParams({ sortType });
-            }}
-          />
-        </div>
-
-        <MarkingList display="list">
-          {markingList?.map((marking) => {
-            if (clickedMarking?.markingId === marking.markingId) {
-              return null;
-            }
-
-            return (
-              <MarkingItem
-                key={marking.markingId}
-                onRegionClick={() =>
-                  handleRegionClick({ lat: marking.lat, lng: marking.lng })
-                }
-                onDelete={() => {
-                  queryClient.invalidateQueries({
-                    queryKey: ["markingList"],
-                  });
-                }}
-                queryKeys={["marker", "markingList"]}
-                isFollowing={myFollowingIdsMap[marking.userId]}
-                isLiked={myLikedIdsMap[marking.markingId]}
-                isBookmarked={myBookmarkIdsMap[marking.markingId]}
-                {...marking}
-              />
-            );
-          })}
-        </MarkingList>
-        <div className="h-[.125rem]" ref={setNode} />
-      </section>
+          return (
+            <MarkingItem
+              key={marking.markingId}
+              onRegionClick={() =>
+                handleRegionClick({ lat: marking.lat, lng: marking.lng })
+              }
+              onDelete={() => {
+                queryClient.invalidateQueries({
+                  queryKey: ["markingList"],
+                });
+              }}
+              queryKeys={["marker", "markingList"]}
+              isFollowing={myFollowingIdsMap[marking.userId]}
+              isLiked={myLikedIdsMap[marking.markingId]}
+              isBookmarked={myBookmarkIdsMap[marking.markingId]}
+              {...marking}
+            />
+          );
+        })}
+      </MarkingList>
+      <div className="h-[.125rem]" ref={setNode} />
     </>
   );
 };
