@@ -110,24 +110,30 @@ export const PlaceMarkingList = () => {
         </div>
 
         <MarkingList display="list">
-          {markingList?.map((marking) => (
-            <MarkingItem
-              key={marking.markingId}
-              onRegionClick={() =>
-                handleRegionClick({ lat: marking.lat, lng: marking.lng })
-              }
-              onDelete={() => {
-                queryClient.invalidateQueries({
-                  queryKey: ["markingList"],
-                });
-              }}
-              queryKeys={["marker", "markingList"]}
-              isFollowing={myFollowingIdsMap[marking.userId]}
-              isLiked={myLikedIdsMap[marking.markingId]}
-              isBookmarked={myBookmarkIdsMap[marking.markingId]}
-              {...marking}
-            />
-          ))}
+          {markingList?.map((marking) => {
+            if (clickedMarking?.markingId === marking.markingId) {
+              return null;
+            }
+
+            return (
+              <MarkingItem
+                key={marking.markingId}
+                onRegionClick={() =>
+                  handleRegionClick({ lat: marking.lat, lng: marking.lng })
+                }
+                onDelete={() => {
+                  queryClient.invalidateQueries({
+                    queryKey: ["markingList"],
+                  });
+                }}
+                queryKeys={["marker", "markingList"]}
+                isFollowing={myFollowingIdsMap[marking.userId]}
+                isLiked={myLikedIdsMap[marking.markingId]}
+                isBookmarked={myBookmarkIdsMap[marking.markingId]}
+                {...marking}
+              />
+            );
+          })}
         </MarkingList>
         <div className="h-[.125rem]" ref={setNode} />
       </section>
