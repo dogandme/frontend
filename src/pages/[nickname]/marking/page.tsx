@@ -10,23 +10,29 @@ import {
   useGetMarkingDetail,
 } from "@/entities/marking/api";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
-import { useGetProfile, useGetMyProfile } from "@/entities/profile/api";
+import {
+  EmptyMarkingThumbnailGrid,
+  EmptyMyMarkingThumbnailGrid,
+} from "@/entities/marking/ui";
+import {
+  useGetProfile,
+  useGetMyProfile,
+  Nickname,
+} from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const UserMarkingPage = withAuth(() => {
   const { nicknameParams, isMyPage } = useNicknameParams();
-  const { token } = useAuthStore.getState();
+
+  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
+  const sortTypeOption = ["RECENT", "POPULARITY"] as const;
 
   const { data: myProfile } = useGetMyProfile();
   const { data: profile } = useGetProfile({ nickname: nicknameParams });
-
-  // todo ui 표시
-  if (!token) return null;
 
   // TODO 로딩 처리
   if (!myProfile) {
@@ -50,46 +56,55 @@ export const UserMarkingPage = withAuth(() => {
               <TemporaryMarkingBar tempCnt={profile.tempCnt} />
             </div>
           )}
-        <MyMarkingSortTypeFilter />
-        <MyMarkingList />
+        <div className="flex w-full justify-end">
+          <SortTypeFilter
+            options={sortTypeOption}
+            selectedOption={sortTypeParam as (typeof sortTypeOption)[number]}
+            onSelect={(sortType) => {
+              setMapQueryParams({ sortType });
+            }}
+          />
+        </div>
+        <MyMarkingList
+          nickname={nicknameParams}
+          isMyPage={isMyPage}
+          sortType={
+            (sortTypeParam || "RECENT") as (typeof sortTypeOption)[number]
+          }
+        />
       </section>
     </div>
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
 
-const MyMarkingSortTypeFilter = () => {
-  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
-
-  return (
-    <div className="flex w-full justify-end">
-      <SortTypeFilter
-        options={["RECENT", "POPULARITY"]}
-        selectedOption={sortTypeParam || "RECENT"}
-        onSelect={(sortType) => {
-          setMapQueryParams({ sortType });
-        }}
-      />
-    </div>
-  );
-};
-
-const MyMarkingList = () => {
+interface MyMarkingListProps {
+  nickname: Nickname;
+  isMyPage: boolean;
+  sortType: Exclude<SortType, "DISTANCE">;
+}
+const MyMarkingList = ({
+  nickname,
+  isMyPage,
+  sortType,
+}: MyMarkingListProps) => {
   const { state } = useLocation() as { state: null | { markingId: number } };
   const navigate = useNavigate();
-  const { sortTypeParam } = useMapQueryParams();
 
-  const markingId = state?.markingId;
-  const { nicknameParams, isMyPage } = useNicknameParams();
+  const { data: clickedMarking, isLoading: isClickedMarkingLoading } =
+    useGetMarkingDetail({
+      markingId: state?.markingId,
+    });
 
-  const { data: clickedMarking } = useGetMarkingDetail({ markingId });
   const {
-    data: markingList,
+    data: markingList = [],
+    isLoading: isMarkingListLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useGetAllMarkingsOfUser({
-    nickname: nicknameParams,
-    sortType: (sortTypeParam || "RECENT") as Exclude<SortType, "DISTANCE">,
+    nickname,
+    sortType,
+    filterData: (data) => data.markingId !== state?.markingId,
   });
 
   const [setNode] = useInfiniteScroll(() => {
@@ -116,41 +131,33 @@ const MyMarkingList = () => {
     });
   };
 
+  if (isMarkingListLoading || isClickedMarkingLoading) {
+    return <div>loading..</div>;
+  }
+
   return (
     <>
       <MarkingList display="list">
+        {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
         {clickedMarking && (
-          <>
-            <MarkingItem
-              {...clickedMarking}
-              onRegionClick={() =>
-                handleRegionClick({
-                  markingId: clickedMarking.markingId,
-                  lat: clickedMarking.lat,
-                  lng: clickedMarking.lng,
-                })
-              }
-            />
-            <DividerLine axis="row" />
-          </>
+          <MarkingItem onRegionClick={handleRegionClick} {...clickedMarking} />
         )}
-        {markingList?.map((marking) => {
-          if (marking.markingId === markingId) return;
-
-          return (
+        {clickedMarking && markingList.length > 0 && <DividerLine axis="row" />}
+        {markingList.length === 0 && !clickedMarking ? (
+          isMyPage ? (
+            <EmptyMyMarkingThumbnailGrid />
+          ) : (
+            <EmptyMarkingThumbnailGrid />
+          )
+        ) : (
+          markingList.map((marking) => (
             <MarkingItem
               key={marking.markingId}
-              onRegionClick={() =>
-                handleRegionClick({
-                  markingId: marking.markingId,
-                  lat: marking.lat,
-                  lng: marking.lng,
-                })
-              }
+              onRegionClick={handleRegionClick}
               {...marking}
             />
-          );
-        })}
+          ))
+        )}
       </MarkingList>
       <div className="h-[.125rem]" ref={setNode} />
     </>
