@@ -10,12 +10,7 @@ import {
   useGetMarkingDetail,
 } from "@/entities/marking/api";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
-import {
-  useGetMyBookmarkIdsMap,
-  useGetMyFollowingIdsMap,
-  useGetMyLikedIdsMap,
-  useGetProfile,
-} from "@/entities/profile/api";
+import { useGetProfile, useGetMyProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
@@ -40,9 +35,7 @@ export const UserMarkingPage = withAuth(() => {
 
   const { nickname: myNickname, token } = useAuthStore.getState();
 
-  const { data: myBookmarkIdsMap } = useGetMyBookmarkIdsMap();
-  const { data: myLikedIdsMap } = useGetMyLikedIdsMap();
-  const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
+  const { data: myProfile } = useGetMyProfile();
   const { data: profile } = useGetProfile({ nickname: myNickname });
   const { data: clickedMarking } = useGetMarkingDetail({ markingId });
   const {
@@ -80,8 +73,12 @@ export const UserMarkingPage = withAuth(() => {
   };
 
   // todo ui 표시
-  if (!token || !myFollowingIdsMap || !myBookmarkIdsMap || !myLikedIdsMap)
-    return null;
+  if (!token) return null;
+
+  // TODO 로딩 처리
+  if (!myProfile) {
+    return <div>내 정보를 가져오는 중...</div>;
+  }
 
   return (
     <div className="px-4">
@@ -124,9 +121,11 @@ export const UserMarkingPage = withAuth(() => {
                     lng: clickedMarking.lng,
                   })
                 }
-                isFollowing={myFollowingIdsMap[clickedMarking.userId]}
-                isLiked={myLikedIdsMap[clickedMarking.markingId]}
-                isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
+                isFollowing={myProfile.myFollowingIdsMap[clickedMarking.userId]}
+                isLiked={myProfile.myLikedIdsMap[clickedMarking.markingId]}
+                isBookmarked={
+                  myProfile.myBookmarkIdsMap[clickedMarking.markingId]
+                }
               />
               <DividerLine axis="row" />
             </>
@@ -144,9 +143,9 @@ export const UserMarkingPage = withAuth(() => {
                     lng: marking.lng,
                   })
                 }
-                isLiked={myLikedIdsMap[marking.markingId]}
-                isBookmarked={myBookmarkIdsMap[marking.markingId]}
-                isFollowing={myFollowingIdsMap[marking.userId]}
+                isLiked={myProfile.myLikedIdsMap[marking.markingId]}
+                isBookmarked={myProfile.myBookmarkIdsMap[marking.markingId]}
+                isFollowing={myProfile.myFollowingIdsMap[marking.userId]}
                 {...marking}
               />
             );

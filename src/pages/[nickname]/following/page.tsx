@@ -1,14 +1,14 @@
 import { FollowItemContainer, FollowNavigationBar } from "@/widgets/follow";
 import { FollowingUserItem } from "@/widgets/follow/followingUserItem";
 import { useGetFollowingList } from "@/entities/follow/api";
-import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
+import { useGetMyProfile } from "@/entities/profile/api";
 import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const FollowingPage = withAuth(() => {
   const { nicknameParams } = useNicknameParams();
 
-  const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
+  const { data: myProfile } = useGetMyProfile();
   const {
     data: followingList,
     fetchNextPage,
@@ -24,7 +24,7 @@ export const FollowingPage = withAuth(() => {
     }
   });
 
-  if (!myFollowingIdsMap) {
+  if (!myProfile) {
     return <div>loading...</div>;
   }
 
@@ -41,7 +41,7 @@ export const FollowingPage = withAuth(() => {
             nickname={nickname}
             petName={pet.name}
             profile={pet.profile}
-            isFollowing={myFollowingIdsMap[userId]}
+            isFollowing={myProfile.myFollowingIdsMap[userId]}
           />
         ))}
       </FollowItemContainer>

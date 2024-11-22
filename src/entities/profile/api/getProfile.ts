@@ -75,9 +75,17 @@ export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
   });
 };
 
-export const useGetMyProfile = <TResult = GetProfileResponse>(
-  select: (data: GetProfileResponse) => TResult,
-) => {
+const makeIdsMap = (ids: number[]) => {
+  return ids.reduce(
+    (map, id) => {
+      map[id] = true;
+      return map;
+    },
+    {} as Record<number, boolean>,
+  );
+};
+
+export const useGetMyProfile = () => {
   const token = useAuthStore((state) => state.token);
   const nickname = useAuthStore((state) => state.nickname);
 
@@ -85,47 +93,17 @@ export const useGetMyProfile = <TResult = GetProfileResponse>(
     queryKey: profileQueryKey.profile(nickname!),
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
     gcTime: 0,
-    select,
-  });
-};
+    select: (data) => {
+      const myFollowingIdsMap = makeIdsMap(data.followingsIds || []);
+      const myBookmarkIdsMap = makeIdsMap(data.bookmarks || []);
+      const myLikedIdsMap = makeIdsMap(data.likes || []);
 
-export const useGetMyFollowingIdsMap = () => {
-  return useGetMyProfile((data) => {
-    const followingsIds = data.followingsIds || [];
-    return followingsIds.reduce(
-      (map, id) => {
-        map[id] = true;
-        return map;
-      },
-      {} as Record<UserId, boolean>,
-    );
-  });
-};
-
-export const useGetMyBookmarkIdsMap = () => {
-  return useGetMyProfile((data) => {
-    const bookmarks = data.bookmarks || [];
-
-    return bookmarks.reduce(
-      (map, id) => {
-        map[id] = true;
-        return map;
-      },
-      {} as Record<number, boolean>,
-    );
-  });
-};
-
-export const useGetMyLikedIdsMap = () => {
-  return useGetMyProfile((data) => {
-    const likes = data.likes || [];
-
-    return likes.reduce(
-      (map, id) => {
-        map[id] = true;
-        return map;
-      },
-      {} as Record<number, boolean>,
-    );
+      return {
+        ...data,
+        myFollowingIdsMap,
+        myBookmarkIdsMap,
+        myLikedIdsMap,
+      };
+    },
   });
 };

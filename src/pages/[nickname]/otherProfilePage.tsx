@@ -1,7 +1,7 @@
 import { MarkingThumbnailGrid } from "@/widgets/marking/ui";
 import { ProfileOverView } from "@/widgets/profile/ui";
 import { useGetProfile } from "@/entities/profile/api";
-import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
+import { useGetMyProfile } from "@/entities/profile/api";
 import { useNicknameParams } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
@@ -10,10 +10,9 @@ export const OtherProfilePage = () => {
   const { data, isLoading } = useGetProfile({
     nickname: nicknameParams,
   });
-  const { data: myFollowingIdsMap, isLoading: isMyFollowingIdsMapLoading } =
-    useGetMyFollowingIdsMap();
+  const { data: myProfile, isLoading: isMyProfileLoading } = useGetMyProfile();
 
-  if (!data || isLoading || !myFollowingIdsMap || isMyFollowingIdsMapLoading) {
+  if (!data || isLoading || !myProfile || isMyProfileLoading) {
     return <div>Loading...</div>;
   }
 
@@ -31,7 +30,7 @@ export const OtherProfilePage = () => {
             followersIds={followersIds}
             followingsIds={followingsIds}
             pet={pet}
-            isFollowing={myFollowingIdsMap[userId]}
+            isFollowing={myProfile.myFollowingIdsMap[userId]}
           />
         ) : (
           <EmptyOtherProfileOverView />

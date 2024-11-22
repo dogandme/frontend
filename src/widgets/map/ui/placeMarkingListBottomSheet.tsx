@@ -4,18 +4,13 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem } from "@/widgets/marking/ui";
 import { useMapQueryParams, usePlaceQueryParams } from "@/features/map/hooks";
 import { SortTypeFilter } from "@/features/marking/ui";
-import { LatLng } from "@/entities/auth/api";
 import {
   type Marking,
   useGetMarkingDetail,
   useGetMarkingList,
 } from "@/entities/marking/api";
 import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
-import {
-  useGetMyFollowingIdsMap,
-  useGetMyBookmarkIdsMap,
-  useGetMyLikedIdsMap,
-} from "@/entities/profile/api";
+import { useGetMyProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
@@ -67,13 +62,21 @@ const PlaceMarkingSortTypeFilter = () => {
   );
 };
 
-const PlaceMarkingItem = (marking: Marking) => {
+interface PlaceMarkingItemProps {
+  marking: Marking;
+  isBookmarked: boolean;
+  isLiked: boolean;
+  isFollowing: boolean;
+}
+
+const PlaceMarkingItem = ({
+  marking,
+  isBookmarked,
+  isLiked,
+  isFollowing,
+}: PlaceMarkingItemProps) => {
   const queryClient = useQueryClient();
   const map = useMap();
-
-  const { data: myBookmarkIdsMap = {} } = useGetMyBookmarkIdsMap();
-  const { data: myLikedIdsMap = {} } = useGetMyLikedIdsMap();
-  const { data: myFollowingIdsMap = {} } = useGetMyFollowingIdsMap();
 
   return (
     <MarkingItem
@@ -85,9 +88,9 @@ const PlaceMarkingItem = (marking: Marking) => {
         });
         map.setZoom(mapOptions.maxZoom);
       }}
-      isLiked={myLikedIdsMap[marking.markingId]}
-      isBookmarked={myBookmarkIdsMap[marking.markingId]}
-      isFollowing={myFollowingIdsMap[marking.userId]}
+      isLiked={isLiked}
+      isBookmarked={isBookmarked}
+      isFollowing={isFollowing}
       onDelete={() => {
         queryClient.invalidateQueries({
           queryKey: ["markingList"],
@@ -124,13 +127,15 @@ const PlaceMarkingList = () => {
       markingId: state?.markingInfo?.markingId,
     });
 
+  const { data: myProfile } = useGetMyProfile();
+
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   });
 
-  if (isMarkingListLoading || isClickedMarkingLoading) {
+  if (isMarkingListLoading || isClickedMarkingLoading || !myProfile) {
     return <div className="px-4">loading..</div>;
   }
 
@@ -138,13 +143,26 @@ const PlaceMarkingList = () => {
     <>
       <MarkingList display="list" className="px-4">
         {/* 특정 유저 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
-        {clickedMarking && <PlaceMarkingItem {...clickedMarking} />}
+        {clickedMarking && (
+          <PlaceMarkingItem
+            marking={clickedMarking}
+            isBookmarked={myProfile.myBookmarkIdsMap[clickedMarking.markingId]}
+            isLiked={myProfile.myLikedIdsMap[clickedMarking.markingId]}
+            isFollowing={myProfile.myFollowingIdsMap[clickedMarking.markingId]}
+          />
+        )}
         {clickedMarking && markingList.length > 0 && <DividerLine axis="row" />}
         {markingList.length === 0 && !clickedMarking ? (
           <EmptyMarkingThumbnailGrid />
         ) : (
           markingList.map((marking) => (
-            <PlaceMarkingItem key={marking.markingId} {...marking} />
+            <PlaceMarkingItem
+              key={marking.markingId}
+              marking={marking}
+              isBookmarked={myProfile.myBookmarkIdsMap[marking.markingId]}
+              isLiked={myProfile.myLikedIdsMap[marking.markingId]}
+              isFollowing={myProfile.myFollowingIdsMap[marking.markingId]}
+            />
           ))
         )}
       </MarkingList>

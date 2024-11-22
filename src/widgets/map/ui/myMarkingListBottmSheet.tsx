@@ -14,8 +14,7 @@ import {
 } from "@/entities/marking/ui";
 import {
   Nickname,
-  useGetMyBookmarkIdsMap,
-  useGetMyLikedIdsMap,
+  useGetMyProfile,
   useGetProfile,
 } from "@/entities/profile/api";
 import { useInfiniteScroll } from "@/shared/lib";
@@ -66,10 +65,18 @@ const MyMarkingSortTypeFilter = () => {
   );
 };
 
-const MyMarkingItem = (marking: Marking) => {
+interface MyMarkingItemProps {
+  marking: Marking;
+  isLiked: boolean;
+  isBookmarked: boolean;
+}
+
+const MyMarkingItem = ({
+  marking,
+  isLiked,
+  isBookmarked,
+}: MyMarkingItemProps) => {
   const map = useMap();
-  const { data: myBookmarkIdsMap = {} } = useGetMyBookmarkIdsMap();
-  const { data: myLikedIdsMap = {} } = useGetMyLikedIdsMap();
 
   return (
     <MarkingItem
@@ -81,8 +88,8 @@ const MyMarkingItem = (marking: Marking) => {
         });
         map.setZoom(mapOptions.maxZoom);
       }}
-      isLiked={myLikedIdsMap[marking.markingId]}
-      isBookmarked={myBookmarkIdsMap[marking.markingId]}
+      isLiked={isLiked}
+      isBookmarked={isBookmarked}
     />
   );
 };
@@ -108,13 +115,15 @@ const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
     filterData: (data) => data.markingId !== state?.markingInfo?.markingId,
   });
 
+  const { data: myProfile } = useGetMyProfile();
+
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   });
 
-  if (isMarkingListLoading || isClickedMarkingLoading) {
+  if (isMarkingListLoading || isClickedMarkingLoading || !myProfile) {
     return <div>loading..</div>;
   }
 
@@ -122,13 +131,24 @@ const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
     <>
       <MarkingList display="list">
         {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
-        {clickedMarking && <MyMarkingItem {...clickedMarking} />}
+        {clickedMarking && (
+          <MyMarkingItem
+            marking={clickedMarking}
+            isLiked={myProfile.myLikedIdsMap[clickedMarking.markingId]}
+            isBookmarked={myProfile.myBookmarkIdsMap[clickedMarking.markingId]}
+          />
+        )}
         {clickedMarking && markingList.length > 0 && <DividerLine axis="row" />}
         {markingList.length === 0 && !clickedMarking ? (
           <EmptyMyMarkingThumbnailGrid />
         ) : (
           markingList.map((marking) => (
-            <MyMarkingItem key={marking.markingId} {...marking} />
+            <MyMarkingItem
+              key={marking.markingId}
+              marking={marking}
+              isLiked={myProfile.myLikedIdsMap[marking.markingId]}
+              isBookmarked={myProfile.myBookmarkIdsMap[marking.markingId]}
+            />
           ))
         )}
       </MarkingList>
