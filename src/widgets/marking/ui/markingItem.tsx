@@ -9,8 +9,13 @@ import {
   useDeleteSavedMarking,
   usePostSaveMarking,
 } from "@/features/marking/api";
+import type { PutModifyMarkingArguments } from "@/features/marking/api";
 import { useMarkingFormModal } from "@/features/marking/lib";
 import { EditMarkingFormModal } from "@/features/marking/ui";
+import type { LatLng } from "@/entities/auth/api";
+import type { Marking } from "@/entities/marking/api";
+import { useGetMyProfile } from "@/entities/profile/api";
+import type { PetInfo } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
 import { formatDateToYearMonthDay, useDropdown } from "@/shared/lib";
 import { useSnackBar } from "@/shared/lib";
@@ -27,31 +32,47 @@ import {
 } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
-import {
-  type MarkingItemProps,
-  MarkingItemContext,
-  useMarkingItemProps,
-} from "../store";
+import { MarkingItemContext, useMarkingItemProps } from "../store";
+import type { MarkingItemProviderValue } from "../store";
 
-interface MarkingItemProviderProps {
-  children: React.ReactNode;
-  props: MarkingItemProps;
+export interface MarkingItemProps
+  extends Omit<Marking, "isTempSaved" | "userId" | "pet"> {
+  onRegionClick: ({ lat, lng }: LatLng) => void;
+  onDelete?: () => void;
+  pet: Pick<PetInfo, "petId" | "profile" | "name">;
+  queryKeys?: PutModifyMarkingArguments["queryKeys"];
 }
 
 const MarkingItemPropsProvider = ({
   children,
-  props,
-}: MarkingItemProviderProps) => (
-  <MarkingItemContext.Provider value={props}>
+  value,
+}: {
+  children: React.ReactNode;
+  value: MarkingItemProviderValue;
+}) => (
+  <MarkingItemContext.Provider value={value}>
     {children}
   </MarkingItemContext.Provider>
 );
 
 export const MarkingItem = (props: MarkingItemProps) => {
-  const { nickName, isOwner = false, isFollowing } = props;
+  const { data: myProfile, isLoading: isMyProfileLoading } = useGetMyProfile();
+  const {
+    myFollowingIdsMap = {},
+    myLikedIdsMap = {},
+    myBookmarkIdsMap = {},
+  } = myProfile || {};
+
   const token = useAuthStore((state) => state.token);
 
+  // TODO 로딩 처리 하기
+  if (isMyProfileLoading) {
+    return <div>loading ...</div>;
+  }
+
   const renderFollowingToggle = () => {
+    const { isOwner, nickName, markingId } = props;
+
     if (!token) {
       return <UnAuthorizedFollowingButton />;
     }
@@ -64,17 +85,24 @@ export const MarkingItem = (props: MarkingItemProps) => {
       <FollowingToggle
         nickname={nickName}
         size="xSmall"
-        isFollowing={!!isFollowing}
+        isFollowing={myFollowingIdsMap[markingId]}
       />
     );
   };
 
   return (
-    <MarkingItemPropsProvider props={props}>
+    <MarkingItemPropsProvider
+      value={{
+        ...props,
+        isFollowing: myFollowingIdsMap[props.markingId],
+        isBookmarked: myBookmarkIdsMap[props.markingId],
+        isLiked: myLikedIdsMap[props.markingId],
+      }}
+    >
       <li className="flex flex-col gap-2">
         <div className="flex justify-between items-center">
           <MarkingItemRegion />
-          {isOwner && <MarkingManageButton />}
+          {props.isOwner && <MarkingManageButton />}
         </div>
         <header className="flex items-center justify-between">
           <div className="flex justify-between items-center gap-1 ">
@@ -417,12 +445,12 @@ const MarkingItemImages = () => {
 };
 
 const MarkingItemRegion = () => {
-  const { onRegionClick, region } = useMarkingItemProps();
+  const { onRegionClick, region, lat, lng } = useMarkingItemProps();
   return (
     <div
       className="flex pr-4 justify-center items-center gap-[.625rem] h-8 text-tangerine-500 cursor-pointer"
       onClick={() => {
-        onRegionClick?.();
+        onRegionClick?.({ lat, lng });
       }}
     >
       <MyLocationIcon />

@@ -3,8 +3,8 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem } from "@/widgets/marking/ui";
 import { useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
+import { LatLng } from "@/entities/auth/api";
 import {
-  Marking,
   useGetMarkingDetail,
   useGetUserMarkingList,
 } from "@/entities/marking/api";
@@ -12,11 +12,7 @@ import {
   EmptyMyMarkingThumbnailGrid,
   TemporaryMarkingBar,
 } from "@/entities/marking/ui";
-import {
-  Nickname,
-  useGetMyProfile,
-  useGetProfile,
-} from "@/entities/profile/api";
+import { Nickname, useGetProfile } from "@/entities/profile/api";
 import { useInfiniteScroll } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
@@ -65,35 +61,6 @@ const MyMarkingSortTypeFilter = () => {
   );
 };
 
-interface MyMarkingItemProps {
-  marking: Marking;
-  isLiked: boolean;
-  isBookmarked: boolean;
-}
-
-const MyMarkingItem = ({
-  marking,
-  isLiked,
-  isBookmarked,
-}: MyMarkingItemProps) => {
-  const map = useMap();
-
-  return (
-    <MarkingItem
-      {...marking}
-      onRegionClick={() => {
-        map.setCenter({
-          lat: marking.lat,
-          lng: marking.lng,
-        });
-        map.setZoom(mapOptions.maxZoom);
-      }}
-      isLiked={isLiked}
-      isBookmarked={isBookmarked}
-    />
-  );
-};
-
 const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
   const { state } = useLocation();
   const { data: clickedMarking, isLoading: isClickedMarkingLoading } =
@@ -115,7 +82,15 @@ const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
     filterData: (data) => data.markingId !== state?.markingInfo?.markingId,
   });
 
-  const { data: myProfile } = useGetMyProfile();
+  const map = useMap();
+
+  const handleRegionClick = ({ lat, lng }: LatLng) => {
+    map.setCenter({
+      lat,
+      lng,
+    });
+    map.setZoom(mapOptions.maxZoom);
+  };
 
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -123,7 +98,7 @@ const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
     }
   });
 
-  if (isMarkingListLoading || isClickedMarkingLoading || !myProfile) {
+  if (isMarkingListLoading || isClickedMarkingLoading) {
     return <div>loading..</div>;
   }
 
@@ -132,22 +107,17 @@ const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
       <MarkingList display="list">
         {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
         {clickedMarking && (
-          <MyMarkingItem
-            marking={clickedMarking}
-            isLiked={myProfile.myLikedIdsMap[clickedMarking.markingId]}
-            isBookmarked={myProfile.myBookmarkIdsMap[clickedMarking.markingId]}
-          />
+          <MarkingItem onRegionClick={handleRegionClick} {...clickedMarking} />
         )}
         {clickedMarking && markingList.length > 0 && <DividerLine axis="row" />}
         {markingList.length === 0 && !clickedMarking ? (
           <EmptyMyMarkingThumbnailGrid />
         ) : (
           markingList.map((marking) => (
-            <MyMarkingItem
+            <MarkingItem
               key={marking.markingId}
-              marking={marking}
-              isLiked={myProfile.myLikedIdsMap[marking.markingId]}
-              isBookmarked={myProfile.myBookmarkIdsMap[marking.markingId]}
+              onRegionClick={handleRegionClick}
+              {...marking}
             />
           ))
         )}

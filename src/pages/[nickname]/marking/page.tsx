@@ -121,11 +121,6 @@ export const UserMarkingPage = withAuth(() => {
                     lng: clickedMarking.lng,
                   })
                 }
-                isFollowing={myProfile.myFollowingIdsMap[clickedMarking.userId]}
-                isLiked={myProfile.myLikedIdsMap[clickedMarking.markingId]}
-                isBookmarked={
-                  myProfile.myBookmarkIdsMap[clickedMarking.markingId]
-                }
               />
               <DividerLine axis="row" />
             </>
@@ -143,9 +138,6 @@ export const UserMarkingPage = withAuth(() => {
                     lng: marking.lng,
                   })
                 }
-                isLiked={myProfile.myLikedIdsMap[marking.markingId]}
-                isBookmarked={myProfile.myBookmarkIdsMap[marking.markingId]}
-                isFollowing={myProfile.myFollowingIdsMap[marking.userId]}
                 {...marking}
               />
             );

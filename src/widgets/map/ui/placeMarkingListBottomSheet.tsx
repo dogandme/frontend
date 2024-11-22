@@ -4,13 +4,9 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem } from "@/widgets/marking/ui";
 import { useMapQueryParams, usePlaceQueryParams } from "@/features/map/hooks";
 import { SortTypeFilter } from "@/features/marking/ui";
-import {
-  type Marking,
-  useGetMarkingDetail,
-  useGetMarkingList,
-} from "@/entities/marking/api";
+import { LatLng } from "@/entities/auth/api";
+import { useGetMarkingDetail, useGetMarkingList } from "@/entities/marking/api";
 import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
-import { useGetMyProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
@@ -62,45 +58,6 @@ const PlaceMarkingSortTypeFilter = () => {
   );
 };
 
-interface PlaceMarkingItemProps {
-  marking: Marking;
-  isBookmarked: boolean;
-  isLiked: boolean;
-  isFollowing: boolean;
-}
-
-const PlaceMarkingItem = ({
-  marking,
-  isBookmarked,
-  isLiked,
-  isFollowing,
-}: PlaceMarkingItemProps) => {
-  const queryClient = useQueryClient();
-  const map = useMap();
-
-  return (
-    <MarkingItem
-      {...marking}
-      onRegionClick={() => {
-        map.setCenter({
-          lat: marking.lat,
-          lng: marking.lng,
-        });
-        map.setZoom(mapOptions.maxZoom);
-      }}
-      isLiked={isLiked}
-      isBookmarked={isBookmarked}
-      isFollowing={isFollowing}
-      onDelete={() => {
-        queryClient.invalidateQueries({
-          queryKey: ["markingList"],
-        });
-      }}
-      queryKeys={["marker", "markingList"]}
-    />
-  );
-};
-
 const PlaceMarkingList = () => {
   const location = useLocation();
 
@@ -127,7 +84,22 @@ const PlaceMarkingList = () => {
       markingId: state?.markingInfo?.markingId,
     });
 
-  const { data: myProfile } = useGetMyProfile();
+  const queryClient = useQueryClient();
+  const map = useMap();
+
+  const handleRegionClick = ({ lat, lng }: LatLng) => {
+    map.setCenter({
+      lat,
+      lng,
+    });
+    map.setZoom(mapOptions.maxZoom);
+  };
+
+  const handleDelete = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["markingList"],
+    });
+  };
 
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -135,7 +107,7 @@ const PlaceMarkingList = () => {
     }
   });
 
-  if (isMarkingListLoading || isClickedMarkingLoading || !myProfile) {
+  if (isMarkingListLoading || isClickedMarkingLoading) {
     return <div className="px-4">loading..</div>;
   }
 
@@ -144,11 +116,11 @@ const PlaceMarkingList = () => {
       <MarkingList display="list" className="px-4">
         {/* 특정 유저 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
         {clickedMarking && (
-          <PlaceMarkingItem
-            marking={clickedMarking}
-            isBookmarked={myProfile.myBookmarkIdsMap[clickedMarking.markingId]}
-            isLiked={myProfile.myLikedIdsMap[clickedMarking.markingId]}
-            isFollowing={myProfile.myFollowingIdsMap[clickedMarking.markingId]}
+          <MarkingItem
+            {...clickedMarking}
+            onDelete={handleDelete}
+            onRegionClick={handleRegionClick}
+            queryKeys={["marker", "markingList"]}
           />
         )}
         {clickedMarking && markingList.length > 0 && <DividerLine axis="row" />}
@@ -156,12 +128,11 @@ const PlaceMarkingList = () => {
           <EmptyMarkingThumbnailGrid />
         ) : (
           markingList.map((marking) => (
-            <PlaceMarkingItem
-              key={marking.markingId}
-              marking={marking}
-              isBookmarked={myProfile.myBookmarkIdsMap[marking.markingId]}
-              isLiked={myProfile.myLikedIdsMap[marking.markingId]}
-              isFollowing={myProfile.myFollowingIdsMap[marking.markingId]}
+            <MarkingItem
+              {...marking}
+              onDelete={handleDelete}
+              onRegionClick={handleRegionClick}
+              queryKeys={["marker", "markingList"]}
             />
           ))
         )}
