@@ -1,8 +1,13 @@
+import { useLocation } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem } from "@/widgets/marking/ui";
 import { useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
-import { useGetUserMarkingList } from "@/entities/marking/api";
+import { LatLng } from "@/entities/auth/api";
+import {
+  useGetMarkingDetail,
+  useGetUserMarkingList,
+} from "@/entities/marking/api";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
 import {
   useGetMyBookmarkIdsMap,
@@ -11,9 +16,12 @@ import {
 } from "@/entities/profile/api";
 import { useInfiniteScroll } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
+import { DividerLine } from "@/shared/ui/divider";
 import { MarkingList } from "./markingList";
 
 export const MyMarkingList = () => {
+  const { state } = useLocation();
+
   const map = useMap();
 
   const { sortTypeParam, boundsParams, setMapQueryParams } =
@@ -32,8 +40,11 @@ export const MyMarkingList = () => {
     nickname: nickname || "",
     sortType: sortTypeParam,
   });
-  const { data: myBookmarkedMap } = useGetMyBookmarkIdsMap();
-  const { data: myLikedMap } = useGetMyLikedIdsMap();
+  const { data: myBookmarkIdsMap = {} } = useGetMyBookmarkIdsMap();
+  const { data: myLikedIdsMap = {} } = useGetMyLikedIdsMap();
+  const { data: clickedMarking } = useGetMarkingDetail({
+    markingId: state?.markingInfo?.markingId,
+  });
 
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -41,7 +52,13 @@ export const MyMarkingList = () => {
     }
   });
 
-  if (!myBookmarkedMap || !myLikedMap) return null;
+  const handleRegionClick = ({ lat, lng }: LatLng) => {
+    map.setCenter({
+      lat,
+      lng,
+    });
+    map.setZoom(19);
+  };
 
   // todo 회원이 아닐 경우
   if (!nickname) return null;
@@ -72,18 +89,31 @@ export const MyMarkingList = () => {
         </div>
 
         <MarkingList display="list">
+          {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
+          {clickedMarking && (
+            <>
+              <MarkingItem
+                {...clickedMarking}
+                onRegionClick={() =>
+                  handleRegionClick({
+                    lat: clickedMarking.lat,
+                    lng: clickedMarking.lng,
+                  })
+                }
+                isLiked={myLikedIdsMap[clickedMarking.markingId]}
+                isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
+              />
+              <DividerLine axis="row" />
+            </>
+          )}
           {markingList?.map((marking) => (
             <MarkingItem
               key={marking.markingId}
-              onRegionClick={() => {
-                map.setCenter({
-                  lat: marking.lat,
-                  lng: marking.lng,
-                });
-                map.setZoom(19);
-              }}
-              isLiked={myLikedMap[marking.markingId]}
-              isBookmarked={myBookmarkedMap[marking.markingId]}
+              onRegionClick={() =>
+                handleRegionClick({ lat: marking.lat, lng: marking.lng })
+              }
+              isLiked={myLikedIdsMap[marking.markingId]}
+              isBookmarked={myBookmarkIdsMap[marking.markingId]}
               queryKeys={["marker", "markingList"]}
               {...marking}
             />

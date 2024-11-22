@@ -1,3 +1,13 @@
+import { otherUsers } from "./otherUser";
+
+let markingCount = 0;
+const makeRandomMarking = (markingId: number) => ({
+  markingId,
+  previewImage: `a18b127f-06e6-4954-9f45-${Math.ceil(Math.random() * 100000)}a7299a`,
+  lat: Math.random() > 0.5 ? 35 + Math.random() : 35 - Math.random(),
+  lng: Math.random() > 0.5 ? 129 + Math.random() : 129 - Math.random(),
+});
+
 export const profileMarkingThumbnail: Record<
   string,
   { markingId: number; previewImage: string; lat: number; lng: number }[]
@@ -6,12 +16,20 @@ export const profileMarkingThumbnail: Record<
     {
       length: 120,
     },
-    (_, i) => ({
-      markingId: i,
-      previewImage: `a18b127f-06e6-4954-9f45-${Math.ceil(Math.random() * 100000)}a7299a`,
-      lat: Math.random() > 0.5 ? 35 + Math.random() : 35 - Math.random(),
-      lng: Math.random() > 0.5 ? 129 + Math.random() : 129 - Math.random(),
+    () => makeRandomMarking(markingCount++),
+  ),
+  // otherUser 에 대한 랜덤한 마킹 생성
+  // 마이 페이지 -> 팔로잉 , 팔로워 리스트에서 접근 가능한 유저들입니다.
+  ...Object.fromEntries(
+    otherUsers.map(({ nickname }, idx) => {
+      return [
+        nickname,
+        idx < 10
+          ? []
+          : Array.from({ length: Math.random() * 30 }, () =>
+              makeRandomMarking(markingCount++),
+            ),
+      ];
     }),
   ),
-  나는야게스트: [],
 };

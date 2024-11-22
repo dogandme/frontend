@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MarkingList } from "@/widgets/map/ui/markingList";
 import { MarkingItem } from "@/widgets/marking/ui";
 import { SortTypeFilter } from "@/features/marking/ui";
 import {
-  SortType,
+  type Marking,
+  type SortType,
   useGetAllMarkingsOfUser,
   useGetMarkingDetail,
 } from "@/entities/marking/api";
@@ -15,6 +16,7 @@ import {
   useGetMyLikedIdsMap,
   useGetProfile,
 } from "@/entities/profile/api";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -23,6 +25,7 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const UserMarkingPage = withAuth(() => {
   const { state } = useLocation() as { state: null | { markingId: number } };
+  const navigate = useNavigate();
 
   const sortTypeOptions: Exclude<SortType, "DISTANCE">[] = [
     "RECENT",
@@ -33,7 +36,7 @@ export const UserMarkingPage = withAuth(() => {
   >(sortTypeOptions[0]);
 
   const markingId = state?.markingId;
-  const { nicknameParams } = useNicknameParams();
+  const { nicknameParams, isMyPage } = useNicknameParams();
 
   const { nickname: myNickname, token } = useAuthStore.getState();
 
@@ -58,6 +61,24 @@ export const UserMarkingPage = withAuth(() => {
     }
   });
 
+  const handleRegionClick = ({
+    markingId,
+    lat,
+    lng,
+  }: Pick<Marking, "markingId" | "lat" | "lng">) => {
+    navigate(isMyPage ? ROUTER_PATH.MY_MARK : ROUTER_PATH.PLACE, {
+      state: {
+        markingInfo: {
+          position: {
+            lat,
+            lng,
+          },
+          markingId,
+        },
+      },
+    });
+  };
+
   // todo ui 표시
   if (!token || !myFollowingIdsMap || !myBookmarkIdsMap || !myLikedIdsMap)
     return null;
@@ -81,21 +102,6 @@ export const UserMarkingPage = withAuth(() => {
             </div>
           )}
 
-        {clickedMarking && (
-          <>
-            <MarkingItem
-              {...clickedMarking}
-              onRegionClick={() => {
-                // todo 맵 페이지로 이동
-              }}
-              isFollowing={myFollowingIdsMap[clickedMarking.userId]}
-              isLiked={myLikedIdsMap[clickedMarking.markingId]}
-              isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
-            />
-            <DividerLine axis="row" />
-          </>
-        )}
-
         <div className="flex w-full justify-end">
           <SortTypeFilter
             options={sortTypeOptions}
@@ -107,15 +113,37 @@ export const UserMarkingPage = withAuth(() => {
         </div>
 
         <MarkingList display="list">
+          {clickedMarking && (
+            <>
+              <MarkingItem
+                {...clickedMarking}
+                onRegionClick={() =>
+                  handleRegionClick({
+                    markingId: clickedMarking.markingId,
+                    lat: clickedMarking.lat,
+                    lng: clickedMarking.lng,
+                  })
+                }
+                isFollowing={myFollowingIdsMap[clickedMarking.userId]}
+                isLiked={myLikedIdsMap[clickedMarking.markingId]}
+                isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
+              />
+              <DividerLine axis="row" />
+            </>
+          )}
           {markingList?.map((marking) => {
             if (marking.markingId === markingId) return;
 
             return (
               <MarkingItem
                 key={marking.markingId}
-                onRegionClick={() => {
-                  // todo 맵 페이지로 이동
-                }}
+                onRegionClick={() =>
+                  handleRegionClick({
+                    markingId: marking.markingId,
+                    lat: marking.lat,
+                    lng: marking.lng,
+                  })
+                }
                 isLiked={myLikedIdsMap[marking.markingId]}
                 isBookmarked={myBookmarkIdsMap[marking.markingId]}
                 isFollowing={myFollowingIdsMap[marking.userId]}

@@ -22,7 +22,7 @@ import { MARKER_END_POINT } from "@/entities/marking/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import { getMockMarkerList } from "./data/markerList";
 // data
-import { getMockMarkingList } from "./data/markingList";
+import { createMockMarking, getMockMarkingList } from "./data/markingList";
 import userInfoData from "./data/myInfo.json";
 import { getMyMark } from "./data/myMark";
 import { otherUsers, roleGuestUser } from "./data/otherUser";
@@ -1771,11 +1771,19 @@ const getUserMarkingListHandler = [
 
       const url = new URL(request.url);
 
-      const southBottomLat = Number(url.searchParams.get("southBottomLat"));
-      const northTopLat = Number(url.searchParams.get("northTopLat"));
-      const southLeftLng = Number(url.searchParams.get("southLeftLng"));
-      const northRightLng = Number(url.searchParams.get("northRightLng"));
+      const southBottomLat =
+        Number(url.searchParams.get("southBottomLat")) || 37.56055534657849;
+      const northTopLat =
+        Number(url.searchParams.get("northTopLat")) || 37.572444179048894;
+      const southLeftLng =
+        Number(url.searchParams.get("southLeftLng")) || 126.98218424603498;
+      const northRightLng =
+        Number(url.searchParams.get("northRightLng")) || 126.97381575396503;
 
+      // TODO 실제 서버에선  mapViewMode 가 ALL_VIEW 일 경우엔 사실 southBottomLat , ... 등의 queryParams가 존재하지 않습니다.
+      // 쿼리 파라미터 값과 상관 없이 모든 데이터를 가져오기 때문입니다.
+      // 하지만 우리는 가상 DB를 만들지 않고 랜덤한 마킹 리스트를 생성하기 때문에 해당 부분을 구현하는데 어려움이 있습니다.
+      // 이에 임시 방편으로 mapViewMode여서 queryParams 가 없는 경우를 고려하여 기본 값을 넣어주도록 합니다.
       const markingList =
         nickname === "뽀송송"
           ? myMarkingList
@@ -1922,6 +1930,45 @@ const getSavedMarkerListHandler = [
   }),
 ];
 
+// 해당 핸들러는 내 마킹이 아닌 경우에는 랜덤한 마킹을 만들어 반환합니다.
+// 이에 이 핸들러는 내 마킹이 아닌 경우엔 부정확한 결과를 보여 줄 수 있습니다.
+const getMarkingDetailRequestHandler = [
+  http.get(
+    `${API_BASE_URL}/markings/:markingId`,
+    async ({ request, params }) => {
+      const token = await request.headers.get("Authorization");
+      if (!token || token === "staleAccessToken") {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: "토큰 검증에 실패 했습니다.",
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      const content = myMarkingList.find(
+        ({ markingId }) => markingId === Number(params.markingId),
+      );
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content:
+          content ??
+          createMockMarking(Number(params.markingId), {
+            southBottomLat: 35.0,
+            northTopLat: 35.1,
+            southLeftLng: 129.0,
+            northRightLng: 129.1,
+          }),
+      });
+    },
+  ),
+];
+
 // * 나중에 msw 사용을 대비하여 만들었습니다.
 export const handlers = [
   ...signUpByEmailHandlers,
@@ -1956,4 +2003,5 @@ export const handlers = [
   ...getLikedMarkerListHandler,
   ...getSavedMarkerListHandler,
   ...getProfileThumbnailHandler,
+  ...getMarkingDetailRequestHandler,
 ];
