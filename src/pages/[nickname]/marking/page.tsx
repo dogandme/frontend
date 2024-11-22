@@ -20,10 +20,10 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const UserMarkingPage = withAuth(() => {
   const { nicknameParams, isMyPage } = useNicknameParams();
-  const { nickname: myNickname, token } = useAuthStore.getState();
+  const { token } = useAuthStore.getState();
 
   const { data: myProfile } = useGetMyProfile();
-  const { data: profile } = useGetProfile({ nickname: myNickname });
+  const { data: profile } = useGetProfile({ nickname: nicknameParams });
 
   // todo ui 표시
   if (!token) return null;
@@ -38,7 +38,7 @@ export const UserMarkingPage = withAuth(() => {
       <BackwardNavigationBar
         label={
           <h1 className="title-1 text-grey-900 py-4">
-            {nicknameParams === myNickname ? "내" : nicknameParams} 마킹
+            {isMyPage ? "내" : nicknameParams} 마킹
           </h1>
         }
       />
