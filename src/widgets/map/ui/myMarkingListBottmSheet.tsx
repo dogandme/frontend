@@ -105,6 +105,7 @@ const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
     ...boundsParams,
     nickname: nickname || "",
     sortType: sortTypeParam,
+    filterData: (data) => data.markingId !== state?.markingInfo?.markingId,
   });
 
   const [setNode] = useInfiniteScroll(() => {

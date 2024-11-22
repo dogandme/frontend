@@ -134,6 +134,7 @@ export const useGetMarkingList = ({
   northEastLng,
   sortType,
   searchType,
+  filterData,
 }: {
   southWestLat: number | null;
   southWestLng: number | null;
@@ -141,6 +142,7 @@ export const useGetMarkingList = ({
   northEastLng: number | null;
   sortType: SortType | null;
   searchType: SearchType;
+  filterData?: (data: Marking) => boolean;
 }) => {
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
   const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
@@ -185,7 +187,10 @@ export const useGetMarkingList = ({
       return pageNumber < totalPages - 1 ? pageNumber + 1 : null;
     },
     initialPageParam: 0,
-    select: (data) => data.pages.flatMap((page) => page.markings),
+    select: (data) => {
+      const flattenData = data.pages.flatMap((page) => page.markings);
+      return filterData ? flattenData.filter(filterData) : flattenData;
+    },
 
     refetchOnWindowFocus: false,
 

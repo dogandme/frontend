@@ -116,7 +116,9 @@ const PlaceMarkingList = () => {
     ...boundsAdjacentPlace,
     sortType: sortTypeParam,
     searchType: "LOCATION",
+    filterData: (data) => data.markingId !== state?.markingInfo?.markingId,
   });
+
   const { data: clickedMarking, isLoading: isClickedMarkingLoading } =
     useGetMarkingDetail({
       markingId: state?.markingInfo?.markingId,

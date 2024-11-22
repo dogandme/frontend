@@ -71,6 +71,7 @@ export const useGetUserMarkingList = ({
   northEastLat,
   northEastLng,
   sortType,
+  filterData,
 }: {
   nickname: string;
   southWestLat: number | null;
@@ -78,6 +79,7 @@ export const useGetUserMarkingList = ({
   northEastLat: number | null;
   northEastLng: number | null;
   sortType: SortType | null;
+  filterData?: (data: Marking) => boolean;
 }) => {
   const token = useAuthStore.getState().token;
 
@@ -126,7 +128,10 @@ export const useGetUserMarkingList = ({
       return pageNumber < totalPages - 1 ? pageNumber + 1 : null;
     },
     initialPageParam: 0,
-    select: (data) => data.pages.flatMap((page) => page.markings),
+    select: (data) => {
+      const flattenData = data.pages.flatMap((page) => page.markings);
+      return filterData ? flattenData.filter(filterData) : flattenData;
+    },
 
     refetchOnWindowFocus: false,
 
