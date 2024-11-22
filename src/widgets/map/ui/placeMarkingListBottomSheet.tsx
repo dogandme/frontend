@@ -2,10 +2,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem } from "@/widgets/marking/ui";
-import { useMapQueryParams, usePlaceQueryParams } from "@/features/map/hooks";
+import {
+  Bounds,
+  useMapQueryParams,
+  usePlaceQueryParams,
+} from "@/features/map/hooks";
 import { SortTypeFilter } from "@/features/marking/ui";
 import { LatLng } from "@/entities/auth/api";
-import { useGetMarkingDetail, useGetMarkingList } from "@/entities/marking/api";
+import {
+  SortType,
+  useGetMarkingDetail,
+  useGetMarkingList,
+} from "@/entities/marking/api";
 import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
@@ -15,56 +23,55 @@ import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 
 export const PlaceMarkingListBottomSheet = () => {
+  const { boundsParams, sortTypeParam, setMapQueryParams } =
+    useMapQueryParams();
+  const { boundsAdjacentPlace } = usePlaceQueryParams();
+  const sortTypeOption = ["POPULARITY", "RECENT"] as const;
+  const navigate = useNavigate();
+
   return (
     <>
-      <PlaceMarkingNavigationBar />
-      <PlaceMarkingSortTypeFilter />
-      <PlaceMarkingList />
+      <BackwardNavigationBar
+        onClick={() => {
+          navigate(ROUTER_PATH.MAP);
+          setMapQueryParams({
+            bounds: boundsParams,
+            sortType: "POPULARITY",
+          });
+        }}
+        label={<h1 className="text-grey-900 title-1">이 장소 관련 마킹</h1>}
+      />
+      <div className="flex justify-end w-full px-4 mb-4">
+        <SortTypeFilter
+          options={sortTypeOption}
+          selectedOption={
+            (sortTypeParam ||
+              sortTypeOption[0]) as (typeof sortTypeOption)[number]
+          }
+          onSelect={(sortType) => {
+            setMapQueryParams({ sortType });
+          }}
+        />
+      </div>
+      <PlaceMarkingList
+        sortType={sortTypeParam || "POPULARITY"}
+        boundsParams={boundsAdjacentPlace}
+      />
     </>
   );
 };
 
-const PlaceMarkingNavigationBar = () => {
-  const navigate = useNavigate();
-  const { boundsParams, setMapQueryParams } = useMapQueryParams();
-
-  return (
-    <BackwardNavigationBar
-      onClick={() => {
-        navigate(ROUTER_PATH.MAP);
-        setMapQueryParams({
-          bounds: boundsParams,
-          sortType: "POPULARITY",
-        });
-      }}
-      label={<h1 className="text-grey-900 title-1">이 장소 관련 마킹</h1>}
-    />
-  );
-};
-
-const PlaceMarkingSortTypeFilter = () => {
-  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
-
-  return (
-    <div className="flex justify-end w-full px-4 mb-4">
-      <SortTypeFilter
-        options={["POPULARITY", "RECENT"]}
-        selectedOption={sortTypeParam || "POPULARITY"}
-        onSelect={(sortType) => {
-          setMapQueryParams({ sortType });
-        }}
-      />
-    </div>
-  );
-};
-
-const PlaceMarkingList = () => {
+interface PlaceMarkingListProps {
+  sortType: SortType;
+  boundsParams: Bounds;
+}
+const PlaceMarkingList = ({
+  sortType,
+  boundsParams,
+}: PlaceMarkingListProps) => {
   const location = useLocation();
 
   const { state } = location;
-
-  const { sortTypeParam } = useMapQueryParams();
-  const { boundsAdjacentPlace } = usePlaceQueryParams();
 
   const {
     data: markingList = [],
@@ -73,8 +80,8 @@ const PlaceMarkingList = () => {
     isFetchingNextPage,
     isLoading: isMarkingListLoading,
   } = useGetMarkingList({
-    ...boundsAdjacentPlace,
-    sortType: sortTypeParam,
+    ...boundsParams,
+    sortType,
     searchType: "LOCATION",
     filterData: (data) => data.markingId !== state?.markingInfo?.markingId,
   });
