@@ -27,7 +27,7 @@ export const PlaceMarkingList = () => {
 
   const { boundsParams, sortTypeParam, setMapQueryParams } =
     useMapQueryParams();
-  const { boundsAdjacentPlace, setPlaceQueryParams } = usePlaceQueryParams();
+  const { boundsAdjacentPlace } = usePlaceQueryParams();
 
   const { data: myFollowingIdsMap = {} } = useGetMyFollowingIdsMap();
   const { data: myBookmarkIdsMap = {} } = useGetMyBookmarkIdsMap();
@@ -61,10 +61,6 @@ export const PlaceMarkingList = () => {
       lng,
     });
     await map.setZoom(mapOptions.maxZoom);
-    setPlaceQueryParams({
-      lat,
-      lng,
-    });
   };
 
   return (
