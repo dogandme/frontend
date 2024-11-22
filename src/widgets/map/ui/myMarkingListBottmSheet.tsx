@@ -1,13 +1,14 @@
 import { useLocation } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem } from "@/widgets/marking/ui";
-import { useMapQueryParams } from "@/features/map/hooks";
+import { Bounds, useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { LatLng } from "@/entities/auth/api";
 import {
   useGetMarkingDetail,
   useGetUserMarkingList,
 } from "@/entities/marking/api";
+import { SortType } from "@/entities/marking/api";
 import {
   EmptyMyMarkingThumbnailGrid,
   TemporaryMarkingBar,
@@ -22,6 +23,9 @@ import { MarkingList } from "./markingList";
 export const MyMarkingListBottomSheet = () => {
   const nickname = useAuthStore.getState().nickname;
   const { data: profile } = useGetProfile({ nickname });
+  const { sortTypeParam, setMapQueryParams, boundsParams } =
+    useMapQueryParams();
+  const sortTypeOption = ["RECENT", "POPULARITY", "DISTANCE"] as const;
 
   // todo 회원이 아닐 경우
   if (!nickname) return null;
@@ -37,38 +41,47 @@ export const MyMarkingListBottomSheet = () => {
             <TemporaryMarkingBar tempCnt={profile.tempCnt} />
           </div>
         )}
-        <MyMarkingSortTypeFilter />
-        <MyMarkingList nickname={nickname} />
+        <div className="flex w-full justify-end">
+          <RangeFilter
+            options={["ALL_VIEW", "CURRENT_LOCATION", "MAP_LOCATION"]}
+          />
+          <SortTypeFilter
+            options={sortTypeOption}
+            selectedOption={
+              (sortTypeParam || "RECENT") as (typeof sortTypeOption)[number]
+            }
+            onSelect={(sortType) => {
+              setMapQueryParams({ sortType });
+            }}
+          />
+        </div>
+        <MyMarkingList
+          nickname={nickname}
+          sortType={sortTypeParam || "RECENT"}
+          boundsParams={boundsParams}
+        />
       </section>
     </div>
   );
 };
 
-const MyMarkingSortTypeFilter = () => {
-  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
-
-  return (
-    <div className="flex w-full justify-end">
-      <RangeFilter options={["ALL_VIEW", "CURRENT_LOCATION", "MAP_LOCATION"]} />
-      <SortTypeFilter
-        options={["RECENT", "POPULARITY", "DISTANCE"]}
-        selectedOption={sortTypeParam || "RECENT"}
-        onSelect={(sortType) => {
-          setMapQueryParams({ sortType });
-        }}
-      />
-    </div>
-  );
-};
-
-const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
+interface MyMarkingListProps {
+  nickname: Nickname;
+  sortType: SortType;
+  boundsParams: Bounds;
+}
+const MyMarkingList = ({
+  nickname,
+  sortType,
+  boundsParams,
+}: MyMarkingListProps) => {
+  const map = useMap();
   const { state } = useLocation();
   const { data: clickedMarking, isLoading: isClickedMarkingLoading } =
     useGetMarkingDetail({
       markingId: state?.markingInfo?.markingId,
     });
 
-  const { sortTypeParam, boundsParams } = useMapQueryParams();
   const {
     data: markingList = [],
     isLoading: isMarkingListLoading,
@@ -78,11 +91,9 @@ const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
   } = useGetUserMarkingList({
     ...boundsParams,
     nickname: nickname || "",
-    sortType: sortTypeParam,
+    sortType,
     filterData: (data) => data.markingId !== state?.markingInfo?.markingId,
   });
-
-  const map = useMap();
 
   const handleRegionClick = ({ lat, lng }: LatLng) => {
     map.setCenter({
