@@ -37,7 +37,7 @@ export const createMockMarking = (
     northRightLng: number;
   },
   nickname?: string,
-) => {
+): Marking => {
   return {
     markingId: id,
     region: "**시 **구 **동",
@@ -48,7 +48,7 @@ export const createMockMarking = (
           )}`.repeat(Math.random() * 10)
         : `content ${id} `.repeat(Math.random() * 10),
     previewImage: "fa805c91-8228-4ec4-927f-9eb876a480c3",
-    isVisible: "PUBLIC" as "PUBLIC" | "PRIVATE" | "FOLLOW_ONLY",
+    isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
     userId: id,
     nickName: nickname ?? `User${id}`,
