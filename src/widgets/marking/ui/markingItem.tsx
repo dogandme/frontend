@@ -41,7 +41,7 @@ export interface MarkingItemProps
     lat,
     lng,
     markingId,
-  }: LatLng & { markingId?: Marking["markingId"] }) => void;
+  }: Pick<Marking, "lat" | "lng" | "markingId">) => void;
   onDelete?: () => void;
   pet: Pick<PetInfo, "petId" | "profile" | "name">;
   queryKeys?: PutModifyMarkingArguments["queryKeys"];
