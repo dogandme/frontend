@@ -150,6 +150,10 @@ export const MapInitializer = () => {
   // 해당 이펙트는 place가 ROUTER_PATH.PLACE 면서 state가 없을 때 실행됩니다.
   // 이펙트의 용도는 placeParams의 값이 존재하지 않거나 boundsParams의 범위를 벗어난 경우에 placeParams 값을 boundsParams의 중심으로 설정하기 위함입니다.
   useEffect(() => {
+    if (ROUTER_PATH.PLACE !== pathname || state) {
+      return;
+    }
+
     const { southWestLat, northEastLat, southWestLng, northEastLng } =
       boundsParams;
 
@@ -157,29 +161,27 @@ export const MapInitializer = () => {
       return;
     }
 
-    if (ROUTER_PATH.PLACE === pathname && !state) {
-      const { lat, lng } = placeParams;
+    const { lat, lng } = placeParams;
 
-      if (!(southWestLat && northEastLat && southWestLng && northEastLng)) {
-        return;
-      }
-
-      if (
-        lat &&
-        lng &&
-        lat >= southWestLat &&
-        lat <= northEastLat &&
-        lng >= southWestLng &&
-        lng <= northEastLng
-      ) {
-        return;
-      }
-
-      setPlaceQueryParams({
-        lat: (southWestLat + northEastLat) / 2,
-        lng: (southWestLng + northEastLng) / 2,
-      });
+    if (!(southWestLat && northEastLat && southWestLng && northEastLng)) {
+      return;
     }
+
+    if (
+      lat &&
+      lng &&
+      lat >= southWestLat &&
+      lat <= northEastLat &&
+      lng >= southWestLng &&
+      lng <= northEastLng
+    ) {
+      return;
+    }
+
+    setPlaceQueryParams({
+      lat: (southWestLat + northEastLat) / 2,
+      lng: (southWestLng + northEastLng) / 2,
+    });
   }, [pathname, state, boundsParams]);
 
   // 해당 이펙트는 Link 나 navigate 등으로 라우팅 될 때 router state 가 존재하지 않는 경우 실행됩니다.
