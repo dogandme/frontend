@@ -35,7 +35,8 @@ const LocalMarkingList = () => {
   const { boundsParams, sortTypeParam } = useMapQueryParams();
 
   const {
-    data: markingList,
+    data: markingList = [],
+    isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -83,7 +84,7 @@ const LocalMarkingList = () => {
   };
 
   // TODO loading 처리 하기
-  if (!markingList) {
+  if (isLoading) {
     return <div>loading</div>;
   }
 
