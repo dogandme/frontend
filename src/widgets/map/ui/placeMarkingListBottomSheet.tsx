@@ -10,6 +10,7 @@ import {
   useGetMarkingDetail,
   useGetMarkingList,
 } from "@/entities/marking/api";
+import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import {
   useGetMyFollowingIdsMap,
   useGetMyBookmarkIdsMap,
@@ -67,10 +68,12 @@ const PlaceMarkingSelect = () => {
 };
 
 const PlaceMarkingItem = (marking: Marking) => {
+  const queryClient = useQueryClient();
   const map = useMap();
 
   const { data: myBookmarkIdsMap = {} } = useGetMyBookmarkIdsMap();
   const { data: myLikedIdsMap = {} } = useGetMyLikedIdsMap();
+  const { data: myFollowingIdsMap = {} } = useGetMyFollowingIdsMap();
 
   const handleRegionClick = async ({ lat, lng }: LatLng) => {
     await map.setCenter({
@@ -91,6 +94,13 @@ const PlaceMarkingItem = (marking: Marking) => {
       }
       isLiked={myLikedIdsMap[marking.markingId]}
       isBookmarked={myBookmarkIdsMap[marking.markingId]}
+      isFollowing={myFollowingIdsMap[marking.userId]}
+      onDelete={() => {
+        queryClient.invalidateQueries({
+          queryKey: ["markingList"],
+        });
+      }}
+      queryKeys={["marker", "markingList"]}
     />
   );
 };
@@ -104,18 +114,20 @@ const PlaceMarkingList = () => {
   const { boundsAdjacentPlace } = usePlaceQueryParams();
 
   const {
-    data: markingList,
+    data: markingList = [],
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isLoading: isMarkingListLoading,
   } = useGetMarkingList({
     ...boundsAdjacentPlace,
     sortType: sortTypeParam,
     searchType: "LOCATION",
   });
-  const { data: clickedMarking } = useGetMarkingDetail({
-    markingId: state?.markingInfo?.markingId,
-  });
+  const { data: clickedMarking, isLoading: isClickedMarkingLoading } =
+    useGetMarkingDetail({
+      markingId: state?.markingInfo?.markingId,
+    });
 
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -123,17 +135,22 @@ const PlaceMarkingList = () => {
     }
   });
 
+  if (isMarkingListLoading || isClickedMarkingLoading) {
+    return <div className="px-4">loading..</div>;
+  }
 
   return (
     <>
       <MarkingList display="list" className="px-4">
-        {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
+        {/* 특정 유저 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
         {clickedMarking && <PlaceMarkingItem {...clickedMarking} />}
-        <DividerLine axis="row" />
-        {markingList?.map((marking) =>
-          marking.markingId === clickedMarking?.markingId ? null : (
-            <PlaceMarkingItem {...marking} />
-          ),
+        {clickedMarking && markingList.length > 0 && <DividerLine axis="row" />}
+        {markingList.length === 0 && !clickedMarking ? (
+          <EmptyMarkingThumbnailGrid />
+        ) : (
+          markingList.map((marking) => (
+            <PlaceMarkingItem key={marking.markingId} {...marking} />
+          ))
         )}
       </MarkingList>
       <div className="h-[.125rem]" ref={setNode} />
