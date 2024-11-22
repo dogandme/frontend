@@ -3,13 +3,15 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem } from "@/widgets/marking/ui";
 import { useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
-import { LatLng } from "@/entities/auth/api";
 import {
   Marking,
   useGetMarkingDetail,
   useGetUserMarkingList,
 } from "@/entities/marking/api";
-import { TemporaryMarkingBar } from "@/entities/marking/ui";
+import {
+  EmptyMyMarkingThumbnailGrid,
+  TemporaryMarkingBar,
+} from "@/entities/marking/ui";
 import {
   Nickname,
   useGetMyBookmarkIdsMap,
@@ -19,6 +21,7 @@ import {
 import { useInfiniteScroll } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
+import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 
 export const MyMarkingListBottomSheet = () => {
@@ -68,23 +71,16 @@ const MyMarkingItem = (marking: Marking) => {
   const { data: myBookmarkIdsMap = {} } = useGetMyBookmarkIdsMap();
   const { data: myLikedIdsMap = {} } = useGetMyLikedIdsMap();
 
-  const handleRegionClick = ({ lat, lng }: LatLng) => {
-    map.setCenter({
-      lat,
-      lng,
-    });
-    map.setZoom(19);
-  };
-
   return (
     <MarkingItem
       {...marking}
-      onRegionClick={() =>
-        handleRegionClick({
+      onRegionClick={() => {
+        map.setCenter({
           lat: marking.lat,
           lng: marking.lng,
-        })
-      }
+        });
+        map.setZoom(mapOptions.maxZoom);
+      }}
       isLiked={myLikedIdsMap[marking.markingId]}
       isBookmarked={myBookmarkIdsMap[marking.markingId]}
     />
@@ -93,13 +89,15 @@ const MyMarkingItem = (marking: Marking) => {
 
 const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
   const { state } = useLocation();
-  const { data: clickedMarking } = useGetMarkingDetail({
-    markingId: state?.markingInfo?.markingId,
-  });
+  const { data: clickedMarking, isLoading: isClickedMarkingLoading } =
+    useGetMarkingDetail({
+      markingId: state?.markingInfo?.markingId,
+    });
 
   const { sortTypeParam, boundsParams } = useMapQueryParams();
   const {
-    data: markingList,
+    data: markingList = [],
+    isLoading: isMarkingListLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -115,17 +113,23 @@ const MyMarkingList = ({ nickname }: { nickname: Nickname }) => {
     }
   });
 
+  if (isMarkingListLoading || isClickedMarkingLoading) {
+    return <div>loading..</div>;
+  }
+
   return (
     <>
       <MarkingList display="list">
         {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
-        {clickedMarking && (
-          <>
-            <MyMarkingItem {...clickedMarking} />
-            <DividerLine axis="row" />
-          </>
+        {clickedMarking && <MyMarkingItem {...clickedMarking} />}
+        {clickedMarking && markingList.length > 0 && <DividerLine axis="row" />}
+        {markingList.length === 0 && !clickedMarking ? (
+          <EmptyMyMarkingThumbnailGrid />
+        ) : (
+          markingList.map((marking) => (
+            <MyMarkingItem key={marking.markingId} {...marking} />
+          ))
         )}
-        {markingList?.map((marking) => <MyMarkingItem {...marking} />)}
       </MarkingList>
       <div className="h-[.125rem]" ref={setNode} />
     </>

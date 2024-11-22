@@ -27,7 +27,7 @@ export const PlaceMarkingListBottomSheet = () => {
   return (
     <>
       <PlaceMarkingNavigationBar />
-      <PlaceMarkingSelect />
+      <PlaceMarkingSortTypeFilter />
       <PlaceMarkingList />
     </>
   );
@@ -51,7 +51,7 @@ const PlaceMarkingNavigationBar = () => {
   );
 };
 
-const PlaceMarkingSelect = () => {
+const PlaceMarkingSortTypeFilter = () => {
   const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
 
   return (
@@ -75,23 +75,16 @@ const PlaceMarkingItem = (marking: Marking) => {
   const { data: myLikedIdsMap = {} } = useGetMyLikedIdsMap();
   const { data: myFollowingIdsMap = {} } = useGetMyFollowingIdsMap();
 
-  const handleRegionClick = async ({ lat, lng }: LatLng) => {
-    await map.setCenter({
-      lat,
-      lng,
-    });
-    await map.setZoom(mapOptions.maxZoom);
-  };
-
   return (
     <MarkingItem
       {...marking}
-      onRegionClick={() =>
-        handleRegionClick({
+      onRegionClick={() => {
+        map.setCenter({
           lat: marking.lat,
           lng: marking.lng,
-        })
-      }
+        });
+        map.setZoom(mapOptions.maxZoom);
+      }}
       isLiked={myLikedIdsMap[marking.markingId]}
       isBookmarked={myBookmarkIdsMap[marking.markingId]}
       isFollowing={myFollowingIdsMap[marking.userId]}
