@@ -7,6 +7,7 @@ import {
   useGetAddressFromLatLng,
   useGetMarkingList,
 } from "@/entities/marking/api";
+import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
@@ -81,23 +82,32 @@ const LocalMarkingList = () => {
     map.setZoom(mapOptions.maxZoom);
   };
 
+  // TODO loading 처리 하기
+  if (!markingList) {
+    return <div>loading</div>;
+  }
+
   return (
     <>
-      <MarkingList display="grid">
-        {markingList?.map(({ markingId, previewImage, lat, lng }) => (
-          <button
-            key={markingId}
-            type="button"
-            className="aspect-square"
-            onClick={() => handleClick({ lat, lng, markingId })}
-          >
-            <img
-              className="w-full h-full object-cover"
-              src={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-            />
-          </button>
-        ))}
-      </MarkingList>
+      {markingList.length === 0 ? (
+        <EmptyMarkingThumbnailGrid />
+      ) : (
+        <MarkingList display="grid">
+          {markingList.map(({ markingId, previewImage, lat, lng }) => (
+            <button
+              key={markingId}
+              type="button"
+              className="aspect-square"
+              onClick={() => handleClick({ lat, lng, markingId })}
+            >
+              <img
+                className="w-full h-full object-cover"
+                src={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
+              />
+            </button>
+          ))}
+        </MarkingList>
+      )}
       <div className="h-[.125rem]" ref={setNode} />
     </>
   );
