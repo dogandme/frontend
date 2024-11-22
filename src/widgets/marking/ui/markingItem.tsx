@@ -37,7 +37,11 @@ import type { MarkingItemProviderValue } from "../store";
 
 export interface MarkingItemProps
   extends Omit<Marking, "isTempSaved" | "userId" | "pet"> {
-  onRegionClick: ({ lat, lng }: LatLng) => void;
+  onRegionClick: ({
+    lat,
+    lng,
+    markingId,
+  }: LatLng & { markingId?: Marking["markingId"] }) => void;
   onDelete?: () => void;
   pet: Pick<PetInfo, "petId" | "profile" | "name">;
   queryKeys?: PutModifyMarkingArguments["queryKeys"];
@@ -445,12 +449,12 @@ const MarkingItemImages = () => {
 };
 
 const MarkingItemRegion = () => {
-  const { onRegionClick, region, lat, lng } = useMarkingItemProps();
+  const { onRegionClick, region, lat, lng, markingId } = useMarkingItemProps();
   return (
     <div
       className="flex pr-4 justify-center items-center gap-[.625rem] h-8 text-tangerine-500 cursor-pointer"
       onClick={() => {
-        onRegionClick?.({ lat, lng });
+        onRegionClick?.({ lat, lng, markingId });
       }}
     >
       <MyLocationIcon />
