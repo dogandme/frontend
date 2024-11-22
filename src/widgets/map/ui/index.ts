@@ -6,5 +6,5 @@ export * from "./mapInitializer";
 export * from "./mapBottomSheet";
 export * from "./localMarkingList";
 export * from "./placeMarkingListBottomSheet";
-export * from "./myMarkingList";
+export * from "./myMarkingListBottmSheet";
 export * from "./myActivityList";
