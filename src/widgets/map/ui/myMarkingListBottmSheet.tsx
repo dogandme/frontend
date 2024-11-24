@@ -90,7 +90,7 @@ const MyMarkingList = ({
     isFetchingNextPage,
   } = useGetUserMarkingList({
     ...boundsParams,
-    nickname: nickname || "",
+    nickname,
     sortType,
     filterData: (data) => data.markingId !== state?.markingInfo?.markingId,
   });
