@@ -48,7 +48,8 @@ export const MyMarkingListBottomSheet = () => {
           <SortTypeFilter
             options={sortTypeOption}
             selectedOption={
-              (sortTypeParam || "RECENT") as (typeof sortTypeOption)[number]
+              (sortTypeParam ||
+                sortTypeOption[0]) as (typeof sortTypeOption)[number]
             }
             onSelect={(sortType) => {
               setMapQueryParams({ sortType });

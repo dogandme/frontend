@@ -59,7 +59,10 @@ export const UserMarkingPage = withAuth(() => {
         <div className="flex w-full justify-end">
           <SortTypeFilter
             options={sortTypeOption}
-            selectedOption={sortTypeParam as (typeof sortTypeOption)[number]}
+            selectedOption={
+              (sortTypeParam ||
+                sortTypeOption[0]) as (typeof sortTypeOption)[number]
+            }
             onSelect={(sortType) => {
               setMapQueryParams({ sortType });
             }}
