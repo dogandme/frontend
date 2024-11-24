@@ -12,7 +12,6 @@ import {
 import type { PutModifyMarkingArguments } from "@/features/marking/api";
 import { useMarkingFormModal } from "@/features/marking/lib";
 import { EditMarkingFormModal } from "@/features/marking/ui";
-import type { LatLng } from "@/entities/auth/api";
 import type { Marking } from "@/entities/marking/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import type { PetInfo } from "@/entities/profile/api";
