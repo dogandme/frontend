@@ -5,7 +5,7 @@ import {
 } from "@/widgets/follow";
 import { FollowingUserItem } from "@/widgets/follow";
 import { useGetFollowerList } from "@/entities/follow/api";
-import { useGetMyFollowingIdsMap } from "@/entities/profile/api";
+import { useGetMyProfile } from "@/entities/profile/api";
 import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
@@ -15,7 +15,7 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
  */
 export const FollowerPage = withAuth(() => {
   const { nicknameParams, isMyPage } = useNicknameParams();
-  const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
+  const { data: myProfile } = useGetMyProfile();
   const {
     data: followerList,
     fetchNextPage,
@@ -31,7 +31,7 @@ export const FollowerPage = withAuth(() => {
   });
 
   // TODO 로딩 상태 생각해보기
-  if (!myFollowingIdsMap) {
+  if (!myProfile) {
     return <div>내 정보를 가져오는 중...</div>;
   }
 
@@ -49,7 +49,7 @@ export const FollowerPage = withAuth(() => {
               nickname={nickname}
               petName={pet.name}
               profile={pet.profile}
-              isFollowing={myFollowingIdsMap[userId]}
+              isFollowing={myProfile.myFollowingIdsMap[userId]}
             />
           ) : (
             <FollowingUserItem
@@ -57,7 +57,7 @@ export const FollowerPage = withAuth(() => {
               nickname={nickname}
               petName={pet.name}
               profile={pet.profile}
-              isFollowing={myFollowingIdsMap[userId]}
+              isFollowing={myProfile.myFollowingIdsMap[userId]}
             />
           ),
         )}

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { mapOptions } from "@/widgets/map/constants";
-import { PlaceMarkingList } from "@/widgets/map/ui";
+import { PlaceMarkingListBottomSheet } from "@/widgets/map/ui";
 import { MAP_INITIAL_ZOOM } from "@/features/map/constants";
 import { useMapQueryParams } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
@@ -29,7 +29,7 @@ export const PlaceMarkingPage = () => {
   return (
     <>
       {data && <MarkingPins tiles={data} />}
-      <PlaceMarkingList />
+      <PlaceMarkingListBottomSheet />
     </>
   );
 };

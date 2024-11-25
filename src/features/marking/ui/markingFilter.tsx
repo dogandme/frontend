@@ -53,23 +53,23 @@ const MarkingFilterButton = ({
  * 동네 마킹: [인기순] (기본값), [최신순], [가까운순] 제공
  * 이장소 관련 마킹: [인기순] (기본값), [최신순] 제공
  *
- * @param options: "RECENT", "POPULAR", "DISTANCE"로 구성된 배열
+ * @param options: "RECENT" |"POPULAR" |"DISTANCE"으로 확장된 제네릭 타입 배열
  * @param defaultOptionIdx: 기본 옵션 인덱스 (기본값: 0)
  * @param selectedOption: 선택된 옵션
  * @param onSelect: 옵션 선택 시 호출되는 콜백
  */
-export const SortTypeFilter = ({
+export const SortTypeFilter = <T extends readonly SortType[]>({
   options,
   defaultOptionIdx = 0,
   selectedOption,
   onSelect,
 }: {
-  options: SortType[];
+  options: T;
   defaultOptionIdx?: number;
   selectedOption: SortType;
-  onSelect?: (sortType: SortType) => void;
+  onSelect?: (sortType: T[number]) => void;
 }) => {
-  const handleSelect = (sortType: SortType) => {
+  const handleSelect = (sortType: T[number]) => {
     if (sortType === selectedOption) return;
 
     onSelect?.(sortType);

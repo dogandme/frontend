@@ -59,11 +59,6 @@ export const MyActivityList = withAuth(() => {
                 });
                 map.setZoom(19);
               }}
-              // todo isLiked, isBookmarked 설정
-              isLiked={false}
-              isBookmarked={false}
-              // todo isFollowing 삭제
-              isFollowing={false}
               {...marking}
             />
           ))}

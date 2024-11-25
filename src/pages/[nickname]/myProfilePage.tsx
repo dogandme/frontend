@@ -5,7 +5,7 @@ import {
   MyProfileOverview,
 } from "@/widgets/profile/ui";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
-import { useGetProfile } from "@/entities/profile/api";
+import { useGetMyProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -14,11 +14,9 @@ import { NavigationBar } from "@/shared/ui/navigationbar";
 
 export const MyProfilePage = () => {
   const { nicknameParams } = useNicknameParams();
-  const { data, isLoading } = useGetProfile({
-    nickname: nicknameParams,
-  });
+  const { data } = useGetMyProfile();
 
-  if (!data || isLoading) {
+  if (!data) {
     return <div>Loading...</div>;
   }
 

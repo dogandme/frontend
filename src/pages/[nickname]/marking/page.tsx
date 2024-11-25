@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MarkingList } from "@/widgets/map/ui/markingList";
 import { MarkingItem } from "@/widgets/marking/ui";
+import { useMapQueryParams } from "@/features/map/hooks";
 import { SortTypeFilter } from "@/features/marking/ui";
 import {
   type Marking,
@@ -11,48 +11,90 @@ import {
 } from "@/entities/marking/api";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
 import {
-  useGetMyBookmarkIdsMap,
-  useGetMyFollowingIdsMap,
-  useGetMyLikedIdsMap,
-  useGetProfile,
-} from "@/entities/profile/api";
+  EmptyMarkingThumbnailGrid,
+  EmptyMyMarkingThumbnailGrid,
+} from "@/entities/marking/ui";
+import { useGetProfile, Nickname } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const UserMarkingPage = withAuth(() => {
+  const { nicknameParams, isMyPage } = useNicknameParams();
+
+  const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
+  const sortTypeOption = ["RECENT", "POPULARITY"] as const;
+
+  const { data: profile } = useGetProfile({ nickname: nicknameParams });
+
+  return (
+    <div className="px-4">
+      <BackwardNavigationBar
+        label={
+          <h1 className="title-1 text-grey-900 py-4">
+            {isMyPage ? "내" : nicknameParams} 마킹
+          </h1>
+        }
+      />
+      <section className="pb-4 flex flex-col gap-4">
+        {isMyPage &&
+          typeof profile?.tempCnt === "number" &&
+          profile.tempCnt > 0 && (
+            <div className="pt-4">
+              <TemporaryMarkingBar tempCnt={profile.tempCnt} />
+            </div>
+          )}
+        <div className="flex w-full justify-end">
+          <SortTypeFilter
+            options={sortTypeOption}
+            selectedOption={sortTypeParam || sortTypeOption[0]}
+            onSelect={(sortType) => {
+              setMapQueryParams({ sortType });
+            }}
+          />
+        </div>
+        <MyMarkingList
+          nickname={nicknameParams}
+          isMyPage={isMyPage}
+          sortType={
+            (sortTypeParam || "RECENT") as (typeof sortTypeOption)[number]
+          }
+        />
+      </section>
+    </div>
+  );
+}, ["ROLE_GUEST", "ROLE_USER"]);
+
+interface MyMarkingListProps {
+  nickname: Nickname;
+  isMyPage: boolean;
+  sortType: Exclude<SortType, "DISTANCE">;
+}
+const MyMarkingList = ({
+  nickname,
+  isMyPage,
+  sortType,
+}: MyMarkingListProps) => {
   const { state } = useLocation() as { state: null | { markingId: number } };
   const navigate = useNavigate();
 
-  const sortTypeOptions: Exclude<SortType, "DISTANCE">[] = [
-    "RECENT",
-    "POPULARITY",
-  ];
-  const [selectedSortType, setSelectedSortType] = useState<
-    Exclude<SortType, "DISTANCE">
-  >(sortTypeOptions[0]);
+  const { data: clickedMarking, isLoading: isClickedMarkingLoading } =
+    useGetMarkingDetail({
+      markingId: state?.markingId,
+    });
 
-  const markingId = state?.markingId;
-  const { nicknameParams, isMyPage } = useNicknameParams();
-
-  const { nickname: myNickname, token } = useAuthStore.getState();
-
-  const { data: myBookmarkIdsMap } = useGetMyBookmarkIdsMap();
-  const { data: myLikedIdsMap } = useGetMyLikedIdsMap();
-  const { data: myFollowingIdsMap } = useGetMyFollowingIdsMap();
-  const { data: profile } = useGetProfile({ nickname: myNickname });
-  const { data: clickedMarking } = useGetMarkingDetail({ markingId });
   const {
-    data: markingList,
+    data: markingList = [],
+    isLoading: isMarkingListLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useGetAllMarkingsOfUser({
-    nickname: nicknameParams,
-    sortType: selectedSortType,
+    nickname,
+    sortType,
+    filterData: (data) => data.markingId !== state?.markingId,
   });
 
   const [setNode] = useInfiniteScroll(() => {
@@ -79,81 +121,39 @@ export const UserMarkingPage = withAuth(() => {
     });
   };
 
-  // todo ui 표시
-  if (!token || !myFollowingIdsMap || !myBookmarkIdsMap || !myLikedIdsMap)
-    return null;
+  if (isMarkingListLoading || isClickedMarkingLoading) {
+    return <div>loading..</div>;
+  }
 
   return (
-    <div className="px-4">
-      <BackwardNavigationBar
-        label={
-          <h1 className="title-1 text-grey-900 py-4">
-            {nicknameParams === myNickname ? "내" : nicknameParams} 마킹
-          </h1>
-        }
-      />
-
-      <section className="pb-4 flex flex-col gap-4">
-        {nicknameParams === myNickname &&
-          typeof profile?.tempCnt === "number" &&
-          profile.tempCnt > 0 && (
-            <div className="pt-4">
-              <TemporaryMarkingBar tempCnt={profile.tempCnt} />
-            </div>
-          )}
-
-        <div className="flex w-full justify-end">
-          <SortTypeFilter
-            options={sortTypeOptions}
-            selectedOption={selectedSortType}
-            onSelect={(sortType) => {
-              setSelectedSortType(sortType as Exclude<SortType, "DISTANCE">);
-            }}
+    <>
+      <MarkingList display="list">
+        {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
+        {clickedMarking && (
+          <>
+            <MarkingItem
+              onRegionClick={handleRegionClick}
+              {...clickedMarking}
+            />
+            {markingList.length > 0 && <DividerLine axis="row" />}
+          </>
+        )}
+        {markingList.length === 0 &&
+          !clickedMarking &&
+          (isMyPage ? (
+            <EmptyMyMarkingThumbnailGrid />
+          ) : (
+            <EmptyMarkingThumbnailGrid />
+          ))}
+        {markingList.map((marking) => (
+          <MarkingItem
+            key={marking.markingId}
+            onRegionClick={handleRegionClick}
+            {...marking}
           />
-        </div>
-
-        <MarkingList display="list">
-          {clickedMarking && (
-            <>
-              <MarkingItem
-                {...clickedMarking}
-                onRegionClick={() =>
-                  handleRegionClick({
-                    markingId: clickedMarking.markingId,
-                    lat: clickedMarking.lat,
-                    lng: clickedMarking.lng,
-                  })
-                }
-                isFollowing={myFollowingIdsMap[clickedMarking.userId]}
-                isLiked={myLikedIdsMap[clickedMarking.markingId]}
-                isBookmarked={myBookmarkIdsMap[clickedMarking.markingId]}
-              />
-              <DividerLine axis="row" />
-            </>
-          )}
-          {markingList?.map((marking) => {
-            if (marking.markingId === markingId) return;
-
-            return (
-              <MarkingItem
-                key={marking.markingId}
-                onRegionClick={() =>
-                  handleRegionClick({
-                    markingId: marking.markingId,
-                    lat: marking.lat,
-                    lng: marking.lng,
-                  })
-                }
-                isLiked={myLikedIdsMap[marking.markingId]}
-                isBookmarked={myBookmarkIdsMap[marking.markingId]}
-                isFollowing={myFollowingIdsMap[marking.userId]}
-                {...marking}
-              />
-            );
-          })}
-        </MarkingList>
-        <div className="h-[.125rem]" ref={setNode} />
-      </section>
-    </div>
+        ))}
+      </MarkingList>
+      <div className="h-[.125rem]" ref={setNode} />
+    </>
   );
-}, ["ROLE_GUEST", "ROLE_USER"]);
+};
