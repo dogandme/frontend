@@ -7,12 +7,12 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const OtherProfilePage = () => {
   const { nicknameParams } = useNicknameParams();
-  const { data, isLoading } = useGetProfile({
+  const { data } = useGetProfile({
     nickname: nicknameParams,
   });
-  const { data: myProfile, isLoading: isMyProfileLoading } = useGetMyProfile();
+  const { data: myProfile } = useGetMyProfile();
 
-  if (!data || isLoading || !myProfile || isMyProfileLoading) {
+  if (!data || !myProfile) {
     return <div>Loading...</div>;
   }
 
