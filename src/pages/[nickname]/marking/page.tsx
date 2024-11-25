@@ -14,11 +14,7 @@ import {
   EmptyMarkingThumbnailGrid,
   EmptyMyMarkingThumbnailGrid,
 } from "@/entities/marking/ui";
-import {
-  useGetProfile,
-  useGetMyProfile,
-  Nickname,
-} from "@/entities/profile/api";
+import { useGetProfile, Nickname } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
@@ -31,13 +27,7 @@ export const UserMarkingPage = withAuth(() => {
   const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
   const sortTypeOption = ["RECENT", "POPULARITY"] as const;
 
-  const { data: myProfile } = useGetMyProfile();
   const { data: profile } = useGetProfile({ nickname: nicknameParams });
-
-  // TODO 로딩 처리
-  if (!myProfile) {
-    return <div>내 정보를 가져오는 중...</div>;
-  }
 
   return (
     <div className="px-4">
