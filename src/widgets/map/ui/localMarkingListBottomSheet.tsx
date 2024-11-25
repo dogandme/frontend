@@ -1,9 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
-import { useMapQueryParams } from "@/features/map/hooks";
+import { Bounds, useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import {
   Marking,
+  SortType,
   useGetAddressFromLatLng,
   useGetMarkingList,
 } from "@/entities/marking/api";
@@ -15,24 +16,47 @@ import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 
 export const LocalMarkingListBottomSheet = () => {
+  const { boundsParams, setMapQueryParams, sortTypeParam } =
+    useMapQueryParams();
+  const sortTypeOptions = ["POPULARITY", "RECENT", "DISTANCE"] as const;
+
   return (
     <div className="px-4">
       {/* todo 버튼 활성화 여부에 따라 내용 바뀜 */}
       <h1 className="title-1 text-grey-900 py-4">동네 마킹</h1>
       <div className="flex justify-between items-center mb-4">
-        <LocalMarkingListBottomSheetHeader />
-        <LocationMarkingListFilter />
+        <LocalMarkingListBottomSheetHeader boundsParams={boundsParams} />
+        <div className="flex">
+          <RangeFilter options={["CURRENT_LOCATION", "MAP_LOCATION"]} />
+          <SortTypeFilter
+            options={sortTypeOptions}
+            selectedOption={sortTypeParam || sortTypeOptions[0]}
+            onSelect={(sortType) => {
+              setMapQueryParams({ sortType });
+            }}
+          />
+        </div>
       </div>
-      <LocalMarkingList />
+      <LocalMarkingList
+        sortType={sortTypeParam || sortTypeOptions[0]}
+        boundsParams={boundsParams}
+      />
     </div>
   );
 };
 
-const LocalMarkingList = () => {
+interface LocalMarkingListProps {
+  sortType: SortType;
+  boundsParams: Bounds;
+}
+
+const LocalMarkingList = ({
+  sortType,
+  boundsParams,
+}: LocalMarkingListProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const map = useMap();
-  const { boundsParams, sortTypeParam } = useMapQueryParams();
 
   const {
     data: markingList = [],
@@ -42,7 +66,7 @@ const LocalMarkingList = () => {
     isFetchingNextPage,
   } = useGetMarkingList({
     ...boundsParams,
-    sortType: sortTypeParam,
+    sortType,
     searchType: "NEARBY",
   });
 
@@ -114,9 +138,12 @@ const LocalMarkingList = () => {
   );
 };
 
-const LocalMarkingListBottomSheetHeader = () => {
-  const { boundsParams } = useMapQueryParams();
-
+interface LocalMarkingBottomSheetHeaderProps {
+  boundsParams: Bounds;
+}
+const LocalMarkingListBottomSheetHeader = ({
+  boundsParams,
+}: LocalMarkingBottomSheetHeaderProps) => {
   const { northEastLat, northEastLng, southWestLat, southWestLng } =
     boundsParams;
 
