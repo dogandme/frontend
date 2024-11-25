@@ -123,26 +123,27 @@ const PlaceMarkingList = ({
       <MarkingList display="list" className="px-4">
         {/* 특정 유저 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
         {clickedMarking && (
-          <MarkingItem
-            {...clickedMarking}
-            onDelete={handleDelete}
-            onRegionClick={handleRegionClick}
-            queryKeys={["marker", "markingList"]}
-          />
-        )}
-        {clickedMarking && markingList.length > 0 && <DividerLine axis="row" />}
-        {markingList.length === 0 && !clickedMarking ? (
-          <EmptyMarkingThumbnailGrid />
-        ) : (
-          markingList.map((marking) => (
+          <>
             <MarkingItem
-              {...marking}
+              {...clickedMarking}
               onDelete={handleDelete}
               onRegionClick={handleRegionClick}
               queryKeys={["marker", "markingList"]}
             />
-          ))
+            {markingList.length > 0 && <DividerLine axis="row" />}
+          </>
         )}
+        {markingList.length === 0 && !clickedMarking && (
+          <EmptyMarkingThumbnailGrid />
+        )}
+        {markingList.map((marking) => (
+          <MarkingItem
+            {...marking}
+            onDelete={handleDelete}
+            onRegionClick={handleRegionClick}
+            queryKeys={["marker", "markingList"]}
+          />
+        ))}
       </MarkingList>
       <div className="h-[.125rem]" ref={setNode} />
     </>

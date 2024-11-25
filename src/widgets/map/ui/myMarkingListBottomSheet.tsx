@@ -119,20 +119,24 @@ const MyMarkingList = ({
       <MarkingList display="list">
         {/* 내 마킹 페이지에서 특정 마커를 클릭한 경우 나타나는 마킹 아이템 */}
         {clickedMarking && (
-          <MarkingItem onRegionClick={handleRegionClick} {...clickedMarking} />
-        )}
-        {clickedMarking && markingList.length > 0 && <DividerLine axis="row" />}
-        {markingList.length === 0 && !clickedMarking ? (
-          <EmptyMyMarkingThumbnailGrid />
-        ) : (
-          markingList.map((marking) => (
+          <>
             <MarkingItem
-              key={marking.markingId}
               onRegionClick={handleRegionClick}
-              {...marking}
+              {...clickedMarking}
             />
-          ))
+            {markingList.length > 0 && <DividerLine axis="row" />}
+          </>
         )}
+        {markingList.length === 0 && !clickedMarking && (
+          <EmptyMyMarkingThumbnailGrid />
+        )}
+        {markingList.map((marking) => (
+          <MarkingItem
+            key={marking.markingId}
+            onRegionClick={handleRegionClick}
+            {...marking}
+          />
+        ))}
       </MarkingList>
       <div className="h-[.125rem]" ref={setNode} />
     </>
