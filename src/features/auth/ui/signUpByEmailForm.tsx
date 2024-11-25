@@ -128,8 +128,6 @@ const Email = () => {
 };
 
 const SendCodeButton = () => {
-  const handleOpenSnackbar = useSnackBar();
-
   const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
   const isTimeLeftLessThanOneMinute = useSignUpByEmailFormStore(
     (state) => state.isTimeLeftLessThanOneMinute,
@@ -154,7 +152,6 @@ const SendCodeButton = () => {
       { email },
       {
         onSuccess: () => {
-          handleOpenSnackbar("메일로 인증코드가 전송되었습니다");
           setTimeLeft(1000 * 60 * 3);
         },
       },
