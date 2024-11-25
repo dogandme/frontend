@@ -44,10 +44,7 @@ export const PlaceMarkingListBottomSheet = () => {
       <div className="flex justify-end w-full px-4 mb-4">
         <SortTypeFilter
           options={sortTypeOption}
-          selectedOption={
-            (sortTypeParam ||
-              sortTypeOption[0]) as (typeof sortTypeOption)[number]
-          }
+          selectedOption={sortTypeParam || sortTypeOption[0]}
           onSelect={(sortType) => {
             setMapQueryParams({ sortType });
           }}
