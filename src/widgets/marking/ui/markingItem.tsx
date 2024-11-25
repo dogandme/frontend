@@ -31,8 +31,11 @@ import {
 } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 import { List } from "@/shared/ui/list";
-import { MarkingItemContext, useMarkingItemProps } from "../store";
-import type { MarkingItemProviderValue } from "../store";
+import {
+  MarkingItemContext,
+  useMarkingItemProps,
+  type MarkingItemContextValue,
+} from "../store";
 
 export interface MarkingItemProps
   extends Omit<Marking, "isTempSaved" | "userId" | "pet"> {
@@ -51,7 +54,7 @@ const MarkingItemPropsProvider = ({
   value,
 }: {
   children: React.ReactNode;
-  value: MarkingItemProviderValue;
+  value: MarkingItemContextValue;
 }) => (
   <MarkingItemContext.Provider value={value}>
     {children}

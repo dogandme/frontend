@@ -4,14 +4,15 @@ import type { MarkingItemProps } from "../ui";
 /**
  * 해당 컨텍스트는 MarkingItem 컴포넌트의 props drilling 문제를 해결하기 위해 생성되었습니다.
  */
-export interface MarkingItemProviderValue extends MarkingItemProps {
+export interface MarkingItemContextValue extends MarkingItemProps {
   isFollowing: boolean;
   isBookmarked: boolean;
   isLiked: boolean;
 }
 
-export const MarkingItemContext =
-  createContext<MarkingItemProviderValue | null>(null);
+export const MarkingItemContext = createContext<MarkingItemContextValue | null>(
+  null,
+);
 export const useMarkingItemProps = () => {
   const props = useContext(MarkingItemContext);
   if (!props) {
