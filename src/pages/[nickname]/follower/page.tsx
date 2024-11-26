@@ -31,12 +31,7 @@ export const FollowerPage = withAuth(() => {
     }
   });
 
-  // TODO 로딩 상태 생각해보기
-  if (!myProfile) {
-    return <div>내 정보를 가져오는 중...</div>;
-  }
-
-  if (!followerList) {
+  if (!followerList || !myProfile) {
     return (
       <section>
         <BackwardNavigationBar

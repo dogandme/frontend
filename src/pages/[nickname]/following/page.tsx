@@ -28,11 +28,7 @@ export const FollowingPage = withAuth(() => {
     }
   });
 
-  if (!myProfile) {
-    return <div>loading...</div>;
-  }
-
-  if (!followingList) {
+  if (!followingList || !myProfile) {
     return (
       <section>
         <BackwardNavigationBar
