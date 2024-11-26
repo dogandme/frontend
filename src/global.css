@@ -230,3 +230,7 @@ img[alt="Google"] {
 .snackbar-close-map {
   animation: snackbar-close-map 0.5s ease-in-out forwards;
 }
+
+.skeleton {
+  @apply animate-pulse bg-grey-200 text-grey-200;
+}
