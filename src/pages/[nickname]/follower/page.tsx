@@ -1,6 +1,7 @@
 import {
   FollowerUserItem,
   FollowItemContainer,
+  FollowItemLoadingContainer,
   FollowNavigationBar,
 } from "@/widgets/follow";
 import { FollowingUserItem } from "@/widgets/follow";
@@ -35,6 +36,18 @@ export const FollowerPage = withAuth(() => {
     return <div>내 정보를 가져오는 중...</div>;
   }
 
+  if (!followerList) {
+    return (
+      <section>
+        <BackwardNavigationBar
+          label={<h1 className="title-1 text-grey-900">{nicknameParams}</h1>}
+        />
+        <FollowNavigationBar nickname={nicknameParams} />
+        <FollowItemLoadingContainer />
+      </section>
+    );
+  }
+
   return (
     <section>
       <BackwardNavigationBar
@@ -42,7 +55,7 @@ export const FollowerPage = withAuth(() => {
       />
       <FollowNavigationBar nickname={nicknameParams} />
       <FollowItemContainer>
-        {followerList?.map(({ userId, nickname, pet }) =>
+        {followerList.map(({ userId, nickname, pet }) =>
           isMyPage ? (
             <FollowerUserItem
               key={userId}
