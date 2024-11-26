@@ -80,7 +80,7 @@ export const TemporaryMarkingItemSkeleton = () => (
         {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
           <div
             key={key}
-            className="relative w-[7.5rem] h-[7.5rem]rounded-2xl flex justify-center items-center flex-shrink-0 skeleton"
+            className="relative w-[7.5rem] h-[7.5rem] rounded-2xl flex justify-center items-center flex-shrink-0 skeleton"
           >
             <div className="w-full h-full object-cover no-drag rounded-2xl" />
           </div>
