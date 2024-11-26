@@ -10,7 +10,7 @@ export const FollowItemContainer = ({
   </section>
 );
 
-export const FollowItemLoadingContainer = () => {
+export const FollowItemContainerSkeleton = () => {
   return (
     <FollowItemContainer>
       {Array.from({ length: 20 }, (_, idx) => idx).map((key) => (

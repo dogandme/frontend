@@ -3,7 +3,7 @@ import { ProfileOverViewSkeleton } from "@/widgets/profile/ui";
 import { useNicknameParams } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
-export const ProfileLoadingPage = () => {
+export const ProfilePageSkeleton = () => {
   const { nicknameParams, isMyPage } = useNicknameParams();
 
   return (

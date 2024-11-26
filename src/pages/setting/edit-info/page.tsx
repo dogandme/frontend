@@ -15,7 +15,7 @@ export const EditInfoPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
 
   if (!myInfo) {
-    return <EditInfoLoadingPage />;
+    return <EditInfoPageSkeleton />;
   }
 
   const { age, gender, regions, nickLastModDt } = myInfo;
@@ -36,7 +36,7 @@ export const EditInfoPage = withAuth(() => {
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
 
-const EditInfoLoadingPage = () => {
+const EditInfoPageSkeleton = () => {
   return (
     <>
       <BackwardNavigationBar

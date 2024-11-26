@@ -1,7 +1,7 @@
 import {
   FollowerUserItem,
   FollowItemContainer,
-  FollowItemLoadingContainer,
+  FollowItemContainerSkeleton,
   FollowNavigationBar,
 } from "@/widgets/follow";
 import { FollowingUserItem } from "@/widgets/follow";
@@ -38,7 +38,7 @@ export const FollowerPage = withAuth(() => {
           label={<h1 className="title-1 text-grey-900">{nicknameParams}</h1>}
         />
         <FollowNavigationBar nickname={nicknameParams} />
-        <FollowItemLoadingContainer />
+        <FollowItemContainerSkeleton />
       </section>
     );
   }

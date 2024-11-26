@@ -14,12 +14,12 @@ export const AccountManagementPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
 
   if (!myInfo) {
-    return <AccountManagementLoadingPage />;
+    return <AccountManagementPageSkeleton />;
   }
 
   const { email, socialType, isPasswordSet } = myInfo;
 
-  return (
+  return ( 
     <>
       <BackwardNavigationBar
         label={<h1 className="title-1 text-grey-700">계정 관리</h1>}
@@ -34,7 +34,7 @@ export const AccountManagementPage = withAuth(() => {
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
 
-const AccountManagementLoadingPage = () => {
+const AccountManagementPageSkeleton = () => {
   return (
     <>
       <BackwardNavigationBar
