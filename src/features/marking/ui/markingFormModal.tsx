@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { SelectOpener } from "@/entities/auth/ui";
 import { useGetAddressFromLatLng } from "@/entities/marking/api";
-import { useSnackBar } from "@/shared/lib";
 import {
   MARKING_VISIBILITY_MAP,
   MARKING_VISIBILITY_ENTRIES,
 } from "@/entities/marking/constants";
+import { useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -77,6 +77,21 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
     return;
   }
 
+  // 로딩 상태
+  // TODO 에러 상태 처리 시 변경 하기
+  if (data === undefined) {
+    return (
+      <button className="flex gap-[0.625rem] items-center">
+        <span className="text-tangerine-500">
+          <MyLocationIcon />
+        </span>
+        <span className="btn-2 text-start skeleton">
+          loading loading loading
+        </span>
+      </button>
+    );
+  }
+
   return (
     <button
       onClick={onCloseMarkingModal}
@@ -85,11 +100,7 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
       <span className="text-tangerine-500">
         <MyLocationIcon />
       </span>
-      {isSuccess ? (
-        <span className="btn-2 text-start">{data.region}</span>
-      ) : (
-        <span className="animate-pulse w-44 bg-grey-200 rounded-2xl"></span>
-      )}
+      <span className="btn-2 text-start">{data.region}</span>
     </button>
   );
 };

@@ -161,6 +161,14 @@ const LocalMarkingListBottomSheetHeader = ({
     lng,
   });
 
+  // TODO 에러 처리 시 변경 하기
+  if (data === undefined) {
+    <div className="flex gap-1 text-tangerine-500 items-center">
+      <MyLocationIcon width={20} height={20} />
+      <span className="body-2 skeleton">loading loading loading</span>
+    </div>;
+  }
+
   return (
     <div className="flex gap-1 text-tangerine-500 items-center">
       <MyLocationIcon width={20} height={20} />
