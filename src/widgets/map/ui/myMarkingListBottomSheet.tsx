@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
-import { MarkingItem } from "@/widgets/marking/ui";
+import { MarkingItem, MarkingItemSkeleton } from "@/widgets/marking/ui";
 import { Bounds, useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import { LatLng } from "@/entities/auth/api";
@@ -108,7 +108,13 @@ const MyMarkingList = ({
   });
 
   if (isMarkingListLoading || isClickedMarkingLoading) {
-    return <div>loading..</div>;
+    return (
+      <MarkingList display="list">
+        {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
+          <MarkingItemSkeleton key={key} />
+        ))}
+      </MarkingList>
+    );
   }
 
   return (

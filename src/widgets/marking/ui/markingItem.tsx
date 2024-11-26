@@ -140,6 +140,44 @@ export const MarkingItem = (props: MarkingItemProps) => {
   );
 };
 
+export const MarkingItemSkeleton = () => {
+  return (
+    <li className="flex flex-col gap-2">
+      <div className="flex justify-between items-center">
+        <MarkingItemRegionSkeleton />
+      </div>
+      <header className="flex items-center justify-between">
+        <div className="flex justify-between items-center gap-1 ">
+          <MarkingItemProfileImageSkeleton />
+          <MarkingItemNicknameSkeleton />
+          <DividerLine axis="col" />
+          <MarkingItemPetNameSkeleton />
+        </div>
+        <Button
+          size="xSmall"
+          variant="filled"
+          colorType="primary"
+          fullWidth={false}
+          className="skeleton"
+        >
+          팔로우
+        </Button>
+      </header>
+      <main className="flex flex-col gap-2">
+        <MarkingItemImagesSkeleton />
+        <div className="flex justify-between">
+          <div className="w-6 h-6 skeleton" />
+          <div className="w-6 h-6 skeleton" />
+        </div>
+      </main>
+      <footer className="flex flex-col gap-2">
+        <MarkingItemContentSkeleton />
+        <MarkingItemDateSkeleton />
+      </footer>
+    </li>
+  );
+};
+
 const UnAuthorizedFollowingButton = () => {
   const handleOpenSnackbar = useSnackBar();
 
@@ -451,6 +489,19 @@ const MarkingItemImages = () => {
   );
 };
 
+const MarkingItemImagesSkeleton = () => (
+  <ImgSlider>
+    {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
+      <div
+        key={key}
+        className="relative w-[7.5rem] h-[7.5rem]rounded-2xl flex justify-center items-center flex-shrink-0 skeleton"
+      >
+        <div className="w-full h-full object-cover no-drag rounded-2xl" />
+      </div>
+    ))}
+  </ImgSlider>
+);
+
 const MarkingItemRegion = () => {
   const { onRegionClick, region, lat, lng, markingId } = useMarkingItemProps();
   return (
@@ -466,6 +517,13 @@ const MarkingItemRegion = () => {
   );
 };
 
+const MarkingItemRegionSkeleton = () => (
+  <div className="flex pr-4 justify-center items-center gap-[.625rem] h-8 text-tangerine-500 cursor-pointer">
+    <MyLocationIcon />
+    <h2 className="btn-2 skeleton">loading loading loading</h2>
+  </div>
+);
+
 const MarkingItemProfileImage = () => {
   const { pet } = useMarkingItemProps();
   return (
@@ -477,15 +535,27 @@ const MarkingItemProfileImage = () => {
   );
 };
 
+const MarkingItemProfileImageSkeleton = () => (
+  <div className="w-8 h-8 rounded-2xl object-cover" />
+);
+
 const MarkingItemNickname = () => {
   const { nickName } = useMarkingItemProps();
   return <span className="title-3 text-grey-700">{nickName}</span>;
 };
 
+const MarkingItemNicknameSkeleton = () => (
+  <span className="title-3 skeleton">loading</span>
+);
+
 const MarkingItemPetName = () => {
   const { pet } = useMarkingItemProps();
   return <span className="body-2 text-grey-500">{pet.name}</span>;
 };
+
+const MarkingItemPetNameSkeleton = () => (
+  <span className="body-2 skeleton">loading</span>
+);
 
 const MarkingItemContent = () => {
   const { content } = useMarkingItemProps();
@@ -541,9 +611,20 @@ const MarkingItemContent = () => {
   );
 };
 
+const MarkingItemContentSkeleton = () => (
+  <div className="body-2 line-clamp-2 skeleton">
+    loading loading loading loading loading loading loading loading loading
+    loading
+  </div>
+);
+
 const MarkingItemDate = () => {
   const { regDt } = useMarkingItemProps();
   return (
     <p className="body-3 text-grey-500">{formatDateToYearMonthDay(regDt)}</p>
   );
 };
+
+const MarkingItemDateSkeleton = () => (
+  <p className="body-3 skeleton">loading</p>
+);

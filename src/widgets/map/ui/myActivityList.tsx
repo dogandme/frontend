@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
-import { MarkingItem } from "@/widgets/marking/ui";
+import { MarkingItem, MarkingItemSkeleton } from "@/widgets/marking/ui";
 import { MarkingPins } from "@/entities/map/ui";
 import { useGetMyActivityMarkerList } from "@/entities/marking/api";
 import { useGetMyActivityMarkingList } from "@/entities/marking/hooks";
@@ -14,6 +14,7 @@ export const MyActivityList = withAuth(() => {
 
   const {
     data: markingList,
+    isLoading: isMarkingListLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -49,19 +50,23 @@ export const MyActivityList = withAuth(() => {
         </div>
 
         <MarkingList display="list">
-          {markingList?.map((marking) => (
-            <MarkingItem
-              key={marking.markingId}
-              onRegionClick={() => {
-                map.setCenter({
-                  lat: marking.lat,
-                  lng: marking.lng,
-                });
-                map.setZoom(19);
-              }}
-              {...marking}
-            />
-          ))}
+          {isMarkingListLoading
+            ? Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
+                <MarkingItemSkeleton key={key} />
+              ))
+            : markingList?.map((marking) => (
+                <MarkingItem
+                  key={marking.markingId}
+                  onRegionClick={() => {
+                    map.setCenter({
+                      lat: marking.lat,
+                      lng: marking.lng,
+                    });
+                    map.setZoom(19);
+                  }}
+                  {...marking}
+                />
+              ))}
         </MarkingList>
         <div className="h-[.125rem]" ref={setNode} />
       </div>
