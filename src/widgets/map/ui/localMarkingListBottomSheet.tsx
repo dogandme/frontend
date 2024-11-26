@@ -107,9 +107,14 @@ const LocalMarkingList = ({
     map.setZoom(mapOptions.maxZoom);
   };
 
-  // TODO loading 처리 하기
   if (isLoading) {
-    return <div>loading</div>;
+    return (
+      <MarkingList display="grid" className="gap-1">
+        {Array.from({ length: 20 }, (_, idx) => idx).map((key) => (
+          <div key={key} className="aspect-square skeleton" />
+        ))}
+      </MarkingList>
+    );
   }
 
   return (
