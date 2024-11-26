@@ -57,3 +57,11 @@ export const MarkingThumbnailGrid = ({
     </section>
   );
 };
+
+export const MarkingThumbnailGridSkeleton = () => (
+  <section className="w-full grid grid-cols-3 gap-2">
+    {Array.from({ length: 20 }, (_, idx) => idx).map((key) => (
+      <div key={key} className="aspect-square skeleton"></div>
+    ))}
+  </section>
+);

@@ -437,6 +437,7 @@ export const loginHandlers = [
 
 export const getProfileHandlers = [
   http.get(`${API_BASE_URL}/profile`, async ({ request }) => {
+    await new Promise(res => setTimeout(res, 1000));
     const requestUrl = new URL(request.url);
     const nickname = requestUrl.searchParams.get("nickname");
     // 2024/10/05 AccessToken 검증 로직을 추가 합니다.
