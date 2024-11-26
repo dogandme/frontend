@@ -4,7 +4,7 @@ import { useNicknameParams } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
 
 export const ProfileLoadingPage = () => {
-  const { nicknameParams } = useNicknameParams();
+  const { nicknameParams, isMyPage } = useNicknameParams();
 
   return (
     <>
@@ -15,7 +15,7 @@ export const ProfileLoadingPage = () => {
         <ProfileOverViewSkeleton />
         <div className="flex flex-col items-start gap-2 w-full ">
           <h3 className="text-grey-900 text-center title-2">
-            {nicknameParams}님의 마킹
+            {isMyPage ? "내 마킹" : `${nicknameParams}님의 마킹`}
           </h3>
           <MarkingThumbnailGridSkeleton />
         </div>
