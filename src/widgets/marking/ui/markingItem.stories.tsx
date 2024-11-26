@@ -58,18 +58,6 @@ const meta: Meta<typeof MarkingItem> = {
       description: "좋아요 개수와 북마크 개수를 나타냅니다.",
       control: "object",
     },
-    isLiked: {
-      description: "좋아요 여부를 나타냅니다.",
-      control: "boolean",
-    },
-    isBookmarked: {
-      description: "북마크 여부를 나타냅니다.",
-      control: "boolean",
-    },
-    isFollowing: {
-      description: "팔로잉 여부를 나타냅니다.",
-      control: "boolean",
-    },
   },
   args: {
     markingId: 1,
@@ -95,9 +83,6 @@ const meta: Meta<typeof MarkingItem> = {
       likedCount: 1,
       savedCount: 1,
     },
-    isLiked: false,
-    isBookmarked: false,
-    isFollowing: false,
   },
 };
 
