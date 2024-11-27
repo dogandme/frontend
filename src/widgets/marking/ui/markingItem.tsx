@@ -165,9 +165,15 @@ export const MarkingItemSkeleton = () => {
       </header>
       <main className="flex flex-col gap-2">
         <MarkingItemImagesSkeleton />
-        <div className="flex justify-between">
-          <div className="w-6 h-6 skeleton" />
-          <div className="w-6 h-6 skeleton" />
+        <div className="flex justify-between skeleton">
+          <div className="flex gap-2 items-center">
+            <BookmarkIcon />
+            <span className="title-3 ">99</span>
+          </div>
+          <div className="flex gap-2 items-center skeleton">
+            <LikeIcon />
+            <span className="title-3">99</span>
+          </div>
         </div>
       </main>
       <footer className="flex flex-col gap-2">
