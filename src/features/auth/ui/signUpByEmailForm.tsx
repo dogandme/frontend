@@ -68,7 +68,7 @@ const Email = () => {
     sendCodeMutation,
     checkCodeMutation,
     isModifiedEmail,
-    isDuplicateEmail,
+    isDuplicatedEmail,
     isVerified,
   } = useVerifyEmailContext();
 
@@ -99,7 +99,7 @@ const Email = () => {
 
   const statusText = !isValidEmail
     ? "이메일 형식으로 입력해 주세요"
-    : isDuplicateEmail
+    : isDuplicatedEmail
       ? "이미 가입된 이메일 입니다"
       : "올바른 이메일 형식입니다";
 
@@ -109,7 +109,7 @@ const Email = () => {
       name="email"
       label="이메일"
       disabled={isVerified}
-      isError={(!isEmailEmpty && !isValidEmail) || isDuplicateEmail}
+      isError={(!isEmailEmpty && !isValidEmail) || isDuplicatedEmail}
       placeholder="이메일을 입력해 주세요"
       statusText={statusText}
       essential
@@ -119,7 +119,7 @@ const Email = () => {
 };
 
 const SendCodeButton = () => {
-  const { sendCodeMutation, isDuplicateEmail, isSentCode, isVerified } =
+  const { sendCodeMutation, isDuplicatedEmail, isSentCode, isVerified } =
     useVerifyEmailContext();
 
   const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
@@ -150,7 +150,7 @@ const SendCodeButton = () => {
       }}
       disabled={
         !isValidEmail ||
-        isDuplicateEmail ||
+        isDuplicatedEmail ||
         (isSentCode && !isTimeLeftLessThanOneMinute) ||
         isVerified
       }

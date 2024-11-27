@@ -6,7 +6,7 @@ const VerifyEmailContext = createContext<{
   checkCodeMutation: ReturnType<typeof usePostCheckCode>;
   isModifiedEmail: (email: string) => boolean;
   isModifiedCode: (code: string) => boolean;
-  isDuplicateEmail: boolean;
+  isDuplicatedEmail: boolean;
   isSentCode: boolean;
   isNotMatchedCode: boolean;
   isVerified: boolean;
@@ -50,7 +50,7 @@ export const VerifyEmailProvider = ({
         checkCodeMutation,
         isModifiedEmail,
         isModifiedCode,
-        isDuplicateEmail,
+        isDuplicatedEmail: isDuplicateEmail,
         isSentCode,
         isNotMatchedCode,
         isVerified,
