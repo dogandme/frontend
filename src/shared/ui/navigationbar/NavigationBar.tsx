@@ -1,25 +1,27 @@
+import { type ReactElement } from "react";
 import { navigationBarStyles, navigationBaseStyle } from "./Navigation.style";
 
-export interface NavigationBarProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  componentType: keyof typeof navigationBarStyles;
-  button: React.ReactNode;
-  label?: React.ReactNode;
+export interface NavigationBarProps {
+  children:
+    | [ReactElement<HTMLButtonElement>, string | undefined]
+    | [string | undefined, ReactElement<HTMLButtonElement>];
 }
 
-export const NavigationBar = ({
-  componentType,
-  button,
-  label = <div className="invisible"></div>,
-}: NavigationBarProps) => {
-  const isButtonLeft = componentType === "buttonLeft";
+export const NavigationBar = ({ children }: NavigationBarProps) => {
+  const isButtonLeft =
+    typeof children[1] === "string" || typeof children[1] === "undefined";
 
   return (
     <nav
-      className={`${navigationBaseStyle} ${navigationBarStyles[componentType]}`}
+      className={`${navigationBaseStyle} ${navigationBarStyles[isButtonLeft ? "buttonLeft" : "buttonRight"]}`}
     >
-      {isButtonLeft ? button : label}
-      {isButtonLeft ? label : button}
+      {children.map((child) =>
+        typeof child === "string" ? (
+          <h1 className="text-grey-900 title-1">{child}</h1>
+        ) : (
+          child
+        ),
+      )}
     </nav>
   );
 };
