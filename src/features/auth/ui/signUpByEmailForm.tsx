@@ -3,13 +3,13 @@ import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Input, StatusText } from "@/shared/ui/input";
-import {
-  usePostCheckCode,
-  usePostSendCode,
-  usePostSignUpByEmail,
-} from "../api";
+import { usePostSignUpByEmail } from "../api";
 import { VERIFICATION_CODE_LENGTH } from "../constants";
-import { useSignUpByEmailFormStore } from "../store";
+import {
+  useSignUpByEmailFormStore,
+  useVerifyEmailContext,
+  VerifyEmailProvider,
+} from "../store";
 
 const Timer = () => {
   const INTERVAL = 1000;
@@ -46,114 +46,32 @@ const Timer = () => {
   );
 };
 
-const useVerifyEmail = () => {
-  const sendCodeMutation = usePostSendCode();
-  const checkCodeMutation = usePostCheckCode();
-
-  const isModifiedEmail = (email: string) =>
-    email !== sendCodeMutation.variables?.email;
-  const isModifiedCode = (code: string) =>
-    code !== checkCodeMutation.variables?.authNum;
-
-  const isDuplicateEmail = sendCodeMutation.error?.code === 409;
-  const isSentCode = sendCodeMutation.status === "success";
-
-  const isNotMatchedCode = checkCodeMutation.error?.code === 400;
-  const isVerified = checkCodeMutation.status === "success";
-
-  return {
-    sendCodeMutation,
-    checkCodeMutation,
-    isModifiedEmail,
-    isModifiedCode,
-    isDuplicateEmail,
-    isSentCode,
-    isNotMatchedCode,
-    isVerified,
-  };
+const VerifyEmail = () => {
+  return (
+    <VerifyEmailProvider>
+      <div>
+        <div className="flex items-end justify-between gap-2">
+          <Email />
+          <SendCodeButton />
+        </div>
+      </div>
+      <div className="flex items-end justify-between gap-2">
+        <VerificationCode />
+        <CheckCodeButton />
+      </div>
+    </VerifyEmailProvider>
+  );
 };
 
-const VerifyEmail = () => {
-  const { setTimeLeft } = useSignUpByEmailFormStore((state) => state.actions);
-
+const Email = () => {
   const {
     sendCodeMutation,
     checkCodeMutation,
     isModifiedEmail,
-    isModifiedCode,
     isDuplicateEmail,
-    isSentCode,
-    isNotMatchedCode,
     isVerified,
-  } = useVerifyEmail();
+  } = useVerifyEmailContext();
 
-  return (
-    <>
-      <div>
-        <div className="flex items-end justify-between gap-2">
-          <Email
-            isModified={isModifiedEmail}
-            isDuplicateEmail={isDuplicateEmail}
-            isVerified={isVerified}
-            resetCache={() => {
-              sendCodeMutation.reset();
-              checkCodeMutation.reset();
-            }}
-          />
-          <SendCodeButton
-            isDuplicateEmail={isDuplicateEmail}
-            isSentCode={isSentCode}
-            isVerified={isVerified}
-            onClick={() => {
-              sendCodeMutation.mutate(
-                { email: useSignUpByEmailFormStore.getState().email },
-                {
-                  onSuccess: () => {
-                    setTimeLeft(1000 * 60 * 3);
-                  },
-                },
-              );
-            }}
-          />
-        </div>
-      </div>
-      <div className="flex items-end justify-between gap-2">
-        <VerificationCode
-          isModified={isModifiedCode}
-          isSentCode={isSentCode}
-          isVerified={isVerified}
-          isNotMatchedCode={isNotMatchedCode}
-          resetCache={() => {
-            checkCodeMutation.reset();
-          }}
-        />
-        <CheckCodeButton
-          isSentCode={isSentCode}
-          isVerified={isVerified}
-          isNotMatchedCode={isNotMatchedCode}
-          onClick={() => {
-            const { email, verificationCode: authNum } =
-              useSignUpByEmailFormStore.getState();
-
-            checkCodeMutation.mutate({ email, authNum });
-          }}
-        />
-      </div>
-    </>
-  );
-};
-
-const Email = ({
-  isModified,
-  isDuplicateEmail,
-  isVerified,
-  resetCache,
-}: {
-  isModified: (email: string) => boolean;
-  isDuplicateEmail: boolean;
-  isVerified: boolean;
-  resetCache: () => void;
-}) => {
   const isEmailEmpty = useSignUpByEmailFormStore((state) => state.isEmailEmpty);
   const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
   const { setEmail, resetState } = useSignUpByEmailFormStore(
@@ -168,13 +86,14 @@ const Email = ({
     // 이메일이 변경되면
     // 1. 인증코드, 타이머, 타이머가 1분 남았는지 여부 상태 초기화
     // 2. 캐시 초기화
-    if (isModified(email)) {
+    if (isModifiedEmail(email)) {
       resetState([
         "verificationCode",
         "timeLeft",
         "isTimeLeftLessThanOneMinute",
       ]);
-      resetCache();
+      sendCodeMutation.reset();
+      checkCodeMutation.reset();
     }
   };
 
@@ -199,21 +118,15 @@ const Email = ({
   );
 };
 
-const SendCodeButton = ({
-  isDuplicateEmail,
-  isSentCode,
-  isVerified,
-  onClick,
-}: {
-  isDuplicateEmail: boolean;
-  isSentCode: boolean;
-  isVerified: boolean;
-  onClick: () => void;
-}) => {
+const SendCodeButton = () => {
+  const { sendCodeMutation, isDuplicateEmail, isSentCode, isVerified } =
+    useVerifyEmailContext();
+
   const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
   const isTimeLeftLessThanOneMinute = useSignUpByEmailFormStore(
     (state) => state.isTimeLeftLessThanOneMinute,
   );
+  const { setTimeLeft } = useSignUpByEmailFormStore((state) => state.actions);
 
   return (
     <Button
@@ -223,7 +136,18 @@ const SendCodeButton = ({
       size="medium"
       fullWidth={false}
       className="w-[6.5rem] mb-6"
-      onClick={onClick}
+      onClick={() => {
+        const { email } = useSignUpByEmailFormStore.getState();
+
+        sendCodeMutation.mutate(
+          { email },
+          {
+            onSuccess: () => {
+              setTimeLeft(1000 * 60 * 3);
+            },
+          },
+        );
+      }}
       disabled={
         !isValidEmail ||
         isDuplicateEmail ||
@@ -236,19 +160,15 @@ const SendCodeButton = ({
   );
 };
 
-const VerificationCode = ({
-  isModified,
-  isSentCode,
-  isVerified,
-  isNotMatchedCode,
-  resetCache,
-}: {
-  isModified: (code: string) => boolean;
-  isSentCode: boolean;
-  isVerified: boolean;
-  isNotMatchedCode: boolean;
-  resetCache: () => void;
-}) => {
+const VerificationCode = () => {
+  const {
+    checkCodeMutation,
+    isModifiedCode,
+    isSentCode,
+    isVerified,
+    isNotMatchedCode,
+  } = useVerifyEmailContext();
+
   const verificationCode = useSignUpByEmailFormStore(
     (state) => state.verificationCode,
   );
@@ -268,8 +188,8 @@ const VerificationCode = ({
 
     setVerificationCode(onlyNumbers);
 
-    if (isModified(onlyNumbers)) {
-      resetCache();
+    if (isModifiedCode(onlyNumbers)) {
+      checkCodeMutation.reset();
     }
   };
 
@@ -298,17 +218,10 @@ const VerificationCode = ({
   );
 };
 
-const CheckCodeButton = ({
-  isSentCode,
-  isNotMatchedCode,
-  isVerified,
-  onClick,
-}: {
-  isSentCode: boolean;
-  isNotMatchedCode: boolean;
-  isVerified: boolean;
-  onClick: () => void;
-}) => {
+const CheckCodeButton = () => {
+  const { checkCodeMutation, isSentCode, isNotMatchedCode, isVerified } =
+    useVerifyEmailContext();
+
   const verificationCode = useSignUpByEmailFormStore(
     (state) => state.verificationCode,
   );
@@ -322,7 +235,12 @@ const CheckCodeButton = ({
       size="medium"
       fullWidth={false}
       className="w-[6.5rem] mb-6"
-      onClick={onClick}
+      onClick={() => {
+        const { email, verificationCode: authNum } =
+          useSignUpByEmailFormStore.getState();
+
+        checkCodeMutation.mutate({ email, authNum });
+      }}
       disabled={
         verificationCode.length < VERIFICATION_CODE_LENGTH ||
         (timeLeft === 0 && isSentCode) ||
