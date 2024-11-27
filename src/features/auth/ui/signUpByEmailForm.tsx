@@ -54,10 +54,10 @@ const VerifyEmail = () => {
           <Email />
           <SendCodeButton />
         </div>
-      </div>
-      <div className="flex items-end justify-between gap-2">
-        <VerificationCode />
-        <CheckCodeButton />
+        <div className="flex items-end justify-between gap-2">
+          <VerificationCode />
+          <CheckCodeButton />
+        </div>
       </div>
     </VerifyEmailProvider>
   );
@@ -388,9 +388,7 @@ export const SignUpByEmailForm = () => {
 
   return (
     <form className="flex flex-col gap-8 self-stretch" onSubmit={handleSubmit}>
-      <div className="flex flex-col">
-        <VerifyEmail />
-      </div>
+      <VerifyEmail />
 
       <div>
         <Password />
