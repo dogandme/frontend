@@ -1,4 +1,3 @@
-import { useLocation } from "react-router-dom";
 import { Button } from "@/shared/ui/button";
 
 export const FollowItemContainer = ({
@@ -12,9 +11,6 @@ export const FollowItemContainer = ({
 );
 
 export const FollowItemContainerSkeleton = () => {
-  const { pathname } = useLocation();
-  const lastPath = pathname.split("/").pop();
-
   return (
     <FollowItemContainer>
       {Array.from({ length: 20 }, (_, idx) => idx).map((key) => (
@@ -22,10 +18,8 @@ export const FollowItemContainerSkeleton = () => {
           {/* 로딩 이미지 대체 */}
           <div className="flex gap-4">
             <div className="w-10 h-10 rounded-[1.75rem] skeleton" />
-            <div className="flex flex-col justify-center">
-              <div className="flex gap-2">
-                <p className="title-2 skeleton">유저 닉네임</p>
-              </div>
+            <div className="flex flex-col gap-1 justify-center">
+              <p className="title-2 skeleton">유저 닉네임</p>
               <p className="body-3 skeleton">펫 이름</p>
             </div>
           </div>
