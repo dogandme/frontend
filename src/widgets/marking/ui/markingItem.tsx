@@ -542,7 +542,7 @@ const MarkingItemProfileImage = () => {
 };
 
 const MarkingItemProfileImageSkeleton = () => (
-  <div className="w-8 h-8 rounded-2xl object-cover" />
+  <div className="w-8 h-8 rounded-2xl" />
 );
 
 const MarkingItemNickname = () => {
@@ -551,7 +551,7 @@ const MarkingItemNickname = () => {
 };
 
 const MarkingItemNicknameSkeleton = () => (
-  <span className="title-3 skeleton">loading</span>
+  <span className="body-2 skeleton">loading</span>
 );
 
 const MarkingItemPetName = () => {
