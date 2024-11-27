@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import { Button } from "@/shared/ui/button";
 
 export const FollowItemContainer = ({
@@ -11,6 +12,9 @@ export const FollowItemContainer = ({
 );
 
 export const FollowItemContainerSkeleton = () => {
+  const { pathname } = useLocation();
+  const lastPath = pathname.split("/").pop();
+
   return (
     <FollowItemContainer>
       {Array.from({ length: 20 }, (_, idx) => idx).map((key) => (
@@ -34,7 +38,7 @@ export const FollowItemContainerSkeleton = () => {
             disabled
             className="skeleton"
           >
-            삭제
+            <div className="w-12" />
           </Button>
         </div>
       ))}

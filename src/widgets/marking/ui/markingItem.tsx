@@ -160,7 +160,7 @@ export const MarkingItemSkeleton = () => {
           fullWidth={false}
           className="skeleton"
         >
-          팔로우
+          <div className="w-12" />
         </Button>
       </header>
       <main className="flex flex-col gap-2">

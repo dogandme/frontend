@@ -96,7 +96,7 @@ export const ProfileOverViewSkeleton = () => (
           disabled
           className="skeleton"
         >
-          삭제
+          <div className="w-12" />
         </Button>
       </div>
     </div>
