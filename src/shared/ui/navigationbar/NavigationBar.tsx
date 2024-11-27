@@ -1,5 +1,4 @@
 import { type ReactElement } from "react";
-import { navigationBarStyles, navigationBaseStyle } from "./Navigation.style";
 
 export interface NavigationBarProps {
   children:
@@ -10,10 +9,9 @@ export interface NavigationBarProps {
 export const NavigationBar = ({ children }: NavigationBarProps) => {
   const isButtonLeft =
     typeof children[1] === "string" || typeof children[1] === "undefined";
-
   return (
     <nav
-      className={`${navigationBaseStyle} ${navigationBarStyles[isButtonLeft ? "buttonLeft" : "buttonRight"]}`}
+      className={`flex py-2 px-1 items-center ${isButtonLeft ? "justify-start" : children[0] ? "justify-between" : "justify-end"}`}
     >
       {children.map((child) =>
         typeof child === "string" ? (
