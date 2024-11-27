@@ -2,13 +2,14 @@ import { type ReactElement } from "react";
 
 export interface NavigationBarProps {
   children:
-    | [ReactElement<HTMLButtonElement>, string | undefined]
-    | [string | undefined, ReactElement<HTMLButtonElement>];
+    | [ReactElement<HTMLButtonElement | HTMLAnchorElement>, string | undefined]
+    | [string | undefined, ReactElement<HTMLButtonElement | HTMLAnchorElement>];
 }
 
 export const NavigationBar = ({ children }: NavigationBarProps) => {
   const isButtonLeft =
     typeof children[1] === "string" || typeof children[1] === "undefined";
+
   return (
     <nav
       className={`flex py-2 px-1 items-center ${isButtonLeft ? "justify-start" : children[0] ? "justify-between" : "justify-end"}`}
