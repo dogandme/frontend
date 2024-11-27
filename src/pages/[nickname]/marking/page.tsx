@@ -19,7 +19,7 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const UserMarkingPage = withAuth(() => {
   const { nicknameParams, isMyPage } = useNicknameParams();
@@ -31,13 +31,9 @@ export const UserMarkingPage = withAuth(() => {
 
   return (
     <div className="px-4">
-      <BackwardNavigationBar
-        label={
-          <h1 className="title-1 text-grey-900 py-4">
-            {isMyPage ? "내" : nicknameParams} 마킹
-          </h1>
-        }
-      />
+      <BackwardNavigationBar>
+        {`${isMyPage ? "내" : nicknameParams} 마킹`}
+      </BackwardNavigationBar>
       <section className="pb-4 flex flex-col gap-4">
         {isMyPage &&
           typeof profile?.tempCnt === "number" &&

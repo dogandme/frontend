@@ -3,7 +3,7 @@ import { ProfileOverView } from "@/widgets/profile/ui";
 import { useGetProfile } from "@/entities/profile/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import { useNicknameParams } from "@/shared/lib";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 import { ProfilePageSkeleton } from "./loading";
 
 export const OtherProfilePage = () => {
@@ -21,9 +21,7 @@ export const OtherProfilePage = () => {
 
   return (
     <>
-      <BackwardNavigationBar
-        label={<h1 className="text-grey-900 title-1">{nicknameParams}님</h1>}
-      />
+      <BackwardNavigationBar>{`${nicknameParams}님`}</BackwardNavigationBar>
       <section className="px-4 flex flex-col items-start gap-8">
         {pet ? (
           <ProfileOverView

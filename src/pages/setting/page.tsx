@@ -5,15 +5,13 @@ import { withAuth, useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const SettingPage = withAuth(() => {
   return (
     <>
       <section>
-        <BackwardNavigationBar
-          label={<h1 className="title-1 text-grey-900">설정</h1>}
-        />
+        <BackwardNavigationBar>설정</BackwardNavigationBar>
         <section className="flex flex-col gap-4 px-4 py-4">
           <AccountManagement />
           <EditMyInfo />

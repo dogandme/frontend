@@ -18,7 +18,7 @@ import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 
@@ -39,8 +39,9 @@ export const PlaceMarkingListBottomSheet = () => {
             sortType: "POPULARITY",
           });
         }}
-        label={<h1 className="text-grey-900 title-1">이 장소 관련 마킹</h1>}
-      />
+      >
+        이 장소 관련 마킹
+      </BackwardNavigationBar>
       <div className="flex justify-end w-full px-4 mb-4">
         <SortTypeFilter
           options={sortTypeOption}

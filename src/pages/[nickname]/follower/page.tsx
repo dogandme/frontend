@@ -8,7 +8,7 @@ import { FollowingUserItem } from "@/widgets/follow";
 import { useGetFollowerList } from "@/entities/follow/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 /**
  * 팔로워 페이지의 경우 나의 페이지일 경우엔 팔로워 리스트를 보여주고
@@ -45,9 +45,7 @@ export const FollowerPage = withAuth(() => {
 
   return (
     <section>
-      <BackwardNavigationBar
-        label={<h1 className="title-1 text-grey-900">{nicknameParams}</h1>}
-      />
+      <BackwardNavigationBar>{nicknameParams}</BackwardNavigationBar>
       <FollowNavigationBar nickname={nicknameParams} />
       <FollowItemContainer>
         {followerList.map(({ userId, nickname, pet }) =>

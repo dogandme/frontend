@@ -1,25 +1,26 @@
-import { navigationBarStyles, navigationBaseStyle } from "./Navigation.style";
+import { type ReactElement } from "react";
 
-export interface NavigationBarProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  componentType: keyof typeof navigationBarStyles;
-  button: React.ReactNode;
-  label?: React.ReactNode;
+export interface NavigationBarProps {
+  children:
+    | [ReactElement<HTMLButtonElement | HTMLAnchorElement>, string | undefined]
+    | [string | undefined, ReactElement<HTMLButtonElement | HTMLAnchorElement>];
 }
 
-export const NavigationBar = ({
-  componentType,
-  button,
-  label = <div className="invisible"></div>,
-}: NavigationBarProps) => {
-  const isButtonLeft = componentType === "buttonLeft";
+export const NavigationBar = ({ children }: NavigationBarProps) => {
+  const isButtonLeft =
+    typeof children[1] === "string" || typeof children[1] === "undefined";
 
   return (
     <nav
-      className={`${navigationBaseStyle} ${navigationBarStyles[componentType]}`}
+      className={`flex py-2 px-1 items-center ${isButtonLeft ? "justify-start" : children[0] ? "justify-between" : "justify-end"}`}
     >
-      {isButtonLeft ? button : label}
-      {isButtonLeft ? label : button}
+      {children.map((child) =>
+        typeof child === "string" ? (
+          <h1 className="text-grey-900 title-1">{child}</h1>
+        ) : (
+          child
+        ),
+      )}
     </nav>
   );
 };

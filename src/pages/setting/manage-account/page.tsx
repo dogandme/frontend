@@ -8,7 +8,7 @@ import { SOCIAL_TYPE } from "@/entities/auth/constants";
 import { useModal, withAuth } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const AccountManagementPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
@@ -21,9 +21,7 @@ export const AccountManagementPage = withAuth(() => {
 
   return ( 
     <>
-      <BackwardNavigationBar
-        label={<h1 className="title-1 text-grey-700">계정 관리</h1>}
-      />
+      <BackwardNavigationBar>계정 관리</BackwardNavigationBar>
       <section className="flex flex-col gap-4 px-4 py-4">
         <AccountEmail email={email} socialType={socialType} />
         {isPasswordSet ? <PasswordChangeButton /> : <PasswordSetButton />}
