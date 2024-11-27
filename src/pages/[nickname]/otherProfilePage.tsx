@@ -3,7 +3,7 @@ import { ProfileOverView } from "@/widgets/profile/ui";
 import { useGetProfile } from "@/entities/profile/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import { useNicknameParams } from "@/shared/lib";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const OtherProfilePage = () => {
   const { nicknameParams } = useNicknameParams();

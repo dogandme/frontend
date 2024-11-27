@@ -9,7 +9,7 @@ import type { MyInfo } from "@/entities/auth/api";
 import { useModal, withAuth } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const EditInfoPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();

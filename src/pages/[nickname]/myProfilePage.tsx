@@ -10,7 +10,7 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
-import { NavigationBar } from "@/shared/ui/navigationbar";
+import { NavigationBar } from "@/shared/ui/navigationBar";
 
 export const MyProfilePage = () => {
   const { nicknameParams } = useNicknameParams();

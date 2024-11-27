@@ -3,7 +3,7 @@ import { FollowingUserItem } from "@/widgets/follow/followingUserItem";
 import { useGetFollowingList } from "@/entities/follow/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const FollowingPage = withAuth(() => {
   const { nicknameParams } = useNicknameParams();

@@ -5,7 +5,7 @@ import { withAuth, useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const SettingPage = withAuth(() => {
   return (

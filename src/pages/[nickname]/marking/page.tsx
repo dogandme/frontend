@@ -19,7 +19,7 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const UserMarkingPage = withAuth(() => {
   const { nicknameParams, isMyPage } = useNicknameParams();

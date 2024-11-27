@@ -7,7 +7,7 @@ import { useModal } from "@/shared/lib/overlay";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 const SignUpPage = withAuth(() => {
   const navigate = useNavigate();

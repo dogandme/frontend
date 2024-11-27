@@ -9,7 +9,7 @@ import { useRouteHistoryStore } from "@/shared/store/history";
 import {
   BackwardNavigationBar,
   CloseNavigationBar,
-} from "@/shared/ui/navigationbar";
+} from "@/shared/ui/navigationBar";
 
 interface AuthNavigationBarProps {
   type?: "backward" | "close";

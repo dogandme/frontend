@@ -18,7 +18,7 @@ import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 

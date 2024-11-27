@@ -8,7 +8,7 @@ import { SOCIAL_TYPE } from "@/entities/auth/constants";
 import { useModal, withAuth } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const AccountManagementPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();

@@ -3,7 +3,7 @@ import { TemporaryMarkingItem } from "@/widgets/marking/ui";
 import { useGetTemporaryMarkingList } from "@/entities/marking/api";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const TemporaryMarkingPage = withAuth(() => {
   const navigate = useNavigate();
