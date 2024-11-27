@@ -9,7 +9,7 @@ import type { MyInfo } from "@/entities/auth/api";
 import { useModal, withAuth } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const EditInfoPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
@@ -23,10 +23,7 @@ export const EditInfoPage = withAuth(() => {
 
   return (
     <>
-      <BackwardNavigationBar
-        label={<h1 className="title-1 text-grey-700">내 정보 수정</h1>}
-      />
-
+      <BackwardNavigationBar>내 정보 수정</BackwardNavigationBar>
       <section className="flex flex-col gap-4 px-4 py-4">
         <NicknameButton nickLastModDt={nickLastModDt!} />
         <GenderChangeButton gender={gender} />
