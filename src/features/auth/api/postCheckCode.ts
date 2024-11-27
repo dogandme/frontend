@@ -15,6 +15,7 @@ const postCheckCode = async ({ email, authNum }: PostCheckCodeRequest) => {
   // postman에 token이 필요 없다고 명시되어 있음
   return apiClient.post(SIGN_UP_END_POINT.CHECK_VERIFICATION_CODE, {
     body: { email, authNum },
+    snackbarOnError: (error) => error.code !== 400,
   });
 };
 
