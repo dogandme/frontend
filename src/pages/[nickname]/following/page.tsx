@@ -30,9 +30,7 @@ export const FollowingPage = withAuth(() => {
 
   return (
     <section>
-      <BackwardNavigationBar
-        label={<h1 className="title-1 text-grey-900">{nicknameParams}</h1>}
-      />
+      <BackwardNavigationBar>{nicknameParams}</BackwardNavigationBar>
       <FollowNavigationBar nickname={nicknameParams} />
       <FollowItemContainer>
         {followingList?.map(({ userId, nickname, pet }) => (

@@ -39,8 +39,9 @@ export const PlaceMarkingListBottomSheet = () => {
             sortType: "POPULARITY",
           });
         }}
-        label={<h1 className="text-grey-900 title-1">이 장소 관련 마킹</h1>}
-      />
+      >
+        이 장소 관련 마킹
+      </BackwardNavigationBar>
       <div className="flex justify-end w-full px-4 mb-4">
         <SortTypeFilter
           options={sortTypeOption}

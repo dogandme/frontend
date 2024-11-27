@@ -11,9 +11,7 @@ export const SettingPage = withAuth(() => {
   return (
     <>
       <section>
-        <BackwardNavigationBar
-          label={<h1 className="title-1 text-grey-900">설정</h1>}
-        />
+        <BackwardNavigationBar>설정</BackwardNavigationBar>
         <section className="flex flex-col gap-4 px-4 py-4">
           <AccountManagement />
           <EditMyInfo />

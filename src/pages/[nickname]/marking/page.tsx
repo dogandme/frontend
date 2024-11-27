@@ -31,13 +31,9 @@ export const UserMarkingPage = withAuth(() => {
 
   return (
     <div className="px-4">
-      <BackwardNavigationBar
-        label={
-          <h1 className="title-1 text-grey-900 py-4">
-            {isMyPage ? "내" : nicknameParams} 마킹
-          </h1>
-        }
-      />
+      <BackwardNavigationBar>
+        {`${isMyPage ? "내" : nicknameParams} 마킹`}
+      </BackwardNavigationBar>
       <section className="pb-4 flex flex-col gap-4">
         {isMyPage &&
           typeof profile?.tempCnt === "number" &&

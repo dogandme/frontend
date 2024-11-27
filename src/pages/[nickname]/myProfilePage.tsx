@@ -51,18 +51,15 @@ export const MyProfilePage = () => {
 const MyPageNavigationBar = () => {
   const nickname = useAuthStore((state) => state.nickname);
   return (
-    <NavigationBar
-      componentType="buttonRight"
-      label={<h1 className="text-grey-900 title-1">{nickname}님</h1>}
-      button={
-        <Link
-          to={ROUTER_PATH.SETTING}
-          className="px-3 py-3 text-grey-500"
-          aria-label="내 정보 설정하기"
-        >
-          <SettingIcon />
-        </Link>
-      }
-    />
+    <NavigationBar>
+      {`${nickname}님`}
+      <Link
+        to={ROUTER_PATH.SETTING}
+        className="px-3 py-3 text-grey-500"
+        aria-label="내 정보 설정하기"
+      >
+        <SettingIcon />
+      </Link>
+    </NavigationBar>
   );
 };

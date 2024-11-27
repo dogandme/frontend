@@ -20,9 +20,7 @@ export const OtherProfilePage = () => {
 
   return (
     <>
-      <BackwardNavigationBar
-        label={<h1 className="text-grey-900 title-1">{nicknameParams}님</h1>}
-      />
+      <BackwardNavigationBar>{`${nicknameParams}님`}</BackwardNavigationBar>
       <section className="px-4 flex flex-col items-start gap-8">
         {pet ? (
           <ProfileOverView
