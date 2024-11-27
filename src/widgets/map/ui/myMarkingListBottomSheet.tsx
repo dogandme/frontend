@@ -109,11 +109,19 @@ const MyMarkingList = ({
 
   if (isMarkingListLoading || isClickedMarkingLoading) {
     return (
-      <MarkingList display="list">
-        {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
-          <MarkingItemSkeleton key={key} />
-        ))}
-      </MarkingList>
+      <>
+        {state?.markingInfo?.markingId && (
+          <>
+            <MarkingItemSkeleton />
+            <DividerLine axis="row" />
+          </>
+        )}
+        <MarkingList display="list">
+          {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
+            <MarkingItemSkeleton key={key} />
+          ))}
+        </MarkingList>
+      </>
     );
   }
 

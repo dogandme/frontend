@@ -113,7 +113,13 @@ const PlaceMarkingList = ({
 
   if (isMarkingListLoading || isClickedMarkingLoading) {
     return (
-      <MarkingList display="list">
+      <MarkingList display="list" className="px-4">
+        {state?.markingInfo?.markingId && (
+          <>
+            <MarkingItemSkeleton />
+            <DividerLine axis="row" />
+          </>
+        )}
         {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
           <MarkingItemSkeleton key={key} />
         ))}
