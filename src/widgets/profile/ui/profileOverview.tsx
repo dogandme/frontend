@@ -108,7 +108,7 @@ export const ProfileOverViewSkeleton = () => (
     <ul className="flex gap-2 self-stretch flex-wrap items-center content-center">
       {Array.from({ length: 3 }, (_, idx) => idx).map((key) => (
         <li key={key}>
-          <InfoChip size="small" className="skeleton">
+          <InfoChip size="small" className="skeleton border-none">
             personality
           </InfoChip>
         </li>
