@@ -30,36 +30,38 @@ export const UserMarkingPage = withAuth(() => {
   const { data: profile } = useGetProfile({ nickname: nicknameParams });
 
   return (
-    <div className="px-4">
+    <>
       <BackwardNavigationBar>
         {`${isMyPage ? "내" : nicknameParams} 마킹`}
       </BackwardNavigationBar>
-      <section className="pb-4 flex flex-col gap-4">
-        {isMyPage &&
-          typeof profile?.tempCnt === "number" &&
-          profile.tempCnt > 0 && (
-            <div className="pt-4">
-              <TemporaryMarkingBar tempCnt={profile.tempCnt} />
-            </div>
-          )}
-        <div className="flex w-full justify-end">
-          <SortTypeFilter
-            options={sortTypeOption}
-            selectedOption={sortTypeParam || sortTypeOption[0]}
-            onSelect={(sortType) => {
-              setMapQueryParams({ sortType });
-            }}
+      <div className="px-4">
+        <section className="pb-4 flex flex-col gap-4">
+          {isMyPage &&
+            typeof profile?.tempCnt === "number" &&
+            profile.tempCnt > 0 && (
+              <div className="pt-4">
+                <TemporaryMarkingBar tempCnt={profile.tempCnt} />
+              </div>
+            )}
+          <div className="flex w-full justify-end">
+            <SortTypeFilter
+              options={sortTypeOption}
+              selectedOption={sortTypeParam || sortTypeOption[0]}
+              onSelect={(sortType) => {
+                setMapQueryParams({ sortType });
+              }}
+            />
+          </div>
+          <MyMarkingList
+            nickname={nicknameParams}
+            isMyPage={isMyPage}
+            sortType={
+              (sortTypeParam || "RECENT") as (typeof sortTypeOption)[number]
+            }
           />
-        </div>
-        <MyMarkingList
-          nickname={nicknameParams}
-          isMyPage={isMyPage}
-          sortType={
-            (sortTypeParam || "RECENT") as (typeof sortTypeOption)[number]
-          }
-        />
-      </section>
-    </div>
+        </section>
+      </div>
+    </>
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
 
