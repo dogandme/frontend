@@ -126,3 +126,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     );
   },
 );
+
+export const StatusText = ({
+  isError = false,
+  children,
+}: {
+  isError?: boolean;
+  children: React.ReactNode;
+}) => {
+  return (
+    <p
+      className={`${baseStyles.statusText} ${isError ? "text-pink-500" : "text-grey-500"}`}
+    >
+      {children}
+    </p>
+  );
+};

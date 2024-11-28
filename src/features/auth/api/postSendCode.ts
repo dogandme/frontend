@@ -1,9 +1,5 @@
-import {
-  type MutationState,
-  useMutation,
-  useMutationState,
-} from "@tanstack/react-query";
-import { apiClient, HttpError } from "@/shared/lib";
+import { useMutation } from "@tanstack/react-query";
+import { apiClient, HttpError, useSnackBar } from "@/shared/lib";
 import { SIGN_UP_END_POINT } from "../constants";
 
 export interface PostSendCodeRequest {
@@ -17,27 +13,15 @@ const postSendCode = async ({ email }: PostSendCodeRequest) => {
   });
 };
 
-const mutationKey = ["sendVerificationCode"];
-
 export const usePostSendCode = () => {
+  const handleOpenSnackbar = useSnackBar();
+
   return useMutation<unknown, HttpError, PostSendCodeRequest>({
-    mutationKey,
+    mutationKey: ["sendVerificationCode"],
     mutationFn: postSendCode,
     gcTime: 0,
-  });
-};
-
-export const usePostSendCodeState = () => {
-  const mutationState = useMutationState<
-    MutationState<unknown, HttpError, PostSendCodeRequest>
-  >({
-    filters: {
-      mutationKey,
-      exact: true,
+    onSuccess: () => {
+      handleOpenSnackbar("메일로 인증코드가 전송되었습니다");
     },
   });
-
-  const lastMutationState = mutationState[mutationState.length - 1];
-
-  return lastMutationState;
 };
