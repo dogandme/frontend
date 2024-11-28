@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { MarkingList } from "@/widgets/map/ui/markingList";
-import { MarkingItem } from "@/widgets/marking/ui";
+import { MarkingItem, MarkingItemSkeleton } from "@/widgets/marking/ui";
 import { useMapQueryParams } from "@/features/map/hooks";
 import { SortTypeFilter } from "@/features/marking/ui";
 import {
@@ -118,7 +118,13 @@ const MyMarkingList = ({
   };
 
   if (isMarkingListLoading || isClickedMarkingLoading) {
-    return <div>loading..</div>;
+    return (
+      <MarkingList display="list">
+        {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
+          <MarkingItemSkeleton key={key} />
+        ))}
+      </MarkingList>
+    );
   }
 
   return (

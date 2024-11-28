@@ -18,17 +18,14 @@ export const otherUsers = Array.from({ length: 400 }).map((_, i) => ({
       "사람을 좋아하는",
       "까칠한",
       "부끄럼이 많은",
-    ].slice(
-      i + (Math.ceil(Math.random() * 10) % 4),
-      i + (Math.ceil(Math.random() * 10) % 4),
-    ),
+    ].slice(0, Math.ceil(Math.random() * 4)),
   },
 }));
 
 export const roleGuestUser = {
   userId: 999999,
   nickname: "나는야게스트",
-  pet: null,    
+  pet: null,
   socialType: null,
   tembCnt: 0,
   followersIds: [],

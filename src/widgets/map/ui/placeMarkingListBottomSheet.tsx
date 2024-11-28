@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
-import { MarkingItem } from "@/widgets/marking/ui";
+import { MarkingItem, MarkingItemSkeleton } from "@/widgets/marking/ui";
 import {
   Bounds,
   useMapQueryParams,
@@ -113,7 +113,19 @@ const PlaceMarkingList = ({
   });
 
   if (isMarkingListLoading || isClickedMarkingLoading) {
-    return <div className="px-4">loading..</div>;
+    return (
+      <MarkingList display="list" className="px-4">
+        {state?.markingInfo?.markingId && (
+          <>
+            <MarkingItemSkeleton />
+            <DividerLine axis="row" />
+          </>
+        )}
+        {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
+          <MarkingItemSkeleton key={key} />
+        ))}
+      </MarkingList>
+    );
   }
 
   return (

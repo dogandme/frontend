@@ -59,6 +59,52 @@ export const TemporaryMarkingItem = ({
   );
 };
 
+export const TemporaryMarkingItemSkeleton = () => (
+  <li className="py-4 px-4 border border-grey-300 rounded-2xl flex flex-col self-stretch">
+    {/* 마킹바 헤더 */}
+    <header className="flex gap-4 justify-between items-center">
+      <div className="flex gap-1 text-tangerine-500">
+        <MyLocationIcon />
+        <p className="body-2 skeleton">loading loading loading</p>
+      </div>
+      <div className="flex gap-2">
+        <InfoChip size="small" className="skeleton">
+          loading
+        </InfoChip>
+        <div className="skeleton w-6 h-6 skeleton " />
+      </div>
+    </header>
+    {/* 이미지 슬라이더 */}
+    <main className="flex flex-col gap-2 mt-2">
+      <ImgSlider>
+        {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
+          <div
+            key={key}
+            className="relative w-[7.5rem] h-[7.5rem] rounded-2xl flex justify-center items-center flex-shrink-0 skeleton"
+          >
+            <div className="w-full h-full object-cover no-drag rounded-2xl" />
+          </div>
+        ))}
+      </ImgSlider>
+      {/* 내용 */}
+      <p className="body-2 line-clamp-2 skeleton">
+        loading loading loading loading loading loading loading loading loading
+        loading
+      </p>
+    </main>
+    <footer className="mt-4">
+      <Button
+        colorType="primary"
+        size="small"
+        variant="filled"
+        className="skeleton"
+      >
+        마킹 마저하기
+      </Button>
+    </footer>
+  </li>
+);
+
 const TempMarkingContent = ({
   content,
 }: {
