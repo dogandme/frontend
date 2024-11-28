@@ -1,16 +1,14 @@
 import { MarkingThumbnailGridSkeleton } from "@/widgets/marking/ui";
 import { ProfileOverViewSkeleton } from "@/widgets/profile/ui";
 import { useNicknameParams } from "@/shared/lib";
-import { BackwardNavigationBar } from "@/shared/ui/navigationbar";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 export const ProfilePageSkeleton = () => {
   const { nicknameParams, isMyPage } = useNicknameParams();
 
   return (
     <>
-      <BackwardNavigationBar
-        label={<h1 className="text-grey-900 title-1">{nicknameParams}님</h1>}
-      />
+      <BackwardNavigationBar>{`${nicknameParams}님`}</BackwardNavigationBar>
       <section className="px-4 flex flex-col items-start gap-8">
         <ProfileOverViewSkeleton />
         <div className="flex flex-col items-start gap-2 w-full ">
