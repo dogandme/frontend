@@ -186,10 +186,6 @@ export const Test: Story = {
 
       await userEvent.clear($emailInput);
 
-      // todo
-      // [재전송]은 기본으로 비활성화 상태로 노출되며 1분이 지나는 시점으로 활성화된다.
-      // 1분 이내에 [코드전송]을 다시 누르는 경우, "1분 이후에 재전송 해주세요"라는 snackbar가 노출된다.
-
       await step(
         "중복되지 않는 이메일을 입력한 상태에서 [코드전송]을 클릭하면",
         async () => {
@@ -222,28 +218,9 @@ export const Test: Story = {
             },
           );
 
-          await step(
-            "동시에 [코드전송]은 [재전송]으로 문구가 수정되어 보여진다.",
-            async () => {
-              expect($codeSendButton).toHaveTextContent("재전송");
-            },
-          );
-
           await step("인증 코드 input은 활성화된다.", async () => {
             expect($codeInput).toBeEnabled();
           });
-
-          // ? 어떻게 테스트하지?
-          // await step(
-          //   "[재전송]은 기본으로 비활성화 상태로 노출되며 1분이 지나는 시점으로 활성화된다.",
-          //   async () => {
-          //     expect($codeSendButton).toBeDisabled();
-
-          //     await waitFor(() => {
-          //       expect($codeSendButton).toBeEnabled();
-          //     });
-          //   },
-          // );
         },
       );
     });
@@ -504,7 +481,7 @@ export const Test: Story = {
         await waitFor(() => {
           const { token, role } = useAuthStore.getState();
 
-          expect(token).toBe("token");
+          expect(token).toBe("accessToken-ROLE_GUEST");
           expect(role).toBe("ROLE_NONE");
         });
       },

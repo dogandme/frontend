@@ -1,9 +1,8 @@
-import { http, HttpResponse } from "msw";
 import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
-import { getProfileHandlers } from "@/mocks/handler";
+import { handlers } from "@/mocks/handler";
 import { PetInformationForm } from "./petInformationForm";
 
 const meta: Meta<typeof PetInformationForm> = {
@@ -16,28 +15,14 @@ export default meta;
 export const Default: StoryObj<typeof PetInformationForm> = {
   parameters: {
     msw: {
-      handlers: [
-        [
-          http.post("http://localhost/pets", async () => {
-            return HttpResponse.json({
-              code: 200,
-              message: "success",
-              content: {
-                role: "ROLE_USER",
-                authorization: "freshAccessToken",
-              },
-            });
-          }),
-        ],
-        getProfileHandlers,
-      ],
+      handlers,
     },
   },
 
   decorators: (Story) => {
     useAuthStore.setState({
       nickname: "뽀송송",
-      token: "Bearer token",
+      token: "accessToken-ROLE_GUEST",
       role: "ROLE_GUEST",
     });
 
