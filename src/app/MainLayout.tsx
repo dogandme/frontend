@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
@@ -7,6 +7,7 @@ import { getAccessTokenByRefreshToken } from "./api";
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (
@@ -18,14 +19,24 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    getAccessTokenByRefreshToken().then(({ authorization, role, nickname }) => {
-      useAuthStore.setState({ token: authorization, role, nickname });
+    setIsLoading(true);
 
-      if (role === "ROLE_NONE") {
-        navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
-      }
-    });
+    getAccessTokenByRefreshToken()
+      .then(({ authorization, role, nickname }) => {
+        useAuthStore.setState({ token: authorization, role, nickname });
+
+        if (authorization === "ROLE_NONE") {
+          navigate(ROUTER_PATH.SIGN_UP_USER_INFO);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div className="mx-auto my-0 flex h-screen max-w-[37.5rem] flex-col">
