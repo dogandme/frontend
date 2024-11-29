@@ -19,8 +19,6 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    setIsLoading(true);
-
     getAccessTokenByRefreshToken()
       .then(({ authorization, role, nickname }) => {
         useAuthStore.setState({ token: authorization, role, nickname });
