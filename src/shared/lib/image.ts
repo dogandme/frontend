@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+
 interface compressFileImageOptions {
   maxSize: number;
   compactSize: number;
@@ -99,4 +101,54 @@ export const compressFileImage: compressFileImage = async (file, options) => {
   });
 
   return compressedFile;
+};
+
+export const useImageState = (source: { src: string } | { src: string }[]) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const imageCache = useRef(new Map<string, { isSuccess: boolean }>()).current;
+
+  const getImageCache = (src: string) => {
+    const imageState = imageCache.get(src);
+    return imageState ? imageState : { isSuccess: false };
+  };
+
+  useEffect(() => {
+    const loadImage = (src: string) => {
+      if (imageCache.has(src)) {
+        return Promise.resolve();
+      }
+
+      return new Promise<void>((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+          imageCache.set(src, { isSuccess: true });
+          resolve();
+        };
+        img.onerror = () => {
+          imageCache.set(src, { isSuccess: false });
+          reject(new Error(`Failed to load image: ${src}`));
+        };
+      });
+    };
+
+    const loadImages = async () => {
+      try {
+        if (Array.isArray(source)) {
+          await Promise.allSettled(source.map(({ src }) => loadImage(src)));
+        } else {
+          await loadImage(source.src);
+        }
+        setIsLoading(false);
+      } catch {
+        setHasError(true);
+        setIsLoading(false);
+      }
+    };
+
+    loadImages();
+  }, [source]);
+
+  return { isLoading, hasError, getImageCache };
 };
