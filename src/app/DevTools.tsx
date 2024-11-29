@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { getCookie } from "@/shared/lib";
+import { useRef } from "react";
+import { getCookie, useDropdown } from "@/shared/lib";
 import { type Role, useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { List } from "@/shared/ui/list";
@@ -16,7 +16,9 @@ export const DevTools = () => {
     }),
   );
   const currentRefreshToken = getCookie("Authorization-refresh");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+  const { isOpen, setIsOpen } = useDropdown(ref);
 
   const setRefreshToken = (refreshToken: string | null) => {
     if (refreshToken === null) {
@@ -110,7 +112,7 @@ export const DevTools = () => {
 
   return (
     <div className="absolute left-4 top-4">
-      <div className="relative">
+      <div className="relative" ref={ref}>
         <Button
           colorType="primary"
           variant="outlined"
@@ -120,6 +122,7 @@ export const DevTools = () => {
         >
           Dev Tools
         </Button>
+
         <List
           className={`${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-grey-0 p-2 z-10 flex flex-col gap-4 `}
           style={{ width: "280px" }}
