@@ -16,7 +16,11 @@ import type { Marking } from "@/entities/marking/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import type { PetInfo } from "@/entities/profile/api";
 import { API_BASE_URL } from "@/shared/constants";
-import { formatDateToYearMonthDay, useDropdown } from "@/shared/lib";
+import {
+  formatDateToYearMonthDay,
+  useDropdown,
+  useImageState,
+} from "@/shared/lib";
 import { useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
@@ -482,28 +486,43 @@ const EditMyMarkingModalOpenItem = ({
 
 const MarkingItemImages = () => {
   const { images, pet, markingId } = useMarkingItemProps();
+  const imageUrls = images.map(({ imageUrl, id }) => ({
+    src: `${API_BASE_URL}/markings/image/${markingId}/${imageUrl}`,
+    alt: `${pet.name}의 마킹 이미지`,
+    id,
+  }));
+  const { isLoading, getImageCache } = useImageState(imageUrls);
+
+  if (isLoading) {
+    return (
+      <ImgSlider>
+        {imageUrls.map((_, idx) => (
+          <ImgSlider.ImgItemSkeleton key={idx} />
+        ))}
+      </ImgSlider>
+    );
+  }
+
   return (
     <ImgSlider>
-      {images.map(({ imageUrl, id }) => (
-        <ImgSlider.ImgItem
-          key={id}
-          src={`${API_BASE_URL}/markings/image/${markingId}/${imageUrl}`}
-          alt={`${pet.name}의 마킹 이미지`}
-        />
-      ))}
+      {imageUrls.map(({ src, alt, id }) => {
+        const { isSuccess } = getImageCache(src);
+        return (
+          <ImgSlider.ImgItem
+            key={id}
+            src={isSuccess ? src : "/default-image.png"}
+            alt={alt}
+          />
+        );
+      })}
     </ImgSlider>
   );
 };
 
 const MarkingItemImagesSkeleton = () => (
   <ImgSlider>
-    {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
-      <div
-        key={key}
-        className="relative w-[7.5rem] h-[7.5rem] rounded-2xl flex justify-center items-center flex-shrink-0"
-      >
-        <div className="w-full h-full object-cover no-drag rounded-2xl skeleton" />
-      </div>
+    {Array.from({ length: 5 }).map((_, idx) => (
+      <ImgSlider.ImgItemSkeleton key={idx} />
     ))}
   </ImgSlider>
 );
@@ -532,17 +551,25 @@ const MarkingItemRegionSkeleton = () => (
 
 const MarkingItemProfileImage = () => {
   const { pet } = useMarkingItemProps();
+  const src = `${API_BASE_URL}/pets/image/${pet.profile}`;
+  const { isLoading, getImageCache } = useImageState({ src });
+  const { isSuccess } = getImageCache(src);
+
+  if (isLoading) {
+    return <MarkingItemProfileImageSkeleton />;
+  }
+
   return (
     <img
       className="w-8 h-8 rounded-2xl object-cover"
-      src={`${API_BASE_URL}/pets/image/${pet.profile}`}
+      src={`${isSuccess ? `${API_BASE_URL}/pets/image/${pet.profile}` : "/default-image.png"}`}
       alt={`${pet.name}-profile`}
     />
   );
 };
 
 const MarkingItemProfileImageSkeleton = () => (
-  <div className="w-8 h-8 rounded-2xl" />
+  <div className="w-8 h-8 rounded-2xl skeleton" />
 );
 
 const MarkingItemNickname = () => {
