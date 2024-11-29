@@ -15,6 +15,7 @@ import { EditMarkingFormModal } from "@/features/marking/ui";
 import type { Marking } from "@/entities/marking/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import type { PetInfo } from "@/entities/profile/api";
+import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
 import { API_BASE_URL } from "@/shared/constants";
 import {
   formatDateToYearMonthDay,
@@ -550,22 +551,20 @@ const MarkingItemRegionSkeleton = () => (
 );
 
 const MarkingItemProfileImage = () => {
-  const { pet } = useMarkingItemProps();
-  const src = `${API_BASE_URL}/pets/image/${pet.profile}`;
-  const { isLoading, getImageCache } = useImageState(src);
-  const { isSuccess } = getImageCache(src);
+  const { pet, nickName } = useMarkingItemProps();
+  const { profile } = pet;
 
-  if (isLoading) {
-    return <MarkingItemProfileImageSkeleton />;
+  if (profile) {
+    return (
+      <ProfileImage
+        imageUrl={profile}
+        size="medium"
+        nickname={nickName}
+        className="rounded-2xl"
+      />
+    );
+    return <EmptyProfileImage size="medium" className="rounded-2xl" />;
   }
-
-  return (
-    <img
-      className="w-8 h-8 rounded-2xl object-cover"
-      src={`${isSuccess ? `${API_BASE_URL}/pets/image/${pet.profile}` : "/default-image.png"}`}
-      alt={`${pet.name}-profile`}
-    />
-  );
 };
 
 const MarkingItemProfileImageSkeleton = () => (

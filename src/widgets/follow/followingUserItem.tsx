@@ -37,11 +37,11 @@ export const FollowingUserItem = ({
         <ProfileImage
           imageUrl={profile}
           nickname={nickname}
-          size="medium"
+          size="large"
           className=" rounded-[1.75rem]"
         />
       ) : (
-        <EmptyProfileImage size="medium" className=" rounded-[1.75rem]" />
+        <EmptyProfileImage size="large" className=" rounded-[1.75rem]" />
       )}
       <div className="flex flex-col justify-center flex-1">
         <p className="title-2 text-grey-700">{nickname}</p>

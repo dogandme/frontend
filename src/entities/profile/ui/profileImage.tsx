@@ -4,8 +4,9 @@ import { Nickname } from "../api";
 
 const profileSizeMap = {
   small: "w-6 h-6",
-  medium: "w-10 h-10",
-  large: "w-20 h-20",
+  medium: "w-8 h-8",
+  large: "w-10 h-10",
+  xLarge: "w-20 h-20",
 } as const;
 
 interface ProfileImageProps {

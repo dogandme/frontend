@@ -41,11 +41,17 @@ export const ProfileOverView = ({
           <ProfileImage
             imageUrl={profile}
             nickname={nickname}
-            size="large"
+
+
+
+
+
+
+            size="xLarge"
             className="rounded-2xl"
           />
         ) : (
-          <EmptyProfileImage size="large" className="rounded-2xl" />
+          <EmptyProfileImage size="xLarge" className="rounded-2xl" />
         )}
         {/* 프로필 정보 */}
         <ProfileHeading
