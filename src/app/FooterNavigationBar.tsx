@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useGetProfile } from "@/entities/profile/api";
-import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
+import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
 import { MapIcon } from "@/shared/ui/icon";
 
@@ -34,9 +35,6 @@ const MyPageNavLink = () => {
   const { data } = useGetProfile({
     nickname,
   });
-  const profileImageUrl = data?.pet?.profile
-    ? `${API_BASE_URL}/pets/image/${data.pet.profile}`
-    : "/default-image.png";
 
   const { active, inactive, base } = footerNavigationBarStyles;
 
@@ -50,16 +48,23 @@ const MyPageNavLink = () => {
     return `/@${nickname}`;
   };
 
+  const imageUrl = data?.pet?.profile;
+
   return (
     <NavLink
       to={getMyPagePath()}
       className={({ isActive }) => `${isActive ? active : inactive} ${base}`}
     >
-      <img
-        src={profileImageUrl}
-        alt={nickname ? `${nickname}님의 프로필 이미지` : "기본 프로필 이미지"}
-        className="w-6 h-6 rounded-2xl flex-shrink-0"
-      />
+      {imageUrl ? (
+        <ProfileImage
+          imageUrl={imageUrl}
+          nickname={data.nickname}
+          size="small"
+          className="rounded-2xl flex-shrink-0"
+        />
+      ) : (
+        <EmptyProfileImage size="small" className="rounded-2xl flex-shrink-0" />
+      )}
       My
     </NavLink>
   );
