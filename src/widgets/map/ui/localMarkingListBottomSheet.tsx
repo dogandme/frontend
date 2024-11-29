@@ -10,7 +10,7 @@ import {
 } from "@/entities/marking/api";
 import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
-import { useInfiniteScroll } from "@/shared/lib";
+import { useImageState, useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
 import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
@@ -109,9 +109,9 @@ const LocalMarkingList = ({
 
   if (isLoading) {
     return (
-      <MarkingList display="grid" className="gap-1">
-        {Array.from({ length: 20 }, (_, idx) => idx).map((key) => (
-          <div key={key} className="aspect-square skeleton" />
+      <MarkingList display="grid">
+        {Array.from({ length: markingList.length }).map((_, idx) => (
+          <div key={idx} className="aspect-square skeleton  mx-1 my-1" />
         ))}
       </MarkingList>
     );
@@ -123,24 +123,59 @@ const LocalMarkingList = ({
         <EmptyMarkingThumbnailGrid />
       ) : (
         <MarkingList display="grid">
-          {markingList.map(({ markingId, previewImage, lat, lng }) => (
-            <button
-              key={markingId}
-              type="button"
-              className="aspect-square"
-              onClick={() => handleClick({ lat, lng, markingId })}
-            >
-              <img
-                className="w-full h-full object-cover"
-                src={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-              />
-            </button>
-          ))}
+          <LocalMarkingImages markingList={markingList} onClick={handleClick} />
         </MarkingList>
       )}
       <div className="h-[.125rem]" ref={setNode} />
     </>
   );
+};
+
+interface LocalMarkingImageProps {
+  markingList: Marking[];
+  onClick: ({
+    lat,
+    lng,
+    markingId,
+  }: Pick<Marking, "lat" | "lng" | "markingId">) => void;
+}
+
+const LocalMarkingImages = ({
+  markingList,
+  onClick,
+}: LocalMarkingImageProps) => {
+  const { isLoading, getImageCache } = useImageState(
+    markingList.map(({ markingId, previewImage }) => ({
+      src: `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`,
+    })),
+  );
+
+  if (isLoading) {
+    return Array.from({ length: markingList.length }).map((_, idx) => (
+      <div key={idx} className="aspect-square skeleton mx-1 my-1" />
+    ));
+  }
+
+  return markingList.map(({ lat, lng, markingId, previewImage }) => {
+    const src = `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`;
+    const { isSuccess } = getImageCache(src);
+
+    return (
+      <button
+        key={markingId}
+        type="button"
+        className="aspect-square"
+        onClick={() => onClick({ lat, lng, markingId })}
+      >
+        {/* TODO 이미지 에러 처리 */}
+        <img
+          src={isSuccess ? src : "default-image.png"}
+          alt={`${markingId}번 마킹 이미지`}
+          className="w-full h-full object-cover"
+        />
+      </button>
+    );
+  });
 };
 
 interface LocalMarkingBottomSheetHeaderProps {
