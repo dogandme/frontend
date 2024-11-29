@@ -552,7 +552,7 @@ const MarkingItemRegionSkeleton = () => (
 const MarkingItemProfileImage = () => {
   const { pet } = useMarkingItemProps();
   const src = `${API_BASE_URL}/pets/image/${pet.profile}`;
-  const { isLoading, getImageCache } = useImageState({ src });
+  const { isLoading, getImageCache } = useImageState(src);
   const { isSuccess } = getImageCache(src);
 
   if (isLoading) {

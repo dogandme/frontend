@@ -103,7 +103,7 @@ export const compressFileImage: compressFileImage = async (file, options) => {
   return compressedFile;
 };
 
-export const useImageState = (source: { src: string } | { src: string }[]) => {
+export const useImageState = (source: string | { src: string }[]) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const imageCache = useRef(new Map<string, { isSuccess: boolean }>()).current;
@@ -138,7 +138,7 @@ export const useImageState = (source: { src: string } | { src: string }[]) => {
         if (Array.isArray(source)) {
           await Promise.allSettled(source.map(({ src }) => loadImage(src)));
         } else {
-          await loadImage(source.src);
+          await loadImage(source);
         }
         setIsLoading(false);
       } catch {

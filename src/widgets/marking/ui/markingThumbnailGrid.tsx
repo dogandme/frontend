@@ -96,7 +96,7 @@ const MarkingThumbnailGridImages = ({
       </Link>
     );
   });
-};
+}; 
 
 export const MarkingThumbnailGridSkeleton = () => (
   <section className="w-full grid grid-cols-3 gap-2">
