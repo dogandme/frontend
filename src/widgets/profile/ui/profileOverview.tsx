@@ -11,6 +11,9 @@ import {
   ProfileHeading,
   ProfileImage,
 } from "@/entities/profile/ui";
+import { Button } from "@/shared/ui/button";
+import { InfoChip } from "@/shared/ui/chip/InfoChip";
+import { DividerLine } from "@/shared/ui/divider";
 
 interface ProfileOverviewProps {
   nickname: Nickname;
@@ -64,3 +67,52 @@ export const ProfileOverView = ({
 export const EmptyProfileOverView = () => {
   return <div>다른 사람의 빈 페이지 ..</div>;
 };
+
+export const ProfileOverViewSkeleton = () => (
+  <section className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full">
+    <div className="flex gap-4 self-stretch">
+      {/* 프로필 이미지 */}
+      <div className="w-16 h-16 rounded-[1.75rem] object-cover skeleton" />
+      {/* 프로필 정보 */}
+      <div className="flex flex-col gap-1 items-start self-stretch">
+        <h1 className="text-grey-900 title-2 skeleton">name</h1>
+        <h2 className="text-grey-500 body-3 skeleton">breed breed</h2>
+        <p className="text-grey-700 body-3 flex gap-2 items-center">
+          <div>
+            팔로워 <span className="skeleton">loading</span>
+          </div>
+          <DividerLine axis="col" />
+          <div>
+            팔로잉 <span className=" skeleton">loading</span>
+          </div>
+        </p>
+      </div>
+      <div className="flex flex-grow justify-end">
+        <Button
+          size="xSmall"
+          variant="outlined"
+          colorType="tertiary"
+          fullWidth={false}
+          disabled
+          className="skeleton"
+        >
+          <div className="w-12" />
+        </Button>
+      </div>
+    </div>
+    {/* 반려동물 소개와 성격 리스트 */}
+    <p className=" body-2  skeleton">
+      description description description description
+    </p>
+    {/* PetPersonality */}
+    <ul className="flex gap-2 self-stretch flex-wrap items-center content-center">
+      {Array.from({ length: 3 }, (_, idx) => idx).map((key) => (
+        <li key={key}>
+          <InfoChip size="small" className="skeleton border-none">
+            personality
+          </InfoChip>
+        </li>
+      ))}
+    </ul>
+  </section>
+);

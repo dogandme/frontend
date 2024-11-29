@@ -209,6 +209,7 @@ export const userInfoRegistrationHandlers = [
 
   http.get(MY_INFO_END_POINT, async ({ request }) => {
     const token = request.headers.get("Authorization");
+    await new Promise((res) => setTimeout(res, 1500));
 
     if (!token?.startsWith("accessToken")) {
       return HttpResponse.json(
@@ -414,6 +415,7 @@ export const loginHandlers = [
 
 export const getProfileHandlers = [
   http.get(`${API_BASE_URL}/profile`, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
     const requestUrl = new URL(request.url);
     const nickname = requestUrl.searchParams.get("nickname");
 
@@ -1224,6 +1226,7 @@ const markingListDB: Record<string, Marking[]> = {};
 
 const getMarkingListHandler = [
   http.get(`${API_BASE_URL}/markings/bounds`, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
     const url = new URL(request.url);
     const token = request.headers.get("Authorization");
 
@@ -1312,6 +1315,7 @@ const getMarkingListHandler = [
 
 const getBoundaryMarkerListHandler = [
   http.get(`${API_BASE_URL}/markings/marks`, async ({ request }) => {
+    await new Promise((res) => setTimeout(res, 1000));
     const url = new URL(request.url);
     const token = request.headers.get("Authorization");
 
@@ -1607,7 +1611,7 @@ const getProfileThumbnailHandler = [
 
 const getTemporaryMarkingListHandler = [
   http.get(`${API_BASE_URL}/markings/temps`, async ({ request }) => {
-    await new Promise((res) => setTimeout(res, 1000));
+    await new Promise((res) => setTimeout(res, 1500));
     const url = new URL(request.url);
 
     const offset = Number(url.searchParams.get("offset")) || 0;
@@ -1761,6 +1765,7 @@ const getUserMarkingListHandler = [
   http.get(
     `${API_BASE_URL}/markings/users/:nickname`,
     async ({ request, params }) => {
+      await new Promise((res) => setTimeout(res, 1500));
       const { nickname } = params;
 
       if (typeof nickname !== "string") {

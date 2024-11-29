@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { TemporaryMarkingItem } from "@/widgets/marking/ui";
+import {
+  TemporaryMarkingItem,
+  TemporaryMarkingItemSkeleton,
+} from "@/widgets/marking/ui";
 import { useGetTemporaryMarkingList } from "@/entities/marking/api";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -26,7 +29,24 @@ export const TemporaryMarkingPage = withAuth(() => {
   }
 
   if (!data) {
-    return <div>loading ...</div>;
+    return (
+      <>
+        <BackwardNavigationBar
+          label={<h1 className="text-grey-900 title-1">임시저장</h1>}
+          onClick={() => navigate(`/@${nickname}`)}
+        />
+        <section className="pt-4 px-4 pb-32 flex flex-col gap-8">
+          <div className="flex flex-col gap-8">
+            <p className="skeleton title-2">loading loading</p>
+            <ul className="flex flex-col gap-8">
+              {Array.from({ length: 20 }, (_, idx) => idx).map((key) => (
+                <TemporaryMarkingItemSkeleton key={key} />
+              ))}
+            </ul>
+          </div>
+        </section>
+      </>
+    );
   }
 
   if (data.length === 0) {

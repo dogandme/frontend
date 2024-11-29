@@ -14,12 +14,12 @@ export const AccountManagementPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
 
   if (!myInfo) {
-    return null;
+    return <AccountManagementPageSkeleton />;
   }
 
   const { email, socialType, isPasswordSet } = myInfo;
 
-  return (
+  return ( 
     <>
       <BackwardNavigationBar>계정 관리</BackwardNavigationBar>
       <section className="flex flex-col gap-4 px-4 py-4">
@@ -31,6 +31,34 @@ export const AccountManagementPage = withAuth(() => {
     </>
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
+
+const AccountManagementPageSkeleton = () => {
+  return (
+    <>
+      <BackwardNavigationBar
+        label={<h1 className="title-1 text-grey-700">내 정보 수정</h1>}
+      />
+
+      <section className="flex flex-col gap-4 px-4 py-4">
+        <div className="setting-item">
+          <p className="skeleton">이메일 계정</p>
+          <span className="body-2 skeleton">example123@naver.com</span>
+        </div>
+
+        <button className="setting-item">
+          <p className="skeleton">비밀번호 변경</p>
+          <div className="flex items-center text-grey-500">
+            <span className="body-2">●●●●●●●●</span>
+            <ArrowRightIcon />
+          </div>
+        </button>
+
+        <DividerLine axis="row" />
+        <AccountCancellationButton disabled />
+      </section>
+    </>
+  );
+};
 
 const AccountEmail = ({
   socialType,
@@ -108,13 +136,15 @@ const PasswordSetButton = () => {
   );
 };
 
-const AccountCancellationButton = () => {
+const AccountCancellationButton = (
+  props: React.ButtonHTMLAttributes<HTMLButtonElement>,
+) => {
   const { handleOpen, onClose } = useModal(() => (
     <AccountCancellationModal onClose={onClose} />
   ));
 
   return (
-    <button className="setting-item" onClick={handleOpen}>
+    <button className="setting-item" onClick={handleOpen} {...props}>
       탈퇴하기
     </button>
   );

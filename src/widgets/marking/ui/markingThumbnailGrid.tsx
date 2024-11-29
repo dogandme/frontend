@@ -14,7 +14,7 @@ interface MarkingThumbnailGridProps {
 export const MarkingThumbnailGrid = ({
   nickname,
 }: MarkingThumbnailGridProps) => {
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading } =
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useGetDashboardMarkingThumbnail(nickname);
 
   const [setNode] = useInfiniteScroll(() => {
@@ -25,8 +25,8 @@ export const MarkingThumbnailGrid = ({
 
   const { nicknameParams, isMyPage } = useNicknameParams();
 
-  if (!data || isLoading) {
-    return <div>loading..</div>;
+  if (!data) {
+    return <MarkingThumbnailGridSkeleton />;
   }
 
   if (data.length === 0) {
@@ -57,3 +57,11 @@ export const MarkingThumbnailGrid = ({
     </section>
   );
 };
+
+export const MarkingThumbnailGridSkeleton = () => (
+  <section className="w-full grid grid-cols-3 gap-2">
+    {Array.from({ length: 20 }, (_, idx) => idx).map((key) => (
+      <div key={key} className="aspect-square skeleton"></div>
+    ))}
+  </section>
+);

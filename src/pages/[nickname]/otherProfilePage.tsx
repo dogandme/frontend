@@ -4,6 +4,7 @@ import { useGetProfile } from "@/entities/profile/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import { useNicknameParams } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
+import { ProfilePageSkeleton } from "./loading";
 
 export const OtherProfilePage = () => {
   const { nicknameParams } = useNicknameParams();
@@ -13,7 +14,7 @@ export const OtherProfilePage = () => {
   const { data: myProfile } = useGetMyProfile();
 
   if (!data || !myProfile) {
-    return <div>Loading...</div>;
+    return <ProfilePageSkeleton />;
   }
 
   const { followersIds, followingsIds, pet, userId } = data;

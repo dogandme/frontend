@@ -11,13 +11,14 @@ import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
 import { NavigationBar } from "@/shared/ui/navigationBar";
+import { ProfilePageSkeleton } from "./loading";
 
 export const MyProfilePage = () => {
   const { nicknameParams } = useNicknameParams();
   const { data } = useGetMyProfile();
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <ProfilePageSkeleton />;
   }
 
   const { followersIds, followingsIds, pet, tempCnt } = data;

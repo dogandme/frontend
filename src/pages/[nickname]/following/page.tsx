@@ -1,4 +1,8 @@
-import { FollowItemContainer, FollowNavigationBar } from "@/widgets/follow";
+import {
+  FollowItemContainer,
+  FollowItemContainerSkeleton,
+  FollowNavigationBar,
+} from "@/widgets/follow";
 import { FollowingUserItem } from "@/widgets/follow/followingUserItem";
 import { useGetFollowingList } from "@/entities/follow/api";
 import { useGetMyProfile } from "@/entities/profile/api";
@@ -24,8 +28,16 @@ export const FollowingPage = withAuth(() => {
     }
   });
 
-  if (!myProfile) {
-    return <div>loading...</div>;
+  if (!followingList || !myProfile) {
+    return (
+      <section>
+        <BackwardNavigationBar
+          label={<h1 className="title-1 text-grey-900">{nicknameParams}</h1>}
+        />
+        <FollowNavigationBar nickname={nicknameParams} />
+        <FollowItemContainerSkeleton />
+      </section>
+    );
   }
 
   return (
@@ -33,7 +45,7 @@ export const FollowingPage = withAuth(() => {
       <BackwardNavigationBar>{nicknameParams}</BackwardNavigationBar>
       <FollowNavigationBar nickname={nicknameParams} />
       <FollowItemContainer>
-        {followingList?.map(({ userId, nickname, pet }) => (
+        {followingList.map(({ userId, nickname, pet }) => (
           <FollowingUserItem
             key={userId}
             nickname={nickname}
