@@ -222,7 +222,7 @@ export const userInfoRegistrationHandlers = [
       );
     }
 
-    if (token === "accessToken-naver") {
+    if (token === "accessToken-ROLE_USER-naver") {
       return HttpResponse.json({
         code: 200,
         message: "success",
