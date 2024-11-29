@@ -11,13 +11,13 @@ export const DevTools = () => {
   // matchMedia(검사 할 문자열) 을 통해 미디어 쿼리를 검사하고 반환되는 이벤트의 matches 결과를 통해
   // 해당 미디어 쿼리가 맞는지 확인합니다.
   const [isWideEnough, setIsWideEnough] = useState(
-    window.matchMedia("(min-width: 1100px)").matches,
+    window.matchMedia("(min-width: 1000px)").matches,
   );
 
   const nickname = "뽀송송";
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 1100px)");
+    const mediaQuery = window.matchMedia("(min-width: 1000px)");
     const handleMediaChange = (event: MediaQueryListEvent) => {
       setIsWideEnough(event.matches);
     };
@@ -25,7 +25,6 @@ export const DevTools = () => {
     mediaQuery.addEventListener("change", handleMediaChange);
     return () => {
       mediaQuery.removeEventListener("change", handleMediaChange);
-      document.cookie = "Authorization-refresh=; path=/; max-age=0";
     };
   }, []);
 
@@ -33,74 +32,54 @@ export const DevTools = () => {
     return null;
   }
 
-  // 눌리는 버튼에 따라 상태 변경
-  const setAuthStore = (role: Role) => {
-    switch (role) {
-      case null:
-        useAuthStore.setState({
-          token: null,
-          role: null,
-          nickname: null,
-        });
-        break;
-      case "ROLE_NONE":
-        useAuthStore.setState({
-          token: "Bearer token",
-          role: "ROLE_NONE",
-          nickname: null,
-        });
-        break;
-      case "ROLE_GUEST":
-        useAuthStore.setState({
-          token: "freshAccessTokenGuest",
-          role: "ROLE_GUEST",
-          nickname,
-        });
-        break;
-      case "ROLE_USER": {
-        useAuthStore.setState({
-          token: "Bearer token",
-          role: "ROLE_USER",
-          nickname,
-        });
-        break;
-      }
-      default:
-        return;
+  const setRefreshToken = ({
+    role,
+    isValid,
+  }: {
+    role: NonNullable<Role>;
+    isValid: boolean;
+  }) => {
+    const refreshToken = `${isValid ? "refreshToken" : "invalidRefreshToken"}-${role}`;
+
+    document.cookie = `Authorization-refresh=${refreshToken}; Path=/; Max-Age=3600`;
+  };
+
+  const setAuthStore = ({
+    role,
+    isValidAccessToken,
+    isValidRefreshToken,
+  }: {
+    role: Role;
+    isValidAccessToken: boolean;
+    isValidRefreshToken: boolean;
+  }) => {
+    if (role === null) {
+      useAuthStore.setState({
+        token: null,
+        role: null,
+        nickname: null,
+      });
+      // 쿠키 삭제
+      document.cookie = `Authorization-refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+      return;
     }
-  };
 
-  const setStaleATandStaleRT = () => {
     useAuthStore.setState({
-      role: "ROLE_USER",
-      token: "staleAccessToken",
+      token: `${isValidAccessToken ? "accessToken" : "invalidAccessToken"}-${role}`,
+      role,
       nickname,
     });
-    document.cookie =
-      "Authorization-refresh=staleRefreshToken; path=/; max-age=3600";
-  };
-
-  const setStaleATandFreshRT = () => {
-    useAuthStore.setState({
-      role: "ROLE_USER",
-      token: "staleAccessToken",
-      nickname,
-    });
-    document.cookie =
-      "Authorization-refresh=freshRefreshToken; path=/; max-age=3600";
+    setRefreshToken({ role, isValid: isValidRefreshToken });
   };
 
   const setSocialUser = () => {
     useAuthStore.setState({
       role: "ROLE_USER",
-      token: "freshAccessToken-naver",
+      token: "accessToken-naver",
       nickname,
     });
-    document.cookie =
-      "Authorization-refresh=freshRefreshToken; path=/; max-age=3600";
+    setRefreshToken({ role: "ROLE_USER", isValid: true });
   };
-
-  // TODO 권한에 따라서 ProfileInfo 에 대한 useQuery InitialData 를 변경해야 합니다.
 
   return (
     <div className="absolute left-4 top-4">
@@ -110,55 +89,53 @@ export const DevTools = () => {
           colorType="primary"
           variant="filled"
           size="small"
-          onClick={() => setAuthStore(null)}
+          onClick={() =>
+            setAuthStore({
+              role: null,
+              isValidAccessToken: true,
+              isValidRefreshToken: true,
+            })
+          }
         >
-          SET ROLE_NULL
+          ROLE_NULL
         </Button>
         <Button
           colorType="primary"
           variant="filled"
           size="small"
-          onClick={() => setAuthStore("ROLE_NONE")}
+          onClick={() =>
+            setAuthStore({
+              role: "ROLE_NONE",
+              isValidAccessToken: true,
+              isValidRefreshToken: true,
+            })
+          }
         >
-          SET ROLE_NONE
+          ROLE_NONE
         </Button>
         <Button
           colorType="primary"
           variant="filled"
           size="small"
-          onClick={() => setAuthStore("ROLE_GUEST")}
+          onClick={() =>
+            setAuthStore({
+              role: "ROLE_GUEST",
+              isValidAccessToken: true,
+              isValidRefreshToken: true,
+            })
+          }
         >
-          SET ROLE_GUEST
+          ROLE_GUEST
         </Button>
         <Button
           colorType="primary"
           variant="filled"
           size="small"
-          onClick={() => setAuthStore("ROLE_USER")}
-        >
-          SET ROLE_USER
-        </Button>
-        {/* 2014/10/05 refresh , access token 로직 추가 */}
-        <Button
-          colorType="primary"
-          variant="filled"
-          size="small"
-          onClick={setStaleATandFreshRT}
+          onClick={setSocialUser}
         >
           <p className="flex flex-col">
             <span>ROLE_USER</span>
-            <span>stale AT & fresh RT</span>
-          </p>
-        </Button>
-        <Button
-          colorType="primary"
-          variant="filled"
-          size="small"
-          onClick={setStaleATandStaleRT}
-        >
-          <p className="flex flex-col">
-            <span>ROLE_USER</span>
-            <span>stale AT & stale RT</span>
+            <span>Social Type : Naver</span>
           </p>
         </Button>
         <Button
@@ -166,13 +143,28 @@ export const DevTools = () => {
           variant="filled"
           size="small"
           onClick={() => {
-            useAuthStore.setState({
+            setAuthStore({
               role: "ROLE_USER",
-              token: "invalidAccessToken",
-              nickname,
+              isValidAccessToken: true,
+              isValidRefreshToken: true,
             });
-            document.cookie =
-              "Authorization-refresh=freshRefreshToken; path=/; max-age=3600";
+          }}
+        >
+          <p className="flex flex-col">
+            <span>ROLE_USER</span>
+            <span>valid AT & valid RT</span>
+          </p>
+        </Button>
+        <Button
+          colorType="primary"
+          variant="filled"
+          size="small"
+          onClick={() => {
+            setAuthStore({
+              role: "ROLE_USER",
+              isValidAccessToken: false,
+              isValidRefreshToken: true,
+            });
           }}
         >
           <p className="flex flex-col">
@@ -185,29 +177,16 @@ export const DevTools = () => {
           variant="filled"
           size="small"
           onClick={() => {
-            useAuthStore.setState({
+            setAuthStore({
               role: "ROLE_USER",
-              token: "invalidAccessToken",
-              nickname,
+              isValidAccessToken: false,
+              isValidRefreshToken: false,
             });
-            document.cookie =
-              "Authorization-refresh=invalidRefreshToken; path=/; max-age=3600";
           }}
         >
           <p className="flex flex-col">
             <span>ROLE_USER</span>
             <span>invalid AT & invalid RT</span>
-          </p>
-        </Button>
-        <Button
-          colorType="primary"
-          variant="filled"
-          size="small"
-          onClick={setSocialUser}
-        >
-          <p className="flex flex-col">
-            <span>ROLE_USER</span>
-            <span>Social Type : Naver</span>
           </p>
         </Button>
       </div>
