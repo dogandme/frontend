@@ -3,6 +3,21 @@ import { profileMarkingThumbnail } from "./profileMarking";
 import { temporaryMarkingList } from "./tempMarkingList";
 
 export const User = {
+  ROLE_NONE: {
+    code: 200,
+    message: "success",
+    content: {
+      nickname: null,
+      socialType: "EMAIL",
+      followersIds: [],
+      followingsIds: [],
+      likes: [],
+      bookmarks: [],
+      tempCnt: 0,
+      markings: [],
+      pet: null,
+    },
+  },
   ROLE_GUEST: {
     code: 200,
     message: "success",

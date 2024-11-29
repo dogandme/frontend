@@ -24,7 +24,7 @@ type Story = StoryObj<typeof MarkingFormModal>;
 export const Default: Story = {
   decorators: [
     (Story) => {
-      useAuthStore.setState({ token: "freshAccessToken" });
+      useAuthStore.setState({ token: "accessToken-ROLE_USER" });
       useMapStore.setState({ mode: "view" });
 
       return (

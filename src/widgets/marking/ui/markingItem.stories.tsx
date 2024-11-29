@@ -10,7 +10,7 @@ const meta: Meta<typeof MarkingItem> = {
   decorators: [
     (Story) => {
       useAuthStore.setState({
-        token: "freshAccessToken",
+        token: "accessToken-ROLE_USER",
       });
       return <Story />;
     },

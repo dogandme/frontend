@@ -88,18 +88,10 @@ export const signUpByEmailHandlers = [
       );
     }
 
-    return HttpResponse.json(
-      {
-        code: 200,
-        message: "success",
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Set-Cookie": "Authorization-refresh=ROLE_NONE; Path=/; Max-Age=60",
-        },
-      },
-    );
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+    });
   }),
   http.post<
     PathParams,
@@ -125,6 +117,7 @@ export const signUpByEmailHandlers = [
       { status: 400 },
     );
   }),
+
   http.post<
     PathParams,
     {
@@ -142,7 +135,7 @@ export const signUpByEmailHandlers = [
       code: 200,
       message: "success",
       content: {
-        authorization: "token",
+        authorization: "accessToken-ROLE_NONE",
         role: "ROLE_NONE",
       },
     });
@@ -185,26 +178,10 @@ export const userInfoRegistrationHandlers = [
       message: "success",
       content: {
         nickname,
-        authorization: "Bearer token-for-role-guest",
+        authorization: "accessToken-ROLE_GUEST",
         role: "ROLE_GUEST",
       },
     });
-    return HttpResponse.json(
-      {
-        code: 200,
-        message: "success",
-        content: {
-          nickname,
-          role: "ROLE_GUEST",
-        },
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Set-Cookie": "Authorization-refresh=ROLE_GUEST; Path=/; Max-Age=60",
-        },
-      },
-    );
   }),
 
   http.post<
@@ -232,10 +209,9 @@ export const userInfoRegistrationHandlers = [
 
   http.get(MY_INFO_END_POINT, async ({ request }) => {
     const token = request.headers.get("Authorization");
-
     await new Promise((res) => setTimeout(res, 1500));
 
-    if (token === "staleAccessToken") {
+    if (!token?.startsWith("accessToken")) {
       return HttpResponse.json(
         {
           code: 401,
@@ -247,7 +223,7 @@ export const userInfoRegistrationHandlers = [
       );
     }
 
-    if (token === "freshAccessToken-naver") {
+    if (token === "accessToken-ROLE_USER-naver") {
       return HttpResponse.json({
         code: 200,
         message: "success",
@@ -298,7 +274,8 @@ export const markingModalHandlers = [
      * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
      */
     const token = request.headers.get("Authorization");
-    if (token === "staleAccessToken") {
+
+    if (!token?.startsWith("accessToken")) {
       return HttpResponse.json(
         {
           code: 401,
@@ -367,7 +344,8 @@ export const markingModalHandlers = [
      * 2024/10/07 access token에 대한 테스트 로직을 추가 합니다.
      */
     const token = request.headers.get("Authorization");
-    if (token === "staleAccessToken") {
+
+    if (!token?.startsWith("accessToken")) {
       return HttpResponse.json(
         {
           code: 401,
@@ -403,8 +381,8 @@ export const loginHandlers = [
         code: 200,
         message: "success",
         content: {
-          authorization: "Bearer token",
-          role: "USER_USER",
+          authorization: "accessToken-ROLE_USER",
+          role: "ROLE_USER",
           nickname: "뽀송이",
           userId: 1234,
         },
@@ -416,7 +394,7 @@ export const loginHandlers = [
         code: 200,
         message: "success",
         content: {
-          authorization: "Bearer token",
+          authorization: "accessToken-ROLE_NONE",
           role: "ROLE_NONE",
           nickname: null,
         },
@@ -440,9 +418,10 @@ export const getProfileHandlers = [
     await new Promise((res) => setTimeout(res, 1000));
     const requestUrl = new URL(request.url);
     const nickname = requestUrl.searchParams.get("nickname");
-    // 2024/10/05 AccessToken 검증 로직을 추가 합니다.
+
     const token = request.headers.get("Authorization");
-    if (token === "staleAccessToken") {
+
+    if (!token?.startsWith("accessToken")) {
       return HttpResponse.json(
         {
           code: 401,
@@ -453,11 +432,16 @@ export const getProfileHandlers = [
         },
       );
     }
-    if (token === "freshAccessTokenGuest" && nickname === "뽀송송") {
+
+    if (token === "accessToken-ROLE_NONE" && nickname === "뽀송송") {
+      return HttpResponse.json(User["ROLE_NONE"]);
+    }
+
+    if (token === "accessToken-ROLE_GUEST" && nickname === "뽀송송") {
       return HttpResponse.json(User["ROLE_GUEST"]);
     }
 
-    if (token?.split("-")[0] === "freshAccessToken" && nickname === "뽀송송") {
+    if (token === "accessToken-ROLE_USER" && nickname === "뽀송송") {
       return HttpResponse.json(User["ROLE_USER"]);
     }
 
@@ -470,6 +454,7 @@ export const getProfileHandlers = [
     }
 
     const userInfo = otherUsers.find((user) => user.nickname === nickname);
+
     if (!userInfo) {
       return HttpResponse.json(
         {
@@ -536,6 +521,7 @@ export const addressHandlers = [
 export const postLogoutHandlers = [
   http.post(SETTING_END_POINT.LOGOUT, ({ request }) => {
     const token = request.headers.get("Authorization");
+
     if (!token) {
       return HttpResponse.json(
         {
@@ -608,13 +594,14 @@ export const petInfoFormHandlers = [
         message: "success",
         content: {
           role: "ROLE_USER",
-          authorization: "Bearer token for ROLE_USER",
+          authorization: "accessToken-ROLE_USER",
         },
       },
       {
         headers: {
           "Content-Type": "application/json",
-          "Set-Cookie": "Authorization-refresh=ROLE_USER; Path=/; Max-Age=60",
+          "Set-Cookie":
+            "Authorization-refresh=refreshToken-ROLE_USER; Path=/; Max-Age=3600",
         },
       },
     );
@@ -625,19 +612,7 @@ const getValidAuthorizationHandler = [
   http.get(APP_END_POINT.REFRESH_ACCESS_TOKEN, ({ cookies }) => {
     const refreshToken = cookies["Authorization-refresh"];
 
-    if (!refreshToken) {
-      return HttpResponse.json(
-        {
-          code: 400,
-          message: "RefreshToken이 존재하지 않습니다.",
-        },
-        {
-          status: 400,
-        },
-      );
-    }
-
-    if (refreshToken !== "freshRefreshToken") {
+    if (!refreshToken?.startsWith("refreshToken")) {
       return HttpResponse.json(
         {
           code: 401,
@@ -648,12 +623,15 @@ const getValidAuthorizationHandler = [
         },
       );
     }
+
+    const role = refreshToken.split("-")[1];
+
     return HttpResponse.json({
       code: 200,
       message: "success",
       content: {
-        authorization: "freshAccessToken",
-        role: "ROLE_USER",
+        authorization: `accessToken-${role}`,
+        role,
         nickname: "뽀송송",
       },
     });
@@ -668,7 +646,8 @@ const putChangeRegionHandler = [
       const { newIds } = await request.json();
 
       const token = request.headers.get("Authorization")!;
-      if (token === "staleAccessToken") {
+
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -704,9 +683,11 @@ export const deleteAccountHandlers = [
     SETTING_END_POINT.DELETE_ACCOUNT,
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));
+
       const token = request.headers.get("Authorization");
       const { password } = await request.json();
-      if (!token || token === "staleAccessToken") {
+
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -742,9 +723,10 @@ const putChangeGenderHandler = [
   http.put(SETTING_END_POINT.CHANGE_GENDER, async ({ request }) => {
     await new Promise((res) => setTimeout(res, 1000));
 
-    const token = request.headers.get("Authorization")!;
+    const token = request.headers.get("Authorization");
     const { gender } = (await request.json()) as PutChangeGenderRequest;
-    if (token === "staleAccessToken") {
+
+    if (!token?.startsWith("accessToken")) {
       return HttpResponse.json(
         {
           code: 401,
@@ -779,7 +761,7 @@ const putChangePasswordHandler = [
       const token = request.headers.get("Authorization");
       const { password, newPw, newPwChk } = await request.json();
 
-      if (token === "staleAccessToken") {
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -833,7 +815,7 @@ export const putSetPasswordHandler = [
       const token = request.headers.get("Authorization");
       const { newPw, newPwChk } = await request.json();
 
-      if (token === "staleAccessToken") {
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -877,7 +859,8 @@ const putChangeAgeHandler = [
       const { age } = await request.json();
 
       const token = request.headers.get("Authorization")!;
-      if (token === "staleAccessToken") {
+
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -924,7 +907,7 @@ const putChangeNickname = [
 
       const token = request.headers.get("Authorization")!;
 
-      if (token === "staleAccessToken") {
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -975,8 +958,10 @@ const putChangePetInformationHandler = [
     SETTING_END_POINT.CHANGE_PET_INFO,
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));
+
       const token = request.headers.get("Authorization")!;
-      if (token === "staleAccessToken") {
+
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -1028,7 +1013,9 @@ const getFollowerListHandler = [
     `${API_BASE_URL}/users/follows/followers/:nickname`,
     async ({ request, params }) => {
       await new Promise((res) => setTimeout(res, 1000));
+
       const nickname = params.nickname;
+
       if (typeof nickname !== "string") {
         return HttpResponse.json(
           {
@@ -1042,7 +1029,8 @@ const getFollowerListHandler = [
       }
 
       const token = request.headers.get("Authorization");
-      if (token === "staleAccessToken") {
+
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -1088,6 +1076,7 @@ const getFollowerListHandler = [
       const itemPerPage = 20;
       const start = Number(offset) * itemPerPage;
       const end = start + itemPerPage;
+
       return HttpResponse.json({
         code: 200,
         message: "success",
@@ -1120,7 +1109,8 @@ const getFollowingListHandler = [
       await new Promise((res) => setTimeout(res, 1000));
 
       const token = request.headers.get("Authorization");
-      if (token === "staleAccessToken") {
+
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -1240,7 +1230,7 @@ const getMarkingListHandler = [
     const url = new URL(request.url);
     const token = request.headers.get("Authorization");
 
-    if (token === "invalidAccessToken") {
+    if (token && token.startsWith("invalidAccessToken")) {
       return HttpResponse.json(
         {
           code: 401,
@@ -1329,7 +1319,7 @@ const getBoundaryMarkerListHandler = [
     const url = new URL(request.url);
     const token = request.headers.get("Authorization");
 
-    if (token === "invalidAccessToken") {
+    if (token && token.startsWith("invalidAccessToken")) {
       return HttpResponse.json(
         {
           code: 401,
@@ -1381,7 +1371,7 @@ const postFollowingHandler = [
       await new Promise((res) => setTimeout(res, 1000));
       const token = request.headers.get("Authorization");
 
-      if (token === "staleAccessToken") {
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -1440,7 +1430,7 @@ const deleteFollowingHandler = [
       await new Promise((res) => setTimeout(res, 1000));
       const token = request.headers.get("Authorization");
 
-      if (token === "staleAccessToken") {
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -1501,7 +1491,7 @@ const deleteFollowerHandler = [
       await new Promise((res) => setTimeout(res, 1000));
       const token = request.headers.get("Authorization");
 
-      if (token === "staleAccessToken") {
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -1562,7 +1552,8 @@ const getProfileThumbnailHandler = [
     async ({ request, params }) => {
       const { nickname } = params;
       const token = request.headers.get("Authorization");
-      if (token === "staleAccessToken") {
+
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -1662,7 +1653,7 @@ const deleteTemporaryMarkingHandler = [
 
       const token = request.headers.get("Authorization");
 
-      if (token === "staleAccessToken") {
+      if (!token?.startsWith("accessToken")) {
         return HttpResponse.json(
           {
             code: 401,
@@ -1698,6 +1689,20 @@ const putModifyTempMarkingHandler = [
     const targetTempPost = temporaryMarkingList.find(
       (marking) => marking.markingId === id,
     );
+
+    const token = request.headers.get("Authorization");
+
+    if (!token?.startsWith("accessToken")) {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
 
     if (!targetTempPost) {
       return HttpResponse.json(
@@ -1868,11 +1873,11 @@ const getMyMarkerList = [
   http.get(MARKER_END_POINT.MY, ({ request }) => {
     const token = request.headers.get("Authorization");
 
-    if (!token || token === "staleAccessToken") {
+    if (!token?.startsWith("accessToken")) {
       return HttpResponse.json(
         {
           code: 401,
-          message: "토큰 검증에 실패 했습니다.",
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
         },
         {
           status: 401,
@@ -1892,11 +1897,11 @@ const getLikedMarkerListHandler = [
   http.get(`${API_BASE_URL}/markings/marks/likes`, async ({ request }) => {
     const token = request.headers.get("Authorization");
 
-    if (!token || token === "staleAccessToken") {
+    if (!token?.startsWith("accessToken")) {
       return HttpResponse.json(
         {
           code: 401,
-          message: "토큰 검증에 실패 했습니다.",
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
         },
         {
           status: 401,
@@ -1916,11 +1921,11 @@ const getSavedMarkerListHandler = [
   http.get(`${API_BASE_URL}/markings/marks/saves`, async ({ request }) => {
     const token = request.headers.get("Authorization");
 
-    if (!token || token === "staleAccessToken") {
+    if (!token?.startsWith("accessToken")) {
       return HttpResponse.json(
         {
           code: 401,
-          message: "토큰 검증에 실패 했습니다.",
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
         },
         {
           status: 401,
@@ -1939,24 +1944,41 @@ const getSavedMarkerListHandler = [
 // 해당 핸들러는 내 마킹이 아닌 경우에는 랜덤한 마킹을 만들어 반환합니다.
 // 이에 이 핸들러는 내 마킹이 아닌 경우엔 부정확한 결과를 보여 줄 수 있습니다.
 const getMarkingDetailRequestHandler = [
-  http.get(`${API_BASE_URL}/markings/:markingId`, async ({ params }) => {
-    const content = myMarkingList.find(
-      ({ markingId }) => markingId === Number(params.markingId),
-    );
+  http.get(
+    `${API_BASE_URL}/markings/:markingId`,
+    async ({ request, params }) => {
+      const token = request.headers.get("Authorization");
 
-    return HttpResponse.json({
-      code: 200,
-      message: "success",
-      content:
-        content ??
-        createMockMarking(Number(params.markingId), {
-          southBottomLat: 35.0,
-          northTopLat: 35.1,
-          southLeftLng: 129.0,
-          northRightLng: 129.1,
-        }),
-    });
-  }),
+      if (!token?.startsWith("accessToken")) {
+        return HttpResponse.json(
+          {
+            code: 401,
+            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+          },
+          {
+            status: 401,
+          },
+        );
+      }
+
+      const content = myMarkingList.find(
+        ({ markingId }) => markingId === Number(params.markingId),
+      );
+
+      return HttpResponse.json({
+        code: 200,
+        message: "success",
+        content:
+          content ??
+          createMockMarking(Number(params.markingId), {
+            southBottomLat: 35.0,
+            northTopLat: 35.1,
+            southLeftLng: 129.0,
+            northRightLng: 129.1,
+          }),
+      });
+    },
+  ),
 ];
 
 // * 나중에 msw 사용을 대비하여 만들었습니다.

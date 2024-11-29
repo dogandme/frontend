@@ -20,7 +20,7 @@ export default meta;
 export const Default: StoryObj<typeof LoginForm> = {
   parameters: {
     msw: {
-      handlers: [...handlers],
+      handlers,
     },
   },
 
@@ -137,8 +137,8 @@ export const APISuccessTest: StoryObj<typeof LoginForm> = {
       // 목업된 API 데이터를 받기 위한 딜레이 설정
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const { token, role, nickname } = useAuthStore.getState();
-      expect(token).toBe("Bearer token");
-      expect(role).toBe("USER_USER");
+      expect(token).toBe("accessToken-ROLE_USER");
+      expect(role).toBe("ROLE_USER");
       expect(nickname).toBe("뽀송이");
     });
   },

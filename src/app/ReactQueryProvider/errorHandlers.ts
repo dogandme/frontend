@@ -45,6 +45,10 @@ export const useRefreshToken = () => {
         resetAuthStore();
         queryClient.clear();
 
+        // 실패하면 failedQueue, isRefreshing 초기화
+        isRefreshing.current = false;
+        failedQueue.current = [];
+
         if (
           (
             window as Window &
