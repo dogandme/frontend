@@ -36,9 +36,7 @@ export const EditInfoPage = withAuth(() => {
 const EditInfoPageSkeleton = () => {
   return (
     <>
-      <BackwardNavigationBar
-        label={<h1 className="title-1 text-grey-700">내 정보 수정</h1>}
-      />
+      <BackwardNavigationBar>내 정보 수정</BackwardNavigationBar>
 
       <section className="flex flex-col gap-4 px-4 py-4">
         <button className="setting-item">

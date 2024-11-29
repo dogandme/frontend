@@ -31,10 +31,9 @@ export const TemporaryMarkingPage = withAuth(() => {
   if (!data) {
     return (
       <>
-        <BackwardNavigationBar
-          label={<h1 className="text-grey-900 title-1">임시저장</h1>}
-          onClick={() => navigate(`/@${nickname}`)}
-        />
+        <BackwardNavigationBar onClick={() => navigate(`/@${nickname}`)}>
+          임시저장
+        </BackwardNavigationBar>
         <section className="pt-4 px-4 pb-32 flex flex-col gap-8">
           <div className="flex flex-col gap-8">
             <p className="skeleton title-2">loading loading</p>

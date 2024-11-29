@@ -19,7 +19,7 @@ export const AccountManagementPage = withAuth(() => {
 
   const { email, socialType, isPasswordSet } = myInfo;
 
-  return ( 
+  return (
     <>
       <BackwardNavigationBar>계정 관리</BackwardNavigationBar>
       <section className="flex flex-col gap-4 px-4 py-4">
@@ -35,10 +35,7 @@ export const AccountManagementPage = withAuth(() => {
 const AccountManagementPageSkeleton = () => {
   return (
     <>
-      <BackwardNavigationBar
-        label={<h1 className="title-1 text-grey-700">내 정보 수정</h1>}
-      />
-
+      <BackwardNavigationBar>내 정보 수정</BackwardNavigationBar>
       <section className="flex flex-col gap-4 px-4 py-4">
         <div className="setting-item">
           <p className="skeleton">이메일 계정</p>
