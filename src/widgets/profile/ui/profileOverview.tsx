@@ -41,12 +41,6 @@ export const ProfileOverView = ({
           <ProfileImage
             imageUrl={profile}
             nickname={nickname}
-
-
-
-
-
-
             size="xLarge"
             className="rounded-2xl"
           />
