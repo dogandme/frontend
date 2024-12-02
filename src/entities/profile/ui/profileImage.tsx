@@ -24,7 +24,7 @@ export const ProfileImage = ({
 }: ProfileImageProps) => {
   const src = `${API_BASE_URL}/pets/image/${imageUrl}`;
 
-  const { isLoading, getImageCache } = useImageState(
+  const { isLoading, imageState } = useImageState(
     `${API_BASE_URL}/pets/image/${imageUrl}`,
   );
 
@@ -33,7 +33,7 @@ export const ProfileImage = ({
   }
   return (
     <img
-      src={getImageCache(src).isSuccess ? src : "/default-image.png"}
+      src={imageState[src].isSuccess ? src : "/default-image.png"}
       alt={`${nickname}의 프로필 이미지`}
       className={`object-cover  ${profileSizeMap[size]} ${className}`}
     />

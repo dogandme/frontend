@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface compressFileImageOptions {
   maxSize: number;
@@ -103,52 +103,68 @@ export const compressFileImage: compressFileImage = async (file, options) => {
   return compressedFile;
 };
 
-export const useImageState = (source: string | { src: string }[]) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const imageCache = useRef(new Map<string, { isSuccess: boolean }>()).current;
+interface imageState {
+  [key: string]: { isSuccess: boolean };
+}
 
-  const getImageCache = (src: string) => {
-    const imageState = imageCache.get(src);
-    return imageState ? imageState : { isSuccess: false };
+export const useImageState = (source?: string | string[]) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [imageState, setImageState] = useState<imageState>({});
+
+  const loadImage = async (source: string | string[]) => {
+    setIsLoading(true);
+    if (typeof source === "string") {
+      const img = new Image();
+      img.src = source;
+      img.onload = () => {
+        setIsLoading(false);
+        setImageState({ [source]: { isSuccess: true } });
+      };
+      img.onerror = () => {
+        setIsLoading(false);
+        setHasError(true);
+        setImageState({ [source]: { isSuccess: false } });
+      };
+      return;
+    }
+
+    const imagePromises = await Promise.allSettled(
+      source.map(
+        (src) =>
+          new Promise<string>((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+              resolve(src);
+            };
+            img.onerror = () => {
+              reject(src);
+            };
+          }),
+      ),
+    );
+
+    setIsLoading(false);
+    setHasError(imagePromises.some(({ status }) => status === "rejected"));
+    setImageState((prev) => ({
+      ...imagePromises.reduce(
+        (acc, result, idx) => ({
+          ...acc,
+          [source[idx]]: {
+            isSuccess: result.status === "fulfilled",
+          },
+        }),
+        prev as imageState,
+      ),
+    }));
   };
 
   useEffect(() => {
-    const loadImage = (src: string) => {
-      if (imageCache.has(src)) {
-        return Promise.resolve();
-      }
-
-      return new Promise<void>((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-        img.onload = () => {
-          imageCache.set(src, { isSuccess: true });
-          resolve();
-        };
-        img.onerror = () => {
-          imageCache.set(src, { isSuccess: false });
-          reject(new Error(`Failed to load image: ${src}`));
-        };
-      });
-    };
-
-    const loadImages = async () => {
-      try {
-        if (Array.isArray(source)) {
-          await Promise.allSettled(source.map(({ src }) => loadImage(src)));
-        } else {
-          await loadImage(source);
-        }
-        setIsLoading(false);
-      } catch {
-        setHasError(true);
-        setIsLoading(false);
-      }
-    };
-
-    loadImages();
+    if (source) {
+      loadImage(source);
+    }
   }, [source]);
 
-  return { isLoading, hasError, getImageCache };
+  return { isLoading, hasError, imageState, loadImage };
 };

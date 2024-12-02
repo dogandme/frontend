@@ -492,7 +492,9 @@ const MarkingItemImages = () => {
     alt: `${pet.name}의 마킹 이미지`,
     id,
   }));
-  const { isLoading, getImageCache } = useImageState(imageUrls);
+  const { isLoading, imageState } = useImageState(
+    imageUrls.map(({ src }) => src),
+  );
 
   if (isLoading) {
     return (
@@ -507,7 +509,7 @@ const MarkingItemImages = () => {
   return (
     <ImgSlider>
       {imageUrls.map(({ src, alt, id }) => {
-        const { isSuccess } = getImageCache(src);
+        const { isSuccess } = imageState[src];
         return (
           <ImgSlider.ImgItem
             key={id}

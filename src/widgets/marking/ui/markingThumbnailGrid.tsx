@@ -21,8 +21,15 @@ interface MarkingThumbnailGridProps {
 export const MarkingThumbnailGrid = ({
   nickname,
 }: MarkingThumbnailGridProps) => {
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useGetDashboardMarkingThumbnail(nickname);
+  const {
+    data = [],
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    imageState,
+    makeMarkingImageSource,
+  } = useGetDashboardMarkingThumbnail(nickname);
 
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -30,9 +37,9 @@ export const MarkingThumbnailGrid = ({
     }
   });
 
-  const { nicknameParams, isMyPage } = useNicknameParams();
+  const { isMyPage } = useNicknameParams();
 
-  if (!data) {
+  if (isLoading) {
     return <MarkingThumbnailGridSkeleton />;
   }
 
@@ -44,59 +51,32 @@ export const MarkingThumbnailGrid = ({
     );
   }
 
-  const thumbnailList = data.map(({ markingId, previewImage }) => ({
-    src: `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`,
-    markingId,
-  }));
-
   return (
-    <section className="w-full grid grid-cols-3 gap-2">
-      <MarkingThumbnailGridImages
-        thumbnailList={thumbnailList}
-        nickname={nicknameParams}
-      />
-      <div ref={setNode} />
-    </section>
+    <>
+      <section className="w-full grid grid-cols-3 gap-2">
+        {data.map(({ markingId, previewImage }) => {
+          const src = makeMarkingImageSource(markingId, previewImage);
+          return (
+            <Link
+              to={`/@${nickname}/markings`}
+              key={markingId}
+              className="aspect-square"
+              state={{ markingId }}
+            >
+              <img
+                src={imageState[src].isSuccess ? src : "/default-image.png"}
+                alt={`${nickname}의 ${markingId} 마킹의 썸네일 이미지`}
+                className="w-full h-full object-cover rounded-[1rem]"
+              />
+            </Link>
+          );
+        })}
+        <div ref={setNode} />
+      </section>
+      {isFetchingNextPage && <div>TOOD 스피너로 변경하기</div>}
+    </>
   );
 };
-
-interface MarkingThumbnailGridImagesProps {
-  thumbnailList: (Pick<Marking, "markingId"> & {
-    src: string;
-  })[];
-  nickname: string;
-}
-
-const MarkingThumbnailGridImages = ({
-  thumbnailList,
-  nickname,
-}: MarkingThumbnailGridImagesProps) => {
-  const { isLoading, getImageCache } = useImageState(thumbnailList);
-
-  if (isLoading) {
-    return thumbnailList.map((_, idx) => (
-      <div key={idx} className="aspect-square skeleton  rounded-[1rem]" />
-    ));
-  }
-
-  return thumbnailList.map(({ markingId, src }) => {
-    const { isSuccess } = getImageCache(src);
-    return (
-      <Link
-        to={`/@${nickname}/markings`}
-        key={markingId}
-        className="aspect-square"
-        state={{ markingId }}
-      >
-        <img
-          src={isSuccess ? src : "/default-image.png"}
-          alt={`${nickname}의 ${markingId} 마킹의 썸네일 이미지`}
-          className="w-full h-full object-cover rounded-[1rem]"
-        />
-      </Link>
-    );
-  });
-}; 
 
 export const MarkingThumbnailGridSkeleton = () => (
   <section className="w-full grid grid-cols-3 gap-2">
