@@ -108,12 +108,15 @@ interface imageState {
 }
 
 export const useImageState = (source?: string | string[]) => {
-  const [isLoading, setIsLoading] = useState(()=> source ? true : false);
+  const [isLoading, setIsLoading] = useState(() => (source ? true : false));
   const [imageState, setImageState] = useState<imageState>({});
 
   const loadImage = async (source: string | string[]) => {
-    setIsLoading(true);
     if (typeof source === "string") {
+      if (!imageState[source]) {
+        return;
+      }
+      setIsLoading(true);
       const img = new Image();
       img.src = source;
       img.onload = () => {
@@ -127,8 +130,14 @@ export const useImageState = (source?: string | string[]) => {
       return;
     }
 
+    const nonCachedImages = source.filter((src) => !imageState[src]);
+    if (nonCachedImages.length === 0) {
+      return;
+    }
+
+    setIsLoading(true);
     const imagePromises = await Promise.allSettled(
-      source.map(
+      nonCachedImages.map(
         (src) =>
           new Promise<string>((resolve, reject) => {
             const img = new Image();
@@ -142,7 +151,6 @@ export const useImageState = (source?: string | string[]) => {
           }),
       ),
     );
-
     setIsLoading(false);
     setImageState((prev) => ({
       ...imagePromises.reduce(
@@ -159,7 +167,6 @@ export const useImageState = (source?: string | string[]) => {
 
   useEffect(() => {
     if (source) {
-
       loadImage(source);
     }
   }, [source]);
