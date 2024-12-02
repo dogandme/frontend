@@ -108,7 +108,7 @@ interface imageState {
 }
 
 export const useImageState = (source?: string | string[]) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(()=> source ? true : false);
   const [imageState, setImageState] = useState<imageState>({});
 
   const loadImage = async (source: string | string[]) => {
@@ -159,6 +159,7 @@ export const useImageState = (source?: string | string[]) => {
 
   useEffect(() => {
     if (source) {
+
       loadImage(source);
     }
   }, [source]);
