@@ -133,9 +133,8 @@ const LocalMarkingList = ({
                 className="aspect-square"
                 onClick={() => handleClick({ lat, lng, markingId })}
               >
-                {/* TODO 이미지 에러 처리 */}
                 <img
-                  src={imageState[src].isSuccess ? src : "default-image.png"}
+                  src={imageState[src].isSuccess ? src : "failed_image.png"}
                   alt={`${markingId}번 마킹 이미지`}
                   className="w-full h-full object-cover"
                 />

@@ -513,7 +513,7 @@ const MarkingItemImages = () => {
         return (
           <ImgSlider.ImgItem
             key={id}
-            src={isSuccess ? src : "/default-image.png"}
+            src={isSuccess ? src : "/failed_image.png"}
             alt={alt}
           />
         );

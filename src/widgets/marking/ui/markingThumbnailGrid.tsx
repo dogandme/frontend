@@ -56,7 +56,7 @@ export const MarkingThumbnailGrid = ({
               state={{ markingId }}
             >
               <img
-                src={imageState[src].isSuccess ? src : "/default-image.png"}
+                src={imageState[src].isSuccess ? src : "/failed_image.png"}
                 alt={`${nickname}의 ${markingId} 마킹의 썸네일 이미지`}
                 className="w-full h-full object-cover rounded-[1rem]"
               />
