@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
-import { apiClient } from "@/shared/lib";
+import { API_BASE_URL } from "@/shared/constants";
+import { apiClient, useImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKING_THUMBNAIL_END_POINT, markerQueryKey } from "../constants";
 
@@ -38,8 +40,11 @@ export const useGetDashboardMarkingThumbnail = (
   nickname: GetDashboardMarkingThumbnailRequest["nickname"],
 ) => {
   const token = useAuthStore((state) => state.token);
+  const [isFirstPageImageLoading, setIsFirstPageImageLoading] =
+    useState<boolean>(true);
+  const { loadImage, isLoading: isImageLoading, imageState } = useImageState();
 
-  return useInfiniteQuery({
+  const { data, isLoading, isFetchingNextPage, ...rest } = useInfiniteQuery({
     queryKey: markerQueryKey.markerThumbnail(nickname),
     queryFn: token
       ? ({ pageParam = 0 }) =>
@@ -55,4 +60,34 @@ export const useGetDashboardMarkingThumbnail = (
     select: ({ pages }) => pages.flatMap((page) => page.marks),
     initialPageParam: 0,
   });
+
+  const makeMarkingImageSource = (markingId: number, previewImage: string) =>
+    `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`;
+
+  useEffect(() => {
+    (async function () {
+      if (!data) {
+        return;
+      }
+      const sourceList = data.map(({ markingId, previewImage }) =>
+        makeMarkingImageSource(markingId, previewImage),
+      );
+      await loadImage(sourceList);
+      if (isFirstPageImageLoading) {
+        setIsFirstPageImageLoading(false);
+      }
+    })();
+  }, [data]);
+
+  return {
+    data: data?.filter(
+      ({ markingId, previewImage }) =>
+        imageState[makeMarkingImageSource(markingId, previewImage)],
+    ),
+    isLoading: isLoading || isFirstPageImageLoading,
+    isFetchingNextPage: isFetchingNextPage || isImageLoading,
+    imageState,
+    makeMarkingImageSource,
+    ...rest,
+  };
 };

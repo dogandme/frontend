@@ -9,8 +9,8 @@ import {
   useGetMarkingList,
 } from "@/entities/marking/api";
 import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
-import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
-import { useImageState, useInfiniteScroll } from "@/shared/lib";
+import { ROUTER_PATH } from "@/shared/constants";
+import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
 import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
@@ -64,12 +64,13 @@ const LocalMarkingList = ({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    imageState,
+    makeMarkingImageSource,
   } = useGetMarkingList({
     ...boundsParams,
     sortType,
     searchType: "NEARBY",
   });
-
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -110,7 +111,7 @@ const LocalMarkingList = ({
   if (isLoading) {
     return (
       <MarkingList display="grid">
-        {Array.from({ length: markingList.length }).map((_, idx) => (
+        {Array.from({ length: 20 }).map((_, idx) => (
           <div key={idx} className="aspect-square skeleton m-1" />
         ))}
       </MarkingList>
@@ -123,59 +124,30 @@ const LocalMarkingList = ({
         <EmptyMarkingThumbnailGrid />
       ) : (
         <MarkingList display="grid">
-          <LocalMarkingImages markingList={markingList} onClick={handleClick} />
+          {markingList.map(({ lat, lng, markingId, previewImage }) => {
+            const src = makeMarkingImageSource(markingId, previewImage);
+            return (
+              <button
+                key={markingId}
+                type="button"
+                className="aspect-square"
+                onClick={() => handleClick({ lat, lng, markingId })}
+              >
+                {/* TODO 이미지 에러 처리 */}
+                <img
+                  src={imageState[src].isSuccess ? src : "default-image.png"}
+                  alt={`${markingId}번 마킹 이미지`}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            );
+          })}
         </MarkingList>
       )}
+      {isFetchingNextPage && <div>TOOD 스피너로 변경하기</div>}
       <div className="h-[.125rem]" ref={setNode} />
     </>
   );
-};
-
-interface LocalMarkingImageProps {
-  markingList: Marking[];
-  onClick: ({
-    lat,
-    lng,
-    markingId,
-  }: Pick<Marking, "lat" | "lng" | "markingId">) => void;
-}
-
-const LocalMarkingImages = ({
-  markingList,
-  onClick,
-}: LocalMarkingImageProps) => {
-  const { isLoading, getImageCache } = useImageState(
-    markingList.map(({ markingId, previewImage }) => ({
-      src: `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`,
-    })),
-  );
-
-  if (isLoading) {
-    return Array.from({ length: markingList.length }).map((_, idx) => (
-      <div key={idx} className="aspect-square skeleton mx-1 my-1" />
-    ));
-  }
-
-  return markingList.map(({ lat, lng, markingId, previewImage }) => {
-    const src = `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`;
-    const { isSuccess } = getImageCache(src);
-
-    return (
-      <button
-        key={markingId}
-        type="button"
-        className="aspect-square"
-        onClick={() => onClick({ lat, lng, markingId })}
-      >
-        {/* TODO 이미지 에러 처리 */}
-        <img
-          src={isSuccess ? src : "default-image.png"}
-          alt={`${markingId}번 마킹 이미지`}
-          className="w-full h-full object-cover"
-        />
-      </button>
-    );
-  });
 };
 
 interface LocalMarkingBottomSheetHeaderProps {

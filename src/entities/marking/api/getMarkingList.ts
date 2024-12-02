@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
-import { apiClient } from "@/shared/lib";
+import { API_BASE_URL } from "@/shared/constants";
+import { apiClient, useImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import {
   MARKING_END_POINT,
@@ -148,8 +150,10 @@ export const useGetMarkingList = ({
   const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
 
   const { isIdle: isMapIdle } = useMapStore.getState();
-
-  return useInfiniteQuery({
+  const [isFirstPageImageLoading, setIsFirstPageImageLoading] =
+    useState<boolean>(true);
+  const { loadImage, isLoading: isImageLoading, imageState } = useImageState();
+  const { data, isLoading, isFetchingNextPage, ...rest } = useInfiniteQuery({
     queryKey: markingQueryKey.boundaryMarkingList(
       {
         southWestLat: southWestLat!,
@@ -196,4 +200,33 @@ export const useGetMarkingList = ({
 
     gcTime: 0,
   });
+  const makeMarkingImageSource = (markingId: number, previewImage: string) =>
+    `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`;
+
+  useEffect(() => {
+    (async function () {
+      if (!data) {
+        return;
+      }
+      const sourceList = data.map(({ markingId, previewImage }) =>
+        makeMarkingImageSource(markingId, previewImage),
+      );
+      await loadImage(sourceList);
+      if (isFirstPageImageLoading) {
+        setIsFirstPageImageLoading(false);
+      }
+    })();
+  }, [data]);
+
+  return {
+    data: data?.filter(
+      ({ markingId, previewImage }) =>
+        imageState[makeMarkingImageSource(markingId, previewImage)],
+    ),
+    isLoading: isLoading || isFirstPageImageLoading,
+    isFetchingNextPage: isFetchingNextPage || isImageLoading,
+    imageState,
+    makeMarkingImageSource,
+    ...rest,
+  };
 };
