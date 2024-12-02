@@ -12,7 +12,7 @@ export const NavigationBar = ({ children }: NavigationBarProps) => {
 
   return (
     <nav
-      className={`flex py-2 px-1 items-center ${isButtonLeft ? "justify-start" : children[0] ? "justify-between" : "justify-end"}`}
+      className={`flex py-2 items-center ${isButtonLeft ? "px-1 justify-start" : children[0] ? "pl-4 pr-1 justify-between" : "justify-end"}`}
     >
       {children.map((child) =>
         typeof child === "string" ? (
