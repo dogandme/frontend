@@ -111,7 +111,7 @@ const LocalMarkingList = ({
     return (
       <MarkingList display="grid">
         {Array.from({ length: markingList.length }).map((_, idx) => (
-          <div key={idx} className="aspect-square skeleton  mx-1 my-1" />
+          <div key={idx} className="aspect-square skeleton m-1" />
         ))}
       </MarkingList>
     );
