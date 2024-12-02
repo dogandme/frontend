@@ -109,7 +109,6 @@ interface imageState {
 
 export const useImageState = (source?: string | string[]) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
   const [imageState, setImageState] = useState<imageState>({});
 
   const loadImage = async (source: string | string[]) => {
@@ -123,7 +122,6 @@ export const useImageState = (source?: string | string[]) => {
       };
       img.onerror = () => {
         setIsLoading(false);
-        setHasError(true);
         setImageState({ [source]: { isSuccess: false } });
       };
       return;
@@ -146,7 +144,6 @@ export const useImageState = (source?: string | string[]) => {
     );
 
     setIsLoading(false);
-    setHasError(imagePromises.some(({ status }) => status === "rejected"));
     setImageState((prev) => ({
       ...imagePromises.reduce(
         (acc, result, idx) => ({
@@ -166,5 +163,5 @@ export const useImageState = (source?: string | string[]) => {
     }
   }, [source]);
 
-  return { isLoading, hasError, imageState, loadImage };
+  return { isLoading, imageState, loadImage };
 };
