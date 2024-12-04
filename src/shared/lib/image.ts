@@ -103,21 +103,24 @@ export const compressFileImage: compressFileImage = async (file, options) => {
   return compressedFile;
 };
 
-interface imageState {
+interface ImageState {
   [key: string]: { isSuccess: boolean };
 }
 
 export const useImageState = (source?: string | string[]) => {
   const [isLoading, setIsLoading] = useState(() => (source ? true : false));
-  const [imageState, setImageState] = useState<imageState>({});
+  const [imageState, setImageState] = useState<ImageState>({});
 
   const loadImage = async (source: string | string[]) => {
     if (typeof source === "string") {
       if (!imageState[source]) {
         return;
       }
+
       setIsLoading(true);
+
       const img = new Image();
+
       img.src = source;
       img.onload = () => {
         setIsLoading(false);
@@ -127,6 +130,7 @@ export const useImageState = (source?: string | string[]) => {
         setIsLoading(false);
         setImageState({ [source]: { isSuccess: false } });
       };
+
       return;
     }
 
@@ -151,6 +155,7 @@ export const useImageState = (source?: string | string[]) => {
           }),
       ),
     );
+
     setIsLoading(false);
     setImageState((prev) => ({
       ...imagePromises.reduce(
@@ -160,7 +165,7 @@ export const useImageState = (source?: string | string[]) => {
             isSuccess: result.status === "fulfilled",
           },
         }),
-        prev as imageState,
+        prev as ImageState,
       ),
     }));
   };
