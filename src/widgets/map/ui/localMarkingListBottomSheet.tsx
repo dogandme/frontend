@@ -6,10 +6,10 @@ import {
   Marking,
   SortType,
   useGetAddressFromLatLng,
-  useGetMarkingList,
+  useGetMarkingThumbnailList,
 } from "@/entities/marking/api";
 import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
-import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
+import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
 import { mapOptions } from "../constants";
@@ -59,17 +59,16 @@ const LocalMarkingList = ({
   const map = useMap();
 
   const {
-    data: markingList = [],
+    data: markingThumbnailList = [],
     isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetMarkingList({
-    ...boundsParams,
+  } = useGetMarkingThumbnailList({
     sortType,
     searchType: "NEARBY",
+    ...boundsParams,
   });
-
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -109,9 +108,9 @@ const LocalMarkingList = ({
 
   if (isLoading) {
     return (
-      <MarkingList display="grid" className="gap-1">
-        {Array.from({ length: 20 }, (_, idx) => idx).map((key) => (
-          <div key={key} className="aspect-square skeleton" />
+      <MarkingList display="grid">
+        {Array.from({ length: 20 }).map((_, idx) => (
+          <div key={idx} className="aspect-square skeleton m-1" />
         ))}
       </MarkingList>
     );
@@ -119,25 +118,33 @@ const LocalMarkingList = ({
 
   return (
     <>
-      {markingList.length === 0 ? (
+      {markingThumbnailList.length === 0 ? (
         <EmptyMarkingThumbnailGrid />
       ) : (
         <MarkingList display="grid">
-          {markingList.map(({ markingId, previewImage, lat, lng }) => (
-            <button
-              key={markingId}
-              type="button"
-              className="aspect-square"
-              onClick={() => handleClick({ lat, lng, markingId })}
-            >
-              <img
-                className="w-full h-full object-cover"
-                src={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
-              />
-            </button>
-          ))}
+          {markingThumbnailList.map(
+            ({ lat, lng, markingId, previewImage, previewImageIsSuccess }) => {
+              return (
+                <button
+                  key={markingId}
+                  type="button"
+                  className="aspect-square"
+                  onClick={() => handleClick({ lat, lng, markingId })}
+                >
+                  <img
+                    src={
+                      previewImageIsSuccess ? previewImage : "failed_image.svg"
+                    }
+                    alt={`${markingId}번 마킹 이미지`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              );
+            },
+          )}
         </MarkingList>
       )}
+      {isFetchingNextPage && <div>TOOD 스피너로 변경하기</div>}
       <div className="h-[.125rem]" ref={setNode} />
     </>
   );

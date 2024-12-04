@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 interface compressFileImageOptions {
   maxSize: number;
   compactSize: number;
@@ -99,4 +101,136 @@ export const compressFileImage: compressFileImage = async (file, options) => {
   });
 
   return compressedFile;
+};
+
+interface ImageState {
+  [key: string]: { isSuccess: boolean };
+}
+
+/**
+ *  해당 훅은 훅 마운트 이후 source 데이터가 변경되지 않는 이미지 로딩에 사용 됩니다.
+ */
+export const useImageState = (source?: string | string[]) => {
+  const [isLoading, setIsLoading] = useState(() => (source ? true : false));
+  const [imageState, setImageState] = useState<ImageState>({});
+
+  const loadImage = async (source: string | string[]) => {
+    if (typeof source === "string") {
+      if (!imageState[source]) {
+        return;
+      }
+
+      setIsLoading(true);
+
+      const img = new Image();
+
+      img.src = source;
+      img.onload = () => {
+        setIsLoading(false);
+        setImageState({ [source]: { isSuccess: true } });
+      };
+      img.onerror = () => {
+        setIsLoading(false);
+        setImageState({ [source]: { isSuccess: false } });
+      };
+
+      return;
+    }
+
+    const newImages = source.filter((src) => !imageState[src]);
+    if (newImages.length === 0) {
+      return;
+    }
+
+    setIsLoading(true);
+    const imagePromises = await Promise.allSettled(
+      newImages.map(
+        (src) =>
+          new Promise<string>((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+              resolve(src);
+            };
+            img.onerror = () => {
+              reject(src);
+            };
+          }),
+      ),
+    );
+
+    setIsLoading(false);
+    setImageState((prev) => ({
+      ...imagePromises.reduce(
+        (acc, result, idx) => ({
+          ...acc,
+          [source[idx]]: {
+            isSuccess: result.status === "fulfilled",
+          },
+        }),
+        prev,
+      ),
+    }));
+  };
+
+  useEffect(() => {
+    if (source) {
+      loadImage(source);
+    }
+  }, [source]);
+
+  return { isLoading, imageState };
+};
+
+/**
+ * 해당 훅은 훅 마운트 이후 source 데이터가 변경되는 이미지 로딩에 사용 됩니다.
+ * 추가적인 이미지 로드를 위해선 사용처에서 useEffect 내부에서 loadImage 를 호출해야 합니다.
+ */
+export const useInfiniteImageState = () => {
+  const [isFirstPageImageLoading, setIsFirstPageImageLoading] = useState(true);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [imageState, setImageState] = useState<ImageState>({});
+
+  const loadImage = async (source: string[]) => {
+    const newImages = source.filter((src) => !imageState[src]);
+    if (newImages.length === 0) {
+      return;
+    }
+
+    setIsImageLoading(true);
+    const imagePromises = await Promise.allSettled(
+      newImages.map(
+        (src) =>
+          new Promise<string>((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+              resolve(src);
+            };
+            img.onerror = () => {
+              reject(src);
+            };
+          }),
+      ),
+    );
+
+    if (isFirstPageImageLoading) {
+      setIsFirstPageImageLoading(false);
+    }
+
+    setIsImageLoading(false);
+    setImageState((prev) => ({
+      ...imagePromises.reduce(
+        (acc, result, idx) => ({
+          ...acc,
+          [source[idx]]: {
+            isSuccess: result.status === "fulfilled",
+          },
+        }),
+        prev,
+      ),
+    }));
+  };
+
+  return { isImageLoading, isFirstPageImageLoading, imageState, loadImage };
 };

@@ -11,6 +11,7 @@ import {
   PetPersonalityList,
   ProfileHeading,
   ProfileImage,
+  EmptyProfileImage,
 } from "@/entities/profile/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { PlusIcon } from "@/shared/ui/icon";
@@ -34,7 +35,16 @@ export const MyProfileOverview = ({
     <section className="px-4 py-4 flex flex-col gap-4 rounded-2xl border border-grey-300 bg-grey-50 w-full">
       <div className="flex gap-4 self-stretch">
         {/* 프로필 이미지 */}
-        <ProfileImage profile={profile} nickname={nickname} />
+        {profile ? (
+          <ProfileImage
+            imageUrl={profile}
+            nickname={nickname}
+            size="xLarge"
+            className="rounded-2xl"
+          />
+        ) : (
+          <EmptyProfileImage size="xLarge" className="rounded-2xl" />
+        )}
         {/* 프로필 정보 */}
         <ProfileHeading
           name={name}

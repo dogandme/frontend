@@ -31,6 +31,10 @@ const ImgItem = ({
   );
 };
 
+const ImgItemSkeleton = () => (
+  <div className="w-[7.5rem] h-[7.5rem] rounded-2xl flex-shrink-0 skeleton" />
+);
+
 const Item = ({
   children,
   ...props
@@ -101,6 +105,10 @@ const ImgSliderMain = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const ImgSlider = Object.assign(ImgSliderMain, { Item, ImgItem });
+const ImgSlider = Object.assign(ImgSliderMain, {
+  Item,
+  ImgItem,
+  ImgItemSkeleton,
+});
 
 export default ImgSlider;

@@ -15,8 +15,12 @@ import { EditMarkingFormModal } from "@/features/marking/ui";
 import type { Marking } from "@/entities/marking/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import type { PetInfo } from "@/entities/profile/api";
-import { API_BASE_URL } from "@/shared/constants";
-import { formatDateToYearMonthDay, useDropdown } from "@/shared/lib";
+import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
+import {
+  formatDateToYearMonthDay,
+  useDropdown,
+  useImageState,
+} from "@/shared/lib";
 import { useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
@@ -62,7 +66,7 @@ const MarkingItemPropsProvider = ({
 );
 
 export const MarkingItem = (props: MarkingItemProps) => {
-  const { data: myProfile, isLoading: isMyProfileLoading } = useGetMyProfile();
+  const { data: myProfile, isLoading } = useGetMyProfile();
   const {
     myFollowingIdsMap = {},
     myLikedIdsMap = {},
@@ -71,10 +75,8 @@ export const MarkingItem = (props: MarkingItemProps) => {
 
   const token = useAuthStore((state) => state.token);
 
-  // TODO 로딩 처리 하기
-  // TODO 마킹 아이템 로딩 처리 시 처리 하기
-  if (isMyProfileLoading) {
-    return <div>loading ...</div>;
+  if (isLoading) {
+    return <MarkingItemSkeleton />;
   }
 
   const renderFollowingToggle = () => {
@@ -481,29 +483,42 @@ const EditMyMarkingModalOpenItem = ({
 };
 
 const MarkingItemImages = () => {
-  const { images, pet, markingId } = useMarkingItemProps();
+  const { images, pet } = useMarkingItemProps();
+
+  const { isLoading, imageState } = useImageState(
+    images.map(({ imageUrl }) => imageUrl),
+  );
+
+  if (isLoading) {
+    return (
+      <ImgSlider>
+        {images.map((_, idx) => (
+          <ImgSlider.ImgItemSkeleton key={idx} />
+        ))}
+      </ImgSlider>
+    );
+  }
+
   return (
     <ImgSlider>
-      {images.map(({ imageUrl, id }) => (
-        <ImgSlider.ImgItem
-          key={id}
-          src={`${API_BASE_URL}/markings/image/${markingId}/${imageUrl}`}
-          alt={`${pet.name}의 마킹 이미지`}
-        />
-      ))}
+      {images.map(({ imageUrl, id }) => {
+        const { isSuccess } = imageState[imageUrl];
+        return (
+          <ImgSlider.ImgItem
+            key={id}
+            src={isSuccess ? imageUrl : "/failed_image.svg"}
+            alt={`${pet.name}의 ${id}번 이미지`}
+          />
+        );
+      })}
     </ImgSlider>
   );
 };
 
 const MarkingItemImagesSkeleton = () => (
   <ImgSlider>
-    {Array.from({ length: 5 }, (_, idx) => idx).map((key) => (
-      <div
-        key={key}
-        className="relative w-[7.5rem] h-[7.5rem] rounded-2xl flex justify-center items-center flex-shrink-0"
-      >
-        <div className="w-full h-full object-cover no-drag rounded-2xl skeleton" />
-      </div>
+    {Array.from({ length: 5 }).map((_, idx) => (
+      <ImgSlider.ImgItemSkeleton key={idx} />
     ))}
   </ImgSlider>
 );
@@ -531,18 +546,25 @@ const MarkingItemRegionSkeleton = () => (
 );
 
 const MarkingItemProfileImage = () => {
-  const { pet } = useMarkingItemProps();
-  return (
-    <img
-      className="w-8 h-8 rounded-2xl object-cover"
-      src={`${API_BASE_URL}/pets/image/${pet.profile}`}
-      alt={`${pet.name}-profile`}
-    />
-  );
+  const { pet, nickName } = useMarkingItemProps();
+  const { profile } = pet;
+
+  if (profile) {
+    return (
+      <ProfileImage
+        imageUrl={profile}
+        size="medium"
+        nickname={nickName}
+        className="rounded-2xl"
+      />
+    );
+  }
+  
+  return <EmptyProfileImage size="medium" className="rounded-2xl" />;
 };
 
 const MarkingItemProfileImageSkeleton = () => (
-  <div className="w-8 h-8 rounded-2xl" />
+  <div className="w-8 h-8 rounded-2xl skeleton" />
 );
 
 const MarkingItemNickname = () => {

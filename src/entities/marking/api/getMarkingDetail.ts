@@ -2,6 +2,7 @@ import { skipToken, useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT, markingQueryKey } from "../constants";
 import type { Marking } from "./getMarkingList";
+import { API_BASE_URL } from "@/shared/constants";
 
 export interface GetMarkingDetailRequest {
   markingId?: number;
@@ -17,5 +18,12 @@ export const useGetMarkingDetail = ({ markingId }: GetMarkingDetailRequest) => {
               withToken: true,
             })
         : skipToken,
+    select: (data) => ({
+      ...data,
+      images: data.images.map(({ imageUrl, ...rest }) => ({
+        ...rest,
+        imageUrl: `${API_BASE_URL}/markings/image/${data.markingId}/${imageUrl}`,
+      })),
+    }),
   });
 };

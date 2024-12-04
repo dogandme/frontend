@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
-import { apiClient } from "@/shared/lib";
+import { API_BASE_URL } from "@/shared/constants";
+import { apiClient, useInfiniteImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import {
   MARKING_END_POINT,
@@ -127,6 +129,16 @@ const getMarkingList = async ({
   );
 };
 
+interface UseGetMarkingListParams {
+  southWestLat: number | null;
+  southWestLng: number | null;
+  northEastLat: number | null;
+  northEastLng: number | null;
+  sortType: SortType | null;
+  searchType: SearchType;
+  filterData?: (data: Marking) => boolean;
+}
+
 export const useGetMarkingList = ({
   southWestLat,
   southWestLng,
@@ -135,15 +147,7 @@ export const useGetMarkingList = ({
   sortType,
   searchType,
   filterData,
-}: {
-  southWestLat: number | null;
-  southWestLng: number | null;
-  northEastLat: number | null;
-  northEastLng: number | null;
-  sortType: SortType | null;
-  searchType: SearchType;
-  filterData?: (data: Marking) => boolean;
-}) => {
+}: UseGetMarkingListParams) => {
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
   const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
 
@@ -186,14 +190,51 @@ export const useGetMarkingList = ({
     getNextPageParam: ({ pageAble: { pageNumber }, totalPages }) => {
       return pageNumber < totalPages - 1 ? pageNumber + 1 : null;
     },
+
     initialPageParam: 0,
+
     select: (data) => {
-      const flattenData = data.pages.flatMap((page) => page.markings);
+      const flattenData = data.pages.flatMap(({ markings }) =>
+        markings.map((data) => ({
+          ...data,
+          previewImage: `${API_BASE_URL}/markings/image/preview/${data.markingId}/${data.previewImage}`,
+          images: data.images.map(({ imageUrl, ...rest }) => ({
+            ...rest,
+            imageUrl: `${API_BASE_URL}/markings/image/${data.markingId}/${imageUrl}`,
+          })),
+        })),
+      );
       return filterData ? flattenData.filter(filterData) : flattenData;
     },
 
     refetchOnWindowFocus: false,
-
     gcTime: 0,
   });
+};
+
+export const useGetMarkingThumbnailList = (params: UseGetMarkingListParams) => {
+  const { loadImage, isFirstPageImageLoading, isImageLoading, imageState } =
+    useInfiniteImageState();
+  const { data, isLoading, isFetchingNextPage, ...rest } =
+    useGetMarkingList(params);
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    loadImage(data.map(({ previewImage }) => previewImage));
+  }, [data]);
+
+  return {
+    data: data
+      ?.filter(({ previewImage }) => imageState[previewImage])
+      .map((data) => ({
+        ...data,
+        previewImageIsSuccess: imageState[data.previewImage].isSuccess,
+      })),
+    isLoading: isLoading || isFirstPageImageLoading,
+    isFetchingNextPage: isFetchingNextPage || isImageLoading,
+    ...rest,
+  };
 };
