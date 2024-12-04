@@ -168,7 +168,7 @@ export const useImageState = (source?: string | string[]) => {
             isSuccess: result.status === "fulfilled",
           },
         }),
-        prev as ImageState,
+        prev,
       ),
     }));
   };
