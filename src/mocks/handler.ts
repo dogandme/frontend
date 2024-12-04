@@ -1944,41 +1944,24 @@ const getSavedMarkerListHandler = [
 // 해당 핸들러는 내 마킹이 아닌 경우에는 랜덤한 마킹을 만들어 반환합니다.
 // 이에 이 핸들러는 내 마킹이 아닌 경우엔 부정확한 결과를 보여 줄 수 있습니다.
 const getMarkingDetailRequestHandler = [
-  http.get(
-    `${API_BASE_URL}/markings/:markingId`,
-    async ({ request, params }) => {
-      const token = request.headers.get("Authorization");
+  http.get(`${API_BASE_URL}/markings/:markingId`, async ({ params }) => {
+    const content = myMarkingList.find(
+      ({ markingId }) => markingId === Number(params.markingId),
+    );
 
-      if (!token?.startsWith("accessToken")) {
-        return HttpResponse.json(
-          {
-            code: 401,
-            message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
-          },
-          {
-            status: 401,
-          },
-        );
-      }
-
-      const content = myMarkingList.find(
-        ({ markingId }) => markingId === Number(params.markingId),
-      );
-
-      return HttpResponse.json({
-        code: 200,
-        message: "success",
-        content:
-          content ??
-          createMockMarking(Number(params.markingId), {
-            southBottomLat: 35.0,
-            northTopLat: 35.1,
-            southLeftLng: 129.0,
-            northRightLng: 129.1,
-          }),
-      });
-    },
-  ),
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content:
+        content ??
+        createMockMarking(Number(params.markingId), {
+          southBottomLat: 35.0,
+          northTopLat: 35.1,
+          southLeftLng: 129.0,
+          northRightLng: 129.1,
+        }),
+    });
+  }),
 ];
 
 // * 나중에 msw 사용을 대비하여 만들었습니다.
