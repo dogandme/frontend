@@ -12,6 +12,7 @@ import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { MyLocationIcon } from "@/shared/ui/icon";
+import { LoadingSpinner } from "@/shared/ui/spinner";
 import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 
@@ -144,7 +145,7 @@ const LocalMarkingList = ({
           )}
         </MarkingList>
       )}
-      {isFetchingNextPage && <div>TOOD 스피너로 변경하기</div>}
+      {isFetchingNextPage && <LoadingSpinner />}
       <div className="h-[.125rem]" ref={setNode} />
     </>
   );

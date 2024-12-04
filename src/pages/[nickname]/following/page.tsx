@@ -8,6 +8,7 @@ import { useGetFollowingList } from "@/entities/follow/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
+import { LoadingSpinner } from "@/shared/ui/spinner";
 
 export const FollowingPage = withAuth(() => {
   const { nicknameParams } = useNicknameParams();
@@ -53,6 +54,7 @@ export const FollowingPage = withAuth(() => {
           />
         ))}
       </FollowItemContainer>
+      {isFetchingNextPage && <LoadingSpinner />}
       <div ref={setNode} />
     </section>
   );

@@ -5,6 +5,7 @@ import { MarkingPins } from "@/entities/map/ui";
 import { useGetMyActivityMarkerList } from "@/entities/marking/api";
 import { useGetMyActivityMarkingList } from "@/entities/marking/hooks";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
+import { LoadingSpinner } from "@/shared/ui/spinner";
 import { MarkingList } from "./markingList";
 
 export const MyActivityList = withAuth(() => {
@@ -68,6 +69,7 @@ export const MyActivityList = withAuth(() => {
                 />
               ))}
         </MarkingList>
+        {isFetchingNextPage && <LoadingSpinner />}
         <div className="h-[.125rem]" ref={setNode} />
       </div>
     </>
