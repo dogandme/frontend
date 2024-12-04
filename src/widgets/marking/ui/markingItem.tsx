@@ -66,7 +66,7 @@ const MarkingItemPropsProvider = ({
 );
 
 export const MarkingItem = (props: MarkingItemProps) => {
-  const { data: myProfile, isLoading: isMyProfileLoading } = useGetMyProfile();
+  const { data: myProfile, isLoading } = useGetMyProfile();
   const {
     myFollowingIdsMap = {},
     myLikedIdsMap = {},
@@ -75,10 +75,8 @@ export const MarkingItem = (props: MarkingItemProps) => {
 
   const token = useAuthStore((state) => state.token);
 
-  // TODO 로딩 처리 하기
-  // TODO 마킹 아이템 로딩 처리 시 처리 하기
-  if (isMyProfileLoading) {
-    return <div>loading ...</div>;
+  if (isLoading) {
+    return <MarkingItemSkeleton />;
   }
 
   const renderFollowingToggle = () => {
