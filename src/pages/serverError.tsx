@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { ROUTER_PATH } from "@/shared/constants";
 import { Button } from "@/shared/ui/button";
 
 export const ServerError = () => {
@@ -21,10 +22,10 @@ export const ServerError = () => {
         size="xSmall"
         fullWidth={false}
         onClick={() => {
-          navigate(-1);
+          navigate(ROUTER_PATH.MAIN);
         }}
       >
-        이전으로
+        메인 페이지로 이동
       </Button>
     </div>
   );
