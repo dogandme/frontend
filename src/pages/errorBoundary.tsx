@@ -1,5 +1,8 @@
-import { useRouteError } from "react-router-dom";
-import { AUTH_ERROR_MESSAGE } from "@/shared/constants";
+import { isRouteErrorResponse, useRouteError } from "react-router-dom";
+import {
+  AUTH_ERROR_MESSAGE,
+  NOT_FOUND_ERROR_MESSAGE,
+} from "@/shared/constants";
 import { NonAuthorized, NonLogin, NonPetInfo, NonUserInfo } from "./authError";
 import { NotFound } from "./notFound";
 
@@ -34,5 +37,13 @@ export const ErrorBoundary = () => {
     return <NonAuthorized />;
   }
 
-  return <NotFound />;
+  if (
+    (error instanceof Error && error.message === NOT_FOUND_ERROR_MESSAGE) ||
+    isRouteErrorResponse(error)
+  ) {
+    return <NotFound />;
+  }
+
+  // todo 알 수 없는 에러 페이지 만들기
+  // return <div>알 수 없는 에러</div>;
 };
