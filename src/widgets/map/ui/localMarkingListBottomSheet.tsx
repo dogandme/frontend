@@ -134,7 +134,7 @@ const LocalMarkingList = ({
                 onClick={() => handleClick({ lat, lng, markingId })}
               >
                 <img
-                  src={imageState[src].isSuccess ? src : "failed_image.png"}
+                  src={imageState[src].isSuccess ? src : "failed_image.svg"}
                   alt={`${markingId}번 마킹 이미지`}
                   className="w-full h-full object-cover"
                 />

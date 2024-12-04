@@ -33,7 +33,7 @@ export const ProfileImage = ({
   }
   return (
     <img
-      src={imageState[src].isSuccess ? src : "/failed_image.png"}
+      src={imageState[src].isSuccess ? src : "/failed_image.svg"}
       alt={`${nickname}의 프로필 이미지`}
       className={`object-cover  ${profileSizeMap[size]} ${className}`}
     />
