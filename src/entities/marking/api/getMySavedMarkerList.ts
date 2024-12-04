@@ -1,4 +1,5 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
+import { API_BASE_URL } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKING_END_POINT, markingQueryKey } from "../constants";
@@ -47,7 +48,16 @@ export const useGetMySavedMarkingList = ({ enabled }: { enabled: boolean }) => {
         : null;
     },
     initialPageParam: 0,
-    select: (data) => data.pages.flatMap((page) => page.markings),
+    select: (data) =>
+      data.pages.flatMap(({ markings }) =>
+        markings.map(({ images, ...data }) => ({
+          ...data,
+          images: images.map(({ imageUrl, ...rest }) => ({
+            ...rest,
+            imageUrl: `${API_BASE_URL}/markings/image/${data.markingId}/${imageUrl}`,
+          })),
+        })),
+      ),
 
     enabled,
     refetchOnWindowFocus: false,

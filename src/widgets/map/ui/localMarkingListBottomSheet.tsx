@@ -65,7 +65,6 @@ const LocalMarkingList = ({
     hasNextPage,
     isFetchingNextPage,
     imageState,
-    makeMarkingImageSource,
   } = useGetMarkingList({
     ...boundsParams,
     sortType,
@@ -125,7 +124,6 @@ const LocalMarkingList = ({
       ) : (
         <MarkingList display="grid">
           {markingList.map(({ lat, lng, markingId, previewImage }) => {
-            const src = makeMarkingImageSource(markingId, previewImage);
             return (
               <button
                 key={markingId}
@@ -134,7 +132,11 @@ const LocalMarkingList = ({
                 onClick={() => handleClick({ lat, lng, markingId })}
               >
                 <img
-                  src={imageState[src].isSuccess ? src : "failed_image.svg"}
+                  src={
+                    imageState[previewImage].isSuccess
+                      ? previewImage
+                      : "failed_image.svg"
+                  }
                   alt={`${markingId}번 마킹 이미지`}
                   className="w-full h-full object-cover"
                 />

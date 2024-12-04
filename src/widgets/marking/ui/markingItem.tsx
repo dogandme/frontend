@@ -16,7 +16,6 @@ import type { Marking } from "@/entities/marking/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import type { PetInfo } from "@/entities/profile/api";
 import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
-import { API_BASE_URL } from "@/shared/constants";
 import {
   formatDateToYearMonthDay,
   useDropdown,
@@ -486,20 +485,16 @@ const EditMyMarkingModalOpenItem = ({
 };
 
 const MarkingItemImages = () => {
-  const { images, pet, markingId } = useMarkingItemProps();
-  const imageUrls = images.map(({ imageUrl, id }) => ({
-    src: `${API_BASE_URL}/markings/image/${markingId}/${imageUrl}`,
-    alt: `${pet.name}의 마킹 이미지`,
-    id,
-  }));
+  const { images, pet } = useMarkingItemProps();
+
   const { isLoading, imageState } = useImageState(
-    imageUrls.map(({ src }) => src),
+    images.map(({ imageUrl }) => imageUrl),
   );
 
   if (isLoading) {
     return (
       <ImgSlider>
-        {imageUrls.map((_, idx) => (
+        {images.map((_, idx) => (
           <ImgSlider.ImgItemSkeleton key={idx} />
         ))}
       </ImgSlider>
@@ -508,13 +503,13 @@ const MarkingItemImages = () => {
 
   return (
     <ImgSlider>
-      {imageUrls.map(({ src, alt, id }) => {
-        const { isSuccess } = imageState[src];
+      {images.map(({ imageUrl, id }) => {
+        const { isSuccess } = imageState[imageUrl];
         return (
           <ImgSlider.ImgItem
             key={id}
-            src={isSuccess ? src : "/failed_image.svg"}
-            alt={alt}
+            src={isSuccess ? imageUrl : "/failed_image.svg"}
+            alt={`${pet.name}의 ${id}번 이미지`}
           />
         );
       })}

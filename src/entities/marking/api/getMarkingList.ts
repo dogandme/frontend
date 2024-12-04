@@ -190,28 +190,33 @@ export const useGetMarkingList = ({
     getNextPageParam: ({ pageAble: { pageNumber }, totalPages }) => {
       return pageNumber < totalPages - 1 ? pageNumber + 1 : null;
     },
+
     initialPageParam: 0,
+
     select: (data) => {
-      const flattenData = data.pages.flatMap((page) => page.markings);
+      const flattenData = data.pages.flatMap(({ markings }) =>
+        markings.map((data) => ({
+          ...data,
+          previewImage: `${API_BASE_URL}/markings/image/preview/${data.markingId}/${data.previewImage}`,
+          images: data.images.map(({ imageUrl, ...rest }) => ({
+            ...rest,
+            imageUrl: `${API_BASE_URL}/markings/image/${data.markingId}/${imageUrl}`,
+          })),
+        })),
+      );
       return filterData ? flattenData.filter(filterData) : flattenData;
     },
 
     refetchOnWindowFocus: false,
-
     gcTime: 0,
   });
-  const makeMarkingImageSource = (markingId: number, previewImage: string) =>
-    `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`;
 
   useEffect(() => {
     (async function () {
       if (!data) {
         return;
       }
-      const sourceList = data.map(({ markingId, previewImage }) =>
-        makeMarkingImageSource(markingId, previewImage),
-      );
-      await loadImage(sourceList);
+      await loadImage(data.map(({ previewImage }) => previewImage));
       if (isFirstPageImageLoading) {
         setIsFirstPageImageLoading(false);
       }
@@ -219,14 +224,10 @@ export const useGetMarkingList = ({
   }, [data]);
 
   return {
-    data: data?.filter(
-      ({ markingId, previewImage }) =>
-        imageState[makeMarkingImageSource(markingId, previewImage)],
-    ),
+    data: data?.filter(({ previewImage }) => imageState[previewImage]),
     isLoading: isLoading || isFirstPageImageLoading,
     isFetchingNextPage: isFetchingNextPage || isImageLoading,
     imageState,
-    makeMarkingImageSource,
     ...rest,
   };
 };
