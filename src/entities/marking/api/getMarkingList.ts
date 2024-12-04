@@ -129,6 +129,16 @@ const getMarkingList = async ({
   );
 };
 
+interface UseGetMarkingListParams {
+  southWestLat: number | null;
+  southWestLng: number | null;
+  northEastLat: number | null;
+  northEastLng: number | null;
+  sortType: SortType | null;
+  searchType: SearchType;
+  filterData?: (data: Marking) => boolean;
+}
+
 export const useGetMarkingList = ({
   southWestLat,
   southWestLng,
@@ -137,23 +147,13 @@ export const useGetMarkingList = ({
   sortType,
   searchType,
   filterData,
-}: {
-  southWestLat: number | null;
-  southWestLng: number | null;
-  northEastLat: number | null;
-  northEastLng: number | null;
-  sortType: SortType | null;
-  searchType: SearchType;
-  filterData?: (data: Marking) => boolean;
-}) => {
+}: UseGetMarkingListParams) => {
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
   const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
 
   const { isIdle: isMapIdle } = useMapStore.getState();
-  const [isFirstPageImageLoading, setIsFirstPageImageLoading] =
-    useState<boolean>(true);
-  const { loadImage, isLoading: isImageLoading, imageState } = useImageState();
-  const { data, isLoading, isFetchingNextPage, ...rest } = useInfiniteQuery({
+
+  return useInfiniteQuery({
     queryKey: markingQueryKey.boundaryMarkingList(
       {
         southWestLat: southWestLat!,
@@ -210,6 +210,17 @@ export const useGetMarkingList = ({
     refetchOnWindowFocus: false,
     gcTime: 0,
   });
+};
+
+export const useGetBottomSheetMarkingThumbnail = (
+  useGetMarkingListParams: UseGetMarkingListParams,
+) => {
+  const [isFirstPageImageLoading, setIsFirstPageImageLoading] =
+    useState<boolean>(true);
+  const { loadImage, isLoading: isImageLoading, imageState } = useImageState();
+  const { data, isLoading, isFetchingNextPage, ...rest } = useGetMarkingList(
+    useGetMarkingListParams,
+  );
 
   useEffect(() => {
     (async function () {
@@ -224,10 +235,14 @@ export const useGetMarkingList = ({
   }, [data]);
 
   return {
-    data: data?.filter(({ previewImage }) => imageState[previewImage]),
+    data: data
+      ?.filter(({ previewImage }) => imageState[previewImage])
+      .map((data) => ({
+        ...data,
+        previewImageIsSuccess: imageState[data.previewImage].isSuccess,
+      })),
     isLoading: isLoading || isFirstPageImageLoading,
     isFetchingNextPage: isFetchingNextPage || isImageLoading,
-    imageState,
     ...rest,
   };
 };

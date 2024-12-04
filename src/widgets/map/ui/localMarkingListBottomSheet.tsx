@@ -6,7 +6,7 @@ import {
   Marking,
   SortType,
   useGetAddressFromLatLng,
-  useGetMarkingList,
+  useGetBottomSheetMarkingThumbnail,
 } from "@/entities/marking/api";
 import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import { ROUTER_PATH } from "@/shared/constants";
@@ -59,16 +59,15 @@ const LocalMarkingList = ({
   const map = useMap();
 
   const {
-    data: markingList = [],
+    data: markingThumbnailList = [],
     isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    imageState,
-  } = useGetMarkingList({
-    ...boundsParams,
+  } = useGetBottomSheetMarkingThumbnail({
     sortType,
     searchType: "NEARBY",
+    ...boundsParams,
   });
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -119,30 +118,30 @@ const LocalMarkingList = ({
 
   return (
     <>
-      {markingList.length === 0 ? (
+      {markingThumbnailList.length === 0 ? (
         <EmptyMarkingThumbnailGrid />
       ) : (
         <MarkingList display="grid">
-          {markingList.map(({ lat, lng, markingId, previewImage }) => {
-            return (
-              <button
-                key={markingId}
-                type="button"
-                className="aspect-square"
-                onClick={() => handleClick({ lat, lng, markingId })}
-              >
-                <img
-                  src={
-                    imageState[previewImage].isSuccess
-                      ? previewImage
-                      : "failed_image.svg"
-                  }
-                  alt={`${markingId}번 마킹 이미지`}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            );
-          })}
+          {markingThumbnailList.map(
+            ({ lat, lng, markingId, previewImage, previewImageIsSuccess }) => {
+              return (
+                <button
+                  key={markingId}
+                  type="button"
+                  className="aspect-square"
+                  onClick={() => handleClick({ lat, lng, markingId })}
+                >
+                  <img
+                    src={
+                      previewImageIsSuccess ? previewImage : "failed_image.svg"
+                    }
+                    alt={`${markingId}번 마킹 이미지`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              );
+            },
+          )}
         </MarkingList>
       )}
       {isFetchingNextPage && <div>TOOD 스피너로 변경하기</div>}
