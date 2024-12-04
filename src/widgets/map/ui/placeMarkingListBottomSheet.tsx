@@ -19,6 +19,7 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
+import { LoadingSpinner } from "@/shared/ui/spinner";
 import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 
@@ -155,6 +156,7 @@ const PlaceMarkingList = ({
           />
         ))}
       </MarkingList>
+      {isFetchingNextPage && <LoadingSpinner />}
       <div className="h-[.125rem]" ref={setNode} />
     </>
   );

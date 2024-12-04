@@ -20,6 +20,7 @@ import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
 import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
+import { LoadingSpinner } from "@/shared/ui/spinner";
 
 export const UserMarkingPage = withAuth(() => {
   const { nicknameParams, isMyPage } = useNicknameParams();
@@ -157,6 +158,7 @@ const MyMarkingList = ({
           />
         ))}
       </MarkingList>
+      {isFetchingNextPage && <LoadingSpinner />}
       <div className="h-[.125rem]" ref={setNode} />
     </>
   );

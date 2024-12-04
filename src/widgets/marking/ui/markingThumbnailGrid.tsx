@@ -6,6 +6,7 @@ import {
 } from "@/entities/marking/ui";
 import { Nickname } from "@/entities/profile/api";
 import { useInfiniteScroll, useNicknameParams } from "@/shared/lib";
+import { LoadingSpinner } from "@/shared/ui/spinner";
 
 interface MarkingThumbnailGridProps {
   nickname: Nickname;
@@ -60,9 +61,9 @@ export const MarkingThumbnailGrid = ({
             </Link>
           );
         })}
+        {isFetchingNextPage && <LoadingSpinner />}
         <div ref={setNode} />
       </section>
-      {isFetchingNextPage && <div>TOOD 스피너로 변경하기</div>}
     </>
   );
 };

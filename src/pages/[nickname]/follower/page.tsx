@@ -9,6 +9,7 @@ import { useGetFollowerList } from "@/entities/follow/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
+import { LoadingSpinner } from "@/shared/ui/spinner";
 
 /**
  * 팔로워 페이지의 경우 나의 페이지일 경우엔 팔로워 리스트를 보여주고
@@ -65,6 +66,7 @@ export const FollowerPage = withAuth(() => {
             />
           ),
         )}
+        {isFetchingNextPage && <LoadingSpinner />}
         <div ref={setNode} />
       </FollowItemContainer>
     </section>

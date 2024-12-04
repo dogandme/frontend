@@ -17,6 +17,7 @@ import { Nickname, useGetProfile } from "@/entities/profile/api";
 import { useInfiniteScroll } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
+import { LoadingSpinner } from "@/shared/ui/spinner";
 import { mapOptions } from "../constants";
 import { MarkingList } from "./markingList";
 
@@ -147,6 +148,7 @@ const MyMarkingList = ({
           />
         ))}
       </MarkingList>
+      {isFetchingNextPage && <LoadingSpinner />}
       <div className="h-[.125rem]" ref={setNode} />
     </>
   );
