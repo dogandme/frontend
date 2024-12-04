@@ -558,8 +558,9 @@ const MarkingItemProfileImage = () => {
         className="rounded-2xl"
       />
     );
-    return <EmptyProfileImage size="medium" className="rounded-2xl" />;
   }
+  
+  return <EmptyProfileImage size="medium" className="rounded-2xl" />;
 };
 
 const MarkingItemProfileImageSkeleton = () => (

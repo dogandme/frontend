@@ -212,14 +212,11 @@ export const useGetMarkingList = ({
   });
 };
 
-export const useGetBottomSheetMarkingThumbnail = (
-  useGetMarkingListParams: UseGetMarkingListParams,
-) => {
+export const useGetMarkingThumbnailList = (params: UseGetMarkingListParams) => {
   const { loadImage, isFirstPageImageLoading, isImageLoading, imageState } =
     useInfiniteImageState();
-  const { data, isLoading, isFetchingNextPage, ...rest } = useGetMarkingList(
-    useGetMarkingListParams,
-  );
+  const { data, isLoading, isFetchingNextPage, ...rest } =
+    useGetMarkingList(params);
 
   useEffect(() => {
     if (!data) {

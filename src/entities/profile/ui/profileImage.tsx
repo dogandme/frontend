@@ -24,9 +24,7 @@ export const ProfileImage = ({
 }: ProfileImageProps) => {
   const src = `${API_BASE_URL}/pets/image/${imageUrl}`;
 
-  const { isLoading, imageState } = useImageState(
-    `${API_BASE_URL}/pets/image/${imageUrl}`,
-  );
+  const { isLoading, imageState } = useImageState(src);
 
   if (isLoading) {
     return <div className={`${profileSizeMap[size]} ${className} skeleton`} />;

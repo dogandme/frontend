@@ -6,7 +6,7 @@ import {
   Marking,
   SortType,
   useGetAddressFromLatLng,
-  useGetBottomSheetMarkingThumbnail,
+  useGetMarkingThumbnailList,
 } from "@/entities/marking/api";
 import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import { ROUTER_PATH } from "@/shared/constants";
@@ -64,7 +64,7 @@ const LocalMarkingList = ({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetBottomSheetMarkingThumbnail({
+  } = useGetMarkingThumbnailList({
     sortType,
     searchType: "NEARBY",
     ...boundsParams,
