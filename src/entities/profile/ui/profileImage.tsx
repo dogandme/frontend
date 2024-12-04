@@ -29,13 +29,13 @@ export const ProfileImage = ({
   );
 
   if (isLoading) {
-    return <div className={`${profileSizeMap[size]} ${className}  skeleton`} />;
+    return <div className={`${profileSizeMap[size]} ${className} skeleton`} />;
   }
   return (
     <img
       src={imageState[src].isSuccess ? src : "/failed_image.svg"}
       alt={`${nickname}의 프로필 이미지`}
-      className={`object-cover  ${profileSizeMap[size]} ${className}`}
+      className={`object-cover ${profileSizeMap[size]} ${className}`}
     />
   );
 };
@@ -49,6 +49,6 @@ export const EmptyProfileImage = ({
 }) => (
   <img
     src="/default-image.png"
-    className={`object-cover  ${profileSizeMap[size]} ${className}`}
+    className={`object-cover ${profileSizeMap[size]} ${className}`}
   />
 );

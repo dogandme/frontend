@@ -137,14 +137,14 @@ export const useImageState = (source?: string | string[]) => {
       return;
     }
 
-    const nonCachedImages = source.filter((src) => !imageState[src]);
-    if (nonCachedImages.length === 0) {
+    const newImages = source.filter((src) => !imageState[src]);
+    if (newImages.length === 0) {
       return;
     }
 
     setIsLoading(true);
     const imagePromises = await Promise.allSettled(
-      nonCachedImages.map(
+      newImages.map(
         (src) =>
           new Promise<string>((resolve, reject) => {
             const img = new Image();
@@ -188,7 +188,7 @@ export const useImageState = (source?: string | string[]) => {
  */
 export const useInfiniteImageState = () => {
   const [isFirstPageImageLoading, setIsFirstPageImageLoading] = useState(true);
-  const [isImageLoading, setIsImageLoading] = useState(() => true);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const [imageState, setImageState] = useState<ImageState>({});
 
   const loadImage = async (source: string[]) => {
@@ -227,7 +227,7 @@ export const useInfiniteImageState = () => {
             isSuccess: result.status === "fulfilled",
           },
         }),
-        prev as ImageState,
+        prev,
       ),
     }));
   };
