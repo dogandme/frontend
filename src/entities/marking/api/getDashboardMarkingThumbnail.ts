@@ -43,7 +43,6 @@ export const useGetDashboardMarkingThumbnail = (
   const [isFirstPageImageLoading, setIsFirstPageImageLoading] =
     useState<boolean>(true);
   const { loadImage, isLoading: isImageLoading, imageState } = useImageState();
-
   const { data, isLoading, isFetchingNextPage, ...rest } = useInfiniteQuery({
     queryKey: markerQueryKey.markerThumbnail(nickname),
     queryFn: token
@@ -57,22 +56,22 @@ export const useGetDashboardMarkingThumbnail = (
       : skipToken,
     getNextPageParam: ({ totalPages, pageAble }) =>
       pageAble.pageNumber < totalPages - 1 ? pageAble.pageNumber + 1 : null,
-    select: ({ pages }) => pages.flatMap((page) => page.marks),
+    select: ({ pages }) =>
+      pages.flatMap(({ marks }) =>
+        marks.map((data) => ({
+          ...data,
+          previewImage: `${API_BASE_URL}/markings/image/preview/${data.markingId}/${data.previewImage}`,
+        })),
+      ),
     initialPageParam: 0,
   });
-
-  const makeMarkingImageSource = (markingId: number, previewImage: string) =>
-    `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`;
 
   useEffect(() => {
     (async function () {
       if (!data) {
         return;
       }
-      const sourceList = data.map(({ markingId, previewImage }) =>
-        makeMarkingImageSource(markingId, previewImage),
-      );
-      await loadImage(sourceList);
+      await loadImage(data.map(({ previewImage }) => previewImage));
       if (isFirstPageImageLoading) {
         setIsFirstPageImageLoading(false);
       }
@@ -80,14 +79,14 @@ export const useGetDashboardMarkingThumbnail = (
   }, [data]);
 
   return {
-    data: data?.filter(
-      ({ markingId, previewImage }) =>
-        imageState[makeMarkingImageSource(markingId, previewImage)],
-    ),
+    data: data
+      ?.filter(({ previewImage }) => imageState[previewImage])
+      .map((data) => ({
+        ...data,
+        previewImageIsSuccess: imageState[data.previewImage].isSuccess,
+      })),
     isLoading: isLoading || isFirstPageImageLoading,
     isFetchingNextPage: isFetchingNextPage || isImageLoading,
-    imageState,
-    makeMarkingImageSource,
     ...rest,
   };
 };

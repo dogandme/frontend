@@ -19,8 +19,6 @@ export const MarkingThumbnailGrid = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-    imageState,
-    makeMarkingImageSource,
   } = useGetDashboardMarkingThumbnail(nickname);
 
   const [setNode] = useInfiniteScroll(() => {
@@ -46,8 +44,7 @@ export const MarkingThumbnailGrid = ({
   return (
     <>
       <section className="w-full grid grid-cols-3 gap-2">
-        {data.map(({ markingId, previewImage }) => {
-          const src = makeMarkingImageSource(markingId, previewImage);
+        {data.map(({ markingId, previewImage, previewImageIsSuccess }) => {
           return (
             <Link
               to={`/@${nickname}/markings`}
@@ -56,7 +53,7 @@ export const MarkingThumbnailGrid = ({
               state={{ markingId }}
             >
               <img
-                src={imageState[src].isSuccess ? src : "/failed_image.svg"}
+                src={previewImageIsSuccess ? previewImage : "/failed_image.svg"}
                 alt={`${nickname}의 ${markingId} 마킹의 썸네일 이미지`}
                 className="w-full h-full object-cover rounded-[1rem]"
               />
