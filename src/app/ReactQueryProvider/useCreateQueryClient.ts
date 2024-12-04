@@ -19,6 +19,9 @@ export const useCreateQueryClient = () => {
            * 만약 retry를 필요로 하는 경우에선 개별적인 query 문에서 retry 를 정의 해줍니다.
            */
           retry: false,
+          throwOnError(error) {
+            return error instanceof HttpError && error.code >= 500;
+          },
         },
         mutations: {
           /**
@@ -27,6 +30,9 @@ export const useCreateQueryClient = () => {
            * 만약 retry를 필요로 하는 경우에선 개별적인 query 문에서 retry 를 정의 해줍니다.
            */
           retry: false,
+          throwOnError(error) {
+            return error instanceof HttpError && error.code >= 500;
+          },
         },
       },
 
