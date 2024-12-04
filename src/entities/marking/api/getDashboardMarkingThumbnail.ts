@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/shared/constants";
-import { apiClient, useImageState } from "@/shared/lib";
+import { apiClient, useInfiniteImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKING_THUMBNAIL_END_POINT, markerQueryKey } from "../constants";
 
@@ -40,9 +40,9 @@ export const useGetDashboardMarkingThumbnail = (
   nickname: GetDashboardMarkingThumbnailRequest["nickname"],
 ) => {
   const token = useAuthStore((state) => state.token);
-  const [isFirstPageImageLoading, setIsFirstPageImageLoading] =
-    useState<boolean>(true);
-  const { loadImage, isLoading: isImageLoading, imageState } = useImageState();
+  const { loadImage, isImageLoading, isFirstPageImageLoading, imageState } =
+    useInfiniteImageState();
+
   const { data, isLoading, isFetchingNextPage, ...rest } = useInfiniteQuery({
     queryKey: markerQueryKey.markerThumbnail(nickname),
     queryFn: token
@@ -67,15 +67,11 @@ export const useGetDashboardMarkingThumbnail = (
   });
 
   useEffect(() => {
-    (async function () {
-      if (!data) {
-        return;
-      }
-      await loadImage(data.map(({ previewImage }) => previewImage));
-      if (isFirstPageImageLoading) {
-        setIsFirstPageImageLoading(false);
-      }
-    })();
+    if (!data) {
+      return;
+    }
+
+    loadImage(data.map(({ previewImage }) => previewImage));
   }, [data]);
 
   return {

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
 import { API_BASE_URL } from "@/shared/constants";
-import { apiClient, useImageState } from "@/shared/lib";
+import { apiClient, useInfiniteImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import {
   MARKING_END_POINT,
@@ -215,23 +215,18 @@ export const useGetMarkingList = ({
 export const useGetBottomSheetMarkingThumbnail = (
   useGetMarkingListParams: UseGetMarkingListParams,
 ) => {
-  const [isFirstPageImageLoading, setIsFirstPageImageLoading] =
-    useState<boolean>(true);
-  const { loadImage, isLoading: isImageLoading, imageState } = useImageState();
+  const { loadImage, isFirstPageImageLoading, isImageLoading, imageState } =
+    useInfiniteImageState();
   const { data, isLoading, isFetchingNextPage, ...rest } = useGetMarkingList(
     useGetMarkingListParams,
   );
 
   useEffect(() => {
-    (async function () {
-      if (!data) {
-        return;
-      }
-      await loadImage(data.map(({ previewImage }) => previewImage));
-      if (isFirstPageImageLoading) {
-        setIsFirstPageImageLoading(false);
-      }
-    })();
+    if (!data) {
+      return;
+    }
+
+    loadImage(data.map(({ previewImage }) => previewImage));
   }, [data]);
 
   return {
