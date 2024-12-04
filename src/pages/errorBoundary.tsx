@@ -5,6 +5,7 @@ import {
 } from "@/shared/constants";
 import { NonAuthorized, NonLogin, NonPetInfo, NonUserInfo } from "./authError";
 import { NotFound } from "./notFound";
+import { UnknownError } from "./unknownError";
 
 export const ErrorBoundary = () => {
   const error = useRouteError();
@@ -44,6 +45,5 @@ export const ErrorBoundary = () => {
     return <NotFound />;
   }
 
-  // todo 알 수 없는 에러 페이지 만들기
-  // return <div>알 수 없는 에러</div>;
+  return <UnknownError />;
 };
