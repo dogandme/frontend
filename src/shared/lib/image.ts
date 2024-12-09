@@ -117,6 +117,10 @@ export const useImageState = (source: string | string[]) => {
   const loadImage = async (source: string | string[]) => {
     if (typeof source === "string") {
       if (!imageState[source]) {
+        if (isLoading) {
+          setIsLoading(false);
+        }
+
         return;
       }
 
@@ -138,7 +142,12 @@ export const useImageState = (source: string | string[]) => {
     }
 
     const newImages = source.filter((src) => !imageState[src]);
+
     if (newImages.length === 0) {
+      if (isLoading) {
+        setIsLoading(false);
+      }
+
       return;
     }
 
