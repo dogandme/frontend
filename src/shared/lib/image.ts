@@ -116,10 +116,6 @@ export const useImageState = (source: string | string[]) => {
 
   const loadImage = async (source: string | string[]) => {
     if (typeof source === "string") {
-      if (imageState[source]) {
-        return;
-      }
-
       setIsLoading(true);
 
       const img = new Image();
@@ -137,19 +133,9 @@ export const useImageState = (source: string | string[]) => {
       return;
     }
 
-    const newImages = source.filter((src) => !imageState[src]);
-
-    if (newImages.length === 0) {
-      if (isLoading) {
-        setIsLoading(false);
-      }
-
-      return;
-    }
-
     setIsLoading(true);
     const imagePromises = await Promise.allSettled(
-      newImages.map(
+      source.map(
         (src) =>
           new Promise<string>((resolve, reject) => {
             const img = new Image();
@@ -179,9 +165,7 @@ export const useImageState = (source: string | string[]) => {
   };
 
   useEffect(() => {
-    if (source) {
-      loadImage(source);
-    }
+    loadImage(source);
   }, [source]);
 
   return { isLoading, imageState };
