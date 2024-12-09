@@ -110,8 +110,8 @@ interface ImageState {
 /**
  *  해당 훅은 훅 마운트 이후 source 데이터가 변경되지 않는 이미지 로딩에 사용 됩니다.
  */
-export const useImageState = (source?: string | string[]) => {
-  const [isLoading, setIsLoading] = useState(() => (source ? true : false));
+export const useImageState = (source: string | string[]) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [imageState, setImageState] = useState<ImageState>({});
 
   const loadImage = async (source: string | string[]) => {
