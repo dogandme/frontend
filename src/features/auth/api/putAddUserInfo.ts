@@ -1,7 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
-import { type Role, useAuthStore } from "@/shared/store";
+import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
+import { SignUpResponse } from "./type";
 
 interface PostAddUserInfoRequest {
   token: string;
@@ -12,11 +13,7 @@ interface PostAddUserInfoRequest {
   marketingYn: boolean;
 }
 
-interface PostAddUserInfoResponse {
-  role: NonNullable<Role>;
-  nickname: string;
-  authorization: string;
-}
+interface PostAddUserInfoResponse extends SignUpResponse<"ROLE_GUEST"> {}
 
 const putAddUserInfo = async (userInfo: PostAddUserInfoRequest) => {
   return apiClient.put<PostAddUserInfoResponse>(SIGN_UP_END_POINT.USER_INFO, {

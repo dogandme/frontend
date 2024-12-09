@@ -5,13 +5,9 @@ import { apiClient } from "@/shared/lib";
 import { type Role, useAuthStore } from "@/shared/store";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
+import type { SignUpResponse } from "./type";
 
-interface EmailLoginResponse {
-  authorization: string;
-  role: NonNullable<Role>;
-  userId: number | null;
-  nickname: string | null;
-}
+interface EmailLoginResponse extends SignUpResponse<NonNullable<Role>> {}
 
 interface EmailLoginRequest {
   email: string;
@@ -25,7 +21,6 @@ const postLogin = async (formData: EmailLoginRequest) => {
   });
 };
 
-// TODO 리액트 쿼리를 활용하여 최적화 하기
 export const usePostLogin = () => {
   const navigate = useNavigate();
   const setToken = useAuthStore((state) => state.setToken);
