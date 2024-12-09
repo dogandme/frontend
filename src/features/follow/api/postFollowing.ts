@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Nickname } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
 import { FOLLOW_END_POINT } from "../constants";
 
@@ -7,7 +6,7 @@ export const usePostFollowing = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (nickname: Nickname) =>
+    mutationFn: (nickname: string) =>
       apiClient.post(FOLLOW_END_POINT.POST_FOLLOWING(nickname), {
         withToken: true,
       }),
