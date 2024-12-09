@@ -1,1 +1,1 @@
-export type { PetInfo } from "../type.ts";
+export type { PetInfo } from "../getProfile";
