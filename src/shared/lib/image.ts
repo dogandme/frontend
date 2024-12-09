@@ -194,10 +194,22 @@ export const useInfiniteImageState = () => {
   const loadImage = async (source: string[]) => {
     const newImages = source.filter((src) => !imageState[src]);
     if (newImages.length === 0) {
+      // 처음 loadImages 가 호출 되었을 때 로드 할 이미지가 없을 수 있기 때문에
+      // 이미지 로딩 상태를 false 로 변경합니다.
+
+      if (isFirstPageImageLoading) {
+        setIsFirstPageImageLoading(false);
+      }
+
+      if (isImageLoading) {
+        setIsImageLoading(false);
+      }
+
       return;
     }
 
     setIsImageLoading(true);
+
     const imagePromises = await Promise.allSettled(
       newImages.map(
         (src) =>
