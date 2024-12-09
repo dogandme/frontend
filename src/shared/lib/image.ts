@@ -116,11 +116,7 @@ export const useImageState = (source: string | string[]) => {
 
   const loadImage = async (source: string | string[]) => {
     if (typeof source === "string") {
-      if (!imageState[source]) {
-        if (isLoading) {
-          setIsLoading(false);
-        }
-
+      if (imageState[source]) {
         return;
       }
 
