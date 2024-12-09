@@ -14,7 +14,9 @@ export interface RegionModalExternalState {
   regionList: Region[];
 }
 
-type RegionModalState = RegionModalInternalState & RegionModalExternalState;
+interface RegionModalState
+  extends RegionModalInternalState,
+    RegionModalExternalState {}
 
 interface RegionModalAction {
   setKeyword: (keyword: string) => void;

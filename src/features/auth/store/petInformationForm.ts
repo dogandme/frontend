@@ -9,12 +9,10 @@ export interface FileInfo {
   file: File | null;
 }
 
-export type PetInformationFormExternalState = Omit<
-  PetInfo,
-  "profile" | "petId"
-> & {
+export interface PetInformationFormExternalState
+  extends Omit<PetInfo, "profile" | "petId"> {
   profile: FileInfo;
-};
+}
 
 interface PetInformationFormInternalState {
   isValidName: boolean;
