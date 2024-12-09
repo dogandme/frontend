@@ -2,7 +2,7 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { FOLLOW_END_POINT, followQueryKey } from "../constants";
-import type { UserInfo } from "./type";
+import type { FollowUserInfo } from "./type";
 
 // TODO 리팩토링 시 해당 타입 정의 위치 의논
 interface PageAbleInformation {
@@ -27,7 +27,7 @@ interface GetFollowerListRequest {
 }
 
 type GetFollowerListResponse = {
-  userInfos: UserInfo[];
+  userInfos: FollowUserInfo[];
 } & PageAbleInformation;
 
 const getFollowerList = ({
