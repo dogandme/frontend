@@ -2,7 +2,11 @@ import { useChangePetInfoModal } from "@/features/setting/hooks/useChangePetInfo
 import { PetInfo } from "@/entities/profile/api";
 import { EditIcon } from "@/shared/ui/icon";
 
-export const ProfileEditButton = ({ pet }: { pet: PetInfo }) => {
+interface ProfileEditButtonProps {
+  pet: PetInfo;
+}
+
+export const ProfileEditButton = ({ pet }: ProfileEditButtonProps) => {
   const handleOpen = useChangePetInfoModal(pet);
 
   return (

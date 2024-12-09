@@ -12,15 +12,17 @@ import {
 import { validateNickname } from "../lib";
 import { NicknameInput } from "./NicknameInput";
 
+interface ChangeNicknameModalProps {
+  onClose: () => Promise<void>;
+  // TODO NonNullable 유틸리티 타입으로 바꾸기
+  nickLastModDt: NonNullable<MyInfo["nickLastModDt"]>;
+}
+
 export const ChangeNicknameModal = ({
   onClose,
   nickLastModDt,
-}: {
-  onClose: () => Promise<void>;
-  nickLastModDt: NonNullable<MyInfo["nickLastModDt"]>;
-}) => {
+}: ChangeNicknameModalProps) => {
   const nicknameRef = useRef<HTMLInputElement | null>(null);
-
   const handleOpenSnackbar = useSnackBar();
 
   const { mutate: putChangeNickname, isPending: isChangeNicknamePending } =
