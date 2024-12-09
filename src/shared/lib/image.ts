@@ -110,16 +110,12 @@ interface ImageState {
 /**
  *  해당 훅은 훅 마운트 이후 source 데이터가 변경되지 않는 이미지 로딩에 사용 됩니다.
  */
-export const useImageState = (source?: string | string[]) => {
-  const [isLoading, setIsLoading] = useState(() => (source ? true : false));
+export const useImageState = (source: string | string[]) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [imageState, setImageState] = useState<ImageState>({});
 
   const loadImage = async (source: string | string[]) => {
     if (typeof source === "string") {
-      if (!imageState[source]) {
-        return;
-      }
-
       setIsLoading(true);
 
       const img = new Image();
@@ -137,14 +133,9 @@ export const useImageState = (source?: string | string[]) => {
       return;
     }
 
-    const newImages = source.filter((src) => !imageState[src]);
-    if (newImages.length === 0) {
-      return;
-    }
-
     setIsLoading(true);
     const imagePromises = await Promise.allSettled(
-      newImages.map(
+      source.map(
         (src) =>
           new Promise<string>((resolve, reject) => {
             const img = new Image();
@@ -174,9 +165,7 @@ export const useImageState = (source?: string | string[]) => {
   };
 
   useEffect(() => {
-    if (source) {
-      loadImage(source);
-    }
+    loadImage(source);
   }, [source]);
 
   return { isLoading, imageState };
@@ -194,10 +183,22 @@ export const useInfiniteImageState = () => {
   const loadImage = async (source: string[]) => {
     const newImages = source.filter((src) => !imageState[src]);
     if (newImages.length === 0) {
+      // 처음 loadImages 가 호출 되었을 때 로드 할 이미지가 없을 수 있기 때문에
+      // 이미지 로딩 상태를 false 로 변경합니다.
+
+      if (isFirstPageImageLoading) {
+        setIsFirstPageImageLoading(false);
+      }
+
+      if (isImageLoading) {
+        setIsImageLoading(false);
+      }
+
       return;
     }
 
     setIsImageLoading(true);
+
     const imagePromises = await Promise.allSettled(
       newImages.map(
         (src) =>
