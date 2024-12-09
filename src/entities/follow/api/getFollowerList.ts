@@ -1,8 +1,8 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
-import type { Nickname, PetInfo, UserId } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { FOLLOW_END_POINT, followQueryKey } from "../constants";
+import type { UserInfo } from "./type";
 
 // TODO 리팩토링 시 해당 타입 정의 위치 의논
 interface PageAbleInformation {
@@ -23,15 +23,11 @@ interface PageAbleInformation {
 }
 
 interface GetFollowerListRequest {
-  nickname: Nickname;
+  nickname: string;
 }
 
 type GetFollowerListResponse = {
-  userInfos: {
-    userId: UserId;
-    nickname: Nickname;
-    pet: PetInfo;
-  }[];
+  userInfos: UserInfo[];
 } & PageAbleInformation;
 
 const getFollowerList = ({
