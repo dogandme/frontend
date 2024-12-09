@@ -5,16 +5,12 @@ import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
-type PetInfoFormObject = Omit<PetInfo, "profile" | "petId">;
+interface PetInfoFormObject extends Omit<PetInfo, "profile" | "petId"> {}
 
-interface ProfileImage {
+export interface PutChangePetInfoRequest extends PetInfoFormObject {
   image: File | null;
+  isChaProfile: boolean;
 }
-
-export type PutChangePetInfoRequest = PetInfoFormObject &
-  ProfileImage & {
-    isChaProfile: boolean;
-  };
 
 const putChangePetInfo = async ({
   image,
