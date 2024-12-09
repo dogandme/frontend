@@ -1,10 +1,10 @@
+import { FollowingUserItem } from "@/widgets/follow/ui";
 import {
   FollowerUserItem,
   FollowItemContainer,
   FollowItemContainerSkeleton,
   FollowNavigationBar,
-} from "@/widgets/follow";
-import { FollowingUserItem } from "@/widgets/follow";
+} from "@/widgets/follow/ui";
 import { useGetFollowerList } from "@/entities/follow/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
