@@ -1,10 +1,10 @@
 import { Button } from "@/shared/ui/button";
 import { Checkbox, CheckboxProps } from "@/shared/ui/checkbox";
 
-type AgreementCheckboxProps = Omit<CheckboxProps, "children"> & {
+interface AgreementCheckboxProps extends Omit<CheckboxProps, "children"> {
   label: string;
   agreementLink?: string;
-};
+}
 
 export const AgreementCheckbox = ({
   checked,

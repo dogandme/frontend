@@ -26,9 +26,9 @@ interface GetFollowerListRequest {
   nickname: string;
 }
 
-type GetFollowerListResponse = {
+interface GetFollowerListResponse extends PageAbleInformation {
   userInfos: FollowUserInfo[];
-} & PageAbleInformation;
+}
 
 const getFollowerList = ({
   pageParam = 0,
