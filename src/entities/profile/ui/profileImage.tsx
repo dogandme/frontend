@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/shared/constants";
 import { useImageState } from "@/shared/lib";
-import { Nickname } from "../api";
+import { ProfileInfo } from "../api";
 
 const profileSizeMap = {
   small: "w-6 h-6",
@@ -9,9 +9,8 @@ const profileSizeMap = {
   xLarge: "w-20 h-20",
 } as const;
 
-interface ProfileImageProps {
+interface ProfileImageProps extends Pick<ProfileInfo, "nickname"> {
   imageUrl: string;
-  nickname: Nickname;
   size: keyof typeof profileSizeMap;
   className?: string;
 }
