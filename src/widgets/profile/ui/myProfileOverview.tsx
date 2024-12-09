@@ -1,11 +1,6 @@
 import { Link } from "react-router-dom";
 import { ProfileEditButton } from "@/features/auth/ui";
-import type {
-  FollowerIdList,
-  FollowingIdList,
-  Nickname,
-  PetInfo,
-} from "@/entities/profile/api";
+import type { PetInfo, ProfileInfo } from "@/entities/profile/api";
 import {
   PetDescriptionText,
   PetPersonalityList,
@@ -16,11 +11,9 @@ import {
 import { ROUTER_PATH } from "@/shared/constants";
 import { PlusIcon } from "@/shared/ui/icon";
 
-interface ProfileOverviewProps {
-  nickname: Nickname;
+interface ProfileOverviewProps
+  extends Pick<ProfileInfo, "nickname" | "followersIds" | "followingsIds"> {
   pet: PetInfo;
-  followersIds: FollowerIdList;
-  followingsIds: FollowingIdList;
 }
 
 export const MyProfileOverview = ({
