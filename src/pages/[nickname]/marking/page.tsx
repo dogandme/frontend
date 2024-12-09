@@ -13,7 +13,7 @@ import {
   EmptyMarkingThumbnailGrid,
   EmptyMyMarkingThumbnailGrid,
 } from "@/entities/marking/ui";
-import { useGetProfile, Nickname } from "@/entities/profile/api";
+import { useGetProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useNicknameParams } from "@/shared/lib";
@@ -66,7 +66,7 @@ export const UserMarkingPage = withAuth(() => {
 }, ["ROLE_GUEST", "ROLE_USER"]);
 
 interface MyMarkingListProps {
-  nickname: Nickname;
+  nickname: string;
   isMyPage: boolean;
   sortType: Exclude<SortType, "DISTANCE">;
 }

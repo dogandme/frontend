@@ -8,23 +8,9 @@ import type { ProfileInfo } from "./type";
 // TODO 병합 후 타입 제거하기
 export type Nickname = string;
 export type UserId = number;
-export type FollowerIdList = UserId[];
-export type FollowingIdList = UserId[];
-
-// 펫 프로필 정보
-// TODO 병합 후 타입 제거하기
-export type PetId = number;
-export type PetName = string;
-export type Breed = string;
-export type PetPersonalities = string[];
-export type PetDescription = string | null;
-export type ProfileImageUrl = string | null;
-
-// 마킹 정보
-export type TemporarySavedMarkingCount = number;
 
 interface GetProfileRequest {
-  nickname: Nickname;
+  nickname: string;
 }
 
 export const getProfile = ({ nickname }: GetProfileRequest) =>

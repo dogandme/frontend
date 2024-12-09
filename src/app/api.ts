@@ -1,13 +1,10 @@
-import { Nickname } from "@/entities/profile/api";
+import { SignUpResponse } from "@/features/auth/api/type";
 import { apiClient } from "@/shared/lib";
 import type { Role } from "@/shared/store";
 import { APP_END_POINT } from "./ReactQueryProvider/constants";
 
-interface GetAccessTokenByRefreshTokenResponse {
-  authorization: string;
-  role: NonNullable<Role>;
-  nickname: Nickname;
-}
+interface GetAccessTokenByRefreshTokenResponse
+  extends SignUpResponse<NonNullable<Role>> {}
 
 export const getAccessTokenByRefreshToken = () =>
   apiClient.get<GetAccessTokenByRefreshTokenResponse>(

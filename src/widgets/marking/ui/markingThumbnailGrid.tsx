@@ -7,7 +7,12 @@ import {
 import { useInfiniteScroll, useNicknameParams } from "@/shared/lib";
 import { LoadingSpinner } from "@/shared/ui/spinner";
 
-export const MarkingThumbnailGrid = ({ nickname }: { nickname: string }) => {
+interface MarkingThumbnailGridProps {
+  nickname: string;
+}
+export const MarkingThumbnailGrid = ({
+  nickname,
+}: MarkingThumbnailGridProps) => {
   const {
     data = [],
     isLoading,
