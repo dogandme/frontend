@@ -2,12 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
-import { type Role, useAuthStore } from "@/shared/store";
+import { useAuthStore } from "@/shared/store";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
 import type { SignUpResponse } from "./type";
-
-type EmailLoginResponse = SignUpResponse<NonNullable<Role>>;
 
 interface EmailLoginRequest {
   email: string;
@@ -16,7 +14,7 @@ interface EmailLoginRequest {
 }
 
 const postLogin = async (formData: EmailLoginRequest) => {
-  return apiClient.post<EmailLoginResponse>(LOGIN_END_POINT.EMAIL, {
+  return apiClient.post<SignUpResponse>(LOGIN_END_POINT.EMAIL, {
     body: formData,
   });
 };
@@ -27,7 +25,7 @@ export const usePostLogin = () => {
   const setRole = useAuthStore((state) => state.setRole);
   const setNickname = useAuthStore((state) => state.setNickname);
 
-  return useMutation<EmailLoginResponse, Error, EmailLoginRequest>({
+  return useMutation<SignUpResponse, Error, EmailLoginRequest>({
     mutationFn: postLogin,
     onSuccess: (data) => {
       const { authorization, role, nickname } = data;
