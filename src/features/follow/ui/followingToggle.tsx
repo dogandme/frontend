@@ -4,6 +4,7 @@ import { ButtonProps } from "@/shared/ui/button/Button";
 import { usePostFollowing, useDeleteFollowing } from "../api";
 
 interface FollowingToggleProps {
+  // TODO : marking 의 타입 extends 하기 ?
   nickname: string;
   isFollowing: boolean;
   size: Extract<ButtonProps["size"], "small" | "xSmall">;
