@@ -1,22 +1,11 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
+import type { Bounds, LatLng } from "@/entities/map/@x/marking";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKING_END_POINT } from "../constants";
+import type { Marking, SortType } from "../types/server";
 import { markingQueryKey } from "./queryKey";
-import type { Marking, SortType } from "./type";
-
-export interface GetUserMarkingListRequest {
-  nickname: string;
-  southWestLat: number;
-  southWestLng: number;
-  northEastLat: number;
-  northEastLng: number;
-  lat: number | null;
-  lng: number | null;
-  offset: number; // 페이지 번호
-  sortType: SortType;
-}
 
 interface GetUserMarkingListResponse {
   markings: Marking[];
@@ -46,7 +35,12 @@ const getUserMarkingList = async ({
   lng,
   sortType,
   offset,
-}: GetUserMarkingListRequest) => {
+}: {
+  nickname: string;
+  offset: number;
+  sortType: SortType;
+} & NonNullableObject<Bounds> &
+  LatLng) => {
   return apiClient.get<GetUserMarkingListResponse>(
     MARKING_END_POINT.USER({
       nickname,
@@ -65,6 +59,12 @@ const getUserMarkingList = async ({
   );
 };
 
+interface GetUserMarkingListRequest extends Bounds {
+  nickname: string;
+  sortType: SortType | null;
+  filterData?: (data: Marking) => boolean;
+}
+
 export const useGetUserMarkingList = ({
   nickname,
   southWestLat,
@@ -73,15 +73,7 @@ export const useGetUserMarkingList = ({
   northEastLng,
   sortType,
   filterData,
-}: {
-  nickname: string;
-  southWestLat: number | null;
-  southWestLng: number | null;
-  northEastLat: number | null;
-  northEastLng: number | null;
-  sortType: SortType | null;
-  filterData?: (data: Marking) => boolean;
-}) => {
+}: GetUserMarkingListRequest) => {
   const token = useAuthStore.getState().token;
 
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);

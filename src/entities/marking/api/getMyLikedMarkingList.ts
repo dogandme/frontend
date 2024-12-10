@@ -3,11 +3,11 @@ import { API_BASE_URL } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKING_END_POINT } from "../constants";
+import type { Marking } from "../types/server";
 import { markingQueryKey } from "./queryKey";
-import type { Marking } from "./type";
 
-export interface GetMyLikedMarkingListRequest {
-  offset: number;
+interface GetMyLikedMarkingListRequest {
+  enabled: boolean;
 }
 
 export interface GetMyLikedMarkingListResponse {
@@ -28,7 +28,9 @@ export interface GetMyLikedMarkingListResponse {
   };
 }
 
-export const useGetMyLikedMarkingList = ({ enabled }: { enabled: boolean }) => {
+export const useGetMyLikedMarkingList = ({
+  enabled,
+}: GetMyLikedMarkingListRequest) => {
   const { token } = useAuthStore.getState();
 
   return useInfiniteQuery({

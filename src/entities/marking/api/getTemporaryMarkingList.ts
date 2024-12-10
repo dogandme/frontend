@@ -2,8 +2,8 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { apiClient, formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MY_MARKING_END_POINT } from "../constants";
+import type { TempMarking } from "../types/server";
 import { markingQueryKey } from "./queryKey";
-import type { TempMarking } from "./type";
 
 export interface GetTemporaryMarkingListResponse {
   markings: TempMarking[];

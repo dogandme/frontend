@@ -1,10 +1,11 @@
-import { LatLng } from "@/entities/map/@x/marking";
-import type { Bounds, SearchType, SortType } from "./type";
+import type { LatLng, Bounds } from "@/entities/map/@x/marking";
+import type { SearchType, SortType } from "../types/server";
 
 type Activity = "LIKED" | "SAVED";
 
 export const markingQueryKey = {
-  address: (latLng: LatLng) => ["address", { latLng }] as const,
+  address: (latLng: NonNullableObject<LatLng>) =>
+    ["address", { latLng }] as const,
   markingListAll: () => ["markingList"] as const,
   detail: (markingId: number) =>
     [...markingQueryKey.markingListAll(), { markingId }] as const,

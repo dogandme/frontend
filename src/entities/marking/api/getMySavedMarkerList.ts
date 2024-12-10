@@ -3,11 +3,11 @@ import { API_BASE_URL } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKING_END_POINT } from "../constants";
+import type { Marking } from "../types/server";
 import { markingQueryKey } from "./queryKey";
-import type { Marking } from "./type";
 
-export interface GetMySavedMarkingListRequest {
-  offset: number;
+interface GetMySavedMarkingListRequest {
+  enabled: boolean;
 }
 
 export interface GetMySavedMarkingListResponse {
@@ -28,7 +28,9 @@ export interface GetMySavedMarkingListResponse {
   };
 }
 
-export const useGetMySavedMarkingList = ({ enabled }: { enabled: boolean }) => {
+export const useGetMySavedMarkingList = ({
+  enabled,
+}: GetMySavedMarkingListRequest) => {
   const { token } = useAuthStore.getState();
 
   return useInfiniteQuery({

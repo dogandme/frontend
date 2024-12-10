@@ -3,8 +3,8 @@ import { useTiling } from "@/entities/map/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKER_END_POINT } from "../constants";
+import type { Marker } from "../types/server";
 import { markerQueryKey } from "./queryKey";
-import type { Marker } from "./type";
 
 type GetMyMarkerListResponse = Marker[];
 

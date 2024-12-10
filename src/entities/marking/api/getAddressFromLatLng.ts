@@ -1,6 +1,6 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
-import type { LatLng } from "@/entities/map/@x/marking";
+import { LatLng } from "@/entities/map/@x/marking";
 import { apiClient } from "@/shared/lib";
 import { REVERSE_GEOCODING_END_POINT } from "../constants";
 import { markingQueryKey } from "./queryKey";
@@ -14,7 +14,7 @@ interface GetAddressFromLatLngResponse {
 const getAddressFromLatLng = async ({
   lat,
   lng,
-}: GetAddressFromLatLngRequest) => {
+}: NonNullableObject<GetAddressFromLatLngRequest>) => {
   return apiClient.get<GetAddressFromLatLngResponse>(
     REVERSE_GEOCODING_END_POINT({ lat, lng }),
     {
@@ -26,10 +26,7 @@ const getAddressFromLatLng = async ({
 export const useGetAddressFromLatLng = ({
   lat,
   lng,
-}: {
-  lat: number | null;
-  lng: number | null;
-}) => {
+}: GetAddressFromLatLngRequest) => {
   const { isIdle } = useMapStore.getState();
 
   return useQuery({

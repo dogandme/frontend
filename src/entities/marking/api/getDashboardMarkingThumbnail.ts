@@ -4,8 +4,12 @@ import { API_BASE_URL } from "@/shared/constants";
 import { apiClient, useInfiniteImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKING_THUMBNAIL_END_POINT } from "../constants";
+import type { Marker } from "../types/server";
 import { markerQueryKey } from "./queryKey";
-import type { Marker } from "./type";
+
+interface GetDashboardMarkingThumbnailRequest {
+  nickname: string;
+}
 
 interface GetDashboardMarkingThumbnailResponse {
   marks: Marker[];
@@ -25,7 +29,9 @@ interface GetDashboardMarkingThumbnailResponse {
   };
 }
 
-export const useGetDashboardMarkingThumbnail = (nickname: string) => {
+export const useGetDashboardMarkingThumbnail = ({
+  nickname,
+}: GetDashboardMarkingThumbnailRequest) => {
   const token = useAuthStore((state) => state.token);
   const { loadImage, isImageLoading, isFirstPageImageLoading, imageState } =
     useInfiniteImageState();

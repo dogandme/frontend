@@ -20,7 +20,7 @@ export const MarkingThumbnailGrid = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useGetDashboardMarkingThumbnail(nickname);
+  } = useGetDashboardMarkingThumbnail({ nickname });
 
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {

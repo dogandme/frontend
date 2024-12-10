@@ -1,26 +1,14 @@
 import { useEffect } from "react";
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
+import { Bounds, LatLng } from "@/entities/map/@x/marking";
 import { API_BASE_URL } from "@/shared/constants";
 import { apiClient, useInfiniteImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { MARKING_END_POINT } from "../constants";
+import type { Marking, SearchType, SortType } from "../types/server";
 import { markingQueryKey } from "./queryKey";
-import type { Marking, SearchType, SortType } from "./type";
 
-export interface GetMarkingListRequest {
-  southWestLat: number;
-  southWestLng: number;
-  northEastLat: number;
-  northEastLng: number;
-  lat: number | null;
-  lng: number | null;
-  offset: number; // 페이지 번호
-  sortType: SortType;
-  searchType: SearchType;
-}
-
-// sort, paged, unpaged은 사용하지 x
 interface GetMarkingListResponse {
   markings: Marking[];
   totalElements: number;
@@ -49,7 +37,12 @@ const getMarkingList = async ({
   sortType,
   searchType,
   offset,
-}: GetMarkingListRequest) => {
+}: NonNullableObject<Bounds> &
+  LatLng & {
+    sortType: SortType;
+    searchType: SearchType;
+    offset: number;
+  }) => {
   const hasToken = !!useAuthStore.getState().token;
 
   return apiClient.get<GetMarkingListResponse>(
@@ -70,11 +63,7 @@ const getMarkingList = async ({
   );
 };
 
-interface UseGetMarkingListParams {
-  southWestLat: number | null;
-  southWestLng: number | null;
-  northEastLat: number | null;
-  northEastLng: number | null;
+interface GetMarkingListRequest extends Bounds {
   sortType: SortType | null;
   searchType: SearchType;
   filterData?: (data: Marking) => boolean;
@@ -88,7 +77,7 @@ export const useGetMarkingList = ({
   sortType,
   searchType,
   filterData,
-}: UseGetMarkingListParams) => {
+}: GetMarkingListRequest) => {
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
   const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
 
@@ -153,7 +142,7 @@ export const useGetMarkingList = ({
   });
 };
 
-export const useGetMarkingThumbnailList = (params: UseGetMarkingListParams) => {
+export const useGetMarkingThumbnailList = (params: GetMarkingListRequest) => {
   const { loadImage, isFirstPageImageLoading, isImageLoading, imageState } =
     useInfiniteImageState();
   const { data, isLoading, isFetchingNextPage, ...rest } =
