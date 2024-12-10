@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem, MarkingItemSkeleton } from "@/widgets/marking/ui";
 import { useMapQueryParams, usePlaceQueryParams } from "@/features/map/hooks";
+import { useMapStore } from "@/features/map/store";
 import { SortTypeFilter } from "@/features/marking/ui";
 import type { Bounds, LatLng } from "@/entities/map/types/client";
 import { useGetMarkingDetail, useGetMarkingList } from "@/entities/marking/api";
@@ -65,6 +66,9 @@ const PlaceMarkingList = ({
 
   const { state } = location;
 
+  const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
+  const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
+
   const {
     data: markingList = [],
     fetchNextPage,
@@ -75,6 +79,8 @@ const PlaceMarkingList = ({
     ...boundsParams,
     sortType,
     searchType: "LOCATION",
+    lat,
+    lng,
     filterData: (data) => data.markingId !== state?.markingInfo?.markingId,
   });
 

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
-import { Bounds, LatLng } from "@/entities/map/@x/marking";
+import type { Bounds, LatLng } from "@/entities/map/@x/marking";
 import { API_BASE_URL } from "@/shared/constants";
 import { apiClient, useInfiniteImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
@@ -27,6 +27,13 @@ export interface GetMarkingListResponse {
   };
 }
 
+type GetMarkingListRequest = NonNullableObject<Bounds> &
+  LatLng & {
+    sortType: SortType;
+    searchType: SearchType;
+    offset: number;
+  };
+
 const getMarkingList = async ({
   southWestLat,
   southWestLng,
@@ -37,12 +44,7 @@ const getMarkingList = async ({
   sortType,
   searchType,
   offset,
-}: NonNullableObject<Bounds> &
-  LatLng & {
-    sortType: SortType;
-    searchType: SearchType;
-    offset: number;
-  }) => {
+}: GetMarkingListRequest) => {
   const hasToken = !!useAuthStore.getState().token;
 
   return apiClient.get<GetMarkingListResponse>(
@@ -63,24 +65,21 @@ const getMarkingList = async ({
   );
 };
 
-interface GetMarkingListRequest extends Bounds {
-  sortType: SortType | null;
-  searchType: SearchType;
-  filterData?: (data: Marking) => boolean;
-}
-
 export const useGetMarkingList = ({
   southWestLat,
   southWestLng,
   northEastLat,
   northEastLng,
+  lat,
+  lng,
   sortType,
   searchType,
   filterData,
-}: GetMarkingListRequest) => {
-  const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
-  const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
-
+}: Pick<GetMarkingListRequest, "searchType" | "lat" | "lng"> &
+  Bounds & {
+    sortType: SortType | null;
+    filterData?: (data: Marking) => boolean;
+  }) => {
   const { isIdle: isMapIdle } = useMapStore.getState();
 
   return useInfiniteQuery({
@@ -91,7 +90,7 @@ export const useGetMarkingList = ({
         northEastLat: northEastLat!,
         northEastLng: northEastLng!,
       },
-      { lat: lat!, lng: lng! },
+      { lat, lng },
       sortType!,
       searchType,
     ),
