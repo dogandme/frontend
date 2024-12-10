@@ -1,12 +1,5 @@
 import { MARKING_VISIBILITY_MAP } from "../constants";
 
-export interface Bounds {
-  southWestLat: number;
-  southWestLng: number;
-  northEastLat: number;
-  northEastLng: number;
-}
-
 interface Address {
   id: number;
   province: string;
