@@ -1,17 +1,5 @@
-interface LatLng {
-  lat: number;
-  lng: number;
-}
-
-interface Bounds {
-  southWestLat: number;
-  southWestLng: number;
-  northEastLat: number;
-  northEastLng: number;
-}
-
-type SortType = "RECENT" | "DISTANCE" | "POPULARITY";
-type SearchType = "NEARBY" | "LOCATION";
+import { LatLng } from "@/entities/map/@x/marking";
+import { Bounds, SearchType, SortType } from "./type";
 
 type Activity = "LIKED" | "SAVED";
 

@@ -9,7 +9,6 @@ import type {
   GetAllMarkingsOfUserRequest,
 } from "../api";
 
-export * from "./queryKey";
 export const REVERSE_GEOCODING_END_POINT = ({
   lat,
   lng,
