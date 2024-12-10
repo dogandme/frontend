@@ -14,8 +14,10 @@ export interface MyInfo {
   isPasswordSet: boolean;
 }
 
+type GetMyInfoResponse = MyInfo;
+
 const getMyInfo = async () => {
-  return apiClient.get<MyInfo>(MY_INFO_END_POINT, {
+  return apiClient.get<GetMyInfoResponse>(MY_INFO_END_POINT, {
     withToken: true,
   });
 };

@@ -18,10 +18,10 @@ export interface Region {
   subDistrict: string;
 }
 
-type GetRegionResponse = Region[];
+type GetRegionByKeywordResponse = Region[];
 
-const getRegionByKeyword = async (keyword: RegionKeyword) => {
-  return apiClient.get<GetRegionResponse>(
+const getRegionByKeyword = async (keyword: string) => {
+  return apiClient.get<GetRegionByKeywordResponse>(
     REGION_END_POINT.REGION_LIST(keyword),
   );
 };
@@ -41,8 +41,11 @@ export const useGetRegionByKeyword = ({
   });
 };
 
-const getRegionByLatLng = async ({ lat, lng }: LatLng) => {
-  return apiClient.get<GetRegionResponse>(
+type GetRegionByLatLngRequest = LatLng;
+type GetRegionByLatLngResponse = Region[];
+
+const getRegionByLatLng = async ({ lat, lng }: GetRegionByLatLngRequest) => {
+  return apiClient.get<GetRegionByLatLngResponse>(
     REGION_END_POINT.CURRENT_POSITION({ lat, lng }),
   );
 };
