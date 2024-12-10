@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
-import { SignUpResponse } from "../type/server";
+import type { SignUpResponse } from "../type/server";
 
 interface PostAddUserInfoRequest {
   token: string;
