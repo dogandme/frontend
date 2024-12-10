@@ -92,7 +92,7 @@ export const PetDescriptionText = ({
   );
 };
 
-interface PetPersonalityListProps extends Pick<PetInfo, "personalities"> {}
+type PetPersonalityListProps = Pick<PetInfo, "personalities">;
 
 export const PetPersonalityList = ({
   personalities,
