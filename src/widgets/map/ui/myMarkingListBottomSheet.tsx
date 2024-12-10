@@ -13,7 +13,7 @@ import {
   EmptyMyMarkingThumbnailGrid,
   TemporaryMarkingBar,
 } from "@/entities/marking/ui";
-import { Nickname, useGetProfile } from "@/entities/profile/api";
+import { useGetProfile } from "@/entities/profile/api";
 import { useInfiniteScroll } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
@@ -65,7 +65,7 @@ export const MyMarkingListBottomSheet = () => {
 };
 
 interface MyMarkingListProps {
-  nickname: Nickname;
+  nickname: string;
   sortType: SortType;
   boundsParams: Bounds;
 }
