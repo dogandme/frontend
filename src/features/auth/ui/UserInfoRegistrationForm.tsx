@@ -1,10 +1,10 @@
 import { useState } from "react";
-import type { Region } from "@/entities/auth/api";
 import {
   AgreementCheckbox,
   SelectOpener,
   SignUpLandingModal,
 } from "@/entities/auth/ui";
+import type { Region } from "@/entities/map/types/server";
 import { useModal, useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store/auth";
 import { Badge } from "@/shared/ui/badge";

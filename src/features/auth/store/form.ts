@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Region } from "@/entities/auth/api";
+import type { Region } from "@/entities/map/types/server";
 
 interface LoginFormStore {
   email: string;

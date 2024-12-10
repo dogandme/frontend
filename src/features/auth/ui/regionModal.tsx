@@ -1,9 +1,9 @@
 import { useRef, createContext } from "react";
 import {
-  type Region,
   useGetRegionByKeyword,
   useGetRegionByLatLng,
-} from "@/entities/auth/api";
+} from "@/entities/map/api";
+import type { Region } from "@/entities/map/types/server";
 import { useSnackBar } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
