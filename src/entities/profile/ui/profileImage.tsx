@@ -37,13 +37,12 @@ export const ProfileImage = ({
   );
 };
 
+type EmptyProfileImageProps = Omit<ProfileImageProps, "imageUrl">;
+
 export const EmptyProfileImage = ({
   size,
   className = "",
-}: {
-  size: keyof typeof profileSizeMap;
-  className?: string;
-}) => (
+}: EmptyProfileImageProps) => (
   <img
     src="/default-image.png"
     className={`object-cover ${profileSizeMap[size]} ${className}`}
