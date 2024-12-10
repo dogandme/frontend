@@ -7,7 +7,7 @@ import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
 import type { SignUpResponse } from "../type/server";
 
-interface PostLoginRequest {
+export interface PostLoginRequest {
   email: string;
   password: string;
   persistLogin: boolean;

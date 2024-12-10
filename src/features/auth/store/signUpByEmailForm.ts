@@ -1,8 +1,8 @@
 import { create } from "zustand";
+import type { PostSignUpByEmailRequest } from "../api";
 import { validateEmail, validatePassword } from "../lib";
 
-interface SignUpByEmailFormState {
-  email: string;
+interface SignUpByEmailFormState extends PostSignUpByEmailRequest {
   isEmailEmpty: boolean;
   isValidEmail: boolean;
 
@@ -11,7 +11,6 @@ interface SignUpByEmailFormState {
   timeLeft: number;
   isTimeLeftLessThanOneMinute: boolean;
 
-  password: string;
   isPasswordEmpty: boolean;
   isValidPassword: boolean;
 

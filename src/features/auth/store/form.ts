@@ -1,10 +1,8 @@
 import { create } from "zustand";
-import type { Region } from "@/entities/map/types/server";
+import type { Region } from "@/entities/auth/api";
+import type { PostLoginRequest } from "../api";
 
-interface LoginFormStore {
-  email: string;
-  password: string;
-  persistLogin: boolean;
+interface LoginFormStore extends PostLoginRequest {
   isValidEmail: boolean;
   statusText: string;
 

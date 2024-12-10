@@ -6,7 +6,7 @@ import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 import { SignUpResponse } from "../type/server";
 
-interface PostSignUpByEmailRequest {
+export interface PostSignUpByEmailRequest {
   email: string;
   password: string;
 }
