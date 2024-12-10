@@ -27,14 +27,14 @@ interface EditMarkingFormModalProps {
   onClose: () => Promise<void>;
   initialState: EditMarkingFormExternalState;
   markingId: TempMarking["markingId"];
-  putModifyMarkingArgumets: PutModifyMarkingArguments;
+  putModifyMarkingArguments: PutModifyMarkingArguments;
 }
 
 export const EditMarkingFormModal = ({
   onClose,
   initialState,
   markingId,
-  putModifyMarkingArgumets,
+  putModifyMarkingArguments,
 }: EditMarkingFormModalProps) => {
   return (
     <EditMarkingFormProvider initialState={initialState}>
@@ -59,11 +59,11 @@ export const EditMarkingFormModal = ({
         <Modal.Footer axis="col">
           <EditMarkingSaveButton
             markingId={markingId}
-            putModifyMarkingArgumets={putModifyMarkingArgumets}
+            putModifyMarkingArguments={putModifyMarkingArguments}
           />
           <EditMarkingTempSaveButton
             markingId={markingId}
-            putModifyMarkingArgumets={putModifyMarkingArgumets}
+            putModifyMarkingArguments={putModifyMarkingArguments}
           />
         </Modal.Footer>
       </Modal>
@@ -262,12 +262,12 @@ const EditMarkingTextArea = () => {
 
 const EditMarkingSaveButton = ({
   markingId,
-  putModifyMarkingArgumets,
+  putModifyMarkingArguments,
 }: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
   const store = useEditMarkingFormContext();
   const handleOpen = useSnackBar();
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
-    putModifyMarkingArgumets,
+    putModifyMarkingArguments,
   );
 
   const handleClick = () => {
@@ -314,12 +314,12 @@ const EditMarkingSaveButton = ({
 };
 const EditMarkingTempSaveButton = ({
   markingId,
-  putModifyMarkingArgumets,
+  putModifyMarkingArguments,
 }: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
   const store = useEditMarkingFormContext();
   const handleOpen = useSnackBar();
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
-    putModifyMarkingArgumets,
+    putModifyMarkingArguments,
   );
 
   const handleClick = () => {
