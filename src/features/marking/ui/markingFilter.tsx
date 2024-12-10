@@ -7,7 +7,7 @@ import {
   useMapQueryParams,
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
-import { SortType } from "@/entities/marking/api";
+import type { SortType } from "@/entities/marking/types/server";
 import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { DropDownIcon } from "@/shared/ui/icon";

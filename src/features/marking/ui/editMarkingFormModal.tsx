@@ -1,11 +1,10 @@
 import { useRef, useState } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
-import { TempMarkingInfo } from "@/entities/marking/api";
 import {
   MARKING_VISIBILITY_MAP,
   MARKING_VISIBILITY_ENTRIES,
-  type MarkingVisibilityKey,
 } from "@/entities/marking/constants";
+import type { IsVisible, TempMarking } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
 import { Badge } from "@/shared/ui/badge";
@@ -27,7 +26,7 @@ import {
 interface EditMarkingFormModalProps {
   onClose: () => Promise<void>;
   initialState: EditMarkingFormExternalState;
-  markingId: TempMarkingInfo["markingId"];
+  markingId: TempMarking["markingId"];
   putModifyMarkingArgumets: PutModifyMarkingArguments;
 }
 
@@ -91,7 +90,7 @@ const EditPostVisibilitySelect = () => {
   const setIsVisible = useEditMarkingForm((state) => state.setIsVisible);
   const handleCloseSelectList = () => setIsOpen(false);
 
-  const handleSelect = (value: MarkingVisibilityKey) => {
+  const handleSelect = (value: IsVisible) => {
     setIsVisible(value);
     handleCloseSelectList();
   };
