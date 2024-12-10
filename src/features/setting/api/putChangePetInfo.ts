@@ -5,9 +5,8 @@ import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
-type PetInfoFormObject = Omit<PetInfo, "profile" | "petId">;
-
-export interface PutChangePetInfoRequest extends PetInfoFormObject {
+export interface PutChangePetInfoRequest
+  extends Omit<PetInfo, "profile" | "petId"> {
   image: File | null;
   isChaProfile: boolean;
 }
