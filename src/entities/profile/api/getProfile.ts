@@ -39,9 +39,10 @@ export type UserId = number;
 interface GetProfileRequest {
   nickname: string;
 }
+type GetProfileResponse = ProfileInfo;
 
 export const getProfile = ({ nickname }: GetProfileRequest) =>
-  apiClient.get<ProfileInfo>(PROFILE_END_POINT.PROFILE(nickname), {
+  apiClient.get<GetProfileResponse>(PROFILE_END_POINT.PROFILE(nickname), {
     withToken: true,
     snackbarOnError: ({ code }) => code !== 404,
   });
@@ -49,7 +50,7 @@ export const getProfile = ({ nickname }: GetProfileRequest) =>
 export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
   const token = useAuthStore((state) => state.token);
 
-  return useQuery<ProfileInfo, HttpError>({
+  return useQuery<GetProfileResponse, HttpError>({
     queryKey: profileQueryKey.profile(nickname!),
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
     gcTime: 0,
