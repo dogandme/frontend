@@ -1,4 +1,4 @@
-import type { PetInfo } from "@/entities/profile/api/@x/follow";
+import type { PetInfo } from "@/entities/profile/@x/follow";
 
 export interface FollowUserInfo {
   userId: number;
