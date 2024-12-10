@@ -7,10 +7,6 @@ import { MARKING_THUMBNAIL_END_POINT } from "../constants";
 import type { Marker } from "../types/server";
 import { markerQueryKey } from "./queryKey";
 
-interface GetDashboardMarkingThumbnailRequest {
-  nickname: string;
-}
-
 interface GetDashboardMarkingThumbnailResponse {
   marks: Marker[];
   totalElements: number;
@@ -31,7 +27,9 @@ interface GetDashboardMarkingThumbnailResponse {
 
 export const useGetDashboardMarkingThumbnail = ({
   nickname,
-}: GetDashboardMarkingThumbnailRequest) => {
+}: {
+  nickname: string;
+}) => {
   const token = useAuthStore((state) => state.token);
   const { loadImage, isImageLoading, isFirstPageImageLoading, imageState } =
     useInfiniteImageState();

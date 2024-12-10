@@ -8,7 +8,7 @@ import { MARKER_END_POINT } from "../constants";
 import type { Marker } from "../types/server";
 import { markerQueryKey } from "./queryKey";
 
-type GetBoundaryMarkerListRequest = Bounds;
+type GetBoundaryMarkerListRequest = NonNullableObject<Bounds>;
 
 type GetBoundaryMarkerListResponse = Marker[];
 
@@ -17,7 +17,7 @@ const getBoundaryMarkerList = async ({
   southWestLng,
   northEastLat,
   northEastLng,
-}: NonNullableObject<GetBoundaryMarkerListRequest>) => {
+}: GetBoundaryMarkerListRequest) => {
   const hasToken = !!useAuthStore.getState().token;
 
   return apiClient.get<GetBoundaryMarkerListResponse>(
@@ -38,7 +38,7 @@ export const useGetBoundaryMarkerList = ({
   southWestLng,
   northEastLat,
   northEastLng,
-}: GetBoundaryMarkerListRequest) => {
+}: Bounds) => {
   const { isIdle: isMapIdle } = useMapStore.getState();
   const getTiles = useTiling();
 

@@ -5,7 +5,7 @@ import { apiClient } from "@/shared/lib";
 import { REVERSE_GEOCODING_END_POINT } from "../constants";
 import { markingQueryKey } from "./queryKey";
 
-type GetAddressFromLatLngRequest = LatLng;
+type GetAddressFromLatLngRequest = NonNullableObject<LatLng>;
 
 interface GetAddressFromLatLngResponse {
   region: string;
@@ -14,7 +14,7 @@ interface GetAddressFromLatLngResponse {
 const getAddressFromLatLng = async ({
   lat,
   lng,
-}: NonNullableObject<GetAddressFromLatLngRequest>) => {
+}: GetAddressFromLatLngRequest) => {
   return apiClient.get<GetAddressFromLatLngResponse>(
     REVERSE_GEOCODING_END_POINT({ lat, lng }),
     {
@@ -23,10 +23,7 @@ const getAddressFromLatLng = async ({
   );
 };
 
-export const useGetAddressFromLatLng = ({
-  lat,
-  lng,
-}: GetAddressFromLatLngRequest) => {
+export const useGetAddressFromLatLng = ({ lat, lng }: LatLng) => {
   const { isIdle } = useMapStore.getState();
 
   return useQuery({

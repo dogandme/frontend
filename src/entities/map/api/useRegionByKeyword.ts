@@ -6,15 +6,13 @@ import { regionQueryKey } from "./queryKey";
 
 type GetRegionByKeywordResponse = Region[];
 
-interface GetRegionByKeywordRequest {
-  keyword: string;
-  enabled: boolean;
-}
-
 export const useGetRegionByKeyword = ({
   keyword,
   enabled,
-}: GetRegionByKeywordRequest) => {
+}: {
+  keyword: string;
+  enabled: boolean;
+}) => {
   return useQuery({
     queryKey: regionQueryKey.regionKeyword(keyword),
     queryFn: () =>

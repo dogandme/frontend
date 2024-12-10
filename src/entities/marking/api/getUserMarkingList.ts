@@ -25,6 +25,13 @@ interface GetUserMarkingListResponse {
   };
 }
 
+type GetUserMarkingListRequest = NonNullableObject<Bounds> &
+  LatLng & {
+    nickname: string;
+    offset: number;
+    sortType: SortType;
+  };
+
 const getUserMarkingList = async ({
   nickname,
   southWestLat,
@@ -35,12 +42,7 @@ const getUserMarkingList = async ({
   lng,
   sortType,
   offset,
-}: {
-  nickname: string;
-  offset: number;
-  sortType: SortType;
-} & NonNullableObject<Bounds> &
-  LatLng) => {
+}: GetUserMarkingListRequest) => {
   return apiClient.get<GetUserMarkingListResponse>(
     MARKING_END_POINT.USER({
       nickname,
@@ -59,12 +61,6 @@ const getUserMarkingList = async ({
   );
 };
 
-interface GetUserMarkingListRequest extends Bounds {
-  nickname: string;
-  sortType: SortType | null;
-  filterData?: (data: Marking) => boolean;
-}
-
 export const useGetUserMarkingList = ({
   nickname,
   southWestLat,
@@ -73,7 +69,11 @@ export const useGetUserMarkingList = ({
   northEastLng,
   sortType,
   filterData,
-}: GetUserMarkingListRequest) => {
+}: Pick<GetAllMarkingsOfUserRequest, "nickname"> &
+  Bounds & {
+    sortType: SortType | null;
+    filterData?: (data: Marking) => boolean;
+  }) => {
   const token = useAuthStore.getState().token;
 
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);

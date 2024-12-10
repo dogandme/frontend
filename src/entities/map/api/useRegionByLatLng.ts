@@ -7,15 +7,13 @@ import { regionQueryKey } from "./queryKey";
 
 type GetRegionByLatLngResponse = Region[];
 
-interface GetRegionByLatLngRequest extends NonNullableObject<LatLng> {
-  enabled: boolean;
-}
-
 export const useGetRegionByLatLng = ({
   lat,
   lng,
   enabled,
-}: GetRegionByLatLngRequest) => {
+}: NonNullableObject<LatLng> & {
+  enabled: boolean;
+}) => {
   return useQuery({
     queryKey: regionQueryKey.regionLatLng({ lat, lng }),
     queryFn: () =>
