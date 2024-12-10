@@ -5,7 +5,7 @@ import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { SIGN_UP_END_POINT } from "../constants";
-import type { SignUpResponse } from "./type";
+import type { SignUpResponse } from "../type/server";
 
 interface PostPetInfoRequest extends Omit<PetInfo, "profile" | "petId"> {
   image: File | null;
