@@ -1,9 +1,10 @@
-import { NavLink, NavLinkProps } from "react-router-dom";
+import { NavLink, type NavLinkProps } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
 
 interface FollowNavigationBarProps {
   nickname: string;
 }
+
 export const FollowNavigationBar = ({ nickname }: FollowNavigationBarProps) => {
   return (
     <div className="flex self-stretch items-center title-2 text-center px-4">

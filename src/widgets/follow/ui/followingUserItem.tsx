@@ -8,14 +8,16 @@ import { FollowingToggle } from "@/features/follow/ui";
 import { ProfileLink } from "@/features/profile/ui";
 import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
 import { useNicknameParams } from "@/shared/lib";
-import type { FollowItemProps } from "./type";
+import type { FollowItemProps } from "../type/client";
+
+type FollowingUserItemProps = FollowItemProps & { isFollowing: boolean };
 
 export const FollowingUserItem = ({
   nickname,
   petName,
   profile,
   isFollowing,
-}: FollowItemProps & { isFollowing: boolean }) => {
+}: FollowingUserItemProps) => {
   const { isMyPage } = useNicknameParams();
 
   return (

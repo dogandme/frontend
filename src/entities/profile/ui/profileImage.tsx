@@ -37,7 +37,7 @@ export const ProfileImage = ({
   );
 };
 
-type EmptyProfileImageProps = Omit<ProfileImageProps, "imageUrl">;
+type EmptyProfileImageProps = Omit<ProfileImageProps, "imageUrl" | "nickname">;
 
 export const EmptyProfileImage = ({
   size,

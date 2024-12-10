@@ -1,10 +1,9 @@
 import { Button } from "@/shared/ui/button";
 
-export const FollowItemContainer = ({
-  children,
-}: {
+interface FollowItemContainerProps {
   children: React.ReactNode;
-}) => (
+}
+export const FollowItemContainer = ({ children }: FollowItemContainerProps) => (
   <section className="px-4 pt-4 flex flex-col gap-4 overflow-y-auto">
     {children}
   </section>
