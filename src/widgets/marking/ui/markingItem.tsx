@@ -12,7 +12,7 @@ import {
 import type { PutModifyMarkingArguments } from "@/features/marking/api";
 import { useMarkingFormModal } from "@/features/marking/lib";
 import { EditMarkingFormModal } from "@/features/marking/ui";
-import type { Marking } from "@/entities/marking/api";
+import { Marking } from "@/entities/marking/types/server";
 import { useGetMyProfile } from "@/entities/profile/api";
 import type { PetInfo } from "@/entities/profile/api";
 import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
@@ -559,7 +559,7 @@ const MarkingItemProfileImage = () => {
       />
     );
   }
-  
+
   return <EmptyProfileImage size="medium" className="rounded-2xl" />;
 };
 
@@ -594,7 +594,7 @@ const MarkingItemContent = () => {
   const multiLineSummaryRef = useRef<HTMLParagraphElement>(null);
 
   const renderMarkingContent = () => {
-    const multiLineContent = content.split("\n");
+    const multiLineContent = (content || "").split("\n");
     const multiLineLength = multiLineContent.length;
 
     if (multiLineLength > 1) {
