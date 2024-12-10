@@ -1,8 +1,9 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/shared/lib";
-import { MARKING_END_POINT, markingQueryKey } from "../constants";
-import type { Marking } from "./getMarkingList";
 import { API_BASE_URL } from "@/shared/constants";
+import { apiClient } from "@/shared/lib";
+import { MARKING_END_POINT } from "../constants";
+import { markingQueryKey } from "./queryKey";
+import type { Marking } from "./type";
 
 export interface GetMarkingDetailRequest {
   markingId?: number;

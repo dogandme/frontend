@@ -1,13 +1,11 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
+import type { LatLng } from "@/entities/map/@x/marking";
 import { apiClient } from "@/shared/lib";
 import { REVERSE_GEOCODING_END_POINT } from "../constants";
-import { markingQueryKey } from "../constants";
+import { markingQueryKey } from "./queryKey";
 
-interface GetAddressFromLatLngRequest {
-  lat: number;
-  lng: number;
-}
+type GetAddressFromLatLngRequest = LatLng;
 
 interface GetAddressFromLatLngResponse {
   region: string;

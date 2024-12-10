@@ -4,68 +4,9 @@ import { useMapStore } from "@/features/map/store";
 import { API_BASE_URL } from "@/shared/constants";
 import { apiClient, useInfiniteImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import {
-  MARKING_END_POINT,
-  markingQueryKey,
-  type MarkingVisibilityKey,
-} from "../constants";
-
-interface Address {
-  id: number;
-  province: string;
-  cityCounty: string;
-  district: string | null;
-  subDistrict: string;
-}
-
-type PetName = string;
-type Breed = string;
-type PetDescription = string | null;
-type ProfileImageUrl = string | null;
-type PetPersonalities = string[];
-
-interface Pet {
-  petId: number;
-  name: PetName;
-  description: PetDescription;
-  profile: ProfileImageUrl;
-  breed: Breed;
-  personalities: PetPersonalities;
-}
-
-interface Image {
-  id: number;
-  imageUrl: string;
-  lank: number;
-  regDt: string;
-}
-
-interface Count {
-  likedCount: number;
-  savedCount: number;
-}
-
-export interface Marking {
-  markingId: number;
-  region: string;
-  content: string;
-  isVisible: MarkingVisibilityKey;
-  regDt: string;
-  previewImage: string;
-  userId: number;
-  nickName: string;
-  isOwner: boolean;
-  isTempSaved: boolean;
-  lat: number;
-  lng: number;
-  address: Address;
-  countData: Count;
-  pet: Pet;
-  images: Image[];
-}
-
-export type SortType = "RECENT" | "DISTANCE" | "POPULARITY";
-export type SearchType = "NEARBY" | "LOCATION";
+import { MARKING_END_POINT } from "../constants";
+import { markingQueryKey } from "./queryKey";
+import type { Marking, SearchType, SortType } from "./type";
 
 export interface GetMarkingListRequest {
   southWestLat: number;

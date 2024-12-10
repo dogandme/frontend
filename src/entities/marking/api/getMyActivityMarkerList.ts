@@ -3,14 +3,10 @@ import { skipToken, useQuery } from "@tanstack/react-query";
 import { useTiling } from "@/entities/map/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKER_END_POINT, markerQueryKey } from "../constants";
+import { MARKER_END_POINT } from "../constants";
+import { markerQueryKey } from "./queryKey";
+import type { Marker } from "./type";
 
-interface Marker {
-  markingId: number;
-  previewImage: string;
-  lat: number;
-  lng: number;
-}
 type GetMyActivityMarkerListRequest = "LIKED" | "SAVED";
 type GetMyActivityMarkerListResponse = Marker[];
 

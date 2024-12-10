@@ -1,5 +1,5 @@
 import { LatLng } from "@/entities/map/@x/marking";
-import { Bounds, SearchType, SortType } from "./type";
+import type { Bounds, SearchType, SortType } from "./type";
 
 type Activity = "LIKED" | "SAVED";
 

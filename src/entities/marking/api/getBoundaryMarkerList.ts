@@ -3,21 +3,11 @@ import { useMapStore } from "@/features/map/store";
 import { useTiling } from "@/entities/map/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKER_END_POINT, markerQueryKey } from "../constants";
+import { MARKER_END_POINT } from "../constants";
+import { markerQueryKey } from "./queryKey";
+import type { Bounds, Marker } from "./type";
 
-interface Marker {
-  markingId: number;
-  previewImage: string;
-  lat: number;
-  lng: number;
-}
-
-export interface GetBoundaryMarkerListRequest {
-  southWestLat: number;
-  southWestLng: number;
-  northEastLat: number;
-  northEastLng: number;
-}
+export type GetBoundaryMarkerListRequest = Bounds;
 
 type GetBoundaryMarkerListResponse = Marker[];
 

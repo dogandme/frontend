@@ -2,8 +2,9 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_END_POINT, markingQueryKey } from "../constants";
-import type { Marking, SortType } from "./getMarkingList";
+import { MARKING_END_POINT } from "../constants";
+import { markingQueryKey } from "./queryKey";
+import type { Marking, SortType } from "./type";
 
 export interface GetUserMarkingListRequest {
   nickname: string;

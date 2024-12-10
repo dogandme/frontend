@@ -10,3 +10,4 @@ export * from "./getMySavedMarkerList";
 export * from "./getMarkingDetail";
 export * from "./getMyActivityMarkerList";
 export * from "./getDashboardMarkingThumbnail";
+export * from "./type";

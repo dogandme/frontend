@@ -2,8 +2,9 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_END_POINT, markingQueryKey } from "../constants";
-import type { Marking } from "./getMarkingList";
+import { MARKING_END_POINT } from "../constants";
+import { markingQueryKey } from "./queryKey";
+import type { Marking } from "./type";
 
 export interface GetMySavedMarkingListRequest {
   offset: number;
