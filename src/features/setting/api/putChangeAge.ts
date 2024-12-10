@@ -5,7 +5,7 @@ import { authQueryKey } from "@/entities/auth/constants";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
-export interface PutChangeAgeRequest extends Pick<MyInfo, "age"> {}
+export type PutChangeAgeRequest = Pick<MyInfo, "age">;
 
 const putChangeAge = async (changeAgeData: PutChangeAgeRequest) => {
   return apiClient.put(SETTING_END_POINT.CHANGE_AGE, {

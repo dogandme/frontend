@@ -3,11 +3,8 @@ import { apiClient } from "@/shared/lib";
 import type { Role } from "@/shared/store";
 import { APP_END_POINT } from "./ReactQueryProvider/constants";
 
-interface GetAccessTokenByRefreshTokenResponse
-  extends SignUpResponse<NonNullable<Role>> {}
-
 export const getAccessTokenByRefreshToken = () =>
-  apiClient.get<GetAccessTokenByRefreshTokenResponse>(
+  apiClient.get<SignUpResponse<NonNullable<Role>>>(
     APP_END_POINT.REFRESH_ACCESS_TOKEN,
     {
       credentials:

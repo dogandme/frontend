@@ -11,7 +11,7 @@ interface PostPetInfoRequest extends Omit<PetInfo, "profile" | "petId"> {
   image: File | null;
 }
 
-interface PostPetInfoResponse extends SignUpResponse<"ROLE_USER"> {}
+type PostPetInfoResponse = SignUpResponse<"ROLE_USER">;
 
 const postAddPetInfo = async ({
   image,

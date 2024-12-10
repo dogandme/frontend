@@ -7,7 +7,7 @@ import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
 import type { SignUpResponse } from "./type";
 
-interface EmailLoginResponse extends SignUpResponse<NonNullable<Role>> {}
+type EmailLoginResponse = SignUpResponse<NonNullable<Role>>;
 
 interface EmailLoginRequest {
   email: string;

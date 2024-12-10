@@ -11,7 +11,7 @@ interface PostSignUpByEmailRequest {
   password: string;
 }
 
-interface PostSignUpByEmailResponse extends SignUpResponse<"ROLE_NONE"> {}
+type PostSignUpByEmailResponse = SignUpResponse<"ROLE_NONE">;
 
 const postSignUpByEmail = async ({
   email,

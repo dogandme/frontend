@@ -7,9 +7,8 @@ import { DividerLine } from "@/shared/ui/divider";
 import { DropDownIcon } from "@/shared/ui/icon";
 import type { ProfileInfo, PetInfo } from "../api";
 
-interface ProfileHeadingProps
-  extends Pick<ProfileInfo, "followersIds" | "followingsIds">,
-    Pick<PetInfo, "breed" | "name"> {}
+type ProfileHeadingProps = Pick<ProfileInfo, "followersIds" | "followingsIds"> &
+  Pick<PetInfo, "breed" | "name">;
 
 export const ProfileHeading = ({
   name,

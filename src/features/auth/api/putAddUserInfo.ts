@@ -13,7 +13,7 @@ interface PostAddUserInfoRequest {
   marketingYn: boolean;
 }
 
-interface PostAddUserInfoResponse extends SignUpResponse<"ROLE_GUEST"> {}
+type PostAddUserInfoResponse = SignUpResponse<"ROLE_GUEST">;
 
 const putAddUserInfo = async (userInfo: PostAddUserInfoRequest) => {
   return apiClient.put<PostAddUserInfoResponse>(SIGN_UP_END_POINT.USER_INFO, {

@@ -5,7 +5,7 @@ import { authQueryKey } from "@/entities/auth/constants";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
-export interface PutChangeGenderRequest extends Pick<MyInfo, "gender"> {}
+export type PutChangeGenderRequest = Pick<MyInfo, "gender">;
 
 const putChangeGender = async (changeGenderData: PutChangeGenderRequest) => {
   return apiClient.put(SETTING_END_POINT.CHANGE_GENDER, {
