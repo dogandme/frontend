@@ -9,7 +9,7 @@ import { MARKING_END_POINT } from "../constants";
 import type { Marking, SearchType, SortType } from "../types/server";
 import { markingQueryKey } from "./queryKey";
 
-interface GetMarkingListResponse {
+export interface GetMarkingListResponse {
   markings: Marking[];
   totalElements: number;
   totalPages: number;

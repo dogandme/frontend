@@ -1,21 +1,19 @@
 import { useMutation } from "@tanstack/react-query";
+import type { Marking } from "@/entities/marking/types/server";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
 interface DeleteMarkingRequest {
-  markingId: number;
+  markingId: Marking["markingId"];
 }
 
-const deleteMarking = async ({ markingId }: DeleteMarkingRequest) => {
-  return apiClient.delete(MARKING_END_POINT.DELETE, {
-    withToken: true,
-    body: { markingId },
-  });
-};
-
 export const useDeleteMarking = ({ onSuccess }: { onSuccess?: () => void }) => {
-  return useMutation<unknown, Error, DeleteMarkingRequest>({
-    mutationFn: deleteMarking,
+  return useMutation({
+    mutationFn: ({ markingId }: DeleteMarkingRequest) =>
+      apiClient.delete(MARKING_END_POINT.DELETE, {
+        withToken: true,
+        body: { markingId },
+      }),
     onSuccess: () => {
       onSuccess?.();
     },

@@ -1,18 +1,14 @@
 // Marking Form 임시 저장 API
 import { useMutation } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
-import { MarkingVisibilityKey } from "@/entities/marking/constants";
 import { apiClient, useSnackBar } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 import { useMarkingFormStore } from "../store";
 import type { PostAddMarkingRequest } from "./postAddMarking";
 
-interface PostAddTempMarkingRequestData
-  extends Omit<PostAddMarkingRequest, "isVisible"> {
-  isVisible: MarkingVisibilityKey;
-}
+type PostAddTempMarkingRequest = PostAddMarkingRequest;
 
-const postAddTempMarking = async (formObj: PostAddTempMarkingRequestData) => {
+const postAddTempMarking = async (formObj: PostAddTempMarkingRequest) => {
   const { region, isVisible, content, images, lat, lng } = formObj;
 
   const formData = new FormData();
@@ -51,7 +47,7 @@ export const usePostAddTempMarking = () => {
   const setMode = useMapStore((state) => state.setMode);
   const handleOpenSnackbar = useSnackBar();
 
-  return useMutation<unknown, Error, PostAddTempMarkingRequestData>({
+  return useMutation({
     mutationKey: ["markingFormModal"],
     mutationFn: postAddTempMarking,
     onSuccess: () => {

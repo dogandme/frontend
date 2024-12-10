@@ -5,12 +5,11 @@ import {
 } from "@tanstack/react-query";
 import type { GetTemporaryMarkingListResponse } from "@/entities/marking/api";
 import { markingQueryKey } from "@/entities/marking/api";
-import { TempMarking } from "@/entities/marking/types/server";
+import type { TempMarking } from "@/entities/marking/types/server";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
-// TODO 타입 markingId import 하여 사용
-export interface DeleteTemporaryMarkingRequest {
+interface DeleteTemporaryMarkingRequest {
   id: TempMarking["markingId"];
 }
 

@@ -4,20 +4,21 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import type { GetMarkingListResponse } from "@/entities/marking/api";
 import type {
-  Marking,
-  TempMarkingFileInfo,
-  TempMarkingInfo,
-} from "@/entities/marking/api";
+  TempMarking,
+  MarkingImage,
+  Marker,
+} from "@/entities/marking/types/server";
 import { ROUTER_PATH } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
 export interface PutModifyMarkingRequest
-  extends Pick<TempMarkingInfo, "isVisible"> {
-  content: NonNullable<TempMarkingInfo["content"]>;
-  id: TempMarkingInfo["markingId"];
-  removeIds: TempMarkingFileInfo["id"][];
+  extends Pick<TempMarking, "isVisible"> {
+  content: NonNullable<TempMarking["content"]>;
+  id: TempMarking["markingId"];
+  removeIds: MarkingImage["id"][];
   isTempSaved: boolean;
   images: File[];
 }
@@ -34,32 +35,6 @@ export interface PutModifyMarkingArguments {
   queryKeys: InvalidateQueryKey[];
 }
 
-// TODO : 타입 리팩토링 시 해당 타입을 기본적인 타입으로 한 후 다른 타입들을 확장 시켜 리팩토링
-interface MarkingListResponse {
-  markings: Marking[];
-  totalElements: number;
-  totalPages: number;
-  pageAble: {
-    pageNumber: number;
-    pageSize: number;
-    sort: {
-      sorted: boolean;
-      unsorted: boolean;
-      empty: boolean;
-    };
-  };
-  offset: number;
-  paged: boolean;
-  unpaged: boolean;
-}
-
-interface MarkerListResponse {
-  markingId: number;
-  lat: number;
-  lng: number;
-  previewImage: string;
-}
-
 export const usePutModifyMarking = ({
   endPoint,
   queryKeys,
@@ -71,6 +46,7 @@ export const usePutModifyMarking = ({
     mutationKey: ["markingFormModal"],
     mutationFn: ({ images, ...formObj }: PutModifyMarkingRequest) => {
       const formData = new FormData();
+
       formData.append(
         "markingModifyDto",
         new Blob([JSON.stringify(formObj)], { type: "application/json" }),
@@ -78,6 +54,7 @@ export const usePutModifyMarking = ({
       images.forEach((image) => {
         formData.append("images", image);
       });
+
       return apiClient.put(MARKING_END_POINT[endPoint], {
         withToken: true,
         body: formData,
@@ -88,7 +65,7 @@ export const usePutModifyMarking = ({
       queryKeys.forEach((queryKey) => {
         // 임시저장 페이지에서 저장 할 경우엔 임시저장 리스트에서 해당 마킹 아이템 제거
         if (!isTempSaved && pathname === ROUTER_PATH.TEMPORARY_MARKING) {
-          queryClient.setQueriesData<InfiniteData<MarkingListResponse>>(
+          queryClient.setQueriesData<InfiniteData<GetMarkingListResponse>>(
             { queryKey: [queryKey] },
             (data) => {
               if (!data) {
@@ -111,7 +88,7 @@ export const usePutModifyMarking = ({
         }
 
         if (isTempSaved && queryKey === "markingList") {
-          queryClient.setQueriesData<InfiniteData<MarkingListResponse>>(
+          queryClient.setQueriesData<InfiniteData<GetMarkingListResponse>>(
             { queryKey: [queryKey] },
             (data) => {
               if (!data) {
@@ -134,7 +111,7 @@ export const usePutModifyMarking = ({
         }
 
         if (isTempSaved && queryKey === "marker") {
-          queryClient.setQueriesData<MarkerListResponse[]>(
+          queryClient.setQueriesData<Marker[]>(
             {
               queryKey: [queryKey],
             },
