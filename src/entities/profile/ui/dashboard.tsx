@@ -33,6 +33,7 @@ export const ProfileHeading = ({
   );
 };
 
+// TODO : 유틸리티 타입 나오면 수정 하기
 interface PetDescriptionTextProps {
   description: NonNullable<PetInfo["description"]>;
 }
