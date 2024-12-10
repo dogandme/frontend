@@ -1,32 +1,35 @@
 import { createContext, useContext, useRef } from "react";
 import { create, useStore } from "zustand";
-import { TempMarkingFileInfo, TempMarkingInfo } from "@/entities/marking/api";
-import type { MarkingVisibilityKey } from "@/entities/marking/constants";
+import type {
+  IsVisible,
+  MarkingImage,
+  TempMarking,
+} from "@/entities/marking/types/server";
 import { compressFileImage } from "@/shared/lib";
 import { MarkingFileInfo } from "./markingForm";
 
 // TODO 타입 스크립트 리팩토링 시 변경 하기
 
 export interface EditMarkingFormExternalState
-  extends Pick<TempMarkingInfo, "region" | "isVisible" | "content"> {
-  externalImages: TempMarkingFileInfo[];
+  extends Pick<TempMarking, "region" | "isVisible" | "content"> {
+  externalImages: MarkingImage[];
 }
 
 interface EditMarkingFormInternalState {
   isCompressing: boolean;
   inputKey: number;
   images: MarkingFileInfo[];
-  removedIds: TempMarkingFileInfo["id"][];
+  removedIds: MarkingImage["id"][];
 }
 
 type EditMarkingFormState = EditMarkingFormExternalState &
   EditMarkingFormInternalState;
 
 interface EditMarkingFormAction {
-  setIsVisible: (isVisible: MarkingVisibilityKey) => void;
+  setIsVisible: (isVisible: IsVisible) => void;
   setContent: (content: string | null) => void;
-  setExternalImages: (images: TempMarkingFileInfo[]) => void;
-  setRemovedIds: (removedIds: TempMarkingFileInfo["id"][]) => void;
+  setExternalImages: (images: MarkingImage[]) => void;
+  setRemovedIds: (removedIds: MarkingImage["id"][]) => void;
 
   setImages: (images: MarkingFileInfo[]) => void;
   setIsCompressing: (isCompressing: boolean) => void;

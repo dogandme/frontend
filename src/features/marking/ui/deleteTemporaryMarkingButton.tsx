@@ -1,11 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
-import type { TempMarkingInfo } from "@/entities/marking/api";
+import type { TempMarking } from "@/entities/marking/types/server";
 import { useModal } from "@/shared/lib";
 import { DeleteIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { useDeleteTemporaryMarking } from "../api";
 
-type DeleteTemporaryMarkingButtonProps = Pick<TempMarkingInfo, "markingId">;
+type DeleteTemporaryMarkingButtonProps = Pick<TempMarking, "markingId">;
 
 export const DeleteTemporaryMarkingButton = ({
   markingId,

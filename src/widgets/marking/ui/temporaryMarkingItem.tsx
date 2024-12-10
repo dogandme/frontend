@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useMarkingFormModal } from "@/features/marking/lib";
 import { DeleteTemporaryMarkingButton } from "@/features/marking/ui";
 import { EditMarkingFormModal } from "@/features/marking/ui";
-import { TempMarkingInfo } from "@/entities/marking/api";
 import { MARKING_VISIBILITY_MAP } from "@/entities/marking/constants";
+import type { TempMarking } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
 import { Button } from "@/shared/ui/button";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
@@ -16,7 +16,7 @@ export const TemporaryMarkingItem = ({
   images,
   markingId,
   content,
-}: Omit<TempMarkingInfo, "regDt">) => {
+}: Omit<TempMarking, "regDt">) => {
   return (
     <li className="py-4 px-4 border border-grey-300 rounded-2xl flex flex-col self-stretch">
       {/* 마킹바 헤더 */}
@@ -108,8 +108,8 @@ export const TemporaryMarkingItemSkeleton = () => (
 const TempMarkingContent = ({
   content,
 }: {
-  content: NonNullable<TempMarkingInfo["content"]>;
-  markingId: TempMarkingInfo["markingId"];
+  content: NonNullable<TempMarking["content"]>;
+  markingId: TempMarking["markingId"];
 }) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
   const [isMultiLineSummaryEllipsis, setIsMultiLineSummaryEllipsis] =
@@ -164,7 +164,7 @@ const TempMarkingContent = ({
 };
 
 type EditMarkingModalOpenButtonProps = Pick<
-  TempMarkingInfo,
+  TempMarking,
   "region" | "content" | "images" | "markingId" | "isVisible"
 >;
 
