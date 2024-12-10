@@ -1,4 +1,4 @@
-import type { SortType } from "@/entities/marking/api";
+import type { SortType } from "@/entities/marking/types/server";
 
 export const sortTypeMap: Record<SortType, string> = {
   RECENT: "최신순",
