@@ -16,7 +16,7 @@ interface ProfileOverviewProps
   pet: PetInfo;
   isFollowing: boolean;
 }
-
+  
 export const ProfileOverView = ({
   nickname,
   pet,
