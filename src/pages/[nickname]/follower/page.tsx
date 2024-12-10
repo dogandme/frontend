@@ -1,9 +1,9 @@
-import { FollowingUserItem } from "@/widgets/follow/ui";
 import {
   FollowerUserItem,
   FollowItemContainer,
   FollowItemContainerSkeleton,
   FollowNavigationBar,
+  FollowingUserItem,
 } from "@/widgets/follow/ui";
 import { useGetFollowerList } from "@/entities/follow/api";
 import { useGetMyProfile } from "@/entities/profile/api";
