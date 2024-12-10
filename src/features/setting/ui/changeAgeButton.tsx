@@ -5,8 +5,10 @@ import { ArrowRightIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { type PutChangeAgeRequest, usePutChangeAge } from "../api";
 
+type ChangeAgeButtonProps = Pick<MyInfo, "age">;
+
 // TODO useQuery 옮기고 isLoading 동안 disabled 시키기
-export const ChangeAgeButton = ({ age }: Pick<MyInfo, "age">) => {
+export const ChangeAgeButton = ({ age }: ChangeAgeButtonProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { mutate: putChangeAge, isPending } = usePutChangeAge();
 

@@ -3,11 +3,13 @@ import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { PasswordCheckModal } from "./passwordCheckModal";
 
+interface AccountCancellationModalProps {
+  onClose: () => Promise<void>;
+}
+
 export const AccountCancellationModal = ({
   onClose,
-}: {
-  onClose: () => Promise<void>;
-}) => {
+}: AccountCancellationModalProps) => {
   const queryClient = useQueryClient();
 
   const { handleOpen, onClose: onClosePasswordCheckModal } = useModal(

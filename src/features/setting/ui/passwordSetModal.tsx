@@ -70,11 +70,11 @@ const ConfirmNewPasswordInput = () => {
   );
 };
 
-export const PasswordSetModal = ({
-  onClose,
-}: {
+interface PasswordSetModalProps {
   onClose: () => Promise<void>;
-}) => {
+}
+
+export const PasswordSetModal = ({ onClose }: PasswordSetModalProps) => {
   const resetPasswordSetForm = usePasswordSetFormStore((state) => state.reset);
 
   const { mutate: putSetPassword, isPending } = usePutSetPassword();
