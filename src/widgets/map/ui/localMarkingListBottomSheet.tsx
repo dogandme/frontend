@@ -1,13 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
-import { Bounds, useMapQueryParams } from "@/features/map/hooks";
+import { useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
+import type { Bounds } from "@/entities/map/types/client";
 import {
-  Marking,
-  SortType,
   useGetAddressFromLatLng,
   useGetMarkingThumbnailList,
 } from "@/entities/marking/api";
+import type { Marking, SortType } from "@/entities/marking/types/server";
 import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";

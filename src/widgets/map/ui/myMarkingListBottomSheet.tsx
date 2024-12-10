@@ -1,14 +1,14 @@
 import { useLocation } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem, MarkingItemSkeleton } from "@/widgets/marking/ui";
-import { Bounds, useMapQueryParams } from "@/features/map/hooks";
+import { useMapQueryParams } from "@/features/map/hooks";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
-import { LatLng } from "@/entities/auth/api";
+import type { Bounds, LatLng } from "@/entities/map/types/client";
 import {
   useGetMarkingDetail,
   useGetUserMarkingList,
 } from "@/entities/marking/api";
-import { SortType } from "@/entities/marking/api";
+import type { SortType } from "@/entities/marking/types/server";
 import {
   EmptyMyMarkingThumbnailGrid,
   TemporaryMarkingBar,
@@ -94,7 +94,7 @@ const MyMarkingList = ({
     filterData: (data) => data.markingId !== state?.markingInfo?.markingId,
   });
 
-  const handleRegionClick = ({ lat, lng }: LatLng) => {
+  const handleRegionClick = ({ lat, lng }: NonNullableObject<LatLng>) => {
     map.setCenter({
       lat,
       lng,
