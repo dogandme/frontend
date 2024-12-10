@@ -185,7 +185,7 @@ const EditMarkingModalOpenButton = ({
         content,
         externalImages: images,
       }}
-      putModifyMarkingArgumets={{
+      putModifyMarkingArguments={{
         endPoint: "PUT_MODIFY_TEMP_MARKING",
         queryKeys: ["markingList"],
       }}

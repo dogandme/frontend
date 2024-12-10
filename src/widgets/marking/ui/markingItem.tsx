@@ -461,7 +461,7 @@ const EditMyMarkingModalOpenItem = ({
           isVisible,
           externalImages: images,
         }}
-        putModifyMarkingArgumets={{
+        putModifyMarkingArguments={{
           endPoint: "PUT_MODIFY_MARKING",
           queryKeys,
         }}
