@@ -12,7 +12,7 @@ import {
 import type { PutModifyMarkingArguments } from "@/features/marking/api";
 import { useMarkingFormModal } from "@/features/marking/lib";
 import { EditMarkingFormModal } from "@/features/marking/ui";
-import { Marking } from "@/entities/marking/types/server";
+import type { Marking } from "@/entities/marking/types/server";
 import { useGetMyProfile } from "@/entities/profile/api";
 import type { PetInfo } from "@/entities/profile/api";
 import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";

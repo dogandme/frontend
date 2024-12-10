@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Region } from "@/entities/map/@x/auth";
+import type { Region } from "@/entities/map/@x/auth";
 import { apiClient } from "@/shared/lib";
 import { MY_INFO_END_POINT, SOCIAL_TYPE } from "../constants";
 import { authQueryKey } from "../constants";

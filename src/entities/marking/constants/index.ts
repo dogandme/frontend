@@ -1,4 +1,4 @@
-import { LatLng, Bounds } from "@/entities/map/@x/marking";
+import type { LatLng, Bounds } from "@/entities/map/@x/marking";
 import { API_BASE_URL } from "@/shared/constants";
 import type { GetAllMarkingsOfUserRequest } from "../api";
 import type { IsVisible, SearchType, SortType } from "../types/server";
