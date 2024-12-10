@@ -15,7 +15,7 @@ type TileBounds = MapCameraChangedEvent["detail"]["bounds"];
  * @description 마커를 나타내는 타입으로 해당 마커의 위도, 경도, 마킹 아이디, 미리보기 이미지를 의미 합니다.
  */
 
-interface LatLng {
+export interface LatLng {
   lat: number;
   lng: number;
 }
@@ -117,10 +117,7 @@ const calculateTileIndex = (
   return [lngIndex, latIndex];
 };
 
- const filterInnerBoundary = (
-  { lat, lng }: LatLng,
-  bounds: MapBounds,
-) => {
+const filterInnerBoundary = ({ lat, lng }: LatLng, bounds: MapBounds) => {
   return (
     lat < bounds.north &&
     lat > bounds.south &&
