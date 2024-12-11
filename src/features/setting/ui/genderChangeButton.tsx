@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { genderMap, GenderMapKey } from "@/features/auth/constants";
-import type { MyInfo } from "@/entities/auth/api";
+import type { MyInfo } from "@/entities/auth/types/server";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { PutChangeGenderRequest, usePutChangeGender } from "../api";

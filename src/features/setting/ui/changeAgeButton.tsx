@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AGE_RANGE_MAP } from "@/features/auth/constants";
-import type { MyInfo } from "@/entities/auth/api";
+import type { MyInfo } from "@/entities/auth/types/server";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { type PutChangeAgeRequest, usePutChangeAge } from "../api";
