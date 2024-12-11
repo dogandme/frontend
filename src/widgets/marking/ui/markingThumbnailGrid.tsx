@@ -4,23 +4,17 @@ import {
   EmptyMarkingThumbnailGrid,
   EmptyMyMarkingThumbnailGrid,
 } from "@/entities/marking/ui";
-import { Nickname } from "@/entities/profile/api";
 import { useInfiniteScroll, useNicknameParams } from "@/shared/lib";
 import { LoadingSpinner } from "@/shared/ui/spinner";
 
-interface MarkingThumbnailGridProps {
-  nickname: Nickname;
-}
-export const MarkingThumbnailGrid = ({
-  nickname,
-}: MarkingThumbnailGridProps) => {
+export const MarkingThumbnailGrid = ({ nickname }: { nickname: string }) => {
   const {
     data = [],
     isLoading,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useGetDashboardMarkingThumbnail(nickname);
+  } = useGetDashboardMarkingThumbnail({ nickname });
 
   const [setNode] = useInfiniteScroll(() => {
     if (hasNextPage && !isFetchingNextPage) {

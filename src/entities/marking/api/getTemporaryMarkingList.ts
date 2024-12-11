@@ -1,49 +1,12 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
-import { Nickname, UserId } from "@/entities/profile/api";
 import { apiClient, formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import {
-  markingQueryKey,
-  MY_MARKING_END_POINT,
-  type MarkingVisibilityKey,
-} from "../constants";
-
-export interface TempMarkingFileInfo {
-  id: number;
-  imageUrl: string;
-  lank: number;
-  regDt: string;
-}
-// TODO 타입 스크립트 리팩토링 시 변경 하기
-export interface TempMarkingInfo {
-  markingId: number;
-  region: string;
-  content: string | null;
-  isVisible: MarkingVisibilityKey;
-  regDt: string;
-  previewImage: string | null;
-  userId: UserId;
-  nickname: Nickname;
-  isOwner: true;
-  isTempSaved: true;
-  lat: number;
-  lng: number;
-  address: {
-    id: number;
-    province: string;
-    cityCounty: string;
-    district: string | null;
-    subDistrict: string;
-  };
-  countData: {
-    likedCount: 0;
-    savedCount: 0;
-  };
-  images: TempMarkingFileInfo[];
-}
+import { MY_MARKING_END_POINT } from "../constants";
+import type { TempMarking } from "../types/server";
+import { markingQueryKey } from "./queryKey";
 
 export interface GetTemporaryMarkingListResponse {
-  markings: TempMarkingInfo[];
+  markings: TempMarking[];
   totalElements: number;
   totalPages: number;
   pageAble: {
@@ -81,12 +44,12 @@ export const useGetTemporaryMarkingList = () => {
     initialPageParam: 0,
     /**
      * 페이징 된 데이터를 하나의 객체로 만든 후 엔트리 형태로 변환하여 반환 합니다.
-     * [날짜 , TemporaryMarkingInfo[]] 형태로 반환 합니다.
+     * [날짜 , TemporaryMarking[]] 형태로 반환 합니다.
      */
     select: ({ pages }) => {
       const markings = pages.flatMap((page) => page.markings);
       const temporaryMarkingMap = markings.reduce<
-        Record<string, TempMarkingInfo[]>
+        Record<string, TempMarking[]>
       >((map, { regDt, ...rest }) => {
         const key = formatDateToYearMonthDay(regDt);
 

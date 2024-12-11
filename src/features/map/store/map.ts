@@ -1,27 +1,21 @@
 import { create } from "zustand";
 import { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
+import { LatLng } from "@/entities/map/types/client";
 import {
   MAP_INITIAL_BOUNDS,
   MAP_INITIAL_CENTER,
   MAP_INITIAL_ZOOM,
 } from "../constants";
 
-export interface LatLng {
-  lat: number;
-  lng: number;
-}
 export interface MapInfo {
-  center: LatLng;
+  center: NonNullableObject<LatLng>;
   zoom: number;
   bounds: MapCameraChangedEvent["detail"]["bounds"];
 }
 type Mode = "view" | "add";
 
 interface UserInfo {
-  currentLocation: {
-    lat: number | null;
-    lng: number | null;
-  };
+  currentLocation: LatLng;
   hasLocationPermission: boolean;
 }
 

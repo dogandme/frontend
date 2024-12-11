@@ -2,11 +2,12 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_END_POINT, markingQueryKey } from "../constants";
-import type { Marking } from "./getMarkingList";
+import { MARKING_END_POINT } from "../constants";
+import type { Marking } from "../types/server";
+import { markingQueryKey } from "./queryKey";
 
-export interface GetMySavedMarkingListRequest {
-  offset: number;
+interface UseGetMySavedMarkingListParams {
+  enabled: boolean;
 }
 
 export interface GetMySavedMarkingListResponse {
@@ -27,7 +28,9 @@ export interface GetMySavedMarkingListResponse {
   };
 }
 
-export const useGetMySavedMarkingList = ({ enabled }: { enabled: boolean }) => {
+export const useGetMySavedMarkingList = ({
+  enabled,
+}: UseGetMySavedMarkingListParams) => {
   const { token } = useAuthStore.getState();
 
   return useInfiniteQuery({

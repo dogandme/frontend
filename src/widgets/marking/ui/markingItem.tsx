@@ -9,10 +9,10 @@ import {
   useDeleteSavedMarking,
   usePostSaveMarking,
 } from "@/features/marking/api";
-import type { PutModifyMarkingArguments } from "@/features/marking/api";
+import type { UsePutModifyMarkingParams } from "@/features/marking/api";
 import { useMarkingFormModal } from "@/features/marking/lib";
 import { EditMarkingFormModal } from "@/features/marking/ui";
-import type { Marking } from "@/entities/marking/api";
+import type { Marking } from "@/entities/marking/types/server";
 import { useGetMyProfile } from "@/entities/profile/api";
 import type { PetInfo } from "@/entities/profile/api";
 import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
@@ -50,7 +50,7 @@ export interface MarkingItemProps
   }: Pick<Marking, "lat" | "lng" | "markingId">) => void;
   onDelete?: () => void;
   pet: Pick<PetInfo, "petId" | "profile" | "name">;
-  queryKeys?: PutModifyMarkingArguments["queryKeys"];
+  queryKeys?: UsePutModifyMarkingParams["queryKeys"];
 }
 
 const MarkingItemPropsProvider = ({
@@ -461,7 +461,7 @@ const EditMyMarkingModalOpenItem = ({
           isVisible,
           externalImages: images,
         }}
-        putModifyMarkingArgumets={{
+        putModifyMarkingArguments={{
           endPoint: "PUT_MODIFY_MARKING",
           queryKeys,
         }}
@@ -559,7 +559,7 @@ const MarkingItemProfileImage = () => {
       />
     );
   }
-  
+
   return <EmptyProfileImage size="medium" className="rounded-2xl" />;
 };
 
@@ -594,7 +594,7 @@ const MarkingItemContent = () => {
   const multiLineSummaryRef = useRef<HTMLParagraphElement>(null);
 
   const renderMarkingContent = () => {
-    const multiLineContent = content.split("\n");
+    const multiLineContent = (content || "").split("\n");
     const multiLineLength = multiLineContent.length;
 
     if (multiLineLength > 1) {

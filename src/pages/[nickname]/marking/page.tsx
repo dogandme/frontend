@@ -4,11 +4,10 @@ import { MarkingItem, MarkingItemSkeleton } from "@/widgets/marking/ui";
 import { useMapQueryParams } from "@/features/map/hooks";
 import { SortTypeFilter } from "@/features/marking/ui";
 import {
-  type Marking,
-  type SortType,
   useGetAllMarkingsOfUser,
   useGetMarkingDetail,
 } from "@/entities/marking/api";
+import type { Marking, SortType } from "@/entities/marking/types/server";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
 import {
   EmptyMarkingThumbnailGrid,

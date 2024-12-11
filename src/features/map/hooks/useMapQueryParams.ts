@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import type { SortType } from "@/entities/marking/api";
+import type { Bounds } from "@/entities/map/types/client";
+import type { SortType } from "@/entities/marking/types/server";
 import { sortTypeMap } from "../constants";
-import type { Bounds } from "./useGetMapCurrentBounds";
 
 export interface Filter {
   sortType?: SortType;

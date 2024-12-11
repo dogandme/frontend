@@ -1,86 +1,26 @@
 import { useEffect } from "react";
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
+import type { Bounds, LatLng } from "@/entities/map/@x/marking";
 import { API_BASE_URL } from "@/shared/constants";
 import { apiClient, useInfiniteImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import {
-  MARKING_END_POINT,
-  markingQueryKey,
-  type MarkingVisibilityKey,
-} from "../constants";
+import { MARKING_END_POINT } from "../constants";
+import type { Marking, SearchType, SortType } from "../types/server";
+import { markingQueryKey } from "./queryKey";
 
-interface Address {
-  id: number;
-  province: string;
-  cityCounty: string;
-  district: string | null;
-  subDistrict: string;
-}
+type UseGetMarkingListParams = Bounds &
+  LatLng & {
+    sortType: SortType | null;
+    searchType: SearchType;
+    filterData?: (data: Marking) => boolean;
+  };
+type GetMarkingListRequest = NonNullableObject<
+  Omit<UseGetMarkingListParams, "filterData" | "lat" | "lng">
+> &
+  LatLng & { offset: number };
 
-type PetName = string;
-type Breed = string;
-type PetDescription = string | null;
-type ProfileImageUrl = string | null;
-type PetPersonalities = string[];
-
-interface Pet {
-  petId: number;
-  name: PetName;
-  description: PetDescription;
-  profile: ProfileImageUrl;
-  breed: Breed;
-  personalities: PetPersonalities;
-}
-
-interface Image {
-  id: number;
-  imageUrl: string;
-  lank: number;
-  regDt: string;
-}
-
-interface Count {
-  likedCount: number;
-  savedCount: number;
-}
-
-export interface Marking {
-  markingId: number;
-  region: string;
-  content: string;
-  isVisible: MarkingVisibilityKey;
-  regDt: string;
-  previewImage: string;
-  userId: number;
-  nickName: string;
-  isOwner: boolean;
-  isTempSaved: boolean;
-  lat: number;
-  lng: number;
-  address: Address;
-  countData: Count;
-  pet: Pet;
-  images: Image[];
-}
-
-export type SortType = "RECENT" | "DISTANCE" | "POPULARITY";
-export type SearchType = "NEARBY" | "LOCATION";
-
-export interface GetMarkingListRequest {
-  southWestLat: number;
-  southWestLng: number;
-  northEastLat: number;
-  northEastLng: number;
-  lat: number | null;
-  lng: number | null;
-  offset: number; // 페이지 번호
-  sortType: SortType;
-  searchType: SearchType;
-}
-
-// sort, paged, unpaged은 사용하지 x
-interface GetMarkingListResponse {
+export interface GetMarkingListResponse {
   markings: Marking[];
   totalElements: number;
   totalPages: number;
@@ -129,28 +69,17 @@ const getMarkingList = async ({
   );
 };
 
-interface UseGetMarkingListParams {
-  southWestLat: number | null;
-  southWestLng: number | null;
-  northEastLat: number | null;
-  northEastLng: number | null;
-  sortType: SortType | null;
-  searchType: SearchType;
-  filterData?: (data: Marking) => boolean;
-}
-
 export const useGetMarkingList = ({
   southWestLat,
   southWestLng,
   northEastLat,
   northEastLng,
+  lat,
+  lng,
   sortType,
   searchType,
   filterData,
 }: UseGetMarkingListParams) => {
-  const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
-  const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
-
   const { isIdle: isMapIdle } = useMapStore.getState();
 
   return useInfiniteQuery({
@@ -161,7 +90,7 @@ export const useGetMarkingList = ({
         northEastLat: northEastLat!,
         northEastLng: northEastLng!,
       },
-      { lat: lat!, lng: lng! },
+      { lat, lng },
       sortType!,
       searchType,
     ),
@@ -212,7 +141,7 @@ export const useGetMarkingList = ({
   });
 };
 
-export const useGetMarkingThumbnailList = (params: UseGetMarkingListParams) => {
+export const useGetMarkingThumbnailList = (params: GetMarkingListRequest) => {
   const { loadImage, isFirstPageImageLoading, isImageLoading, imageState } =
     useInfiniteImageState();
   const { data, isLoading, isFetchingNextPage, ...rest } =

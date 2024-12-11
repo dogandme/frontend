@@ -1,11 +1,10 @@
 import { useRef, useState } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
-import { TempMarkingInfo } from "@/entities/marking/api";
 import {
   MARKING_VISIBILITY_MAP,
   MARKING_VISIBILITY_ENTRIES,
-  type MarkingVisibilityKey,
 } from "@/entities/marking/constants";
+import type { IsVisible, TempMarking } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
 import { Badge } from "@/shared/ui/badge";
@@ -15,7 +14,7 @@ import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
-import { usePutModifyMarking, type PutModifyMarkingArguments } from "../api";
+import { usePutModifyMarking, type UsePutModifyMarkingParams } from "../api";
 import { MARKING_ADD_ERROR_MESSAGE, MAX_IMAGE_LENGTH } from "../constants";
 import {
   type EditMarkingFormExternalState,
@@ -27,15 +26,15 @@ import {
 interface EditMarkingFormModalProps {
   onClose: () => Promise<void>;
   initialState: EditMarkingFormExternalState;
-  markingId: TempMarkingInfo["markingId"];
-  putModifyMarkingArgumets: PutModifyMarkingArguments;
+  markingId: TempMarking["markingId"];
+  putModifyMarkingArguments: UsePutModifyMarkingParams;
 }
 
 export const EditMarkingFormModal = ({
   onClose,
   initialState,
   markingId,
-  putModifyMarkingArgumets,
+  putModifyMarkingArguments,
 }: EditMarkingFormModalProps) => {
   return (
     <EditMarkingFormProvider initialState={initialState}>
@@ -60,11 +59,11 @@ export const EditMarkingFormModal = ({
         <Modal.Footer axis="col">
           <EditMarkingSaveButton
             markingId={markingId}
-            putModifyMarkingArgumets={putModifyMarkingArgumets}
+            putModifyMarkingArguments={putModifyMarkingArguments}
           />
           <EditMarkingTempSaveButton
             markingId={markingId}
-            putModifyMarkingArgumets={putModifyMarkingArgumets}
+            putModifyMarkingArguments={putModifyMarkingArguments}
           />
         </Modal.Footer>
       </Modal>
@@ -91,7 +90,7 @@ const EditPostVisibilitySelect = () => {
   const setIsVisible = useEditMarkingForm((state) => state.setIsVisible);
   const handleCloseSelectList = () => setIsOpen(false);
 
-  const handleSelect = (value: MarkingVisibilityKey) => {
+  const handleSelect = (value: IsVisible) => {
     setIsVisible(value);
     handleCloseSelectList();
   };
@@ -263,12 +262,12 @@ const EditMarkingTextArea = () => {
 
 const EditMarkingSaveButton = ({
   markingId,
-  putModifyMarkingArgumets,
+  putModifyMarkingArguments,
 }: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
   const store = useEditMarkingFormContext();
   const handleOpen = useSnackBar();
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
-    putModifyMarkingArgumets,
+    putModifyMarkingArguments,
   );
 
   const handleClick = () => {
@@ -315,12 +314,12 @@ const EditMarkingSaveButton = ({
 };
 const EditMarkingTempSaveButton = ({
   markingId,
-  putModifyMarkingArgumets,
+  putModifyMarkingArguments,
 }: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
   const store = useEditMarkingFormContext();
   const handleOpen = useSnackBar();
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
-    putModifyMarkingArgumets,
+    putModifyMarkingArguments,
   );
 
   const handleClick = () => {

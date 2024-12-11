@@ -11,7 +11,7 @@ import {
 } from "@/features/map/hooks";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
-import { Marking } from "@/entities/marking/api";
+import type { Marking } from "@/entities/marking/types/server";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
 

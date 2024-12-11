@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { create, useStore } from "zustand";
-import type { LatLng, Region } from "@/entities/auth/api";
+import type { LatLng } from "@/entities/map/types/client";
+import type { Region } from "@/entities/map/types/server";
 import { RegionModalStoreContext } from "../ui/regionModal";
 
 interface RegionModalInternalState {
   keyword: string;
-  position: LatLng;
+  position: NonNullableObject<LatLng>;
   origin: "keyword" | "position";
 }
 
@@ -17,7 +18,7 @@ type RegionModalState = RegionModalInternalState & RegionModalExternalState;
 
 interface RegionModalAction {
   setKeyword: (keyword: string) => void;
-  setPosition: (position: LatLng) => void;
+  setPosition: (position: NonNullableObject<LatLng>) => void;
   setOrigin: (origin: "keyword" | "position") => void;
   setRegionList: (regionList: Region[]) => void;
 }

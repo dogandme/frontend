@@ -3,23 +3,16 @@ import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/shared/constants";
 import { apiClient, useInfiniteImageState } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKING_THUMBNAIL_END_POINT, markerQueryKey } from "../constants";
+import { MARKING_THUMBNAIL_END_POINT } from "../constants";
+import type { Marker } from "../types/server";
+import { markerQueryKey } from "./queryKey";
 
-interface GetDashboardMarkingThumbnailRequest {
+interface UseGetDashboardMarkingThumbnailParams {
   nickname: string;
-  pageParams: number;
-}
-
-// TODO 타입 리팩토링 시 재사용 하기
-interface MarkingThumbnailInfo {
-  markingId: number;
-  previewImage: string;
-  lat: number;
-  lng: number;
 }
 
 interface GetDashboardMarkingThumbnailResponse {
-  marks: MarkingThumbnailInfo[];
+  marks: Marker[];
   totalElements: number;
   totalPages: number;
   pageAble: {
@@ -36,9 +29,9 @@ interface GetDashboardMarkingThumbnailResponse {
   };
 }
 
-export const useGetDashboardMarkingThumbnail = (
-  nickname: GetDashboardMarkingThumbnailRequest["nickname"],
-) => {
+export const useGetDashboardMarkingThumbnail = ({
+  nickname,
+}: UseGetDashboardMarkingThumbnailParams) => {
   const token = useAuthStore((state) => state.token);
   const { loadImage, isImageLoading, isFirstPageImageLoading, imageState } =
     useInfiniteImageState();

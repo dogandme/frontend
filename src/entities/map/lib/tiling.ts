@@ -1,7 +1,9 @@
 import { useRef } from "react";
 import { MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import { useMapStore } from "@/features/map/store";
+import type { Marker } from "@/entities/marking/@x/map";
 import { NUM_OF_TILE_MAP } from "../constants";
+import type { LatLng } from "../types/client";
 
 /**
  * @description 지도의 경계를 나타내는 타입으로 현재 보고 있는 지도 전체의 바운더리를 의미 합니다.
@@ -15,19 +17,10 @@ type TileBounds = MapCameraChangedEvent["detail"]["bounds"];
  * @description 마커를 나타내는 타입으로 해당 마커의 위도, 경도, 마킹 아이디, 미리보기 이미지를 의미 합니다.
  */
 
-interface LatLng {
-  lat: number;
-  lng: number;
-}
-interface Marker extends LatLng {
-  markingId: number;
-  previewImage: string;
-}
-
 export class Tile {
   bounds: TileBounds;
   markerCount: number = 0;
-  position: LatLng = { lat: 0, lng: 0 };
+  position: NonNullableObject<LatLng> = { lat: 0, lng: 0 };
 
   markerMap: Map<Marker["markingId"], boolean> = new Map();
 
@@ -117,8 +110,8 @@ const calculateTileIndex = (
   return [lngIndex, latIndex];
 };
 
- const filterInnerBoundary = (
-  { lat, lng }: LatLng,
+const filterInnerBoundary = (
+  { lat, lng }: NonNullableObject<LatLng>,
   bounds: MapBounds,
 ) => {
   return (

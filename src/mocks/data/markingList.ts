@@ -1,4 +1,4 @@
-import type { Marking } from "@/entities/marking/api";
+import type { Marking } from "@/entities/marking/types/server";
 
 export const getMockMarkingList = ({
   southBottomLat,

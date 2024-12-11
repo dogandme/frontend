@@ -1,22 +1,30 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/shared/lib";
-import { MARKING_END_POINT, markingQueryKey } from "../constants";
-import type { Marking } from "./getMarkingList";
 import { API_BASE_URL } from "@/shared/constants";
+import { apiClient } from "@/shared/lib";
+import { MARKING_END_POINT } from "../constants";
+import type { Marking } from "../types/server";
+import { markingQueryKey } from "./queryKey";
 
-export interface GetMarkingDetailRequest {
+interface UseGetMarkingDetailParams {
   markingId?: number;
 }
 
-export const useGetMarkingDetail = ({ markingId }: GetMarkingDetailRequest) => {
+type GetMarkingDetailResponse = Marking;
+
+export const useGetMarkingDetail = ({
+  markingId,
+}: UseGetMarkingDetailParams) => {
   return useQuery({
     queryKey: markingQueryKey.detail(markingId as number),
     queryFn:
       markingId !== undefined
         ? () =>
-            apiClient.get<Marking>(MARKING_END_POINT.DETAIL({ markingId }), {
-              withToken: true,
-            })
+            apiClient.get<GetMarkingDetailResponse>(
+              MARKING_END_POINT.DETAIL({ markingId }),
+              {
+                withToken: true,
+              },
+            )
         : skipToken,
     select: (data) => ({
       ...data,

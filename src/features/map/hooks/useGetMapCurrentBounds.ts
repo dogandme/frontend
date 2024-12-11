@@ -1,11 +1,5 @@
 import { useMap } from "@vis.gl/react-google-maps";
-
-export interface Bounds {
-  northEastLat: number | null;
-  northEastLng: number | null;
-  southWestLat: number | null;
-  southWestLng: number | null;
-}
+import type { Bounds } from "@/entities/map/types/client";
 
 export const useGetMapCurrentBounds = () => {
   const map = useMap();

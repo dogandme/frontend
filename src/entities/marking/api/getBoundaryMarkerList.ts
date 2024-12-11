@@ -1,23 +1,16 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
+import { Bounds } from "@/entities/map/@x/marking";
 import { useTiling } from "@/entities/map/lib";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { MARKER_END_POINT, markerQueryKey } from "../constants";
+import { MARKER_END_POINT } from "../constants";
+import type { Marker } from "../types/server";
+import { markerQueryKey } from "./queryKey";
 
-interface Marker {
-  markingId: number;
-  previewImage: string;
-  lat: number;
-  lng: number;
-}
-
-export interface GetBoundaryMarkerListRequest {
-  southWestLat: number;
-  southWestLng: number;
-  northEastLat: number;
-  northEastLng: number;
-}
+type UseGetBoundaryMarkerListParams = Bounds;
+type GetBoundaryMarkerListRequest =
+  NonNullableObject<UseGetBoundaryMarkerListParams>;
 
 type GetBoundaryMarkerListResponse = Marker[];
 
@@ -47,12 +40,7 @@ export const useGetBoundaryMarkerList = ({
   southWestLng,
   northEastLat,
   northEastLng,
-}: {
-  southWestLat: number | null;
-  southWestLng: number | null;
-  northEastLat: number | null;
-  northEastLng: number | null;
-}) => {
+}: UseGetBoundaryMarkerListParams) => {
   const { isIdle: isMapIdle } = useMapStore.getState();
   const getTiles = useTiling();
 

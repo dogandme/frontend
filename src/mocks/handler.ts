@@ -6,7 +6,6 @@ import {
   LOGIN_END_POINT,
   SIGN_UP_END_POINT,
 } from "@/features/auth/constants";
-import { DeleteTemporaryMarkingRequest } from "@/features/marking/api";
 import { MARKING_END_POINT } from "@/features/marking/constants";
 import { PostChangeRegionRequest } from "@/features/setting/api";
 import type {
@@ -17,8 +16,12 @@ import type {
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
-import { Marking, SortType } from "@/entities/marking/api";
 import { MARKER_END_POINT } from "@/entities/marking/constants";
+import type {
+  Marking,
+  SortType,
+  TempMarking,
+} from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
 import { getMockMarkerList } from "./data/markerList";
 // data
@@ -1645,7 +1648,7 @@ const getTemporaryMarkingListHandler = [
 ];
 
 const deleteTemporaryMarkingHandler = [
-  http.delete<PathParams, DeleteTemporaryMarkingRequest>(
+  http.delete<PathParams, { id: TempMarking["markingId"] }>(
     MARKING_END_POINT.DELETE_TEMPORARY_MARKING,
     async ({ request }) => {
       await new Promise((res) => setTimeout(res, 1000));

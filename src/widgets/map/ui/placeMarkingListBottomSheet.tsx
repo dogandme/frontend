@@ -2,18 +2,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem, MarkingItemSkeleton } from "@/widgets/marking/ui";
-import {
-  Bounds,
-  useMapQueryParams,
-  usePlaceQueryParams,
-} from "@/features/map/hooks";
+import { useMapQueryParams, usePlaceQueryParams } from "@/features/map/hooks";
+import { useMapStore } from "@/features/map/store";
 import { SortTypeFilter } from "@/features/marking/ui";
-import { LatLng } from "@/entities/auth/api";
-import {
-  SortType,
-  useGetMarkingDetail,
-  useGetMarkingList,
-} from "@/entities/marking/api";
+import type { Bounds, LatLng } from "@/entities/map/types/client";
+import { useGetMarkingDetail, useGetMarkingList } from "@/entities/marking/api";
+import type { SortType } from "@/entities/marking/types/server";
 import { EmptyMarkingThumbnailGrid } from "@/entities/marking/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useInfiniteScroll } from "@/shared/lib";
@@ -72,6 +66,9 @@ const PlaceMarkingList = ({
 
   const { state } = location;
 
+  const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
+  const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
+
   const {
     data: markingList = [],
     fetchNextPage,
@@ -82,6 +79,8 @@ const PlaceMarkingList = ({
     ...boundsParams,
     sortType,
     searchType: "LOCATION",
+    lat,
+    lng,
     filterData: (data) => data.markingId !== state?.markingInfo?.markingId,
   });
 
@@ -93,7 +92,7 @@ const PlaceMarkingList = ({
   const queryClient = useQueryClient();
   const map = useMap();
 
-  const handleRegionClick = ({ lat, lng }: LatLng) => {
+  const handleRegionClick = ({ lat, lng }: NonNullableObject<LatLng>) => {
     map.setCenter({
       lat,
       lng,

@@ -5,26 +5,24 @@ import {
 } from "@tanstack/react-query";
 import { useMapMode } from "@/features/map/hooks";
 import type { GetMyLikedMarkingListResponse } from "@/entities/marking/api";
-import { markingQueryKey } from "@/entities/marking/constants";
+import { markingQueryKey } from "@/entities/marking/api";
+import type { Marking } from "@/entities/marking/types/server";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
 interface DeleteLikeMarkingRequest {
-  markingId: number;
+  markingId: Marking["markingId"];
 }
-
-const deleteLikeMarking = async ({ markingId }: DeleteLikeMarkingRequest) => {
-  return apiClient.delete(MARKING_END_POINT.LIKE(markingId), {
-    withToken: true,
-  });
-};
 
 export const useDeleteLikeMarking = () => {
   const queryClient = useQueryClient();
   const mode = useMapMode();
 
-  return useMutation<unknown, Error, DeleteLikeMarkingRequest>({
-    mutationFn: deleteLikeMarking,
+  return useMutation({
+    mutationFn: ({ markingId }: DeleteLikeMarkingRequest) =>
+      apiClient.delete(MARKING_END_POINT.LIKE(markingId), {
+        withToken: true,
+      }),
     onSuccess: (_, { markingId }) => {
       if (mode === "MY_ACTIVITY") {
         queryClient.setQueryData<InfiniteData<GetMyLikedMarkingListResponse>>(

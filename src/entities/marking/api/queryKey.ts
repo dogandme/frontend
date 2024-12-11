@@ -1,22 +1,11 @@
-interface LatLng {
-  lat: number;
-  lng: number;
-}
-
-interface Bounds {
-  southWestLat: number;
-  southWestLng: number;
-  northEastLat: number;
-  northEastLng: number;
-}
-
-type SortType = "RECENT" | "DISTANCE" | "POPULARITY";
-type SearchType = "NEARBY" | "LOCATION";
+import type { LatLng, Bounds } from "@/entities/map/@x/marking";
+import type { SearchType, SortType } from "../types/server";
 
 type Activity = "LIKED" | "SAVED";
 
 export const markingQueryKey = {
-  address: (latLng: LatLng) => ["address", { latLng }] as const,
+  address: (latLng: NonNullableObject<LatLng>) =>
+    ["address", { latLng }] as const,
   markingListAll: () => ["markingList"] as const,
   detail: (markingId: number) =>
     [...markingQueryKey.markingListAll(), { markingId }] as const,
