@@ -3,11 +3,14 @@ import type { Marking } from "@/entities/marking/types/server";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
+interface UseDeleteMarkingParams {
+  onSuccess?: () => void;
+}
 interface DeleteMarkingRequest {
   markingId: Marking["markingId"];
 }
 
-export const useDeleteMarking = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useDeleteMarking = ({ onSuccess }: UseDeleteMarkingParams) => {
   return useMutation({
     mutationFn: ({ markingId }: DeleteMarkingRequest) =>
       apiClient.delete(MARKING_END_POINT.DELETE, {

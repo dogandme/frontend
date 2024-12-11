@@ -14,7 +14,7 @@ import { ImgSlider } from "@/shared/ui/imgSlider";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
-import { usePutModifyMarking, type PutModifyMarkingArguments } from "../api";
+import { usePutModifyMarking, type UsePutModifyMarkingParams } from "../api";
 import { MARKING_ADD_ERROR_MESSAGE, MAX_IMAGE_LENGTH } from "../constants";
 import {
   type EditMarkingFormExternalState,
@@ -27,7 +27,7 @@ interface EditMarkingFormModalProps {
   onClose: () => Promise<void>;
   initialState: EditMarkingFormExternalState;
   markingId: TempMarking["markingId"];
-  putModifyMarkingArguments: PutModifyMarkingArguments;
+  putModifyMarkingArguments: UsePutModifyMarkingParams;
 }
 
 export const EditMarkingFormModal = ({

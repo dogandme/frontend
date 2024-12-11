@@ -30,7 +30,7 @@ type ModifyMarkingEndPoint = Extract<
 
 type InvalidateQueryKey = "marker" | "markingList";
 
-export interface PutModifyMarkingArguments {
+export interface UsePutModifyMarkingParams {
   endPoint: ModifyMarkingEndPoint;
   queryKeys: InvalidateQueryKey[];
 }
@@ -38,7 +38,7 @@ export interface PutModifyMarkingArguments {
 export const usePutModifyMarking = ({
   endPoint,
   queryKeys,
-}: PutModifyMarkingArguments) => {
+}: UsePutModifyMarkingParams) => {
   const queryClient = useQueryClient();
   const { pathname } = useLocation();
 

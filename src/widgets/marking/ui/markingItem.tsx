@@ -9,7 +9,7 @@ import {
   useDeleteSavedMarking,
   usePostSaveMarking,
 } from "@/features/marking/api";
-import type { PutModifyMarkingArguments } from "@/features/marking/api";
+import type { UsePutModifyMarkingParams } from "@/features/marking/api";
 import { useMarkingFormModal } from "@/features/marking/lib";
 import { EditMarkingFormModal } from "@/features/marking/ui";
 import type { Marking } from "@/entities/marking/types/server";
@@ -50,7 +50,7 @@ export interface MarkingItemProps
   }: Pick<Marking, "lat" | "lng" | "markingId">) => void;
   onDelete?: () => void;
   pet: Pick<PetInfo, "petId" | "profile" | "name">;
-  queryKeys?: PutModifyMarkingArguments["queryKeys"];
+  queryKeys?: UsePutModifyMarkingParams["queryKeys"];
 }
 
 const MarkingItemPropsProvider = ({
