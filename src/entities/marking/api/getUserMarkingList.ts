@@ -7,6 +7,18 @@ import { MARKING_END_POINT } from "../constants";
 import type { Marking, SortType } from "../types/server";
 import { markingQueryKey } from "./queryKey";
 
+type UseGetUserMarkingListParams = Bounds & {
+  nickname: string;
+  sortType: SortType | null;
+  filterData?: (data: Marking) => boolean;
+};
+type GetUserMarkingListRequest = Pick<UseGetUserMarkingListParams, "nickname"> &
+  NonNullableObject<Bounds> &
+  LatLng & {
+    offset: number;
+    sortType: NonNullable<UseGetUserMarkingListParams["sortType"]>;
+  };
+
 interface GetUserMarkingListResponse {
   markings: Marking[];
   totalElements: number;
@@ -24,13 +36,6 @@ interface GetUserMarkingListResponse {
     unpaged: boolean;
   };
 }
-
-type GetUserMarkingListRequest = NonNullableObject<Bounds> &
-  LatLng & {
-    nickname: string;
-    offset: number;
-    sortType: SortType;
-  };
 
 const getUserMarkingList = async ({
   nickname,
@@ -69,11 +74,7 @@ export const useGetUserMarkingList = ({
   northEastLng,
   sortType,
   filterData,
-}: Pick<GetAllMarkingsOfUserRequest, "nickname"> &
-  Bounds & {
-    sortType: SortType | null;
-    filterData?: (data: Marking) => boolean;
-  }) => {
+}: UseGetUserMarkingListParams) => {
   const token = useAuthStore.getState().token;
 
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);

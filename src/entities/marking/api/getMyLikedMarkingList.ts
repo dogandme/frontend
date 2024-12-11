@@ -6,6 +6,10 @@ import { MARKING_END_POINT } from "../constants";
 import type { Marking } from "../types/server";
 import { markingQueryKey } from "./queryKey";
 
+interface UseGetMyLikedMarkingListParams {
+  enabled: boolean;
+}
+
 export interface GetMyLikedMarkingListResponse {
   markings: Marking[];
   totalElements: number;
@@ -24,7 +28,9 @@ export interface GetMyLikedMarkingListResponse {
   };
 }
 
-export const useGetMyLikedMarkingList = ({ enabled }: { enabled: boolean }) => {
+export const useGetMyLikedMarkingList = ({
+  enabled,
+}: UseGetMyLikedMarkingListParams) => {
   const { token } = useAuthStore.getState();
 
   return useInfiniteQuery({

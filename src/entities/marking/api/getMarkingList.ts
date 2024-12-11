@@ -9,6 +9,22 @@ import { MARKING_END_POINT } from "../constants";
 import type { Marking, SearchType, SortType } from "../types/server";
 import { markingQueryKey } from "./queryKey";
 
+type UseGetMarkingListParams = Bounds &
+  LatLng & {
+    sortType: SortType | null;
+    searchType: SearchType;
+    filterData?: (data: Marking) => boolean;
+  };
+type GetMarkingListRequest = Pick<
+  UseGetMarkingListParams,
+  "searchType" | "lat" | "lng"
+> &
+  NonNullableObject<Bounds> &
+  LatLng & {
+    sortType: NonNullable<UseGetMarkingListParams["sortType"]>;
+    offset: number;
+  };
+
 export interface GetMarkingListResponse {
   markings: Marking[];
   totalElements: number;
@@ -26,13 +42,6 @@ export interface GetMarkingListResponse {
     unpaged: boolean;
   };
 }
-
-type GetMarkingListRequest = NonNullableObject<Bounds> &
-  LatLng & {
-    sortType: SortType;
-    searchType: SearchType;
-    offset: number;
-  };
 
 const getMarkingList = async ({
   southWestLat,
@@ -75,11 +84,7 @@ export const useGetMarkingList = ({
   sortType,
   searchType,
   filterData,
-}: Pick<GetMarkingListRequest, "searchType" | "lat" | "lng"> &
-  Bounds & {
-    sortType: SortType | null;
-    filterData?: (data: Marking) => boolean;
-  }) => {
+}: UseGetMarkingListParams) => {
   const { isIdle: isMapIdle } = useMapStore.getState();
 
   return useInfiniteQuery({

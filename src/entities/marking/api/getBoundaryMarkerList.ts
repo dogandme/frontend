@@ -8,7 +8,9 @@ import { MARKER_END_POINT } from "../constants";
 import type { Marker } from "../types/server";
 import { markerQueryKey } from "./queryKey";
 
-type GetBoundaryMarkerListRequest = NonNullableObject<Bounds>;
+type UseGetBoundaryMarkerListParams = Bounds;
+type GetBoundaryMarkerListRequest =
+  NonNullableObject<UseGetBoundaryMarkerListParams>;
 
 type GetBoundaryMarkerListResponse = Marker[];
 
@@ -38,7 +40,7 @@ export const useGetBoundaryMarkerList = ({
   southWestLng,
   northEastLat,
   northEastLng,
-}: Bounds) => {
+}: UseGetBoundaryMarkerListParams) => {
   const { isIdle: isMapIdle } = useMapStore.getState();
   const getTiles = useTiling();
 

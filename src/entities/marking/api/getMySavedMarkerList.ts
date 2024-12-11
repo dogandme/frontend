@@ -6,6 +6,10 @@ import { MARKING_END_POINT } from "../constants";
 import type { Marking } from "../types/server";
 import { markingQueryKey } from "./queryKey";
 
+interface UseGetMySavedMarkingListParams {
+  enabled: boolean;
+}
+
 export interface GetMySavedMarkingListResponse {
   markings: Marking[];
   totalElements: number;
@@ -24,7 +28,9 @@ export interface GetMySavedMarkingListResponse {
   };
 }
 
-export const useGetMySavedMarkingList = ({ enabled }: { enabled: boolean }) => {
+export const useGetMySavedMarkingList = ({
+  enabled,
+}: UseGetMySavedMarkingListParams) => {
   const { token } = useAuthStore.getState();
 
   return useInfiniteQuery({

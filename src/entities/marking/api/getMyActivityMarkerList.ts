@@ -7,7 +7,8 @@ import { MARKER_END_POINT } from "../constants";
 import type { Marker } from "../types/server";
 import { markerQueryKey } from "./queryKey";
 
-type GetMyActivityMarkerListRequest = "LIKED" | "SAVED";
+type UseGetMyActivityMarkerListParams = "LIKED" | "SAVED";
+
 type GetMyActivityMarkerListResponse = Marker[];
 
 const ACTIVITY_MAP = {
@@ -16,7 +17,7 @@ const ACTIVITY_MAP = {
 } as const;
 
 export const useGetMyActivityMarkerList = (
-  activity: GetMyActivityMarkerListRequest,
+  activity: UseGetMyActivityMarkerListParams,
 ) => {
   const getTiles = useTiling();
   const token = useAuthStore((state) => state.token);

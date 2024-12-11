@@ -5,9 +5,15 @@ import { MARKING_END_POINT } from "../constants";
 import type { Marking } from "../types/server";
 import { markingQueryKey } from "./queryKey";
 
+interface UseGetMarkingDetailParams {
+  markingId?: number;
+}
+
 type GetMarkingDetailResponse = Marking;
 
-export const useGetMarkingDetail = ({ markingId }: { markingId?: number }) => {
+export const useGetMarkingDetail = ({
+  markingId,
+}: UseGetMarkingDetailParams) => {
   return useQuery({
     queryKey: markingQueryKey.detail(markingId as number),
     queryFn:
