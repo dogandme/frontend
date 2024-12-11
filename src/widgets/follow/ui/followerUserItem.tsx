@@ -7,7 +7,7 @@ import type { FollowItemProps } from "../type/client";
 
 export const FollowerUserItem = ({
   nickname,
-  petName,
+  name,
   profile,
   isFollowing,
 }: FollowItemProps) => {
@@ -74,7 +74,7 @@ export const FollowerUserItem = ({
             </button>
           )}
         </div>
-        <p className="body-3 text-grey-500">{petName}</p>
+        <p className="body-3 text-grey-500">{name}</p>
       </div>
       <DeleteFollowerButton onClick={handleOptimisticDeleteFollower} />
     </ProfileLink>

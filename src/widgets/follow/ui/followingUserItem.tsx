@@ -14,7 +14,7 @@ type FollowingUserItemProps = FollowItemProps & { isFollowing: boolean };
 
 export const FollowingUserItem = ({
   nickname,
-  petName,
+  name,
   profile,
   isFollowing,
 }: FollowingUserItemProps) => {
@@ -37,7 +37,7 @@ export const FollowingUserItem = ({
       )}
       <div className="flex flex-col justify-center flex-1">
         <p className="title-2 text-grey-700">{nickname}</p>
-        <p className="body-3 text-grey-500">{petName}</p>
+        <p className="body-3 text-grey-500">{name}</p>
       </div>
       {!isMyPage || (
         <FollowingToggle

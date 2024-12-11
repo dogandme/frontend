@@ -52,7 +52,7 @@ export const FollowerPage = withAuth(() => {
             <FollowerUserItem
               key={userId}
               nickname={nickname}
-              petName={pet.name}
+              name={pet.name}
               profile={pet.profile}
               isFollowing={myProfile.myFollowingIdsMap[userId]}
             />
@@ -60,7 +60,7 @@ export const FollowerPage = withAuth(() => {
             <FollowingUserItem
               key={userId}
               nickname={nickname}
-              petName={pet.name}
+              name={pet.name}
               profile={pet.profile}
               isFollowing={myProfile.myFollowingIdsMap[userId]}
             />
