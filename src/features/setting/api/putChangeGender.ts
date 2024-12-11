@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { authQueryKey } from "@/entities/auth/constants";
+import { authQueryKey } from "@/entities/auth/api";
 import type { MyInfo } from "@/entities/auth/types/server";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";

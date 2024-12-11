@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
 import { MY_INFO_END_POINT } from "../constants";
-import { authQueryKey } from "../constants";
 import type { MyInfo } from "../types/server";
+import { authQueryKey } from "./queryKey";
 
 type GetMyInfoResponse = MyInfo;
 

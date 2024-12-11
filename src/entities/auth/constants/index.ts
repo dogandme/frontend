@@ -7,5 +7,3 @@ export const SOCIAL_TYPE = {
   NAVER: "네이버",
   GOOGLE: "구글",
 } as const;
-
-export * from "./queryKey";
