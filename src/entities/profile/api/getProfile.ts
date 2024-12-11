@@ -4,14 +4,10 @@ import { useAuthStore } from "@/shared/store";
 import { PROFILE_END_POINT, profileQueryKey } from "../constants";
 import type { ProfileInfo } from "../type/server";
 
-// 유저 정보
-// TODO 병합 후 타입 제거하기
-export type Nickname = string;
-export type UserId = number;
-
-interface GetProfileRequest {
-  nickname: string;
+interface UseGetProfileParams {
+  nickname: string | null;
 }
+type GetProfileRequest = NonNullableObject<UseGetProfileParams>;
 type GetProfileResponse = ProfileInfo;
 
 export const getProfile = ({ nickname }: GetProfileRequest) =>
@@ -20,7 +16,7 @@ export const getProfile = ({ nickname }: GetProfileRequest) =>
     snackbarOnError: ({ code }) => code !== 404,
   });
 
-export const useGetProfile = ({ nickname }: { nickname: Nickname | null }) => {
+export const useGetProfile = ({ nickname }: UseGetProfileParams) => {
   const token = useAuthStore((state) => state.token);
 
   return useQuery<GetProfileResponse, HttpError>({
