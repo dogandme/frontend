@@ -1,8 +1,9 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { apiClient, HttpError } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { PROFILE_END_POINT, profileQueryKey } from "../constants";
+import { PROFILE_END_POINT } from "../constants";
 import type { ProfileInfo } from "../types/server";
+import { profileQueryKey } from "./queryKey";
 
 interface UseGetProfileParams {
   nickname: string | null;
