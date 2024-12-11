@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authQueryKey } from "@/entities/auth/constants";
-import type { Region } from "@/entities/map/types/server";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 

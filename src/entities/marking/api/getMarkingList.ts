@@ -141,7 +141,7 @@ export const useGetMarkingList = ({
   });
 };
 
-export const useGetMarkingThumbnailList = (params: GetMarkingListRequest) => {
+export const useGetMarkingThumbnailList = (params: UseGetMarkingListParams) => {
   const { loadImage, isFirstPageImageLoading, isImageLoading, imageState } =
     useInfiniteImageState();
   const { data, isLoading, isFetchingNextPage, ...rest } =

@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { RegionModal } from "@/features/auth/ui";
-import type { Region } from "@/entities/auth/api";
+import type { Region } from "@/entities/map/types/server";
 import { useModal } from "@/shared/lib";
 import { usePostChangeRegion } from "../api";
 
