@@ -1,1 +1,1 @@
-export type { PetInfo } from "../api/getProfile";
+export type { PetInfo } from "../type/server";

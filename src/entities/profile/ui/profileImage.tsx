@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/shared/constants";
 import { useImageState } from "@/shared/lib";
-import { ProfileInfo } from "../api";
+import type { ProfileInfo } from "../type/server";
 
 const profileSizeMap = {
   small: "w-6 h-6",

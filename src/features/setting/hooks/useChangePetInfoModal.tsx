@@ -1,5 +1,5 @@
 import { PetInformationForm } from "@/features/auth/ui";
-import { PetInfo } from "@/entities/profile/api";
+import { PetInfo } from "@/entities/profile/type/server";
 import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePetInfo } from "../api";

@@ -1,5 +1,5 @@
 import { FollowingToggle } from "@/features/follow/ui";
-import type { PetInfo, ProfileInfo } from "@/entities/profile/api";
+import type { PetInfo, ProfileInfo } from "@/entities/profile/type/server";
 import {
   EmptyProfileImage,
   PetDescriptionText,
@@ -16,7 +16,7 @@ interface ProfileOverviewProps
   pet: PetInfo;
   isFollowing: boolean;
 }
-  
+
 export const ProfileOverView = ({
   nickname,
   pet,

@@ -14,7 +14,7 @@ import { useMarkingFormModal } from "@/features/marking/lib";
 import { EditMarkingFormModal } from "@/features/marking/ui";
 import type { Marking } from "@/entities/marking/types/server";
 import { useGetMyProfile } from "@/entities/profile/api";
-import type { PetInfo } from "@/entities/profile/api";
+import type { PetInfo } from "@/entities/profile/type/server";
 import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
 import {
   formatDateToYearMonthDay,

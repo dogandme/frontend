@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { PetInfo } from "@/entities/profile/api";
+import { PetInfo } from "@/entities/profile/type/server";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";

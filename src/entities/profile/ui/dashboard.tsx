@@ -5,7 +5,7 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { DividerLine } from "@/shared/ui/divider";
 import { DropDownIcon } from "@/shared/ui/icon";
-import type { ProfileInfo, PetInfo } from "../api";
+import type { PetInfo, ProfileInfo } from "../type/server";
 
 type ProfileHeadingProps = Pick<ProfileInfo, "followersIds" | "followingsIds"> &
   Pick<PetInfo, "breed" | "name">;

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { PetInfo } from "@/entities/profile/api";
 import { profileQueryKey } from "@/entities/profile/constants";
+import type { PetInfo } from "@/entities/profile/type/server";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";

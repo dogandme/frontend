@@ -1,5 +1,5 @@
 import { useChangePetInfoModal } from "@/features/setting/hooks/useChangePetInfoModal";
-import { PetInfo } from "@/entities/profile/api";
+import { PetInfo } from "@/entities/profile/type/server";
 import { EditIcon } from "@/shared/ui/icon";
 
 interface ProfileEditButtonProps {
