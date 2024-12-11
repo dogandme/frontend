@@ -22,8 +22,12 @@ interface PageAbleInformation {
   };
 }
 
-interface GetFollowingListRequest {
+interface UseGetFollowerListParams {
   nickname: string;
+}
+
+interface GetFollowingListRequest extends UseGetFollowerListParams {
+  pageParam?: number;
 }
 
 interface GetFollowingListResponse extends PageAbleInformation {
@@ -33,7 +37,7 @@ interface GetFollowingListResponse extends PageAbleInformation {
 const getFollowingList = ({
   pageParam = 0,
   nickname,
-}: GetFollowingListRequest & { pageParam: number }) => {
+}: GetFollowingListRequest) => {
   return apiClient.get<GetFollowingListResponse>(
     FOLLOW_END_POINT.FOLLOWING_LIST(nickname, pageParam),
     {
@@ -42,7 +46,7 @@ const getFollowingList = ({
   );
 };
 
-export const useGetFollowingList = ({ nickname }: GetFollowingListRequest) => {
+export const useGetFollowingList = ({ nickname }: UseGetFollowerListParams) => {
   const token = useAuthStore((state) => state.token);
 
   return useInfiniteQuery({
