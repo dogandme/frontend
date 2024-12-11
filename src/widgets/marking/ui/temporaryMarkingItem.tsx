@@ -105,12 +105,12 @@ export const TemporaryMarkingItemSkeleton = () => (
   </li>
 );
 
-const TempMarkingContent = ({
-  content,
-}: {
+interface TempMarkingContentProps {
   content: NonNullable<TempMarking["content"]>;
   markingId: TempMarking["markingId"];
-}) => {
+}
+
+const TempMarkingContent = ({ content }: TempMarkingContentProps) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
   const [isMultiLineSummaryEllipsis, setIsMultiLineSummaryEllipsis] =
     useState<boolean>(false);

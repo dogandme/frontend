@@ -4,7 +4,7 @@ import {
   MARKING_VISIBILITY_MAP,
   MARKING_VISIBILITY_ENTRIES,
 } from "@/entities/marking/constants";
-import type { IsVisible, TempMarking } from "@/entities/marking/types/server";
+import type { IsVisible } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
 import { useSnackBar } from "@/shared/lib";
 import { Badge } from "@/shared/ui/badge";
@@ -26,7 +26,7 @@ import {
 interface EditMarkingFormModalProps {
   onClose: () => Promise<void>;
   initialState: EditMarkingFormExternalState;
-  markingId: TempMarking["markingId"];
+  markingId: number;
   putModifyMarkingArguments: UsePutModifyMarkingParams;
 }
 

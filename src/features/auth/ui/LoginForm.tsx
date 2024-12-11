@@ -4,7 +4,10 @@ import { Button } from "@/shared/ui/button";
 import { usePostLogin } from "../api";
 import { useLoginFormStore } from "../store";
 
-export const Form = ({ children }: { children: React.ReactNode }) => {
+interface FormProps {
+  children: React.ReactNode;
+}
+export const Form = ({ children }: FormProps) => {
   return (
     <form className="flex flex-col items-start gap-4 self-stretch">
       {children}

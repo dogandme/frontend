@@ -12,10 +12,9 @@ import {
 import { validateNickname } from "../lib";
 import { NicknameInput } from "./NicknameInput";
 
-interface ChangeNicknameModalProps {
+interface ChangeNicknameModalProps
+  extends NonNullableObject<Pick<MyInfo, "nickLastModDt">> {
   onClose: () => Promise<void>;
-  // TODO NonNullable 유틸리티 타입으로 바꾸기
-  nickLastModDt: NonNullable<MyInfo["nickLastModDt"]>;
 }
 
 export const ChangeNicknameModal = ({

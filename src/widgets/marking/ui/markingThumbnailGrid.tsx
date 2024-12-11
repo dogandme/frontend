@@ -10,6 +10,7 @@ import { LoadingSpinner } from "@/shared/ui/spinner";
 interface MarkingThumbnailGridProps {
   nickname: string;
 }
+
 export const MarkingThumbnailGrid = ({
   nickname,
 }: MarkingThumbnailGridProps) => {

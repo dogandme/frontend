@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { Sheet, SheetRef } from "react-modal-sheet";
 import { useMapStore } from "@/features/map/store";
 
-export const MapBottomSheet = ({ children }: { children: React.ReactNode }) => {
+interface MapBottomSheetProps {
+  children: React.ReactNode;
+}
+
+export const MapBottomSheet = ({ children }: MapBottomSheetProps) => {
   const sheetRef = useRef<SheetRef>();
 
   const snapPoints = [-50, 0.5, 116];

@@ -14,13 +14,15 @@ import { DropDownIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
 
+interface MarkingFilterButtonProps {
+  children: string;
+  onClick: () => void;
+}
+
 const MarkingFilterButton = ({
   children,
   onClick,
-}: {
-  children: string;
-  onClick: () => void;
-}) => {
+}: MarkingFilterButtonProps) => {
   return (
     <Button
       type="button"
@@ -38,6 +40,13 @@ const MarkingFilterButton = ({
     </Button>
   );
 };
+
+interface SortTypeFilterProps<T extends readonly SortType[]> {
+  options: T;
+  defaultOptionIdx?: number;
+  selectedOption: SortType;
+  onSelect?: (sortType: T[number]) => void;
+}
 
 /**
  * 마킹 데이터들을 정렬하는 필터
@@ -63,12 +72,7 @@ export const SortTypeFilter = <T extends readonly SortType[]>({
   defaultOptionIdx = 0,
   selectedOption,
   onSelect,
-}: {
-  options: T;
-  defaultOptionIdx?: number;
-  selectedOption: SortType;
-  onSelect?: (sortType: T[number]) => void;
-}) => {
+}: SortTypeFilterProps<T>) => {
   const handleSelect = (sortType: T[number]) => {
     if (sortType === selectedOption) return;
 
@@ -119,6 +123,10 @@ export const SortTypeFilter = <T extends readonly SortType[]>({
 
 type RangeFilter = keyof typeof RangeFilterMap;
 
+interface RangeFilterProps {
+  options: RangeFilter[];
+  defaultOptionIdx?: number;
+}
 /**
  * 마킹 노출 범위 필터
  *
@@ -138,10 +146,7 @@ type RangeFilter = keyof typeof RangeFilterMap;
 export const RangeFilter = ({
   options,
   defaultOptionIdx = 0,
-}: {
-  options: RangeFilter[];
-  defaultOptionIdx?: number;
-}) => {
+}: RangeFilterProps) => {
   const setIsCenteredOnMyLocation = useMapStore(
     (state) => state.setIsCenterOnMyLocation,
   );
