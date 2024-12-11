@@ -11,6 +11,10 @@ const postLogout = async () => {
   });
 };
 
+interface usePostLogoutParams {
+  onMutate: () => void;
+}
+
 /**
  * 해당 훅은 token 을 인수로 받는 postLogout 을 반환합니다.
  * 요청이 성공하게 되면 다음과 같은 작업이 기본적으로 일어납니다.
@@ -18,7 +22,7 @@ const postLogout = async () => {
  * 2. queryClient 에서 해당 nickname 을 가진 쿼리를 제거
  * 3. 인수로 받은 onMutate 함수 실행
  */
-export const usePostLogout = ({ onMutate }: { onMutate: () => void }) => {
+export const usePostLogout = ({ onMutate }: usePostLogoutParams) => {
   const queryClient = useQueryClient();
   const resetAuthStore = useAuthStore((state) => state.reset);
 
