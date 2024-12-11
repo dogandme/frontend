@@ -5,15 +5,17 @@ import { LatLng } from "../types/client";
 import type { Region } from "../types/server";
 import { regionQueryKey } from "./queryKey";
 
+interface UseGetRegionByLatLngParams extends NonNullableObject<LatLng> {
+  enabled: boolean;
+}
+
 type GetRegionByLatLngResponse = Region[];
 
 export const useGetRegionByLatLng = ({
   lat,
   lng,
   enabled,
-}: NonNullableObject<LatLng> & {
-  enabled: boolean;
-}) => {
+}: UseGetRegionByLatLngParams) => {
   return useQuery({
     queryKey: regionQueryKey.regionLatLng({ lat, lng }),
     queryFn: () =>

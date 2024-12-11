@@ -4,15 +4,17 @@ import { REGION_END_POINT } from "../constants";
 import type { Region } from "../types/server";
 import { regionQueryKey } from "./queryKey";
 
+interface UseGetRegionByKeywordParams {
+  keyword: string;
+  enabled: boolean;
+}
+
 type GetRegionByKeywordResponse = Region[];
 
 export const useGetRegionByKeyword = ({
   keyword,
   enabled,
-}: {
-  keyword: string;
-  enabled: boolean;
-}) => {
+}: UseGetRegionByKeywordParams) => {
   return useQuery({
     queryKey: regionQueryKey.regionKeyword(keyword),
     queryFn: () =>
