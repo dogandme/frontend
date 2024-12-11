@@ -12,12 +12,10 @@ type UseGetUserMarkingListParams = Bounds & {
   sortType: SortType | null;
   filterData?: (data: Marking) => boolean;
 };
-type GetUserMarkingListRequest = Pick<UseGetUserMarkingListParams, "nickname"> &
-  NonNullableObject<Bounds> &
-  LatLng & {
-    offset: number;
-    sortType: NonNullable<UseGetUserMarkingListParams["sortType"]>;
-  };
+type GetUserMarkingListRequest = NonNullableObject<
+  Omit<UseGetUserMarkingListParams, "filterData" | "lat" | "lng">
+> &
+  LatLng & { offset: number };
 
 interface GetUserMarkingListResponse {
   markings: Marking[];

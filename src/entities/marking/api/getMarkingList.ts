@@ -15,15 +15,10 @@ type UseGetMarkingListParams = Bounds &
     searchType: SearchType;
     filterData?: (data: Marking) => boolean;
   };
-type GetMarkingListRequest = Pick<
-  UseGetMarkingListParams,
-  "searchType" | "lat" | "lng"
+type GetMarkingListRequest = NonNullableObject<
+  Omit<UseGetMarkingListParams, "filterData" | "lat" | "lng">
 > &
-  NonNullableObject<Bounds> &
-  LatLng & {
-    sortType: NonNullable<UseGetMarkingListParams["sortType"]>;
-    offset: number;
-  };
+  LatLng & { offset: number };
 
 export interface GetMarkingListResponse {
   markings: Marking[];
