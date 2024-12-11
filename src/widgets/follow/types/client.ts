@@ -1,4 +1,4 @@
-import type { FollowUserInfo } from "@/entities/follow/type/server";
+import type { FollowUserInfo } from "@/entities/follow/types/server";
 
 export interface FollowItemProps
   extends Pick<FollowUserInfo, "nickname">,

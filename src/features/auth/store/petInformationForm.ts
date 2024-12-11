@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { create, useStore } from "zustand";
-import type { PetInfo } from "@/entities/profile/type/server";
+import type { PetInfo } from "@/entities/profile/types/server";
 import { compressFileImage } from "@/shared/lib";
 
 export interface FileInfo {

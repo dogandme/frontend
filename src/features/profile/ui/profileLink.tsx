@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import type { ProfileInfo } from "@/entities/profile/type/server";
+import type { ProfileInfo } from "@/entities/profile/types/server";
 
 interface ProfileLinkProps extends Pick<ProfileInfo, "nickname"> {
   children: React.ReactNode;

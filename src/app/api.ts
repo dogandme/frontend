@@ -1,4 +1,4 @@
-import type { SignUpResponse } from "@/features/auth/type/server";
+import type { SignUpResponse } from "@/features/auth/types/server";
 import { apiClient } from "@/shared/lib";
 import { APP_END_POINT } from "./ReactQueryProvider/constants";
 

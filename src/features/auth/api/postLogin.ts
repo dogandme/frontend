@@ -5,7 +5,7 @@ import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
-import type { SignUpResponse } from "../type/server";
+import type { SignUpResponse } from "../types/server";
 
 export interface PostLoginRequest {
   email: string;

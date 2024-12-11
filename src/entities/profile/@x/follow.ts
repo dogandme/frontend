@@ -1,1 +1,1 @@
-export type { PetInfo } from "../type/server";
+export type { PetInfo } from "../types/server";

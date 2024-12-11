@@ -4,7 +4,7 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
-import type { SignUpResponse } from "../type/server";
+import type { SignUpResponse } from "../types/server";
 
 export interface PostSignUpByEmailRequest {
   email: string;

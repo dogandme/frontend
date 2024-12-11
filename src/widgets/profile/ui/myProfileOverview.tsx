@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ProfileEditButton } from "@/features/auth/ui";
-import type { PetInfo, ProfileInfo } from "@/entities/profile/type/server";
+import type { PetInfo, ProfileInfo } from "@/entities/profile/types/server";
 import {
   PetDescriptionText,
   PetPersonalityList,

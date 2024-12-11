@@ -3,7 +3,7 @@ import { useDeleteFollower, usePostFollowing } from "@/features/follow/api";
 import { DeleteFollowerButton } from "@/features/follow/ui";
 import { ProfileLink } from "@/features/profile/ui";
 import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
-import type { FollowItemProps } from "../type/client";
+import type { FollowItemProps } from "../types/client";
 
 export const FollowerUserItem = ({
   nickname,
