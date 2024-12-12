@@ -57,6 +57,10 @@ const CurrentPasswordInput = () => {
   );
 };
 
+interface PasswordCheckModalProps {
+  onClose: () => Promise<void>;
+}
+
 const PasswordCheckSubmitButton = ({ onClose }: PasswordCheckModalProps) => {
   const store = usePasswordCheckFormContext();
   const { mutate: deleteAccount, isPending } = useDeleteAccount();
@@ -103,10 +107,6 @@ const PasswordCheckCloseButton = ({ onClose }: PasswordCheckModalProps) => {
     </Modal.TextButton>
   );
 };
-
-interface PasswordCheckModalProps {
-  onClose: () => Promise<void>;
-}
 
 export const PasswordCheckModal = ({ onClose }: PasswordCheckModalProps) => {
   return (
