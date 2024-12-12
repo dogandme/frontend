@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ProfileEditButton } from "@/features/auth/ui";
-import type { PetInfo, ProfileInfo } from "@/entities/profile/types/server";
+import type { ProfileInfo } from "@/entities/profile/types/server";
 import {
   PetDescriptionText,
   PetPersonalityList,
@@ -13,7 +13,7 @@ import { PlusIcon } from "@/shared/ui/icon";
 
 interface ProfileOverviewProps
   extends Pick<ProfileInfo, "nickname" | "followersIds" | "followingsIds"> {
-  pet: PetInfo;
+  pet: NonNullable<ProfileInfo["pet"]>;
 }
 
 export const MyProfileOverview = ({
