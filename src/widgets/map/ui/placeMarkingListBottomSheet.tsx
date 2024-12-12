@@ -69,10 +69,6 @@ const PlaceMarkingList = ({
   const lat = useMapStore((state) => state.userInfo.currentLocation.lat);
   const lng = useMapStore((state) => state.userInfo.currentLocation.lng);
 
-  // ! TODO 현재 PlaceMarkingList 는 searchType = LOCATION 밖에 네트워크요청이 일어나지 않습니다.
-  // ! 왜 searchType 을 props 로 받고 있지 않을까요 ?
-  // ! lat , lng 값을 인수로 제공해야 합니다.
-  // ! 이것은 치명적인 버그인걸까요 ?
   const {
     data: markingList = [],
     fetchNextPage,
