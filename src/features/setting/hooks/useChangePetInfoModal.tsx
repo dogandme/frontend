@@ -4,8 +4,8 @@ import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePetInfo } from "../api";
 
-type useChangePetInfoModalParams = Omit<PetInfo, "petId">;
-export const useChangePetInfoModal = (pet: useChangePetInfoModalParams) => {
+type UseChangePetInfoModalParams = Omit<PetInfo, "petId">;
+export const useChangePetInfoModal = (pet: UseChangePetInfoModalParams) => {
   const { mutate: putChangePetInformation, isPending } = usePutChangePetInfo();
 
   const { handleOpen, onClose } = useModal(() => (

@@ -4,9 +4,9 @@ import type { Region } from "@/entities/map/types/server";
 import { useModal } from "@/shared/lib";
 import { usePostChangeRegion } from "../api";
 
-type useChangePetInfoModalParams = Region[];
+type UseChangePetInfoModalParams = Region[];
 
-export const useChangeRegionModal = (regions: useChangePetInfoModalParams) => {
+export const useChangeRegionModal = (regions: UseChangePetInfoModalParams) => {
   const queryClient = useQueryClient();
   const { mutate: putChangeRegion } = usePostChangeRegion();
   const { handleOpen, onClose } = useModal(
