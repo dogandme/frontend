@@ -1,8 +1,9 @@
 export * from "./hyperlinks";
 export * from "./signUpByEmailForm";
-export * as LoginForm from "./LoginForm";
+export * as LoginForm from "./loginForm";
 export * from "./petInformationForm";
-export { default as UserInfoRegistrationForm } from "./UserInfoRegistrationForm";
+export { default as UserInfoRegistrationForm } from "./userInfoRegistrationForm";
 export * from "./authNavigationBar";
 export * from "./regionModal";
 export * from "./dashboard";
+export * from "./changeNicknameModal";
