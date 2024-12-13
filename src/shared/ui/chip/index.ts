@@ -1,2 +1,2 @@
-export * from "./SelectChip";
-export * from "./ActionChip";
+export * from "./selectChip";
+export * from "./actionChip";
