@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { ChangeNicknameModal } from "@/features/auth/ui/ChangeNicknameModal";
+import { ChangeNicknameModal } from "@/features/auth/ui/changeNicknameModal";
 import { GenderChangeButton } from "@/features/setting/ui";
 import { ChangeAgeButton } from "@/features/setting/ui";
 import { RegionChangeButton } from "@/features/setting/ui";
