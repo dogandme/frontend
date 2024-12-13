@@ -5,11 +5,11 @@ import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { usePostLogout } from "../api";
 
-export const LogoutModal = ({
-  onCloseLogoutModal,
-}: {
+interface LogoutModalProps {
   onCloseLogoutModal: () => Promise<void>;
-}) => {
+}
+
+export const LogoutModal = ({ onCloseLogoutModal }: LogoutModalProps) => {
   const navigate = useNavigate();
   const handleOpenSnackbar = useSnackBar();
 

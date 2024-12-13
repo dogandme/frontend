@@ -4,11 +4,11 @@ import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { Modal } from "@/shared/ui/modal";
 
-export const SignUpLandingModal = ({
-  onClose,
-}: {
+interface SignUpLandingModalProps {
   onClose: () => Promise<void>;
-}) => {
+}
+
+export const SignUpLandingModal = ({ onClose }: SignUpLandingModalProps) => {
   const { nickname } = useAuthStore.getState();
 
   const lastNoneAuthRoute = useRouteHistoryStore(

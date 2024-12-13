@@ -39,7 +39,7 @@ export const DeleteTemporaryMarkingButton = ({
 };
 
 interface DeleteTemporaryMarkingModalProps
-  extends DeleteTemporaryMarkingButtonProps {
+  extends Pick<TempMarking, "markingId"> {
   onClose: () => Promise<void>;
 }
 

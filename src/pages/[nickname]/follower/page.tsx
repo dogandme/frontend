@@ -3,8 +3,8 @@ import {
   FollowItemContainer,
   FollowItemContainerSkeleton,
   FollowNavigationBar,
-} from "@/widgets/follow";
-import { FollowingUserItem } from "@/widgets/follow";
+  FollowingUserItem,
+} from "@/widgets/follow/ui";
 import { useGetFollowerList } from "@/entities/follow/api";
 import { useGetMyProfile } from "@/entities/profile/api";
 import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
@@ -52,7 +52,7 @@ export const FollowerPage = withAuth(() => {
             <FollowerUserItem
               key={userId}
               nickname={nickname}
-              petName={pet.name}
+              name={pet.name}
               profile={pet.profile}
               isFollowing={myProfile.myFollowingIdsMap[userId]}
             />
@@ -60,7 +60,7 @@ export const FollowerPage = withAuth(() => {
             <FollowingUserItem
               key={userId}
               nickname={nickname}
-              petName={pet.name}
+              name={pet.name}
               profile={pet.profile}
               isFollowing={myProfile.myFollowingIdsMap[userId]}
             />

@@ -1,20 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { PetInfo } from "@/entities/profile/api";
-import { profileQueryKey } from "@/entities/profile/constants";
+import { profileQueryKey } from "@/entities/profile/api";
+import type { PetInfo } from "@/entities/profile/types/server";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 
-type PetInfoFormObject = Omit<PetInfo, "profile" | "petId">;
-
-interface ProfileImage {
+export interface PutChangePetInfoRequest
+  extends Omit<PetInfo, "profile" | "petId"> {
   image: File | null;
+  isChaProfile: boolean;
 }
-
-export type PutChangePetInfoRequest = PetInfoFormObject &
-  ProfileImage & {
-    isChaProfile: boolean;
-  };
 
 const putChangePetInfo = async ({
   image,

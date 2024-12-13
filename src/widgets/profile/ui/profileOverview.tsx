@@ -1,10 +1,5 @@
 import { FollowingToggle } from "@/features/follow/ui";
-import type {
-  FollowerIdList,
-  FollowingIdList,
-  Nickname,
-  PetInfo,
-} from "@/entities/profile/api";
+import type { PetInfo, ProfileInfo } from "@/entities/profile/types/server";
 import {
   EmptyProfileImage,
   PetDescriptionText,
@@ -16,11 +11,9 @@ import { Button } from "@/shared/ui/button";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { DividerLine } from "@/shared/ui/divider";
 
-interface ProfileOverviewProps {
-  nickname: Nickname;
+interface ProfileOverviewProps
+  extends Pick<ProfileInfo, "nickname" | "followersIds" | "followingsIds"> {
   pet: PetInfo;
-  followersIds: FollowerIdList;
-  followingsIds: FollowingIdList;
   isFollowing: boolean;
 }
 

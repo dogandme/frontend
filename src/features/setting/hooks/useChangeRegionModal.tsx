@@ -1,10 +1,12 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { RegionModal } from "@/features/auth/ui";
-import { MyInfo } from "@/entities/auth/api";
+import type { Region } from "@/entities/map/types/server";
 import { useModal } from "@/shared/lib";
 import { usePostChangeRegion } from "../api";
 
-export const useChangeRegionModal = (regions: MyInfo["regions"]) => {
+type UseChangePetInfoModalParams = Region[];
+
+export const useChangeRegionModal = (regions: UseChangePetInfoModalParams) => {
   const queryClient = useQueryClient();
   const { mutate: putChangeRegion } = usePostChangeRegion();
   const { handleOpen, onClose } = useModal(

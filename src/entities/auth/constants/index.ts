@@ -6,6 +6,4 @@ export const SOCIAL_TYPE = {
   EMAIL: "이메일",
   NAVER: "네이버",
   GOOGLE: "구글",
-};
-
-export * from "./queryKey";
+} as const;

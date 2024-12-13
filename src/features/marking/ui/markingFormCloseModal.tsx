@@ -2,11 +2,13 @@ import { Modal } from "@/shared/ui/modal";
 import { useMapStore } from "../../map/store";
 import { useMarkingFormStore } from "../store";
 
+interface MarkingFormCloseModalProps {
+  onCloseExitModal: () => Promise<void>;
+}
+
 export const MarkingFormCloseModal = ({
   onCloseExitModal,
-}: {
-  onCloseExitModal: () => Promise<void>;
-}) => {
+}: MarkingFormCloseModalProps) => {
   const resetMarkingFormStore = useMarkingFormStore(
     (state) => state.resetMarkingFormStore,
   );

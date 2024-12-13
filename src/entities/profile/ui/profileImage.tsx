@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/shared/constants";
 import { useImageState } from "@/shared/lib";
-import { Nickname } from "../api";
+import type { ProfileInfo } from "../types/server";
 
 const profileSizeMap = {
   small: "w-6 h-6",
@@ -9,9 +9,8 @@ const profileSizeMap = {
   xLarge: "w-20 h-20",
 } as const;
 
-interface ProfileImageProps {
+interface ProfileImageProps extends Pick<ProfileInfo, "nickname"> {
   imageUrl: string;
-  nickname: Nickname;
   size: keyof typeof profileSizeMap;
   className?: string;
 }
@@ -38,13 +37,12 @@ export const ProfileImage = ({
   );
 };
 
+type EmptyProfileImageProps = Omit<ProfileImageProps, "imageUrl" | "nickname">;
+
 export const EmptyProfileImage = ({
   size,
   className = "",
-}: {
-  size: keyof typeof profileSizeMap;
-  className?: string;
-}) => (
+}: EmptyProfileImageProps) => (
   <img
     src="/default-image.png"
     className={`object-cover ${profileSizeMap[size]} ${className}`}

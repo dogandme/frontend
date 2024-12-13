@@ -2,25 +2,15 @@ import { useState } from "react";
 import { useDeleteFollower, usePostFollowing } from "@/features/follow/api";
 import { DeleteFollowerButton } from "@/features/follow/ui";
 import { ProfileLink } from "@/features/profile/ui";
-import type {
-  Nickname,
-  PetName,
-  ProfileImageUrl,
-} from "@/entities/profile/api";
 import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
+import type { FollowItemProps } from "../types/client";
 
-interface FollowerUserItemProps {
-  nickname: Nickname;
-  petName: PetName;
-  profile: ProfileImageUrl;
-  isFollowing?: boolean;
-}
 export const FollowerUserItem = ({
   nickname,
-  petName,
+  name,
   profile,
   isFollowing,
-}: FollowerUserItemProps) => {
+}: FollowItemProps) => {
   const [_isFollowing, _setIsFollowing] = useState(() => isFollowing);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
@@ -84,7 +74,7 @@ export const FollowerUserItem = ({
             </button>
           )}
         </div>
-        <p className="body-3 text-grey-500">{petName}</p>
+        <p className="body-3 text-grey-500">{name}</p>
       </div>
       <DeleteFollowerButton onClick={handleOptimisticDeleteFollower} />
     </ProfileLink>

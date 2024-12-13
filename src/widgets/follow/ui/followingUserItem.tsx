@@ -6,23 +6,15 @@
  */
 import { FollowingToggle } from "@/features/follow/ui";
 import { ProfileLink } from "@/features/profile/ui";
-import {
-  type Nickname,
-  type PetName,
-  type ProfileImageUrl,
-} from "@/entities/profile/api";
 import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
 import { useNicknameParams } from "@/shared/lib";
+import type { FollowItemProps } from "../types/client";
 
-interface FollowingUserItemProps {
-  nickname: Nickname;
-  petName: PetName;
-  profile: ProfileImageUrl;
-  isFollowing: boolean;
-}
+type FollowingUserItemProps = FollowItemProps & { isFollowing: boolean };
+
 export const FollowingUserItem = ({
   nickname,
-  petName,
+  name,
   profile,
   isFollowing,
 }: FollowingUserItemProps) => {
@@ -45,7 +37,7 @@ export const FollowingUserItem = ({
       )}
       <div className="flex flex-col justify-center flex-1">
         <p className="title-2 text-grey-700">{nickname}</p>
-        <p className="body-3 text-grey-500">{petName}</p>
+        <p className="body-3 text-grey-500">{name}</p>
       </div>
       {!isMyPage || (
         <FollowingToggle

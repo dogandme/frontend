@@ -1,14 +1,14 @@
 import { useState } from "react";
-import type { Nickname } from "@/entities/profile/api";
 import { Button } from "@/shared/ui/button";
 import { ButtonProps } from "@/shared/ui/button/Button";
 import { usePostFollowing, useDeleteFollowing } from "../api";
 
 interface FollowingToggleProps {
-  nickname: Nickname;
+  nickname: string;
   isFollowing: boolean;
   size: Extract<ButtonProps["size"], "small" | "xSmall">;
 }
+
 export const FollowingToggle = ({
   nickname,
   isFollowing,

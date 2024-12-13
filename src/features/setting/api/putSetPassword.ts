@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
-import { authQueryKey } from "@/entities/auth/constants";
+import { authQueryKey } from "@/entities/auth/api";
 import { apiClient, useSnackBar } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordSetFormStore } from "../store";

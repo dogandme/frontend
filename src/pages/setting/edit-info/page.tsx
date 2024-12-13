@@ -4,7 +4,7 @@ import { GenderChangeButton } from "@/features/setting/ui";
 import { ChangeAgeButton } from "@/features/setting/ui";
 import { RegionChangeButton } from "@/features/setting/ui";
 import { useGetMyInfo } from "@/entities/auth/api";
-import type { MyInfo } from "@/entities/auth/api";
+import type { MyInfo } from "@/entities/auth/types/server";
 import { useModal, withAuth } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { ActionChip } from "@/shared/ui/chip";

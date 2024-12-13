@@ -1,10 +1,11 @@
 import { PetInformationForm } from "@/features/auth/ui";
-import { PetInfo } from "@/entities/profile/api";
+import type { PetInfo } from "@/entities/profile/types/server";
 import { useModal } from "@/shared/lib";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePetInfo } from "../api";
 
-export const useChangePetInfoModal = (pet: Omit<PetInfo, "petId">) => {
+type UseChangePetInfoModalParams = Omit<PetInfo, "petId">;
+export const useChangePetInfoModal = (pet: UseChangePetInfoModalParams) => {
   const { mutate: putChangePetInformation, isPending } = usePutChangePetInfo();
 
   const { handleOpen, onClose } = useModal(() => (

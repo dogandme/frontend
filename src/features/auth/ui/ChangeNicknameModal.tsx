@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { MyInfo } from "@/entities/auth/api";
+import type { MyInfo } from "@/entities/auth/types/server";
 import { formatDateToYearMonthDay, useSnackBar } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
@@ -12,15 +12,16 @@ import {
 import { validateNickname } from "../lib";
 import { NicknameInput } from "./NicknameInput";
 
+interface ChangeNicknameModalProps
+  extends NonNullableObject<Pick<MyInfo, "nickLastModDt">> {
+  onClose: () => Promise<void>;
+}
+
 export const ChangeNicknameModal = ({
   onClose,
   nickLastModDt,
-}: {
-  onClose: () => Promise<void>;
-  nickLastModDt: NonNullable<MyInfo["nickLastModDt"]>;
-}) => {
+}: ChangeNicknameModalProps) => {
   const nicknameRef = useRef<HTMLInputElement | null>(null);
-
   const handleOpenSnackbar = useSnackBar();
 
   const { mutate: putChangeNickname, isPending: isChangeNicknamePending } =

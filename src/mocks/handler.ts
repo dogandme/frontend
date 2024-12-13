@@ -14,8 +14,8 @@ import type {
   PutChangePetInfoRequest,
 } from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
-import { MyInfo } from "@/entities/auth/api";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
+import type { MyInfo } from "@/entities/auth/types/server";
 import { MARKER_END_POINT } from "@/entities/marking/constants";
 import type {
   Marking,

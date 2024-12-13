@@ -68,6 +68,8 @@ const LocalMarkingList = ({
   } = useGetMarkingThumbnailList({
     sortType,
     searchType: "NEARBY",
+    lat: null,
+    lng: null,
     ...boundsParams,
   });
   const [setNode] = useInfiniteScroll(() => {

@@ -48,7 +48,15 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
         previewImage:
           Math.random() > 0.5 ? null : `${tempMarkingId - 1} 프리뷰 이미지`,
         userId: 1,
-        nickname: "뽀송송",
+        nickName: "뽀송송",
+        pet: {
+          petId: 1,
+          name: "뽀송이",
+          description: "뽀송이는 귀여워요",
+          profile: "profile-url",
+          breed: "푸들",
+          personalities: ["예민", "활발"],
+        },
         isTempSaved: true,
         isOwner: true,
         lat: regionInfo.lat,

@@ -5,21 +5,10 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { InfoChip } from "@/shared/ui/chip/InfoChip";
 import { DividerLine } from "@/shared/ui/divider";
 import { DropDownIcon } from "@/shared/ui/icon";
-import type {
-  Breed,
-  FollowerIdList,
-  FollowingIdList,
-  PetDescription,
-  PetName,
-  PetPersonalities,
-} from "../api";
+import type { PetInfo, ProfileInfo } from "../types/server";
 
-type ProfileHeadingProps = {
-  name: PetName;
-  breed: Breed;
-  followersIds: FollowerIdList;
-  followingsIds: FollowingIdList;
-};
+type ProfileHeadingProps = Pick<ProfileInfo, "followersIds" | "followingsIds"> &
+  Pick<PetInfo, "breed" | "name">;
 
 export const ProfileHeading = ({
   name,
@@ -44,9 +33,7 @@ export const ProfileHeading = ({
   );
 };
 
-interface PetDescriptionTextProps {
-  description: NonNullable<PetDescription>;
-}
+type PetDescriptionTextProps = NonNullableObject<Pick<PetInfo, "description">>;
 
 export const PetDescriptionText = ({
   description,
@@ -103,9 +90,8 @@ export const PetDescriptionText = ({
   );
 };
 
-interface PetPersonalityListProps {
-  personalities: PetPersonalities;
-}
+type PetPersonalityListProps = Pick<PetInfo, "personalities">;
+
 export const PetPersonalityList = ({
   personalities,
 }: PetPersonalityListProps) => {

@@ -2,37 +2,30 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
-import { type Role, useAuthStore } from "@/shared/store";
+import { useAuthStore } from "@/shared/store";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { LOGIN_END_POINT } from "../constants";
+import type { SignUpResponse } from "../types/server";
 
-interface EmailLoginResponse {
-  authorization: string;
-  role: NonNullable<Role>;
-  userId: number | null;
-  nickname: string | null;
-}
-
-interface EmailLoginRequest {
+export interface PostLoginRequest {
   email: string;
   password: string;
   persistLogin: boolean;
 }
 
-const postLogin = async (formData: EmailLoginRequest) => {
-  return apiClient.post<EmailLoginResponse>(LOGIN_END_POINT.EMAIL, {
+const postLogin = async (formData: PostLoginRequest) => {
+  return apiClient.post<SignUpResponse>(LOGIN_END_POINT.EMAIL, {
     body: formData,
   });
 };
 
-// TODO 리액트 쿼리를 활용하여 최적화 하기
 export const usePostLogin = () => {
   const navigate = useNavigate();
   const setToken = useAuthStore((state) => state.setToken);
   const setRole = useAuthStore((state) => state.setRole);
   const setNickname = useAuthStore((state) => state.setNickname);
 
-  return useMutation<EmailLoginResponse, Error, EmailLoginRequest>({
+  return useMutation<SignUpResponse, Error, PostLoginRequest>({
     mutationFn: postLogin,
     onSuccess: (data) => {
       const { authorization, role, nickname } = data;

@@ -1,8 +1,9 @@
 import { skipToken, useInfiniteQuery } from "@tanstack/react-query";
-import type { Nickname, PetInfo, UserId } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
-import { FOLLOW_END_POINT, followQueryKey } from "../constants";
+import { FOLLOW_END_POINT } from "../constants";
+import type { FollowUserInfo } from "../types/server";
+import { followQueryKey } from "./queryKey";
 
 // TODO 리팩토링 시 해당 타입 정의 위치 의논
 interface PageAbleInformation {
@@ -22,22 +23,22 @@ interface PageAbleInformation {
   };
 }
 
-interface GetFollowingListRequest {
-  nickname: Nickname;
+interface UseGetFollowerListParams {
+  nickname: string;
 }
 
-type GetFollowingListResponse = {
-  userInfos: {
-    userId: UserId;
-    nickname: Nickname;
-    pet: PetInfo;
-  }[];
-} & PageAbleInformation;
+interface GetFollowingListRequest extends UseGetFollowerListParams {
+  pageParam?: number;
+}
+
+interface GetFollowingListResponse extends PageAbleInformation {
+  userInfos: FollowUserInfo[];
+}
 
 const getFollowingList = ({
   pageParam = 0,
   nickname,
-}: GetFollowingListRequest & { pageParam: number }) => {
+}: GetFollowingListRequest) => {
   return apiClient.get<GetFollowingListResponse>(
     FOLLOW_END_POINT.FOLLOWING_LIST(nickname, pageParam),
     {
@@ -46,7 +47,7 @@ const getFollowingList = ({
   );
 };
 
-export const useGetFollowingList = ({ nickname }: GetFollowingListRequest) => {
+export const useGetFollowingList = ({ nickname }: UseGetFollowerListParams) => {
   const token = useAuthStore((state) => state.token);
 
   return useInfiniteQuery({

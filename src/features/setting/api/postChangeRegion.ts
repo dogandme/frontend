@@ -1,11 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { authQueryKey } from "@/entities/auth/constants";
-import type { Region } from "@/entities/map/types/server";
+import { authQueryKey } from "@/entities/auth/api";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
 
 export interface PostChangeRegionRequest {
-  newIds: Region["id"][];
+  newIds: number[];
 }
 
 const postChangeRegion = async (changeRegionData: PostChangeRegionRequest) => {

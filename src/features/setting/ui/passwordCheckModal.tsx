@@ -12,11 +12,13 @@ import {
   usePasswordCheckFormStore,
 } from "../store";
 
+interface PasswordCheckFormProviderProps {
+  children: React.ReactNode;
+}
+
 const PasswordCheckFormProvider = ({
   children,
-}: {
-  children: React.ReactNode;
-}) => {
+}: PasswordCheckFormProviderProps) => {
   const store = useRef(createPasswordCheckFormStore()).current;
   return (
     <PasswordCheckFormContext.Provider value={store}>
@@ -55,11 +57,11 @@ const CurrentPasswordInput = () => {
   );
 };
 
-const PasswordCheckSubmitButton = ({
-  onClose,
-}: {
+interface PasswordCheckModalProps {
   onClose: () => Promise<void>;
-}) => {
+}
+
+const PasswordCheckSubmitButton = ({ onClose }: PasswordCheckModalProps) => {
   const store = usePasswordCheckFormContext();
   const { mutate: deleteAccount, isPending } = useDeleteAccount();
 
@@ -89,7 +91,7 @@ const PasswordCheckSubmitButton = ({
   );
 };
 
-const PasswordCheckCloseButton = ({ onClose }: { onClose: () => void }) => {
+const PasswordCheckCloseButton = ({ onClose }: PasswordCheckModalProps) => {
   const isMutating =
     useIsMutating({
       mutationKey: ["deleteAccount"],
@@ -106,11 +108,7 @@ const PasswordCheckCloseButton = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export const PasswordCheckModal = ({
-  onClose,
-}: {
-  onClose: () => Promise<void>;
-}) => {
+export const PasswordCheckModal = ({ onClose }: PasswordCheckModalProps) => {
   return (
     // TODO FormModal 생성 되면 적용하기
     <PasswordCheckFormProvider>

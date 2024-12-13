@@ -3,7 +3,10 @@ import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { useChangeRegionModal } from "../hooks";
 
-export const RegionChangeButton = ({ regions }: { regions: Region[] }) => {
+interface RegionChangeButtonProps {
+  regions: Region[];
+}
+export const RegionChangeButton = ({ regions }: RegionChangeButtonProps) => {
   const handleOpen = useChangeRegionModal(regions);
 
   return (

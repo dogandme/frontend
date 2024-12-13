@@ -2,19 +2,16 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { ROUTER_PATH } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
-import { type Role, useAuthStore } from "@/shared/store";
+import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
+import type { SignUpResponse } from "../types/server";
 
-interface PostSignUpByEmailResponse {
-  authorization: string;
-  role: NonNullable<Role>;
-  userId: number;
-}
-
-interface PostSignUpByEmailRequest {
+export interface PostSignUpByEmailRequest {
   email: string;
   password: string;
 }
+
+type PostSignUpByEmailResponse = SignUpResponse<"ROLE_NONE">;
 
 const postSignUpByEmail = async ({
   email,

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { genderMap, GenderMapKey } from "@/features/auth/constants";
-import type { MyInfo } from "@/entities/auth/api";
+import type { MyInfo } from "@/entities/auth/types/server";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { Select } from "@/shared/ui/select";
 import { PutChangeGenderRequest, usePutChangeGender } from "../api";
 
-export const GenderChangeButton = ({ gender }: Pick<MyInfo, "gender">) => {
+type GenderChangeButtonProps = Pick<MyInfo, "gender">;
+
+export const GenderChangeButton = ({ gender }: GenderChangeButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: putChangeGender } = usePutChangeGender();
 
