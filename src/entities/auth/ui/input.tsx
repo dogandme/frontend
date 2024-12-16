@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { VisibilityOffIcon, VisibilityOnIcon } from "@/shared/ui/icon";
-import { Input, InputProps } from "@/shared/ui/input";
+import { Input, type InputProps } from "@/shared/ui/input";
 
 type FixedInputProps = "type" | "componentType";
 
