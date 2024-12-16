@@ -31,8 +31,9 @@ import StarSVG from "@/shared/assets/star.svg";
 import VisibilityOffSvg from "@/shared/assets/visibility-off.svg";
 import VisibilityOnSvg from "@/shared/assets/visibility-on.svg";
 import WardLeftSvg from "@/shared/assets/ward-left.svg";
-import withIcon from "./Icon";
+import withIcon from "./icon";
 
+export { withIcon };
 // Icon 컴포넌트 생성
 export const EmailIcon = withIcon(EmailSvg);
 export const VisibilityOnIcon = withIcon(VisibilityOnSvg);

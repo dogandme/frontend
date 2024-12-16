@@ -6,7 +6,7 @@ import { MARKING_VISIBILITY_MAP } from "@/entities/marking/constants";
 import type { TempMarking } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
 import { Button } from "@/shared/ui/button";
-import { InfoChip } from "@/shared/ui/chip/InfoChip";
+import { InfoChip } from "@/shared/ui/chip";
 import { MyLocationIcon } from "@/shared/ui/icon";
 import { ImgSlider } from "@/shared/ui/imgSlider";
 

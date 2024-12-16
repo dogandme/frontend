@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
-import { InfoChip } from "@/shared/ui/chip/InfoChip";
+import { InfoChip } from "@/shared/ui/chip";
 import { DividerLine } from "@/shared/ui/divider";
 import { DropDownIcon } from "@/shared/ui/icon";
 import type { PetInfo, ProfileInfo } from "../types/server";

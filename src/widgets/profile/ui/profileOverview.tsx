@@ -8,7 +8,7 @@ import {
   ProfileImage,
 } from "@/entities/profile/ui";
 import { Button } from "@/shared/ui/button";
-import { InfoChip } from "@/shared/ui/chip/InfoChip";
+import { InfoChip } from "@/shared/ui/chip";
 import { DividerLine } from "@/shared/ui/divider";
 
 interface ProfileOverviewProps

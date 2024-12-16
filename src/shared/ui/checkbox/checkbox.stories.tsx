@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, within } from "@storybook/test";
-import { Checkbox } from "./Checkbox";
+import { Checkbox } from "./checkbox";
 
 const meta: Meta<typeof Checkbox> = {
   title: "shared/Checkbox",
