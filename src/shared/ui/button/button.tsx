@@ -16,7 +16,7 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
 };
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       colorType,
@@ -103,7 +103,3 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
   },
 );
-
-Button.displayName = "Button";
-
-export default Button;

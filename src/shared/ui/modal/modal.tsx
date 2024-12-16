@@ -1,7 +1,7 @@
 import React from "react";
 import { createContext, useContext } from "react";
 import { Button } from "../button";
-import { ButtonProps } from "../button/button";
+import { ButtonProps } from "../button";
 import { CloseIcon } from "../icon";
 import { modalStyles } from "./modal.styles";
 

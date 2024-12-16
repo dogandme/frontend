@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Button } from "@/shared/ui/button";
-import type { ButtonProps } from "@/shared/ui/button/button";
+import { Button, type ButtonProps } from "@/shared/ui/button";
 import { usePostFollowing, useDeleteFollowing } from "../api";
 
 interface FollowingToggleProps {
