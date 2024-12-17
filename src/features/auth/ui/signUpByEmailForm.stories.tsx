@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { signUpByEmailHandlers } from "@/mocks/handler";
@@ -75,7 +75,7 @@ export const Test: Story = {
     const $passwordInput = canvasElement.querySelector("#password")!;
     const $passwordConfirmInput =
       canvasElement.querySelector("#password-confirm")!;
-    // const $submitButton = canvas.getByText("다음");
+    const $submitButton = canvas.getByText("다음");
 
     const validEmail = "hi@example.com";
     const invalidEmail = "invalid-email";
@@ -278,12 +278,6 @@ export const Test: Story = {
 
       await userEvent.clear($codeInput);
 
-      // ? 인증시간이 만료될 경우 테스트 작성 (인증 시간 만료된 경우를 어떻게 테스트하지)
-      //  인증시간이 만료되었습니다 재전송 버튼을 눌러주세요 에러 문구를 띄운다.
-      //  타이머도 빨간색으로 표시한다.
-      //  입력값을 모두 삭제한다.
-      //  [확인] 버튼이 비활성화된다.
-
       await step("인증 코드가 일치하지 않을 경우", async () => {
         await userEvent.type($codeInput, "7654321");
         await userEvent.click($checkCodeButton);
@@ -473,18 +467,18 @@ export const Test: Story = {
       });
     });
 
-    // await step(
-    //   "모든 input 값이 유효한 상태에서 [다음] 버튼 클릭 시, auth store에 token과 role이 저장된다.",
-    //   async () => {
-    //     await userEvent.click($submitButton);
+    await step(
+      "모든 input 값이 유효한 상태에서 [다음] 버튼 클릭 시, auth store에 token과 role이 저장된다.",
+      async () => {
+        await userEvent.click($submitButton);
 
-    //     await waitFor(() => {
-    //       const { token, role } = useAuthStore.getState();
+        await waitFor(() => {
+          const { token, role } = useAuthStore.getState();
 
-    //       expect(token).toBe("accessToken-ROLE_GUEST");
-    //       expect(role).toBe("ROLE_NONE");
-    //     });
-    // },
-    // );
+          expect(token).toBe("accessToken-ROLE_NONE");
+          expect(role).toBe("ROLE_NONE");
+        });
+      },
+    );
   },
 };
