@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePassword } from "../api";
 import { usePasswordChangeFormStore } from "../store";
@@ -113,7 +113,7 @@ export const PasswordChangeModal = ({
   );
 
   const { mutate: putChangePassword, isPending } = usePutChangePassword();
-  const handleSnackbar = useSnackBar();
+  const handleSnackbar = useSnackBarStore((state) => state.handleOpenSnackbar);
 
   const handleSave = () => {
     const {

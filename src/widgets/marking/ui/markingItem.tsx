@@ -21,8 +21,7 @@ import {
   useDropdown,
   useImageState,
 } from "@/shared/lib";
-import { useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { useAuthStore, useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
 import {
@@ -189,7 +188,9 @@ export const MarkingItemSkeleton = () => {
 };
 
 const UnAuthorizedFollowingButton = () => {
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   return (
     <Button
@@ -278,7 +279,9 @@ const MarkingItemLikeToggle = () => {
 const UnauthorizedLikeButton = () => {
   const { markingId, countData } = useMarkingItemProps();
   const { likedCount } = countData;
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   return (
     <div className="flex gap-2 items-center text-grey-500">
@@ -369,7 +372,9 @@ const MarkingItemBookmarkToggle = () => {
 const UnAuthorizedBookmarkButton = () => {
   const { markingId, countData } = useMarkingItemProps();
   const { savedCount } = countData;
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   return (
     <div className="flex gap-2 items-center text-grey-500">

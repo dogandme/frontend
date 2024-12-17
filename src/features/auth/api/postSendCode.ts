@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { apiClient, HttpError, useSnackBar } from "@/shared/lib";
+import { apiClient, HttpError } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
 export interface PostSendCodeRequest {
@@ -14,7 +15,9 @@ const postSendCode = async ({ email }: PostSendCodeRequest) => {
 };
 
 export const usePostSendCode = () => {
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   return useMutation<unknown, HttpError, PostSendCodeRequest>({
     mutationKey: ["sendVerificationCode"],

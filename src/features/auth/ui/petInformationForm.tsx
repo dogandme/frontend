@@ -1,7 +1,7 @@
 import { useState, useRef, useTransition } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { SelectChip } from "@/shared/ui/chip";
@@ -363,7 +363,9 @@ const SubmitButton = ({
 }: Omit<PetInformationFormProps, "initialState">) => {
   const store = usePetInformationFormContext();
   // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   const handleClick = () => {
     const petInfoForm = store.getState();

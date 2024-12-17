@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { usePostLogout } from "../api";
@@ -11,7 +11,9 @@ interface LogoutModalProps {
 
 export const LogoutModal = ({ onCloseLogoutModal }: LogoutModalProps) => {
   const navigate = useNavigate();
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   const { mutate: postLogout } = usePostLogout({
     onMutate: () => {

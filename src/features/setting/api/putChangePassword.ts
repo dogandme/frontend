@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { apiClient, useSnackBar } from "@/shared/lib";
+import { apiClient } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordChangeFormStore } from "../store";
 
@@ -22,7 +23,9 @@ export const usePutChangePassword = () => {
   const resetPasswordChangeForm = usePasswordChangeFormStore(
     (state) => state.reset,
   );
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   return useMutation<unknown, Error, PutChangePasswordRequest>({
     mutationFn: putChangePassword,

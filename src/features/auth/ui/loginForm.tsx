@@ -1,5 +1,5 @@
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { usePostLogin } from "../api";
 import { useLoginFormStore } from "../store";
@@ -102,7 +102,9 @@ export const PersistLogin = () => {
 
 export const SubmitButton = () => {
   const { mutate: postLoginForm } = usePostLogin();
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   const handleSubmit = () => {
     const { email, password, isValidEmail, persistLogin } =

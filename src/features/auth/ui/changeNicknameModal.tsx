@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import type { MyInfo } from "@/entities/auth/types/server";
-import { formatDateToYearMonthDay, useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { formatDateToYearMonthDay } from "@/shared/lib";
+import { useAuthStore, useSnackBarStore } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
@@ -22,7 +22,9 @@ export const ChangeNicknameModal = ({
   nickLastModDt,
 }: ChangeNicknameModalProps) => {
   const nicknameRef = useRef<HTMLInputElement | null>(null);
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   const { mutate: putChangeNickname, isPending: isChangeNicknamePending } =
     usePutChangeNickname();

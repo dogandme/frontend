@@ -4,7 +4,7 @@ import {
   useGetRegionByLatLng,
 } from "@/entities/map/api";
 import type { Region } from "@/entities/map/types/server";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
 import { CancelIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";
@@ -85,7 +85,9 @@ const SearchRegionByGPSButton = () => {
   const setPosition = useRegionModalStore((state) => state.setPosition);
   const setOrigin = useRegionModalStore((state) => state.setOrigin);
 
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   const additionalClassName =
     origin === "position"
@@ -163,7 +165,9 @@ const SearchRegionControlItem = (region: Region) => {
   const regionModalStore = useRegionModalContext();
   const setRegionList = useRegionModalStore((state) => state.setRegionList);
   const { id, province, cityCounty, subDistrict } = region;
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   const handleSelectRegion = () => {
     const { regionList } = regionModalStore.getState();
@@ -276,7 +280,9 @@ const RegionModalSaveButton = ({
   onSave: (regionList: RegionModalExternalState["regionList"]) => void;
 }) => {
   const regionModalStore = useRegionModalContext();
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   return (
     <Button

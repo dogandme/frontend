@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { Input, StatusText } from "@/shared/ui/input";
 import { usePostSignUpByEmail } from "../api";
@@ -348,7 +348,9 @@ export const SignUpByEmailForm = () => {
   const { resetState } = useSignUpByEmailFormStore((state) => state.actions);
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
 
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

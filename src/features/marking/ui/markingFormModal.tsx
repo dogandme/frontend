@@ -6,8 +6,7 @@ import {
   MARKING_VISIBILITY_MAP,
   MARKING_VISIBILITY_ENTRIES,
 } from "@/entities/marking/constants";
-import { useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { useAuthStore, useSnackBarStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
@@ -56,7 +55,9 @@ export const MarkingFormModal = ({
 
 const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
   const center = map.getCenter();
 
   const lat = center.lat();
@@ -158,7 +159,7 @@ const PhotoInput = () => {
   const handleOpenAlbum = () => {
     inputRef.current?.click();
   };
-  const handleOpen = useSnackBar();
+  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
 
   const handleChange = async ({
     target,
@@ -263,7 +264,7 @@ const SaveButton = () => {
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
 
   const { mutate: postMarkingData } = usePostAddMarking();
-  const handleOpen = useSnackBar();
+  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
 
   const handleSave = async () => {
     const { token } = useAuthStore.getState();
@@ -322,7 +323,7 @@ const SaveButton = () => {
 const TemporarySaveButton = () => {
   const map = useMap();
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
-  const handleOpen = useSnackBar();
+  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
   const { mutate: postAddTempMarking } = usePostAddTempMarking();
 
   const handleSave = () => {

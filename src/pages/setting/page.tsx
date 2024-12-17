@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { Report, LogoutButton } from "@/features/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
-import { withAuth, useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { withAuth } from "@/shared/lib";
+import { useAuthStore, useSnackBarStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
@@ -63,7 +63,9 @@ const MyActivity = () => (
 
 // 알림
 const Notification = () => {
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   return (
     <button

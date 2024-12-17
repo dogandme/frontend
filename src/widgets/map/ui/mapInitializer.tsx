@@ -13,7 +13,7 @@ import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 import type { Marking } from "@/entities/marking/types/server";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 
 interface MarkingInfo {
   position: {
@@ -39,7 +39,7 @@ export const MapInitializer = () => {
   const { placeParams, setPlaceQueryParams } = usePlaceQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
-  const handleOpen = useSnackBar();
+  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
 
   const isMapIdle = useMapStore((state) => state.isIdle);
   const setIsMapIdle = useMapStore((state) => state.setIsIdle);

@@ -1,7 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { authQueryKey } from "@/entities/auth/api";
-import { apiClient, useSnackBar } from "@/shared/lib";
+import { apiClient } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordSetFormStore } from "../store";
 
@@ -19,7 +20,9 @@ const putSetPassword = async (setPasswordData: PutSetPasswordRequest) => {
 
 export const usePutSetPassword = () => {
   const resetPasswordSetForm = usePasswordSetFormStore((state) => state.reset);
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   const queryClient = useQueryClient();
 

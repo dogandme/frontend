@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { useMapStore } from "../store";
 
 type OnSuccess = (position: GeolocationPosition) => void;
@@ -8,7 +8,9 @@ type OnError = () => void;
 export const useCurrentLocation = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const setUserInfo = useMapStore((state) => state.setUserInfo);
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   const MAX_WAIT_TIME = 5000;
 

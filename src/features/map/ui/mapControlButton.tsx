@@ -6,8 +6,8 @@ import { useMarkingFormStore } from "@/features/marking/store";
 import { MarkingFormCloseModal } from "@/features/marking/ui/markingFormCloseModal";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useModal, useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { useModal } from "@/shared/lib";
+import { useAuthStore, useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import {
   BookmarkIcon,
@@ -27,7 +27,9 @@ import { useMapStore } from "../store";
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingAddButton = () => {
   const setMode = useMapStore((state) => state.setMode);
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   return (
     <Button
@@ -167,7 +169,9 @@ export const CollectionButton = () => {
 
 /* ----------add mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingFormTriggerButton = () => {
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
   const { handleOpen, onClose } = useMarkingFormModal(() => (
     <MarkingFormModal onCloseMarkingModal={onClose} />
   ));

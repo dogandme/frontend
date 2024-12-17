@@ -6,7 +6,7 @@ import {
 } from "@/entities/marking/constants";
 import type { IsVisible } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
@@ -138,7 +138,7 @@ const EditPhotoInput = ({
   const setImages = useEditMarkingForm((state) => state.setImages);
   const inputKey = useEditMarkingForm((state) => state.inputKey);
 
-  const handleOpen = useSnackBar();
+  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const currentImagesLength = externalImages.length + images.length;
@@ -265,7 +265,7 @@ const EditMarkingSaveButton = ({
   putModifyMarkingArguments,
 }: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
   const store = useEditMarkingFormContext();
-  const handleOpen = useSnackBar();
+  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
     putModifyMarkingArguments,
   );
@@ -317,7 +317,7 @@ const EditMarkingTempSaveButton = ({
   putModifyMarkingArguments,
 }: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
   const store = useEditMarkingFormContext();
-  const handleOpen = useSnackBar();
+  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
     putModifyMarkingArguments,
   );

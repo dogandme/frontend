@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
-import { useSnackBar } from "@/shared/lib/snackbar";
+import { useSnackBarStore } from "@/shared/store";
 import { Snackbar } from "./snackbar";
 
 const meta: Meta<typeof Snackbar> = {
@@ -60,7 +60,9 @@ export const Default: Story = {
 
   render: () => {
     /* eslint-disable */
-    const handleOpenSnackbar = useSnackBar();
+    const handleOpenSnackbar = useSnackBarStore(
+      (state) => state.handleOpenSnackbar,
+    );
 
     return (
       <div className="flex h-96 w-full items-end justify-end px-2 py-2 gap-2">

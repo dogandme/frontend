@@ -5,7 +5,8 @@ import {
   SignUpLandingModal,
 } from "@/entities/auth/ui";
 import type { Region } from "@/entities/map/types/server";
-import { useModal, useSnackBar } from "@/shared/lib";
+import { useModal } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { useAuthStore } from "@/shared/store/auth";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -266,7 +267,9 @@ const MyRegionList = () => {
 };
 
 const UserInfoRegistrationForm = () => {
-  const handleOpenSnackbar = useSnackBar();
+  const handleOpenSnackbar = useSnackBarStore(
+    (state) => state.handleOpenSnackbar,
+  );
 
   const { handleOpen: openLandingModal, onClose: onCloseLandingModal } =
     useModal(() => <SignUpLandingModal onClose={onCloseLandingModal} />);
