@@ -227,10 +227,10 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     const $nicknameInput = canvasElement.querySelector(
-      'input[name="nickname"]',
+      "#nickname",
     ) as HTMLInputElement;
     const validNickname = "hihihi";
-    const invalidNickname = "!!@#$@";
+    const invalidNickname = "   ";
 
     const $submitButton = canvas.getByText("회원가입");
     const $regionSelectButton = canvas.getByText("동네 설정하기");
@@ -247,7 +247,7 @@ export const Default: Story = {
         async () => {
           await userEvent.click($nicknameInput);
 
-          const $statusText = canvas.getByText(STATUS_TEXT);
+          const $statusText = await canvas.findByText(STATUS_TEXT);
           expect($statusText).toBeInTheDocument();
           expect($statusText).toHaveClass(textColor.base);
         },
@@ -260,7 +260,7 @@ export const Default: Story = {
           // outfocus되도 statusText를 pink-500 색상으로 표시
           await userEvent.tab();
 
-          const $statusText = canvas.getByText(STATUS_TEXT);
+          const $statusText = await canvas.findByText(STATUS_TEXT);
           expect($statusText).toHaveClass(textColor.error);
         },
       );
