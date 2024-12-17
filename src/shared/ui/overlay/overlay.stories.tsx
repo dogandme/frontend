@@ -78,40 +78,39 @@ export const Default: StoryObj<typeof OverlayPortal> = {
         await step(
           "사용자가 모달 외부 영역을 클릭하면 모달이 닫힌다.",
           async () => {
-            const $modalOverlay =
-              canvasElement.querySelector(".absolute.w-screen");
+            const $modalOverlay = canvasElement.querySelector(
+              ".bg-translucent-gray",
+            );
             await userEvent.click($modalOverlay!);
-            expect(
-              canvas.queryByText("나가시겠습니까?"),
-            ).not.toBeInTheDocument();
+            expect(canvas.queryByText("나가시겠습니까?")).toBeNull();
           },
         );
       },
     );
 
-    // await step(
-    //   '사용자가 모달의 저장하기를 누르면 "저장이 되었습니다" 스낵바가 나타난다.',
-    //   async () => {
-    //     await userEvent.click($button);
-    //     const $saveButton = canvas.getByText("저장");
-    //     await userEvent.click($saveButton);
-    //     expect(canvas.getByText("저장이 되었습니다")).toBeInTheDocument();
-    //   },
-    // );
+    await step(
+      '사용자가 모달의 저장하기를 누르면 "저장이 되었습니다" 스낵바가 나타난다.',
+      async () => {
+        await userEvent.click($button);
+        const $saveButton = canvas.getByText("저장");
+        await userEvent.click($saveButton);
+        expect(canvas.getByText("저장이 되었습니다")).toBeInTheDocument();
+      },
+    );
 
-    // // 스낵바는 1초뒤에 사라지기에 1초간 대기
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
+    // 스낵바는 1초뒤에 사라지기에 1초간 대기
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // await step(
-    //   "사용자가 모달의 취소를 누르면 스낵바가 나타나지 않는다.",
-    //   async () => {
-    //     await userEvent.click($button);
-    //     const $exitButton = canvas.getByText("취소");
+    await step(
+      "사용자가 모달의 취소를 누르면 스낵바가 나타나지 않는다.",
+      async () => {
+        await userEvent.click($button);
+        const $exitButton = canvas.getByText("취소");
 
-    //     await userEvent.click($exitButton);
-    //     expect(canvas.queryByText("저장이 되었습니다")).not.toBeInTheDocument();
-    //   },
-    // );
+        await userEvent.click($exitButton);
+        expect(canvas.queryByText("저장이 되었습니다")).toBeNull();
+      },
+    );
   },
 };
 
