@@ -172,14 +172,13 @@ export const Default: Story = {
       // 내용 작성
       await userEvent.type($textArea, "여기는 진짜 대박이긴 해요");
 
-      // TODO 버그 픽스하기
-      // const { content, isVisible, images } = useMarkingFormStore.getState();
-      // expect(content).toBe("여기는 진짜 대박이긴 해요");
-      // expect(isVisible).toBe("PUBLIC");
-      // expect(images).toHaveLength(4);
-      // expect(images.map((file) => file.name)).toEqual(
-      //   dummyFiles.map((file) => file.name),
-      // );
+      const { content, isVisible, images } = useMarkingFormStore.getState();
+      expect(content).toBe("여기는 진짜 대박이긴 해요");
+      expect(isVisible).toBe("PUBLIC");
+      expect(images).toHaveLength(4);
+      expect(images.map((file) => file.name)).toEqual(
+        dummyFiles.map((file) => file.name),
+      );
     });
 
     await step(
