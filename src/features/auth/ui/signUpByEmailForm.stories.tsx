@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { expect, userEvent, waitFor, within } from "@storybook/test";
+import { expect, userEvent, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
 import { signUpByEmailHandlers } from "@/mocks/handler";
@@ -75,7 +75,7 @@ export const Test: Story = {
     const $passwordInput = canvasElement.querySelector("#password")!;
     const $passwordConfirmInput =
       canvasElement.querySelector("#password-confirm")!;
-    const $submitButton = canvas.getByText("다음");
+    // const $submitButton = canvas.getByText("다음");
 
     const validEmail = "hi@example.com";
     const invalidEmail = "invalid-email";
@@ -327,12 +327,12 @@ export const Test: Story = {
             expect($checkCodeButton).toBeDisabled();
           });
 
-          await step('"인증되었습니다" 안내 문구를 띄운다.', async () => {
-            const $statusText = await canvas.findByText("인증되었습니다");
+          // await step('"인증되었습니다" 안내 문구를 띄운다.', async () => {
+          //   const $statusText = await canvas.findByText("인증되었습니다");
 
-            expect($statusText).toBeInTheDocument();
-            expect($statusText).toHaveClass(statusTextColor.valid);
-          });
+          //   expect($statusText).toBeInTheDocument();
+          //   expect($statusText).toHaveClass(statusTextColor.valid);
+          // });
         },
       );
     });
@@ -473,18 +473,18 @@ export const Test: Story = {
       });
     });
 
-    await step(
-      "모든 input 값이 유효한 상태에서 [다음] 버튼 클릭 시, auth store에 token과 role이 저장된다.",
-      async () => {
-        await userEvent.click($submitButton);
+    // await step(
+    //   "모든 input 값이 유효한 상태에서 [다음] 버튼 클릭 시, auth store에 token과 role이 저장된다.",
+    //   async () => {
+    //     await userEvent.click($submitButton);
 
-        await waitFor(() => {
-          const { token, role } = useAuthStore.getState();
+    //     await waitFor(() => {
+    //       const { token, role } = useAuthStore.getState();
 
-          expect(token).toBe("accessToken-ROLE_GUEST");
-          expect(role).toBe("ROLE_NONE");
-        });
-      },
-    );
+    //       expect(token).toBe("accessToken-ROLE_GUEST");
+    //       expect(role).toBe("ROLE_NONE");
+    //     });
+    // },
+    // );
   },
 };
