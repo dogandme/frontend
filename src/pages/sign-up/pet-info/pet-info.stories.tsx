@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
+import { useAuthStore } from "@/shared/store";
 import PetInfoPage from "./page";
 
 const meta: Meta = {
@@ -17,5 +18,10 @@ export default meta;
 
 type Story = StoryObj<typeof PetInfoPage>;
 export const Default: Story = {
-  render: () => <PetInfoPage />,
+  render: () => {
+    useAuthStore.setState({
+      role: "ROLE_GUEST",
+    });
+    return <PetInfoPage />;
+  },
 };
