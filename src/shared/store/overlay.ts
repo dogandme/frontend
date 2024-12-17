@@ -17,7 +17,7 @@ export interface OverlayInfo {
   options: OverlayOptions;
 }
 
-interface OverlayStore {
+export interface OverlayStore {
   overlays: OverlayInfo[];
   addOverlay: (newOverlay: OverlayInfo) => void;
   removeOverlay: (id: number) => void;
