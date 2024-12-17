@@ -321,12 +321,12 @@ export const Test: Story = {
             expect($checkCodeButton).toBeDisabled();
           });
 
-          // await step('"인증되었습니다" 안내 문구를 띄운다.', async () => {
-          //   const $statusText = await canvas.findByText("인증되었습니다");
+          await step('"인증되었습니다" 안내 문구를 띄운다.', async () => {
+            const $statusText = await canvas.findByText("인증되었습니다");
 
-          //   expect($statusText).toBeInTheDocument();
-          //   expect($statusText).toHaveClass(statusTextColor.valid);
-          // });
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.valid);
+          });
         },
       );
     });
