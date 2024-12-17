@@ -63,13 +63,11 @@ const MyActivity = () => (
 
 // 알림
 const Notification = () => {
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return (
     <button
-      onClick={() => handleOpenSnackbar("아직 출시 되지 않은 기능입니다")}
+      onClick={() => setSnackbarProps("아직 출시 되지 않은 기능입니다")}
       className="setting-item"
     >
       <p>알림</p>

@@ -7,9 +7,7 @@ import { useRefreshToken } from "./errorHandlers";
 
 export const useCreateQueryClient = () => {
   const resetOverlays = useOverlayStore((state) => state.resetOverlays);
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
   const { refreshTokenAndRetry } = useRefreshToken();
 
   const queryClient = useRef(
@@ -47,7 +45,7 @@ export const useCreateQueryClient = () => {
           }
 
           if (error instanceof HttpError && error.snackbarOnError) {
-            handleOpenSnackbar(error.message);
+            setSnackbarProps(error.message);
           }
         },
       }),
@@ -71,7 +69,7 @@ export const useCreateQueryClient = () => {
           }
 
           if (error instanceof HttpError && error.snackbarOnError) {
-            handleOpenSnackbar(error.message);
+            setSnackbarProps(error.message);
           }
         },
       }),

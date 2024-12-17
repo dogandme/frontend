@@ -39,7 +39,7 @@ export const MapInitializer = () => {
   const { placeParams, setPlaceQueryParams } = usePlaceQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
-  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
+  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
 
   const isMapIdle = useMapStore((state) => state.isIdle);
   const setIsMapIdle = useMapStore((state) => state.setIsIdle);

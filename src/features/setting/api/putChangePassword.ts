@@ -23,16 +23,14 @@ export const usePutChangePassword = () => {
   const resetPasswordChangeForm = usePasswordChangeFormStore(
     (state) => state.reset,
   );
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return useMutation<unknown, Error, PutChangePasswordRequest>({
     mutationFn: putChangePassword,
     mutationKey: ["putChangePassword"],
     onSuccess: () => {
       resetPasswordChangeForm();
-      handleOpenSnackbar("비밀번호가 변경되었습니다.");
+      setSnackbarProps("비밀번호가 변경되었습니다.");
     },
     onError: (error) => {
       // TODO 에러  바운더리 로직 나오면 변경 하기

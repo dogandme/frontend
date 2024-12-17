@@ -60,22 +60,22 @@ export const Default: Story = {
 
   render: () => {
     /* eslint-disable */
-    const handleOpenSnackbar = useSnackBarStore(
-      (state) => state.handleOpenSnackbar,
+    const setSnackbarProps = useSnackBarStore(
+      (state) => state.setSnackbarProps,
     );
 
     return (
       <div className="flex h-96 w-full items-end justify-end px-2 py-2 gap-2">
         <button
           className="px-2 py-2 bg-grey-200"
-          onClick={() => handleOpenSnackbar("1번 스낵바 오픈")}
+          onClick={() => setSnackbarProps("1번 스낵바 오픈")}
         >
           1번 스낵바 열기
         </button>
         <button
           className="px-2 py-2 bg-grey-200"
           onClick={() =>
-            handleOpenSnackbar("2번 스낵바 오픈", {
+            setSnackbarProps("2번 스낵바 오픈", {
               type: "map",
             })
           }

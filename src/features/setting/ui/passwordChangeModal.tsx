@@ -113,7 +113,7 @@ export const PasswordChangeModal = ({
   );
 
   const { mutate: putChangePassword, isPending } = usePutChangePassword();
-  const handleSnackbar = useSnackBarStore((state) => state.handleOpenSnackbar);
+  const handleSnackbar = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleSave = () => {
     const {

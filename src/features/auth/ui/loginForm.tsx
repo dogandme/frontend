@@ -102,9 +102,7 @@ export const PersistLogin = () => {
 
 export const SubmitButton = () => {
   const { mutate: postLoginForm } = usePostLogin();
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleSubmit = () => {
     const { email, password, isValidEmail, persistLogin } =
@@ -113,7 +111,7 @@ export const SubmitButton = () => {
     const isPasswordEmpty = password.length === 0;
 
     if (isEmailEmpty || isPasswordEmpty || !isValidEmail) {
-      handleOpenSnackbar("아이디 또는 비밀번호를 모두 입력해 주세요");
+      setSnackbarProps("아이디 또는 비밀번호를 모두 입력해 주세요");
       return;
     }
     postLoginForm({ email, password, persistLogin });

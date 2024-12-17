@@ -9,17 +9,15 @@ import { LogoutModal } from "./logoutModal";
 export const Report = () => {
   const officialEmail = "mungwithme@gmail.com";
 
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleClick = async () => {
     try {
       await window.navigator.clipboard.writeText(officialEmail);
-      handleOpenSnackbar("문의 사항을 보낼 이메일 주소가 복사되었습니다");
+      setSnackbarProps("문의 사항을 보낼 이메일 주소가 복사되었습니다");
     } catch (error) {
       console.error(error);
-      handleOpenSnackbar("이메일 주소를 복사 하던 중 오류가 발생했습니다");
+      setSnackbarProps("이메일 주소를 복사 하던 중 오류가 발생했습니다");
     }
   };
   return (

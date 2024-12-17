@@ -138,7 +138,7 @@ const EditPhotoInput = ({
   const setImages = useEditMarkingForm((state) => state.setImages);
   const inputKey = useEditMarkingForm((state) => state.inputKey);
 
-  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
+  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const currentImagesLength = externalImages.length + images.length;
@@ -265,7 +265,7 @@ const EditMarkingSaveButton = ({
   putModifyMarkingArguments,
 }: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
   const store = useEditMarkingFormContext();
-  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
+  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
     putModifyMarkingArguments,
   );
@@ -317,7 +317,7 @@ const EditMarkingTempSaveButton = ({
   putModifyMarkingArguments,
 }: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
   const store = useEditMarkingFormContext();
-  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
+  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
     putModifyMarkingArguments,
   );

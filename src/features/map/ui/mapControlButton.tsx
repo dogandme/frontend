@@ -27,9 +27,7 @@ import { useMapStore } from "../store";
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingAddButton = () => {
   const setMode = useMapStore((state) => state.setMode);
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return (
     <Button
@@ -38,7 +36,7 @@ export const MarkingAddButton = () => {
       size="medium"
       onClick={() => {
         if (!useAuthStore.getState().token) {
-          handleOpenSnackbar("로그인 후 이용해 주세요", {
+          setSnackbarProps("로그인 후 이용해 주세요", {
             type: "map",
           });
           return;
@@ -169,15 +167,13 @@ export const CollectionButton = () => {
 
 /* ----------add mode 일 때 나타나는 버튼들입니다.---------- */
 export const MarkingFormTriggerButton = () => {
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
   const { handleOpen, onClose } = useMarkingFormModal(() => (
     <MarkingFormModal onCloseMarkingModal={onClose} />
   ));
 
   useEffect(() => {
-    handleOpenSnackbar("마킹 위치를 손가락으로 움직여서 선택해 주세요", {
+    setSnackbarProps("마킹 위치를 손가락으로 움직여서 선택해 주세요", {
       type: "map",
     });
   }, []);

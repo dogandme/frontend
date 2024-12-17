@@ -55,9 +55,7 @@ export const MarkingFormModal = ({
 
 const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
   const center = map.getCenter();
 
   const lat = center.lat();
@@ -74,7 +72,7 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   }, [data, isSuccess, setRegion]);
 
   if (!useAuthStore.getState().token) {
-    handleOpenSnackbar(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
+    setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     return;
   }
 
@@ -159,7 +157,7 @@ const PhotoInput = () => {
   const handleOpenAlbum = () => {
     inputRef.current?.click();
   };
-  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
+  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleChange = async ({
     target,
@@ -264,7 +262,7 @@ const SaveButton = () => {
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
 
   const { mutate: postMarkingData } = usePostAddMarking();
-  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
+  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleSave = async () => {
     const { token } = useAuthStore.getState();
@@ -323,7 +321,7 @@ const SaveButton = () => {
 const TemporarySaveButton = () => {
   const map = useMap();
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
-  const handleOpen = useSnackBarStore((state) => state.handleOpenSnackbar);
+  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
   const { mutate: postAddTempMarking } = usePostAddTempMarking();
 
   const handleSave = () => {

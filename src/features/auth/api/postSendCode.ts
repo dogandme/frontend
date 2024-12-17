@@ -15,16 +15,14 @@ const postSendCode = async ({ email }: PostSendCodeRequest) => {
 };
 
 export const usePostSendCode = () => {
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return useMutation<unknown, HttpError, PostSendCodeRequest>({
     mutationKey: ["sendVerificationCode"],
     mutationFn: postSendCode,
     gcTime: 0,
     onSuccess: () => {
-      handleOpenSnackbar("메일로 인증코드가 전송되었습니다");
+      setSnackbarProps("메일로 인증코드가 전송되었습니다");
     },
   });
 };

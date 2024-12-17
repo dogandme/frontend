@@ -20,9 +20,7 @@ const putSetPassword = async (setPasswordData: PutSetPasswordRequest) => {
 
 export const usePutSetPassword = () => {
   const resetPasswordSetForm = usePasswordSetFormStore((state) => state.reset);
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const queryClient = useQueryClient();
 
@@ -33,7 +31,7 @@ export const usePutSetPassword = () => {
       /* isPasswordSet 값의 mutation 이 일어났기 때문에 새로운 데이터를 패치 해옵니다. */
       queryClient.invalidateQueries({ queryKey: authQueryKey.myInfo() });
       resetPasswordSetForm();
-      handleOpenSnackbar("비밀번호가 설정 되었습니다.");
+      setSnackbarProps("비밀번호가 설정 되었습니다.");
     },
     onError: (error) => {
       // TODO 에러바운더리 로직 나오면 변경 하기

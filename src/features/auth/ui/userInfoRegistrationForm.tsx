@@ -267,9 +267,7 @@ const MyRegionList = () => {
 };
 
 const UserInfoRegistrationForm = () => {
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const { handleOpen: openLandingModal, onClose: onCloseLandingModal } =
     useModal(() => <SignUpLandingModal onClose={onCloseLandingModal} />);
@@ -291,7 +289,7 @@ const UserInfoRegistrationForm = () => {
       useUserInfoRegistrationFormStore.getState();
 
     if (!token) {
-      handleOpenSnackbar("로그인 정보가 없습니다");
+      setSnackbarProps("로그인 정보가 없습니다");
       return;
     }
 
@@ -305,21 +303,21 @@ const UserInfoRegistrationForm = () => {
       region.length > 0;
 
     if (!areEssentialFieldsFilled) {
-      handleOpenSnackbar("필수 항목을 모두 입력해 주세요");
+      setSnackbarProps("필수 항목을 모두 입력해 주세요");
       return;
     }
 
     const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
 
     if (!isValidNickname) {
-      handleOpenSnackbar("올바른 닉네임을 입력해 주세요");
+      setSnackbarProps("올바른 닉네임을 입력해 주세요");
       return;
     }
 
     const areRequiredAgreementsChecked = checkList[0] && checkList[1];
 
     if (!areRequiredAgreementsChecked) {
-      handleOpenSnackbar("필수 약관에 모두 동의해 주세요");
+      setSnackbarProps("필수 약관에 모두 동의해 주세요");
       return;
     }
 
