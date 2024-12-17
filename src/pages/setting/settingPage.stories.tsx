@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
+import { useAuthStore } from "@/shared/store";
 import { SettingPage } from "./page";
 
 export default {
@@ -19,5 +20,11 @@ export const Default: Story = {
     ),
   ],
 
-  render: () => <SettingPage />,
+  render: () => {
+    useAuthStore.setState({
+      role: "ROLE_USER",
+      nickname: "뽀송송",
+    });
+    return <SettingPage />;
+  },
 };

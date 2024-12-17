@@ -78,12 +78,11 @@ export const Default: StoryObj<typeof OverlayPortal> = {
         await step(
           "사용자가 모달 외부 영역을 클릭하면 모달이 닫힌다.",
           async () => {
-            const $modalOverlay =
-              canvasElement.querySelector(".absolute.w-screen");
+            const $modalOverlay = canvasElement.querySelector(
+              ".bg-translucent-gray",
+            );
             await userEvent.click($modalOverlay!);
-            expect(
-              canvas.queryByText("나가시겠습니까?"),
-            ).not.toBeInTheDocument();
+            expect(canvas.queryByText("나가시겠습니까?")).toBeNull();
           },
         );
       },
@@ -94,7 +93,6 @@ export const Default: StoryObj<typeof OverlayPortal> = {
       async () => {
         await userEvent.click($button);
         const $saveButton = canvas.getByText("저장");
-
         await userEvent.click($saveButton);
         expect(canvas.getByText("저장이 되었습니다")).toBeInTheDocument();
       },
@@ -110,7 +108,7 @@ export const Default: StoryObj<typeof OverlayPortal> = {
         const $exitButton = canvas.getByText("취소");
 
         await userEvent.click($exitButton);
-        expect(canvas.queryByText("저장이 되었습니다")).not.toBeInTheDocument();
+        expect(canvas.queryByText("저장이 되었습니다")).toBeNull();
       },
     );
   },
