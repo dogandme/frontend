@@ -11,7 +11,7 @@ import { useMarkingFormStore } from "../store";
 import { MarkingFormModal } from "./markingFormModal";
 
 const meta: Meta<typeof MarkingFormModal> = {
-  title: "features/map/MarkingFormModal",
+  title: "features/marking/MarkingFormModal",
   component: MarkingFormModal,
 };
 
