@@ -394,7 +394,6 @@ export const Test: Story = {
 
             const $statusText =
               await canvas.findByText("비밀번호가 서로 일치하지 않습니다");
-
             expect($statusText).toBeInTheDocument();
             expect($statusText).toHaveClass(statusTextColor.invalid);
 
@@ -408,15 +407,6 @@ export const Test: Story = {
 
         await userEvent.clear($passwordInput);
         await userEvent.clear($passwordConfirmInput);
-
-        // ? status text 요소를 어떻게 찾아서 테스트할지 고민해보기
-        // await step(
-        //   "비밀번호 input 값과 입력값이 동일하면, 안내 문구를 표시하지 않는다.",
-        //   async () => {
-        //     await userEvent.type($passwordInput, invalidEmail);
-        //     await userEvent.type($passwordConfirmInput, invalidEmail);
-        //   },
-        // );
       });
 
       await step("비밀번호 input 값이 유효한 상태에서", async () => {
