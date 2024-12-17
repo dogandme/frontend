@@ -46,9 +46,7 @@ export const usePostAddTempMarking = () => {
     (state) => state.resetMarkingFormStore,
   );
   const setMode = useMapStore((state) => state.setMode);
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return useMutation({
     mutationKey: ["markingFormModal"],
@@ -56,11 +54,14 @@ export const usePostAddTempMarking = () => {
     onSuccess: () => {
       resetMarkingFormStore();
       setMode("view");
-      handleOpenSnackbar(
+      setSnackbarProps(
         <>
           <p>임시저장 되었습니다</p>
           <p>내 마킹에서 저장을 완료해 주세요</p>
         </>,
+        {
+          type: "map",
+        },
       );
     },
     onError: (error) => {

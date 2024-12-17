@@ -40,9 +40,7 @@ export const usePostAddMarking = () => {
     (state) => state.resetMarkingFormStore,
   );
   const setMode = useMapStore((state) => state.setMode);
-  const handleOpenSnackbar = useSnackBarStore(
-    (state) => state.handleOpenSnackbar,
-  );
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return useMutation({
     mutationKey: ["markingFormModal"],
@@ -50,7 +48,9 @@ export const usePostAddMarking = () => {
     onSuccess: () => {
       resetMarkingFormStore();
       setMode("view");
-      handleOpenSnackbar("내 마킹이 추가되었습니다");
+      setSnackbarProps("내 마킹이 추가되었습니다", {
+        type: "map",
+      });
     },
   });
 };
