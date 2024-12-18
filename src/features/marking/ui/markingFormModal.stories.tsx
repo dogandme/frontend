@@ -3,6 +3,7 @@ import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { GoogleMapsProvider } from "@/app/GoogleMapsProvider";
 // ! 이 부분은 테스트를 위해 FSD 구조를 무시합니다. 실제 구현 시에는 app 레이어에 존재하는 컴포넌트를 import 하지 마세요
 import { OverlayPortal } from "@/app/OverlayPortal";
+import { SnackbarController } from "@/app/SnackbarController";
 import { MapLayout, MapPage } from "@/pages/map";
 import { useAuthStore } from "@/shared/store";
 import { markingModalHandlers } from "@/mocks/handler";
@@ -33,6 +34,7 @@ export const Default: Story = {
             <div className="mx-auto my-0 flex h-screen max-w-[37.5rem] flex-col">
               <main className="flex grow flex-col overflow-y-scroll">
                 <OverlayPortal />
+                <SnackbarController />
                 <MapLayout>
                   <Story />
                 </MapLayout>
@@ -316,9 +318,8 @@ export const Default: Story = {
         const $markingFormSubmitButton = await canvas.findByText("임시저장");
         await userEvent.click($markingFormSubmitButton);
 
-        // TODO 버그 픽스 하기
-        // const $snackBar = await canvas.findByText("임시저장 되었습니다");
-        // expect($snackBar).toBeVisible();
+        const $snackBar = await canvas.findByText("임시저장 되었습니다");
+        expect($snackBar).toBeVisible();
 
         waitFor(() => {
           expect(useMapStore.getState().mode).toBe("view");
@@ -333,50 +334,49 @@ export const Default: Story = {
       },
     );
 
-    // TODO 버그 픽스하기
-    // await step(
-    //   "저장이 성공하면 view 모드로 변경 되고 스낵 바가 나타난다.",
-    //   async () => {
-    //     const $markingButton = await canvas.findByText("마킹하기");
-    //     await userEvent.click($markingButton);
+    await step(
+      "저장이 성공하면 view 모드로 변경 되고 스낵 바가 나타난다.",
+      async () => {
+        const $markingButton = await canvas.findByText("마킹하기");
+        await userEvent.click($markingButton);
 
-    //     const $markingModalTriggerButton =
-    //       await canvas.findByText("여기에 마킹하기");
-    //     await userEvent.click($markingModalTriggerButton);
+        const $markingModalTriggerButton =
+          await canvas.findByText("여기에 마킹하기");
+        await userEvent.click($markingModalTriggerButton);
 
-    //     const $fileUploadInput = canvasElement.querySelector(
-    //       "#images",
-    //     ) as HTMLInputElement;
-    //     const dummyFiles = [
-    //       new File([""], "test1.jpg", { type: "image/jpg", lastModified: 1 }),
-    //       new File([""], "test2.jpg", { type: "image/png", lastModified: 2 }),
-    //       new File([""], "test3.jpg", { type: "image/jpeg", lastModified: 3 }),
-    //       new File([""], "test4.jpg", { type: "image/webp", lastModified: 4 }),
-    //     ];
-    //     await userEvent.upload($fileUploadInput, dummyFiles);
+        const $fileUploadInput = canvasElement.querySelector(
+          "#images",
+        ) as HTMLInputElement;
+        const dummyFiles = [
+          new File([""], "test1.jpg", { type: "image/jpg", lastModified: 1 }),
+          new File([""], "test2.jpg", { type: "image/png", lastModified: 2 }),
+          new File([""], "test3.jpg", { type: "image/jpeg", lastModified: 3 }),
+          new File([""], "test4.jpg", { type: "image/webp", lastModified: 4 }),
+        ];
+        await userEvent.upload($fileUploadInput, dummyFiles);
 
-    //     const $postVisibilityElements = await canvas.findAllByText("전체 공개");
-    //     const $postVisibilityOpener = $postVisibilityElements[0];
-    //     await $postVisibilityOpener.click();
-    //     const $publicVisibility = $postVisibilityElements[1];
-    //     await $publicVisibility.click();
+        const $postVisibilityElements = await canvas.findAllByText("전체 공개");
+        const $postVisibilityOpener = $postVisibilityElements[0];
+        await $postVisibilityOpener.click();
+        const $publicVisibility = $postVisibilityElements[1];
+        await $publicVisibility.click();
 
-    //     const $textArea =
-    //       await canvas.findByPlaceholderText(/마킹에 대한 메모를 남겨주세요/);
-    //     await userEvent.type($textArea, "여기는 진짜 대박이긴 해요");
+        const $textArea =
+          await canvas.findByPlaceholderText(/마킹에 대한 메모를 남겨주세요/);
+        await userEvent.type($textArea, "여기는 진짜 대박이긴 해요");
 
-    //     const $markingFormSubmitButton = await canvas.findByText("저장하기");
-    //     await userEvent.click($markingFormSubmitButton);
+        const $markingFormSubmitButton = await canvas.findByText("저장하기");
+        await userEvent.click($markingFormSubmitButton);
 
-    //     const $snackBar = await canvas.findByText("내 마킹이 추가되었습니다");
-    //     expect($snackBar).toBeVisible();
-    //     expect(useMapStore.getState().mode).toBe("view");
+        const $snackBar = await canvas.findByText("내 마킹이 추가되었습니다");
+        expect($snackBar).toBeVisible();
+        expect(useMapStore.getState().mode).toBe("view");
 
-    //     const { content, isVisible, images } = useMarkingFormStore.getState();
-    //     expect(content).toBe("");
-    //     expect(isVisible).toBe("PUBLIC");
-    //     expect(images).toHaveLength(0);
-    //   },
-    // );
+        const { content, isVisible, images } = useMarkingFormStore.getState();
+        expect(content).toBe("");
+        expect(isVisible).toBe("PUBLIC");
+        expect(images).toHaveLength(0);
+      },
+    );
   },
 };
