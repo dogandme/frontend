@@ -138,7 +138,7 @@ const EditPhotoInput = ({
   const setImages = useEditMarkingForm((state) => state.setImages);
   const inputKey = useEditMarkingForm((state) => state.inputKey);
 
-  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const currentImagesLength = externalImages.length + images.length;
@@ -157,7 +157,9 @@ const EditPhotoInput = ({
     }
 
     if (currentImagesLength + newFiles.length > MAX_IMAGE_LENGTH) {
-      handleOpen(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
+      setSnackbarProps(
+        `사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`,
+      );
     }
 
     const availableNewFileArray = [...newFiles]
@@ -265,7 +267,7 @@ const EditMarkingSaveButton = ({
   putModifyMarkingArguments,
 }: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
   const store = useEditMarkingFormContext();
-  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
     putModifyMarkingArguments,
   );
@@ -281,12 +283,12 @@ const EditMarkingSaveButton = ({
     } = store.getState();
 
     if (isCompressing) {
-      handleOpen("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      setSnackbarProps("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
       return;
     }
 
     if (externalImages.length + images.length === 0) {
-      handleOpen(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
+      setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
       return;
     }
 
@@ -317,7 +319,7 @@ const EditMarkingTempSaveButton = ({
   putModifyMarkingArguments,
 }: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
   const store = useEditMarkingFormContext();
-  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
     putModifyMarkingArguments,
   );
@@ -327,7 +329,7 @@ const EditMarkingTempSaveButton = ({
       store.getState();
 
     if (isCompressing) {
-      handleOpen("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      setSnackbarProps("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
       return;
     }
 

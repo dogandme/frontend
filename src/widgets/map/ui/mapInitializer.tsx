@@ -39,7 +39,7 @@ export const MapInitializer = () => {
   const { placeParams, setPlaceQueryParams } = usePlaceQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
 
-  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const isMapIdle = useMapStore((state) => state.isIdle);
   const setIsMapIdle = useMapStore((state) => state.setIsIdle);
@@ -190,7 +190,9 @@ export const MapInitializer = () => {
     if (!hasBoundsParams || state) {
       return;
     }
-    handleOpen("스팟을 발견하고 마킹으로 추억을 남겨보세요", { type: "map" });
+    setSnackbarProps("스팟을 발견하고 마킹으로 추억을 남겨보세요", {
+      type: "map",
+    });
   }, [hasBoundsParams, state]);
 
   if (!map || loading || !isMapIdle) {

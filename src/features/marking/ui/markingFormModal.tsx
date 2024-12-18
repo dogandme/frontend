@@ -157,7 +157,7 @@ const PhotoInput = () => {
   const handleOpenAlbum = () => {
     inputRef.current?.click();
   };
-  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleChange = async ({
     target,
@@ -169,7 +169,9 @@ const PhotoInput = () => {
     }
 
     if (images.length + newFiles.length > MAX_IMAGE_LENGTH) {
-      handleOpen(`사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`);
+      setSnackbarProps(
+        `사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`,
+      );
     }
 
     const availableNewFileArray = [...newFiles]
@@ -262,13 +264,13 @@ const SaveButton = () => {
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
 
   const { mutate: postMarkingData } = usePostAddMarking();
-  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleSave = async () => {
     const { token } = useAuthStore.getState();
 
     if (!token) {
-      handleOpen(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
+      setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
       return;
     }
 
@@ -284,12 +286,12 @@ const SaveButton = () => {
     const center = map.getCenter();
 
     if (!region) {
-      handleOpen(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
+      setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
       return;
     }
 
     if (!isVisible || images.length === 0) {
-      handleOpen(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
+      setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
       return;
     }
 
@@ -321,7 +323,7 @@ const SaveButton = () => {
 const TemporarySaveButton = () => {
   const map = useMap();
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
-  const handleOpen = useSnackBarStore((state) => state.setSnackbarProps);
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
   const { mutate: postAddTempMarking } = usePostAddTempMarking();
 
   const handleSave = () => {
@@ -330,11 +332,11 @@ const TemporarySaveButton = () => {
       useMarkingFormStore.getState();
 
     if (!token) {
-      handleOpen(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
+      setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     }
 
     if (isCompressing) {
-      handleOpen("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      setSnackbarProps("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
       return;
     }
 
