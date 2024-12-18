@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { OverlayStore, useOverlayStore } from "../store/overlay";
+import { type OverlayStore, useOverlayStore } from "../store/overlay";
 import type { SnackBarProps } from "../ui/snackbar";
 
 interface SnackbarStore extends OverlayStore {
