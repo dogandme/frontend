@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
 import { useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
@@ -161,6 +161,8 @@ const SendCodeButton = () => {
 };
 
 const VerificationCode = () => {
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   const {
     checkCodeMutation,
     isModifiedCode,
@@ -180,6 +182,7 @@ const VerificationCode = () => {
   const verificationCodeRef = useRef<HTMLInputElement>(null);
 
   const isTimeOver = timeLeft === 0 && isSentCode;
+  const isError = isTimeOver || isNotMatchedCode;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: verificationCode } = e.target;
@@ -193,28 +196,35 @@ const VerificationCode = () => {
     }
   };
 
-  let statusText = "인증코드 7자리를 입력해 주세요";
+  let statusText = "";
+  if (isFocused) statusText = "인증코드 7자리를 입력해 주세요";
   if (isVerified) statusText = "인증되었습니다";
   if (isNotMatchedCode) statusText = "인증코드를 다시 확인해 주세요";
   if (isTimeOver)
     statusText = "인증시간이 만료되었습니다. 재전송 버튼을 눌러주세요";
 
   return (
-    <Input
-      ref={verificationCodeRef}
-      componentType="outlinedText"
-      id="verification-code"
-      name="verificationCode"
-      type="text"
-      placeholder="인증코드 7자리를 입력해 주세요"
-      statusText={statusText}
-      maxLength={VERIFICATION_CODE_LENGTH}
-      value={verificationCode}
-      onChange={handleChange}
-      isError={isTimeOver || isNotMatchedCode}
-      disabled={!isSentCode || isVerified}
-      trailingNode={isSentCode && !isVerified && <Timer />}
-    />
+    <div className="w-full">
+      <Input
+        ref={verificationCodeRef}
+        componentType="outlinedText"
+        id="verification-code"
+        name="verificationCode"
+        type="text"
+        placeholder="인증코드 7자리를 입력해 주세요"
+        statusText={undefined}
+        maxLength={VERIFICATION_CODE_LENGTH}
+        value={verificationCode}
+        onChange={handleChange}
+        isError={isError}
+        disabled={!isSentCode || isVerified}
+        trailingNode={isSentCode && !isVerified && <Timer />}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+      />
+
+      <StatusText isError={isError}>{statusText}</StatusText>
+    </div>
   );
 };
 
