@@ -38,5 +38,5 @@ jobs:
       - name: Post Lighthouse report as PR comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.YONGHYEUN_GITHUB_TOKEN }}
           path: ./lighthouseCI/lhr-0.report.html
