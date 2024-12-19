@@ -28,3 +28,15 @@ jobs:
         run: |
           npm install -g @lhci/cli@0.14.x
           lhci autorun
+
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v2
+        with:
+          name: lighthouse-report
+          path: .lighthouseci
+
+      - name: Post Lighthouse report as PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: ./lighthouseCI/lhr-0.report.html
