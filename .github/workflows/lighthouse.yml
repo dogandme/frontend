@@ -1,61 +1,85 @@
-name: Lighthouse CI
+name: Run Lighthouse CI & Comment on PR
 
 on:
-  pull_request:
+  push:
     branches:
-      - dev
-
-permissions:
-  pull-requests: write
-  contents: write
+      - "dev"
 
 jobs:
-  lhci:
-    name: Lighthouse
+  create-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
+      - name: Use Node.js 20.9.0
+        uses: actions/setup-node@v1
         with:
-          node-version: 18.x
+          node-version: 20.9.0
 
-      - name: Install dependencies
+      - name: Install packages
         run: npm install
 
-      - name: Build project
+      - name: Build
         run: npm run build
 
       - name: Run Lighthouse CI
         run: |
-          npm install -g @lhci/cli@0.14.x
-          lhci autorun
-        continue-on-error: true
+          npm install -g @lhci/cli
+          lhci autorun || echo "Fail to Run Lighthouse CI!"
 
-      - name: Upload Lighthouse report
-        uses: actions/upload-artifact@v3
+      - name: Format lighthouse score
+        id: format_lighthouse_score
+        uses: actions/github-script@v3
         with:
-          name: lighthouse-report
-          path: .lighthouseci
+          github-token: ${{secrets.YONGHYEUN_GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync("/home/runner/work/medipot_front/medipot_front/lhci_reports/manifest.json"));
+            let comments = "";
 
-      - name: Read Lighthouse report
-        id: read_lighthouse_report
-        run: |
-          REPORT_PATH=$(find .lighthouseci -name 'lhr-*.json' | head -n 1)
-          echo "REPORT_PATH=$REPORT_PATH" >> $GITHUB_ENV
-          cat $REPORT_PATH
+            results.forEach((result) => {
+              const { summary, jsonPath } = result;
+              const details = JSON.parse(fs.readFileSync(jsonPath));
+              const { audits } = details;
+              const formatResult = (res) => Math.round(res * 100);
+
+              Object.keys(summary).forEach(
+                (key) => (summary[key] = formatResult(summary[key]))
+              );
+
+              const score = (res) => (res >= 90 ? "🟢" : res >= 50 ? "🟠" : "🔴");
+
+              const comment = [
+                `⚡️ Lighthouse report!`,
+                `| Category | Score |`,
+                `| --- | --- |`,
+                `| ${score(summary.performance)} Performance | ${summary.performance} |`,
+                `| ${score(summary.accessibility)} Accessibility | ${summary.accessibility} |`,
+                `| ${score(summary['best-practices'])} Best Practices | ${summary['best-practices']} |`,
+                `| ${score(summary.seo)} SEO | ${summary.seo} |`,
+                `| ${score(summary.pwa)} PWA | ${summary.pwa} |`,
+              ].join("\n");
+
+              const detail = [
+                `| Metric | Score |`,
+                `| --- | --- |`,
+                `| ${score(audits["first-contentful-paint"].score * 100)} First Contentful Paint | ${audits["first-contentful-paint"].displayValue} |`,
+                `| ${score(audits["speed-index"].score * 100)} Speed Index | ${audits["speed-index"].displayValue} |`,
+                `| ${score(audits["largest-contentful-paint"].score * 100)} Largest Contentful Paint | ${audits["largest-contentful-paint"].displayValue} |`,
+                `| ${score(audits["interactive"].score * 100)} Time to Interactive | ${audits["interactive"].displayValue} |`,
+                `| ${score(audits["total-blocking-time"].score * 100)} Total Blocking Time | ${audits["total-blocking-time"].displayValue} |`,
+                `| ${score(audits["cumulative-layout-shift"].score * 100)} Cumulative Layout Shift | ${audits["cumulative-layout-shift"].displayValue} |`,
+              ].join("\n");
+
+              comments += comment + "\n" + detail + "\n";
+            });
+
+            core.setOutput('comments', comments);
 
       - name: Comment PR with Lighthouse report
-        uses: thollander/actions-comment-pull-request@v2
+        uses: unsplash/comment-on-pr@v1.3.0
+        env:
+          GITHUB_TOKEN: ${{secrets.YONGHYEUN_GITHUB_TOKEN}}
         with:
-          GITHUB_TOKEN: ${{ secrets.YONGHYEUN_GITHUB_TOKEN }}
-          message: |
-            ## Lighthouse Report
-            Performance: ${{ steps.read_lighthouse_report.outputs.performance }}
-            Accessibility: ${{ steps.read_lighthouse_report.outputs.accessibility }}
-            Best Practices: ${{ steps.read_lighthouse_report.outputs.best-practices }}
-            SEO: ${{ steps.read_lighthouse_report.outputs.seo }}
-            PWA: ${{ steps.read_lighthouse_report.outputs.pwa }}
-            [View full report](${{ steps.read_lighthouse_report.outputs.report_url }})
+          msg: ${{ steps.format_lighthouse_score.outputs.comments }}
