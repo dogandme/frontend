@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, within, spyOn, waitFor } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
-import { addressHandlers } from "@/mocks/handler";
+import { handlers } from "@/mocks/handler";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { RegionModal } from "./regionModal";
 
@@ -23,9 +23,7 @@ type Story = StoryObj<typeof RegionModal>;
 
 export const Default: Story = {
   parameters: {
-    msw: {
-      handlers: addressHandlers,
-    },
+    msw: { handlers },
   },
 
   decorators: [

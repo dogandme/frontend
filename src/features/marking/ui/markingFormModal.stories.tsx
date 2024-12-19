@@ -6,7 +6,7 @@ import { OverlayPortal } from "@/app/OverlayPortal";
 import { SnackbarController } from "@/app/SnackbarController";
 import { MapLayout, MapPage } from "@/pages/map";
 import { useAuthStore } from "@/shared/store";
-import { markingModalHandlers } from "@/mocks/handler";
+import { handlers } from "@/mocks/handler";
 import { useMapStore } from "../../map/store";
 import { useMarkingFormStore } from "../store";
 import { MarkingFormModal } from "./markingFormModal";
@@ -47,9 +47,7 @@ export const Default: Story = {
   ],
 
   parameters: {
-    msw: {
-      handlers: [...markingModalHandlers],
-    },
+    msw: { handlers },
   },
 
   render: () => <MapPage />,

@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { useAuthStore } from "@/shared/store";
-import { markingModalHandlers } from "@/mocks/handler";
+import { handlers } from "@/mocks/handler";
 import { MarkingItem } from "./markingItem";
 
 const meta: Meta<typeof MarkingItem> = {
@@ -16,7 +16,7 @@ const meta: Meta<typeof MarkingItem> = {
     },
   ],
   parameters: {
-    msw: [...markingModalHandlers],
+    msw: { handlers },
   },
   argTypes: {
     markingId: {

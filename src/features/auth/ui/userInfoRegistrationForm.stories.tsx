@@ -1,10 +1,9 @@
-import { http, HttpResponse } from "msw";
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { SnackbarController } from "@/app/SnackbarController";
 import { useAuthStore } from "@/shared/store/auth";
-import { userInfoRegistrationHandlers } from "@/mocks/handler";
+import { handlers } from "@/mocks/handler";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { useUserInfoRegistrationFormStore } from "../store";
 import UserInfoRegistrationForm from "./userInfoRegistrationForm";
@@ -50,177 +49,7 @@ export const Default: Story = {
   },
 
   parameters: {
-    msw: {
-      handlers: [
-        http.get("http://localhost/addresses", (req) => {
-          const {
-            request: { url },
-          } = req;
-
-          const URLObject = new URL(url);
-          const keyword = URLObject.searchParams.get("keyword");
-
-          if (keyword === "강남구 역삼동") {
-            return HttpResponse.json({
-              code: 200,
-              message: "good",
-              content: [
-                {
-                  id: 0,
-                  province: "서울특별시",
-                  cityCounty: "강남구",
-                  subDistrict: "역삼1동",
-                  distrirct: "123-45",
-                },
-                {
-                  id: 1,
-                  province: "서울특별시",
-                  cityCounty: "강남구",
-                  subDistrict: "역삼2동",
-                  distrirct: "123-45",
-                },
-                {
-                  id: 2,
-                  province: "서울특별시",
-                  cityCounty: "강남구",
-                  subDistrict: "역삼3동",
-                  distrirct: "123-45",
-                },
-                {
-                  id: 3,
-                  province: "서울특별시",
-                  cityCounty: "강남구",
-                  subDistrict: "역삼4동",
-                  distrirct: "123-45",
-                },
-                {
-                  id: 4,
-                  province: "서울특별시",
-                  cityCounty: "강남구",
-                  subDistrict: "역삼5동",
-                  distrirct: "123-45",
-                },
-                {
-                  id: 5,
-                  province: "서울특별시",
-                  cityCounty: "강남구",
-                  subDistrict: "역삼6동",
-                  distrirct: "123-45",
-                },
-                {
-                  id: 6,
-                  province: "서울특별시",
-                  cityCounty: "강남구",
-                  subDistrict: "역삼7동",
-                  distrirct: "123-45",
-                },
-              ],
-            });
-          }
-
-          if (keyword === "도봉구 도봉동") {
-            return HttpResponse.json({
-              code: 200,
-              message: "good",
-              content: [
-                {
-                  id: 0,
-                  province: "서울특별시",
-                  cityCounty: "도봉구",
-                  subDistrict: "도봉1동",
-                  distrirct: "123-45",
-                },
-                {
-                  id: 1,
-                  province: "서울특별시",
-                  cityCounty: "도봉구",
-                  subDistrict: "도봉2동",
-                  distrirct: "123-45",
-                },
-                {
-                  id: 2,
-                  province: "서울특별시",
-                  cityCounty: "도봉구",
-                  subDistrict: "도봉3동",
-                  distrirct: "123-45",
-                },
-                {
-                  id: 3,
-                  province: "서울특별시",
-                  cityCounty: "도봉구",
-                  subDistrict: "도봉4동",
-                  distrirct: "123-45",
-                },
-              ],
-            });
-          }
-
-          return HttpResponse.json({
-            code: 204, // 검색 결과 없을 시를 가정
-            message: "bad",
-            content: [],
-          });
-        }),
-        http.get("http://localhost/addresses/search-by-location", () => {
-          return HttpResponse.json({
-            code: 200,
-            message: "good",
-            content: [
-              {
-                id: 0,
-                province: "서울특별시",
-                cityCounty: "영등포구",
-                subDistrict: "영등포 1가",
-                distrirct: "123-45",
-              },
-              {
-                id: 1,
-                province: "서울특별시",
-                cityCounty: "영등포구",
-                subDistrict: "영등포 2가",
-                distrirct: "123-45",
-              },
-              {
-                id: 2,
-                province: "서울특별시",
-                cityCounty: "영등포구",
-                subDistrict: "영등포 3가",
-                distrirct: "123-45",
-              },
-              {
-                id: 3,
-                province: "서울특별시",
-                cityCounty: "영등포구",
-                subDistrict: "영등포 4가",
-                distrirct: "123-45",
-              },
-              {
-                id: 4,
-                province: "서울특별시",
-                cityCounty: "영등포구",
-                subDistrict: "영등포 5가",
-                distrirct: "123-45",
-              },
-              {
-                id: 5,
-                province: "서울특별시",
-                cityCounty: "영등포구",
-                subDistrict: "영등포 6가",
-                distrirct: "123-45",
-              },
-              {
-                id: 6,
-                province: "서울특별시",
-                cityCounty: "영등포구",
-                subDistrict: "영등포 7가",
-                distrirct: "123-45",
-              },
-            ],
-          });
-        }),
-        ...userInfoRegistrationHandlers,
-      ],
-    },
+    msw: { handlers },
   },
 
   render: () => <UserInfoRegistrationForm />,
@@ -541,12 +370,7 @@ export const ApiTest: Story = {
   render: () => <UserInfoRegistrationForm />,
 
   parameters: {
-    msw: {
-      handlers: [
-        ...userInfoRegistrationHandlers,
-        Default?.parameters?.msw.handlers[0],
-      ],
-    },
+    msw: { handlers },
   },
 
   play: async ({ canvasElement, step }) => {
