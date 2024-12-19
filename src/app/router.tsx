@@ -6,8 +6,12 @@ import { AppProviderLayout } from "./AppProviderLayout";
 
 const MainPage = lazy(() => import("@/pages/page"));
 
-const MapLayout = lazy(() => import("@/pages/map/layout"));
-const MapPage = lazy(() => import("@/pages/map/page"));
+const MapLayout = lazy(() =>
+  import("@/pages/map").then((module) => ({ default: module.MapLayout })),
+);
+const MapPage = lazy(() =>
+  import("@/pages/map").then((module) => ({ default: module.MapPage })),
+);
 const PlaceMarkingPage = lazy(() => import("@/pages/map/place"));
 const MyMarkingPage = lazy(() => import("@/pages/map/my"));
 const MyActivityList = lazy(() => import("@/widgets/map/ui"));
