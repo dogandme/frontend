@@ -38,6 +38,42 @@ module.exports = {
           "error",
           { minScore: 0.6 },
         ],
+        "first-contentful-paint": [
+          "warn",
+          { maxNumericValue: 2000 },
+          "error",
+          { maxNumericValue: 4000 },
+        ],
+        "speed-index": [
+          "warn",
+          { maxNumericValue: 3000 },
+          "error",
+          { maxNumericValue: 5000 },
+        ],
+        "largest-contentful-paint": [
+          "warn",
+          { maxNumericValue: 2500 },
+          "error",
+          { maxNumericValue: 4000 },
+        ],
+        interactive: [
+          "warn",
+          { maxNumericValue: 3000 },
+          "error",
+          { maxNumericValue: 5000 },
+        ],
+        "total-blocking-time": [
+          "warn",
+          { maxNumericValue: 300 },
+          "error",
+          { maxNumericValue: 600 },
+        ],
+        "cumulative-layout-shift": [
+          "warn",
+          { maxNumericValue: 0.1 },
+          "error",
+          { maxNumericValue: 0.25 },
+        ],
       },
     },
     upload: {

@@ -32,3 +32,23 @@ jobs:
         run: |
           npm install -g @lhci/cli@0.14.x
           lhci autorun
+        continue-on-error: true
+
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-report
+          path: .lighthouseci
+
+      - name: Comment PR with Lighthouse report
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.YONGHYEUN_GITHUB_TOKEN  }}
+          message: |
+            ## Lighthouse Report
+            Performance: ${{ steps.lhci.outputs.performance }}
+            Accessibility: ${{ steps.lhci.outputs.accessibility }}
+            Best Practices: ${{ steps.lhci.outputs.best-practices }}
+            SEO: ${{ steps.lhci.outputs.seo }}
+            PWA: ${{ steps.lhci.outputs.pwa }}
+            [View full report](https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/${{ steps.lhci.outputs.lighthouseReportUrl }})
