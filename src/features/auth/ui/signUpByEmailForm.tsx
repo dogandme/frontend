@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { Input, StatusText } from "@/shared/ui/input";
 import { usePostSignUpByEmail } from "../api";
@@ -348,7 +348,7 @@ export const SignUpByEmailForm = () => {
   const { resetState } = useSignUpByEmailFormStore((state) => state.actions);
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
 
-  const handleOpenSnackbar = useSnackBar();
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -365,7 +365,7 @@ export const SignUpByEmailForm = () => {
     } = useSignUpByEmailFormStore.getState();
 
     if (isEmailEmpty || isPasswordEmpty || isConfirmPasswordEmpty) {
-      handleOpenSnackbar("이메일과 비밀번호를 모두 입력해 주세요");
+      setSnackbarProps("이메일과 비밀번호를 모두 입력해 주세요");
       return;
     }
 
@@ -373,7 +373,7 @@ export const SignUpByEmailForm = () => {
       isValidEmail && isValidPassword && isValidConfirmPassword;
 
     if (!isValidEmailAndPassword) {
-      handleOpenSnackbar("이메일 또는 비밀번호를 올바르게 입력해 주세요");
+      setSnackbarProps("이메일 또는 비밀번호를 올바르게 입력해 주세요");
       return;
     }
 

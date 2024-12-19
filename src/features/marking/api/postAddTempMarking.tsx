@@ -1,7 +1,8 @@
 // Marking Form 임시 저장 API
 import { useMutation } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
-import { apiClient, useSnackBar } from "@/shared/lib";
+import { apiClient } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { MARKING_END_POINT } from "../constants";
 import { useMarkingFormStore } from "../store";
 import type { PostAddMarkingRequest } from "./postAddMarking";
@@ -45,7 +46,7 @@ export const usePostAddTempMarking = () => {
     (state) => state.resetMarkingFormStore,
   );
   const setMode = useMapStore((state) => state.setMode);
-  const handleOpenSnackbar = useSnackBar();
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return useMutation({
     mutationKey: ["markingFormModal"],
@@ -53,11 +54,14 @@ export const usePostAddTempMarking = () => {
     onSuccess: () => {
       resetMarkingFormStore();
       setMode("view");
-      handleOpenSnackbar(
+      setSnackbarProps(
         <>
           <p>임시저장 되었습니다</p>
           <p>내 마킹에서 저장을 완료해 주세요</p>
         </>,
+        {
+          type: "map",
+        },
       );
     },
     onError: (error) => {

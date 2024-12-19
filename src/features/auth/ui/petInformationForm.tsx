@@ -1,7 +1,7 @@
 import { useState, useRef, useTransition } from "react";
 import { SelectOpener } from "@/entities/auth/ui";
 import { API_BASE_URL, MASCOT_IMAGE_URL } from "@/shared/constants";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { SelectChip } from "@/shared/ui/chip";
@@ -363,7 +363,7 @@ const SubmitButton = ({
 }: Omit<PetInformationFormProps, "initialState">) => {
   const store = usePetInformationFormContext();
   // 필수 항목을 모두 입력하지 않은 경우 나타 날 스낵바
-  const handleOpenSnackbar = useSnackBar();
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleClick = () => {
     const petInfoForm = store.getState();
@@ -378,7 +378,7 @@ const SubmitButton = ({
     } = petInfoForm;
 
     if (isCompressing) {
-      handleOpenSnackbar("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      setSnackbarProps("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
       return;
     }
 
@@ -386,7 +386,7 @@ const SubmitButton = ({
     const isBreedEmpty = breed.length === 0;
 
     if (!isValidName || isNameEmpty || isBreedEmpty) {
-      handleOpenSnackbar("필수 항목을 모두 입력해 주세요");
+      setSnackbarProps("필수 항목을 모두 입력해 주세요");
       return;
     }
 

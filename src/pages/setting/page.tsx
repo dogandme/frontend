@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { Report, LogoutButton } from "@/features/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
-import { withAuth, useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { withAuth } from "@/shared/lib";
+import { useAuthStore, useSnackBarStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
@@ -63,11 +63,11 @@ const MyActivity = () => (
 
 // 알림
 const Notification = () => {
-  const handleOpenSnackbar = useSnackBar();
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return (
     <button
-      onClick={() => handleOpenSnackbar("아직 출시 되지 않은 기능입니다")}
+      onClick={() => setSnackbarProps("아직 출시 되지 않은 기능입니다")}
       className="setting-item"
     >
       <p>알림</p>

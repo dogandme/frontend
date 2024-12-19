@@ -1,5 +1,5 @@
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { useSnackBar } from "@/shared/lib";
+import { useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { usePostLogin } from "../api";
 import { useLoginFormStore } from "../store";
@@ -102,7 +102,7 @@ export const PersistLogin = () => {
 
 export const SubmitButton = () => {
   const { mutate: postLoginForm } = usePostLogin();
-  const handleOpenSnackbar = useSnackBar();
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleSubmit = () => {
     const { email, password, isValidEmail, persistLogin } =
@@ -111,7 +111,7 @@ export const SubmitButton = () => {
     const isPasswordEmpty = password.length === 0;
 
     if (isEmailEmpty || isPasswordEmpty || !isValidEmail) {
-      handleOpenSnackbar("아이디 또는 비밀번호를 모두 입력해 주세요");
+      setSnackbarProps("아이디 또는 비밀번호를 모두 입력해 주세요");
       return;
     }
     postLoginForm({ email, password, persistLogin });

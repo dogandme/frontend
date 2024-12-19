@@ -21,8 +21,7 @@ import {
   useDropdown,
   useImageState,
 } from "@/shared/lib";
-import { useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { useAuthStore, useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
 import {
@@ -189,7 +188,7 @@ export const MarkingItemSkeleton = () => {
 };
 
 const UnAuthorizedFollowingButton = () => {
-  const handleOpenSnackbar = useSnackBar();
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return (
     <Button
@@ -198,7 +197,7 @@ const UnAuthorizedFollowingButton = () => {
       fullWidth={false}
       size="xSmall"
       onClick={() =>
-        handleOpenSnackbar("로그인 후 이용해 주세요", { type: "map" })
+        setSnackbarProps("로그인 후 이용해 주세요", { type: "map" })
       }
     >
       팔로우
@@ -278,14 +277,14 @@ const MarkingItemLikeToggle = () => {
 const UnauthorizedLikeButton = () => {
   const { markingId, countData } = useMarkingItemProps();
   const { likedCount } = countData;
-  const handleOpenSnackbar = useSnackBar();
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return (
     <div className="flex gap-2 items-center text-grey-500">
       <button
         aria-label={`${markingId} 번 마킹 좋아요 추가`}
         onClick={() =>
-          handleOpenSnackbar("로그인 후 이용해 주세요", { type: "map" })
+          setSnackbarProps("로그인 후 이용해 주세요", { type: "map" })
         }
       >
         <LikeIcon />
@@ -369,7 +368,7 @@ const MarkingItemBookmarkToggle = () => {
 const UnAuthorizedBookmarkButton = () => {
   const { markingId, countData } = useMarkingItemProps();
   const { savedCount } = countData;
-  const handleOpenSnackbar = useSnackBar();
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   return (
     <div className="flex gap-2 items-center text-grey-500">
@@ -377,7 +376,7 @@ const UnAuthorizedBookmarkButton = () => {
         className="text-grey-500"
         aria-label={`${markingId} 번 마킹 저장하기`}
         onClick={() =>
-          handleOpenSnackbar("로그인 후 이용해 주세요", { type: "map" })
+          setSnackbarProps("로그인 후 이용해 주세요", { type: "map" })
         }
       >
         <BookmarkIcon />

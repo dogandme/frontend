@@ -5,7 +5,6 @@ export * from "./image";
 export * from "./format";
 export * from "./apiClient";
 export * from "./error";
-export * from "./snackbar";
 export * from "./scroll";
 export * from "./dropdown";
 export * from "./profile";

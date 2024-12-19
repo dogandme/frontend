@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import type { MyInfo } from "@/entities/auth/types/server";
-import { formatDateToYearMonthDay, useSnackBar } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
+import { formatDateToYearMonthDay } from "@/shared/lib";
+import { useAuthStore, useSnackBarStore } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
@@ -22,7 +22,7 @@ export const ChangeNicknameModal = ({
   nickLastModDt,
 }: ChangeNicknameModalProps) => {
   const nicknameRef = useRef<HTMLInputElement | null>(null);
-  const handleOpenSnackbar = useSnackBar();
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const { mutate: putChangeNickname, isPending: isChangeNicknamePending } =
     usePutChangeNickname();
@@ -39,14 +39,14 @@ export const ChangeNicknameModal = ({
     const isNicknameEmpty = nickname.length === 0;
 
     if (isNicknameEmpty) {
-      handleOpenSnackbar("닉네임을 입력해 주세요");
+      setSnackbarProps("닉네임을 입력해 주세요");
       return;
     }
 
     const isNicknameValid = validateNickname(nickname);
 
     if (!isNicknameValid) {
-      handleOpenSnackbar("올바른 닉네임을 입력해 주세요");
+      setSnackbarProps("올바른 닉네임을 입력해 주세요");
       return;
     }
 
@@ -55,7 +55,7 @@ export const ChangeNicknameModal = ({
     const canChange = new Date(nickLastModDt) < oneMonthAgo;
 
     if (!canChange) {
-      handleOpenSnackbar("한달 이후 닉네임을 변경해 주세요");
+      setSnackbarProps("한달 이후 닉네임을 변경해 주세요");
       return;
     }
 
