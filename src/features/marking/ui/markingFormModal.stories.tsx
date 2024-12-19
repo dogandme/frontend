@@ -4,7 +4,8 @@ import { GoogleMapsProvider } from "@/app/GoogleMapsProvider";
 // ! 이 부분은 테스트를 위해 FSD 구조를 무시합니다. 실제 구현 시에는 app 레이어에 존재하는 컴포넌트를 import 하지 마세요
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { SnackbarController } from "@/app/SnackbarController";
-import { MapLayout, MapPage } from "@/pages/map";
+import MapLayout from "@/pages/map/layout";
+import MapPage from "@/pages/map/page";
 import { useAuthStore } from "@/shared/store";
 import { markingModalHandlers } from "@/mocks/handler";
 import { useMapStore } from "../../map/store";

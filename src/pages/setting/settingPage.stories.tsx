@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store";
-import { SettingPage } from "./page";
+import SettingPage from "./page";
 
 export default {
   title: "pages/my-page/setting",
