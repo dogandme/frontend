@@ -1,1 +1,1 @@
-export { default as EmailLoginPage } from "./page";
+export { default } from "./page";

@@ -7,7 +7,7 @@ import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
-export const SettingPage = withAuth(() => {
+const SettingPage = withAuth(() => {
   return (
     <>
       <section>
@@ -29,6 +29,8 @@ export const SettingPage = withAuth(() => {
     </>
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
+
+export default SettingPage;
 
 const AccountManagement = () => (
   <Link to={ROUTER_PATH.MANAGE_ACCOUNT} className="setting-item">

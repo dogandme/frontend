@@ -10,7 +10,7 @@ import { DividerLine } from "@/shared/ui/divider";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
-export const AccountManagementPage = withAuth(() => {
+const AccountManagementPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
 
   if (!myInfo) {
@@ -31,6 +31,8 @@ export const AccountManagementPage = withAuth(() => {
     </>
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
+
+export default AccountManagementPage;
 
 const AccountManagementPageSkeleton = () => {
   return (

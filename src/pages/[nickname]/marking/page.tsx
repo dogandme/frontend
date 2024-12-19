@@ -21,7 +21,7 @@ import { DividerLine } from "@/shared/ui/divider";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 import { LoadingSpinner } from "@/shared/ui/spinner";
 
-export const UserMarkingPage = withAuth(() => {
+const UserMarkingPage = withAuth(() => {
   const { nicknameParams, isMyPage } = useNicknameParams();
 
   const { sortTypeParam, setMapQueryParams } = useMapQueryParams();
@@ -64,6 +64,8 @@ export const UserMarkingPage = withAuth(() => {
     </>
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
+
+export default UserMarkingPage;
 
 interface MyMarkingListProps {
   nickname: string;

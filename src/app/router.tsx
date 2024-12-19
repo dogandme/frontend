@@ -1,108 +1,197 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import { NotFoundUser, ProfilePage } from "@/pages/[nickname]";
-import { FollowerPage } from "@/pages/[nickname]/follower";
-import { FollowingPage } from "@/pages/[nickname]/following";
-import { UserMarkingPage } from "@/pages/[nickname]/marking";
-import { LoginPage, LoginLayout } from "@/pages/login";
-import { EmailLoginPage } from "@/pages/login/email";
-import { MapLayout, MapPage } from "@/pages/map";
-import { MyMarkingPage } from "@/pages/map/my";
-import { PlaceMarkingPage } from "@/pages/map/place";
-import { SettingPage } from "@/pages/setting";
-import { EditInfoPage } from "@/pages/setting/edit-info/page";
-import { AccountManagementPage } from "@/pages/setting/manage-account";
-import { SignUpPage } from "@/pages/sign-up";
-import PetInfoPage from "@/pages/sign-up/pet-info/page";
-import { UserInfoRegistrationPage } from "@/pages/sign-up/user-info";
-import { TemporaryMarkingPage } from "@/pages/temporary-marking";
-import { MyActivityList } from "@/widgets/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
-import { ErrorBoundary, MainPage } from "../pages";
+import { ErrorBoundary } from "../pages";
 import { AppProviderLayout } from "./AppProviderLayout";
+
+const MainPage = lazy(() => import("@/pages/page"));
+
+const MapLayout = lazy(() => import("@/pages/map/layout"));
+const MapPage = lazy(() => import("@/pages/map/page"));
+const PlaceMarkingPage = lazy(() => import("@/pages/map/place"));
+const MyMarkingPage = lazy(() => import("@/pages/map/my"));
+const MyActivityList = lazy(() => import("@/widgets/map/ui"));
+
+const ProfilePage = lazy(() => import("@/pages/[nickname]"));
+const UserMarkingPage = lazy(() => import("@/pages/[nickname]/marking"));
+const FollowingPage = lazy(() => import("@/pages/[nickname]/following"));
+const FollowerPage = lazy(() => import("@/pages/[nickname]/follower"));
+const NotFoundUser = lazy(() => import("@/pages/[nickname]/notFoundUser"));
+
+const LoginPage = lazy(() => import("@/pages/login/page"));
+const LoginLayout = lazy(() => import("@/pages/login/layout"));
+const EmailLoginPage = lazy(() => import("@/pages/login/email"));
+
+const SettingPage = lazy(() => import("@/pages/setting/page"));
+const EditInfoPage = lazy(() => import("@/pages/setting/edit-info/page"));
+const AccountManagementPage = lazy(
+  () => import("@/pages/setting/manage-account"),
+);
+const SignUpPage = lazy(() => import("@/pages/sign-up"));
+const PetInfoPage = lazy(() => import("@/pages/sign-up/pet-info"));
+const UserInfoRegistrationPage = lazy(
+  () => import("@/pages/sign-up/user-info"),
+);
+const TemporaryMarkingPage = lazy(() => import("@/pages/temporary-marking"));
 
 export const router = createBrowserRouter([
   {
     path: ROUTER_PATH.MAIN,
-    element: <AppProviderLayout />,
-    errorElement: <ErrorBoundary />,
+    element: (
+      <Suspense>
+        <AppProviderLayout />
+      </Suspense>
+    ),
+    errorElement: (
+      <Suspense>
+        <ErrorBoundary />
+      </Suspense>
+    ),
     children: [
       {
         index: true,
-        element: <MainPage />, // 지도로 라우팅 시키는 경로 , 추후 탐색 페이지로 변경 되어야 함
+        element: (
+          <Suspense>
+            <MainPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTER_PATH.MAP,
-        element: <MapLayout />, // 지도
+        element: (
+          <Suspense>
+            <MapLayout />
+          </Suspense>
+        ),
         children: [
           {
             index: true,
-            element: <MapPage />,
+            element: (
+              <Suspense>
+                <MapPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.PLACE,
-            element: <PlaceMarkingPage />,
+            element: (
+              <Suspense>
+                <PlaceMarkingPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.MY_MARK,
-            element: <MyMarkingPage />,
+            element: (
+              <Suspense>
+                <MyMarkingPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.MY_ACTIVITY,
-            element: <MyActivityList />,
+            element: (
+              <Suspense>
+                <MyActivityList />
+              </Suspense>
+            ),
           },
         ],
       },
       {
         path: ROUTER_PATH.PROFILE,
-        errorElement: <NotFoundUser />,
+        errorElement: (
+          <Suspense>
+            <NotFoundUser />
+          </Suspense>
+        ),
         children: [
           {
             index: true,
-            element: <ProfilePage />,
+            element: (
+              <Suspense>
+                <ProfilePage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.USER_MARKING,
-            element: <UserMarkingPage />,
+            element: (
+              <Suspense>
+                <UserMarkingPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.FOLLOWINGS,
-            element: <FollowingPage />,
+            element: (
+              <Suspense>
+                <FollowingPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.FOLLOWERS,
-            element: <FollowerPage />,
+            element: (
+              <Suspense>
+                <FollowerPage />
+              </Suspense>
+            ),
           },
         ],
       },
-
       {
         path: ROUTER_PATH.SETTING,
         children: [
           {
             index: true,
-            element: <SettingPage />,
+            element: (
+              <Suspense>
+                <SettingPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.MANAGE_ACCOUNT,
-            element: <AccountManagementPage />,
+            element: (
+              <Suspense>
+                <AccountManagementPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.EDIT_MY_INFO,
-            element: <EditInfoPage />,
+            element: (
+              <Suspense>
+                <EditInfoPage />
+              </Suspense>
+            ),
           },
         ],
       },
       {
         path: ROUTER_PATH.LOGIN,
-        element: <LoginLayout />,
+        element: (
+          <Suspense>
+            <LoginLayout />
+          </Suspense>
+        ),
         children: [
           {
             index: true,
-            element: <LoginPage />,
+            element: (
+              <Suspense>
+                <LoginPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.LOGIN_BY_EMAIL,
-            element: <EmailLoginPage />,
+            element: (
+              <Suspense>
+                <EmailLoginPage />
+              </Suspense>
+            ),
           },
         ],
       },
@@ -111,21 +200,37 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <SignUpPage />,
+            element: (
+              <Suspense>
+                <SignUpPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.SIGN_UP_USER_INFO,
-            element: <UserInfoRegistrationPage />,
+            element: (
+              <Suspense>
+                <UserInfoRegistrationPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTER_PATH.SIGN_UP_PET_INFO,
-            element: <PetInfoPage />,
+            element: (
+              <Suspense>
+                <PetInfoPage />
+              </Suspense>
+            ),
           },
         ],
       },
       {
         path: ROUTER_PATH.TEMPORARY_MARKING,
-        element: <TemporaryMarkingPage />,
+        element: (
+          <Suspense>
+            <TemporaryMarkingPage />
+          </Suspense>
+        ),
       },
     ],
   },

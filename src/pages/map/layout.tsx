@@ -9,7 +9,7 @@ import {
 } from "@/widgets/map/ui";
 import { withAuth } from "@/shared/lib";
 
-export const MapLayout = withAuth(() => {
+const MapLayout = withAuth(() => {
   return (
     <>
       <header className="bg-tangerine-500 px-8 py-5">
@@ -27,3 +27,5 @@ export const MapLayout = withAuth(() => {
     </>
   );
 }, ["ROLE_GUEST", "ROLE_USER", null]);
+
+export default MapLayout;

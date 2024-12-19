@@ -6,7 +6,7 @@ import {
 } from "@/shared/constants";
 import { useRouteHistoryStore } from "@/shared/store/history";
 
-export const NotFoundUser = () => {
+const NotFoundUser = () => {
   const error = useRouteError();
 
   if (
@@ -49,3 +49,5 @@ export const NotFoundUser = () => {
     </section>
   );
 };
+
+export default NotFoundUser;

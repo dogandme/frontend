@@ -8,7 +8,7 @@ import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { LoadingSpinner } from "@/shared/ui/spinner";
 import { MarkingList } from "./markingList";
 
-export const MyActivityList = withAuth(() => {
+const MyActivityList = withAuth(() => {
   const map = useMap();
 
   const [activeTab, setActiveTab] = useState<"LIKED" | "SAVED">("LIKED");
@@ -75,3 +75,5 @@ export const MyActivityList = withAuth(() => {
     </>
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
+
+export default MyActivityList;

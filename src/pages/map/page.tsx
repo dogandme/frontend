@@ -3,7 +3,7 @@ import { useMapQueryParams } from "@/features/map/hooks";
 import { MarkingPins } from "@/entities/map/ui";
 import { useGetBoundaryMarkerList } from "@/entities/marking/api";
 
-export const MapPage = () => {
+const MapPage = () => {
   const { boundsParams } = useMapQueryParams();
   const { data } = useGetBoundaryMarkerList({
     ...boundsParams,
@@ -16,3 +16,5 @@ export const MapPage = () => {
     </>
   );
 };
+
+export default MapPage;

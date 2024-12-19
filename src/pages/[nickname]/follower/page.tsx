@@ -15,7 +15,7 @@ import { LoadingSpinner } from "@/shared/ui/spinner";
  * 팔로워 페이지의 경우 나의 페이지일 경우엔 팔로워 리스트를 보여주고
  * 남의 페이지의 경우엔 남의 팔로워를 보여주나 , 나와의 팔로잉 상태를 보여줘야 합니다.
  */
-export const FollowerPage = withAuth(() => {
+const FollowerPage = withAuth(() => {
   const { nicknameParams, isMyPage } = useNicknameParams();
   const { data: myProfile } = useGetMyProfile();
   const {
@@ -72,3 +72,5 @@ export const FollowerPage = withAuth(() => {
     </section>
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
+
+export default FollowerPage;
