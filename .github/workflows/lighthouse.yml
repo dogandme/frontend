@@ -40,15 +40,22 @@ jobs:
           name: lighthouse-report
           path: .lighthouseci
 
+      - name: Read Lighthouse report
+        id: read_lighthouse_report
+        run: |
+          REPORT_PATH=$(find .lighthouseci -name 'lhr-*.json' | head -n 1)
+          echo "REPORT_PATH=$REPORT_PATH" >> $GITHUB_ENV
+          cat $REPORT_PATH
+
       - name: Comment PR with Lighthouse report
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: thollander/actions-comment-pull-request@v2
         with:
-          GITHUB_TOKEN: ${{ secrets.YONGHYEUN_GITHUB_TOKEN  }}
+          GITHUB_TOKEN: ${{ secrets.YONGHYEUN_GITHUB_TOKEN }}
           message: |
             ## Lighthouse Report
-            Performance: ${{ steps.lhci.outputs.performance }}
-            Accessibility: ${{ steps.lhci.outputs.accessibility }}
-            Best Practices: ${{ steps.lhci.outputs.best-practices }}
-            SEO: ${{ steps.lhci.outputs.seo }}
-            PWA: ${{ steps.lhci.outputs.pwa }}
-            [View full report](https://storage.googleapis.com/lighthouse-infrastructure.appspot.com/reports/${{ steps.lhci.outputs.lighthouseReportUrl }})
+            Performance: ${{ steps.read_lighthouse_report.outputs.performance }}
+            Accessibility: ${{ steps.read_lighthouse_report.outputs.accessibility }}
+            Best Practices: ${{ steps.read_lighthouse_report.outputs.best-practices }}
+            SEO: ${{ steps.read_lighthouse_report.outputs.seo }}
+            PWA: ${{ steps.read_lighthouse_report.outputs.pwa }}
+            [View full report](${{ steps.read_lighthouse_report.outputs.report_url }})
