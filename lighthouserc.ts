@@ -77,8 +77,9 @@ module.exports = {
       },
     },
     upload: {
-      // 실행 결과를 로컬 파일이 아닌 구글에서 제공하는 temporary-public-storage에 업로드
-      target: "temporary-public-storage",
+      target: "filesystem",
+      outputDir: "./lhci_reports",
+      reportFilenamePattern: "example-%%DATETIME%%-CWV-report.%%EXTENSION%%",
     },
   },
 };

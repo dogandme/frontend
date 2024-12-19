@@ -35,7 +35,7 @@ jobs:
           github-token: ${{secrets.YONGHYEUN_GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const results = JSON.parse(fs.readFileSync("/home/runner/work/medipot_front/medipot_front/lhci_reports/manifest.json"));
+            const results = JSON.parse(fs.readFileSync("/home/runner/work/dogandme/frontend/lhci_reports/manifest.json"));
             let comments = "";
 
             results.forEach((result) => {
