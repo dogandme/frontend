@@ -35,8 +35,8 @@ jobs:
           name: lighthouse-report
           path: .lighthouseci
 
-      - name: Post Lighthouse report as PR comment
-        uses: marocchino/sticky-pull-request-comment@v2
+      # 업로드 된 json파일 댓글로 남기기
+      - name: Comment PR with Lighthouse report
+        uses: thollander/actions-comment-pull-request@v2
         with:
-          GITHUB_TOKEN: ${{ secrets.YONGHYEUN_GITHUB_TOKEN }}
-          path: ./lighthouseCI/lhr-0.report.html
+          message: "👀 코드리뷰 전! Lighthouse 결과: ${{ steps.lhci.outputs.lighthouseReportUrl }}"
