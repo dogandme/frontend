@@ -15,9 +15,7 @@ export default meta;
 
 export const Default: StoryObj<typeof PetInformationForm> = {
   parameters: {
-    msw: {
-      handlers,
-    },
+    msw: { handlers },
   },
 
   decorators: (Story) => {

@@ -3,7 +3,7 @@ import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { SnackbarController } from "@/app/SnackbarController";
 import { useAuthStore } from "@/shared/store/auth";
-import { signUpByEmailHandlers } from "@/mocks/handler";
+import { handlers } from "@/mocks/handler";
 import { SignUpByEmailForm } from "./signUpByEmailForm";
 
 const meta: Meta<typeof SignUpByEmailForm> = {
@@ -41,9 +41,7 @@ export const Default: Story = {
   },
 
   parameters: {
-    msw: {
-      handlers: signUpByEmailHandlers,
-    },
+    msw: { handlers },
   },
 
   render: () => <SignUpByEmailForm />,
@@ -61,9 +59,7 @@ export const Test: Story = {
   },
 
   parameters: {
-    msw: {
-      handlers: signUpByEmailHandlers,
-    },
+    msw: { handlers },
   },
 
   render: () => <SignUpByEmailForm />,

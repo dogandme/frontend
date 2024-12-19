@@ -19,9 +19,7 @@ export default meta;
 
 export const Default: StoryObj<typeof LoginForm> = {
   parameters: {
-    msw: {
-      handlers,
-    },
+    msw: { handlers },
   },
 
   render: () => (
