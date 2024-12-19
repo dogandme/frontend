@@ -26,7 +26,7 @@ jobs:
       - name: Run Lighthouse CI
         run: |
           npm install -g @lhci/cli
-          lhci autorun || echo "Fail to Run Lighthouse CI!"
+          lhci autorun --config=./lighthouserc.js || echo "Fail to Run Lighthouse CI!"
 
       - name: Format lighthouse score
         id: format_lighthouse_score
