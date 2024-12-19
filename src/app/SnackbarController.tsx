@@ -5,10 +5,7 @@ import { Snackbar } from "@/shared/ui/snackbar";
 
 export const SnackbarController = () => {
   const addOverlay = useSnackBarStore((state) => state.addOverlay);
-  const removeOverlay = useSnackBarStore((state) => state.removeOverlay);
   const snackbarProps = useSnackBarStore((state) => state.snackbarProps);
-
-  removeOverlay(SNACKBAR_ID);
 
   useEffect(() => {
     if (snackbarProps === null) return;

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { SNACKBAR_ID } from "../constants";
 import { type OverlayStore, useOverlayStore } from "../store/overlay";
 import type { SnackBarProps } from "../ui/snackbar";
 
@@ -10,7 +11,7 @@ interface SnackbarStore extends OverlayStore {
   ) => void;
 }
 
-export const useSnackBarStore = create<SnackbarStore>((set) => ({
+export const useSnackBarStore = create<SnackbarStore>((set, get) => ({
   ...useOverlayStore.getState(),
 
   snackbarProps: null,
@@ -18,6 +19,8 @@ export const useSnackBarStore = create<SnackbarStore>((set) => ({
     children: SnackBarProps["children"],
     snackbarOptions?: Omit<SnackBarProps, "children">,
   ) => {
+    const removeOverlay = get().removeOverlay;
+    removeOverlay(SNACKBAR_ID);
     set({
       snackbarProps: {
         ...snackbarOptions,
