@@ -4,7 +4,7 @@ import { ROUTER_PATH } from "@/shared/constants";
 import { ErrorBoundary } from "../pages";
 import { AppProviderLayout } from "./AppProviderLayout";
 
-const MainPage = lazy(() => import("@/pages/page"));
+const MainPage = lazy(() => import("@/pages"));
 
 const MapLayout = lazy(() =>
   import("@/pages/map").then((module) => ({ default: module.MapLayout })),
@@ -22,12 +22,19 @@ const FollowingPage = lazy(() => import("@/pages/[nickname]/following"));
 const FollowerPage = lazy(() => import("@/pages/[nickname]/follower"));
 const NotFoundUser = lazy(() => import("@/pages/[nickname]/notFoundUser"));
 
-const LoginPage = lazy(() => import("@/pages/login/page"));
-const LoginLayout = lazy(() => import("@/pages/login/layout"));
-const EmailLoginPage = lazy(() => import("@/pages/login/email"));
+const LoginPage = lazy(() =>
+  import("@/pages/login").then((module) => ({
+    default: module.LoginPage,
+  })),
+);
 
-const SettingPage = lazy(() => import("@/pages/setting/page"));
-const EditInfoPage = lazy(() => import("@/pages/setting/edit-info/page"));
+const LoginLayout = lazy(() =>
+  import("@/pages/login").then((module) => ({ default: module.LoginLayout })),
+);
+
+const EmailLoginPage = lazy(() => import("@/pages/login/email"));
+const SettingPage = lazy(() => import("@/pages/setting"));
+const EditInfoPage = lazy(() => import("@/pages/setting/edit-info"));
 const AccountManagementPage = lazy(
   () => import("@/pages/setting/manage-account"),
 );
@@ -41,16 +48,8 @@ const TemporaryMarkingPage = lazy(() => import("@/pages/temporary-marking"));
 export const router = createBrowserRouter([
   {
     path: ROUTER_PATH.MAIN,
-    element: (
-      <Suspense>
-        <AppProviderLayout />
-      </Suspense>
-    ),
-    errorElement: (
-      <Suspense>
-        <ErrorBoundary />
-      </Suspense>
-    ),
+    element: <AppProviderLayout />,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         index: true,
