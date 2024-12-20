@@ -6,9 +6,16 @@ import { Snackbar } from "@/shared/ui/snackbar";
 export const SnackbarController = () => {
   const addOverlay = useSnackBarStore((state) => state.addOverlay);
   const snackbarProps = useSnackBarStore((state) => state.snackbarProps);
+  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   useEffect(() => {
-    if (snackbarProps === null) return;
+    return () => {
+      setSnackbarProps(null);
+    };
+  }, [setSnackbarProps]);
+
+  useEffect(() => {
+    if (snackbarProps.children === null) return;
 
     const { children, ...snackbarOptions } = snackbarProps;
     addOverlay({
@@ -18,7 +25,7 @@ export const SnackbarController = () => {
         disableInteraction: false,
       },
     });
-  }, [snackbarProps, addOverlay]);
+  }, [snackbarProps, addOverlay, setSnackbarProps]);
 
   return null;
 };
