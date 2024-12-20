@@ -3,7 +3,7 @@ import { MarkingPins } from "@/entities/map/ui";
 import { useGetMyMakerList } from "@/entities/marking/api";
 import { withAuth } from "@/shared/lib";
 
-export const MyMarkingPage = withAuth(() => {
+const MyMarkingPage = withAuth(() => {
   const { data } = useGetMyMakerList();
 
   return (
@@ -13,3 +13,5 @@ export const MyMarkingPage = withAuth(() => {
     </>
   );
 }, ["ROLE_USER"]);
+
+export default MyMarkingPage;

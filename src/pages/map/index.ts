@@ -1,2 +1,2 @@
-export * from "./layout";
-export * from "./page";
+export { default as MapLayout } from "./layout";
+export { default as MapPage } from "./page";

@@ -8,7 +8,7 @@ import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
-export const TemporaryMarkingPage = withAuth(() => {
+const TemporaryMarkingPage = withAuth(() => {
   const navigate = useNavigate();
 
   const nickname = useAuthStore((state) => state.nickname);
@@ -73,3 +73,5 @@ export const TemporaryMarkingPage = withAuth(() => {
     </>
   );
 }, ["ROLE_USER"]);
+
+export default TemporaryMarkingPage;

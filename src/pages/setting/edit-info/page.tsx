@@ -11,7 +11,7 @@ import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
-export const EditInfoPage = withAuth(() => {
+const EditInfoPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
 
   if (!myInfo) {
@@ -32,6 +32,8 @@ export const EditInfoPage = withAuth(() => {
     </>
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
+
+export default EditInfoPage;
 
 const EditInfoPageSkeleton = () => {
   return (

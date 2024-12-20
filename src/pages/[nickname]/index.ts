@@ -1,2 +1,2 @@
-export * from "./page";
+export { default } from "./page";
 export * from "./notFoundUser";

@@ -166,7 +166,7 @@ export const useImageState = (source: string | string[]) => {
 
   useEffect(() => {
     loadImage(source);
-  }, [source]);
+  }, []);
 
   return { isLoading, imageState };
 };

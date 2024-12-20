@@ -10,7 +10,7 @@ import { useInfiniteScroll, useNicknameParams, withAuth } from "@/shared/lib";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 import { LoadingSpinner } from "@/shared/ui/spinner";
 
-export const FollowingPage = withAuth(() => {
+const FollowingPage = withAuth(() => {
   const { nicknameParams } = useNicknameParams();
 
   const { data: myProfile } = useGetMyProfile();
@@ -59,3 +59,5 @@ export const FollowingPage = withAuth(() => {
     </section>
   );
 }, ["ROLE_GUEST", "ROLE_USER"]);
+
+export default FollowingPage;
