@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { profileQueryKey } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
 import { FOLLOW_END_POINT } from "../constants";
 
@@ -12,7 +13,11 @@ export const useDeleteFollowing = () => {
     },
     onSuccess: (_data, nickname) => {
       queryClient.invalidateQueries({
-        queryKey: ["profile", nickname],
+        queryKey: profileQueryKey.profile(nickname),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: profileQueryKey.myProfile(),
       });
     },
   });
