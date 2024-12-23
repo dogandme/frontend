@@ -24,7 +24,7 @@ export const MyProfilePage = () => {
 
   useEffect(() => {
     queryClient.invalidateQueries({
-      queryKey: profileQueryKey.profile(nickname!),
+      queryKey: profileQueryKey.myProfile(),
     });
     setHaveMyProfileInvalidated(true);
   }, [queryClient, nickname]);
