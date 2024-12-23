@@ -13,7 +13,7 @@ const MapLayout = withAuth(() => {
   return (
     <>
       <header className="bg-tangerine-500 px-8 py-5">
-        <h1 className="title-1 text-grey-0">MUNGWITHME</h1>
+        <h1 className="title-1 text-grey-0">Mung With Me</h1>
       </header>
       <MapInitializer />
       <GoogleMaps>
