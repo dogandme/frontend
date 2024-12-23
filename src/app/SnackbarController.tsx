@@ -9,12 +9,6 @@ export const SnackbarController = () => {
   const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   useEffect(() => {
-    return () => {
-      setSnackbarProps(null);
-    };
-  }, [setSnackbarProps]);
-
-  useEffect(() => {
     if (snackbarProps.children === null) return;
 
     const { children, ...snackbarOptions } = snackbarProps;
@@ -25,6 +19,10 @@ export const SnackbarController = () => {
         disableInteraction: false,
       },
     });
+
+    return () => {
+      setSnackbarProps(null);
+    };
   }, [snackbarProps, addOverlay, setSnackbarProps]);
 
   return null;
