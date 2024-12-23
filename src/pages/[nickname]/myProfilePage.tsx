@@ -1,23 +1,35 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { MarkingThumbnailGrid } from "@/widgets/marking/ui";
 import {
   EmptyMyProfileOverView,
   MyProfileOverview,
 } from "@/widgets/profile/ui";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
-import { useGetMyProfile } from "@/entities/profile/api";
+import { profileQueryKey, useGetMyProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
 import { NavigationBar } from "@/shared/ui/navigationBar";
 import { ProfilePageSkeleton } from "./loading";
 
 export const MyProfilePage = () => {
-  const { nicknameParams } = useNicknameParams();
-  const { data } = useGetMyProfile();
+  const [haveMyProfileInvalidated, setHaveMyProfileInvalidated] =
+    useState<boolean>(false);
 
-  if (!data) {
+  const nickname = useAuthStore((state) => state.nickname);
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useGetMyProfile();
+
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: profileQueryKey.profile(nickname!),
+    });
+    setHaveMyProfileInvalidated(true);
+  }, [queryClient, nickname]);
+
+  if (!data || !haveMyProfileInvalidated || isLoading) {
     return <ProfilePageSkeleton />;
   }
 
@@ -29,7 +41,7 @@ export const MyProfilePage = () => {
       <section className="px-4 flex flex-col items-start gap-8">
         {pet ? (
           <MyProfileOverview
-            nickname={nicknameParams}
+            nickname={nickname!}
             followersIds={followersIds}
             followingsIds={followingsIds}
             pet={pet}
@@ -42,7 +54,7 @@ export const MyProfilePage = () => {
           {typeof tempCnt === "number" && tempCnt > 0 && (
             <TemporaryMarkingBar tempCnt={tempCnt} />
           )}
-          <MarkingThumbnailGrid nickname={nicknameParams} />
+          <MarkingThumbnailGrid nickname={nickname!} />
         </div>
       </section>
     </>
