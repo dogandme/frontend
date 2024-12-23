@@ -4,7 +4,7 @@ import { type OverlayStore, useOverlayStore } from "../store/overlay";
 import type { SnackBarProps } from "../ui/snackbar";
 
 interface SnackbarStore extends OverlayStore {
-  snackbarProps: SnackBarProps | null;
+  snackbarProps: SnackBarProps;
   setSnackbarProps: (
     children: SnackBarProps["children"],
     snackbarOptions?: Omit<SnackBarProps, "children">,
@@ -14,7 +14,7 @@ interface SnackbarStore extends OverlayStore {
 export const useSnackBarStore = create<SnackbarStore>((set, get) => ({
   ...useOverlayStore.getState(),
 
-  snackbarProps: null,
+  snackbarProps: { children: null },
   setSnackbarProps: (
     children: SnackBarProps["children"],
     snackbarOptions?: Omit<SnackBarProps, "children">,
