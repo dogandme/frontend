@@ -6,6 +6,7 @@ import {
 import type { GetTemporaryMarkingListResponse } from "@/entities/marking/api";
 import { markingQueryKey } from "@/entities/marking/api";
 import type { TempMarking } from "@/entities/marking/types/server";
+import { profileQueryKey } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
@@ -46,6 +47,9 @@ export const useDeleteTemporaryMarking = () => {
       );
       queryClient.invalidateQueries({
         queryKey: markingQueryKey.myTemporaryMarkingList(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: profileQueryKey.myProfile(),
       });
     },
   });
