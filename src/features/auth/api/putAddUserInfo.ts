@@ -5,7 +5,6 @@ import { SIGN_UP_END_POINT } from "../constants";
 import type { SignUpResponse } from "../types/server";
 
 interface PostAddUserInfoRequest {
-  token: string;
   nickname: string;
   gender: "FEMALE" | "MALE" | "NONE";
   age: 10 | 20 | 30 | 40 | 50 | 60;
