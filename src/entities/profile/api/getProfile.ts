@@ -45,6 +45,7 @@ export const useGetMyProfile = () => {
   return useQuery({
     queryKey: profileQueryKey.profile(nickname!),
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
+    staleTime: Infinity,
     gcTime: 0,
     select: (data) => {
       const myFollowingIdsMap = makeIdsMap(data.followingsIds || []);
