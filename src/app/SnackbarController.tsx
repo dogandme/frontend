@@ -19,11 +19,13 @@ export const SnackbarController = () => {
         disableInteraction: false,
       },
     });
+  }, [snackbarProps, addOverlay]);
 
+  useEffect(() => {
     return () => {
       setSnackbarProps(null);
     };
-  }, [snackbarProps, addOverlay, setSnackbarProps]);
+  }, [setSnackbarProps]);
 
   return null;
 };
