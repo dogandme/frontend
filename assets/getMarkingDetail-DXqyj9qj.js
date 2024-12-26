@@ -1,0 +1,1 @@
+import{f as a,h as m,m as t,s as o,A as u}from"./index-kGMPR6C6.js";import{a as n}from"./markingItem-DDd5foO2.js";const y=({markingId:e})=>a({queryKey:n.detail(e),queryFn:e!==void 0?()=>m.get(t.DETAIL({markingId:e}),{withToken:!0}):o,select:s=>({...s,images:s.images.map(({imageUrl:i,...r})=>({...r,imageUrl:`${u}/markings/image/${s.markingId}/${i}`}))})});export{y as u};

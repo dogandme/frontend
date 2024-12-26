@@ -25,7 +25,31 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Mung With Me" />
     <link rel="manifest" href="/site.webmanifest" />
-    <script type="module" crossorigin src="/assets/index-0xlDy4Ih.js"></script>
+    <script type="text/javascript">
+      var segmentCount = 1;
+
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          "//" +
+          l.hostname +
+          (l.port ? ":" + l.port : "") +
+          l.pathname
+            .split("/")
+            .slice(0, 1 + segmentCount)
+            .join("/") +
+          "/?p=/" +
+          l.pathname
+            .slice(1)
+            .split("/")
+            .slice(segmentCount)
+            .join("/")
+            .replace(/&/g, "~and~") +
+          (l.search ? "&q=" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+          l.hash,
+      );
+    </script>
+    <script type="module" crossorigin src="/assets/index-kGMPR6C6.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-CereOy-L.css">
   </head>
   <body>

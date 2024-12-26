@@ -1,1 +1,0 @@
-import{j as p}from"./index-0xlDy4Ih.js";import{i as s}from"./chip.styles-DRViv9KU.js";const l=({children:t,size:a,className:i=""})=>{const n=Array.isArray(t)?"isNotTextOnly":"isTextOnly",{base:o}=s,e=s.padding[n],r=s.size[a];return p.jsx("span",{className:`${o} ${e} ${r} ${i}`,children:t})};export{l as I};
