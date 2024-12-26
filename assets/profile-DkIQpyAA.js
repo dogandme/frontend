@@ -1,0 +1,1 @@
+import{p as e,q as r,g as o}from"./index-0xlDy4Ih.js";const c=()=>{const{nickname:s}=e();if(!(s!=null&&s.startsWith("@")))throw new Error(r);const t=decodeURI(s.slice(1)),a=t===o.getState().nickname;return{nicknameParams:t,isMyPage:a}};export{c as u};

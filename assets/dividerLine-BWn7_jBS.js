@@ -1,0 +1,1 @@
+import{j as o}from"./index-0xlDy4Ih.js";const t=({axis:s,className:a=""})=>{const e="bg-grey-200",m=s==="col"?"w-[.0625rem] h-[.75rem] my-auto":"h-[.0625rem] w-full mx-auto";return o.jsx("span",{className:`${e} ${m} ${a}`})};export{t as D};

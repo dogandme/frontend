@@ -1,0 +1,40 @@
+name: "Chromatic"
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  chromatic:
+    name: Run Chromatic and Test Storybook
+    runs-on: ubuntu-latest
+    env:
+      VITE_GOOGLE_MAPS_API_KEY: ${{secrets.VITE_GOOGLE_MAPS_API_KEY}}
+      VITE_GOOGLE_MAPS_ID: ${{secrets.VITE_GOOGLE_MAPS_ID}}
+      VITE_API_BASE_URL: ${{secrets.STORYBOOK_VITE_API_BASE_URL}}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: install packages
+        run: npm ci
+
+      - name: deploy with chromatic
+        id: chromatic
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          token: ${{ secrets.YONGHYEUN_GITHUB_TOKEN }}
+          exitZeroOnChanges: true
+          onlyChanged: true
+
+      - name: comment PR with chromatic results
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: "👀 코드리뷰 전! Storybook 미리보기: ${{ steps.chromatic.outputs.storybookUrl }}"
