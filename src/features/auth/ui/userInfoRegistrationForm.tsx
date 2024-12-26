@@ -323,7 +323,6 @@ const UserInfoRegistrationForm = () => {
 
     // todo: region 수정
     putUserInfoRegistration({
-      token,
       nickname,
       gender,
       age: ageRange,
