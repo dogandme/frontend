@@ -1,4 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  SNACKBAR_ID,
+  SNACKBAR_ANIMATION_DURATION,
+  SNACKBAR_AUTO_HIDE_DURATION,
+} from "../constants";
 import { useOverlayStore } from "../store";
 import { type _SnackbarProps, _Snackbar } from "../ui/snackbar";
 
@@ -26,13 +31,6 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
   const snackbarCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
-
-  // 스낵바의 고유 ID
-  const SNACKBAR_ID = 999999999;
-  // 스낵바가 마운트 후 자동으로 언마운트 되기 까지 걸리는 시간
-  const AUTO_HIDE_DURATION = 2000;
-  // 스낵바의 slide keyframe 애니메이션 작동 시간
-  const ANIMATION_DURATION = 500;
 
   const handleOpenSnackbar = useCallback(
     (content: _SnackbarProps["children"]) => {
@@ -76,11 +74,11 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
 
       snackbarSlideTimerRef.current = setTimeout(() => {
         setSnackbarSlide({ slide: "slideUp" });
-      }, AUTO_HIDE_DURATION - ANIMATION_DURATION);
+      }, SNACKBAR_AUTO_HIDE_DURATION - SNACKBAR_ANIMATION_DURATION);
 
       snackbarCloseTimerRef.current = setTimeout(() => {
         removeOverlay(SNACKBAR_ID);
-      }, AUTO_HIDE_DURATION);
+      }, SNACKBAR_AUTO_HIDE_DURATION);
       return;
     }
 
@@ -97,7 +95,7 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
 
     snackbarCloseTimerRef.current = setTimeout(() => {
       removeOverlay(SNACKBAR_ID);
-    }, ANIMATION_DURATION);
+    }, SNACKBAR_ANIMATION_DURATION);
   }, [snackbarChildren, addOverlay, snackbarSlide, type, removeOverlay]);
 
   return handleOpenSnackbar;
