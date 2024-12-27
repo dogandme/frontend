@@ -42,7 +42,7 @@ export const markingQueryKey = {
 } as const;
 
 export const markerQueryKey = {
-  markerAll: ["marker"],
+  markerAll: ["marker"] as const,
 
   boundaryMarker: (bounds: Bounds) =>
     [...markerQueryKey.markerAll, { bounds }] as const,

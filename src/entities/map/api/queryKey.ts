@@ -1,5 +1,5 @@
 export const regionQueryKey = {
-  regionAll: ["regions"],
+  regionAll: ["regions"] as const,
   regionKeyword: (keyword: string) =>
     [...regionQueryKey.regionAll, { keyword }] as const,
   regionLatLng: (latLng: { lat: number; lng: number }) =>
