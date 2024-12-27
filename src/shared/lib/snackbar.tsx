@@ -52,6 +52,7 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
     // 이러한 과정을 통해 스낵바는 slideDown -> slideUp -> 언마운트 순으로 애니메이션 됩니다.
 
     const { slide } = snackbarSlide;
+
     if (slide === "slideDown") {
       addOverlay({
         id: SNACKBAR_ID,
@@ -83,6 +84,7 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
       snackbarCloseTimerRef.current = setTimeout(() => {
         removeOverlay(SNACKBAR_ID);
       }, SNACKBAR_AUTO_HIDE_DURATION);
+
       return;
     }
 
