@@ -27,7 +27,7 @@ export const MyProfilePage = () => {
       queryKey: profileQueryKey.myProfile(),
     });
     setHaveMyProfileInvalidated(true);
-  }, [queryClient, nickname]);
+  }, [queryClient]);
 
   if (!data || !haveMyProfileInvalidated || isLoading) {
     return <ProfilePageSkeleton />;
