@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 import { MarkingThumbnailGrid } from "@/widgets/marking/ui";
 import {
   EmptyMyProfileOverView,
   MyProfileOverview,
 } from "@/widgets/profile/ui";
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
-import { profileQueryKey, useGetMyProfile } from "@/entities/profile/api";
+import { useGetMyProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
@@ -15,21 +13,10 @@ import { NavigationBar } from "@/shared/ui/navigationBar";
 import { ProfilePageSkeleton } from "./loading";
 
 export const MyProfilePage = () => {
-  const [haveMyProfileInvalidated, setHaveMyProfileInvalidated] =
-    useState<boolean>(false);
-
   const nickname = useAuthStore((state) => state.nickname);
-  const queryClient = useQueryClient();
-  const { data, isLoading } = useGetMyProfile();
+  const { data, isLoading } = useGetMyProfile({ staleTime: 0 });
 
-  useEffect(() => {
-    queryClient.invalidateQueries({
-      queryKey: profileQueryKey.myProfile(),
-    });
-    setHaveMyProfileInvalidated(true);
-  }, [queryClient]);
-
-  if (!data || !haveMyProfileInvalidated || isLoading) {
+  if (!data || isLoading) {
     return <ProfilePageSkeleton />;
   }
 
