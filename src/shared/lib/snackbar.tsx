@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useOverlayStore } from "../store";
-import type { _SnackbarProps } from "../ui/snackbar";
-import { _Snackbar } from "../ui/snackbar";
+import { type _SnackbarProps, _Snackbar } from "../ui/snackbar";
+
+type SnackbarSlide = Pick<_SnackbarProps, "slide">;
 
 export const useSnackbar = (type: _SnackbarProps["type"]) => {
   // 스낵바 내부에서 렌더링 될 children을 제어하기 위한 상태
@@ -9,8 +10,9 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
     useState<_SnackbarProps["children"]>(null);
 
   // 스낵바의 열림, 닫힘 애니메이션을 위한 상태
-  const [snackbarSlide, setSnackbarSlide] =
-    useState<_SnackbarProps["slide"]>("slideDown");
+  const [snackbarSlide, setSnackbarSlide] = useState<SnackbarSlide>({
+    slide: "slideDown",
+  });
 
   // 스낵바의 마운트, 언마운트를 제어하기 위한 OverlayStore의 메소드
   const addOverlay = useOverlayStore((state) => state.addOverlay);
@@ -35,6 +37,7 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
   const handleOpenSnackbar = useCallback(
     (content: _SnackbarProps["children"]) => {
       removeOverlay(SNACKBAR_ID);
+      setSnackbarSlide({ slide: "slideDown" });
       setSnackbarChildren(content);
     },
     [removeOverlay],
@@ -46,14 +49,15 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
     // snackbarSlide가 slideDown인 경우 스낵바를 마운트하고 일정 시간 후 slideUp으로 변경합니다.
     // 이러한 과정을 통해 스낵바는 slideDown -> slideUp -> 언마운트 순으로 애니메이션 됩니다.
 
-    if (snackbarSlide === "slideDown") {
+    const { slide } = snackbarSlide;
+    if (slide === "slideDown") {
       addOverlay({
         id: SNACKBAR_ID,
         component: (
           <_Snackbar
             type={type}
-            slide={snackbarSlide}
-            onClose={() => setSnackbarSlide("slideUp")}
+            slide={slide}
+            onClose={() => setSnackbarSlide({ slide: "slideUp" })}
           >
             {snackbarChildren}
           </_Snackbar>
@@ -64,7 +68,7 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
       });
 
       snackbarSlideTimerRef.current = setTimeout(() => {
-        setSnackbarSlide("slideUp");
+        setSnackbarSlide({ slide: "slideUp" });
       }, AUTO_HIDE_DURATION - ANIMATION_DURATION);
 
       snackbarCloseTimerRef.current = setTimeout(() => {
