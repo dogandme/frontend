@@ -67,6 +67,13 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
         },
       });
 
+      if (snackbarSlideTimerRef.current) {
+        clearTimeout(snackbarSlideTimerRef.current);
+      }
+      if (snackbarCloseTimerRef.current) {
+        clearTimeout(snackbarCloseTimerRef.current);
+      }
+
       snackbarSlideTimerRef.current = setTimeout(() => {
         setSnackbarSlide({ slide: "slideUp" });
       }, AUTO_HIDE_DURATION - ANIMATION_DURATION);
@@ -81,8 +88,12 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
     // snackbarSlide가 slideUp이 되는 경우는 snackbarSlideTimer 가 실행 되어 자동으로 닫히거나
     // 직접 사용자가 스낵바의 closeIcon을 클릭하여 닫히는 경우입니다.
 
-    clearTimeout(snackbarSlideTimerRef.current!);
-    clearTimeout(snackbarCloseTimerRef.current!);
+    if (snackbarSlideTimerRef.current) {
+      clearTimeout(snackbarSlideTimerRef.current);
+    }
+    if (snackbarCloseTimerRef.current) {
+      clearTimeout(snackbarCloseTimerRef.current);
+    }
 
     snackbarCloseTimerRef.current = setTimeout(() => {
       removeOverlay(SNACKBAR_ID);
