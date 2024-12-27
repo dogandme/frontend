@@ -1,6 +1,6 @@
 import { forwardRef, useState } from "react";
 import { useAuthStore } from "@/shared/store";
-import { Input } from "@/shared/ui/input";
+import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { usePostCheckDuplicateNickname } from "../api";
 import { validateNickname } from "../lib";
 
@@ -11,6 +11,7 @@ interface NicknameInputProps {
 
 export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
   ({ nickname: controlledNickname, onChange }, ref) => {
+    const [isFocused, setIsFocused] = useState<boolean>(false);
     const MAX_LENGTH = 20;
 
     const isControlled = typeof controlledNickname !== "undefined";
@@ -62,29 +63,39 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
       statusText = "사용 가능한 닉네임입니다.";
     }
 
+    const isNicknameError = !isValidNickname && !isNicknameEmpty;
+
     return (
-      <Input
-        ref={ref}
-        type="text"
-        id="nickname"
-        name="nickname"
-        label="닉네임"
-        placeholder="닉네임을 입력해 주세요"
-        statusText={statusText}
-        essential
-        componentType="outlinedText"
-        isError={!isValidNickname && !isNicknameEmpty}
-        value={isControlled ? controlledNickname : nickname}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        maxLength={MAX_LENGTH}
-        trailingNode={
-          <ValueLength
-            value={isControlled ? controlledNickname : nickname}
-            maxLength={MAX_LENGTH}
-          />
-        }
-      />
+      <InputWrapper>
+        <Input
+          ref={ref}
+          type="text"
+          id="nickname"
+          name="nickname"
+          label="닉네임"
+          placeholder="닉네임을 입력해 주세요"
+          essential
+          componentType="outlinedText"
+          isError={isNicknameError}
+          value={isControlled ? controlledNickname : nickname}
+          onChange={handleChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => {
+            setIsFocused(false);
+            handleBlur();
+          }}
+          maxLength={MAX_LENGTH}
+          trailingNode={
+            <ValueLength
+              value={isControlled ? controlledNickname : nickname}
+              maxLength={MAX_LENGTH}
+            />
+          }
+        />
+        {isFocused && (
+          <StatusText isError={isNicknameError}>{statusText}</StatusText>
+        )}
+      </InputWrapper>
     );
   },
 );

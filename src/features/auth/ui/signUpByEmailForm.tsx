@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { EmailInput, PasswordInput } from "@/entities/auth/ui";
+import { PasswordInput } from "@/entities/auth/ui";
 import { useSnackBarStore } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
-import { Input, StatusText } from "@/shared/ui/input";
+import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { usePostSignUpByEmail } from "../api";
 import { VERIFICATION_CODE_LENGTH } from "../constants";
 import {
@@ -64,6 +64,8 @@ const VerifyEmail = () => {
 };
 
 const Email = () => {
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   const {
     sendCodeMutation,
     checkCodeMutation,
@@ -103,18 +105,27 @@ const Email = () => {
       ? "이미 가입된 이메일 입니다"
       : "올바른 이메일 형식입니다";
 
+  const isError = (!isEmailEmpty && !isValidEmail) || isDuplicatedEmail;
+
   return (
-    <EmailInput
-      id="email"
-      name="email"
-      label="이메일"
-      disabled={isVerified}
-      isError={(!isEmailEmpty && !isValidEmail) || isDuplicatedEmail}
-      placeholder="이메일을 입력해 주세요"
-      statusText={statusText}
-      essential
-      onChange={handleChange}
-    />
+    <InputWrapper>
+      <Input
+        type="email"
+        inputMode="email"
+        placeholder="이메일을 입력해주세요"
+        componentType="outlinedText"
+        id="email"
+        name="email"
+        label="이메일"
+        disabled={isVerified}
+        isError={isError}
+        essential
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onChange={handleChange}
+      />
+      <StatusText isError={isError}>{isFocused ? statusText : ""}</StatusText>
+    </InputWrapper>
   );
 };
 
@@ -212,7 +223,6 @@ const VerificationCode = () => {
         name="verificationCode"
         type="text"
         placeholder="인증코드 7자리를 입력해 주세요"
-        statusText={undefined}
         maxLength={VERIFICATION_CODE_LENGTH}
         value={verificationCode}
         onChange={handleChange}
@@ -222,7 +232,6 @@ const VerificationCode = () => {
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
-
       <StatusText isError={isError}>{statusText}</StatusText>
     </div>
   );
@@ -284,17 +293,21 @@ const Password = () => {
       ? ""
       : "비밀번호 형식에 맞게 입력해 주세요";
 
+  const isError = !isValidPassword && !isPasswordEmpty;
+
   return (
-    <PasswordInput
-      id="password"
-      label="비밀번호"
-      name="password"
-      placeholder="비밀번호를 입력해 주세요"
-      statusText={statusText}
-      essential
-      onChange={handleChange}
-      isError={!isValidPassword && !isPasswordEmpty}
-    />
+    <InputWrapper>
+      <PasswordInput
+        id="password"
+        label="비밀번호"
+        name="password"
+        placeholder="비밀번호를 입력해 주세요"
+        essential
+        onChange={handleChange}
+        isError={isError}
+      />
+      <StatusText isError={isError}>{statusText}</StatusText>
+    </InputWrapper>
   );
 };
 
@@ -335,7 +348,6 @@ const PasswordConfirm = () => {
           id="password-confirm"
           name="passwordConfirm"
           placeholder="비밀번호를 다시 한번 입력해 주세요"
-          statusText={undefined}
           essential
           onChange={handleChange}
           isError={!isConfirmPasswordEmpty && !isValidConfirmPassword}

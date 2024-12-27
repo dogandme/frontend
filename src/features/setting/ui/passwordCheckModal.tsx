@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useIsMutating } from "@tanstack/react-query";
 import { PasswordInput } from "@/entities/auth/ui";
 import { InfoIcon } from "@/shared/ui/icon";
+import { InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { useDeleteAccount } from "../api";
@@ -43,17 +44,25 @@ const CurrentPasswordInput = () => {
       ? ""
       : "비밀번호 형식에 맞게 입력해 주세요";
 
+  const isError = !isEmptyCurrentPassword && !isValidPassword;
+
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   return (
-    <PasswordInput
-      id="password"
-      label="현재 비밀번호"
-      statusText={statusText}
-      isError={!isEmptyCurrentPassword && !isValidPassword}
-      essential
-      onChange={({ target }) => {
-        setPassword(target.value);
-      }}
-    />
+    <InputWrapper>
+      <PasswordInput
+        id="password"
+        label="현재 비밀번호"
+        isError={isError}
+        essential
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onChange={({ target }) => {
+          setPassword(target.value);
+        }}
+      />
+      {isFocused && <StatusText isError={isError}>{statusText}</StatusText>}
+    </InputWrapper>
   );
 };
 

@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { within, userEvent, expect } from "@storybook/test";
 import { Input } from "./input";
 
 /*----------leadingIcon, trailingIcon 등에 들어갈 svg 컴포넌트 ---------- */
@@ -87,13 +86,6 @@ const meta: Meta<typeof Input> = {
       },
       description:
         "Input 컴포넌트에서 에러 상태를 나타냅니다. 에러 상태일 때는 error 디자인이 전체 영역과 statusText에 적용됩니다.",
-    },
-    statusText: {
-      control: {
-        type: "text",
-      },
-      description:
-        "Input 컴포넌트에서 다양한 상황을 나타내는 텍스트입니다. 만약 statusText를 props로 전달하지 않을 시 statusText가 존재하는 영역은 렌더링 되지 않습니다.",
     },
     leadingNode: {
       description:
@@ -209,7 +201,6 @@ export const Default: Story = {
               label="calender"
               componentType="calender"
               type="date"
-              statusText="올바른 입력값을 입력해주세요"
               disabled
             />
           </div>
@@ -218,7 +209,6 @@ export const Default: Story = {
               {...args}
               componentType="searchText"
               label="searchText"
-              statusText="올바른 입력값을 입력해주세요"
               disabled
             />
           </div>
@@ -227,25 +217,17 @@ export const Default: Story = {
               {...args}
               componentType="outlinedText"
               label="outlinedText"
-              statusText="올바른 입력값을 입력해주세요"
               disabled
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              componentType="text"
-              label="text"
-              statusText="올바른 입력값을 입력해주세요"
-              disabled
-            />
+            <Input {...args} componentType="text" label="text" disabled />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="timerText"
               label="timerText"
-              statusText="올바른 입력값을 입력해주세요"
               disabled
             />
           </div>
@@ -259,7 +241,6 @@ export const Default: Story = {
               label="calender"
               type="date"
               isError
-              statusText="올바른 입력값을 입력해주세요"
               disabled
             />
           </div>
@@ -269,7 +250,6 @@ export const Default: Story = {
               componentType="searchText"
               label="searchText"
               isError
-              statusText="올바른 입력값을 입력해주세요"
               disabled
             />
           </div>
@@ -279,7 +259,6 @@ export const Default: Story = {
               componentType="outlinedText"
               label="outlinedText"
               isError
-              statusText="올바른 입력값을 입력해주세요"
               disabled
             />
           </div>
@@ -289,7 +268,6 @@ export const Default: Story = {
               componentType="text"
               label="text"
               isError
-              statusText="올바른 입력값을 입력해주세요"
               disabled
             />
           </div>
@@ -299,7 +277,6 @@ export const Default: Story = {
               componentType="timerText"
               label="timerText"
               isError
-              statusText="올바른 입력값을 입력해주세요"
               disabled
             />
           </div>
@@ -312,40 +289,23 @@ export const Default: Story = {
               label="calender"
               componentType="calender"
               type="date"
-              statusText="올바른 입력값을 입력해주세요"
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              componentType="searchText"
-              label="searchText"
-              statusText="올바른 입력값을 입력해주세요"
-            />
+            <Input {...args} componentType="searchText" label="searchText" />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
               componentType="outlinedText"
               label="outlinedText"
-              statusText="올바른 입력값을 입력해주세요"
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              componentType="text"
-              label="text"
-              statusText="올바른 입력값을 입력해주세요"
-            />
+            <Input {...args} componentType="text" label="text" />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              componentType="timerText"
-              label="timerText"
-              statusText="올바른 입력값을 입력해주세요"
-            />
+            <Input {...args} componentType="timerText" label="timerText" />
           </div>
         </div>
         <div className="flex flex-col gap-3">
@@ -357,7 +317,6 @@ export const Default: Story = {
               label="calender"
               type="date"
               isError
-              statusText="올바른 입력값을 입력해주세요"
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -366,7 +325,6 @@ export const Default: Story = {
               componentType="searchText"
               label="searchText"
               isError
-              statusText="올바른 입력값을 입력해주세요"
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -375,17 +333,10 @@ export const Default: Story = {
               componentType="outlinedText"
               label="outlinedText"
               isError
-              statusText="올바른 입력값을 입력해주세요"
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              componentType="text"
-              label="text"
-              isError
-              statusText="올바른 입력값을 입력해주세요"
-            />
+            <Input {...args} componentType="text" label="text" isError />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
@@ -393,7 +344,6 @@ export const Default: Story = {
               componentType="timerText"
               label="timerText"
               isError
-              statusText="올바른 입력값을 입력해주세요"
             />
           </div>
         </div>
@@ -570,7 +520,6 @@ export const InputWithIcons: Story = {
 export const InputExample: Story = {
   args: {
     ...Default.args,
-    statusText: "올바른 입력값을 입력해주세요",
   },
   parameters: {
     ...Default.parameters,
@@ -740,49 +689,6 @@ export const InputExample: Story = {
   },
 };
 
-export const StatusText: Story = {
-  args: {
-    ...Default.args,
-    componentType: "outlinedText",
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Input 컴포넌트는 statusText가 문자열일 경우엔 layout shift 현상을 방지하기 위해 항상 같은 높이를 유지합니다.",
-      },
-    },
-  },
-
-  render: (args) => {
-    return (
-      <div>
-        <div className="flex gap-10 px-2 py-2">
-          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
-            <p>status text = ""</p>
-            <Input {...args} statusText="" />
-          </div>
-          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
-            <p>status text = "올바른 이메일을 입력해주세요"</p>
-            <Input {...args} statusText="올바른 이메일을 입력해주세요" />
-          </div>
-          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
-            <p>status text = undefined</p>
-            <Input {...args} />
-          </div>
-          <div className="h-fit w-96 border border-grey-300 px-2 py-2">
-            <p>status text = width보다 긴 경우</p>
-            <Input
-              {...args}
-              statusText="width 보다 긴 텍스트의 경우에는 불가피하게 layout shift를 발생 시킵니다.UX 향상을 위해 statusText에 사용될 문자열의 길이를 주의해주세요"
-            />
-          </div>
-        </div>
-      </div>
-    );
-  },
-};
-
 export const Essential: Story = {
   args: {
     ...Default.args,
@@ -827,51 +733,5 @@ export const WithoutLabel: Story = {
         </div>
       </div>
     );
-  },
-};
-
-export const WhenInputFocused: Story = {
-  args: {
-    ...Default.args,
-    componentType: "outlinedText",
-    label: "Title",
-    trailingNode: <MockUpIcon />,
-    statusText: "올바른 이메일을 입력해주세요",
-  },
-
-  render: (args) => {
-    return (
-      <div className="flex gap-10">
-        <div className="border border-grey-300 px-2 py-2">
-          <Input
-            {...args}
-            // 더 극적인 상황을 위해 onFocus , onBlur 이벤트를 추가합니다.
-            onFocus={() => console.log("onFocus")}
-            onBlur={() => console.log("onBlur")}
-          />
-        </div>
-      </div>
-    );
-  },
-
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // 테스트에 필요한 엘리먼트들을 가져옵니다
-    const $input = canvas.getByRole("textbox");
-    const $statusText = canvasElement.querySelector("p");
-    const p_originalHeight = $statusText?.clientHeight;
-    const p_originalTextContent = $statusText?.textContent;
-
-    const statusText = "올바른 이메일을 입력해주세요";
-
-    // 아무런 이벤트가 발생하지 않더라도 p 태그는 존재해야 한다.
-    expect($statusText).toBeInTheDocument();
-
-    await userEvent.click($input);
-    expect($statusText?.textContent).toBe(statusText);
-    expect($statusText?.clientHeight).toBe(p_originalHeight);
-
-    await userEvent.click(document.body);
-    expect($statusText?.textContent).toBe(p_originalTextContent);
   },
 };
