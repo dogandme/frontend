@@ -42,13 +42,13 @@ export const markingQueryKey = {
 } as const;
 
 export const markerQueryKey = {
-  markerAll: () => ["marker"] as const,
+  markerAll: ["marker"] as const,
 
   boundaryMarker: (bounds: Bounds) =>
-    [...markerQueryKey.markerAll(), { bounds }] as const,
+    [...markerQueryKey.markerAll, { bounds }] as const,
   myActivityMarker: (activity: Activity) =>
-    [...markerQueryKey.markerAll(), { activity }] as const,
-  myMarker: () => [...markerQueryKey.markerAll(), "myMarker"] as const,
+    [...markerQueryKey.markerAll, { activity }] as const,
+  myMarker: () => [...markerQueryKey.markerAll, "myMarker"] as const,
   markerThumbnail: (nickname: string) =>
-    [...markerQueryKey.markerAll(), "dashboard", { nickname }] as const,
+    [...markerQueryKey.markerAll, "dashboard", { nickname }] as const,
 };
