@@ -10,7 +10,6 @@ import type { SignUpResponse } from "../types/server";
 export interface PostLoginRequest {
   email: string;
   password: string;
-  persistLogin: boolean;
 }
 
 const postLogin = async (formData: PostLoginRequest) => {
