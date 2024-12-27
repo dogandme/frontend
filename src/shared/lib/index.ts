@@ -9,3 +9,4 @@ export * from "./scroll";
 export * from "./dropdown";
 export * from "./profile";
 export * from "./auth";
+export * from "./modal";

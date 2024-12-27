@@ -23,14 +23,17 @@ export const Snackbar = ({
   ...props
 }: SnackBarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
-  const removeOverlay = useOverlayStore((state) => state.removeOverlay);
-  const ANIMATION_DURATION = 500;
-  // 스낵바가 닫히는 애니메이션을 위한 타이머
+
+  // 스낵바가 닫히는 애니메이션을 위한 타이머를 위한 ref
   const closeAnimationTimeId = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
-  // 스낵바가 닫히는 타이머
+
+  // 스낵바가 닫히는 타이머를 위한 ref
   const closeTimerId = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const removeOverlay = useOverlayStore((state) => state.removeOverlay);
+  const ANIMATION_DURATION = 500;
 
   useEffect(() => {
     closeAnimationTimeId.current = setTimeout(() => {

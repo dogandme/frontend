@@ -5,7 +5,7 @@ export type CreateOverlayComponent = (
   onClose: () => Promise<void>,
 ) => JSX.Element;
 
-type UseOverlay = (
+export type UseOverlay = (
   createOverlayComponent: CreateOverlayComponent,
   options?: OverlayOptions,
 ) => {
@@ -48,16 +48,4 @@ export const useOverlay: UseOverlay = (
   };
 
   return { handleOpen, onClose, isOpen };
-};
-
-type UseModal = (
-  createOverlayComponent: CreateOverlayComponent,
-  options?: Omit<OverlayOptions, "disableInteraction">,
-) => ReturnType<UseOverlay>;
-
-export const useModal: UseModal = (createOverlayComponent, options) => {
-  return useOverlay(createOverlayComponent, {
-    disableInteraction: true,
-    ...options,
-  });
 };

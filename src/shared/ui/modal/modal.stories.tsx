@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
-import { useModal } from "@/shared/lib/overlay";
+import { useModal } from "@/shared/lib";
 import { Modal } from "./modal";
 import { CenterModal, FullPageModal } from "./modal.mocks";
 
