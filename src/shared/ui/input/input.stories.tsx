@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Input } from "./input";
+import { Input, InputWrapper, StatusText } from "./input";
 
 /*----------leadingIcon, trailingIcon 등에 들어갈 svg 컴포넌트 ---------- */
 const SearchIcon = () => (
@@ -732,6 +732,21 @@ export const WithoutLabel: Story = {
           <Input {...args} />
         </div>
       </div>
+    );
+  },
+};
+
+export const WithStatusText: Story = {
+  args: {
+    ...Default.args,
+    componentType: "outlinedText",
+  },
+  render: (args) => {
+    return (
+      <InputWrapper>
+        <Input {...args} />
+        <StatusText isError={args.isError}>status text</StatusText>
+      </InputWrapper>
     );
   },
 };
