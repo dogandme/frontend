@@ -10,6 +10,7 @@ import type {
   MarkingImage,
   Marker,
 } from "@/entities/marking/types/server";
+import { profileQueryKey } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
@@ -125,6 +126,10 @@ export const usePutModifyMarking = ({
         }
 
         queryClient.invalidateQueries({ queryKey: [queryKey] });
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: profileQueryKey.myProfile(),
       });
     },
   });

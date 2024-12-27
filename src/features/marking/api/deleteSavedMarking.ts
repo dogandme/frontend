@@ -7,6 +7,7 @@ import { useMapMode } from "@/features/map/hooks";
 import { GetMySavedMarkingListResponse } from "@/entities/marking/api";
 import { markingQueryKey } from "@/entities/marking/api";
 import type { Marking } from "@/entities/marking/types/server";
+import { profileQueryKey } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
 import { MARKING_END_POINT } from "../constants";
 
@@ -49,6 +50,10 @@ export const useDeleteSavedMarking = () => {
           queryKey: markingQueryKey.myActivityMarkingList("SAVED"),
         });
       }
+
+      queryClient.invalidateQueries({
+        queryKey: profileQueryKey.myProfile(),
+      });
     },
   });
 };

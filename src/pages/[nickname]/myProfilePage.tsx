@@ -7,17 +7,16 @@ import {
 import { TemporaryMarkingBar } from "@/entities/marking/ui";
 import { useGetMyProfile } from "@/entities/profile/api";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useNicknameParams } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { SettingIcon } from "@/shared/ui/icon";
 import { NavigationBar } from "@/shared/ui/navigationBar";
 import { ProfilePageSkeleton } from "./loading";
 
 export const MyProfilePage = () => {
-  const { nicknameParams } = useNicknameParams();
-  const { data } = useGetMyProfile();
+  const nickname = useAuthStore((state) => state.nickname);
+  const { data, isLoading } = useGetMyProfile({ staleTime: 0 });
 
-  if (!data) {
+  if (!data || isLoading) {
     return <ProfilePageSkeleton />;
   }
 
@@ -29,7 +28,7 @@ export const MyProfilePage = () => {
       <section className="px-4 flex flex-col items-start gap-8">
         {pet ? (
           <MyProfileOverview
-            nickname={nicknameParams}
+            nickname={nickname!}
             followersIds={followersIds}
             followingsIds={followingsIds}
             pet={pet}
@@ -42,7 +41,7 @@ export const MyProfilePage = () => {
           {typeof tempCnt === "number" && tempCnt > 0 && (
             <TemporaryMarkingBar tempCnt={tempCnt} />
           )}
-          <MarkingThumbnailGrid nickname={nicknameParams} />
+          <MarkingThumbnailGrid nickname={nickname!} />
         </div>
       </section>
     </>

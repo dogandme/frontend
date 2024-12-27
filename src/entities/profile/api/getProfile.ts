@@ -38,13 +38,21 @@ const makeIdsMap = (ids: number[]) => {
   );
 };
 
-export const useGetMyProfile = () => {
+interface UseGetMyProfileParams {
+  staleTime: number;
+}
+
+export const useGetMyProfile = (
+  params: UseGetMyProfileParams = { staleTime: Infinity },
+) => {
+  const { staleTime } = params;
   const token = useAuthStore((state) => state.token);
   const nickname = useAuthStore((state) => state.nickname);
 
   return useQuery({
     queryKey: profileQueryKey.profile(nickname!),
     queryFn: nickname && token ? () => getProfile({ nickname }) : skipToken,
+    staleTime,
     gcTime: 0,
     select: (data) => {
       const myFollowingIdsMap = makeIdsMap(data.followingsIds || []);

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { useGetProfile } from "@/entities/profile/api";
+import { useGetMyProfile } from "@/entities/profile/api";
 import { EmptyProfileImage, ProfileImage } from "@/entities/profile/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useAuthStore } from "@/shared/store";
@@ -31,10 +31,7 @@ export const FooterNavigationBar = () => {
 const MyPageNavLink = () => {
   const role = useAuthStore((state) => state.role);
   const nickname = useAuthStore((state) => state.nickname);
-
-  const { data } = useGetProfile({
-    nickname,
-  });
+  const { data } = useGetMyProfile();
 
   const { active, inactive, base } = footerNavigationBarStyles;
 

@@ -13,7 +13,7 @@ import {
   EmptyMyMarkingThumbnailGrid,
   TemporaryMarkingBar,
 } from "@/entities/marking/ui";
-import { useGetProfile } from "@/entities/profile/api";
+import { useGetMyProfile } from "@/entities/profile/api";
 import { useInfiniteScroll } from "@/shared/lib";
 import { useAuthStore } from "@/shared/store";
 import { DividerLine } from "@/shared/ui/divider";
@@ -23,7 +23,7 @@ import { MarkingList } from "./markingList";
 
 export const MyMarkingListBottomSheet = () => {
   const nickname = useAuthStore.getState().nickname;
-  const { data: profile } = useGetProfile({ nickname });
+  const { data: myProfile } = useGetMyProfile();
   const { sortTypeParam, setMapQueryParams, boundsParams } =
     useMapQueryParams();
   const sortTypeOption = ["RECENT", "POPULARITY", "DISTANCE"] as const;
@@ -37,9 +37,9 @@ export const MyMarkingListBottomSheet = () => {
       <h1 className="title-1 text-grey-900 py-4">내 마킹</h1>
 
       <section className="pb-4 flex flex-col gap-4">
-        {typeof profile?.tempCnt === "number" && profile.tempCnt > 0 && (
+        {typeof myProfile?.tempCnt === "number" && myProfile.tempCnt > 0 && (
           <div className="pt-4">
-            <TemporaryMarkingBar tempCnt={profile.tempCnt} />
+            <TemporaryMarkingBar tempCnt={myProfile.tempCnt} />
           </div>
         )}
         <div className="flex w-full justify-end">
