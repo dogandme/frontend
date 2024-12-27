@@ -178,6 +178,7 @@ img[alt="Google"] {
 }
 
 /* 스낵바 오픈 애니메이션 */
+/* TODO 추후에 지우기 */
 @keyframes snackbar-open-default {
   from {
     transform: translateY(-100%) translateX(-50%);
@@ -233,4 +234,58 @@ img[alt="Google"] {
 
 .skeleton {
   @apply animate-pulse bg-grey-200 text-grey-200;
+}
+
+/* 스낵바 오픈 애니메이션 */
+@keyframes snackbar-slideDown-default {
+  from {
+    transform: translateY(-100%) translateX(-50%);
+  }
+  to {
+    transform: translateY(1rem) translateX(-50%);
+  }
+}
+
+@keyframes snackbar-slideDown-map {
+  from {
+    transform: translateY(-100%) translateX(-50%);
+  }
+  to {
+    transform: translateY(5rem) translateX(-50%);
+  }
+}
+
+/* 스낵바 클로즈 애니메이션 */
+@keyframes snackbar-slideUp-default {
+  from {
+    transform: translateY(1rem) translateX(-50%);
+  }
+  to {
+    transform: translateY(-100%) translateX(-50%);
+  }
+}
+
+@keyframes snackbar-slideUp-map {
+  from {
+    transform: translateY(5rem) translateX(-50%);
+  }
+  to {
+    transform: translateY(-100%) translateX(-50%);
+  }
+}
+
+.snackbar-slideDown-default {
+  animation: snackbar-slideDown-default 0.5s ease-in-out forwards;
+}
+
+.snackbar-slideDown-map {
+  animation: snackbar-slideDown-map 0.5s ease-in-out forwards;
+}
+
+.snackbar-slideUp-default {
+  animation: snackbar-slideUp-default 0.5s ease-in-out forwards;
+}
+
+.snackbar-slideUp-map {
+  animation: snackbar-slideUp-map 0.5s ease-in-out forwards;
 }
