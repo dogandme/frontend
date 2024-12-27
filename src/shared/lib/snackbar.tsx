@@ -7,7 +7,9 @@ import {
 import { useOverlayStore } from "../store";
 import { type _SnackbarProps, _Snackbar } from "../ui/snackbar";
 
-type SnackbarSlide = Pick<_SnackbarProps, "slide">;
+interface SnackbarSlide {
+  slide: "slideDown" | "slideUp";
+}
 
 export const useSnackbar = (type: _SnackbarProps["type"]) => {
   // 스낵바 내부에서 렌더링 될 children을 제어하기 위한 상태
@@ -31,6 +33,8 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
   const snackbarCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  // OverlayPortal을 통해 마운트 된 스낵바를 가리키기 위한 ref
+  const snackbarRef = useRef<HTMLDivElement | null>(null);
 
   const handleOpenSnackbar = useCallback(
     (content: _SnackbarProps["children"]) => {
@@ -54,8 +58,8 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
         component: (
           <_Snackbar
             type={type}
-            slide={slide}
             onClose={() => setSnackbarSlide({ slide: "slideUp" })}
+            ref={snackbarRef}
           >
             {snackbarChildren}
           </_Snackbar>
@@ -85,6 +89,12 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
     // snackbarSlide가 slideUp인 경우 기존 타이머를 제거하고 애니메이션 시행 후 스낵바가 언마운트 되도록 합니다.
     // snackbarSlide가 slideUp이 되는 경우는 snackbarSlideTimer 가 실행 되어 자동으로 닫히거나
     // 직접 사용자가 스낵바의 closeIcon을 클릭하여 닫히는 경우입니다.
+
+    if (!snackbarRef.current) {
+      return;
+    }
+
+    snackbarRef.current.classList.add(`snackbar-slideUp-${type}`);
 
     if (snackbarSlideTimerRef.current) {
       clearTimeout(snackbarSlideTimerRef.current);
