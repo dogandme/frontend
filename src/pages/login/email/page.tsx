@@ -11,7 +11,6 @@ const EmailLoginPage = () => {
       <LoginForm.Form>
         <LoginForm.Email />
         <LoginForm.Password />
-        <LoginForm.PersistLogin />
         <LoginForm.SubmitButton />
       </LoginForm.Form>
       <div className="flex flex-col items-center justify-center self-stretch">

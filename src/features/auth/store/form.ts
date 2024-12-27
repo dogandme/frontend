@@ -8,7 +8,6 @@ interface LoginFormStore extends PostLoginRequest {
 
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
-  setPersistLogin: (persistLogin: boolean) => void;
   setIsValidEmail: (isEmailValidate: boolean) => void;
   setStatusText: (statusText: string) => void;
 }
@@ -16,13 +15,11 @@ interface LoginFormStore extends PostLoginRequest {
 export const useLoginFormStore = create<LoginFormStore>((set) => ({
   email: "",
   password: "",
-  persistLogin: false,
   isValidEmail: true,
   statusText: "이메일 형식으로 입력해 주세요",
 
   setEmail: (email: string) => set({ email }),
   setPassword: (password: string) => set({ password }),
-  setPersistLogin: (persistLogin: boolean) => set({ persistLogin }),
   setIsValidEmail: (isValidEmail: boolean) => set({ isValidEmail }),
   setStatusText: (statusText: string) => set({ statusText }),
 }));

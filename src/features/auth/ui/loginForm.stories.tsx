@@ -26,7 +26,6 @@ export const Default: StoryObj<typeof LoginForm> = {
     <LoginForm.Form>
       <LoginForm.Email />
       <LoginForm.Password />
-      <LoginForm.PersistLogin />
       <LoginForm.SubmitButton />
     </LoginForm.Form>
   ),
@@ -93,7 +92,6 @@ const ApiTestComponent = () => {
       <LoginForm.Form>
         <LoginForm.Email />
         <LoginForm.Password />
-        <LoginForm.PersistLogin />
         <LoginForm.SubmitButton />
       </LoginForm.Form>
     </>

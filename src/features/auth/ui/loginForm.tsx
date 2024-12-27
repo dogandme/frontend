@@ -77,36 +77,12 @@ export const Password = () => {
   );
 };
 
-export const PersistLogin = () => {
-  const setPersistLogin = useLoginFormStore((state) => state.setPersistLogin);
-
-  const handlePersistLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { checked } = e.target;
-    setPersistLogin(checked);
-  };
-
-  return (
-    <div className="flex items-center gap-1">
-      <input
-        type="checkbox"
-        id="rememberMe"
-        name="rememberMe"
-        onChange={handlePersistLogin}
-      />
-      <label htmlFor="rememberMe" className="btn-3 text-grey-700">
-        로그인 유지
-      </label>
-    </div>
-  );
-};
-
 export const SubmitButton = () => {
   const { mutate: postLoginForm } = usePostLogin();
   const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
 
   const handleSubmit = () => {
-    const { email, password, isValidEmail, persistLogin } =
-      useLoginFormStore.getState();
+    const { email, password, isValidEmail } = useLoginFormStore.getState();
     const isEmailEmpty = email.length === 0;
     const isPasswordEmpty = password.length === 0;
 
@@ -114,7 +90,7 @@ export const SubmitButton = () => {
       setSnackbarProps("아이디 또는 비밀번호를 모두 입력해 주세요");
       return;
     }
-    postLoginForm({ email, password, persistLogin });
+    postLoginForm({ email, password });
   };
 
   return (
