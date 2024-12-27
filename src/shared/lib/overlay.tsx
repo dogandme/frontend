@@ -34,7 +34,7 @@ export const useOverlay: UseOverlay = (
     }
     removeOverlay(id);
     setIsOpen(false);
-    await afterClose?.();
+    afterClose?.();
   };
 
   const handleOpen = async () => {
