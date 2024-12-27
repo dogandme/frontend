@@ -1,11 +1,11 @@
-import type { useOverlay } from "@/shared/lib";
+import type { UseModal } from "@/shared/lib";
 import { Button } from "../button";
 import { CloseIcon } from "../icon";
 import { Modal } from "./modal";
 
 export interface ConfirmModalProps {
   onConfirm?: () => void | Promise<void>;
-  onClose: ReturnType<typeof useOverlay>["onClose"];
+  onClose: ReturnType<UseModal>["onClose"];
   children: React.ReactNode;
   confirmText?: string;
   closeText?: string;

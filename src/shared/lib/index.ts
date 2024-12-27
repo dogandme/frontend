@@ -1,5 +1,4 @@
 export * from "./cookie";
-export * from "./overlay";
 export * from "./debounce";
 export * from "./image";
 export * from "./format";
