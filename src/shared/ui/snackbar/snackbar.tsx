@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { SNACKBAR_ID } from "@/shared/constants";
-import { useOverlayStore } from "@/shared/store/overlay";
+import { useOverlayStore } from "@/shared/store";
 import { CloseIcon } from "../icon";
 
 export interface SnackBarProps extends React.HTMLAttributes<HTMLDivElement> {

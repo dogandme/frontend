@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
-import { useOverlayStore } from "@/shared/store/overlay";
-import type { OverlayInfo } from "@/shared/store/overlay";
+import { useOverlayStore } from "@/shared/store";
+import type { OverlayInfo } from "@/shared/store";
 
 /**
  * OverlayController 컴포넌트는 overlayInfo 에 담긴 정보에 따라 다르게 행동합니다.
