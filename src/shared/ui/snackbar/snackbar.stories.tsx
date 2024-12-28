@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
-import { useSnackbar } from "@/shared/lib/snackbar";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { Snackbar } from "./snackbar";
 
 const meta: Meta<typeof Snackbar> = {

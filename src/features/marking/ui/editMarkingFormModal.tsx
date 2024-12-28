@@ -6,7 +6,7 @@ import {
 } from "@/entities/marking/constants";
 import type { IsVisible } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
-import { useSnackbar } from "@/shared/lib/snackbar";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { MyLocationIcon, PlusIcon } from "@/shared/ui/icon";

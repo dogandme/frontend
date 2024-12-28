@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { SnackbarController } from "@/shared/store/snackbar";
 import { GoogleMapsProvider } from "./GoogleMapsProvider";
 import { HistoryTracker } from "./HistoryTracker";
 import { MainLayout } from "./MainLayout";
@@ -12,8 +13,10 @@ export const AppProviderLayout = () => {
       <GoogleMapsProvider>
         <MainLayout>
           <HistoryTracker />
-          <OverlayPortal />
-          <Outlet />
+          <SnackbarController>
+            <OverlayPortal />
+            <Outlet />
+          </SnackbarController>
         </MainLayout>
       </GoogleMapsProvider>
     </ReactQueryProvider>

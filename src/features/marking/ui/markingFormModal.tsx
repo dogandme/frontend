@@ -6,8 +6,8 @@ import {
   MARKING_VISIBILITY_MAP,
   MARKING_VISIBILITY_ENTRIES,
 } from "@/entities/marking/constants";
-import { useSnackbar } from "@/shared/lib/snackbar";
 import { useAuthStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { MyLocationIcon, PlusIcon } from "@/shared/ui/icon";

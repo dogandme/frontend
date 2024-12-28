@@ -1,5 +1,5 @@
 import { EmailInput, PasswordInput } from "@/entities/auth/ui";
-import { useSnackbar } from "@/shared/lib/snackbar";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { Button } from "@/shared/ui/button";
 import { usePostLogin } from "../api";
 import { useLoginFormStore } from "../store";

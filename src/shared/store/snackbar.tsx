@@ -1,25 +1,43 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   SNACKBAR_ID,
   SNACKBAR_ANIMATION_DURATION,
   SNACKBAR_AUTO_HIDE_DURATION,
 } from "../constants";
-import { useOverlayStore } from "../store";
 import { type SnackbarProps, Snackbar } from "../ui/snackbar";
+import { useOverlayStore } from "./overlay";
 
+type HandleOpenSnackbar = (
+  content: SnackbarProps["children"],
+  type: SnackbarProps["type"],
+) => void;
 interface SnackbarSlide {
   slide: "slideDown" | "slideUp";
 }
 
-export const useSnackbar = (type: SnackbarProps["type"]) => {
+const SnackbarContext = createContext<HandleOpenSnackbar>(() => {});
+
+interface SnackbarControllerProps {
+  children: React.ReactNode;
+}
+
+export const SnackbarController = ({ children }: SnackbarControllerProps) => {
   // 스낵바 내부에서 렌더링 될 children을 제어하기 위한 상태
   const [snackbarChildren, setSnackbarChildren] =
     useState<SnackbarProps["children"]>(null);
-
   // 스낵바의 열림, 닫힘 애니메이션을 위한 상태
   const [snackbarSlide, setSnackbarSlide] = useState<SnackbarSlide>({
     slide: "slideDown",
   });
+  // 스낵바의 타입을 제어하기 위한 상태
+  const [type, setType] = useState<SnackbarProps["type"]>("default");
 
   // 스낵바의 마운트, 언마운트를 제어하기 위한 OverlayStore의 메소드
   const addOverlay = useOverlayStore((state) => state.addOverlay);
@@ -37,10 +55,11 @@ export const useSnackbar = (type: SnackbarProps["type"]) => {
   const snackbarRef = useRef<HTMLDivElement | null>(null);
 
   const handleOpenSnackbar = useCallback(
-    (content: SnackbarProps["children"]) => {
+    (content: SnackbarProps["children"], type: SnackbarProps["type"]) => {
       removeOverlay(SNACKBAR_ID);
       setSnackbarSlide({ slide: "slideDown" });
       setSnackbarChildren(content);
+      setType(type);
     },
     [removeOverlay],
   );
@@ -110,5 +129,18 @@ export const useSnackbar = (type: SnackbarProps["type"]) => {
     }, SNACKBAR_ANIMATION_DURATION);
   }, [snackbarChildren, addOverlay, snackbarSlide, type, removeOverlay]);
 
-  return handleOpenSnackbar;
+  return (
+    <SnackbarContext.Provider value={handleOpenSnackbar}>
+      {children}
+    </SnackbarContext.Provider>
+  );
+};
+
+export const useSnackbar = (type: SnackbarProps["type"]) => {
+  const handleOpenSnackbar = useContext(SnackbarContext)!;
+
+  return useCallback(
+    (content: SnackbarProps["children"]) => handleOpenSnackbar(content, type),
+    [handleOpenSnackbar, type],
+  );
 };

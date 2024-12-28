@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMapStore } from "@/features/map/store";
 import { profileQueryKey } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
-import { useSnackbar } from "@/shared/lib/snackbar";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { MARKING_END_POINT } from "../constants";
 import { useMarkingFormStore } from "../store";
 import type { PostAddMarkingRequest } from "./postAddMarking";

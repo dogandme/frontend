@@ -4,7 +4,7 @@ import {
   useGetRegionByLatLng,
 } from "@/entities/map/api";
 import type { Region } from "@/entities/map/types/server";
-import { useSnackbar } from "@/shared/lib/snackbar";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
 import { CancelIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";

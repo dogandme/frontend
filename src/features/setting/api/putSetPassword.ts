@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { authQueryKey } from "@/entities/auth/api";
 import { apiClient } from "@/shared/lib";
-import { useSnackbar } from "@/shared/lib/snackbar";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordSetFormStore } from "../store";
 

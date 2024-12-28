@@ -21,8 +21,8 @@ import {
   useDropdown,
   useImageState,
 } from "@/shared/lib";
-import { useSnackbar } from "@/shared/lib/snackbar";
 import { useAuthStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { Button } from "@/shared/ui/button";
 import { DividerLine } from "@/shared/ui/divider";
 import {

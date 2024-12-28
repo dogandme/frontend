@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSnackbar } from "@/shared/lib/snackbar";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { useMapStore } from "../store";
 
 type OnSuccess = (position: GeolocationPosition) => void;

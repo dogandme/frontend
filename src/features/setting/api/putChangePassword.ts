@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
-import { useSnackbar } from "@/shared/lib/snackbar";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { SETTING_END_POINT } from "../constants";
 import { usePasswordChangeFormStore } from "../store";
 

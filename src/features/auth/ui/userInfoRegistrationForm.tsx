@@ -6,8 +6,8 @@ import {
 } from "@/entities/auth/ui";
 import type { Region } from "@/entities/map/types/server";
 import { useModal } from "@/shared/lib";
-import { useSnackbar } from "@/shared/lib/snackbar";
 import { useAuthStore } from "@/shared/store/auth";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";

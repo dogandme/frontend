@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
 import { HttpError } from "@/shared/lib";
-import { useSnackbar } from "@/shared/lib/snackbar";
 import { useOverlayStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { useRefreshToken } from "./errorHandlers";
 
 export const useCreateQueryClient = () => {

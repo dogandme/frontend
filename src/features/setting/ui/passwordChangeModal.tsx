@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
-import { useSnackbar } from "@/shared/lib/snackbar";
+import { useSnackbar } from "@/shared/store/snackbar";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePassword } from "../api";
 import { usePasswordChangeFormStore } from "../store";
