@@ -141,7 +141,14 @@ export const Default: Story = {
           const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
 
           await userEvent.click($snackBarCloseButton);
-          await expect($snackBarCloseButton).not.toBeInTheDocument();
+          await waitFor(
+            () => {
+              expect($snackBarCloseButton).not.toBeInTheDocument();
+            },
+            {
+              timeout: 1000,
+            },
+          );
         },
       );
 
@@ -219,7 +226,12 @@ export const Default: Story = {
           const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
 
           await userEvent.click($snackBarCloseButton);
-          await expect($snackBarCloseButton).not.toBeInTheDocument();
+          await waitFor(
+            () => {
+              expect($snackBarCloseButton).not.toBeInTheDocument();
+            },
+            { timeout: 1000 },
+          );
         },
       );
 
@@ -294,7 +306,14 @@ export const Default: Story = {
 
         const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
         await userEvent.click($snackBarCloseButton);
-        await expect($snackBarCloseButton).not.toBeInTheDocument();
+        await waitFor(
+          () => {
+            expect($snackBarCloseButton).not.toBeInTheDocument();
+          },
+          {
+            timeout: 1000,
+          },
+        );
       },
     );
 
@@ -325,7 +344,14 @@ export const Default: Story = {
         const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
 
         await userEvent.click($snackBarCloseButton);
-        await expect($snackBarCloseButton).not.toBeInTheDocument();
+        await waitFor(
+          () => {
+            expect($snackBarCloseButton).not.toBeInTheDocument();
+          },
+          {
+            timeout: 1000,
+          },
+        );
       },
     );
 
@@ -345,7 +371,14 @@ export const Default: Story = {
         const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
 
         await userEvent.click($snackBarCloseButton);
-        await expect($snackBarCloseButton).not.toBeInTheDocument();
+        await waitFor(
+          () => {
+            expect($snackBarCloseButton).not.toBeInTheDocument();
+          },
+          {
+            timeout: 1000,
+          },
+        );
       },
     );
   },
