@@ -96,14 +96,14 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
       return;
     }
 
-    snackbarRef.current.classList.add(`snackbar-slideUp-${type}`);
-
     if (snackbarSlideTimerRef.current) {
       clearTimeout(snackbarSlideTimerRef.current);
     }
     if (snackbarCloseTimerRef.current) {
       clearTimeout(snackbarCloseTimerRef.current);
     }
+
+    snackbarRef.current.classList.add(`snackbar-slideUp-${type}`);
 
     snackbarCloseTimerRef.current = setTimeout(() => {
       removeOverlay(SNACKBAR_ID);

@@ -4,7 +4,6 @@ import { HistoryTracker } from "./HistoryTracker";
 import { MainLayout } from "./MainLayout";
 import { OverlayPortal } from "./OverlayPortal";
 import { ReactQueryProvider } from "./ReactQueryProvider";
-import { SnackbarController } from "./SnackbarController";
 
 export const AppProviderLayout = () => {
   return (
@@ -14,7 +13,6 @@ export const AppProviderLayout = () => {
         <MainLayout>
           <HistoryTracker />
           <OverlayPortal />
-          <SnackbarController />
           <Outlet />
         </MainLayout>
       </GoogleMapsProvider>
