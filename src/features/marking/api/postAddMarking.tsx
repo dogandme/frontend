@@ -3,7 +3,7 @@ import { useMapStore } from "@/features/map/store";
 import type { LatLng } from "@/entities/map/types/client";
 import type { IsVisible } from "@/entities/marking/types/server";
 import { apiClient } from "@/shared/lib";
-import { useSnackBarStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/lib/snackbar";
 import { MARKING_END_POINT } from "../constants";
 import { useMarkingFormStore } from "../store";
 
@@ -40,17 +40,14 @@ export const usePostAddMarking = () => {
     (state) => state.resetMarkingFormStore,
   );
   const setMode = useMapStore((state) => state.setMode);
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
-
+  const handleOpenSnackbar = useSnackbar("map");
   return useMutation({
     mutationKey: ["markingFormModal"],
     mutationFn: postAddMarking,
     onSuccess: () => {
       resetMarkingFormStore();
       setMode("view");
-      setSnackbarProps("내 마킹이 추가되었습니다", {
-        type: "map",
-      });
+      handleOpenSnackbar("내 마킹이 추가되었습니다");
     },
   });
 };

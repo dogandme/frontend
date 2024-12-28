@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient, HttpError } from "@/shared/lib";
-import { useSnackBarStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/lib/snackbar";
 import { SIGN_UP_END_POINT } from "../constants";
 
 export interface PostSendCodeRequest {
@@ -15,14 +15,14 @@ const postSendCode = async ({ email }: PostSendCodeRequest) => {
 };
 
 export const usePostSendCode = () => {
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleSnackbarOpen = useSnackbar("default");
 
   return useMutation<unknown, HttpError, PostSendCodeRequest>({
     mutationKey: ["sendVerificationCode"],
     mutationFn: postSendCode,
     gcTime: 0,
     onSuccess: () => {
-      setSnackbarProps("메일로 인증코드가 전송되었습니다");
+      handleSnackbarOpen("메일로 인증코드가 전송되었습니다");
     },
   });
 };

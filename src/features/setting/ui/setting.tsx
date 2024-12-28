@@ -3,21 +3,20 @@
  * page 레이어에서 정의 되기엔 비즈니스 로직이나 도메인 로직이 존재하는 컴포넌트 들을 모아뒀습니다.
  */
 import { useModal } from "@/shared/lib";
-import { useSnackBarStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/lib/snackbar";
 import { LogoutModal } from "./logoutModal";
 
 export const Report = () => {
   const officialEmail = "mungwithme@gmail.com";
-
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("default");
 
   const handleClick = async () => {
     try {
       await window.navigator.clipboard.writeText(officialEmail);
-      setSnackbarProps("문의 사항을 보낼 이메일 주소가 복사되었습니다");
+      handleOpenSnackbar("문의 사항을 보낼 이메일 주소가 복사되었습니다");
     } catch (error) {
       console.error(error);
-      setSnackbarProps("이메일 주소를 복사 하던 중 오류가 발생했습니다");
+      handleOpenSnackbar("이메일 주소를 복사 하던 중 오류가 발생했습니다");
     }
   };
   return (

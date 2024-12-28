@@ -1,13 +1,13 @@
 import { useRef } from "react";
 import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
 import { HttpError } from "@/shared/lib";
-import { useSnackBarStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/lib/snackbar";
 import { useOverlayStore } from "@/shared/store";
 import { useRefreshToken } from "./errorHandlers";
 
 export const useCreateQueryClient = () => {
   const resetOverlays = useOverlayStore((state) => state.resetOverlays);
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleSnackbarOpen = useSnackbar("default");
   const { refreshTokenAndRetry } = useRefreshToken();
 
   const queryClient = useRef(
@@ -45,7 +45,7 @@ export const useCreateQueryClient = () => {
           }
 
           if (error instanceof HttpError && error.snackbarOnError) {
-            setSnackbarProps(error.message);
+            handleSnackbarOpen(error.message);
           }
         },
       }),
@@ -69,7 +69,7 @@ export const useCreateQueryClient = () => {
           }
 
           if (error instanceof HttpError && error.snackbarOnError) {
-            setSnackbarProps(error.message);
+            handleSnackbarOpen(error.message);
           }
         },
       }),

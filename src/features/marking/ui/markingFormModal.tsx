@@ -6,7 +6,8 @@ import {
   MARKING_VISIBILITY_MAP,
   MARKING_VISIBILITY_ENTRIES,
 } from "@/entities/marking/constants";
-import { useAuthStore, useSnackBarStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/lib/snackbar";
+import { useAuthStore } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { MyLocationIcon, PlusIcon } from "@/shared/ui/icon";
@@ -55,7 +56,7 @@ export const MarkingFormModal = ({
 
 const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   const map = useMap();
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("map");
   const center = map.getCenter();
 
   const lat = center.lat();
@@ -72,7 +73,7 @@ const CurrentLocation = ({ onCloseMarkingModal }: MarkingFormModalProps) => {
   }, [data, isSuccess, setRegion]);
 
   if (!useAuthStore.getState().token) {
-    setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
+    handleOpenSnackbar(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     return;
   }
 
@@ -157,7 +158,7 @@ const PhotoInput = () => {
   const handleOpenAlbum = () => {
     inputRef.current?.click();
   };
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("map");
 
   const handleChange = async ({
     target,
@@ -169,7 +170,7 @@ const PhotoInput = () => {
     }
 
     if (images.length + newFiles.length > MAX_IMAGE_LENGTH) {
-      setSnackbarProps(
+      handleOpenSnackbar(
         `사진은 최대 ${MAX_IMAGE_LENGTH}장까지 추가할 수 있습니다`,
       );
     }
@@ -264,13 +265,13 @@ const SaveButton = () => {
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
 
   const { mutate: postMarkingData } = usePostAddMarking();
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("map");
 
   const handleSave = async () => {
     const { token } = useAuthStore.getState();
 
     if (!token) {
-      setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
+      handleOpenSnackbar(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
       return;
     }
 
@@ -286,12 +287,12 @@ const SaveButton = () => {
     const center = map.getCenter();
 
     if (!region) {
-      setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
+      handleOpenSnackbar(MARKING_ADD_ERROR_MESSAGE.REGION_NOT_FOUND);
       return;
     }
 
     if (!isVisible || images.length === 0) {
-      setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
+      handleOpenSnackbar(MARKING_ADD_ERROR_MESSAGE.MISSING_REQUIRED_FIELDS);
       return;
     }
 
@@ -323,7 +324,7 @@ const SaveButton = () => {
 const TemporarySaveButton = () => {
   const map = useMap();
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("map");
   const { mutate: postAddTempMarking } = usePostAddTempMarking();
 
   const handleSave = () => {
@@ -332,11 +333,11 @@ const TemporarySaveButton = () => {
       useMarkingFormStore.getState();
 
     if (!token) {
-      setSnackbarProps(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
+      handleOpenSnackbar(MARKING_ADD_ERROR_MESSAGE.UNAUTHORIZED);
     }
 
     if (isCompressing) {
-      setSnackbarProps("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
+      handleOpenSnackbar("사진을 압축 중입니다. 잠시 후 다시 시도해주세요");
       return;
     }
 

@@ -13,7 +13,7 @@ import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 import type { Marking } from "@/entities/marking/types/server";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useSnackBarStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/lib/snackbar";
 
 interface MarkingInfo {
   position: {
@@ -38,8 +38,7 @@ export const MapInitializer = () => {
     useMapQueryParams();
   const { placeParams, setPlaceQueryParams } = usePlaceQueryParams();
   const getMapBounds = useGetMapCurrentBounds();
-
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("map");
 
   const isMapIdle = useMapStore((state) => state.isIdle);
   const setIsMapIdle = useMapStore((state) => state.setIsIdle);
@@ -190,9 +189,7 @@ export const MapInitializer = () => {
     if (!hasBoundsParams || state) {
       return;
     }
-    setSnackbarProps("스팟을 발견하고 마킹으로 추억을 남겨보세요", {
-      type: "map",
-    });
+    handleOpenSnackbar("스팟을 발견하고 마킹으로 추억을 남겨보세요");
   }, [hasBoundsParams, state]);
 
   if (!map || loading || !isMapIdle) {
