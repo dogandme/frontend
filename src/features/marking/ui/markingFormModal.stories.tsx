@@ -5,6 +5,7 @@ import { GoogleMapsProvider } from "@/app/GoogleMapsProvider";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { MapLayout, MapPage } from "@/pages/map";
 import { useAuthStore } from "@/shared/store";
+import { SnackbarController } from "@/shared/store/snackbar";
 import { handlers } from "@/mocks/handler";
 import { useMapStore } from "../../map/store";
 import { useMarkingFormStore } from "../store";
@@ -32,10 +33,12 @@ export const Default: Story = {
           <GoogleMapsProvider>
             <div className="mx-auto my-0 flex h-screen max-w-[37.5rem] flex-col">
               <main className="flex grow flex-col overflow-y-scroll">
-                <OverlayPortal />
-                <MapLayout>
-                  <Story />
-                </MapLayout>
+                <SnackbarController>
+                  <OverlayPortal />
+                  <MapLayout>
+                    <Story />
+                  </MapLayout>
+                </SnackbarController>
               </main>
             </div>
           </GoogleMapsProvider>

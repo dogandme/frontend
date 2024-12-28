@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useModal } from "@/shared/lib";
+import { SnackbarController } from "@/shared/store/snackbar";
 import { Modal } from "./modal";
 import { CenterModal, FullPageModal } from "./modal.mocks";
 
@@ -15,8 +16,10 @@ export const Default: StoryObj<typeof Modal> = {
   decorators: [
     (Story) => (
       <div id="root">
-        <OverlayPortal />
-        <Story />
+        <SnackbarController>
+          <OverlayPortal />
+          <Story />
+        </SnackbarController>
       </div>
     ),
   ],

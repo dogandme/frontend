@@ -2,6 +2,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
+import { SnackbarController } from "@/shared/store/snackbar";
 import { handlers } from "@/mocks/handler";
 import { PetInformationForm } from "./petInformationForm";
 
@@ -26,8 +27,10 @@ export const Default: StoryObj<typeof PetInformationForm> = {
 
     return (
       <div id="root">
-        <OverlayPortal />
-        <Story />
+        <SnackbarController>
+          <OverlayPortal />
+          <Story />
+        </SnackbarController>
       </div>
     );
   },
@@ -233,7 +236,14 @@ export const Default: StoryObj<typeof PetInformationForm> = {
                 await canvas.getByLabelText("스낵바 닫기");
 
               await userEvent.click(snackBarCloseButton);
-              await expect(snackBarCloseButton).not.toBeInTheDocument();
+              await waitFor(
+                () => {
+                  expect(snackBarCloseButton).not.toBeInTheDocument();
+                },
+                {
+                  timeout: 1000,
+                },
+              );
             },
           );
         },
@@ -258,7 +268,12 @@ export const Default: StoryObj<typeof PetInformationForm> = {
                 await canvas.getByLabelText("스낵바 닫기");
 
               await userEvent.click(snackBarCloseButton);
-              await expect(snackBarCloseButton).not.toBeInTheDocument();
+              await waitFor(
+                () => {
+                  expect(snackBarCloseButton).not.toBeInTheDocument();
+                },
+                { timeout: 1000 },
+              );
             },
           );
         },

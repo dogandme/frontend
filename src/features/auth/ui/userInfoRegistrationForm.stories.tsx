@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
+import { SnackbarController } from "@/shared/store/snackbar";
 import { handlers } from "@/mocks/handler";
 import { REGION_API_DEBOUNCE_DELAY } from "../constants";
 import { useUserInfoRegistrationFormStore } from "../store";
@@ -16,10 +17,12 @@ const meta: Meta<typeof UserInfoRegistrationForm> = {
   decorators: (Story) => {
     return (
       <div id="root">
-        <OverlayPortal />
-        <div className="w-96">
-          <Story />
-        </div>
+        <SnackbarController>
+          <OverlayPortal />
+          <div className="w-96">
+            <Story />
+          </div>
+        </SnackbarController>
       </div>
     );
   },

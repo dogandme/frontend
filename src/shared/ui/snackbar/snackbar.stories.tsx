@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
-import { useSnackbar } from "@/shared/store/snackbar";
+import { SnackbarController, useSnackbar } from "@/shared/store/snackbar";
 import { Snackbar } from "./snackbar";
 
 const meta: Meta<typeof Snackbar> = {
@@ -45,8 +45,10 @@ export const Default: Story = {
       <div className="relative w-fit">
         {/* body 태그 역할 */}
         <div id="root">
-          <OverlayPortal />
-          <Story />
+          <SnackbarController>
+            <OverlayPortal />
+            <Story />
+          </SnackbarController>
         </div>
       </div>
     ),

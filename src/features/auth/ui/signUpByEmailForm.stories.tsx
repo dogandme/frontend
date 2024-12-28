@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useAuthStore } from "@/shared/store/auth";
+import { SnackbarController } from "@/shared/store/snackbar";
 import { handlers } from "@/mocks/handler";
 import { SignUpByEmailForm } from "./signUpByEmailForm";
 
@@ -14,10 +15,12 @@ const meta: Meta<typeof SignUpByEmailForm> = {
   decorators: [
     (Story) => (
       <div id="root">
-        <OverlayPortal />
-        <div className="w-96">
-          <Story />
-        </div>
+        <SnackbarController>
+          <OverlayPortal />
+          <div className="w-96">
+            <Story />
+          </div>
+        </SnackbarController>
       </div>
     ),
   ],

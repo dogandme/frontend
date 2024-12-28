@@ -2,6 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { useModal } from "@/shared/lib";
+import { SnackbarController } from "@/shared/store/snackbar";
 import { ConfirmModal } from "./confirmModal";
 import { Modal } from "./modal";
 
@@ -116,10 +117,12 @@ export const Default: Story = {
   decorators: [
     (Story) => (
       <div id="root">
-        <OverlayPortal />
-        <div className="w-96 h-44">
-          <Story />
-        </div>
+        <SnackbarController>
+          <OverlayPortal />
+          <div className="w-96 h-44">
+            <Story />
+          </div>
+        </SnackbarController>
       </div>
     ),
   ],
