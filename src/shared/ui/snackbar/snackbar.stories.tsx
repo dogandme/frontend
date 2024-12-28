@@ -23,12 +23,6 @@ const meta: Meta<typeof Snackbar> = {
         type: "text",
       },
     },
-    className: {
-      description: "스낵바의 위치를 지정하는 클래스명입니다.",
-      control: {
-        type: "text",
-      },
-    },
   },
 };
 

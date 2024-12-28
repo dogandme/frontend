@@ -5,16 +5,16 @@ import {
   SNACKBAR_AUTO_HIDE_DURATION,
 } from "../constants";
 import { useOverlayStore } from "../store";
-import { type _SnackbarProps, _Snackbar } from "../ui/snackbar";
+import { type SnackbarProps, Snackbar } from "../ui/snackbar";
 
 interface SnackbarSlide {
   slide: "slideDown" | "slideUp";
 }
 
-export const useSnackbar = (type: _SnackbarProps["type"]) => {
+export const useSnackbar = (type: SnackbarProps["type"]) => {
   // 스낵바 내부에서 렌더링 될 children을 제어하기 위한 상태
   const [snackbarChildren, setSnackbarChildren] =
-    useState<_SnackbarProps["children"]>(null);
+    useState<SnackbarProps["children"]>(null);
 
   // 스낵바의 열림, 닫힘 애니메이션을 위한 상태
   const [snackbarSlide, setSnackbarSlide] = useState<SnackbarSlide>({
@@ -37,7 +37,7 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
   const snackbarRef = useRef<HTMLDivElement | null>(null);
 
   const handleOpenSnackbar = useCallback(
-    (content: _SnackbarProps["children"]) => {
+    (content: SnackbarProps["children"]) => {
       removeOverlay(SNACKBAR_ID);
       setSnackbarSlide({ slide: "slideDown" });
       setSnackbarChildren(content);
@@ -57,13 +57,13 @@ export const useSnackbar = (type: _SnackbarProps["type"]) => {
       addOverlay({
         id: SNACKBAR_ID,
         component: (
-          <_Snackbar
+          <Snackbar
             type={type}
             onClose={() => setSnackbarSlide({ slide: "slideUp" })}
             ref={snackbarRef}
           >
             {snackbarChildren}
-          </_Snackbar>
+          </Snackbar>
         ),
         options: {
           disableInteraction: false,
