@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { SnackbarController } from "@/shared/store/snackbar";
+import { SnackbarController } from "@/shared/store";
 import { GoogleMapsProvider } from "./GoogleMapsProvider";
 import { HistoryTracker } from "./HistoryTracker";
 import { MainLayout } from "./MainLayout";

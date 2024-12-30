@@ -5,7 +5,7 @@ import { GoogleMapsProvider } from "@/app/GoogleMapsProvider";
 import { OverlayPortal } from "@/app/OverlayPortal";
 import { MapLayout, MapPage } from "@/pages/map";
 import { useAuthStore } from "@/shared/store";
-import { SnackbarController } from "@/shared/store/snackbar";
+import { SnackbarController } from "@/shared/store";
 import { handlers } from "@/mocks/handler";
 import { useMapStore } from "../../map/store";
 import { useMarkingFormStore } from "../store";

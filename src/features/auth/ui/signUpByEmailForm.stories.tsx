@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { OverlayPortal } from "@/app/OverlayPortal";
+import { SnackbarController } from "@/shared/store";
 import { useAuthStore } from "@/shared/store/auth";
-import { SnackbarController } from "@/shared/store/snackbar";
 import { handlers } from "@/mocks/handler";
 import { SignUpByEmailForm } from "./signUpByEmailForm";
 
