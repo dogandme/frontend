@@ -6,7 +6,7 @@ import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { SelectChip } from "@/shared/ui/chip";
 import { EditIcon, SearchIcon } from "@/shared/ui/icon";
-import { Input } from "@/shared/ui/input";
+import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { TextArea } from "@/shared/ui/textarea";
 import { personalities, dogBreeds } from "../constants/form";
@@ -182,20 +182,32 @@ const NameInput = () => {
     setName(filteredName);
   };
 
+  const isError = !isNameEmpty && !isValidName;
+
+  const [isFocused, setFocused] = useState<boolean>(false);
+
   return (
-    <Input
-      componentType="outlinedText"
-      id="name"
-      label="이름이 어떻게 되나요?"
-      placeholder="한글 또는 영문의 이름을 입력해 주세요"
-      maxLength={MAX_LENGTH}
-      trailingNode={<TextCounter text={name} maxLength={MAX_LENGTH} />}
-      value={name}
-      onChange={handleChange}
-      isError={!isNameEmpty && !isValidName}
-      statusText="20자 이내의 한글 영문의 이름을 입력해 주세요"
-      essential
-    />
+    <InputWrapper>
+      <Input
+        componentType="outlinedText"
+        id="name"
+        label="이름이 어떻게 되나요?"
+        placeholder="한글 또는 영문의 이름을 입력해 주세요"
+        maxLength={MAX_LENGTH}
+        trailingNode={<TextCounter text={name} maxLength={MAX_LENGTH} />}
+        value={name}
+        onChange={handleChange}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        isError={isError}
+        essential
+      />
+      <StatusText isError={isError}>
+        {isFocused || isError
+          ? "20자 이내의 한글 영문의 이름을 입력해 주세요"
+          : ""}
+      </StatusText>
+    </InputWrapper>
   );
 };
 

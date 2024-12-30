@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
 import { useSnackbar } from "@/shared/store/snackbar";
+import { InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePassword } from "../api";
 import { usePasswordChangeFormStore } from "../store";
@@ -25,17 +26,27 @@ const CurrentPasswordInput = () => {
       ? ""
       : "비밀번호 형식에 맞게 입력해 주세요";
 
+  const isError = isFilledCurrentPassword && !isValidPassword;
+
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   return (
-    <PasswordInput
-      id="current-password"
-      label="현재 비밀번호"
-      name="current-password"
-      placeholder="현재 비밀번호를 입력해주세요"
-      essential
-      onChange={({ target }) => setCurrentPassword(target.value)}
-      statusText={statusText}
-      isError={isFilledCurrentPassword && !isValidPassword}
-    />
+    <InputWrapper>
+      <PasswordInput
+        id="current-password"
+        label="현재 비밀번호"
+        name="current-password"
+        placeholder="현재 비밀번호를 입력해주세요"
+        essential
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onChange={({ target }) => setCurrentPassword(target.value)}
+        isError={isError}
+      />
+      <StatusText isError={isError}>
+        {isError || isFocused ? statusText : ""}
+      </StatusText>
+    </InputWrapper>
   );
 };
 
@@ -57,17 +68,27 @@ const NewPasswordInput = () => {
       ? "사용가능한 비밀번호 입니다"
       : "비밀번호 형식에 맞게 입력해 주세요";
 
+  const isError = isFilledNewPassword && !isValidNewPassword;
+
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   return (
-    <PasswordInput
-      id="new-password"
-      label="새 비밀번호"
-      name="new-password"
-      placeholder="비밀번호를 입력해 주세요"
-      essential
-      onChange={({ target }) => setNewPassword(target.value)}
-      statusText={statusText}
-      isError={isFilledNewPassword && !isValidNewPassword}
-    />
+    <InputWrapper>
+      <PasswordInput
+        id="new-password"
+        label="새 비밀번호"
+        name="new-password"
+        placeholder="비밀번호를 입력해 주세요"
+        essential
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onChange={({ target }) => setNewPassword(target.value)}
+        isError={isError}
+      />
+      <StatusText isError={isError}>
+        {isError || isFocused ? statusText : ""}
+      </StatusText>
+    </InputWrapper>
   );
 };
 
@@ -90,16 +111,27 @@ const ConfirmNewPasswordInput = () => {
       ? "비밀번호가 일치합니다"
       : "비밀번호가 서로 일치하지 않습니다";
 
+  const isError =
+    isFilledConfirmPassword && !isSameNewPasswordAndConfirmPassword;
+
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   return (
-    <PasswordInput
-      id="confirm-new-password"
-      name="confirm-new-password"
-      placeholder="비밀번호를 다시 한 번 입력해주세요"
-      essential
-      onChange={({ target }) => setConfirmPassword(target.value)}
-      statusText={statusText}
-      isError={isFilledConfirmPassword && !isSameNewPasswordAndConfirmPassword}
-    />
+    <InputWrapper>
+      <PasswordInput
+        id="confirm-new-password"
+        name="confirm-new-password"
+        placeholder="비밀번호를 다시 한 번 입력해주세요"
+        essential
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onChange={({ target }) => setConfirmPassword(target.value)}
+        isError={isError}
+      />
+      <StatusText isError={isError}>
+        {isError || isFocused ? statusText : ""}
+      </StatusText>
+    </InputWrapper>
   );
 };
 

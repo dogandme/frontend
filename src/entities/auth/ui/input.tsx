@@ -4,16 +4,6 @@ import { Input, type InputProps } from "@/shared/ui/input";
 
 type FixedInputProps = "type" | "componentType";
 
-export const EmailInput = (props: Omit<InputProps, FixedInputProps>) => (
-  <Input
-    type="email"
-    inputMode="email"
-    placeholder="이메일을 입력해주세요"
-    componentType="outlinedText"
-    {...props}
-  />
-);
-
 export const PasswordInput = (props: Omit<InputProps, FixedInputProps>) => {
   const [isVisibilityOn, setIsVisibilityOn] = useState<boolean>(false);
 

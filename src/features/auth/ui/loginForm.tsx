@@ -1,6 +1,8 @@
-import { EmailInput, PasswordInput } from "@/entities/auth/ui";
+import { useState } from "react";
+import { PasswordInput } from "@/entities/auth/ui";
 import { useSnackbar } from "@/shared/store/snackbar";
 import { Button } from "@/shared/ui/button";
+import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { usePostLogin } from "../api";
 import { useLoginFormStore } from "../store";
 
@@ -21,6 +23,8 @@ export const Form = ({ children }: FormProps) => {
  * 폼에서 email,  에러 상태 , 상태 메시지 상태를 변경 시킵니다.
  */
 export const Email = () => {
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   const isValidEmail = useLoginFormStore((state) => state.isValidEmail);
   const statusText = useLoginFormStore((state) => state.statusText);
 
@@ -45,16 +49,27 @@ export const Email = () => {
     setIsValidEmail(isEmailEmpty || isValidEmail);
   };
 
+  const isError = !isValidEmail;
+
   return (
-    <EmailInput
-      id="email"
-      name="email"
-      label="이메일"
-      fullWidth
-      onChange={handleChange}
-      isError={!isValidEmail}
-      statusText={statusText}
-    />
+    <InputWrapper>
+      <Input
+        type="email"
+        inputMode="email"
+        placeholder="이메일을 입력해주세요"
+        componentType="outlinedText"
+        id="email"
+        name="email"
+        label="이메일"
+        onChange={handleChange}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        isError={isError}
+      />
+      <StatusText isError={isError}>
+        {isFocused || isError ? statusText : ""}
+      </StatusText>
+    </InputWrapper>
   );
 };
 
@@ -71,7 +86,6 @@ export const Password = () => {
       id="password"
       name="password"
       label="비밀번호"
-      fullWidth
       onChange={handleChange}
     />
   );
