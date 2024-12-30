@@ -15,7 +15,6 @@ export interface InputProps
   disabled?: boolean;
   trailingNode?: React.ReactNode;
   leadingNode?: React.ReactNode;
-  fullWidth?: boolean;
 }
 
 export const InputWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -31,7 +30,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       essential = false,
       isError = false,
       disabled = false,
-      fullWidth = true,
       trailingNode,
       leadingNode,
       ...rest
@@ -62,7 +60,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const restClasses = Object.values(restStylesObject).join(" ");
 
     return (
-      <div className={`flex ${fullWidth && "w-full"} flex-col items-start`}>
+      <div>
         {label && (
           <div className="flex gap-1 pb-2">
             <label htmlFor={id} className="title-3 text-grey-700">

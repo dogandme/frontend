@@ -61,7 +61,6 @@ export const Email = () => {
         id="email"
         name="email"
         label="이메일"
-        fullWidth
         onChange={handleChange}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
@@ -87,7 +86,6 @@ export const Password = () => {
       id="password"
       name="password"
       label="비밀번호"
-      fullWidth
       onChange={handleChange}
     />
   );
