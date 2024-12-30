@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
-import { useSnackbar } from "@/shared/store/snackbar";
+import { useSnackbar } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { usePostSignUpByEmail } from "../api";

@@ -13,7 +13,7 @@ import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 import type { Marking } from "@/entities/marking/types/server";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useSnackbar } from "@/shared/store/snackbar";
+import { useSnackbar } from "@/shared/store";
 
 interface MarkingInfo {
   position: {

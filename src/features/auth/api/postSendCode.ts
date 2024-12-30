@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient, HttpError } from "@/shared/lib";
-import { useSnackbar } from "@/shared/store/snackbar";
+import { useSnackbar } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 
 export interface PostSendCodeRequest {

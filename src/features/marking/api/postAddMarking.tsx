@@ -3,7 +3,7 @@ import { useMapStore } from "@/features/map/store";
 import type { LatLng } from "@/entities/map/types/client";
 import type { IsVisible } from "@/entities/marking/types/server";
 import { apiClient } from "@/shared/lib";
-import { useSnackbar } from "@/shared/store/snackbar";
+import { useSnackbar } from "@/shared/store";
 import { MARKING_END_POINT } from "../constants";
 import { useMarkingFormStore } from "../store";
 

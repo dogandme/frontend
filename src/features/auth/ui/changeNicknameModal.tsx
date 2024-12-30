@@ -1,8 +1,7 @@
 import { useRef } from "react";
 import type { MyInfo } from "@/entities/auth/types/server";
 import { formatDateToYearMonthDay } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
-import { useSnackbar } from "@/shared/store/snackbar";
+import { useAuthStore, useSnackbar } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";

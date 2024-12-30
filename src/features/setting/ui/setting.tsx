@@ -3,7 +3,7 @@
  * page 레이어에서 정의 되기엔 비즈니스 로직이나 도메인 로직이 존재하는 컴포넌트 들을 모아뒀습니다.
  */
 import { useModal } from "@/shared/lib";
-import { useSnackbar } from "@/shared/store/snackbar";
+import { useSnackbar } from "@/shared/store";
 import { LogoutModal } from "./logoutModal";
 
 export const Report = () => {

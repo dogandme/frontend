@@ -7,8 +7,7 @@ import { MarkingFormCloseModal } from "@/features/marking/ui/markingFormCloseMod
 import { CurrentLocationLoading } from "@/entities/map/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { useModal } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
-import { useSnackbar } from "@/shared/store/snackbar";
+import { useAuthStore, useSnackbar } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import {
   BookmarkIcon,

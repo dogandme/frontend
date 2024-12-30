@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useSnackbar } from "@/shared/store/snackbar";
+import { useSnackbar } from "@/shared/store";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { usePostLogout } from "../api";
