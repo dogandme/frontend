@@ -61,7 +61,9 @@ const CurrentPasswordInput = () => {
           setPassword(target.value);
         }}
       />
-      {isFocused && <StatusText isError={isError}>{statusText}</StatusText>}
+      {(isFocused || isError) && (
+        <StatusText isError={isError}>{statusText}</StatusText>
+      )}
     </InputWrapper>
   );
 };

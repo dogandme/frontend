@@ -42,7 +42,9 @@ const NewPasswordInput = () => {
         onChange={({ target }) => setNewPassword(target.value)}
         isError={isError}
       />
-      {isFocused && <StatusText isError={isError}>{statusText}</StatusText>}
+      {(isFocused || isError) && (
+        <StatusText isError={isError}>{statusText}</StatusText>
+      )}
     </InputWrapper>
   );
 };
@@ -84,7 +86,9 @@ const ConfirmNewPasswordInput = () => {
         isError={isError}
       />
 
-      {isFocused && <StatusText isError={isError}>{statusText}</StatusText>}
+      {(isFocused || isError) && (
+        <StatusText isError={isError}>{statusText}</StatusText>
+      )}
     </InputWrapper>
   );
 };

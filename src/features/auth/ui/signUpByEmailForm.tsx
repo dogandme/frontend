@@ -124,7 +124,9 @@ const Email = () => {
         onBlur={() => setIsFocused(false)}
         onChange={handleChange}
       />
-      <StatusText isError={isError}>{isFocused ? statusText : ""}</StatusText>
+      <StatusText isError={isError}>
+        {isFocused || isError ? statusText : ""}
+      </StatusText>
     </InputWrapper>
   );
 };
@@ -215,7 +217,7 @@ const VerificationCode = () => {
     statusText = "인증시간이 만료되었습니다. 재전송 버튼을 눌러주세요";
 
   return (
-    <div className="w-full">
+    <InputWrapper>
       <Input
         ref={verificationCodeRef}
         componentType="outlinedText"
@@ -233,7 +235,7 @@ const VerificationCode = () => {
         onBlur={() => setIsFocused(false)}
       />
       <StatusText isError={isError}>{statusText}</StatusText>
-    </div>
+    </InputWrapper>
   );
 };
 
@@ -343,7 +345,7 @@ const PasswordConfirm = () => {
 
   return (
     <>
-      <div>
+      <InputWrapper>
         <PasswordInput
           id="password-confirm"
           name="passwordConfirm"
@@ -357,7 +359,7 @@ const PasswordConfirm = () => {
         >
           {isConfirmPasswordEmpty ? "" : statusText}
         </StatusText>
-      </div>
+      </InputWrapper>
       <span className="body-3 px-3 pt-1 text-grey-500">
         영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로 입력해
         주세요.

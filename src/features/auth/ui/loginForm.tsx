@@ -67,7 +67,9 @@ export const Email = () => {
         onBlur={() => setIsFocused(false)}
         isError={isError}
       />
-      {isFocused && <StatusText isError={isError}>{statusText}</StatusText>}
+      <StatusText isError={isError}>
+        {isFocused || isError ? statusText : ""}
+      </StatusText>
     </InputWrapper>
   );
 };

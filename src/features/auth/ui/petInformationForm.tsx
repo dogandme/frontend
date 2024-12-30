@@ -202,11 +202,11 @@ const NameInput = () => {
         isError={isError}
         essential
       />
-      {isFocused && (
-        <StatusText isError={isError}>
-          20자 이내의 한글 영문의 이름을 입력해 주세요
-        </StatusText>
-      )}
+      <StatusText isError={isError}>
+        {isFocused || isError
+          ? "20자 이내의 한글 영문의 이름을 입력해 주세요"
+          : ""}
+      </StatusText>
     </InputWrapper>
   );
 };

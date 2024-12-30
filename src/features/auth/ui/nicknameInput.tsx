@@ -92,7 +92,7 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
             />
           }
         />
-        {isFocused && (
+        {(isFocused || isNicknameError) && (
           <StatusText isError={isNicknameError}>{statusText}</StatusText>
         )}
       </InputWrapper>
