@@ -60,7 +60,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const restClasses = Object.values(restStylesObject).join(" ");
 
     return (
-      <div>
+      <div className="w-full">
         {label && (
           <div className="flex gap-1 pb-2">
             <label htmlFor={id} className="title-3 text-grey-700">
