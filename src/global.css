@@ -177,8 +177,13 @@ img[alt="Google"] {
   -webkit-box-orient: vertical;
 }
 
+/* 스켈레톤 로딩 */
+.skeleton {
+  @apply animate-pulse bg-grey-200 text-grey-200;
+}
+
 /* 스낵바 오픈 애니메이션 */
-@keyframes snackbar-open-default {
+@keyframes snackbar-slideDown-default {
   from {
     transform: translateY(-100%) translateX(-50%);
   }
@@ -187,7 +192,7 @@ img[alt="Google"] {
   }
 }
 
-@keyframes snackbar-open-map {
+@keyframes snackbar-slideDown-map {
   from {
     transform: translateY(-100%) translateX(-50%);
   }
@@ -197,7 +202,7 @@ img[alt="Google"] {
 }
 
 /* 스낵바 클로즈 애니메이션 */
-@keyframes snackbar-close-default {
+@keyframes snackbar-slideUp-default {
   from {
     transform: translateY(1rem) translateX(-50%);
   }
@@ -206,7 +211,7 @@ img[alt="Google"] {
   }
 }
 
-@keyframes snackbar-close-map {
+@keyframes snackbar-slideUp-map {
   from {
     transform: translateY(5rem) translateX(-50%);
   }
@@ -215,22 +220,18 @@ img[alt="Google"] {
   }
 }
 
-.snackbar-open-default {
-  animation: snackbar-open-default 0.5s ease-in-out forwards;
+.snackbar-slideDown-default {
+  animation: snackbar-slideDown-default 0.5s ease-in-out forwards;
 }
 
-.snackbar-open-map {
-  animation: snackbar-open-map 0.5s ease-in-out forwards;
+.snackbar-slideDown-map {
+  animation: snackbar-slideDown-map 0.5s ease-in-out forwards;
 }
 
-.snackbar-close-default {
-  animation: snackbar-close-default 0.5s ease-in-out forwards;
+.snackbar-slideUp-default {
+  animation: snackbar-slideUp-default 0.5s ease-in-out forwards;
 }
 
-.snackbar-close-map {
-  animation: snackbar-close-map 0.5s ease-in-out forwards;
-}
-
-.skeleton {
-  @apply animate-pulse bg-grey-200 text-grey-200;
+.snackbar-slideUp-map {
+  animation: snackbar-slideUp-map 0.5s ease-in-out forwards;
 }

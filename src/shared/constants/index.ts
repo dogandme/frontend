@@ -128,7 +128,12 @@ export const ROUTER_PATH = {
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const MASCOT_IMAGE_URL = "/default-image.png";
-export const SNACKBAR_ID = 999999999;
+// 스낵바의 고유 ID
+export const SNACKBAR_ID = 999999999 as const;
+// 스낵바가 마운트 후 자동으로 언마운트 되기 까지 걸리는 시간
+export const SNACKBAR_AUTO_HIDE_DURATION = 2000 as const;
+// 스낵바의 slide keyframe 애니메이션 작동 시간
+export const SNACKBAR_ANIMATION_DURATION = 500 as const;
 
 export const NOT_FOUND_ERROR_MESSAGE = "존재하지 않은 경로입니다.";
 export const AUTH_ERROR_MESSAGE = {

@@ -1,5 +1,4 @@
 export * from "./cookie";
-export * from "./overlay";
 export * from "./debounce";
 export * from "./image";
 export * from "./format";
@@ -9,3 +8,4 @@ export * from "./scroll";
 export * from "./dropdown";
 export * from "./profile";
 export * from "./auth";
+export * from "./modal";

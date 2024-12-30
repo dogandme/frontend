@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSnackBarStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/store";
 import { useMapStore } from "../store";
 
 type OnSuccess = (position: GeolocationPosition) => void;
@@ -8,7 +8,7 @@ type OnError = () => void;
 export const useCurrentLocation = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const setUserInfo = useMapStore((state) => state.setUserInfo);
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("map");
 
   const MAX_WAIT_TIME = 5000;
 
@@ -48,17 +48,17 @@ export const useCurrentLocation = () => {
 
     switch (error.code) {
       case 1 /* PERMISSION_DENIED */:
-        setSnackbarProps(
+        handleOpenSnackbar(
           "위치 제공을 허용 한 후 사용 가능한 기능입니다\n내 위치 제공을 허용해주세요",
         );
         break;
       case 2 /* POSITION_UNAVAILABLE */:
-        setSnackbarProps(
+        handleOpenSnackbar(
           "위치 정보를 가져오는데 문제가 발생했습니다\n잠시 후 다시 시도해주세요.",
         );
         break;
       case 3 /* TIMEOUT */:
-        setSnackbarProps(
+        handleOpenSnackbar(
           "위치 정보를 가져오는데 시간이 너무 오래 걸립니다\n잠시 후 다시 시도해주세요.",
         );
     }

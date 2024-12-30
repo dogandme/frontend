@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { OverlayPortal } from "@/app/OverlayPortal";
-import { useSnackBarStore } from "@/shared/store";
+import { SnackbarController, useSnackbar } from "@/shared/store/snackbar";
 import { Snackbar } from "./snackbar";
 
 const meta: Meta<typeof Snackbar> = {
@@ -19,12 +19,6 @@ const meta: Meta<typeof Snackbar> = {
   argTypes: {
     children: {
       description: "스낵바에 표시할 메시지 혹은 컴포넌트 입니다.",
-      control: {
-        type: "text",
-      },
-    },
-    className: {
-      description: "스낵바의 위치를 지정하는 클래스명입니다.",
       control: {
         type: "text",
       },
@@ -51,8 +45,10 @@ export const Default: Story = {
       <div className="relative w-fit">
         {/* body 태그 역할 */}
         <div id="root">
-          <OverlayPortal />
-          <Story />
+          <SnackbarController>
+            <OverlayPortal />
+            <Story />
+          </SnackbarController>
         </div>
       </div>
     ),
@@ -60,25 +56,19 @@ export const Default: Story = {
 
   render: () => {
     /* eslint-disable */
-    const setSnackbarProps = useSnackBarStore(
-      (state) => state.setSnackbarProps,
-    );
+    const handleOpenSnackbar = useSnackbar("default");
 
     return (
       <div className="flex h-96 w-full items-end justify-end px-2 py-2 gap-2">
         <button
           className="px-2 py-2 bg-grey-200"
-          onClick={() => setSnackbarProps("1번 스낵바 오픈")}
+          onClick={() => handleOpenSnackbar("1번 스낵바 오픈")}
         >
           1번 스낵바 열기
         </button>
         <button
           className="px-2 py-2 bg-grey-200"
-          onClick={() =>
-            setSnackbarProps("2번 스낵바 오픈", {
-              type: "map",
-            })
-          }
+          onClick={() => handleOpenSnackbar("2번 스낵바 오픈")}
         >
           2번 스낵바 열기
         </button>

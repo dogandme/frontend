@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useSnackBarStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/store";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { usePostLogout } from "../api";
@@ -11,14 +11,14 @@ interface LogoutModalProps {
 
 export const LogoutModal = ({ onCloseLogoutModal }: LogoutModalProps) => {
   const navigate = useNavigate();
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("default");
 
   const { mutate: postLogout } = usePostLogout({
     onMutate: () => {
       onCloseLogoutModal();
       navigate(ROUTER_PATH.MAIN);
       // 네비게이팅이 완료된 후에 스낵바를 띄우기 위해 setTimeout 사용
-      setTimeout(() => setSnackbarProps("로그아웃 되었습니다"), 100);
+      setTimeout(() => handleOpenSnackbar("로그아웃 되었습니다"), 100);
     },
   });
 

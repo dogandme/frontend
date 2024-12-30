@@ -4,7 +4,7 @@ import {
   useGetRegionByLatLng,
 } from "@/entities/map/api";
 import type { Region } from "@/entities/map/types/server";
-import { useSnackBarStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
 import { CancelIcon, MapLocationSearchingIcon } from "@/shared/ui/icon";
@@ -85,7 +85,7 @@ const SearchRegionByGPSButton = () => {
   const setPosition = useRegionModalStore((state) => state.setPosition);
   const setOrigin = useRegionModalStore((state) => state.setOrigin);
 
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("default");
 
   const additionalClassName =
     origin === "position"
@@ -104,15 +104,15 @@ const SearchRegionByGPSButton = () => {
   const errorCallback = (error: GeolocationPositionError) => {
     switch (error.code) {
       case GeolocationPositionError.PERMISSION_DENIED:
-        setSnackbarProps(errorMessage.PERMISSION_DENIED);
+        handleOpenSnackbar(errorMessage.PERMISSION_DENIED);
         break;
       case GeolocationPositionError.POSITION_UNAVAILABLE:
-        setSnackbarProps(errorMessage.POSITION_UNAVAILABLE);
+        handleOpenSnackbar(errorMessage.POSITION_UNAVAILABLE);
         break;
       case GeolocationPositionError.TIMEOUT:
         if (failureCount.current >= 3) {
           failureCount.current = 0;
-          setSnackbarProps(errorMessage.POSITION_UNAVAILABLE);
+          handleOpenSnackbar(errorMessage.POSITION_UNAVAILABLE);
         }
         failureCount.current += 1;
         window.navigator.geolocation.getCurrentPosition(
@@ -126,7 +126,7 @@ const SearchRegionByGPSButton = () => {
         );
         break;
       default:
-        setSnackbarProps(errorMessage.UNKNOWN);
+        handleOpenSnackbar(errorMessage.UNKNOWN);
     }
   };
 
@@ -163,12 +163,12 @@ const SearchRegionControlItem = (region: Region) => {
   const regionModalStore = useRegionModalContext();
   const setRegionList = useRegionModalStore((state) => state.setRegionList);
   const { id, province, cityCounty, subDistrict } = region;
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("default");
 
   const handleSelectRegion = () => {
     const { regionList } = regionModalStore.getState();
     if (regionList.length >= 5) {
-      setSnackbarProps("동네는 최대 5개까지 선택할 수 있습니다.");
+      handleOpenSnackbar("동네는 최대 5개까지 선택할 수 있습니다.");
       return;
     }
 
@@ -276,7 +276,7 @@ const RegionModalSaveButton = ({
   onSave: (regionList: RegionModalExternalState["regionList"]) => void;
 }) => {
   const regionModalStore = useRegionModalContext();
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("default");
 
   return (
     <Button
@@ -286,7 +286,7 @@ const RegionModalSaveButton = ({
       onClick={() => {
         const { regionList } = regionModalStore.getState();
         if (regionList.length === 0) {
-          setSnackbarProps("동네를 선택해 주세요");
+          handleOpenSnackbar("동네를 선택해 주세요");
           return;
         }
         onSave(regionList);

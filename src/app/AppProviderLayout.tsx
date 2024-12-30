@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
+import { SnackbarController } from "@/shared/store";
 import { GoogleMapsProvider } from "./GoogleMapsProvider";
 import { HistoryTracker } from "./HistoryTracker";
 import { MainLayout } from "./MainLayout";
 import { OverlayPortal } from "./OverlayPortal";
 import { ReactQueryProvider } from "./ReactQueryProvider";
-import { SnackbarController } from "./SnackbarController";
 
 export const AppProviderLayout = () => {
   return (
@@ -13,9 +13,10 @@ export const AppProviderLayout = () => {
       <GoogleMapsProvider>
         <MainLayout>
           <HistoryTracker />
-          <OverlayPortal />
-          <SnackbarController />
-          <Outlet />
+          <SnackbarController>
+            <OverlayPortal />
+            <Outlet />
+          </SnackbarController>
         </MainLayout>
       </GoogleMapsProvider>
     </ReactQueryProvider>

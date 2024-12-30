@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PasswordInput } from "@/entities/auth/ui";
-import { useSnackBarStore } from "@/shared/store";
+import { useSnackbar } from "@/shared/store";
 import { InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePassword } from "../api";
@@ -145,7 +145,7 @@ export const PasswordChangeModal = ({
   );
 
   const { mutate: putChangePassword, isPending } = usePutChangePassword();
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
+  const handleOpenSnackbar = useSnackbar("default");
 
   const handleSave = () => {
     const {
@@ -158,17 +158,17 @@ export const PasswordChangeModal = ({
     } = usePasswordChangeFormStore.getState();
 
     if (!isAllValueFilled) {
-      setSnackbarProps("항목을 모두 입력해 주세요");
+      handleOpenSnackbar("항목을 모두 입력해 주세요");
       return;
     }
 
     if (!isSameNewPasswordAndConfirmPassword) {
-      setSnackbarProps("새 비밀번호를 다시 확인해 주세요");
+      handleOpenSnackbar("새 비밀번호를 다시 확인해 주세요");
       return;
     }
 
     if (!isAllValueValid) {
-      setSnackbarProps("비밀번호 형식에 맞게 입력해 주세요");
+      handleOpenSnackbar("비밀번호 형식에 맞게 입력해 주세요");
       return;
     }
 

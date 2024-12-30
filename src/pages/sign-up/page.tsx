@@ -3,7 +3,7 @@ import { useSignUpByEmailFormStore } from "@/features/auth/store";
 import { SignUpByEmailForm } from "@/features/auth/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { withAuth } from "@/shared/lib";
-import { useModal } from "@/shared/lib/overlay";
+import { useModal } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";

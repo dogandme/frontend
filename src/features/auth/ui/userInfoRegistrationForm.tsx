@@ -6,8 +6,7 @@ import {
 } from "@/entities/auth/ui";
 import type { Region } from "@/entities/map/types/server";
 import { useModal } from "@/shared/lib";
-import { useSnackBarStore } from "@/shared/store";
-import { useAuthStore } from "@/shared/store/auth";
+import { useAuthStore, useSnackbar } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
@@ -267,10 +266,9 @@ const MyRegionList = () => {
 };
 
 const UserInfoRegistrationForm = () => {
-  const setSnackbarProps = useSnackBarStore((state) => state.setSnackbarProps);
-
   const { handleOpen: openLandingModal, onClose: onCloseLandingModal } =
     useModal(() => <SignUpLandingModal onClose={onCloseLandingModal} />);
+  const handleOpenSnackbar = useSnackbar("default");
 
   const token = useAuthStore((state) => state.token);
 
@@ -289,7 +287,7 @@ const UserInfoRegistrationForm = () => {
       useUserInfoRegistrationFormStore.getState();
 
     if (!token) {
-      setSnackbarProps("로그인 정보가 없습니다");
+      handleOpenSnackbar("로그인 정보가 없습니다");
       return;
     }
 
@@ -303,21 +301,21 @@ const UserInfoRegistrationForm = () => {
       region.length > 0;
 
     if (!areEssentialFieldsFilled) {
-      setSnackbarProps("필수 항목을 모두 입력해 주세요");
+      handleOpenSnackbar("필수 항목을 모두 입력해 주세요");
       return;
     }
 
     const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
 
     if (!isValidNickname) {
-      setSnackbarProps("올바른 닉네임을 입력해 주세요");
+      handleOpenSnackbar("올바른 닉네임을 입력해 주세요");
       return;
     }
 
     const areRequiredAgreementsChecked = checkList[0] && checkList[1];
 
     if (!areRequiredAgreementsChecked) {
-      setSnackbarProps("필수 약관에 모두 동의해 주세요");
+      handleOpenSnackbar("필수 약관에 모두 동의해 주세요");
       return;
     }
 
