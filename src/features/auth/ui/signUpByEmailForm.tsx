@@ -295,6 +295,7 @@ const Password = () => {
       ? ""
       : "비밀번호 형식에 맞게 입력해 주세요";
 
+  const [isFocused, setIsFocused] = useState<boolean>(false);
   const isError = !isValidPassword && !isPasswordEmpty;
 
   return (
@@ -305,10 +306,14 @@ const Password = () => {
         name="password"
         placeholder="비밀번호를 입력해 주세요"
         essential
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         onChange={handleChange}
         isError={isError}
       />
-      <StatusText isError={isError}>{statusText}</StatusText>
+      <StatusText isError={isError}>
+        {isFocused || isError ? statusText : ""}
+      </StatusText>
     </InputWrapper>
   );
 };
@@ -343,6 +348,10 @@ const PasswordConfirm = () => {
     setConfirmPassword(passwordConfirm);
   };
 
+  const isError = !isConfirmPasswordEmpty && !isValidConfirmPassword;
+
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   return (
     <>
       <InputWrapper>
@@ -352,12 +361,12 @@ const PasswordConfirm = () => {
           placeholder="비밀번호를 다시 한번 입력해 주세요"
           essential
           onChange={handleChange}
-          isError={!isConfirmPasswordEmpty && !isValidConfirmPassword}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          isError={isError}
         />
-        <StatusText
-          isError={!isConfirmPasswordEmpty && !isValidConfirmPassword}
-        >
-          {isConfirmPasswordEmpty ? "" : statusText}
+        <StatusText isError={isError}>
+          {isFocused || isError ? statusText : ""}
         </StatusText>
       </InputWrapper>
       <span className="body-3 px-3 pt-1 text-grey-500">
