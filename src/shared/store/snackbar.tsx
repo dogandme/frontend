@@ -92,6 +92,7 @@ export const SnackbarController = ({ children }: SnackbarControllerProps) => {
       if (snackbarSlideTimerRef.current) {
         clearTimeout(snackbarSlideTimerRef.current);
       }
+
       if (snackbarCloseTimerRef.current) {
         clearTimeout(snackbarCloseTimerRef.current);
       }
@@ -99,10 +100,6 @@ export const SnackbarController = ({ children }: SnackbarControllerProps) => {
       snackbarSlideTimerRef.current = setTimeout(() => {
         setSnackbarSlide({ slide: "slideUp" });
       }, SNACKBAR_AUTO_HIDE_DURATION - SNACKBAR_ANIMATION_DURATION);
-
-      snackbarCloseTimerRef.current = setTimeout(() => {
-        removeOverlay(SNACKBAR_ID);
-      }, SNACKBAR_AUTO_HIDE_DURATION);
 
       return;
     }
@@ -115,14 +112,11 @@ export const SnackbarController = ({ children }: SnackbarControllerProps) => {
       return;
     }
 
-    if (snackbarSlideTimerRef.current) {
-      clearTimeout(snackbarSlideTimerRef.current);
-    }
+    snackbarRef.current.classList.add(`snackbar-slideUp-${type}`);
+
     if (snackbarCloseTimerRef.current) {
       clearTimeout(snackbarCloseTimerRef.current);
     }
-
-    snackbarRef.current.classList.add(`snackbar-slideUp-${type}`);
 
     snackbarCloseTimerRef.current = setTimeout(() => {
       removeOverlay(SNACKBAR_ID);
