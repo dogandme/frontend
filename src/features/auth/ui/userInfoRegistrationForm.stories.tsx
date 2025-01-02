@@ -43,7 +43,9 @@ export const Default: Story = {
     });
 
     useAuthStore.setState({
-      token: "Bearer token",
+      token: "accessToken-ROLE_NONE",
+      role: "ROLE_NONE",
+      nickname: null,
     });
 
     return <Story />;
@@ -387,7 +389,9 @@ export const Default: Story = {
 export const ApiTest: Story = {
   decorators: (Story) => {
     useAuthStore.setState({
-      token: "Bearer token",
+      token: "accessToken-ROLE_NONE",
+      role: "ROLE_NONE",
+      nickname: null,
     });
 
     useUserInfoRegistrationFormStore.setState({
