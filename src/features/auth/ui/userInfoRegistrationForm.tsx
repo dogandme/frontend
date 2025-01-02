@@ -5,6 +5,7 @@ import {
   SignUpLandingModal,
 } from "@/entities/auth/ui";
 import type { Region } from "@/entities/map/types/server";
+import { AUTH_ERROR_MESSAGE } from "@/shared/constants";
 import { useModal } from "@/shared/lib";
 import { useAuthStore, useSnackbar } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -266,17 +267,25 @@ const MyRegionList = () => {
 };
 
 const UserInfoRegistrationForm = () => {
-  const { handleOpen: openLandingModal, onClose: onCloseLandingModal } =
-    useModal(() => <SignUpLandingModal onClose={onCloseLandingModal} />);
+  const {
+    handleOpen: openLandingModal,
+    onClose: onCloseLandingModal,
+    isOpen,
+  } = useModal(() => <SignUpLandingModal onClose={onCloseLandingModal} />);
   const handleOpenSnackbar = useSnackbar("default");
 
   const token = useAuthStore((state) => state.token);
+  const role = useAuthStore((state) => state.role);
 
   const { mutate: putUserInfoRegistration } = usePutAddUserInfo({
     onSuccess: () => {
       openLandingModal();
     },
   });
+
+  if (!isOpen && role === "ROLE_GUEST") {
+    throw new Error(AUTH_ERROR_MESSAGE.NON_AUTHORIZED);
+  }
 
   const { isDuplicateNickname } = usePostCheckDuplicateNicknameState();
 

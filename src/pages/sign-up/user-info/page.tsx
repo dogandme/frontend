@@ -14,6 +14,6 @@ const UserInfoRegistrationPage = withAuth(() => {
       </main>
     </div>
   );
-}, ["ROLE_NONE"]);
+}, ["ROLE_NONE", "ROLE_GUEST"]);
 
 export default UserInfoRegistrationPage;
