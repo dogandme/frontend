@@ -127,15 +127,23 @@ const putAddUserInfoHandler = http.put<
     markings: [],
   };
 
-  return HttpResponse.json({
-    code: 200,
-    message: "success",
-    content: {
-      nickname,
-      authorization: "accessToken-ROLE_GUEST",
-      role: "ROLE_GUEST",
+  return HttpResponse.json(
+    {
+      code: 200,
+      message: "success",
+      content: {
+        nickname,
+        authorization: "accessToken-ROLE_GUEST",
+        role: "ROLE_GUEST",
+      },
     },
-  });
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "Set-Cookie": "Authorization-refresh=refreshToken-ROLE_GUEST",
+      },
+    },
+  );
 });
 
 const postCheckDuplicateNicknameHandler = http.post<
