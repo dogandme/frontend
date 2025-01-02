@@ -7,13 +7,11 @@ interface LogoutModalProps {
 }
 
 export const LogoutModal = ({ onCloseLogoutModal }: LogoutModalProps) => {
-  const { mutate: postLogout } = usePostLogout();
-
-  const handleLogout = () => {
-    postLogout(undefined, {
-      onSuccess: () => onCloseLogoutModal(),
-    });
-  };
+  const { mutate: postLogout } = usePostLogout({
+    onSuccess: () => {
+      onCloseLogoutModal();
+    },
+  });
 
   return (
     <Modal modalType="center">
@@ -33,7 +31,7 @@ export const LogoutModal = ({ onCloseLogoutModal }: LogoutModalProps) => {
         </button>
         <button
           className="flex flex-1 justify-center items-center  px-6 text-tangerine-500 btn-2"
-          onClick={handleLogout}
+          onClick={() => postLogout()}
         >
           확인
         </button>
