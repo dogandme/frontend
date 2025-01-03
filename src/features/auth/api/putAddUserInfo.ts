@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/shared/lib";
-import { useAuthStore } from "@/shared/store";
 import { SIGN_UP_END_POINT } from "../constants";
 import type { SignUpResponse } from "../types/server";
 
@@ -12,10 +11,10 @@ interface PostAddUserInfoRequest {
   marketingYn: boolean;
 }
 
-type PostAddUserInfoResponse = SignUpResponse<"ROLE_GUEST">;
+type PutAddUserInfoResponse = SignUpResponse<"ROLE_GUEST">;
 
 const putAddUserInfo = async (userInfo: PostAddUserInfoRequest) => {
-  return apiClient.put<PostAddUserInfoResponse>(SIGN_UP_END_POINT.USER_INFO, {
+  return apiClient.put<PutAddUserInfoResponse>(SIGN_UP_END_POINT.USER_INFO, {
     withToken: true,
     credentials:
       process.env.NODE_ENV === "development" ? "include" : "same-origin",
@@ -23,24 +22,12 @@ const putAddUserInfo = async (userInfo: PostAddUserInfoRequest) => {
   });
 };
 
-export const usePutAddUserInfo = ({ onSuccess }: { onSuccess: () => void }) => {
-  const setNickname = useAuthStore((state) => state.setNickname);
-  const setToken = useAuthStore((state) => state.setToken);
-  const setRole = useAuthStore((state) => state.setRole);
-
-  return useMutation<PostAddUserInfoResponse, Error, PostAddUserInfoRequest>({
+export const usePutAddUserInfo = () => {
+  return useMutation<PutAddUserInfoResponse, Error, PostAddUserInfoRequest>({
     mutationFn: putAddUserInfo,
-    onSuccess: (data) => {
-      const { role, nickname, authorization } = data;
-
-      setRole(role);
-      setNickname(nickname);
-      setToken(authorization);
-
-      onSuccess();
-    },
     onError: (error) => {
       console.error(error);
     },
+    gcTime: 0,
   });
 };
