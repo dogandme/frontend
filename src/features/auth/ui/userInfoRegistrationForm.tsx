@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AgreementCheckbox,
   SelectOpener,
@@ -266,17 +266,40 @@ const MyRegionList = () => {
 };
 
 const UserInfoRegistrationForm = () => {
+  const setNickname = useAuthStore((state) => state.setNickname);
+  const setToken = useAuthStore((state) => state.setToken);
+  const setRole = useAuthStore((state) => state.setRole);
+
+  const {
+    mutate: putUserInfoRegistration,
+    data,
+    isSuccess,
+  } = usePutAddUserInfo();
+
   const { handleOpen: openLandingModal, onClose: onCloseLandingModal } =
-    useModal(() => <SignUpLandingModal onClose={onCloseLandingModal} />);
+    useModal(() => (
+      <SignUpLandingModal
+        nickname={data?.nickname ?? ""}
+        onClose={() => {
+          if (data) {
+            setNickname(data.nickname);
+            setToken(data.authorization);
+            setRole(data.role);
+
+            onCloseLandingModal();
+          }
+        }}
+      />
+    ));
   const handleOpenSnackbar = useSnackbar("default");
 
-  const token = useAuthStore((state) => state.token);
-
-  const { mutate: putUserInfoRegistration } = usePutAddUserInfo({
-    onSuccess: () => {
+  useEffect(() => {
+    if (isSuccess && data) {
       openLandingModal();
-    },
-  });
+    }
+  }, [isSuccess, data]);
+
+  const token = useAuthStore((state) => state.token);
 
   const { isDuplicateNickname } = usePostCheckDuplicateNicknameState();
 

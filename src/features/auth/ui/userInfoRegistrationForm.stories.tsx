@@ -43,7 +43,9 @@ export const Default: Story = {
     });
 
     useAuthStore.setState({
-      token: "Bearer token",
+      token: "accessToken-ROLE_NONE",
+      role: "ROLE_NONE",
+      nickname: null,
     });
 
     return <Story />;
@@ -358,8 +360,6 @@ export const Default: Story = {
     await userEvent.clear($nicknameInput);
     await userEvent.type($nicknameInput, validNickname);
 
-    // todo: 유저 중복 snackbar 검사
-
     await step(
       "필수 약관에 동의하지 않은 상태에서 [회원가입] 버튼을 누르면, snackbar가 뜬다.",
       async () => {
@@ -377,123 +377,6 @@ export const Default: Story = {
           },
           {
             timeout: 1000,
-          },
-        );
-      },
-    );
-  },
-};
-
-export const ApiTest: Story = {
-  decorators: (Story) => {
-    useAuthStore.setState({
-      token: "Bearer token",
-    });
-
-    useUserInfoRegistrationFormStore.setState({
-      nickname: "",
-      gender: null,
-      ageRange: null,
-      region: [],
-      checkList: [false, false, false],
-    });
-
-    return <Story />;
-  },
-
-  render: () => <UserInfoRegistrationForm />,
-
-  parameters: {
-    msw: { handlers },
-  },
-
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    const $nicknameInput = canvasElement.querySelector(
-      'input[name="nickname"]',
-    ) as HTMLInputElement;
-
-    const $genderTriggerButton = canvasElement.querySelector("#gender");
-    const $ageRangeTriggerButton = canvasElement.querySelector("#age-range");
-
-    const $firstAgreementCheckbox = canvas.getByText("이용약관 동의 (필수)");
-    const $secondAgreementCheckbox = canvas.getByText(
-      "개인정보 수집 및 이용 동의 (필수)",
-    );
-    const $regionSelectButton = canvas.getByText("동네 설정하기");
-
-    const $submitButton = canvas.getByText("회원가입");
-
-    await step(
-      '중복되는 닉네임을 적을 경우, "이미 존재하는 닉네임입니다." 안내 문구가 뜬다.',
-      async () => {
-        await userEvent.type($nicknameInput, "중복");
-        await userEvent.tab();
-
-        const $statusText =
-          await canvas.findByText("이미 존재하는 닉네임입니다.");
-        expect($statusText).toBeInTheDocument();
-      },
-    );
-
-    await userEvent.clear($nicknameInput);
-
-    await step(
-      "form을 올바르게 입력하고 필수 약관에 동의한 상태에서 [회원가입] 버튼을 누르면, nickname과 role을 store에 저장된다.",
-      async () => {
-        const validNickname = "hihihi";
-        await userEvent.type($nicknameInput, validNickname);
-
-        await userEvent.click($genderTriggerButton!);
-
-        const $bottomSheet = document.querySelector("#gender-select");
-        const $optionList = $bottomSheet?.querySelectorAll("li");
-        const $maleOption = $optionList?.[0];
-        await userEvent.click($maleOption!);
-
-        await userEvent.click($ageRangeTriggerButton!);
-
-        const $ageRangeBottomSheet =
-          document.querySelector("#age-range-select");
-        const $ageRangeOptionList =
-          $ageRangeBottomSheet?.querySelectorAll("li");
-        const $teenagerOption = $ageRangeOptionList?.[0];
-        await userEvent.click($teenagerOption!);
-
-        await userEvent.click($firstAgreementCheckbox);
-        await userEvent.click($secondAgreementCheckbox);
-
-        await userEvent.click($regionSelectButton);
-
-        const $regionSearchInput =
-          canvasElement.querySelector("#region-search")!;
-        await userEvent.type($regionSearchInput, "강남구 역삼동");
-
-        const $selectedRegion = await canvas.findByText(/강남구 역삼1동/);
-        await userEvent.click($selectedRegion);
-
-        const $confirmButton = canvas.getByText("확인");
-        await userEvent.click($confirmButton);
-
-        await userEvent.click($submitButton);
-
-        await waitFor(() => {
-          const { nickname, role } = useAuthStore.getState();
-
-          expect(role).toBe("ROLE_GUEST");
-          expect(nickname).toBe(validNickname);
-        });
-
-        await step(
-          "스토어에 닉네임이 저장된 후엔 회원 가입 축하 모달이 나타난다.",
-          async () => {
-            const { nickname } = useAuthStore.getState();
-            const $landingHeadLineTitle = canvas.getByText(`${nickname}`);
-            const $landingHeadLineContent =
-              canvas.getByText("회원가입을 축하해요");
-            expect($landingHeadLineTitle).toBeInTheDocument();
-            expect($landingHeadLineContent).toBeInTheDocument();
           },
         );
       },

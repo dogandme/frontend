@@ -1,16 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
-import { useAuthStore } from "@/shared/store/auth";
 import { useRouteHistoryStore } from "@/shared/store/history";
 import { Modal } from "@/shared/ui/modal";
 
 interface SignUpLandingModalProps {
-  onClose: () => Promise<void>;
+  nickname: string;
+  onClose: () => void;
 }
 
-export const SignUpLandingModal = ({ onClose }: SignUpLandingModalProps) => {
-  const { nickname } = useAuthStore.getState();
-
+export const SignUpLandingModal = ({
+  nickname,
+  onClose,
+}: SignUpLandingModalProps) => {
   const lastNoneAuthRoute = useRouteHistoryStore(
     (state) => state.lastNoneAuthRoute,
   );
