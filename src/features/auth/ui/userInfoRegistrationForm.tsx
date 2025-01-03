@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AgreementCheckbox,
   SelectOpener,
   SignUpLandingModal,
 } from "@/entities/auth/ui";
 import type { Region } from "@/entities/map/types/server";
-import { AUTH_ERROR_MESSAGE } from "@/shared/constants";
 import { useModal } from "@/shared/lib";
 import { useAuthStore, useSnackbar } from "@/shared/store";
 import { Badge } from "@/shared/ui/badge";
@@ -267,25 +266,40 @@ const MyRegionList = () => {
 };
 
 const UserInfoRegistrationForm = () => {
+  const setNickname = useAuthStore((state) => state.setNickname);
+  const setToken = useAuthStore((state) => state.setToken);
+  const setRole = useAuthStore((state) => state.setRole);
+
   const {
-    handleOpen: openLandingModal,
-    onClose: onCloseLandingModal,
-    isOpen,
-  } = useModal(() => <SignUpLandingModal onClose={onCloseLandingModal} />);
+    mutate: putUserInfoRegistration,
+    data,
+    isSuccess,
+  } = usePutAddUserInfo();
+
+  const { handleOpen: openLandingModal, onClose: onCloseLandingModal } =
+    useModal(() => (
+      <SignUpLandingModal
+        nickname={data?.nickname ?? ""}
+        onClose={() => {
+          if (data) {
+            setNickname(data.nickname);
+            setToken(data.authorization);
+            setRole(data.role);
+
+            onCloseLandingModal();
+          }
+        }}
+      />
+    ));
   const handleOpenSnackbar = useSnackbar("default");
 
-  const token = useAuthStore((state) => state.token);
-  const role = useAuthStore((state) => state.role);
-
-  const { mutate: putUserInfoRegistration } = usePutAddUserInfo({
-    onSuccess: () => {
+  useEffect(() => {
+    if (isSuccess && data) {
       openLandingModal();
-    },
-  });
+    }
+  }, [isSuccess, data]);
 
-  if (!isOpen && role === "ROLE_GUEST") {
-    throw new Error(AUTH_ERROR_MESSAGE.NON_AUTHORIZED);
-  }
+  const token = useAuthStore((state) => state.token);
 
   const { isDuplicateNickname } = usePostCheckDuplicateNicknameState();
 
