@@ -8,8 +8,7 @@ import { SETTING_END_POINT } from "../constants";
 const postLogout = async () => {
   return apiClient.post(SETTING_END_POINT.LOGOUT, {
     withToken: true,
-    credentials:
-      process.env.NODE_ENV === "development" ? "include" : "same-origin",
+    credentials: "include",
   });
 };
 

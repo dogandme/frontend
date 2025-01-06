@@ -22,5 +22,7 @@ export const Default: StoryObj<typeof SignUpLandingModal> = {
     },
   ],
 
-  render: () => <SignUpLandingModal onClose={async () => {}} />,
+  render: () => (
+    <SignUpLandingModal onClose={async () => {}} nickname="뽀송송" />
+  ),
 };
