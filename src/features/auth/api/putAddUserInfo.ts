@@ -16,7 +16,7 @@ type PutAddUserInfoResponse = SignUpResponse<"ROLE_GUEST">;
 const putAddUserInfo = async (userInfo: PostAddUserInfoRequest) => {
   return apiClient.put<PutAddUserInfoResponse>(SIGN_UP_END_POINT.USER_INFO, {
     withToken: true,
-    credentials: 'include'
+    credentials: "include",
     body: userInfo,
   });
 };
