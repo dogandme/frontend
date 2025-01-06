@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-*storybook.log
+*storybook.log 
 
 # env 파일 ignore
 .env
