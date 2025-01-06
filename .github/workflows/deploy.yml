@@ -2,7 +2,7 @@ name: Deploy React
 
 on:
   push:
-    branches: release-cookie
+    branches: dev
 
 env:
   S3_BUCKET_NAME: mungwithme.site
