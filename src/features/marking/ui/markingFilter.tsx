@@ -5,7 +5,7 @@ import {
   useCurrentLocation,
   useGetMapCurrentBounds,
   useMapQueryParams,
-} from "@/features/map/hooks";
+} from "@/features/map/lib";
 import { useMapStore } from "@/features/map/store";
 import type { SortType } from "@/entities/marking/types/server";
 import { useModal } from "@/shared/lib";

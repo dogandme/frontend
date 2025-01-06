@@ -1,7 +1,7 @@
 import type { Region } from "@/entities/map/types/server";
 import { ActionChip } from "@/shared/ui/chip";
 import { ArrowRightIcon } from "@/shared/ui/icon";
-import { useChangeRegionModal } from "../hooks";
+import { useChangeRegionModal } from "../lib";
 
 interface RegionChangeButtonProps {
   regions: Region[];

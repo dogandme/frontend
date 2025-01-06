@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { MarkingList } from "@/widgets/map/ui/markingList";
 import { MarkingItem, MarkingItemSkeleton } from "@/widgets/marking/ui";
-import { useMapQueryParams } from "@/features/map/hooks";
+import { useMapQueryParams } from "@/features/map/lib";
 import { SortTypeFilter } from "@/features/marking/ui";
 import {
   useGetAllMarkingsOfUser,

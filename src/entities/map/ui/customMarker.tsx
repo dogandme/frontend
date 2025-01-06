@@ -5,7 +5,7 @@ import {
   useMap,
 } from "@vis.gl/react-google-maps";
 import { mapOptions } from "@/widgets/map/constants";
-import { usePlaceQueryParams } from "@/features/map/hooks";
+import { usePlaceQueryParams } from "@/features/map/lib";
 import { API_BASE_URL, ROUTER_PATH } from "@/shared/constants";
 import { Badge } from "@/shared/ui/badge";
 import { PinShadowIcon } from "@/shared/ui/icon";
