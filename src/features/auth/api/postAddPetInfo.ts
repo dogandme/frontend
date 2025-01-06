@@ -29,8 +29,7 @@ const postAddPetInfo = async ({
 
   return apiClient.post<PostPetInfoResponse>(SIGN_UP_END_POINT.PET_INFO, {
     withToken: true,
-    credentials:
-      process.env.NODE_ENV === "development" ? "include" : "same-origin",
+    credentials: 'include'
     body: formData,
   });
 };

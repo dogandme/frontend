@@ -16,8 +16,7 @@ type PutAddUserInfoResponse = SignUpResponse<"ROLE_GUEST">;
 const putAddUserInfo = async (userInfo: PostAddUserInfoRequest) => {
   return apiClient.put<PutAddUserInfoResponse>(SIGN_UP_END_POINT.USER_INFO, {
     withToken: true,
-    credentials:
-      process.env.NODE_ENV === "development" ? "include" : "same-origin",
+    credentials: 'include'
     body: userInfo,
   });
 };
