@@ -1,10 +1,10 @@
 # 🐾 mung with me
 
-![thumbnail](https://github.com/user-attachments/assets/a2ec542f-7dc3-4a97-b016-6f5a3c5ff414)
+<img src="https://github.com/user-attachments/assets/a2ec542f-7dc3-4a97-b016-6f5a3c5ff414" width="600" />
 
 ## 기술 스택
 
-![기술스택](https://github.com/user-attachments/assets/72efe459-1e01-4daa-b055-a4368d7b0847)
+<img src="https://github.com/user-attachments/assets/0b988f20-3481-426a-8377-8ea4e0381cd6" width="600" />
 
 ## 폴더 구조
 
