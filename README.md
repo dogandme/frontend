@@ -1,4 +1,12 @@
-# 폴더 구조
+# 🐾 mung with me
+
+<img src="https://github.com/user-attachments/assets/a2ec542f-7dc3-4a97-b016-6f5a3c5ff414" width="600" />
+
+## 기술 스택
+
+<img src="https://github.com/user-attachments/assets/0b988f20-3481-426a-8377-8ea4e0381cd6" width="600" />
+
+## 폴더 구조
 
 ```dotnetcli
 📦src
