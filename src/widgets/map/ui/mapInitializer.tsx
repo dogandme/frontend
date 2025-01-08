@@ -8,7 +8,7 @@ import {
   useMapMode,
   useMapQueryParams,
   usePlaceQueryParams,
-} from "@/features/map/hooks";
+} from "@/features/map/lib";
 import { useMapStore } from "@/features/map/store";
 import { CurrentLocationLoading } from "@/entities/map/ui";
 import type { Marking } from "@/entities/marking/types/server";

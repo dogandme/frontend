@@ -3,7 +3,7 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { mapOptions } from "@/widgets/map/constants";
 import { PlaceMarkingListBottomSheet } from "@/widgets/map/ui";
 import { MAP_INITIAL_ZOOM } from "@/features/map/constants";
-import { useMapQueryParams } from "@/features/map/hooks";
+import { useMapQueryParams } from "@/features/map/lib";
 import { useMapStore } from "@/features/map/store";
 import { MarkingPins } from "@/entities/map/ui";
 import { useGetBoundaryMarkerList } from "@/entities/marking/api";

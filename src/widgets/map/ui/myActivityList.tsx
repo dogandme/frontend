@@ -3,7 +3,7 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { MarkingItem, MarkingItemSkeleton } from "@/widgets/marking/ui";
 import { MarkingPins } from "@/entities/map/ui";
 import { useGetMyActivityMarkerList } from "@/entities/marking/api";
-import { useGetMyActivityMarkingList } from "@/entities/marking/hooks";
+import { useGetMyActivityMarkingList } from "@/entities/marking/lib";
 import { useInfiniteScroll, withAuth } from "@/shared/lib";
 import { LoadingSpinner } from "@/shared/ui/spinner";
 import { MarkingList } from "./markingList";

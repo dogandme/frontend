@@ -3,7 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useMapMode } from "@/features/map/hooks";
+import { useMapMode } from "@/features/map/lib";
 import { GetMySavedMarkingListResponse } from "@/entities/marking/api";
 import { markingQueryKey } from "@/entities/marking/api";
 import type { Marking } from "@/entities/marking/types/server";

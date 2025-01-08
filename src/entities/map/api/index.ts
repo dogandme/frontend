@@ -1,3 +1,3 @@
 export * from "./queryKey";
-export * from "./useRegionByKeyword";
-export * from "./useRegionByLatLng";
+export * from "./useGetRegionByKeyword";
+export * from "./useGetRegionByLatLng";

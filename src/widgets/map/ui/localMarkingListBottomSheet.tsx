@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMap } from "@vis.gl/react-google-maps";
-import { useMapQueryParams } from "@/features/map/hooks";
+import { useMapQueryParams } from "@/features/map/lib";
 import { RangeFilter, SortTypeFilter } from "@/features/marking/ui";
 import type { Bounds } from "@/entities/map/types/client";
 import {

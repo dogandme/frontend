@@ -21,7 +21,7 @@ import {
   useGetMapCurrentBounds,
   useMapMode,
   useMapQueryParams,
-} from "../hooks";
+} from "../lib";
 import { useMapStore } from "../store";
 
 /* ----------default mode 일 때 나타나는 버튼들입니다.---------- */

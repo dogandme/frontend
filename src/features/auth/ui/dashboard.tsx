@@ -1,4 +1,4 @@
-import { useChangePetInfoModal } from "@/features/setting/hooks/useChangePetInfoModal";
+import { useChangePetInfoModal } from "@/features/setting/lib/useChangePetInfoModal";
 import type { PetInfo } from "@/entities/profile/types/server";
 import { EditIcon } from "@/shared/ui/icon";
 

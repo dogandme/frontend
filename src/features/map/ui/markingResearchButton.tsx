@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { ROUTER_PATH } from "@/shared/constants";
 import { ResetIcon } from "@/shared/ui/icon";
-import { useGetMapCurrentBounds, useMapQueryParams } from "../hooks";
+import { useGetMapCurrentBounds, useMapQueryParams } from "../lib";
 import { useMapStore } from "../store";
 
 export const MarkingResearchButton = () => {
