@@ -4,7 +4,7 @@
 
 ## 기술 스택
 
-![기술스택](https://github.com/user-attachments/assets/47b83012-b4d1-43af-a416-64327c138adc)
+![기술스택](https://github.com/user-attachments/assets/72efe459-1e01-4daa-b055-a4368d7b0847)
 
 ## 폴더 구조
 
