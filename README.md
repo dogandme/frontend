@@ -1,4 +1,4 @@
-# mung with me
+# 🐾 mung with me
 
 ![thumbnail](https://github.com/user-attachments/assets/a2ec542f-7dc3-4a97-b016-6f5a3c5ff414)
 
