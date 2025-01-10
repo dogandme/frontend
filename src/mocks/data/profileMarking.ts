@@ -1,9 +1,10 @@
+import { getRandomImg } from "./getRandomImg";
 import { otherUsers } from "./otherUser";
 
 let markingCount = 0;
 const makeRandomMarking = (markingId: number) => ({
   markingId,
-  previewImage: `a18b127f-06e6-4954-9f45-${Math.ceil(Math.random() * 100000)}a7299a`,
+  previewImage: getRandomImg(),
   lat: Math.random() > 0.5 ? 35 + Math.random() : 35 - Math.random(),
   lng: Math.random() > 0.5 ? 129 + Math.random() : 129 - Math.random(),
 });
