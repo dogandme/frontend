@@ -101,7 +101,7 @@ export const _likedMarkingList = Array.from(
   }),
 );
 
-export const _bookmarkedMarkingList = Array.from(
+export const _savedMarkingList = Array.from(
   { length: 100 },
   (_, idx) => 120 + idx * 3,
 ).map((id) =>

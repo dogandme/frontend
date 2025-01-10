@@ -9,14 +9,14 @@ import type {
 } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
 import { createMockMarking, getMockMarkingList } from "../data/markingList";
-import { _likedMarkingList, _bookmarkedMarkingList } from "../data/markingList";
+import { _likedMarkingList, _savedMarkingList } from "../data/markingList";
 import { getMyMark } from "../data/myMark";
 import { profileMarkingThumbnail } from "../data/profileMarking";
 import { temporaryMarkingList as _temporaryMarkingList } from "../data/tempMarkingList";
 import { getMockUserMarkingList } from "../data/userMarkingList";
 
 let likedMarkingList = [..._likedMarkingList];
-let bookmarkedMarkingList = [..._bookmarkedMarkingList];
+let savedMarkingList = [..._savedMarkingList];
 
 const getAddressFromLatLngHandler = http.get<PathParams>(
   `${API_BASE_URL}/maps/reverse-geocode`,
@@ -136,7 +136,7 @@ const postSaveMarkingHandler = http.post<PathParams>(
     await new Promise((res) => setTimeout(res, 1000));
 
     const markingId = Number(params.markingId);
-    bookmarkedMarkingList.push(
+    savedMarkingList.push(
       createMockMarking(
         markingId,
         {
@@ -162,7 +162,7 @@ const deleteSaveMarkingHandler = http.delete<PathParams>(
     await new Promise((res) => setTimeout(res, 1000));
 
     const markingId = Number(params.markingId);
-    bookmarkedMarkingList = bookmarkedMarkingList.filter(
+    savedMarkingList = savedMarkingList.filter(
       (marking) => marking.markingId !== markingId,
     );
 
@@ -790,7 +790,7 @@ const getLikedMarkingListHandler = http.get(
   },
 );
 
-const getBookmarkedMarkingListHandler = http.get(
+const getSavedMarkingListHandler = http.get(
   `${API_BASE_URL}/markings/saves`,
   async ({ request }) => {
     const token = request.headers.get("Authorization");
@@ -810,7 +810,7 @@ const getBookmarkedMarkingListHandler = http.get(
     const pageNumber = Number(
       new URL(request.url).searchParams.get("offset") || 0,
     );
-    const totalCount = bookmarkedMarkingList.length;
+    const totalCount = savedMarkingList.length;
     const pageSize = 20;
     const lastPage = Math.ceil(totalCount / pageSize);
 
@@ -818,7 +818,7 @@ const getBookmarkedMarkingListHandler = http.get(
       code: 200,
       message: "success",
       content: {
-        markings: bookmarkedMarkingList.slice(
+        markings: savedMarkingList.slice(
           pageNumber * pageSize,
           (pageNumber + 1) * pageSize,
         ),
@@ -861,7 +861,7 @@ const getSavedMarkerListHandler = http.get(
     return HttpResponse.json({
       code: 200,
       message: "success",
-      content: bookmarkedMarkingList.map(
+      content: savedMarkingList.map(
         ({ markingId, lat, lng, previewImage }) => ({
           markingId,
           lat,
@@ -914,7 +914,7 @@ export const markingHandlers = [
   getLikedMarkerListHandler,
   getSavedMarkerListHandler,
   getLikedMarkingListHandler,
-  getBookmarkedMarkingListHandler,
+  getSavedMarkingListHandler,
   getProfileThumbnailHandler,
   getMarkingDetailRequestHandler,
 ];
