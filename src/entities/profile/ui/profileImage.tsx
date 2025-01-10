@@ -21,7 +21,9 @@ export const ProfileImage = ({
   size,
   className = "",
 }: ProfileImageProps) => {
-  const src = `${API_BASE_URL}/pets/image/${imageUrl}`;
+  const src = import.meta.env.DEV
+    ? imageUrl
+    : `${API_BASE_URL}/pets/image/${imageUrl}`;
 
   const { isLoading, imageState } = useImageState(src);
 

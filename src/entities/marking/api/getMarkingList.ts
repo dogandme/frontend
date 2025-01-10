@@ -126,10 +126,14 @@ export const useGetMarkingList = ({
       const flattenData = data.pages.flatMap(({ markings }) =>
         markings.map((data) => ({
           ...data,
-          previewImage: `${API_BASE_URL}/markings/image/preview/${data.markingId}/${data.previewImage}`,
+          previewImage: import.meta.env.DEV
+            ? data.previewImage
+            : `${API_BASE_URL}/markings/image/preview/${data.markingId}/${data.previewImage}`,
           images: data.images.map(({ imageUrl, ...rest }) => ({
             ...rest,
-            imageUrl: `${API_BASE_URL}/markings/image/${data.markingId}/${imageUrl}`,
+            imageUrl: import.meta.env.DEV
+              ? imageUrl
+              : `${API_BASE_URL}/markings/image/${data.markingId}/${imageUrl}`,
           })),
         })),
       );

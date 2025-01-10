@@ -215,7 +215,11 @@ const EditPhotoInput = ({
         {/* 기존에 존재하던 이미지 */}
         {externalImages.map(({ imageUrl, id }) => (
           <ImgSlider.ImgItem
-            src={`${API_BASE_URL}/markings/image/${markingId}/${imageUrl}`}
+            src={
+              import.meta.env.DEV
+                ? imageUrl
+                : `${API_BASE_URL}/markings/image/${markingId}/${imageUrl}`
+            }
             alt={`${markingId}의 ${id}번의 이미지`}
             key={id}
             onRemove={() => {
