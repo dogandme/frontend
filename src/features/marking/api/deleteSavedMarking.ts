@@ -47,7 +47,10 @@ export const useDeleteSavedMarking = () => {
         );
 
         queryClient.invalidateQueries({
-          queryKey: markingQueryKey.myActivityMarkingList("SAVED"),
+          queryKey: [
+            markingQueryKey.myActivityMarkingList("SAVED"),
+            markingQueryKey.myActivityMarkingList("LIKED"),
+          ],
         });
       }
 

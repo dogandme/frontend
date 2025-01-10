@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { markingQueryKey } from "@/entities/marking/api";
 import type { Marking } from "@/entities/marking/types/server";
 import { profileQueryKey } from "@/entities/profile/api";
 import { apiClient } from "@/shared/lib";
@@ -17,7 +18,11 @@ export const usePostLikeMarking = () => {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: profileQueryKey.myProfile(),
+        queryKey: [
+          profileQueryKey.myProfile(),
+          markingQueryKey.myActivityMarkingList("SAVED"),
+          markingQueryKey.myActivityMarkingList("LIKED"),
+        ],
       });
     },
   });

@@ -47,9 +47,13 @@ export const useDeleteLikeMarking = () => {
         );
 
         queryClient.invalidateQueries({
-          queryKey: markingQueryKey.myActivityMarkingList("LIKED"),
+          queryKey: [
+            markingQueryKey.myActivityMarkingList("SAVED"),
+            markingQueryKey.myActivityMarkingList("LIKED"),
+          ],
         });
       }
+
       queryClient.invalidateQueries({
         queryKey: profileQueryKey.myProfile(),
       });
