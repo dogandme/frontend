@@ -1,4 +1,4 @@
-import { likedMarkingList, bookmarkedMarkingList } from "./markingList";
+import { _likedMarkingList, _bookmarkedMarkingList } from "./markingList";
 import { otherUsers } from "./otherUser";
 import { profileMarkingThumbnail } from "./profileMarking";
 import { temporaryMarkingList } from "./tempMarkingList";
@@ -27,8 +27,8 @@ export const User = {
       socialType: "EMAIL",
       followersIds: [],
       followingsIds: [],
-      likes: likedMarkingList.map(({ markingId }) => markingId),
-      bookmarks: bookmarkedMarkingList.map(({ markingId }) => markingId),
+      likes: _likedMarkingList.map(({ markingId }) => markingId),
+      bookmarks: _bookmarkedMarkingList.map(({ markingId }) => markingId),
       tempCnt: 3,
       markings: [],
       pet: null,
@@ -48,8 +48,8 @@ export const User = {
       followingsIds: otherUsers
         .filter(({ followersIds }) => followersIds.includes(1))
         .map(({ userId }) => userId),
-      likes: likedMarkingList.map(({ markingId }) => markingId),
-      bookmarks: bookmarkedMarkingList.map(({ markingId }) => markingId),
+      likes: _likedMarkingList.map(({ markingId }) => markingId),
+      bookmarks: _bookmarkedMarkingList.map(({ markingId }) => markingId),
       tempCnt: temporaryMarkingList.length,
       markings: profileMarkingThumbnail["뽀송송"].map(
         ({ markingId }) => markingId,

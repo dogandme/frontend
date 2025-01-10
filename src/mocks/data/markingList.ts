@@ -89,7 +89,7 @@ export const createMockMarking = (
 
 // 내 마킹 아이디가 120번까지기 때문에 120번 이후부터 좋아요, 저장된 마킹 리스트 생성
 
-export const likedMarkingList = Array.from(
+export const _likedMarkingList = Array.from(
   { length: 100 },
   (_, idx) => 120 + idx * 2,
 ).map((id) =>
@@ -101,7 +101,7 @@ export const likedMarkingList = Array.from(
   }),
 );
 
-export const bookmarkedMarkingList = Array.from(
+export const _bookmarkedMarkingList = Array.from(
   { length: 100 },
   (_, idx) => 120 + idx * 3,
 ).map((id) =>

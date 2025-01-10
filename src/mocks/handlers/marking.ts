@@ -9,11 +9,14 @@ import type {
 } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
 import { createMockMarking, getMockMarkingList } from "../data/markingList";
-import { likedMarkingList, bookmarkedMarkingList } from "../data/markingList";
+import { _likedMarkingList, _bookmarkedMarkingList } from "../data/markingList";
 import { getMyMark } from "../data/myMark";
 import { profileMarkingThumbnail } from "../data/profileMarking";
 import { temporaryMarkingList as _temporaryMarkingList } from "../data/tempMarkingList";
 import { getMockUserMarkingList } from "../data/userMarkingList";
+
+let likedMarkingList = [..._likedMarkingList];
+let bookmarkedMarkingList = [..._bookmarkedMarkingList];
 
 const getAddressFromLatLngHandler = http.get<PathParams>(
   `${API_BASE_URL}/maps/reverse-geocode`,
@@ -84,8 +87,24 @@ const deleteMarkingHandler = http.delete<PathParams>(
 
 const postLikeMarkingHandler = http.post<PathParams>(
   `${API_BASE_URL}/markings/likes/:markingId`,
-  async () => {
+  async ({ params }) => {
     await new Promise((res) => setTimeout(res, 1000));
+
+    const markingId = Number(params.markingId);
+
+    likedMarkingList.push(
+      createMockMarking(
+        markingId,
+        {
+          southBottomLat: 37.123456 + Math.random() * 0.1,
+          northTopLat: 37.123456 + Math.random() * 0.1,
+          southLeftLng: 127.123456 + Math.random() * 0.1,
+          northRightLng: 127.123456 + Math.random() * 0.1,
+        },
+        `User${Math.floor(Math.random() * 100)}`,
+      ),
+    );
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -95,8 +114,15 @@ const postLikeMarkingHandler = http.post<PathParams>(
 
 const deleteLikeMarkingHandler = http.delete<PathParams>(
   `${API_BASE_URL}/markings/likes/:markingId`,
-  async () => {
+  async ({ params }) => {
     await new Promise((res) => setTimeout(res, 1000));
+
+    const markingId = Number(params.markingId);
+
+    likedMarkingList = likedMarkingList.filter(
+      (marking) => marking.markingId !== markingId,
+    );
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -106,8 +132,23 @@ const deleteLikeMarkingHandler = http.delete<PathParams>(
 
 const postSaveMarkingHandler = http.post<PathParams>(
   `${API_BASE_URL}/markings/saves/:markingId`,
-  async () => {
+  async ({ params }) => {
     await new Promise((res) => setTimeout(res, 1000));
+
+    const markingId = Number(params.markingId);
+    bookmarkedMarkingList.push(
+      createMockMarking(
+        markingId,
+        {
+          southBottomLat: 37.123456 + Math.random() * 0.1,
+          northTopLat: 37.123456 + Math.random() * 0.1,
+          southLeftLng: 127.123456 + Math.random() * 0.1,
+          northRightLng: 127.123456 + Math.random() * 0.1,
+        },
+        `User${Math.floor(Math.random() * 100)}`,
+      ),
+    );
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -117,8 +158,14 @@ const postSaveMarkingHandler = http.post<PathParams>(
 
 const deleteSaveMarkingHandler = http.delete<PathParams>(
   `${API_BASE_URL}/markings/saves/:markingId`,
-  async () => {
+  async ({ params }) => {
     await new Promise((res) => setTimeout(res, 1000));
+
+    const markingId = Number(params.markingId);
+    bookmarkedMarkingList = bookmarkedMarkingList.filter(
+      (marking) => marking.markingId !== markingId,
+    );
+
     return HttpResponse.json({
       code: 200,
       message: "success",
