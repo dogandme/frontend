@@ -8,8 +8,8 @@ import type {
   TempMarking,
 } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
-import { getMockMarkerList } from "../data/markerList";
 import { createMockMarking, getMockMarkingList } from "../data/markingList";
+import { likedMarkingList, bookmarkedMarkingList } from "../data/markingList";
 import { getMyMark } from "../data/myMark";
 import { profileMarkingThumbnail } from "../data/profileMarking";
 import { temporaryMarkingList as _temporaryMarkingList } from "../data/tempMarkingList";
@@ -680,7 +680,116 @@ const getLikedMarkerListHandler = http.get(
     return HttpResponse.json({
       code: 200,
       message: "success",
-      content: getMockMarkerList(),
+      content: likedMarkingList.map(
+        ({ markingId, lat, lng, previewImage }) => ({
+          markingId,
+          lat,
+          lng,
+          previewImage,
+        }),
+      ),
+    });
+  },
+);
+
+const getLikedMarkingListHandler = http.get(
+  `${API_BASE_URL}/markings/likes`,
+  async ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (!token?.startsWith("accessToken")) {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    const pageNumber = Number(
+      new URL(request.url).searchParams.get("offset") || 0,
+    );
+    const totalCount = likedMarkingList.length;
+    const pageSize = 20;
+    const lastPage = Math.ceil(totalCount / pageSize);
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        markings: likedMarkingList.slice(
+          pageNumber * pageSize,
+          (pageNumber + 1) * pageSize,
+        ),
+        totalElements: totalCount,
+        totalPages: lastPage,
+        pageAble: {
+          pageNumber,
+          pageSize,
+          sort: {
+            sorted: false,
+            unsorted: true,
+            empty: true,
+          },
+          offset: pageNumber,
+          paged: true,
+          unpaged: false,
+        },
+      },
+    });
+  },
+);
+
+const getBookmarkedMarkingListHandler = http.get(
+  `${API_BASE_URL}/markings/saves`,
+  async ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (!token?.startsWith("accessToken")) {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    const pageNumber = Number(
+      new URL(request.url).searchParams.get("offset") || 0,
+    );
+    const totalCount = bookmarkedMarkingList.length;
+    const pageSize = 20;
+    const lastPage = Math.ceil(totalCount / pageSize);
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        markings: bookmarkedMarkingList.slice(
+          pageNumber * pageSize,
+          (pageNumber + 1) * pageSize,
+        ),
+        totalElements: totalCount,
+        totalPages: lastPage,
+        pageAble: {
+          pageNumber,
+          pageSize,
+          sort: {
+            sorted: false,
+            unsorted: true,
+            empty: true,
+          },
+          offset: pageNumber,
+          paged: true,
+          unpaged: false,
+        },
+      },
     });
   },
 );
@@ -705,7 +814,14 @@ const getSavedMarkerListHandler = http.get(
     return HttpResponse.json({
       code: 200,
       message: "success",
-      content: getMockMarkerList(),
+      content: bookmarkedMarkingList.map(
+        ({ markingId, lat, lng, previewImage }) => ({
+          markingId,
+          lat,
+          lng,
+          previewImage,
+        }),
+      ),
     });
   },
 );
@@ -743,7 +859,6 @@ export const markingHandlers = [
   postAddTempMarkingHandler,
   getMarkingListHandler,
   getBoundaryMarkerListHandler,
-  getProfileThumbnailHandler,
   getTemporaryMarkingListHandler,
   deleteTemporaryMarkingHandler,
   putModifyTempMarkingHandler,
@@ -751,5 +866,8 @@ export const markingHandlers = [
   getMyMarkerList,
   getLikedMarkerListHandler,
   getSavedMarkerListHandler,
+  getLikedMarkingListHandler,
+  getBookmarkedMarkingListHandler,
+  getProfileThumbnailHandler,
   getMarkingDetailRequestHandler,
 ];
