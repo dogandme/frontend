@@ -1,9 +1,8 @@
-import { _likedMarkingList, _savedMarkingList } from "./markingList";
 import { otherUsers } from "./otherUser";
 import { profileMarkingThumbnail } from "./profileMarking";
 import { temporaryMarkingList } from "./tempMarkingList";
 
-export const User = {
+export let User = {
   ROLE_NONE: {
     code: 200,
     message: "success",
@@ -27,14 +26,13 @@ export const User = {
       socialType: "EMAIL",
       followersIds: [],
       followingsIds: [],
-      likes: _likedMarkingList.map(({ markingId }) => markingId),
-      bookmarks: _savedMarkingList.map(({ markingId }) => markingId),
+      likes: Array.from({ length: 100 }, (_, i) => 120 + i * 2),
+      bookmarks: Array.from({ length: 100 }, (_, i) => 120 + i * 3),
       tempCnt: 3,
       markings: [],
       pet: null,
     },
   },
-
   ROLE_USER: {
     code: 200,
     message: "success",
@@ -48,8 +46,8 @@ export const User = {
       followingsIds: otherUsers
         .filter(({ followersIds }) => followersIds.includes(1))
         .map(({ userId }) => userId),
-      likes: _likedMarkingList.map(({ markingId }) => markingId),
-      bookmarks: _savedMarkingList.map(({ markingId }) => markingId),
+      likes: Array.from({ length: 100 }, (_, i) => 120 + i * 2),
+      bookmarks: Array.from({ length: 100 }, (_, i) => 120 + i * 3),
       tempCnt: temporaryMarkingList.length,
       markings: profileMarkingThumbnail["뽀송송"].map(
         ({ markingId }) => markingId,
@@ -71,4 +69,19 @@ export const User = {
       },
     },
   },
+};
+
+export const updateUser = <T extends Exclude<keyof typeof User, "ROLE_NONE">>(
+  role: T,
+  updater: (target: (typeof User)[T]["content"]) => (typeof User)[T]["content"],
+) => {
+  const target = User[role];
+  User = {
+    ...User,
+    [role]: {
+      code: target.code,
+      message: target.message,
+      content: updater(target.content),
+    },
+  };
 };

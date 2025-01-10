@@ -13,6 +13,7 @@ import { _likedMarkingList, _savedMarkingList } from "../data/markingList";
 import { getMyMark } from "../data/myMark";
 import { profileMarkingThumbnail } from "../data/profileMarking";
 import { temporaryMarkingList as _temporaryMarkingList } from "../data/tempMarkingList";
+import { updateUser } from "../data/user";
 import { getMockUserMarkingList } from "../data/userMarkingList";
 
 let likedMarkingList = [..._likedMarkingList];
@@ -92,18 +93,27 @@ const postLikeMarkingHandler = http.post<PathParams>(
 
     const markingId = Number(params.markingId);
 
-    likedMarkingList.push(
-      createMockMarking(
-        markingId,
-        {
-          southBottomLat: 37.123456 + Math.random() * 0.1,
-          northTopLat: 37.123456 + Math.random() * 0.1,
-          southLeftLng: 127.123456 + Math.random() * 0.1,
-          northRightLng: 127.123456 + Math.random() * 0.1,
-        },
-        `User${Math.floor(Math.random() * 100)}`,
-      ),
-    );
+    if (!likedMarkingList.some((marking) => marking.markingId === markingId)) {
+      likedMarkingList.push(
+        createMockMarking(
+          markingId,
+          {
+            southBottomLat: 37.123456 + Math.random() * 0.1,
+            northTopLat: 37.123456 + Math.random() * 0.1,
+            southLeftLng: 127.123456 + Math.random() * 0.1,
+            northRightLng: 127.123456 + Math.random() * 0.1,
+          },
+          `User${Math.floor(Math.random() * 100)}`,
+        ),
+      );
+    }
+
+    updateUser("ROLE_USER", (user) => {
+      return {
+        ...user,
+        likes: [...user.likes, markingId],
+      };
+    });
 
     return HttpResponse.json({
       code: 200,
@@ -122,6 +132,13 @@ const deleteLikeMarkingHandler = http.delete<PathParams>(
     likedMarkingList = likedMarkingList.filter(
       (marking) => marking.markingId !== markingId,
     );
+
+    updateUser("ROLE_USER", (user) => {
+      return {
+        ...user,
+        likes: user.likes.filter((id) => id !== markingId),
+      };
+    });
 
     return HttpResponse.json({
       code: 200,
@@ -149,6 +166,19 @@ const postSaveMarkingHandler = http.post<PathParams>(
       ),
     );
 
+    if (likedMarkingList.some((marking) => marking.markingId === markingId)) {
+      likedMarkingList = likedMarkingList.filter(
+        (marking) => marking.markingId !== markingId,
+      );
+    }
+
+    updateUser("ROLE_USER", (user) => {
+      return {
+        ...user,
+        bookmarks: [...user.bookmarks, markingId],
+      };
+    });
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -165,6 +195,13 @@ const deleteSaveMarkingHandler = http.delete<PathParams>(
     savedMarkingList = savedMarkingList.filter(
       (marking) => marking.markingId !== markingId,
     );
+
+    updateUser("ROLE_USER", (user) => {
+      return {
+        ...user,
+        bookmarks: user.bookmarks.filter((id) => id !== markingId),
+      };
+    });
 
     return HttpResponse.json({
       code: 200,
