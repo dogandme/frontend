@@ -53,7 +53,9 @@ export const useGetDashboardMarkingThumbnail = ({
       pages.flatMap(({ marks }) =>
         marks.map((data) => ({
           ...data,
-          previewImage: `${API_BASE_URL}/markings/image/preview/${data.markingId}/${data.previewImage}`,
+          previewImage: import.meta.env.DEV
+            ? data.previewImage
+            : `${API_BASE_URL}/markings/image/preview/${data.markingId}/${data.previewImage}`,
         })),
       ),
     initialPageParam: 0,

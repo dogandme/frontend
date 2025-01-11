@@ -88,7 +88,9 @@ const ProfileInput = () => {
   const backgroundUrl = profile.url
     ? profile.url.startsWith("blob")
       ? profile.url
-      : `${API_BASE_URL}/pets/image/${profile.url}`
+      : import.meta.env.DEV
+        ? profile.url
+        : `${API_BASE_URL}/pets/image/${profile.url}`
     : MASCOT_IMAGE_URL;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

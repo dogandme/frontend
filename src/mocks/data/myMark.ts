@@ -1,3 +1,4 @@
+import { getRandomImg } from "./getRandomImg";
 import { profileMarkingThumbnail } from "./profileMarking";
 
 export const getMyMark = () => {
@@ -29,14 +30,14 @@ export const getMyMark = () => {
       petId: 1,
       name: `뽀송송 Pet`,
       description: `Pet description ${index + 1}`,
-      profile: `profile_url_${index + 1}`,
+      profile: null,
       breed: `뽀송송 Breed`,
       personalities: ["personality1", "personality2"],
     },
     images: [
       {
         id: index + 1,
-        imageUrl: `image_url_${index + 1}`,
+        imageUrl: getRandomImg(),
         lank: 1,
         regDt: new Date().toISOString(),
       },

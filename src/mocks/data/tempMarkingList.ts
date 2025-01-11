@@ -1,4 +1,5 @@
 import type { GetTemporaryMarkingListResponse } from "@/entities/marking/api";
+import { getRandomImg } from "./getRandomImg";
 
 let tempMarkingId = 999;
 let hours = 1;
@@ -45,8 +46,7 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
               ? "FOLLOW_ONLY"
               : "PRIVATE",
         regDt: randomDate.toISOString(),
-        previewImage:
-          Math.random() > 0.5 ? null : `${tempMarkingId - 1} 프리뷰 이미지`,
+        previewImage: Math.random() > 0.5 ? null : getRandomImg(),
         userId: 1,
         nickName: "뽀송송",
         pet: {
@@ -79,7 +79,7 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
           (_, i) => ({
             id: tempMarkingId - 1 + i,
             lank: i,
-            imageUrl: `${tempMarkingId - 1 + i} 이미지`,
+            imageUrl: getRandomImg(),
             regDt: randomDate.toISOString(),
           }),
         ),

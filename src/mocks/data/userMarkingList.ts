@@ -1,4 +1,5 @@
 import type { Marking } from "@/entities/marking/types/server";
+import { getRandomImg } from "./getRandomImg";
 
 export const getMockUserMarkingList = ({
   nickname,
@@ -17,7 +18,7 @@ export const getMockUserMarkingList = ({
     markingId: index + 1,
     region: "**시 **구 **동",
     content: `Marking content ${index + 1}`,
-    previewImage: "fa805c91-8228-4ec4-927f-9eb876a480c3",
+    previewImage: getRandomImg(),
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
     nickName: nickname,
@@ -41,14 +42,14 @@ export const getMockUserMarkingList = ({
       petId: 1,
       name: `${nickname} Pet`,
       description: `Pet description ${index + 1}`,
-      profile: `profile_url_${index + 1}`,
+      profile: getRandomImg(),
       breed: `${nickname} Breed`,
       personalities: ["personality1", "personality2"],
     },
     images: [
       {
         id: index + 1,
-        imageUrl: `image_url_${index + 1}`,
+        imageUrl: getRandomImg(),
         lank: 1,
         regDt: new Date().toISOString(),
       },

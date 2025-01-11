@@ -117,7 +117,11 @@ export const MarkingPins = ({ tiles }: MarkingPinProps) => {
         <SinglePin
           key={markingId}
           position={position}
-          imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
+          imageUrl={
+            import.meta.env.DEV
+              ? previewImage
+              : `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`
+          }
           alt={`marking-${markingId} 마커를 나타내는 핀`}
           onClick={() => handleClickSingleMarker(position)}
           className={`${isMarkerInBottomSheet(position) ? "scale-[2]" : ""}`}
@@ -129,7 +133,11 @@ export const MarkingPins = ({ tiles }: MarkingPinProps) => {
       <MultiplePin
         key={markingId}
         position={position}
-        imageUrl={`${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`}
+        imageUrl={
+          import.meta.env.DEV
+            ? previewImage
+            : `${API_BASE_URL}/markings/image/preview/${markingId}/${previewImage}`
+        }
         alt={`${markerCount}개의 마커를 담은 멀티핀`}
         onClick={() => handleClickMultipleMarker(position)}
         className={`${isMarkerInBottomSheet(position) ? "scale-[2]" : ""}`}

@@ -1,4 +1,5 @@
 import type { Marking } from "@/entities/marking/types/server";
+import { getRandomImg } from "./getRandomImg";
 
 export const getMockMarkingList = ({
   southBottomLat,
@@ -47,7 +48,7 @@ export const createMockMarking = (
             Math.random() * 10,
           )}`.repeat(Math.random() * 10)
         : `content ${id} `.repeat(Math.random() * 10),
-    previewImage: "fa805c91-8228-4ec4-927f-9eb876a480c3",
+    previewImage: getRandomImg(),
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
     userId: id,
@@ -71,14 +72,14 @@ export const createMockMarking = (
       petId: id,
       name: `Pet${id}`,
       description: `Pet description ${id}`,
-      profile: `profile_url_${id}`,
+      profile: getRandomImg(),
       breed: `Breed${id}`,
       personalities: ["personality1", "personality2"],
     },
     images: [
       {
         id: id,
-        imageUrl: `image_url_${id}`,
+        imageUrl: getRandomImg(),
         lank: 1,
         regDt: new Date().toISOString(),
       },

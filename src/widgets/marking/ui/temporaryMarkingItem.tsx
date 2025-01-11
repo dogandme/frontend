@@ -36,7 +36,11 @@ export const TemporaryMarkingItem = ({
           {images.map(({ imageUrl, id }, index) => (
             <ImgSlider.ImgItem
               key={id}
-              src={`${API_BASE_URL}/markings/image/${markingId}/${imageUrl}`}
+              src={
+                import.meta.env.DEV
+                  ? imageUrl
+                  : `${API_BASE_URL}/markings/image/${markingId}/${imageUrl}`
+              }
               alt={`${markingId} 의 ${index + 1} 번 째 이미지 `}
             />
           ))}
