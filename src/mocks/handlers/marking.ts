@@ -92,21 +92,20 @@ const postLikeMarkingHandler = http.post<PathParams>(
     await new Promise((res) => setTimeout(res, 1000));
 
     const markingId = Number(params.markingId);
+    const newMarking = createMockMarking(
+      markingId,
+      {
+        southBottomLat: 37.123456 + Math.random() * 0.1,
+        northTopLat: 37.123456 + Math.random() * 0.1,
+        southLeftLng: 127.123456 + Math.random() * 0.1,
+        northRightLng: 127.123456 + Math.random() * 0.1,
+      },
+      `User${Math.floor(Math.random() * 100)}`,
+    );
 
-    if (!likedMarkingList.some((marking) => marking.markingId === markingId)) {
-      likedMarkingList.push(
-        createMockMarking(
-          markingId,
-          {
-            southBottomLat: 37.123456 + Math.random() * 0.1,
-            northTopLat: 37.123456 + Math.random() * 0.1,
-            southLeftLng: 127.123456 + Math.random() * 0.1,
-            northRightLng: 127.123456 + Math.random() * 0.1,
-          },
-          `User${Math.floor(Math.random() * 100)}`,
-        ),
-      );
-    }
+    const temp = [...likedMarkingList, newMarking];
+    temp.sort((prev, cur) => prev.markingId - cur.markingId);
+    likedMarkingList = temp;
 
     updateUser("ROLE_USER", (user) => {
       return {
@@ -153,24 +152,21 @@ const postSaveMarkingHandler = http.post<PathParams>(
     await new Promise((res) => setTimeout(res, 1000));
 
     const markingId = Number(params.markingId);
-    savedMarkingList.push(
-      createMockMarking(
-        markingId,
-        {
-          southBottomLat: 37.123456 + Math.random() * 0.1,
-          northTopLat: 37.123456 + Math.random() * 0.1,
-          southLeftLng: 127.123456 + Math.random() * 0.1,
-          northRightLng: 127.123456 + Math.random() * 0.1,
-        },
-        `User${Math.floor(Math.random() * 100)}`,
-      ),
+
+    const newMarking = createMockMarking(
+      markingId,
+      {
+        southBottomLat: 37.123456 + Math.random() * 0.1,
+        northTopLat: 37.123456 + Math.random() * 0.1,
+        southLeftLng: 127.123456 + Math.random() * 0.1,
+        northRightLng: 127.123456 + Math.random() * 0.1,
+      },
+      `User${Math.floor(Math.random() * 100)}`,
     );
 
-    if (likedMarkingList.some((marking) => marking.markingId === markingId)) {
-      likedMarkingList = likedMarkingList.filter(
-        (marking) => marking.markingId !== markingId,
-      );
-    }
+    const temp = [...savedMarkingList, newMarking];
+    temp.sort((prev, cur) => prev.markingId - cur.markingId);
+    savedMarkingList = temp;
 
     updateUser("ROLE_USER", (user) => {
       return {
