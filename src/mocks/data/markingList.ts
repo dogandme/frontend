@@ -11,6 +11,11 @@ export const getRandomContent = (markingId: number) => {
   );
 };
 
+const randomCountArray = [
+  Array.from({ length: 1000 }, () => Math.floor(Math.random() * 1000)),
+  Array.from({ length: 1000 }, () => Math.floor(Math.random() * 1000)),
+];
+
 export const getMockMarkingList = ({
   southBottomLat,
   northTopLat,
@@ -70,14 +75,8 @@ export const createMockMarking = (
       subDistrict: `district ${id}`,
     },
     countData: {
-      likedCount: id
-        .toString()
-        .split("")
-        .reduce((acc, cur) => acc + +cur, 10),
-      savedCount: id
-        .toString()
-        .split("")
-        .reduce((acc, cur) => acc + +cur, 0),
+      likedCount: randomCountArray[0][id % 1000],
+      savedCount: randomCountArray[1][id % 1000],
     },
     pet: {
       petId: id,
