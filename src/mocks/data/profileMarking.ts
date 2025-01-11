@@ -2,9 +2,10 @@ import { getRandomImg } from "./getRandomImg";
 import { otherUsers } from "./otherUser";
 
 let markingCount = 0;
+
 const makeRandomMarking = (markingId: number) => ({
   markingId,
-  previewImage: getRandomImg(),
+  previewImage: getRandomImg(markingId)[0],
   lat: Math.random() > 0.5 ? 35 + Math.random() : 35 - Math.random(),
   lng: Math.random() > 0.5 ? 129 + Math.random() : 129 - Math.random(),
 });

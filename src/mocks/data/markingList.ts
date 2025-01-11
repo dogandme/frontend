@@ -48,7 +48,7 @@ export const createMockMarking = (
             Math.random() * 10,
           )}`.repeat(Math.random() * 10)
         : `content ${id} `.repeat(Math.random() * 10),
-    previewImage: getRandomImg(),
+    previewImage: getRandomImg(id)[0],
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
     userId: id,
@@ -72,19 +72,16 @@ export const createMockMarking = (
       petId: id,
       name: `Pet${id}`,
       description: `Pet description ${id}`,
-      profile: getRandomImg(),
+      profile: getRandomImg(id)[0],
       breed: `Breed${id}`,
       personalities: ["personality1", "personality2"],
     },
-    images: Array.from(
-      { length: Math.floor(Math.random() * 5) + 1 },
-      (_, idx) => ({
-        imageUrl: getRandomImg(),
-        id: idx,
-        lank: idx + 1,
-        regDt: new Date().toISOString(),
-      }),
-    ),
+    images: Array.from({ length: Math.floor(id % 5) + 1 }, (_, idx) => ({
+      imageUrl: getRandomImg(id)[idx],
+      id: idx,
+      lank: idx + 1,
+      regDt: new Date().toISOString(),
+    })),
   };
 };
 

@@ -1,7 +1,8 @@
 import type { GetTemporaryMarkingListResponse } from "@/entities/marking/api";
+import { IsVisible } from "@/entities/marking/types/server";
 import { getRandomImg } from "./getRandomImg";
 
-let tempMarkingId = 999;
+const tempMarkingId = 999;
 let hours = 1;
 
 const randomRegions = [
@@ -28,25 +29,30 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
       length: 100,
     },
     (_, index) => {
+      const markingId = index + tempMarkingId;
+
       const regionInfo = randomRegions[Math.ceil(Math.random() * 10) % 3];
       const randomDate = new Date();
       randomDate.setHours(randomDate.getHours() - hours++ * 5);
 
-      return {
-        markingId: tempMarkingId++,
+      // 9 의 배수인 경우에는 이미지가 없도록 합니다.
+      const imageLength =
+        markingId % 9 === 0 ? 0 : Math.floor(markingId % 5) + 1;
+
+      const randomTemporaryMarking = {
+        markingId,
         region: regionInfo.region,
         content:
-          index % 2
-            ? `${`content ${index + 1}`.repeat(Math.random() * 30)} \n\n ${`content ${index + 1}`.repeat(Math.random() * 30)}`
-            : `content ${index + 1} `.repeat(Math.random() * 30),
-        isVisible:
-          Math.random() > 0.3
-            ? "PUBLIC"
-            : Math.random() > 0.3
-              ? "FOLLOW_ONLY"
-              : "PRIVATE",
+          markingId % 2
+            ? `${`content ${markingId + 1}`.repeat(Math.random() * 30)} \n\n ${`content ${markingId + 1}`.repeat(Math.random() * 30)}`
+            : `content ${markingId + 1} `.repeat(Math.random() * 30),
+        isVisible: (Math.random() > 0.3
+          ? "PUBLIC"
+          : Math.random() > 0.3
+            ? "FOLLOW_ONLY"
+            : "PRIVATE") as IsVisible,
         regDt: randomDate.toISOString(),
-        previewImage: Math.random() > 0.5 ? null : getRandomImg(),
+        previewImage: imageLength > 0 ? getRandomImg(markingId)[0] : null,
         userId: 1,
         nickName: "뽀송송",
         pet: {
@@ -74,15 +80,17 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
         },
         images: Array.from(
           {
-            length: Math.min(Math.ceil(Math.random() * 10), 5),
+            length: imageLength,
           },
           (_, i) => ({
             id: tempMarkingId - 1 + i,
             lank: i,
-            imageUrl: getRandomImg(),
+            imageUrl: getRandomImg(markingId)[i],
             regDt: randomDate.toISOString(),
           }),
         ),
       };
+
+      return randomTemporaryMarking;
     },
   );
