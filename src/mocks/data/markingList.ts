@@ -76,14 +76,15 @@ export const createMockMarking = (
       breed: `Breed${id}`,
       personalities: ["personality1", "personality2"],
     },
-    images: [
-      {
-        id: id,
+    images: Array.from(
+      { length: Math.floor(Math.random() * 5) + 1 },
+      (_, idx) => ({
         imageUrl: getRandomImg(),
-        lank: 1,
+        id: idx,
+        lank: idx + 1,
         regDt: new Date().toISOString(),
-      },
-    ],
+      }),
+    ),
   };
 };
 
