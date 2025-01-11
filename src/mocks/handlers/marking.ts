@@ -91,28 +91,34 @@ const postLikeMarkingHandler = http.post<PathParams>(
   async ({ params }) => {
     await new Promise((res) => setTimeout(res, 1000));
 
-    const markingId = Number(params.markingId);
-    const newMarking = createMockMarking(
-      markingId,
-      {
-        southBottomLat: 37.123456 + Math.random() * 0.1,
-        northTopLat: 37.123456 + Math.random() * 0.1,
-        southLeftLng: 127.123456 + Math.random() * 0.1,
-        northRightLng: 127.123456 + Math.random() * 0.1,
-      },
-      `User${markingId}`,
-    );
+    if (
+      likedMarkingList.every(
+        (marking) => marking.markingId !== Number(params.markingId),
+      )
+    ) {
+      const markingId = Number(params.markingId);
+      const newMarking = createMockMarking(
+        markingId,
+        {
+          southBottomLat: 37.123456 + Math.random() * 0.1,
+          northTopLat: 37.123456 + Math.random() * 0.1,
+          southLeftLng: 127.123456 + Math.random() * 0.1,
+          northRightLng: 127.123456 + Math.random() * 0.1,
+        },
+        `User${markingId}`,
+      );
 
-    const temp = [...likedMarkingList, newMarking];
-    temp.sort((prev, cur) => prev.markingId - cur.markingId);
-    likedMarkingList = temp;
+      const temp = [...likedMarkingList, newMarking];
+      temp.sort((prev, cur) => prev.markingId - cur.markingId);
+      likedMarkingList = temp;
 
-    updateUser("ROLE_USER", (user) => {
-      return {
-        ...user,
-        likes: [...user.likes, markingId],
-      };
-    });
+      updateUser("ROLE_USER", (user) => {
+        return {
+          ...user,
+          likes: [...user.likes, markingId],
+        };
+      });
+    }
 
     return HttpResponse.json({
       code: 200,
@@ -151,29 +157,34 @@ const postSaveMarkingHandler = http.post<PathParams>(
   async ({ params }) => {
     await new Promise((res) => setTimeout(res, 1000));
 
-    const markingId = Number(params.markingId);
+    if (
+      savedMarkingList.every(
+        (savedMarking) => savedMarking.markingId !== Number(params.markingId),
+      )
+    ) {
+      const markingId = Number(params.markingId);
+      const newMarking = createMockMarking(
+        markingId,
+        {
+          southBottomLat: 37.123456 + Math.random() * 0.1,
+          northTopLat: 37.123456 + Math.random() * 0.1,
+          southLeftLng: 127.123456 + Math.random() * 0.1,
+          northRightLng: 127.123456 + Math.random() * 0.1,
+        },
+        `User${markingId}`,
+      );
 
-    const newMarking = createMockMarking(
-      markingId,
-      {
-        southBottomLat: 37.123456 + Math.random() * 0.1,
-        northTopLat: 37.123456 + Math.random() * 0.1,
-        southLeftLng: 127.123456 + Math.random() * 0.1,
-        northRightLng: 127.123456 + Math.random() * 0.1,
-      },
-      `User${markingId}`,
-    );
+      const temp = [...savedMarkingList, newMarking];
+      temp.sort((prev, cur) => prev.markingId - cur.markingId);
+      savedMarkingList = temp;
 
-    const temp = [...savedMarkingList, newMarking];
-    temp.sort((prev, cur) => prev.markingId - cur.markingId);
-    savedMarkingList = temp;
-
-    updateUser("ROLE_USER", (user) => {
-      return {
-        ...user,
-        bookmarks: [...user.bookmarks, markingId],
-      };
-    });
+      updateUser("ROLE_USER", (user) => {
+        return {
+          ...user,
+          bookmarks: [...user.bookmarks, markingId],
+        };
+      });
+    }
 
     return HttpResponse.json({
       code: 200,

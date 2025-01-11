@@ -21,13 +21,11 @@ export const usePostSaveMarking = () => {
   return useMutation<unknown, Error, PostSaveMarkingRequest>({
     mutationFn: postSaveMarking,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          profileQueryKey.myProfile(),
-          markingQueryKey.myActivityMarkingList("SAVED"),
-          markingQueryKey.myActivityMarkingList("LIKED"),
-        ],
-      });
+      [profileQueryKey.myProfile(), markingQueryKey.markingListAll()].forEach(
+        (queryKey) => {
+          queryClient.invalidateQueries({ queryKey });
+        },
+      );
     },
   });
 };

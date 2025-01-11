@@ -17,13 +17,13 @@ export const usePostLikeMarking = () => {
         withToken: true,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          profileQueryKey.myProfile(),
-          markingQueryKey.myActivityMarkingList("SAVED"),
-          markingQueryKey.myActivityMarkingList("LIKED"),
-        ],
-      });
+      [profileQueryKey.myProfile(), markingQueryKey.markingListAll()].forEach(
+        (queryKey) => {
+          queryClient.invalidateQueries({
+            queryKey,
+          });
+        },
+      );
     },
   });
 };

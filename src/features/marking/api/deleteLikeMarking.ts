@@ -45,18 +45,15 @@ export const useDeleteLikeMarking = () => {
             };
           },
         );
-
-        queryClient.invalidateQueries({
-          queryKey: [
-            markingQueryKey.myActivityMarkingList("SAVED"),
-            markingQueryKey.myActivityMarkingList("LIKED"),
-          ],
-        });
       }
 
-      queryClient.invalidateQueries({
-        queryKey: profileQueryKey.myProfile(),
-      });
+      [profileQueryKey.myProfile(), markingQueryKey.markingListAll()].forEach(
+        (queryKey) => {
+          queryClient.invalidateQueries({
+            queryKey,
+          });
+        },
+      );
     },
   });
 };
