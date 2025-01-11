@@ -57,11 +57,7 @@ const MyActivityList = withAuth(() => {
               ))
             : markingList?.map((marking) => (
                 <MarkingItem
-                  key={
-                    import.meta.env.DEV
-                      ? `${marking.markingId} ${activeTab}`
-                      : marking.markingId
-                  }
+                  key={marking.markingId}
                   onRegionClick={() => {
                     map.setCenter({
                       lat: marking.lat,
