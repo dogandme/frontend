@@ -100,7 +100,7 @@ const postLikeMarkingHandler = http.post<PathParams>(
         southLeftLng: 127.123456 + Math.random() * 0.1,
         northRightLng: 127.123456 + Math.random() * 0.1,
       },
-      `User${Math.floor(Math.random() * 100)}`,
+      `User${markingId}`,
     );
 
     const temp = [...likedMarkingList, newMarking];
@@ -161,7 +161,7 @@ const postSaveMarkingHandler = http.post<PathParams>(
         southLeftLng: 127.123456 + Math.random() * 0.1,
         northRightLng: 127.123456 + Math.random() * 0.1,
       },
-      `User${Math.floor(Math.random() * 100)}`,
+      `User${markingId}`,
     );
 
     const temp = [...savedMarkingList, newMarking];
