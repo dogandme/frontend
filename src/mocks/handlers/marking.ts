@@ -97,20 +97,23 @@ const postLikeMarkingHandler = http.post<PathParams>(
       )
     ) {
       const markingId = Number(params.markingId);
-      const newMarking = createMockMarking(
-        markingId,
-        {
-          southBottomLat: 37.123456 + Math.random() * 0.1,
-          northTopLat: 37.123456 + Math.random() * 0.1,
-          southLeftLng: 127.123456 + Math.random() * 0.1,
-          northRightLng: 127.123456 + Math.random() * 0.1,
-        },
-        `User${markingId}`,
-      );
+      const newMarking = createMockMarking(markingId, {
+        southBottomLat: 37.123456 + Math.random() * 0.1,
+        northTopLat: 37.123456 + Math.random() * 0.1,
+        southLeftLng: 127.123456 + Math.random() * 0.1,
+        northRightLng: 127.123456 + Math.random() * 0.1,
+      });
 
       const temp = [...likedMarkingList, newMarking];
       temp.sort((prev, cur) => prev.markingId - cur.markingId);
       likedMarkingList = temp;
+
+      if (savedMarkingList.some((marking) => marking.markingId === markingId)) {
+        const targetMarkingIndex = savedMarkingList.findIndex(
+          (marking) => marking.markingId === markingId,
+        );
+        savedMarkingList[targetMarkingIndex].countData.likedCount += 1;
+      }
 
       updateUser("ROLE_USER", (user) => {
         return {
@@ -138,6 +141,13 @@ const deleteLikeMarkingHandler = http.delete<PathParams>(
       (marking) => marking.markingId !== markingId,
     );
 
+    if (savedMarkingList.some((marking) => marking.markingId === markingId)) {
+      const targetMarkingIndex = savedMarkingList.findIndex(
+        (marking) => marking.markingId === markingId,
+      );
+      savedMarkingList[targetMarkingIndex].countData.likedCount -= 1;
+    }
+
     updateUser("ROLE_USER", (user) => {
       return {
         ...user,
@@ -163,20 +173,23 @@ const postSaveMarkingHandler = http.post<PathParams>(
       )
     ) {
       const markingId = Number(params.markingId);
-      const newMarking = createMockMarking(
-        markingId,
-        {
-          southBottomLat: 37.123456 + Math.random() * 0.1,
-          northTopLat: 37.123456 + Math.random() * 0.1,
-          southLeftLng: 127.123456 + Math.random() * 0.1,
-          northRightLng: 127.123456 + Math.random() * 0.1,
-        },
-        `User${markingId}`,
-      );
+      const newMarking = createMockMarking(markingId, {
+        southBottomLat: 37.123456 + Math.random() * 0.1,
+        northTopLat: 37.123456 + Math.random() * 0.1,
+        southLeftLng: 127.123456 + Math.random() * 0.1,
+        northRightLng: 127.123456 + Math.random() * 0.1,
+      });
 
       const temp = [...savedMarkingList, newMarking];
       temp.sort((prev, cur) => prev.markingId - cur.markingId);
       savedMarkingList = temp;
+
+      if (likedMarkingList.some((marking) => marking.markingId === markingId)) {
+        const targetMarkingIndex = likedMarkingList.findIndex(
+          (marking) => marking.markingId === markingId,
+        );
+        likedMarkingList[targetMarkingIndex].countData.savedCount += 1;
+      }
 
       updateUser("ROLE_USER", (user) => {
         return {
@@ -199,9 +212,17 @@ const deleteSaveMarkingHandler = http.delete<PathParams>(
     await new Promise((res) => setTimeout(res, 1000));
 
     const markingId = Number(params.markingId);
+
     savedMarkingList = savedMarkingList.filter(
       (marking) => marking.markingId !== markingId,
     );
+
+    if (likedMarkingList.some((marking) => marking.markingId === markingId)) {
+      const targetMarkingIndex = likedMarkingList.findIndex(
+        (marking) => marking.markingId === markingId,
+      );
+      likedMarkingList[targetMarkingIndex].countData.savedCount -= 1;
+    }
 
     updateUser("ROLE_USER", (user) => {
       return {
