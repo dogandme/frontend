@@ -1,6 +1,6 @@
 import type { GetTemporaryMarkingListResponse } from "@/entities/marking/api";
 import { IsVisible } from "@/entities/marking/types/server";
-import { getRandomImg } from "./getRandomImg";
+import { getRandomContent, getRandomImg } from "./markingList";
 
 const tempMarkingId = 999;
 let hours = 1;
@@ -42,10 +42,7 @@ export const temporaryMarkingList: GetTemporaryMarkingListResponse["markings"] =
       const randomTemporaryMarking = {
         markingId,
         region: regionInfo.region,
-        content:
-          markingId % 2
-            ? `${`content ${markingId + 1}`.repeat(Math.random() * 30)} \n\n ${`content ${markingId + 1}`.repeat(Math.random() * 30)}`
-            : `content ${markingId + 1} `.repeat(Math.random() * 30),
+        content: getRandomContent(markingId),
         isVisible: (Math.random() > 0.3
           ? "PUBLIC"
           : Math.random() > 0.3

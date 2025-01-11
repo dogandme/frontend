@@ -27,7 +27,7 @@ export const roleGuestUser = {
   nickname: "나는야게스트",
   pet: null,
   socialType: null,
-  tembCnt: 0,
+  tempCnt: 0,
   followersIds: [],
   followingsIds: [],
   markings: [],

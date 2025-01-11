@@ -1,4 +1,4 @@
-const dogImgList = [
+const originalDogImageList = [
   "https://images.dog.ceo/breeds/brabancon/n02112706_1875.jpg",
   "https://images.dog.ceo/breeds/coonhound/n02089078_4422.jpg",
   "https://images.dog.ceo/breeds/brabancon/n02112706_726.jpg",
@@ -51,10 +51,6 @@ const dogImgList = [
   "https://images.dog.ceo/breeds/hound-ibizan/n02091244_2941.jpg",
 ];
 
-const slicedImages: string[][] = Array.from({ length: 5 }, (_, idx) =>
-  dogImgList.slice(idx * 10, (idx + 1) * 10),
+export const dogImageList: string[][] = Array.from({ length: 5 }, (_, idx) =>
+  originalDogImageList.slice(idx * 10, (idx + 1) * 10),
 );
-
-export const getRandomImg = (markingId: number) => {
-  return slicedImages.map((images) => images[markingId % 10]);
-};

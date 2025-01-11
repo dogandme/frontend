@@ -1,4 +1,4 @@
-import { getRandomImg } from "./getRandomImg";
+import { getRandomImg } from "./markingList";
 import { otherUsers } from "./otherUser";
 
 let markingCount = 0;

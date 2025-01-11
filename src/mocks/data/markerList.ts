@@ -1,4 +1,4 @@
-import { getRandomImg } from "./getRandomImg";
+import { getRandomImg } from "./markingList";
 
 export const getMockMarkerList = () =>
   Array.from({ length: 100 }, (_, index) => ({

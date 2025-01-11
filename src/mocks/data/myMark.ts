@@ -1,4 +1,4 @@
-import { getRandomImg } from "./getRandomImg";
+import { getRandomContent, getRandomImg } from "./markingList";
 import { profileMarkingThumbnail } from "./profileMarking";
 
 export const getMyMark = () => {
@@ -8,7 +8,7 @@ export const getMyMark = () => {
   const myMarkingList = myMarkerList.map((thumbnail, markingId) => ({
     ...thumbnail,
     region: "**시 **구 **동",
-    content: `Marking content ${markingId + 1}`,
+    content: getRandomContent(markingId),
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
     nickName: "뽀송송",

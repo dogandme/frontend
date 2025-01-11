@@ -1,5 +1,15 @@
 import type { Marking } from "@/entities/marking/types/server";
-import { getRandomImg } from "./getRandomImg";
+import { dogImageList } from "./randomDogImageList";
+
+export const getRandomImg = (markingId: number) => {
+  return dogImageList.map((images) => images[markingId % 10]);
+};
+
+export const getRandomContent = (markingId: number) => {
+  return `랜덤하게 생성된 마킹 아이디 ${markingId}의 내용입니다.`.repeat(
+    Math.floor(markingId % 5),
+  );
+};
 
 export const getMockMarkingList = ({
   southBottomLat,
@@ -42,12 +52,7 @@ export const createMockMarking = (
   return {
     markingId: id,
     region: "**시 **구 **동",
-    content:
-      id % 2
-        ? `${`content ${id}`.repeat(Math.random() * 10)} \n ${`content ${id}`.repeat(
-            Math.random() * 10,
-          )}`.repeat(Math.random() * 10)
-        : `content ${id} `.repeat(Math.random() * 10),
+    content: getRandomContent(id),
     previewImage: getRandomImg(id)[0],
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
@@ -65,8 +70,14 @@ export const createMockMarking = (
       subDistrict: `district ${id}`,
     },
     countData: {
-      likedCount: Math.floor(Math.random() * 100),
-      savedCount: Math.floor(Math.random() * 100),
+      likedCount: id
+        .toString()
+        .split("")
+        .reduce((acc, cur) => acc + +cur, 10),
+      savedCount: id
+        .toString()
+        .split("")
+        .reduce((acc, cur) => acc + +cur, 0),
     },
     pet: {
       petId: id,

@@ -1,5 +1,5 @@
 import type { Marking } from "@/entities/marking/types/server";
-import { getRandomImg } from "./getRandomImg";
+import { getRandomContent, getRandomImg } from "./markingList";
 
 export const getMockUserMarkingList = ({
   nickname,
@@ -17,14 +17,14 @@ export const getMockUserMarkingList = ({
   const markingList: Marking[] = Array.from(
     { length: 140 },
     (_, markingId) => ({
-      markingId: markingId + 1,
+      markingId: markingId,
       region: "**시 **구 **동",
-      content: `Marking content ${markingId + 1}`,
+      content: getRandomContent(markingId),
       previewImage: getRandomImg(markingId)[0],
       isVisible: "PUBLIC",
       regDt: new Date().toISOString(),
       nickName: nickname,
-      userId: markingId + 1,
+      userId: markingId,
       isOwner: true,
       isTempSaved: false,
       lat: southBottomLat + Math.random() * (northTopLat - southBottomLat),
