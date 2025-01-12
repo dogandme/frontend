@@ -1,5 +1,6 @@
 import type { Marking } from "@/entities/marking/types/server";
-import { getRandomContent, getRandomImg } from "./markingList";
+import { getRandomContent } from "./markingList";
+import { getRandomImg } from "./randomDogImageList";
 
 export const getMockUserMarkingList = ({
   nickname,

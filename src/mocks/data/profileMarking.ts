@@ -1,5 +1,5 @@
-import { getRandomImg } from "./markingList";
 import { otherUsers } from "./otherUser";
+import { getRandomImg } from "./randomDogImageList";
 
 let markingCount = 0;
 

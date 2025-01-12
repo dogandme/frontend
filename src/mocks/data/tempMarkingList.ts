@@ -1,6 +1,7 @@
 import type { GetTemporaryMarkingListResponse } from "@/entities/marking/api";
 import { IsVisible } from "@/entities/marking/types/server";
-import { getRandomContent, getRandomImg } from "./markingList";
+import { getRandomContent } from "./markingList";
+import { getRandomImg } from "./randomDogImageList";
 
 const tempMarkingId = 999;
 let hours = 1;

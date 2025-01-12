@@ -1,5 +1,6 @@
-import { getRandomContent, getRandomImg } from "./markingList";
+import { getRandomContent } from "./markingList";
 import { profileMarkingThumbnail } from "./profileMarking";
+import { getRandomImg } from "./randomDogImageList";
 
 export const getMyMark = () => {
   // 뽀송송의 마커 리스트

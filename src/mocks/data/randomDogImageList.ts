@@ -51,6 +51,9 @@ const originalDogImageList = [
   "https://images.dog.ceo/breeds/hound-ibizan/n02091244_2941.jpg",
 ];
 
-export const dogImageList: string[][] = Array.from({ length: 5 }, (_, idx) =>
+const dogImageList: string[][] = Array.from({ length: 5 }, (_, idx) =>
   originalDogImageList.slice(idx * 10, (idx + 1) * 10),
 );
+export const getRandomImg = (markingId: number) => {
+  return dogImageList.map((images) => images[markingId % 10]);
+};

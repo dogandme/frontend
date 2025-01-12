@@ -1,9 +1,5 @@
 import type { Marking } from "@/entities/marking/types/server";
-import { dogImageList } from "./randomDogImageList";
-
-export const getRandomImg = (markingId: number) => {
-  return dogImageList.map((images) => images[markingId % 10]);
-};
+import { getRandomImg } from "./randomDogImageList";
 
 export const getRandomContent = (markingId: number) => {
   return `랜덤하게 생성된 마킹 아이디 ${markingId}의 내용입니다.`.repeat(
