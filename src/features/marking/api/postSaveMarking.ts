@@ -22,15 +22,18 @@ export const usePostSaveMarking = () => {
   return useMutation<unknown, Error, PostSaveMarkingRequest>({
     mutationFn: postSaveMarking,
     onSuccess: (_data, { markingId }) => {
-      const myProfile = queryClient.getQueryData<ProfileInfo>(
+      queryClient.setQueryData<ProfileInfo>(
         profileQueryKey.myProfile(),
+        (prev) => {
+          if (!prev) {
+            return prev;
+          }
+          return {
+            ...prev,
+            bookmarks: [...(prev.bookmarks || []), markingId],
+          };
+        },
       );
-      queryClient.setQueryData(profileQueryKey.myProfile(), {
-        ...myProfile,
-        bookmarks: myProfile?.bookmarks
-          ? [...myProfile.bookmarks, markingId]
-          : [markingId],
-      });
 
       [profileQueryKey.myProfile(), markingQueryKey.markingListAll()].forEach(
         (queryKey) => {
