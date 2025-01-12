@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
 import { API_BASE_URL } from "@/shared/constants";
 import { otherUsers, roleGuestUser } from "../data/otherUser";
-import { User } from "../data/user";
+import { USER } from "../data/user";
 
 const getProfileHandler = http.get(
   `${API_BASE_URL}/profile`,
@@ -26,15 +26,15 @@ const getProfileHandler = http.get(
     }
 
     if (token === "accessToken-ROLE_NONE" && nickname === "뽀송송") {
-      return HttpResponse.json(User["ROLE_NONE"]);
+      return HttpResponse.json(USER["ROLE_NONE"]);
     }
 
     if (token === "accessToken-ROLE_GUEST" && nickname === "뽀송송") {
-      return HttpResponse.json(User["ROLE_GUEST"]);
+      return HttpResponse.json(USER["ROLE_GUEST"]);
     }
 
     if (token === "accessToken-ROLE_USER" && nickname === "뽀송송") {
-      return HttpResponse.json(User["ROLE_USER"]);
+      return HttpResponse.json(USER["ROLE_USER"]);
     }
 
     if (nickname === "나는야게스트") {

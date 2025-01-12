@@ -62,7 +62,7 @@ export const createMockMarking = (
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
     userId: id,
-    nickName: nickname ?? `User${id}`,
+    nickName: nickname ?? `USER${id}`,
     isOwner: id === 0 ? true : false,
     isTempSaved: false,
     lat: southBottomLat + Math.random() * (northTopLat - southBottomLat),

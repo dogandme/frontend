@@ -2,7 +2,7 @@ import { otherUsers } from "./otherUser";
 import { profileMarkingThumbnail } from "./profileMarking";
 import { temporaryMarkingList } from "./tempMarkingList";
 
-export let User = {
+export let USER = {
   ROLE_NONE: {
     code: 200,
     message: "success",
@@ -71,13 +71,13 @@ export let User = {
   },
 };
 
-export const updateUser = <T extends Exclude<keyof typeof User, "ROLE_NONE">>(
+export const updateUser = <T extends Exclude<keyof typeof USER, "ROLE_NONE">>(
   role: T,
-  updater: (target: (typeof User)[T]["content"]) => (typeof User)[T]["content"],
+  updater: (target: (typeof USER)[T]["content"]) => (typeof USER)[T]["content"],
 ) => {
-  const target = User[role];
-  User = {
-    ...User,
+  const target = USER[role];
+  USER = {
+    ...USER,
     [role]: {
       code: target.code,
       message: target.message,
