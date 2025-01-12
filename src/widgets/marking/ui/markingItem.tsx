@@ -247,6 +247,10 @@ const MarkingItemLikeToggle = () => {
     );
   };
 
+  useEffect(() => {
+    _setIsLiked(isLiked);
+  }, [isLiked]);
+
   return (
     <div className="flex gap-2 items-center text-grey-500">
       {_isLiked ? (
@@ -335,6 +339,10 @@ const MarkingItemBookmarkToggle = () => {
       },
     );
   };
+
+  useEffect(() => {
+    _setIsBookmarked(isBookmarked);
+  }, [isBookmarked]);
 
   return (
     <div className="flex gap-2 items-center text-grey-500">
