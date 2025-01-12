@@ -1,7 +1,7 @@
 import { http, HttpResponse, type PathParams } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
 import { API_BASE_URL } from "@/shared/constants";
-import { otherUsers } from "../data/otherUser";
+import { OTHER_USERS } from "../data/otherUser";
 import { USER } from "../data/user";
 
 const getFollowerListHandler = http.get<PathParams>(
@@ -40,7 +40,7 @@ const getFollowerListHandler = http.get<PathParams>(
     const followerIds =
       nickname === "뽀송송"
         ? USER["ROLE_USER"].content.followersIds
-        : otherUsers.find((user) => user.nickname === nickname)?.followersIds;
+        : OTHER_USERS.find((user) => user.nickname === nickname)?.followersIds;
 
     if (!followerIds) {
       return HttpResponse.json(
@@ -54,9 +54,9 @@ const getFollowerListHandler = http.get<PathParams>(
       );
     }
 
-    const userInfos = otherUsers
-      .filter((user) => followerIds.includes(user.userId))
-      .map(({ userId, pet, nickname }) => ({ userId, pet, nickname }));
+    const userInfos = OTHER_USERS.filter((user) =>
+      followerIds.includes(user.userId),
+    ).map(({ userId, pet, nickname }) => ({ userId, pet, nickname }));
 
     if (followerIds.includes(1)) {
       userInfos.push({
@@ -132,7 +132,7 @@ const getFollowingListHandler = http.get<PathParams>(
     const followingIds =
       nickname === "뽀송송"
         ? USER["ROLE_USER"].content.followingsIds
-        : otherUsers.find((user) => user.nickname === nickname)?.followingsIds;
+        : OTHER_USERS.find((user) => user.nickname === nickname)?.followingsIds;
 
     if (!followingIds) {
       return HttpResponse.json(
@@ -146,9 +146,9 @@ const getFollowingListHandler = http.get<PathParams>(
       );
     }
 
-    const userInfos = otherUsers
-      .filter((user) => followingIds.includes(user.userId))
-      .map(({ userId, pet, nickname }) => ({ userId, pet, nickname }));
+    const userInfos = OTHER_USERS.filter((user) =>
+      followingIds.includes(user.userId),
+    ).map(({ userId, pet, nickname }) => ({ userId, pet, nickname }));
 
     if (followingIds.includes(1)) {
       userInfos.push({
@@ -219,7 +219,7 @@ const postFollowingHandler = http.post(
       );
     }
 
-    const targetUser = otherUsers.find((user) => user.nickname === nickname);
+    const targetUser = OTHER_USERS.find((user) => user.nickname === nickname);
     if (!targetUser) {
       return HttpResponse.json(
         {
@@ -275,7 +275,7 @@ const deleteFollowingHandler = http.delete(
       );
     }
 
-    const targetUser = otherUsers.find((user) => user.nickname === nickname);
+    const targetUser = OTHER_USERS.find((user) => user.nickname === nickname);
     if (!targetUser) {
       return HttpResponse.json(
         {
@@ -332,7 +332,7 @@ const deleteFollowerHandler = http.delete(
       );
     }
 
-    const targetUser = otherUsers.find((user) => user.nickname === nickname);
+    const targetUser = OTHER_USERS.find((user) => user.nickname === nickname);
 
     if (!targetUser) {
       return HttpResponse.json(

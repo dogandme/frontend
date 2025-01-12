@@ -1,5 +1,5 @@
 // user.ts 에 존재하는 내 userId 는 1이라고 가정 합니다.
-export const otherUsers = Array.from({ length: 400 }).map((_, i) => ({
+export const OTHER_USERS = Array.from({ length: 400 }).map((_, i) => ({
   userId: i + 2,
   nickname: `user${i + 2}`,
   socialType: null,

@@ -1,4 +1,4 @@
-import { otherUsers } from "./otherUser";
+import { OTHER_USERS } from "./otherUser";
 import { profileMarkingThumbnail } from "./profileMarking";
 import { temporaryMarkingList } from "./tempMarkingList";
 
@@ -40,12 +40,12 @@ export let USER = {
       userId: 1,
       nickname: "뽀송송",
       socialType: "EMAIL",
-      followersIds: otherUsers
-        .filter(({ followingsIds }) => followingsIds.includes(1))
-        .map(({ userId }) => userId),
-      followingsIds: otherUsers
-        .filter(({ followersIds }) => followersIds.includes(1))
-        .map(({ userId }) => userId),
+      followersIds: OTHER_USERS.filter(({ followingsIds }) =>
+        followingsIds.includes(1),
+      ).map(({ userId }) => userId),
+      followingsIds: OTHER_USERS.filter(({ followersIds }) =>
+        followersIds.includes(1),
+      ).map(({ userId }) => userId),
       likes: Array.from({ length: 100 }, (_, i) => 120 + i * 2),
       bookmarks: Array.from({ length: 100 }, (_, i) => 120 + i * 3),
       tempCnt: temporaryMarkingList.length,

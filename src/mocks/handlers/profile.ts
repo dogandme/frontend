@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
 import { API_BASE_URL } from "@/shared/constants";
-import { otherUsers, roleGuestUser } from "../data/otherUser";
+import { OTHER_USERS, roleGuestUser } from "../data/otherUser";
 import { USER } from "../data/user";
 
 const getProfileHandler = http.get(
@@ -45,7 +45,7 @@ const getProfileHandler = http.get(
       });
     }
 
-    const userInfo = otherUsers.find((user) => user.nickname === nickname);
+    const userInfo = OTHER_USERS.find((user) => user.nickname === nickname);
 
     if (!userInfo) {
       return HttpResponse.json(
