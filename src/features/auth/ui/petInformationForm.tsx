@@ -196,7 +196,7 @@ const NameInput = () => {
         label="이름이 어떻게 되나요?"
         placeholder="한글 또는 영문의 이름을 입력해 주세요"
         maxLength={MAX_LENGTH}
-        trailingNode={[<TextCounter text={name} maxLength={MAX_LENGTH} />]}
+        trailingNode={<TextCounter text={name} maxLength={MAX_LENGTH} />}
         value={name}
         onChange={handleChange}
         onFocus={() => setFocused(true)}
@@ -292,7 +292,7 @@ const BreedBottomSheet = ({
           id="search"
           componentType="searchText"
           placeholder="찾으시는 품종을 입력해주세요"
-          leadingNode={[<SearchIcon />]}
+          leadingNode={<SearchIcon />}
           onChange={({ target }) => {
             startTransition(() => {
               setText(target.value);

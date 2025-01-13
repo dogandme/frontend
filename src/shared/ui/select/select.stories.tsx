@@ -70,7 +70,7 @@ export const BottomSheetSelect: Story = {
           value={selectedName ?? ""}
           placeholder="연령대를 선택해 주세요"
           type="text"
-          trailingNode={[<ArrowDropDownIcon />]}
+          trailingNode={<ArrowDropDownIcon />}
           componentType="outlinedText"
           readOnly
           style={{ cursor: "pointer" }}

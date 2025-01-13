@@ -5,6 +5,8 @@ import { inputStyles, baseStyles } from "./input.styles";
 type ComponentType = keyof typeof inputStyles;
 type StatusType = keyof (typeof inputStyles)[ComponentType];
 
+type InputNode = Exclude<React.ReactNode, Iterable<React.ReactNode>>;
+
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
@@ -13,8 +15,8 @@ export interface InputProps
   essential?: boolean;
   isError?: boolean;
   disabled?: boolean;
-  trailingNode?: [React.ReactNode, React.ReactNode?];
-  leadingNode?: [React.ReactNode];
+  trailingNode?: InputNode | [InputNode, InputNode];
+  leadingNode?: InputNode;
 }
 
 export const InputWrapper = ({ children }: { children: React.ReactNode }) => {

@@ -85,12 +85,12 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
             handleBlur();
           }}
           maxLength={MAX_LENGTH}
-          trailingNode={[
+          trailingNode={
             <ValueLength
               value={isControlled ? controlledNickname : nickname}
               maxLength={MAX_LENGTH}
-            />,
-          ]}
+            />
+          }
         />
         {(isFocused || isNicknameError) && (
           <StatusText isError={isNicknameError}>{statusText}</StatusText>
