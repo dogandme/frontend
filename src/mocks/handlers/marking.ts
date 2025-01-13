@@ -8,12 +8,16 @@ import type {
   TempMarking,
 } from "@/entities/marking/types/server";
 import { API_BASE_URL } from "@/shared/constants";
-import { getMockMarkerList } from "../data/markerList";
 import { createMockMarking, getMockMarkingList } from "../data/markingList";
+import { _likedMarkingList, _savedMarkingList } from "../data/markingList";
 import { getMyMark } from "../data/myMark";
 import { profileMarkingThumbnail } from "../data/profileMarking";
 import { temporaryMarkingList as _temporaryMarkingList } from "../data/tempMarkingList";
+import { updateUser } from "../data/user";
 import { getMockUserMarkingList } from "../data/userMarkingList";
+
+let likedMarkingList = [..._likedMarkingList];
+let savedMarkingList = [..._savedMarkingList];
 
 const getAddressFromLatLngHandler = http.get<PathParams>(
   `${API_BASE_URL}/maps/reverse-geocode`,
@@ -84,8 +88,41 @@ const deleteMarkingHandler = http.delete<PathParams>(
 
 const postLikeMarkingHandler = http.post<PathParams>(
   `${API_BASE_URL}/markings/likes/:markingId`,
-  async () => {
+  async ({ params }) => {
     await new Promise((res) => setTimeout(res, 1000));
+
+    if (
+      likedMarkingList.every(
+        (marking) => marking.markingId !== Number(params.markingId),
+      )
+    ) {
+      const markingId = Number(params.markingId);
+      const newMarking = createMockMarking(markingId, {
+        southBottomLat: 37.123456 + Math.random() * 0.1,
+        northTopLat: 37.123456 + Math.random() * 0.1,
+        southLeftLng: 127.123456 + Math.random() * 0.1,
+        northRightLng: 127.123456 + Math.random() * 0.1,
+      });
+
+      const temp = [...likedMarkingList, newMarking];
+      temp.sort((prev, cur) => prev.markingId - cur.markingId);
+      likedMarkingList = temp;
+
+      if (savedMarkingList.some((marking) => marking.markingId === markingId)) {
+        const targetMarkingIndex = savedMarkingList.findIndex(
+          (marking) => marking.markingId === markingId,
+        );
+        savedMarkingList[targetMarkingIndex].countData.likedCount += 1;
+      }
+
+      updateUser("ROLE_USER", (user) => {
+        return {
+          ...user,
+          likes: [...user.likes, markingId],
+        };
+      });
+    }
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -95,8 +132,29 @@ const postLikeMarkingHandler = http.post<PathParams>(
 
 const deleteLikeMarkingHandler = http.delete<PathParams>(
   `${API_BASE_URL}/markings/likes/:markingId`,
-  async () => {
+  async ({ params }) => {
     await new Promise((res) => setTimeout(res, 1000));
+
+    const markingId = Number(params.markingId);
+
+    likedMarkingList = likedMarkingList.filter(
+      (marking) => marking.markingId !== markingId,
+    );
+
+    if (savedMarkingList.some((marking) => marking.markingId === markingId)) {
+      const targetMarkingIndex = savedMarkingList.findIndex(
+        (marking) => marking.markingId === markingId,
+      );
+      savedMarkingList[targetMarkingIndex].countData.likedCount -= 1;
+    }
+
+    updateUser("ROLE_USER", (user) => {
+      return {
+        ...user,
+        likes: user.likes.filter((id) => id !== markingId),
+      };
+    });
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -106,8 +164,41 @@ const deleteLikeMarkingHandler = http.delete<PathParams>(
 
 const postSaveMarkingHandler = http.post<PathParams>(
   `${API_BASE_URL}/markings/saves/:markingId`,
-  async () => {
+  async ({ params }) => {
     await new Promise((res) => setTimeout(res, 1000));
+
+    if (
+      savedMarkingList.every(
+        (savedMarking) => savedMarking.markingId !== Number(params.markingId),
+      )
+    ) {
+      const markingId = Number(params.markingId);
+      const newMarking = createMockMarking(markingId, {
+        southBottomLat: 37.123456 + Math.random() * 0.1,
+        northTopLat: 37.123456 + Math.random() * 0.1,
+        southLeftLng: 127.123456 + Math.random() * 0.1,
+        northRightLng: 127.123456 + Math.random() * 0.1,
+      });
+
+      const temp = [...savedMarkingList, newMarking];
+      temp.sort((prev, cur) => prev.markingId - cur.markingId);
+      savedMarkingList = temp;
+
+      if (likedMarkingList.some((marking) => marking.markingId === markingId)) {
+        const targetMarkingIndex = likedMarkingList.findIndex(
+          (marking) => marking.markingId === markingId,
+        );
+        likedMarkingList[targetMarkingIndex].countData.savedCount += 1;
+      }
+
+      updateUser("ROLE_USER", (user) => {
+        return {
+          ...user,
+          bookmarks: [...user.bookmarks, markingId],
+        };
+      });
+    }
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -117,8 +208,29 @@ const postSaveMarkingHandler = http.post<PathParams>(
 
 const deleteSaveMarkingHandler = http.delete<PathParams>(
   `${API_BASE_URL}/markings/saves/:markingId`,
-  async () => {
+  async ({ params }) => {
     await new Promise((res) => setTimeout(res, 1000));
+
+    const markingId = Number(params.markingId);
+
+    savedMarkingList = savedMarkingList.filter(
+      (marking) => marking.markingId !== markingId,
+    );
+
+    if (likedMarkingList.some((marking) => marking.markingId === markingId)) {
+      const targetMarkingIndex = likedMarkingList.findIndex(
+        (marking) => marking.markingId === markingId,
+      );
+      likedMarkingList[targetMarkingIndex].countData.savedCount -= 1;
+    }
+
+    updateUser("ROLE_USER", (user) => {
+      return {
+        ...user,
+        bookmarks: user.bookmarks.filter((id) => id !== markingId),
+      };
+    });
+
     return HttpResponse.json({
       code: 200,
       message: "success",
@@ -680,7 +792,116 @@ const getLikedMarkerListHandler = http.get(
     return HttpResponse.json({
       code: 200,
       message: "success",
-      content: getMockMarkerList(),
+      content: likedMarkingList.map(
+        ({ markingId, lat, lng, previewImage }) => ({
+          markingId,
+          lat,
+          lng,
+          previewImage,
+        }),
+      ),
+    });
+  },
+);
+
+const getLikedMarkingListHandler = http.get(
+  `${API_BASE_URL}/markings/likes`,
+  async ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (!token?.startsWith("accessToken")) {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    const pageNumber = Number(
+      new URL(request.url).searchParams.get("offset") || 0,
+    );
+    const totalCount = likedMarkingList.length;
+    const pageSize = 20;
+    const lastPage = Math.ceil(totalCount / pageSize);
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        markings: likedMarkingList.slice(
+          pageNumber * pageSize,
+          (pageNumber + 1) * pageSize,
+        ),
+        totalElements: totalCount,
+        totalPages: lastPage,
+        pageAble: {
+          pageNumber,
+          pageSize,
+          sort: {
+            sorted: false,
+            unsorted: true,
+            empty: true,
+          },
+          offset: pageNumber,
+          paged: true,
+          unpaged: false,
+        },
+      },
+    });
+  },
+);
+
+const getSavedMarkingListHandler = http.get(
+  `${API_BASE_URL}/markings/saves`,
+  async ({ request }) => {
+    const token = request.headers.get("Authorization");
+
+    if (!token?.startsWith("accessToken")) {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: ERROR_MESSAGE.ACCESS_TOKEN_INVALIDATED,
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    const pageNumber = Number(
+      new URL(request.url).searchParams.get("offset") || 0,
+    );
+    const totalCount = savedMarkingList.length;
+    const pageSize = 20;
+    const lastPage = Math.ceil(totalCount / pageSize);
+
+    return HttpResponse.json({
+      code: 200,
+      message: "success",
+      content: {
+        markings: savedMarkingList.slice(
+          pageNumber * pageSize,
+          (pageNumber + 1) * pageSize,
+        ),
+        totalElements: totalCount,
+        totalPages: lastPage,
+        pageAble: {
+          pageNumber,
+          pageSize,
+          sort: {
+            sorted: false,
+            unsorted: true,
+            empty: true,
+          },
+          offset: pageNumber,
+          paged: true,
+          unpaged: false,
+        },
+      },
     });
   },
 );
@@ -705,7 +926,14 @@ const getSavedMarkerListHandler = http.get(
     return HttpResponse.json({
       code: 200,
       message: "success",
-      content: getMockMarkerList(),
+      content: savedMarkingList.map(
+        ({ markingId, lat, lng, previewImage }) => ({
+          markingId,
+          lat,
+          lng,
+          previewImage,
+        }),
+      ),
     });
   },
 );
@@ -743,7 +971,6 @@ export const markingHandlers = [
   postAddTempMarkingHandler,
   getMarkingListHandler,
   getBoundaryMarkerListHandler,
-  getProfileThumbnailHandler,
   getTemporaryMarkingListHandler,
   deleteTemporaryMarkingHandler,
   putModifyTempMarkingHandler,
@@ -751,5 +978,8 @@ export const markingHandlers = [
   getMyMarkerList,
   getLikedMarkerListHandler,
   getSavedMarkerListHandler,
+  getLikedMarkingListHandler,
+  getSavedMarkingListHandler,
+  getProfileThumbnailHandler,
   getMarkingDetailRequestHandler,
 ];

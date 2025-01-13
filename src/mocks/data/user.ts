@@ -1,8 +1,8 @@
-import { otherUsers } from "./otherUser";
+import { OTHER_USERS } from "./otherUser";
 import { profileMarkingThumbnail } from "./profileMarking";
 import { temporaryMarkingList } from "./tempMarkingList";
 
-export const User = {
+export let USER = {
   ROLE_NONE: {
     code: 200,
     message: "success",
@@ -26,14 +26,13 @@ export const User = {
       socialType: "EMAIL",
       followersIds: [],
       followingsIds: [],
-      likes: [],
-      bookmarks: [],
+      likes: Array.from({ length: 100 }, (_, i) => 120 + i * 2),
+      bookmarks: Array.from({ length: 100 }, (_, i) => 120 + i * 3),
       tempCnt: 3,
       markings: [],
       pet: null,
     },
   },
-
   ROLE_USER: {
     code: 200,
     message: "success",
@@ -41,14 +40,14 @@ export const User = {
       userId: 1,
       nickname: "뽀송송",
       socialType: "EMAIL",
-      followersIds: otherUsers
-        .filter(({ followingsIds }) => followingsIds.includes(1))
-        .map(({ userId }) => userId),
-      followingsIds: otherUsers
-        .filter(({ followersIds }) => followersIds.includes(1))
-        .map(({ userId }) => userId),
-      likes: [],
-      bookmarks: [],
+      followersIds: OTHER_USERS.filter(({ followingsIds }) =>
+        followingsIds.includes(1),
+      ).map(({ userId }) => userId),
+      followingsIds: OTHER_USERS.filter(({ followersIds }) =>
+        followersIds.includes(1),
+      ).map(({ userId }) => userId),
+      likes: Array.from({ length: 100 }, (_, i) => 120 + i * 2),
+      bookmarks: Array.from({ length: 100 }, (_, i) => 120 + i * 3),
       tempCnt: temporaryMarkingList.length,
       markings: profileMarkingThumbnail["뽀송송"].map(
         ({ markingId }) => markingId,
@@ -70,4 +69,19 @@ export const User = {
       },
     },
   },
+};
+
+export const updateUser = <T extends Exclude<keyof typeof USER, "ROLE_NONE">>(
+  role: T,
+  updater: (target: (typeof USER)[T]["content"]) => (typeof USER)[T]["content"],
+) => {
+  const target = USER[role];
+  USER = {
+    ...USER,
+    [role]: {
+      code: target.code,
+      message: target.message,
+      content: updater(target.content),
+    },
+  };
 };

@@ -1,26 +1,27 @@
-import { getRandomImg } from "./getRandomImg";
+import { getRandomContent } from "./markingList";
 import { profileMarkingThumbnail } from "./profileMarking";
+import { getRandomImg } from "./randomDogImageList";
 
 export const getMyMark = () => {
   // 뽀송송의 마커 리스트
   const myMarkerList = profileMarkingThumbnail["뽀송송"];
   // 뽀송송의 마커 리스트를 가공하여 마킹 리스트 반환
-  const myMarkingList = myMarkerList.map((thumbnail, index) => ({
+  const myMarkingList = myMarkerList.map((thumbnail, markingId) => ({
     ...thumbnail,
     region: "**시 **구 **동",
-    content: `Marking content ${index + 1}`,
+    content: getRandomContent(markingId),
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
     nickName: "뽀송송",
-    userId: index + 1,
+    userId: 0,
     isOwner: true,
     isTempSaved: false,
     address: {
-      id: index + 1,
+      id: markingId + 1,
       province: "**시",
       cityCounty: "**구",
       district: null,
-      subDistrict: `district ${index + 1}`,
+      subDistrict: `district ${markingId + 1}`,
     },
     countData: {
       likedCount: Math.floor(Math.random() * 100),
@@ -29,19 +30,17 @@ export const getMyMark = () => {
     pet: {
       petId: 1,
       name: `뽀송송 Pet`,
-      description: `Pet description ${index + 1}`,
+      description: `Pet description ${markingId + 1}`,
       profile: null,
       breed: `뽀송송 Breed`,
       personalities: ["personality1", "personality2"],
     },
-    images: [
-      {
-        id: index + 1,
-        imageUrl: getRandomImg(),
-        lank: 1,
-        regDt: new Date().toISOString(),
-      },
-    ],
+    images: Array.from({ length: Math.floor(markingId % 5) + 1 }, (_, idx) => ({
+      id: markingId + 1,
+      imageUrl: getRandomImg(markingId)[idx],
+      lank: idx + 1,
+      regDt: new Date().toISOString(),
+    })),
   }));
 
   return {
