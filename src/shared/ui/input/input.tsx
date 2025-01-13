@@ -15,7 +15,7 @@ export interface InputProps
   essential?: boolean;
   isError?: boolean;
   disabled?: boolean;
-  trailingNode?: InputNode | [InputNode, InputNode];
+  trailingNode?: InputNode;
   leadingNode?: InputNode;
 }
 
