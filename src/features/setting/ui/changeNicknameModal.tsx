@@ -1,13 +1,15 @@
 import { useRef } from "react";
+import {
+  usePostCheckDuplicateNicknameState,
+  validateNickname,
+  NicknameInput,
+} from "@/features/auth/@x/setting";
 import type { MyInfo } from "@/entities/auth/types/server";
 import { formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore, useSnackbar } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
-import { usePostCheckDuplicateNicknameState } from "../../auth/api";
-import { validateNickname } from "../../auth/lib";
-import { NicknameInput } from "../../auth/ui/nicknameInput";
 import { usePutChangeNickname } from "../api";
 
 interface ChangeNicknameModalProps
