@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authQueryKey } from "@/entities/auth/api";
 import { apiClient } from "@/shared/lib";
 import { AuthStore, useAuthStore } from "@/shared/store/auth";
-import { CHANGE_USER_INFO_END_POINT } from "../../auth/constants";
+import { CHANGE_USER_INFO_END_POINT } from "../constants";
 import { changeUserInfoQueryKey } from "./queryKey";
 
 interface ChangeNicknameRequest {
