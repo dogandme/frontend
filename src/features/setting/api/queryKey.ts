@@ -1,7 +1,7 @@
 export const changeUserInfoQueryKey = {
   changeUserInfoAll: ["changeUserInfo"] as const,
   nickname: () =>
-    [...changeUserInfoQueryKey.changeUserInfoAll, "changeNickname"] as const,
+    [...changeUserInfoQueryKey.changeUserInfoAll, "putChangeNickname"] as const,
   age: () =>
     [...changeUserInfoQueryKey.changeUserInfoAll, "putChangeAge"] as const,
   gender: () =>
