@@ -1,8 +1,8 @@
 import { http, HttpResponse, type PathParams } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
 import { API_BASE_URL } from "@/shared/constants";
-import { OTHER_USERS } from "../data/otherUser";
-import { USER } from "../data/user";
+import { MY_PROFILE } from "../data/myProfile";
+import { PROFILES_OF_OTHER_PEOPLE } from "../data/otherProfile";
 
 const getFollowerListHandler = http.get<PathParams>(
   `${API_BASE_URL}/users/follows/followers/:nickname`,
@@ -39,8 +39,9 @@ const getFollowerListHandler = http.get<PathParams>(
 
     const followerIds =
       nickname === "뽀송송"
-        ? USER["ROLE_USER"].content.followersIds
-        : OTHER_USERS.find((user) => user.nickname === nickname)?.followersIds;
+        ? MY_PROFILE["ROLE_USER"].content.followersIds
+        : PROFILES_OF_OTHER_PEOPLE.find((user) => user.nickname === nickname)
+            ?.followersIds;
 
     if (!followerIds) {
       return HttpResponse.json(
@@ -54,15 +55,15 @@ const getFollowerListHandler = http.get<PathParams>(
       );
     }
 
-    const userInfos = OTHER_USERS.filter((user) =>
+    const userInfos = PROFILES_OF_OTHER_PEOPLE.filter((user) =>
       followerIds.includes(user.userId),
     ).map(({ userId, pet, nickname }) => ({ userId, pet, nickname }));
 
     if (followerIds.includes(1)) {
       userInfos.push({
         userId: 1,
-        pet: USER["ROLE_USER"].content.pet,
-        nickname: USER["ROLE_USER"].content.nickname,
+        pet: MY_PROFILE["ROLE_USER"].content.pet,
+        nickname: MY_PROFILE["ROLE_USER"].content.nickname,
       });
     }
 
@@ -131,8 +132,9 @@ const getFollowingListHandler = http.get<PathParams>(
 
     const followingIds =
       nickname === "뽀송송"
-        ? USER["ROLE_USER"].content.followingsIds
-        : OTHER_USERS.find((user) => user.nickname === nickname)?.followingsIds;
+        ? MY_PROFILE["ROLE_USER"].content.followingsIds
+        : PROFILES_OF_OTHER_PEOPLE.find((user) => user.nickname === nickname)
+            ?.followingsIds;
 
     if (!followingIds) {
       return HttpResponse.json(
@@ -146,15 +148,15 @@ const getFollowingListHandler = http.get<PathParams>(
       );
     }
 
-    const userInfos = OTHER_USERS.filter((user) =>
+    const userInfos = PROFILES_OF_OTHER_PEOPLE.filter((user) =>
       followingIds.includes(user.userId),
     ).map(({ userId, pet, nickname }) => ({ userId, pet, nickname }));
 
     if (followingIds.includes(1)) {
       userInfos.push({
         userId: 1,
-        pet: USER["ROLE_USER"].content.pet,
-        nickname: USER["ROLE_USER"].content.nickname,
+        pet: MY_PROFILE["ROLE_USER"].content.pet,
+        nickname: MY_PROFILE["ROLE_USER"].content.nickname,
       });
     }
 
@@ -219,7 +221,9 @@ const postFollowingHandler = http.post(
       );
     }
 
-    const targetUser = OTHER_USERS.find((user) => user.nickname === nickname);
+    const targetUser = PROFILES_OF_OTHER_PEOPLE.find(
+      (user) => user.nickname === nickname,
+    );
     if (!targetUser) {
       return HttpResponse.json(
         {
@@ -233,7 +237,7 @@ const postFollowingHandler = http.post(
     }
 
     // 내 팔로잉 ID 에 해당 유저의 userId 추가
-    USER["ROLE_USER"].content.followingsIds.push(targetUser.userId);
+    MY_PROFILE["ROLE_USER"].content.followingsIds.push(targetUser.userId);
     // 해당 유저의 팔로워 ID 에 내 userId 추가
     targetUser.followersIds.push(1);
 
@@ -275,7 +279,9 @@ const deleteFollowingHandler = http.delete(
       );
     }
 
-    const targetUser = OTHER_USERS.find((user) => user.nickname === nickname);
+    const targetUser = PROFILES_OF_OTHER_PEOPLE.find(
+      (user) => user.nickname === nickname,
+    );
     if (!targetUser) {
       return HttpResponse.json(
         {
@@ -288,7 +294,7 @@ const deleteFollowingHandler = http.delete(
       );
     }
     // 내가 팔로잉 하는 ID 에 해당 유저의 userId 제거
-    USER["ROLE_USER"].content.followingsIds = USER[
+    MY_PROFILE["ROLE_USER"].content.followingsIds = MY_PROFILE[
       "ROLE_USER"
     ].content.followingsIds.filter((id) => id !== targetUser.userId);
     // 팔로잉 취소 당하는 유저의 팔로워 ID 에 내 userId 제거
@@ -332,7 +338,9 @@ const deleteFollowerHandler = http.delete(
       );
     }
 
-    const targetUser = OTHER_USERS.find((user) => user.nickname === nickname);
+    const targetUser = PROFILES_OF_OTHER_PEOPLE.find(
+      (user) => user.nickname === nickname,
+    );
 
     if (!targetUser) {
       return HttpResponse.json(
@@ -346,7 +354,7 @@ const deleteFollowerHandler = http.delete(
       );
     }
     // 내 팔로워 ID 에 해당 유저의 userId 제거
-    USER["ROLE_USER"].content.followersIds = USER[
+    MY_PROFILE["ROLE_USER"].content.followersIds = MY_PROFILE[
       "ROLE_USER"
     ].content.followersIds.filter((id) => id !== targetUser.userId);
     // 팔로워 취소 당하는 유저의 팔로잉 ID 에 내 userId 제거

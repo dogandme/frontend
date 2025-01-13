@@ -1,8 +1,8 @@
 import { http, HttpResponse } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
 import { API_BASE_URL } from "@/shared/constants";
-import { OTHER_USERS, roleGuestUser } from "../data/otherUser";
-import { USER } from "../data/user";
+import { MY_PROFILE } from "../data/myProfile";
+import { PROFILES_OF_OTHER_PEOPLE, roleGuestUser } from "../data/otherProfile";
 
 const getProfileHandler = http.get(
   `${API_BASE_URL}/profile`,
@@ -26,15 +26,15 @@ const getProfileHandler = http.get(
     }
 
     if (token === "accessToken-ROLE_NONE" && nickname === "뽀송송") {
-      return HttpResponse.json(USER["ROLE_NONE"]);
+      return HttpResponse.json(MY_PROFILE["ROLE_NONE"]);
     }
 
     if (token === "accessToken-ROLE_GUEST" && nickname === "뽀송송") {
-      return HttpResponse.json(USER["ROLE_GUEST"]);
+      return HttpResponse.json(MY_PROFILE["ROLE_GUEST"]);
     }
 
     if (token === "accessToken-ROLE_USER" && nickname === "뽀송송") {
-      return HttpResponse.json(USER["ROLE_USER"]);
+      return HttpResponse.json(MY_PROFILE["ROLE_USER"]);
     }
 
     if (nickname === "나는야게스트") {
@@ -45,7 +45,9 @@ const getProfileHandler = http.get(
       });
     }
 
-    const userInfo = OTHER_USERS.find((user) => user.nickname === nickname);
+    const userInfo = PROFILES_OF_OTHER_PEOPLE.find(
+      (user) => user.nickname === nickname,
+    );
 
     if (!userInfo) {
       return HttpResponse.json(

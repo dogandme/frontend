@@ -9,8 +9,8 @@ import type {
 } from "@/features/setting/api";
 import { SETTING_END_POINT } from "@/features/setting/constants";
 import { myInfo, updateMyInfo } from "../data/myInfo";
+import { MY_PROFILE } from "../data/myProfile";
 import regionListData from "../data/regionList.json";
-import { USER } from "../data/user";
 
 const postLogoutHandler = http.post(SETTING_END_POINT.LOGOUT, ({ request }) => {
   const token = request.headers.get("Authorization");
@@ -363,7 +363,7 @@ const putChangePetInformationHandler = http.put<
   const petDto = JSON.parse(formData.get("petDto") as string);
   const image = formData.get("image") as File;
 
-  const userInfo = USER["ROLE_USER"];
+  const userInfo = MY_PROFILE["ROLE_USER"];
   const newData = {
     ...userInfo,
     content: {
@@ -384,7 +384,7 @@ const putChangePetInformationHandler = http.put<
       },
     },
   };
-  USER["ROLE_USER"] = newData;
+  MY_PROFILE["ROLE_USER"] = newData;
 
   return HttpResponse.json({
     code: 200,
