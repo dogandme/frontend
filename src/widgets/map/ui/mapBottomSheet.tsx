@@ -50,7 +50,9 @@ export const MapBottomSheet = ({ children }: MapBottomSheetProps) => {
         <Sheet.Header />
         <Sheet.Content
           style={{
-            padding: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingTop: 0,
             paddingBottom: contentPaddingBottom,
           }}
         >
