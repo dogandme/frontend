@@ -5,6 +5,8 @@ import { inputStyles, baseStyles } from "./input.styles";
 type ComponentType = keyof typeof inputStyles;
 type StatusType = keyof (typeof inputStyles)[ComponentType];
 
+type InputNode = Exclude<React.ReactNode, Iterable<React.ReactNode>>;
+
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
@@ -13,8 +15,8 @@ export interface InputProps
   essential?: boolean;
   isError?: boolean;
   disabled?: boolean;
-  trailingNode?: React.ReactNode;
-  leadingNode?: React.ReactNode;
+  trailingNode?: InputNode;
+  leadingNode?: InputNode;
 }
 
 export const InputWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -36,14 +38,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-    // 휴먼에러를 방지하기 위해 leadingNode,trailingNode 유효성 확인
-    if (React.Children.count(leadingNode) > 1) {
-      throw new Error("leadingNode 하나의 노드만 가질 수 있습니다.");
-    }
-    if (React.Children.count(trailingNode) > 2) {
-      throw new Error("trailingNode는 최대 2개의 노드만 가질 수 있습니다.");
-    }
-
     // input 컴포넌트의 상태에 따라 적용되는 스타일
     const status: StatusType = isError ? "error" : "default";
     const statusStyles = inputStyles[componentType][status];

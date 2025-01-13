@@ -387,16 +387,6 @@ export const InputWithIcons: Story = {
               trailingNode={<MockUpIcon />}
             />
           </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="calender"
-              componentType="calender"
-              type="date"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-            />
-          </div>
         </div>
 
         <div className="flex gap-5">
@@ -408,7 +398,6 @@ export const InputWithIcons: Story = {
               leadingNode={<MockUpIcon />}
             />
           </div>
-
           <div className="w-[328px] border border-grey-200 p-4 px-2">
             <Input
               {...args}
@@ -418,15 +407,6 @@ export const InputWithIcons: Story = {
               trailingNode={<MockUpIcon />}
             />
           </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="searchText"
-              componentType="searchText"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-            />
-          </div>
         </div>
         <div className="flex gap-5">
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -444,15 +424,6 @@ export const InputWithIcons: Story = {
               componentType="outlinedText"
               leadingNode={<MockUpIcon />}
               trailingNode={<MockUpIcon />}
-            />
-          </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="outlinedText"
-              componentType="outlinedText"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
         </div>
@@ -474,15 +445,6 @@ export const InputWithIcons: Story = {
               trailingNode={<MockUpIcon />}
             />
           </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="text"
-              componentType="text"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-            />
-          </div>
         </div>
         <div className="flex gap-5">
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -500,15 +462,6 @@ export const InputWithIcons: Story = {
               componentType="timerText"
               leadingNode={<MockUpIcon />}
               trailingNode={<MockUpIcon />}
-            />
-          </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="timerText"
-              componentType="timerText"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
         </div>
@@ -558,99 +511,6 @@ export const InputExample: Story = {
               label="searchText on error"
               componentType="searchText"
               leadingNode={<SearchIcon />}
-              isError
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-10">
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="default outlinedText"
-              componentType="outlinedText"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-            />
-          </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="disabled outlinedText"
-              componentType="outlinedText"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-              disabled
-            />
-          </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="outlinedText on error"
-              componentType="outlinedText"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-              isError
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-10">
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="default text"
-              componentType="text"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-            />
-          </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="disabled text"
-              componentType="text"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-              disabled
-            />
-          </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="text on error"
-              componentType="text"
-              leadingNode={<MockUpIcon />}
-              trailingNode={[<MockUpIcon />, <MockUpIcon />]}
-              isError
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-10">
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="default timerText"
-              componentType="timerText"
-              trailingNode={[<CountArea />, <MockUpIcon />]}
-            />
-          </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="disabled timerText"
-              componentType="timerText"
-              trailingNode={[<CountArea />, <MockUpIcon />]}
-              disabled
-            />
-          </div>
-          <div className="w-[328px] border border-grey-200 p-4 px-2">
-            <Input
-              {...args}
-              label="timerText on error"
-              componentType="timerText"
-              trailingNode={[<CountArea />, <MockUpIcon />]}
               isError
             />
           </div>
@@ -743,10 +603,12 @@ export const WithStatusText: Story = {
   },
   render: (args) => {
     return (
-      <InputWrapper>
-        <Input {...args} />
-        <StatusText isError={args.isError}>status text</StatusText>
-      </InputWrapper>
+      <div className="w-[328px] border border-grey-200 p-4 px-2">
+        <InputWrapper>
+          <Input {...args} trailingNode={<CountArea />} />
+          <StatusText isError={args.isError}>status text</StatusText>
+        </InputWrapper>
+      </div>
     );
   },
 };
