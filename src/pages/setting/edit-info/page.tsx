@@ -1,4 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutationState, useQueryClient } from "@tanstack/react-query";
 import { changeUserInfoQueryKey } from "@/features/setting/api";
 import { ChangeNicknameModal, GenderChangeButton } from "@/features/setting/ui";
 import { ChangeAgeButton } from "@/features/setting/ui";
@@ -14,15 +14,17 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 const EditInfoPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
 
-  const queryClient = useQueryClient();
-  const mutationStatusOfChangeUserInfo = queryClient
-    .getMutationCache()
-    .findAll({
+  const mutationOfChangeUserInfo = useMutationState({
+    filters: {
       mutationKey: changeUserInfoQueryKey.changeUserInfoAll,
-    })
-    .reverse()[0]?.state.status;
+      status: "pending",
+    },
+    select: (mutation) => mutation.state.status,
+  });
+  const lastMutation =
+    mutationOfChangeUserInfo[mutationOfChangeUserInfo.length - 1];
 
-  if (!myInfo || mutationStatusOfChangeUserInfo === "pending") {
+  if (!myInfo || lastMutation === "pending") {
     return <EditInfoPageSkeleton />;
   }
 
