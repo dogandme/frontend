@@ -1,13 +1,15 @@
 import { http, HttpResponse, type PathParams } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
-import { CHANGE_USER_INFO_END_POINT } from "@/features/auth/constants";
 import type {
   PostChangeRegionRequest,
   PutChangeAgeRequest,
   PutChangeGenderRequest,
   PutChangePetInfoRequest,
 } from "@/features/setting/api";
-import { SETTING_END_POINT } from "@/features/setting/constants";
+import {
+  CHANGE_USER_INFO_END_POINT,
+  SETTING_END_POINT,
+} from "@/features/setting/constants";
 import { myInfo, updateMyInfo } from "../data/myInfo";
 import { MY_PROFILE } from "../data/myProfile";
 import regionListData from "../data/regionList.json";
