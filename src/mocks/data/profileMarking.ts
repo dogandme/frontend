@@ -35,3 +35,13 @@ export const profileMarkingThumbnail: Record<
     }),
   ),
 };
+
+export const updateMyProfileMarkingThumbnail = (
+  prevNickname: string,
+  newNickname: string,
+) => {
+  const markingThumbnail = profileMarkingThumbnail[prevNickname];
+
+  profileMarkingThumbnail[newNickname] = markingThumbnail;
+  delete profileMarkingThumbnail[prevNickname];
+};

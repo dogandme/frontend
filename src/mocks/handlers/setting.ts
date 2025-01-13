@@ -10,8 +10,10 @@ import {
   CHANGE_USER_INFO_END_POINT,
   SETTING_END_POINT,
 } from "@/features/setting/constants";
+import { useAuthStore } from "@/shared/store";
 import { myInfo, updateMyInfo } from "../data/myInfo";
-import { MY_PROFILE } from "../data/myProfile";
+import { MY_PROFILE, updateMyProfile } from "../data/myProfile";
+import { updateMyProfileMarkingThumbnail } from "../data/profileMarking";
 import regionListData from "../data/regionList.json";
 
 const postLogoutHandler = http.post(SETTING_END_POINT.LOGOUT, ({ request }) => {
@@ -333,6 +335,11 @@ const putChangeNickname = http.put<PathParams, { nickname: string }>(
       ...prev,
       nickLastModDt: new Date().toISOString(),
     }));
+    updateMyProfile("ROLE_USER", (user) => ({ ...user, nickname }));
+    updateMyProfileMarkingThumbnail(
+      useAuthStore.getState().nickname!,
+      nickname,
+    );
 
     return HttpResponse.json({
       code: 200,
