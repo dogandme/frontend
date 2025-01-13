@@ -55,7 +55,7 @@ export const getMockUserMarkingList = ({
         },
         (_, idx) => ({
           id: markingId + 1,
-          imageUrl: getRandomImg(markingId)[0],
+          imageUrl: getRandomImg(markingId)[idx],
           lank: idx + 1,
           regDt: new Date().toISOString(),
         }),

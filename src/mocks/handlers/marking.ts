@@ -11,7 +11,7 @@ import { API_BASE_URL } from "@/shared/constants";
 import { createMockMarking, getMockMarkingList } from "../data/markingList";
 import { _likedMarkingList, _savedMarkingList } from "../data/markingList";
 import { getMyMark } from "../data/myMark";
-import { updateMyProfile } from "../data/myProfile";
+import { MY_PROFILE, updateMyProfile } from "../data/myProfile";
 import { profileMarkingThumbnail } from "../data/profileMarking";
 import { temporaryMarkingList as _temporaryMarkingList } from "../data/tempMarkingList";
 import { getMockUserMarkingList } from "../data/userMarkingList";
@@ -647,8 +647,6 @@ const putModifyTempMarkingHandler = http.put(
   },
 );
 
-const { myMarkerList, myMarkingList } = getMyMark();
-
 const getUserMarkingListHandler = http.get(
   `${API_BASE_URL}/markings/users/:nickname`,
   async ({ request, params }) => {
@@ -678,12 +676,14 @@ const getUserMarkingListHandler = http.get(
     const northRightLng =
       Number(url.searchParams.get("northRightLng")) || 126.97381575396503;
 
+    const { myMarkingList } = getMyMark(MY_PROFILE.ROLE_USER.content.nickname);
+
     // TODO 실제 서버에선  mapViewMode 가 ALL_VIEW 일 경우엔 사실 southBottomLat , ... 등의 queryParams가 존재하지 않습니다.
     // 쿼리 파라미터 값과 상관 없이 모든 데이터를 가져오기 때문입니다.
     // 하지만 우리는 가상 DB를 만들지 않고 랜덤한 마킹 리스트를 생성하기 때문에 해당 부분을 구현하는데 어려움이 있습니다.
     // 이에 임시 방편으로 mapViewMode여서 queryParams 가 없는 경우를 고려하여 기본 값을 넣어주도록 합니다.
     const markingList =
-      nickname === "뽀송송"
+      nickname === MY_PROFILE.ROLE_USER.content.nickname
         ? myMarkingList
         : getMockUserMarkingList({
             nickname,
@@ -764,6 +764,8 @@ const getMyMarkerList = http.get(MARKER_END_POINT.MY, ({ request }) => {
       },
     );
   }
+
+  const { myMarkerList } = getMyMark(MY_PROFILE.ROLE_USER.content.nickname);
 
   return HttpResponse.json({
     code: 200,
@@ -941,21 +943,19 @@ const getSavedMarkerListHandler = http.get(
 const getMarkingDetailRequestHandler = http.get(
   `${API_BASE_URL}/markings/:markingId`,
   async ({ params }) => {
-    const content = myMarkingList.find(
-      ({ markingId }) => markingId === Number(params.markingId),
-    );
-
     return HttpResponse.json({
       code: 200,
       message: "success",
-      content:
-        content ??
-        createMockMarking(Number(params.markingId), {
+      content: createMockMarking(
+        Number(params.markingId),
+        {
           southBottomLat: 35.0,
           northTopLat: 35.1,
           southLeftLng: 129.0,
           northRightLng: 129.1,
-        }),
+        },
+        MY_PROFILE.ROLE_USER.content.nickname,
+      ),
     });
   },
 );

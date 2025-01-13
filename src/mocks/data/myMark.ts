@@ -2,9 +2,9 @@ import { getRandomContent } from "./markingList";
 import { profileMarkingThumbnail } from "./profileMarking";
 import { getRandomImg } from "./randomDogImageList";
 
-export const getMyMark = () => {
+export const getMyMark = (nickname: string) => {
   // 뽀송송의 마커 리스트
-  const myMarkerList = profileMarkingThumbnail["뽀송송"];
+  const myMarkerList = profileMarkingThumbnail[nickname];
   // 뽀송송의 마커 리스트를 가공하여 마킹 리스트 반환
   const myMarkingList = myMarkerList.map((thumbnail, markingId) => ({
     ...thumbnail,
@@ -12,7 +12,7 @@ export const getMyMark = () => {
     content: getRandomContent(markingId),
     isVisible: "PUBLIC",
     regDt: new Date().toISOString(),
-    nickName: "뽀송송",
+    nickName: nickname,
     userId: 0,
     isOwner: true,
     isTempSaved: false,
