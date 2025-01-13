@@ -15,7 +15,7 @@ export const PasswordInput = (props: Omit<InputProps, FixedInputProps>) => {
     <Input
       componentType="outlinedText"
       type={isVisibilityOn ? "text" : "password"}
-      trailingNode={
+      trailingNode={[
         <button
           onClick={handleVisibility}
           aria-label="비밀번호 보기 버튼"
@@ -24,8 +24,8 @@ export const PasswordInput = (props: Omit<InputProps, FixedInputProps>) => {
           type="button"
         >
           {isVisibilityOn ? <VisibilityOnIcon /> : <VisibilityOffIcon />}
-        </button>
-      }
+        </button>,
+      ]}
       placeholder="비밀번호를 입력해 주세요"
       {...props}
     />

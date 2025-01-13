@@ -230,7 +230,7 @@ const VerificationCode = () => {
         onChange={handleChange}
         isError={isError}
         disabled={!isSentCode || isVerified}
-        trailingNode={isSentCode && !isVerified && <Timer />}
+        trailingNode={[isSentCode && !isVerified && <Timer />]}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />

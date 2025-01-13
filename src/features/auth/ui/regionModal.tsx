@@ -71,7 +71,7 @@ const RegionSearchInput = () => {
     <Input
       id="region-search"
       componentType="searchText"
-      leadingNode={<SearchIcon />}
+      leadingNode={[<SearchIcon />]}
       placeholder="동명(읍,면)으로 검색"
       onChange={handleDebouncedChange}
       ref={inputRef}

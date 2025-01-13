@@ -374,7 +374,7 @@ export const InputWithIcons: Story = {
               label="calender"
               componentType="calender"
               type="date"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -383,8 +383,8 @@ export const InputWithIcons: Story = {
               label="calender"
               componentType="calender"
               type="date"
-              leadingNode={<MockUpIcon />}
-              trailingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
+              trailingNode={[<MockUpIcon />]}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -393,7 +393,7 @@ export const InputWithIcons: Story = {
               label="calender"
               componentType="calender"
               type="date"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
@@ -405,7 +405,7 @@ export const InputWithIcons: Story = {
               {...args}
               label="searchText"
               componentType="searchText"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
             />
           </div>
 
@@ -414,8 +414,8 @@ export const InputWithIcons: Story = {
               {...args}
               label="searchText"
               componentType="searchText"
-              leadingNode={<MockUpIcon />}
-              trailingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
+              trailingNode={[<MockUpIcon />]}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -423,7 +423,7 @@ export const InputWithIcons: Story = {
               {...args}
               label="searchText"
               componentType="searchText"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
@@ -434,7 +434,7 @@ export const InputWithIcons: Story = {
               {...args}
               label="outlinedText"
               componentType="outlinedText"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -442,8 +442,8 @@ export const InputWithIcons: Story = {
               {...args}
               label="outlinedText"
               componentType="outlinedText"
-              leadingNode={<MockUpIcon />}
-              trailingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
+              trailingNode={[<MockUpIcon />]}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -451,7 +451,7 @@ export const InputWithIcons: Story = {
               {...args}
               label="outlinedText"
               componentType="outlinedText"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
@@ -462,7 +462,7 @@ export const InputWithIcons: Story = {
               {...args}
               label="text"
               componentType="text"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -470,8 +470,8 @@ export const InputWithIcons: Story = {
               {...args}
               label="text"
               componentType="text"
-              leadingNode={<MockUpIcon />}
-              trailingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
+              trailingNode={[<MockUpIcon />]}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -479,7 +479,7 @@ export const InputWithIcons: Story = {
               {...args}
               label="text"
               componentType="text"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
@@ -490,7 +490,7 @@ export const InputWithIcons: Story = {
               {...args}
               label="timerText"
               componentType="timerText"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -498,8 +498,8 @@ export const InputWithIcons: Story = {
               {...args}
               label="timerText"
               componentType="timerText"
-              leadingNode={<MockUpIcon />}
-              trailingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
+              trailingNode={[<MockUpIcon />]}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4 px-2">
@@ -507,7 +507,7 @@ export const InputWithIcons: Story = {
               {...args}
               label="timerText"
               componentType="timerText"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
@@ -540,7 +540,7 @@ export const InputExample: Story = {
               {...args}
               label="default searchText"
               componentType="searchText"
-              leadingNode={<SearchIcon />}
+              leadingNode={[<SearchIcon />]}
             />
           </div>
           <div className="w-[328px] border border-grey-200 p-4">
@@ -548,7 +548,7 @@ export const InputExample: Story = {
               {...args}
               label="disabled searchText "
               componentType="searchText"
-              leadingNode={<SearchIcon />}
+              leadingNode={[<SearchIcon />]}
               disabled
             />
           </div>
@@ -557,7 +557,7 @@ export const InputExample: Story = {
               {...args}
               label="searchText on error"
               componentType="searchText"
-              leadingNode={<SearchIcon />}
+              leadingNode={[<SearchIcon />]}
               isError
             />
           </div>
@@ -569,7 +569,7 @@ export const InputExample: Story = {
               {...args}
               label="default outlinedText"
               componentType="outlinedText"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
@@ -578,7 +578,7 @@ export const InputExample: Story = {
               {...args}
               label="disabled outlinedText"
               componentType="outlinedText"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
               disabled
             />
@@ -588,7 +588,7 @@ export const InputExample: Story = {
               {...args}
               label="outlinedText on error"
               componentType="outlinedText"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
               isError
             />
@@ -601,7 +601,7 @@ export const InputExample: Story = {
               {...args}
               label="default text"
               componentType="text"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
             />
           </div>
@@ -610,7 +610,7 @@ export const InputExample: Story = {
               {...args}
               label="disabled text"
               componentType="text"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
               disabled
             />
@@ -620,7 +620,7 @@ export const InputExample: Story = {
               {...args}
               label="text on error"
               componentType="text"
-              leadingNode={<MockUpIcon />}
+              leadingNode={[<MockUpIcon />]}
               trailingNode={[<MockUpIcon />, <MockUpIcon />]}
               isError
             />
