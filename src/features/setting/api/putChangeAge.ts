@@ -4,6 +4,7 @@ import { authQueryKey } from "@/entities/auth/api";
 import type { MyInfo } from "@/entities/auth/types/server";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
+import { changeUserInfoQueryKey } from "./queryKey";
 
 export type PutChangeAgeRequest = Pick<MyInfo, "age">;
 
@@ -25,7 +26,7 @@ export const usePutChangeAge = () => {
     return () => {
       const cachedMutation = [
         ...queryClient.getMutationCache().findAll({
-          mutationKey: ["putChangeAge"],
+          mutationKey: changeUserInfoQueryKey.age(),
         }),
       ].reverse()[0];
 
@@ -36,7 +37,7 @@ export const usePutChangeAge = () => {
   }, [queryClient]);
 
   return useMutation<unknown, Error, PutChangeAgeRequest>({
-    mutationKey: ["putChangeAge"],
+    mutationKey: changeUserInfoQueryKey.age(),
     mutationFn: putChangeAge,
 
     /* 낙관적 업데이트 시행 */

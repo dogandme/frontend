@@ -7,5 +7,5 @@ export const changeUserInfoQueryKey = {
   gender: () =>
     [...changeUserInfoQueryKey.changeUserInfoAll, "putChangeGender"] as const,
   region: () =>
-    [...changeUserInfoQueryKey.changeUserInfoAll, "changeRegion"] as const,
+    [...changeUserInfoQueryKey.changeUserInfoAll, "postChangeRegion"] as const,
 };
