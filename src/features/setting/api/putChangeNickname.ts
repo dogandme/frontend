@@ -2,7 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authQueryKey } from "@/entities/auth/api";
 import { apiClient } from "@/shared/lib";
 import { AuthStore, useAuthStore } from "@/shared/store/auth";
-import { CHANGE_USER_INFO_END_POINT } from "../constants";
+import { CHANGE_USER_INFO_END_POINT } from "../../auth/constants";
+import { changeUserInfoQueryKey } from "./queryKey";
 
 interface ChangeNicknameRequest {
   nickname: NonNullable<AuthStore["nickname"]>;
@@ -20,7 +21,7 @@ export const usePutChangeNickname = () => {
   const setNickname = useAuthStore((state) => state.setNickname);
 
   return useMutation<unknown, Error, ChangeNicknameRequest>({
-    mutationKey: ["changeNickname"],
+    mutationKey: changeUserInfoQueryKey.nickname(),
     mutationFn: putChangeNickname,
     onSuccess: (_, variables) => {
       setNickname(variables.nickname);

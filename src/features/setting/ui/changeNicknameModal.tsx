@@ -5,12 +5,10 @@ import { useAuthStore, useSnackbar } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
-import {
-  usePostCheckDuplicateNicknameState,
-  usePutChangeNickname,
-} from "../api";
-import { validateNickname } from "../lib";
-import { NicknameInput } from "./nicknameInput";
+import { usePostCheckDuplicateNicknameState } from "../../auth/api";
+import { validateNickname } from "../../auth/lib";
+import { NicknameInput } from "../../auth/ui/nicknameInput";
+import { usePutChangeNickname } from "../api";
 
 interface ChangeNicknameModalProps
   extends NonNullableObject<Pick<MyInfo, "nickLastModDt">> {

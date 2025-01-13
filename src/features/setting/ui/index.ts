@@ -7,3 +7,4 @@ export * from "./regionChangeButton";
 export * from "./genderChangeButton";
 export * from "./passwordSetModal";
 export * from "./changeAgeButton";
+export * from "./changeNicknameModal";
