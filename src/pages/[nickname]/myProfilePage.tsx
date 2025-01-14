@@ -51,8 +51,8 @@ export const MyProfilePage = () => {
 const MyPageNavigationBar = () => {
   const nickname = useAuthStore((state) => state.nickname);
   return (
-    <NavigationBar>
-      {`${nickname}님`}
+    <NavigationBar justifyContent="between">
+      <h1>{`${nickname}님`}</h1>
       <Link
         to={ROUTER_PATH.SETTING}
         className="px-3 py-3 text-grey-500"

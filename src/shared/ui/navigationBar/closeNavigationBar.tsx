@@ -29,8 +29,8 @@ export const CloseNavigationBar = ({
   const navigate = useNavigate();
 
   return (
-    <NavigationBar>
-      {children}
+    <NavigationBar justifyContent="between">
+      <h1>{children}</h1>
       <CloseButton onClick={() => navigate(-1)} {...props} />
     </NavigationBar>
   );

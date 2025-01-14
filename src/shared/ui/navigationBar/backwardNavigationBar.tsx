@@ -31,9 +31,9 @@ export const BackwardNavigationBar = ({
   ...props
 }: BackwardNavigationBarProps) => {
   return (
-    <NavigationBar>
+    <NavigationBar justifyContent="start">
       <BackWardButton {...props} />
-      {children}
+      <h1>{children}</h1>
     </NavigationBar>
   );
 };

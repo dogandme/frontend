@@ -15,7 +15,7 @@ export const NavigationBar = ({
 }: NavigationBarProps) => {
   return (
     <nav
-      className={`flex py-2 items-center ${navigationStyles[justifyContent]}`}
+      className={`flex py-2 items-center text-grey-900 title-1 ${navigationStyles[justifyContent]}`}
     >
       {children}
     </nav>
