@@ -1,16 +1,16 @@
 import { useRef } from "react";
+import {
+  usePostCheckDuplicateNicknameState,
+  validateNickname,
+  NicknameInput,
+} from "@/features/auth/@x/setting";
 import type { MyInfo } from "@/entities/auth/types/server";
 import { formatDateToYearMonthDay } from "@/shared/lib";
 import { useAuthStore, useSnackbar } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
-import {
-  usePostCheckDuplicateNicknameState,
-  usePutChangeNickname,
-} from "../api";
-import { validateNickname } from "../lib";
-import { NicknameInput } from "./nicknameInput";
+import { usePutChangeNickname } from "../api";
 
 interface ChangeNicknameModalProps
   extends NonNullableObject<Pick<MyInfo, "nickLastModDt">> {

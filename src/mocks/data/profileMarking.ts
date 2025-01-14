@@ -1,4 +1,4 @@
-import { OTHER_USERS } from "./otherUser";
+import { PROFILES_OF_OTHER_PEOPLE } from "./otherProfile";
 import { getRandomImg } from "./randomDogImageList";
 
 let markingCount = 0;
@@ -23,7 +23,7 @@ export const profileMarkingThumbnail: Record<
   // otherUser 에 대한 랜덤한 마킹 생성
   // 마이 페이지 -> 팔로잉 , 팔로워 리스트에서 접근 가능한 유저들입니다.
   ...Object.fromEntries(
-    OTHER_USERS.map(({ nickname }, idx) => {
+    PROFILES_OF_OTHER_PEOPLE.map(({ nickname }, idx) => {
       return [
         nickname,
         idx < 10
@@ -34,4 +34,14 @@ export const profileMarkingThumbnail: Record<
       ];
     }),
   ),
+};
+
+export const updateMyProfileMarkingThumbnail = (
+  prevNickname: string,
+  newNickname: string,
+) => {
+  const markingThumbnail = profileMarkingThumbnail[prevNickname];
+
+  profileMarkingThumbnail[newNickname] = markingThumbnail;
+  delete profileMarkingThumbnail[prevNickname];
 };

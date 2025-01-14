@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authQueryKey } from "@/entities/auth/api";
 import { apiClient } from "@/shared/lib";
 import { SETTING_END_POINT } from "../constants";
+import { changeUserInfoQueryKey } from "./queryKey";
 
 export interface PostChangeRegionRequest {
   newIds: number[];
@@ -19,7 +20,7 @@ export const usePostChangeRegion = () => {
 
   return useMutation<unknown, Error, PostChangeRegionRequest>({
     mutationFn: postChangeRegion,
-    mutationKey: ["postChangeRegion"],
+    mutationKey: changeUserInfoQueryKey.region(),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: authQueryKey.myInfo(),

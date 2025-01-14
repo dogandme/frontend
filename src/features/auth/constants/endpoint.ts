@@ -14,7 +14,3 @@ export const SIGN_UP_END_POINT = {
   USER_INFO: `${API_BASE_URL}/users/additional-info`,
   PET_INFO: `${API_BASE_URL}/pets`,
 };
-
-export const CHANGE_USER_INFO_END_POINT = {
-  NICKNAME: `${API_BASE_URL}/users/profile/nickname`,
-};

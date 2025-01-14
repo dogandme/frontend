@@ -1,8 +1,8 @@
-import { OTHER_USERS } from "./otherUser";
+import { PROFILES_OF_OTHER_PEOPLE } from "./otherProfile";
 import { profileMarkingThumbnail } from "./profileMarking";
 import { temporaryMarkingList } from "./tempMarkingList";
 
-export let USER = {
+export let MY_PROFILE = {
   ROLE_NONE: {
     code: 200,
     message: "success",
@@ -40,10 +40,10 @@ export let USER = {
       userId: 1,
       nickname: "뽀송송",
       socialType: "EMAIL",
-      followersIds: OTHER_USERS.filter(({ followingsIds }) =>
+      followersIds: PROFILES_OF_OTHER_PEOPLE.filter(({ followingsIds }) =>
         followingsIds.includes(1),
       ).map(({ userId }) => userId),
-      followingsIds: OTHER_USERS.filter(({ followersIds }) =>
+      followingsIds: PROFILES_OF_OTHER_PEOPLE.filter(({ followersIds }) =>
         followersIds.includes(1),
       ).map(({ userId }) => userId),
       likes: Array.from({ length: 100 }, (_, i) => 120 + i * 2),
@@ -71,13 +71,17 @@ export let USER = {
   },
 };
 
-export const updateUser = <T extends Exclude<keyof typeof USER, "ROLE_NONE">>(
+export const updateMyProfile = <
+  T extends Exclude<keyof typeof MY_PROFILE, "ROLE_NONE">,
+>(
   role: T,
-  updater: (target: (typeof USER)[T]["content"]) => (typeof USER)[T]["content"],
+  updater: (
+    target: (typeof MY_PROFILE)[T]["content"],
+  ) => (typeof MY_PROFILE)[T]["content"],
 ) => {
-  const target = USER[role];
-  USER = {
-    ...USER,
+  const target = MY_PROFILE[role];
+  MY_PROFILE = {
+    ...MY_PROFILE,
     [role]: {
       code: target.code,
       message: target.message,

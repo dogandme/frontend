@@ -10,10 +10,10 @@ import type {
 import { API_BASE_URL } from "@/shared/constants";
 import { createMockMarking, getMockMarkingList } from "../data/markingList";
 import { _likedMarkingList, _savedMarkingList } from "../data/markingList";
-import { getMyMark } from "../data/myMark";
+import { myMarkerList, myMarkingList } from "../data/myMark";
+import { updateMyProfile } from "../data/myProfile";
 import { profileMarkingThumbnail } from "../data/profileMarking";
 import { temporaryMarkingList as _temporaryMarkingList } from "../data/tempMarkingList";
-import { updateUser } from "../data/user";
 import { getMockUserMarkingList } from "../data/userMarkingList";
 
 let likedMarkingList = [..._likedMarkingList];
@@ -115,7 +115,7 @@ const postLikeMarkingHandler = http.post<PathParams>(
         savedMarkingList[targetMarkingIndex].countData.likedCount += 1;
       }
 
-      updateUser("ROLE_USER", (user) => {
+      updateMyProfile("ROLE_USER", (user) => {
         return {
           ...user,
           likes: [...user.likes, markingId],
@@ -148,7 +148,7 @@ const deleteLikeMarkingHandler = http.delete<PathParams>(
       savedMarkingList[targetMarkingIndex].countData.likedCount -= 1;
     }
 
-    updateUser("ROLE_USER", (user) => {
+    updateMyProfile("ROLE_USER", (user) => {
       return {
         ...user,
         likes: user.likes.filter((id) => id !== markingId),
@@ -191,7 +191,7 @@ const postSaveMarkingHandler = http.post<PathParams>(
         likedMarkingList[targetMarkingIndex].countData.savedCount += 1;
       }
 
-      updateUser("ROLE_USER", (user) => {
+      updateMyProfile("ROLE_USER", (user) => {
         return {
           ...user,
           bookmarks: [...user.bookmarks, markingId],
@@ -224,7 +224,7 @@ const deleteSaveMarkingHandler = http.delete<PathParams>(
       likedMarkingList[targetMarkingIndex].countData.savedCount -= 1;
     }
 
-    updateUser("ROLE_USER", (user) => {
+    updateMyProfile("ROLE_USER", (user) => {
       return {
         ...user,
         bookmarks: user.bookmarks.filter((id) => id !== markingId),
@@ -646,8 +646,6 @@ const putModifyTempMarkingHandler = http.put(
     });
   },
 );
-
-const { myMarkerList, myMarkingList } = getMyMark();
 
 const getUserMarkingListHandler = http.get(
   `${API_BASE_URL}/markings/users/:nickname`,

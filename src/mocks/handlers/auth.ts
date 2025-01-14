@@ -5,8 +5,7 @@ import {
 } from "@/app/ReactQueryProvider/constants";
 import { LOGIN_END_POINT, SIGN_UP_END_POINT } from "@/features/auth/constants";
 import { MY_INFO_END_POINT } from "@/entities/auth/constants";
-import type { MyInfo } from "@/entities/auth/types/server";
-import userInfoData from "../data/myInfo.json";
+import { myInfo } from "../data/myInfo";
 
 const postSendCodeHandler = http.post<PathParams, { email: string }>(
   SIGN_UP_END_POINT.VERIFICATION_CODE,
@@ -169,14 +168,9 @@ const postCheckDuplicateNicknameHandler = http.post<
   });
 });
 
-const userInfoDB: { [key: string]: MyInfo } = {
-  뽀송송_EMAIL: userInfoData["EMAIL"] as MyInfo,
-  뽀송송_NAVER: userInfoData["NAVER"] as MyInfo,
-};
-
 const getMyInfoHandler = http.get(MY_INFO_END_POINT, async ({ request }) => {
   const token = request.headers.get("Authorization");
-  await new Promise((res) => setTimeout(res, 1500));
+  await new Promise((res) => setTimeout(res, 500));
 
   if (!token?.startsWith("accessToken")) {
     return HttpResponse.json(
@@ -194,14 +188,14 @@ const getMyInfoHandler = http.get(MY_INFO_END_POINT, async ({ request }) => {
     return HttpResponse.json({
       code: 200,
       message: "success",
-      content: userInfoDB["뽀송송_NAVER"],
+      content: myInfo.NAVER,
     });
   }
 
   return HttpResponse.json({
     code: 200,
     message: "success",
-    content: userInfoDB["뽀송송_EMAIL"],
+    content: myInfo.EMAIL,
   });
 });
 

@@ -6,3 +6,5 @@ export * from "./putSetPassword";
 export * from "./putChangeAge";
 export * from "./putChangeGender";
 export * from "./putChangePetInfo";
+export * from "./putChangeNickname";
+export * from "./queryKey";

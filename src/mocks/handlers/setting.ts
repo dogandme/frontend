@@ -1,17 +1,21 @@
 import { http, HttpResponse, type PathParams } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
-import { CHANGE_USER_INFO_END_POINT } from "@/features/auth/constants";
 import type {
   PostChangeRegionRequest,
   PutChangeAgeRequest,
   PutChangeGenderRequest,
   PutChangePetInfoRequest,
 } from "@/features/setting/api";
-import { SETTING_END_POINT } from "@/features/setting/constants";
-import type { MyInfo } from "@/entities/auth/types/server";
-import userInfoData from "../data/myInfo.json";
+import {
+  CHANGE_USER_INFO_END_POINT,
+  SETTING_END_POINT,
+} from "@/features/setting/constants";
+import { useAuthStore } from "@/shared/store";
+import { myInfo, updateMyInfo } from "../data/myInfo";
+import { updateMyMark } from "../data/myMark";
+import { MY_PROFILE, updateMyProfile } from "../data/myProfile";
+import { updateMyProfileMarkingThumbnail } from "../data/profileMarking";
 import regionListData from "../data/regionList.json";
-import { USER } from "../data/user";
 
 const postLogoutHandler = http.post(SETTING_END_POINT.LOGOUT, ({ request }) => {
   const token = request.headers.get("Authorization");
@@ -33,11 +37,6 @@ const postLogoutHandler = http.post(SETTING_END_POINT.LOGOUT, ({ request }) => {
     message: "success",
   });
 });
-
-const userInfoDB: { [key: string]: MyInfo } = {
-  뽀송송_EMAIL: userInfoData["EMAIL"] as MyInfo,
-  뽀송송_NAVER: userInfoData["NAVER"] as MyInfo,
-};
 
 const postChangeRegionHandler = http.post<PathParams, PostChangeRegionRequest>(
   SETTING_END_POINT.CHANGE_REGION,
@@ -66,9 +65,10 @@ const postChangeRegionHandler = http.post<PathParams, PostChangeRegionRequest>(
           .find((region) => region.id === id)!,
     );
 
-    userInfoDB[
-      token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL"
-    ].regions = newRegions;
+    updateMyInfo(
+      token.split("-")[1] === "naver" ? "NAVER" : "EMAIL",
+      (prev) => ({ ...prev, regions: newRegions }),
+    );
 
     return HttpResponse.json({
       code: 200,
@@ -136,13 +136,12 @@ const putChangeGenderHandler = http.put(
       );
     }
 
-    const userKey =
-      token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL";
+    const userKey = token.split("-")[1] === "naver" ? "NAVER" : "EMAIL";
 
-    userInfoDB[userKey] = {
-      ...userInfoDB[userKey],
+    updateMyInfo(userKey, (prev) => ({
+      ...prev,
       gender,
-    };
+    }));
 
     return HttpResponse.json({
       code: 200,
@@ -237,7 +236,7 @@ const putSetPasswordHandler = http.put<
   }
 
   /* 가상 DB에서 해당 회원의 isPasswordSet 을 true 로 변경 합니다. */
-  userInfoDB["뽀송송_NAVER"].isPasswordSet = true;
+  updateMyInfo("NAVER", (prev) => ({ ...prev, isPasswordSet: true }));
 
   return HttpResponse.json({
     code: 200,
@@ -265,10 +264,13 @@ const putChangeAgeHandler = http.put<PathParams, PutChangeAgeRequest>(
       );
     }
 
-    if (token.split("-")[1] === "naver") {
-      userInfoDB["뽀송송_NAVER"].age = age;
-    }
-    userInfoDB["뽀송송_EMAIL"].age = age;
+    updateMyInfo(
+      token.split("-")[1] === "naver" ? "NAVER" : "EMAIL",
+      (prev) => ({
+        ...prev,
+        age,
+      }),
+    );
 
     return HttpResponse.json({
       code: 200,
@@ -310,10 +312,9 @@ const putChangeNickname = http.put<PathParams, { nickname: string }>(
       );
     }
 
-    const userKey =
-      token.split("-")[1] === "naver" ? "뽀송송_NAVER" : "뽀송송_EMAIL";
+    const userKey = token.split("-")[1] === "naver" ? "NAVER" : "EMAIL";
 
-    const { nickLastModDt } = userInfoDB[userKey];
+    const { nickLastModDt } = myInfo[userKey];
 
     const now = new Date();
     const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -331,10 +332,16 @@ const putChangeNickname = http.put<PathParams, { nickname: string }>(
       );
     }
 
-    userInfoDB[userKey] = {
-      ...userInfoDB[userKey],
+    updateMyInfo(userKey, (prev) => ({
+      ...prev,
       nickLastModDt: new Date().toISOString(),
-    };
+    }));
+    updateMyProfile("ROLE_USER", (user) => ({ ...user, nickname }));
+    updateMyProfileMarkingThumbnail(
+      useAuthStore.getState().nickname!,
+      nickname,
+    );
+    updateMyMark(nickname);
 
     return HttpResponse.json({
       code: 200,
@@ -367,7 +374,7 @@ const putChangePetInformationHandler = http.put<
   const petDto = JSON.parse(formData.get("petDto") as string);
   const image = formData.get("image") as File;
 
-  const userInfo = USER["ROLE_USER"];
+  const userInfo = MY_PROFILE["ROLE_USER"];
   const newData = {
     ...userInfo,
     content: {
@@ -388,7 +395,7 @@ const putChangePetInformationHandler = http.put<
       },
     },
   };
-  USER["ROLE_USER"] = newData;
+  MY_PROFILE["ROLE_USER"] = newData;
 
   return HttpResponse.json({
     code: 200,

@@ -1,6 +1,6 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { ChangeNicknameModal } from "@/features/auth/ui";
-import { GenderChangeButton } from "@/features/setting/ui";
+import { useMutationState, useQueryClient } from "@tanstack/react-query";
+import { changeUserInfoQueryKey } from "@/features/setting/api";
+import { ChangeNicknameModal, GenderChangeButton } from "@/features/setting/ui";
 import { ChangeAgeButton } from "@/features/setting/ui";
 import { RegionChangeButton } from "@/features/setting/ui";
 import { useGetMyInfo } from "@/entities/auth/api";
@@ -14,7 +14,17 @@ import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 const EditInfoPage = withAuth(() => {
   const { data: myInfo } = useGetMyInfo();
 
-  if (!myInfo) {
+  const mutationOfChangeUserInfo = useMutationState({
+    filters: {
+      mutationKey: changeUserInfoQueryKey.changeUserInfoAll,
+      status: "pending",
+    },
+    select: (mutation) => mutation.state.status,
+  });
+  const lastMutation =
+    mutationOfChangeUserInfo[mutationOfChangeUserInfo.length - 1];
+
+  if (!myInfo || lastMutation === "pending") {
     return <EditInfoPageSkeleton />;
   }
 
@@ -111,7 +121,7 @@ const NicknameButton = ({
         const mutationCache = queryClient
           .getMutationCache()
           .findAll({
-            mutationKey: ["changeNickname"],
+            mutationKey: changeUserInfoQueryKey.nickname(),
           })
           .reverse()[0];
 

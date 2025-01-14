@@ -1,8 +1,8 @@
 import { http, HttpResponse } from "msw";
 import { ERROR_MESSAGE } from "@/app/ReactQueryProvider/constants";
 import { API_BASE_URL } from "@/shared/constants";
-import { OTHER_USERS, roleGuestUser } from "../data/otherUser";
-import { USER } from "../data/user";
+import { MY_PROFILE } from "../data/myProfile";
+import { PROFILES_OF_OTHER_PEOPLE } from "../data/otherProfile";
 
 const getProfileHandler = http.get(
   `${API_BASE_URL}/profile`,
@@ -25,27 +25,27 @@ const getProfileHandler = http.get(
       );
     }
 
-    if (token === "accessToken-ROLE_NONE" && nickname === "뽀송송") {
-      return HttpResponse.json(USER["ROLE_NONE"]);
+    if (token === "accessToken-ROLE_NONE") {
+      return HttpResponse.json(MY_PROFILE["ROLE_NONE"]);
     }
 
-    if (token === "accessToken-ROLE_GUEST" && nickname === "뽀송송") {
-      return HttpResponse.json(USER["ROLE_GUEST"]);
+    if (
+      token === "accessToken-ROLE_GUEST" &&
+      nickname === MY_PROFILE["ROLE_GUEST"].content.nickname
+    ) {
+      return HttpResponse.json(MY_PROFILE["ROLE_GUEST"]);
     }
 
-    if (token === "accessToken-ROLE_USER" && nickname === "뽀송송") {
-      return HttpResponse.json(USER["ROLE_USER"]);
+    if (
+      token === "accessToken-ROLE_USER" &&
+      nickname === MY_PROFILE["ROLE_USER"].content.nickname
+    ) {
+      return HttpResponse.json(MY_PROFILE["ROLE_USER"]);
     }
 
-    if (nickname === "나는야게스트") {
-      return HttpResponse.json({
-        code: 200,
-        message: "success",
-        content: roleGuestUser,
-      });
-    }
-
-    const userInfo = OTHER_USERS.find((user) => user.nickname === nickname);
+    const userInfo = PROFILES_OF_OTHER_PEOPLE.find(
+      (user) => user.nickname === nickname,
+    );
 
     if (!userInfo) {
       return HttpResponse.json(

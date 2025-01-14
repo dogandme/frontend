@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Report, LogoutButton } from "@/features/setting/ui";
 import { ROUTER_PATH } from "@/shared/constants";
 import { withAuth } from "@/shared/lib";
@@ -8,10 +8,16 @@ import { ArrowRightIcon } from "@/shared/ui/icon";
 import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 
 const SettingPage = withAuth(() => {
+  const navigate = useNavigate();
+
+  const nickname = useAuthStore((state) => state.nickname);
+
   return (
     <>
       <section>
-        <BackwardNavigationBar>설정</BackwardNavigationBar>
+        <BackwardNavigationBar onClick={() => navigate(`/@${nickname}`)}>
+          설정
+        </BackwardNavigationBar>
         <section className="flex flex-col gap-4 px-4 py-4">
           <AccountManagement />
           <EditMyInfo />
