@@ -12,6 +12,7 @@ import {
 } from "@/features/setting/constants";
 import { useAuthStore } from "@/shared/store";
 import { myInfo, updateMyInfo } from "../data/myInfo";
+import { updateMyMark } from "../data/myMark";
 import { MY_PROFILE, updateMyProfile } from "../data/myProfile";
 import { updateMyProfileMarkingThumbnail } from "../data/profileMarking";
 import regionListData from "../data/regionList.json";
@@ -340,6 +341,7 @@ const putChangeNickname = http.put<PathParams, { nickname: string }>(
       useAuthStore.getState().nickname!,
       nickname,
     );
+    updateMyMark(nickname);
 
     return HttpResponse.json({
       code: 200,

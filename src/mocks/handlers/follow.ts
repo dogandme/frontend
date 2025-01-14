@@ -38,7 +38,7 @@ const getFollowerListHandler = http.get<PathParams>(
     }
 
     const followerIds =
-      nickname === "뽀송송"
+      nickname === MY_PROFILE["ROLE_USER"].content.nickname
         ? MY_PROFILE["ROLE_USER"].content.followersIds
         : PROFILES_OF_OTHER_PEOPLE.find((user) => user.nickname === nickname)
             ?.followersIds;
@@ -131,7 +131,7 @@ const getFollowingListHandler = http.get<PathParams>(
     }
 
     const followingIds =
-      nickname === "뽀송송"
+      nickname === MY_PROFILE["ROLE_USER"].content.nickname
         ? MY_PROFILE["ROLE_USER"].content.followingsIds
         : PROFILES_OF_OTHER_PEOPLE.find((user) => user.nickname === nickname)
             ?.followingsIds;

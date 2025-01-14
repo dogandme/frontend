@@ -10,7 +10,7 @@ import type {
 import { API_BASE_URL } from "@/shared/constants";
 import { createMockMarking, getMockMarkingList } from "../data/markingList";
 import { _likedMarkingList, _savedMarkingList } from "../data/markingList";
-import { getMyMark } from "../data/myMark";
+import { myMarkerList, myMarkingList } from "../data/myMark";
 import { updateMyProfile } from "../data/myProfile";
 import { profileMarkingThumbnail } from "../data/profileMarking";
 import { temporaryMarkingList as _temporaryMarkingList } from "../data/tempMarkingList";
@@ -646,8 +646,6 @@ const putModifyTempMarkingHandler = http.put(
     });
   },
 );
-
-const { myMarkerList, myMarkingList } = getMyMark();
 
 const getUserMarkingListHandler = http.get(
   `${API_BASE_URL}/markings/users/:nickname`,
