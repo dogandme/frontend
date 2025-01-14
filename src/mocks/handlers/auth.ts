@@ -170,7 +170,7 @@ const postCheckDuplicateNicknameHandler = http.post<
 
 const getMyInfoHandler = http.get(MY_INFO_END_POINT, async ({ request }) => {
   const token = request.headers.get("Authorization");
-  await new Promise((res) => setTimeout(res, 1500));
+  await new Promise((res) => setTimeout(res, 500));
 
   if (!token?.startsWith("accessToken")) {
     return HttpResponse.json(
