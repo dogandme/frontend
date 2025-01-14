@@ -17,26 +17,40 @@ import { MY_PROFILE, updateMyProfile } from "../data/myProfile";
 import { updateMyProfileMarkingThumbnail } from "../data/profileMarking";
 import regionListData from "../data/regionList.json";
 
-const postLogoutHandler = http.post(SETTING_END_POINT.LOGOUT, ({ request }) => {
-  const token = request.headers.get("Authorization");
+const postLogoutHandler = http.post(
+  SETTING_END_POINT.LOGOUT,
+  ({ request, cookies }) => {
+    const token = request.headers.get("Authorization");
 
-  if (!token) {
+    if (!token) {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "토큰 검증에 실패 했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    const headers = new Headers();
+    const cookieEntry = Object.entries(cookies);
+    cookieEntry.forEach(([key, value]) => {
+      headers.append("Set-Cookie", `${key}=${value}; Max-Age=0; Path=/`);
+    });
+
     return HttpResponse.json(
       {
-        code: 401,
-        message: "토큰 검증에 실패 했습니다.",
+        code: 200,
+        message: "success",
       },
       {
-        status: 401,
+        headers,
       },
     );
-  }
-
-  return HttpResponse.json({
-    code: 200,
-    message: "success",
-  });
-});
+  },
+);
 
 const postChangeRegionHandler = http.post<PathParams, PostChangeRegionRequest>(
   SETTING_END_POINT.CHANGE_REGION,
