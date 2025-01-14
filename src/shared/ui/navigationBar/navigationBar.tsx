@@ -1,26 +1,23 @@
-import { type ReactElement } from "react";
+const navigationStyles = {
+  start: "px-1 justify-start",
+  between: "pl-4 pr-1 justify-between",
+  end: "justify-end",
+};
 
 export interface NavigationBarProps {
-  children:
-    | [ReactElement<HTMLButtonElement | HTMLAnchorElement>, string | undefined]
-    | [string | undefined, ReactElement<HTMLButtonElement | HTMLAnchorElement>];
+  children: React.ReactNode;
+  justifyContent: keyof typeof navigationStyles;
 }
 
-export const NavigationBar = ({ children }: NavigationBarProps) => {
-  const isButtonLeft =
-    typeof children[1] === "string" || typeof children[1] === "undefined";
-
+export const NavigationBar = ({
+  children,
+  justifyContent,
+}: NavigationBarProps) => {
   return (
     <nav
-      className={`flex py-2 items-center ${isButtonLeft ? "px-1 justify-start" : children[0] ? "pl-4 pr-1 justify-between" : "justify-end"}`}
+      className={`flex py-2 items-center text-grey-900 title-1 ${navigationStyles[justifyContent]}`}
     >
-      {children.map((child) =>
-        typeof child === "string" ? (
-          <h1 className="text-grey-900 title-1">{child}</h1>
-        ) : (
-          child
-        ),
-      )}
+      {children}
     </nav>
   );
 };
