@@ -78,7 +78,7 @@ const EditInfoPageSkeleton = () => {
           </div>
         </button>
 
-        <button>
+        <div>
           <div className="setting-item">
             <span>동네설정</span>
             <div className="text-grey-500">
@@ -98,7 +98,7 @@ const EditInfoPageSkeleton = () => {
               </li>
             ))}
           </ul>
-        </button>
+        </div>
       </section>
     </>
   );
