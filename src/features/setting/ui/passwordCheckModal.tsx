@@ -1,91 +1,52 @@
-import { useRef, useState } from "react";
-import { useIsMutating } from "@tanstack/react-query";
+import { forwardRef, InputHTMLAttributes } from "react";
+import { FieldError, useForm } from "react-hook-form";
 import { PasswordInput } from "@/entities/auth/ui";
 import { InfoIcon } from "@/shared/ui/icon";
 import { InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { useDeleteAccount } from "../api";
-import {
-  createPasswordCheckFormStore,
-  PasswordCheckFormContext,
-  usePasswordCheckFormContext,
-  usePasswordCheckFormStore,
-} from "../store";
 
-interface PasswordCheckFormProviderProps {
-  children: React.ReactNode;
-}
-
-const PasswordCheckFormProvider = ({
-  children,
-}: PasswordCheckFormProviderProps) => {
-  const store = useRef(createPasswordCheckFormStore()).current;
-  return (
-    <PasswordCheckFormContext.Provider value={store}>
-      {children}
-    </PasswordCheckFormContext.Provider>
-  );
-};
-
-const CurrentPasswordInput = () => {
-  const isValidPassword = usePasswordCheckFormStore(
-    (state) => state.isValidPassword,
-  );
-  const isEmptyCurrentPassword = usePasswordCheckFormStore(
-    (state) => state.isEmptyPassword,
-  );
-
-  const setPassword = usePasswordCheckFormStore((state) => state.setPassword);
-
-  const statusText = isEmptyCurrentPassword
-    ? "비밀번호를 입력해 주세요"
-    : isValidPassword
-      ? ""
-      : "비밀번호 형식에 맞게 입력해 주세요";
-
-  const isError = !isEmptyCurrentPassword && !isValidPassword;
-
-  const [isFocused, setIsFocused] = useState<boolean>(false);
-
+const CurrentPasswordInput = forwardRef<
+  HTMLInputElement,
+  { error?: FieldError } & InputHTMLAttributes<HTMLInputElement>
+>(({ error, ...rest }, ref) => {
   return (
     <InputWrapper>
       <PasswordInput
+        ref={ref}
         id="password"
         label="현재 비밀번호"
-        isError={isError}
+        isError={!!error}
         essential
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        onChange={({ target }) => {
-          setPassword(target.value);
-        }}
+        {...rest}
       />
-      {(isFocused || isError) && (
-        <StatusText isError={isError}>{statusText}</StatusText>
-      )}
+      {error && <StatusText isError={!!error}>{error.message}</StatusText>}
     </InputWrapper>
   );
-};
+});
 
 interface PasswordCheckModalProps {
   onClose: () => Promise<void>;
 }
 
-const PasswordCheckSubmitButton = ({ onClose }: PasswordCheckModalProps) => {
-  const store = usePasswordCheckFormContext();
+interface PasswordCheckFormType {
+  password: string;
+}
+
+export const PasswordCheckModal = ({ onClose }: PasswordCheckModalProps) => {
+  const { register, formState, handleSubmit } = useForm<PasswordCheckFormType>({
+    mode: "onChange",
+    defaultValues: {
+      password: "",
+    },
+  });
+  const { errors, isValid } = formState;
+
   const { mutate: deleteAccount, isPending } = useDeleteAccount();
 
-  const handleSubmit = () => {
-    const { password, isEmptyPassword, isValidPassword } = store.getState();
-
-    if (isEmptyPassword) {
-      // TODO 에러 바운더리 로직 나오면 수정 하기
-      console.error("비밀번호를 입력해 주세요");
-    }
-    if (!isValidPassword) {
-      return;
-    }
+  const onSubmit = ({ password }: PasswordCheckFormType) => {
+    if (!isValid) return;
 
     deleteAccount(
       { password },
@@ -96,56 +57,50 @@ const PasswordCheckSubmitButton = ({ onClose }: PasswordCheckModalProps) => {
   };
 
   return (
-    <Modal.FilledButton onClick={handleSubmit} disabled={isPending}>
-      탈퇴하기
-    </Modal.FilledButton>
-  );
-};
-
-const PasswordCheckCloseButton = ({ onClose }: PasswordCheckModalProps) => {
-  const isMutating =
-    useIsMutating({
-      mutationKey: ["deleteAccount"],
-    }) > 0;
-
-  return (
-    <Modal.TextButton
-      onClick={onClose}
-      colorType="tertiary"
-      disabled={isMutating}
-    >
-      취소
-    </Modal.TextButton>
-  );
-};
-
-export const PasswordCheckModal = ({ onClose }: PasswordCheckModalProps) => {
-  return (
-    // TODO FormModal 생성 되면 적용하기
-    <PasswordCheckFormProvider>
-      <Modal modalType="center">
-        {/* 상단 네비게이션 바 */}
-        <Modal.Header
-          onClick={onClose}
-          closeButtonAriaLabel="비밀번호 확인 모달 닫기"
+    <Modal modalType="center">
+      {/* 상단 네비게이션 바 */}
+      <Modal.Header
+        onClick={onClose}
+        closeButtonAriaLabel="비밀번호 확인 모달 닫기"
+      >
+        비밀번호 확인
+      </Modal.Header>
+      <Modal.Content>
+        {/* 알림창 */}
+        <Notice>
+          <InfoIcon width={20} height={20} />
+          <span>탈퇴 전 한번 더 비밀번호를 입력해 주세요</span>
+        </Notice>
+        {/* PasswordInput */}
+        <CurrentPasswordInput
+          error={errors.password}
+          {...register("password", {
+            required: "비밀번호를 입력해 주세요.",
+            pattern: {
+              value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
+              message: "비밀번호 형식에 맞게 입력해 주세요.",
+            },
+          })}
+        />
+      </Modal.Content>
+      {/* 버튼들 */}
+      <Modal.Footer axis="col">
+        <Modal.FilledButton
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
+          disabled={isPending}
         >
-          비밀번호 확인
-        </Modal.Header>
-        <Modal.Content>
-          {/* 알림창 */}
-          <Notice>
-            <InfoIcon width={20} height={20} />
-            <span>탈퇴 전 한번 더 비밀번호를 입력해 주세요</span>
-          </Notice>
-          {/* PasswordInput */}
-          <CurrentPasswordInput />
-        </Modal.Content>
-        {/* 버튼들 */}
-        <Modal.Footer axis="col">
-          <PasswordCheckSubmitButton onClose={onClose} />
-          <PasswordCheckCloseButton onClose={onClose} />
-        </Modal.Footer>
-      </Modal>
-    </PasswordCheckFormProvider>
+          탈퇴하기
+        </Modal.FilledButton>
+        <Modal.TextButton
+          type="button"
+          onClick={onClose}
+          colorType="tertiary"
+          disabled={isPending}
+        >
+          취소
+        </Modal.TextButton>
+      </Modal.Footer>
+    </Modal>
   );
 };
