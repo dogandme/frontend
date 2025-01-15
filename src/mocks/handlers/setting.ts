@@ -17,26 +17,41 @@ import { MY_PROFILE, updateMyProfile } from "../data/myProfile";
 import { updateMyProfileMarkingThumbnail } from "../data/profileMarking";
 import regionListData from "../data/regionList.json";
 
-const postLogoutHandler = http.post(SETTING_END_POINT.LOGOUT, ({ request }) => {
-  const token = request.headers.get("Authorization");
+const postLogoutHandler = http.post(
+  SETTING_END_POINT.LOGOUT,
+  ({ request, cookies }) => {
+    const token = request.headers.get("Authorization");
 
-  if (!token) {
+    if (!token) {
+      return HttpResponse.json(
+        {
+          code: 401,
+          message: "토큰 검증에 실패 했습니다.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    const headers = new Headers();
+    const cookieEntry = Object.entries(cookies);
+    cookieEntry.forEach(([key, value]) => {
+      if (key === "Authorization-refresh")
+        headers.append("Set-Cookie", `${key}=${value}; Max-Age=0; Path=/`);
+    });
+
     return HttpResponse.json(
       {
-        code: 401,
-        message: "토큰 검증에 실패 했습니다.",
+        code: 200,
+        message: "success",
       },
       {
-        status: 401,
+        headers,
       },
     );
-  }
-
-  return HttpResponse.json({
-    code: 200,
-    message: "success",
-  });
-});
+  },
+);
 
 const postChangeRegionHandler = http.post<PathParams, PostChangeRegionRequest>(
   SETTING_END_POINT.CHANGE_REGION,
@@ -79,7 +94,7 @@ const postChangeRegionHandler = http.post<PathParams, PostChangeRegionRequest>(
 
 const deleteAccountHandler = http.delete<PathParams, { password: string }>(
   SETTING_END_POINT.DELETE_ACCOUNT,
-  async ({ request }) => {
+  async ({ request, cookies }) => {
     await new Promise((res) => setTimeout(res, 1000));
 
     const token = request.headers.get("Authorization");
@@ -109,10 +124,22 @@ const deleteAccountHandler = http.delete<PathParams, { password: string }>(
       );
     }
 
-    return HttpResponse.json({
-      code: 200,
-      message: "회원 탈퇴가 완료 되었습니다.",
+    const headers = new Headers();
+    const cookieEntry = Object.entries(cookies);
+    cookieEntry.forEach(([key, value]) => {
+      if (key === "Authorization-refresh")
+        headers.append("Set-Cookie", `${key}=${value}; Max-Age=0; Path=/`);
     });
+
+    return HttpResponse.json(
+      {
+        code: 200,
+        message: "success",
+      },
+      {
+        headers,
+      },
+    );
   },
 );
 
