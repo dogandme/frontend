@@ -59,3 +59,47 @@
   | **setting** | 설정 관리 | 닉네임 변경 등과 관련된 유저 정보 설정 관리 기능 |
 - Segment
   세그먼트는 [FSD-세그먼트](https://feature-sliced.design/kr/docs/get-started/overview#segments) 에서 정의 된 세그먼트들과 [FSD-타입선언](https://feature-sliced.design/docs/guides/examples/types#business-entities-and-their-cross-references) 에서 정의한 `cross-import` 구조를 통해 동일 레이어 다른 슬라이스 별 타입을 공유 하는 구조로 구성되어 있습니다.
+
+## 기능
+
+### 로그인 페이지 (/login)
+
+- 이메일과 비밀번호를 입력하여 로그인합니다.
+
+<img width="378" height="816" alt="스크린샷 2025-01-14 오후 4 39 28" src="https://github.com/user-attachments/assets/0cf801e2-d282-4e8a-accc-63f600076894" />
+
+### 이메일로 회원가입 (/sign-up)
+
+- 이메일과 비밀번호를 설정할 수 있습니다.
+- 사용자는 입력한 이메일로 코드를 받게 됩니다.
+- 이메일로 받은 코드를 입력하면, 이메일이 인증됩니다.
+
+![이메일로 회원가입](https://github.com/user-attachments/assets/7064f315-569f-4c70-903e-3aed3ee30f9a)
+
+
+### 기본정보 등록 (/sign-up/user-info)
+
+- 닉네임, 성별, 연령대, 동네를 설정합니다.
+
+![기본정보 등록](https://github.com/user-attachments/assets/a213cd2b-438a-4097-bc67-af8444da005e)
+
+
+### 강아지 정보 등록 (/sign-up/pet-info)
+
+- 강아지 이름, 종, 성격, 간단한 소개를 설정합니다.
+
+![강아지 등록](https://github.com/user-attachments/assets/1c7effcf-22d7-4f04-b3f9-f642dd0c7f86)
+
+
+### 내 정보 수정 (/setting/edit-info)
+
+- 닉네임, 성별, 나이대, 동네를 변경할 수 있습니다.
+
+![내 정보 수정](https://github.com/user-attachments/assets/e79b545f-5b56-4dac-ab31-807ebb0f90fc)
+
+### 계정 관리 (/setting/manage-account)
+
+- 비밀번호를 변경할 수 있습니다.
+- 탈퇴할 수 있습니다.
+
+![계정관리](https://github.com/user-attachments/assets/2c44eaa9-3cea-4180-818c-6fdc2eb60f16)
