@@ -102,5 +102,4 @@
 - 비밀번호를 변경할 수 있습니다.
 - 탈퇴할 수 있습니다.
 
-![비밀번호 변경](https://github.com/user-attachments/assets/c95feb30-404f-4adb-9a93-b6844e682337)
-
+![계정관리](https://github.com/user-attachments/assets/2c44eaa9-3cea-4180-818c-6fdc2eb60f16)
