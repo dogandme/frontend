@@ -83,7 +83,8 @@ export const PasswordCheckModal = ({ onClose }: PasswordCheckModalProps) => {
               },
             })}
           />
-          <div className="flex flex-col">
+
+          <div className="flex flex-col mt-8">
             <Modal.FilledButton type="submit" disabled={isPending}>
               탈퇴하기
             </Modal.FilledButton>
