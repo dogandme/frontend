@@ -92,22 +92,20 @@
 
 ### 동네 마킹 (/map)
 
+- 내 위치를 중심으로 하여 지도에 저장 된 마킹들을 조회 할 수 있습니다.
+
 ![내위치](https://github.com/user-attachments/assets/8ee8d403-6bf1-4dc6-966a-80eb3580f6ff)
 
-- 내 위치를 중심으로 하여 지도에 저장 된 마킹들을 조회 할 수 있습니다.
+- 현 지도에서 재검색을 통해 검색된 지도 바운더리 안에 존재하는 마킹들을 지도에서 마커, 바텀시트에서 썸네일 리스트 형태로 조회 가능 합니다.
 
 ![동네마킹 서치 ](https://github.com/user-attachments/assets/d6ac41ba-63a8-4bb2-8d56-e504ea2d33ef)
 
-- 현 지도에서 재검색을 통해 검색된 지도 바운더리 안에 존재하는 마킹들을 지도에서 마커, 바텀시트에서 썸네일 리스트 형태로 조회 가능 합니다.
+- 마킹 하기 버튼을 눌러 원하는 위치에 자신의 반려견과 함께 한 사진과 내용을 저장, 임시저장 할 수 있습니다.
 
 ![내 마킹 저장](https://github.com/user-attachments/assets/bb0b1de7-391f-4ce6-a374-581b9e4f4381)
 ![내 마킹 임시 저장](https://github.com/user-attachments/assets/bf4f301c-1dd9-43ee-b023-51b8272445ef)
 
-- 마킹 하기 버튼을 눌러 원하는 위치에 자신의 반려견과 함께 한 사진과 내용을 저장, 임시저장 할 수 있습니다.
-
 ### 이 장소 마킹 (/map/place)
-
-![동네마킹 - 이 장소 마킹](https://github.com/user-attachments/assets/0d317034-9981-48b9-aa8d-c825d50a2156)
 
 - `/map` 경로에서 지도에 있는 마커 혹은 바텀시트에 존재하는 썸네일을 클릭하여 해당 마커가 존재하는 범위 100m 내에 존재하는 마킹들이 모여있는 이 장소 마킹들을 조회 할 수 있습니다.
 
@@ -128,57 +126,47 @@
  - 유저 팔로우 신청 및 취소
  - 유저 프로필 페이지 접근
 
+![동네마킹 - 이 장소 마킹](https://github.com/user-attachments/assets/0d317034-9981-48b9-aa8d-c825d50a2156)
+
 ### 내 활동 (/map)
+
+- 내가 좋아요 , 북마크 한 게시글들을 확인 할 수 있습니다.
 
 ![내 활동 ](https://github.com/user-attachments/assets/5bae0567-29ef-46bc-b374-9e32ac78ad84)
 
-- 내가 좋아요 , 북마크 한 게시글들을 확인 할 수 있습니다. 
-
 ### 내 마킹 (/map)
-
-![내 마킹](https://github.com/user-attachments/assets/2aacee22-da02-4ed0-bc5d-998e7574140c)
-![내 마킹 수정](https://github.com/user-attachments/assets/4a6d1dd9-1dcb-4801-ab11-3cda212b13a6)
-
 
 - 내 마킹 보기 버튼을 눌러 내가 저장하였거나 임시 저장한 마킹들의 리스트를 볼 수 있습니다.
 - 내 마킹을 수정하거나 삭제하는 기능이 사용 할 수 있습니다.
 - 임시 저장된 마킹을 클릭하면 임시 저장 된 마킹들이 모여있는 페이지로 이동 합니다.
 
-### 임시 저장된 마킹 (/temporary-marking)
+![내 마킹](https://github.com/user-attachments/assets/2aacee22-da02-4ed0-bc5d-998e7574140c)
+![내 마킹 수정](https://github.com/user-attachments/assets/4a6d1dd9-1dcb-4801-ab11-3cda212b13a6)
 
-![임시저장 마킹](https://github.com/user-attachments/assets/e0d130bf-c90a-492a-aa58-16f802e979d8)
+### 임시 저장된 마킹 (/temporary-marking)
 
 - 임시 저장된 마킹을 모아둔 페이지입니다. 해당 페이지에서 마킹을 삭제하거나 저장하는 기능을 사용 할 수 있습니다.
 
-### 프로필 (/@{nickname})
+![임시저장 마킹](https://github.com/user-attachments/assets/e0d130bf-c90a-492a-aa58-16f802e979d8)
 
-![프로필 페이지](https://github.com/user-attachments/assets/f88890ab-3ddd-465f-9809-82f8b934edf7)
+### 프로필 (/@{nickname})
 
 - 내 정보와 마킹들이 모여있는 프로필 페이지 입니다.
 - 임시 저장된 마킹 정보는 본인 외의 계정에선 나타나지 않습니다.
 
+![프로필 페이지](https://github.com/user-attachments/assets/f88890ab-3ddd-465f-9809-82f8b934edf7)
+
 ### 팔로잉, 팔로우 페이지 (/@{nickname}/followings , followers)
-
-![팔로잉팔로우 진입](https://github.com/user-attachments/assets/98ae6206-9ed1-42c1-a9c9-57ea20f45c77)
-![팔로잉팔로우 기능](https://github.com/user-attachments/assets/00005b7b-5541-451c-a98b-e94c36d10387)
-
 
 - 팔로잉,팔로우 페이지에선 나를 팔로잉 하는 유저와 내가 팔로잉 하고 있는 유저를 확인 할 수 있습니다.
 - 해당 페이지에서 특정 유저를 팔로잉 하거나 팔로잉 취소, 팔로워 삭제 등의 기능을 사용 할 수 있습니다.
 
-![팔로잉팔로우 프로필 페이지 진입](https://github.com/user-attachments/assets/92393380-5940-4b4f-9ba7-26f3204141e7)
+![팔로잉팔로우 진입](https://github.com/user-attachments/assets/98ae6206-9ed1-42c1-a9c9-57ea20f45c77)
+![팔로잉팔로우 기능](https://github.com/user-attachments/assets/00005b7b-5541-451c-a98b-e94c36d10387)
 
 - 타 유저 프로필 페이지에서도 팔로잉, 팔로잉 취소 기능을 사용 할 수 있습니다.
 
-
-
-
-
-
-
-
-
-
+![팔로잉팔로우 프로필 페이지 진입](https://github.com/user-attachments/assets/92393380-5940-4b4f-9ba7-26f3204141e7)
 
 ### 내 정보 수정 (/setting/edit-info)
 
