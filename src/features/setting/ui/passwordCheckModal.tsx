@@ -71,36 +71,33 @@ export const PasswordCheckModal = ({ onClose }: PasswordCheckModalProps) => {
           <InfoIcon width={20} height={20} />
           <span>탈퇴 전 한번 더 비밀번호를 입력해 주세요</span>
         </Notice>
-        {/* PasswordInput */}
-        <CurrentPasswordInput
-          error={errors.password}
-          {...register("password", {
-            required: "비밀번호를 입력해 주세요.",
-            pattern: {
-              value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
-              message: "비밀번호 형식에 맞게 입력해 주세요.",
-            },
-          })}
-        />
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CurrentPasswordInput
+            error={errors.password}
+            {...register("password", {
+              required: "비밀번호를 입력해 주세요.",
+              pattern: {
+                value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
+                message: "비밀번호 형식에 맞게 입력해 주세요.",
+              },
+            })}
+          />
+          <div className="flex flex-col">
+            <Modal.FilledButton type="submit" disabled={isPending}>
+              탈퇴하기
+            </Modal.FilledButton>
+            <Modal.TextButton
+              type="button"
+              onClick={onClose}
+              colorType="tertiary"
+              disabled={isPending}
+            >
+              취소
+            </Modal.TextButton>
+          </div>
+        </form>
       </Modal.Content>
-      {/* 버튼들 */}
-      <Modal.Footer axis="col">
-        <Modal.FilledButton
-          type="submit"
-          onClick={handleSubmit(onSubmit)}
-          disabled={isPending}
-        >
-          탈퇴하기
-        </Modal.FilledButton>
-        <Modal.TextButton
-          type="button"
-          onClick={onClose}
-          colorType="tertiary"
-          disabled={isPending}
-        >
-          취소
-        </Modal.TextButton>
-      </Modal.Footer>
     </Modal>
   );
 };
