@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { VisibilityOffIcon, VisibilityOnIcon } from "@/shared/ui/icon";
 import { Input, type InputProps } from "@/shared/ui/input";
 
 type FixedInputProps = "type" | "componentType";
 
-export const PasswordInput = (props: Omit<InputProps, FixedInputProps>) => {
+export const PasswordInput = forwardRef<
+  HTMLInputElement,
+  Omit<InputProps, FixedInputProps>
+>((props, ref) => {
   const [isVisibilityOn, setIsVisibilityOn] = useState<boolean>(false);
 
   const handleVisibility = () => {
@@ -13,6 +16,7 @@ export const PasswordInput = (props: Omit<InputProps, FixedInputProps>) => {
 
   return (
     <Input
+      ref={ref}
       componentType="outlinedText"
       type={isVisibilityOn ? "text" : "password"}
       trailingNode={
@@ -30,4 +34,4 @@ export const PasswordInput = (props: Omit<InputProps, FixedInputProps>) => {
       {...props}
     />
   );
-};
+});

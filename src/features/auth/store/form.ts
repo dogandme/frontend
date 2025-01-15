@@ -1,28 +1,5 @@
 import { create } from "zustand";
 import type { Region } from "@/entities/map/types/server";
-import type { PostLoginRequest } from "../api";
-
-interface LoginFormStore extends PostLoginRequest {
-  isValidEmail: boolean;
-  statusText: string;
-
-  setEmail: (email: string) => void;
-  setPassword: (password: string) => void;
-  setIsValidEmail: (isEmailValidate: boolean) => void;
-  setStatusText: (statusText: string) => void;
-}
-
-export const useLoginFormStore = create<LoginFormStore>((set) => ({
-  email: "",
-  password: "",
-  isValidEmail: true,
-  statusText: "이메일 형식으로 입력해 주세요",
-
-  setEmail: (email: string) => set({ email }),
-  setPassword: (password: string) => set({ password }),
-  setIsValidEmail: (isValidEmail: boolean) => set({ isValidEmail }),
-  setStatusText: (statusText: string) => set({ statusText }),
-}));
 
 type Gender = "FEMALE" | "MALE" | "NONE" | null;
 type AgeRange = 10 | 20 | 30 | 40 | 50 | 60 | null;
