@@ -93,7 +93,7 @@ const postChangeRegionHandler = http.post<PathParams, PostChangeRegionRequest>(
 
 const deleteAccountHandler = http.delete<PathParams, { password: string }>(
   SETTING_END_POINT.DELETE_ACCOUNT,
-  async ({ request }) => {
+  async ({ request, cookies }) => {
     await new Promise((res) => setTimeout(res, 1000));
 
     const token = request.headers.get("Authorization");
@@ -123,10 +123,21 @@ const deleteAccountHandler = http.delete<PathParams, { password: string }>(
       );
     }
 
-    return HttpResponse.json({
-      code: 200,
-      message: "회원 탈퇴가 완료 되었습니다.",
+    const headers = new Headers();
+    const cookieEntry = Object.entries(cookies);
+    cookieEntry.forEach(([key, value]) => {
+      headers.append("Set-Cookie", `${key}=${value}; Max-Age=0; Path=/`);
     });
+
+    return HttpResponse.json(
+      {
+        code: 200,
+        message: "success",
+      },
+      {
+        headers,
+      },
+    );
   },
 );
 

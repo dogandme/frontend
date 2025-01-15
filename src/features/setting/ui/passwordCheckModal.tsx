@@ -87,12 +87,7 @@ const PasswordCheckSubmitButton = ({ onClose }: PasswordCheckModalProps) => {
       return;
     }
 
-    deleteAccount(
-      { password },
-      {
-        onSuccess: onClose,
-      },
-    );
+    deleteAccount({ password });
   };
 
   return (
