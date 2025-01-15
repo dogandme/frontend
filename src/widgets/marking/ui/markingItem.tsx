@@ -421,7 +421,7 @@ const MarkingManageButton = () => {
         <MoreIcon />
       </button>
       <List
-        className={`${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] right-0 bg-grey-0 p-4`}
+        className={`${isOpen ? "visible" : "hidden"} rounded-2xl shadow-custom-1 absolute top-[calc(100%+0.5rem)] right-0 bg-grey-0 p-4 z-50`}
         style={{
           width: "11.625rem",
         }}
