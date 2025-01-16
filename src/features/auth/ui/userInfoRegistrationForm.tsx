@@ -1,4 +1,11 @@
-import { useEffect, useState } from "react";
+import { forwardRef, InputHTMLAttributes, useEffect, useState } from "react";
+import {
+  Controller,
+  FieldError,
+  SubmitErrorHandler,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import {
   AgreementCheckbox,
   SelectOpener,
@@ -12,20 +19,239 @@ import { Button } from "@/shared/ui/button";
 import { ActionChip } from "@/shared/ui/chip";
 import { MapLocationSearchingIcon } from "@/shared/ui/icon";
 import { CancelIcon } from "@/shared/ui/icon";
+import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
-import { usePostCheckDuplicateNicknameState, usePutAddUserInfo } from "../api";
+import { usePostCheckDuplicateNickname, usePutAddUserInfo } from "../api";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
-import { validateNickname } from "../lib";
-import { useUserInfoRegistrationFormStore } from "../store";
-import { NicknameInput } from "./nicknameInput";
 import { RegionModal } from "./regionModal";
 
-const GenderSelect = () => {
-  const gender = useUserInfoRegistrationFormStore((state) => state.gender);
-  const setGender = useUserInfoRegistrationFormStore(
-    (state) => state.setGender,
-  );
+const NICKNAME_MAX_LENGTH = 20;
 
+type Gender = "FEMALE" | "MALE" | "NONE";
+type AgeRange = 10 | 20 | 30 | 40 | 50 | 60;
+
+interface UserInfoRegistrationFormType {
+  nickname: string;
+  gender: Gender;
+  ageRange: AgeRange;
+  region: Region[];
+  checkList: boolean[];
+}
+
+const UserInfoRegistrationForm = () => {
+  const setNickname = useAuthStore((state) => state.setNickname);
+  const setToken = useAuthStore((state) => state.setToken);
+  const setRole = useAuthStore((state) => state.setRole);
+
+  const {
+    mutate: putUserInfoRegistration,
+    data,
+    isSuccess,
+  } = usePutAddUserInfo();
+
+  const { handleOpen: openLandingModal, onClose: onCloseLandingModal } =
+    useModal(() => (
+      <SignUpLandingModal
+        nickname={data?.nickname ?? ""}
+        onClose={() => {
+          if (data) {
+            setNickname(data.nickname);
+            setToken(data.authorization);
+            setRole(data.role);
+
+            onCloseLandingModal();
+          }
+        }}
+      />
+    ));
+  const handleOpenSnackbar = useSnackbar("default");
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      openLandingModal();
+    }
+  }, [isSuccess, data]);
+
+  const { handleSubmit, formState, control, setValue, setError, getValues } =
+    useForm<UserInfoRegistrationFormType>({
+      mode: "onChange",
+      defaultValues: {
+        nickname: "",
+        gender: undefined,
+        ageRange: undefined,
+        region: [],
+        checkList: [false, false, false],
+      },
+    });
+  const { errors, dirtyFields } = formState;
+
+  const onError: SubmitErrorHandler<UserInfoRegistrationFormType> = (
+    errors,
+  ) => {
+    const { nickname, gender, ageRange, region, checkList } = errors;
+
+    if (
+      nickname?.type === "required" ||
+      gender?.type === "required" ||
+      ageRange?.type === "required" ||
+      region?.type === "validate"
+    ) {
+      handleOpenSnackbar("필수 항목을 모두 입력해 주세요.");
+      return;
+    }
+
+    if (nickname?.type === "pattern") {
+      handleOpenSnackbar("올바른 닉네임을 입력해 주세요.");
+      return;
+    }
+
+    if (checkList?.type === "validate") {
+      handleOpenSnackbar("필수 약관에 모두 동의해 주세요.");
+      return;
+    }
+  };
+
+  const onSubmit: SubmitHandler<UserInfoRegistrationFormType> = ({
+    nickname,
+    gender,
+    ageRange,
+    region,
+    checkList,
+  }) => {
+    putUserInfoRegistration({
+      nickname,
+      gender,
+      age: ageRange,
+      region: region.map(({ id }) => id),
+      marketingYn: checkList[2],
+    });
+  };
+
+  const { mutate: postCheckDuplicateNickname } =
+    usePostCheckDuplicateNickname();
+
+  return (
+    <form
+      className="flex flex-col gap-8 self-stretch"
+      onSubmit={handleSubmit(onSubmit, onError)}
+    >
+      <section className="flex flex-col gap-4 self-stretch">
+        <Controller
+          name="nickname"
+          control={control}
+          rules={{
+            pattern: {
+              value: /^[가-힣a-zA-Z0-9]{1,20}$/,
+              message: `${NICKNAME_MAX_LENGTH}자 이내의 한글 영어 숫자만 사용 가능합니다.`,
+            },
+            maxLength: {
+              value: NICKNAME_MAX_LENGTH,
+              message: `${NICKNAME_MAX_LENGTH}자 이내의 한글 영어 숫자만 사용 가능합니다.`,
+            },
+            onBlur: (e) => {
+              postCheckDuplicateNickname(
+                { nickname: e.target.value },
+                {
+                  onError: (error) => {
+                    if (error.code === 409) {
+                      setError("nickname", {
+                        type: "validate",
+                        message: "이미 존재하는 닉네임입니다.",
+                      });
+                    }
+                  },
+                },
+              );
+            },
+            onChange: (e) => {
+              // 한글을 입력하면 NICKNAME_MAX_LENGTH를 넘어가는 경우가 있어서 추가
+              if (e.target.value.length > NICKNAME_MAX_LENGTH) {
+                setValue(
+                  "nickname",
+                  e.target.value.slice(0, NICKNAME_MAX_LENGTH),
+                );
+              }
+            },
+          }}
+          render={({ field }) => (
+            <NicknameInput
+              error={errors.nickname}
+              isValid={!!dirtyFields.nickname && !errors.nickname}
+              {...field}
+            />
+          )}
+        />
+
+        <Controller
+          name="gender"
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { value, onChange } }) => (
+            <GenderSelect gender={value} onSelect={onChange} />
+          )}
+        />
+        <Controller
+          name="ageRange"
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { value, onChange } }) => (
+            <AgeRangeSelect ageRange={value} onSelect={onChange} />
+          )}
+        />
+
+        <Controller
+          name="region"
+          control={control}
+          rules={{
+            validate: (regionList) => regionList.length > 0,
+          }}
+          render={({ field: { value, onChange } }) => (
+            <>
+              <RegionSetting regionList={value} onSave={onChange} />
+              <MyRegionList
+                regionList={value}
+                onRemove={(id) => {
+                  setValue(
+                    "region",
+                    getValues("region").filter((region) => region.id !== id),
+                  );
+                }}
+              />
+            </>
+          )}
+        />
+      </section>
+
+      <hr className="text-grey-200" />
+
+      <Controller
+        name="checkList"
+        control={control}
+        rules={{
+          validate: (checkList) => checkList[0] && checkList[1],
+        }}
+        render={({ field: { value, onChange } }) => (
+          <AgreementCheckboxList
+            checkList={value}
+            onChangeCheckList={onChange}
+          />
+        )}
+      />
+
+      <Button type="submit" colorType="primary" variant="filled" size="large">
+        회원가입
+      </Button>
+    </form>
+  );
+};
+
+const GenderSelect = ({
+  gender,
+  onSelect,
+}: {
+  gender: Gender;
+  onSelect: (gender: Gender) => void;
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const selectedName = genderOptionList.find(
@@ -62,7 +288,7 @@ const GenderSelect = () => {
                   key={value}
                   value={value}
                   isSelected={value === gender}
-                  onClick={() => setGender(value)}
+                  onClick={() => onSelect(value)}
                 >
                   {name}
                 </Select.Option>
@@ -75,12 +301,52 @@ const GenderSelect = () => {
   );
 };
 
-const AgeRangeSelect = () => {
-  const ageRange = useUserInfoRegistrationFormStore((state) => state.ageRange);
-  const setAgeRange = useUserInfoRegistrationFormStore(
-    (state) => state.setAgeRange,
-  );
+const NicknameInput = forwardRef<
+  HTMLInputElement,
+  {
+    error?: FieldError;
+    isValid: boolean;
+  } & InputHTMLAttributes<HTMLInputElement>
+>(({ error, isValid, value, ...rest }, ref) => {
+  let statusText = "";
 
+  if (error && error.message) statusText = error.message;
+  if (isValid) statusText = "사용가능한 닉네임입니다.";
+
+  return (
+    <InputWrapper>
+      <Input
+        ref={ref}
+        type="text"
+        id="nickname"
+        label="닉네임"
+        placeholder="닉네임을 입력해 주세요"
+        essential
+        componentType="outlinedText"
+        isError={!!error}
+        maxLength={NICKNAME_MAX_LENGTH}
+        trailingNode={
+          <div className="flex gap-[.125rem] body-3">
+            <span className="text-grey-500">{(value as string).length}</span>
+            <span className="text-grey-300">/</span>
+            <span className="text-grey-500">{NICKNAME_MAX_LENGTH}</span>
+          </div>
+        }
+        value={value}
+        {...rest}
+      />
+      <StatusText isError={!!error}>{statusText}</StatusText>
+    </InputWrapper>
+  );
+});
+
+const AgeRangeSelect = ({
+  ageRange,
+  onSelect,
+}: {
+  ageRange: AgeRange;
+  onSelect: (ageRange: AgeRange) => void;
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const selectedName = ageRangeOptionList.find(
@@ -115,7 +381,7 @@ const AgeRangeSelect = () => {
                   key={value}
                   value={value}
                   isSelected={value === ageRange}
-                  onClick={() => setAgeRange(value)}
+                  onClick={() => onSelect(value)}
                 >
                   {name}
                 </Select.Option>
@@ -128,18 +394,19 @@ const AgeRangeSelect = () => {
   );
 };
 
-const RegionSetting = () => {
-  const setRegion = useUserInfoRegistrationFormStore(
-    (state) => state.setRegion,
-  );
+const RegionSetting = ({
+  regionList,
+  onSave,
+}: {
+  regionList: Region[];
+  onSave: (regionList: Region[]) => void;
+}) => {
   const { handleOpen, onClose } = useModal(() => (
     <RegionModal
       onClose={onClose}
-      initialState={{
-        regionList: useUserInfoRegistrationFormStore.getState().region,
-      }}
+      initialState={{ regionList }}
       onSave={(regionList) => {
-        setRegion(regionList);
+        onSave(regionList);
         onClose();
       }}
     />
@@ -166,7 +433,13 @@ const RegionSetting = () => {
   );
 };
 
-const AgreementCheckboxList = () => {
+const AgreementCheckboxList = ({
+  checkList,
+  onChangeCheckList,
+}: {
+  checkList: boolean[];
+  onChangeCheckList: (checkList: boolean[]) => void;
+}) => {
   const agreementList = [
     {
       id: "terms-of-service-agreement",
@@ -185,13 +458,6 @@ const AgreementCheckboxList = () => {
     },
   ];
 
-  const checkList = useUserInfoRegistrationFormStore(
-    (state) => state.checkList,
-  );
-  const setCheckList = useUserInfoRegistrationFormStore(
-    (state) => state.setCheckList,
-  );
-
   // 전체 선택되어 있는 경우
   const allChecked = checkList.every(Boolean);
   // 전체 선택되어 있지 않고 하나 이상 선택되어 있는 경우
@@ -207,7 +473,7 @@ const AgreementCheckboxList = () => {
         onChange={(e) => {
           const { checked } = e.target;
 
-          setCheckList([checked, checked, checked]);
+          onChangeCheckList([checked, checked, checked]);
         }}
       />
 
@@ -222,7 +488,7 @@ const AgreementCheckboxList = () => {
               const newCheckList = [...checkList];
               newCheckList[idx] = !newCheckList[idx];
 
-              setCheckList(newCheckList);
+              onChangeCheckList(newCheckList);
             }}
             agreementLink={link}
           />
@@ -232,29 +498,26 @@ const AgreementCheckboxList = () => {
   );
 };
 
-const MyRegionList = () => {
-  const region = useUserInfoRegistrationFormStore((state) => state.region);
-  const setRegion = useUserInfoRegistrationFormStore(
-    (state) => state.setRegion,
-  );
-
-  if (region.length === 0) {
+const MyRegionList = ({
+  regionList,
+  onRemove,
+}: {
+  regionList: Region[];
+  onRemove: (id: Region["id"]) => void;
+}) => {
+  if (regionList.length === 0) {
     return;
   }
 
-  const handleRemoveRegion = (id: Region["id"]) => {
-    setRegion(region.filter((region) => region.id !== id));
-  };
-
   return (
     <ul className="flex items-start gap-2 self-stretch overflow-auto">
-      {region.map(({ province, cityCounty, subDistrict, id }) => (
+      {regionList.map(({ province, cityCounty, subDistrict, id }) => (
         <li className="flex flex-shrink-0" key={id}>
           <ActionChip
             variant="outlined"
             trailingIcon={<CancelIcon width={20} height={20} />}
             key={id}
-            onClick={() => handleRemoveRegion(id)}
+            onClick={() => onRemove(id)}
             isSelected={true}
           >
             {`${province} ${cityCounty} ${subDistrict}`}
@@ -262,118 +525,6 @@ const MyRegionList = () => {
         </li>
       ))}
     </ul>
-  );
-};
-
-const UserInfoRegistrationForm = () => {
-  const setNickname = useAuthStore((state) => state.setNickname);
-  const setToken = useAuthStore((state) => state.setToken);
-  const setRole = useAuthStore((state) => state.setRole);
-
-  const {
-    mutate: putUserInfoRegistration,
-    data,
-    isSuccess,
-  } = usePutAddUserInfo();
-
-  const { handleOpen: openLandingModal, onClose: onCloseLandingModal } =
-    useModal(() => (
-      <SignUpLandingModal
-        nickname={data?.nickname ?? ""}
-        onClose={() => {
-          if (data) {
-            setNickname(data.nickname);
-            setToken(data.authorization);
-            setRole(data.role);
-
-            onCloseLandingModal();
-          }
-        }}
-      />
-    ));
-  const handleOpenSnackbar = useSnackbar("default");
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      openLandingModal();
-    }
-  }, [isSuccess, data]);
-
-  const token = useAuthStore((state) => state.token);
-
-  const { isDuplicateNickname } = usePostCheckDuplicateNicknameState();
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const { nickname, ageRange, gender, checkList, region } =
-      useUserInfoRegistrationFormStore.getState();
-
-    if (!token) {
-      handleOpenSnackbar("로그인 정보가 없습니다");
-      return;
-    }
-
-    const isNicknameEmpty = nickname.length === 0;
-
-    // todo: 조건에 region !== null인 경우 추가하기
-    const areEssentialFieldsFilled =
-      !isNicknameEmpty &&
-      ageRange !== null &&
-      gender !== null &&
-      region.length > 0;
-
-    if (!areEssentialFieldsFilled) {
-      handleOpenSnackbar("필수 항목을 모두 입력해 주세요");
-      return;
-    }
-
-    const isValidNickname = validateNickname(nickname) && !isDuplicateNickname;
-
-    if (!isValidNickname) {
-      handleOpenSnackbar("올바른 닉네임을 입력해 주세요");
-      return;
-    }
-
-    const areRequiredAgreementsChecked = checkList[0] && checkList[1];
-
-    if (!areRequiredAgreementsChecked) {
-      handleOpenSnackbar("필수 약관에 모두 동의해 주세요");
-      return;
-    }
-
-    // todo: region 수정
-    putUserInfoRegistration({
-      nickname,
-      gender,
-      age: ageRange,
-      region: region.map(({ id }) => id),
-      marketingYn: checkList[2],
-    });
-  };
-
-  return (
-    <form className="flex flex-col gap-8 self-stretch" onSubmit={handleSubmit}>
-      <section className="flex flex-col gap-4 self-stretch">
-        <NicknameInput
-          onChange={useUserInfoRegistrationFormStore(
-            (state) => state.setNickname,
-          )}
-        />
-        <GenderSelect />
-        <AgeRangeSelect />
-        <RegionSetting />
-        <MyRegionList />
-      </section>
-
-      <hr className="text-grey-200" />
-
-      <AgreementCheckboxList />
-
-      <Button type="submit" colorType="primary" variant="filled" size="large">
-        회원가입
-      </Button>
-    </form>
   );
 };
 
