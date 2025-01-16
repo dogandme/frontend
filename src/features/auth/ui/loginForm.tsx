@@ -1,5 +1,10 @@
 import { forwardRef } from "react";
-import { FieldError, useForm } from "react-hook-form";
+import {
+  FieldError,
+  SubmitErrorHandler,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { PasswordInput } from "@/entities/auth/ui";
 import { useSnackbar } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
@@ -20,24 +25,31 @@ export const LoginForm = () => {
     },
   });
 
-  const { errors, isValid } = formState;
+  const { errors } = formState;
 
   const { mutate: postLoginForm } = usePostLogin();
   const handleOpenSnackbar = useSnackbar("default");
 
-  const onSubmit = (data: LoginFormType) => {
-    if (!isValid) {
+  const onError: SubmitErrorHandler<LoginFormType> = (errors) => {
+    if (
+      errors.email?.type === "required" ||
+      errors.password?.type === "required"
+    ) {
       handleOpenSnackbar("아이디 또는 비밀번호를 모두 입력해 주세요");
       return;
     }
 
+    handleOpenSnackbar("이메일 또는 비밀번호를 다시 확인해 주세요.");
+  };
+
+  const onSubmit: SubmitHandler<LoginFormType> = (data) => {
     postLoginForm(data);
   };
 
   return (
     <form
       className="flex flex-col items-start gap-4 self-stretch"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit, onError)}
     >
       <EmailInput
         error={errors.email}
@@ -49,7 +61,13 @@ export const LoginForm = () => {
           },
         })}
       />
-      <PasswordInput id="password" label="비밀번호" {...register("password")} />
+      <PasswordInput
+        id="password"
+        label="비밀번호"
+        {...register("password", {
+          required: true,
+        })}
+      />
 
       <Button colorType="primary" size="large" variant="filled" type="submit">
         로그인
