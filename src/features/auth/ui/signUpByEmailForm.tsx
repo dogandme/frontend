@@ -6,16 +6,21 @@ import {
   useState,
 } from "react";
 import { Controller, FieldError, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { PasswordInput as _PasswordInput } from "@/entities/auth/ui";
+import { ROUTER_PATH } from "@/shared/constants";
+import { useModal } from "@/shared/lib";
 import { useSnackbar } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { Input, InputProps, InputWrapper, StatusText } from "@/shared/ui/input";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 import {
   usePostCheckCode,
   usePostSendCode,
   usePostSignUpByEmail,
 } from "../api";
 import { VERIFICATION_CODE_LENGTH } from "../constants";
+import { ExitConfirmationModal } from "./exitConfirmationModal";
 
 const Timer = ({
   time,
@@ -193,7 +198,6 @@ interface SignUpByEmailFormType {
 }
 
 export const SignUpByEmailForm = () => {
-  const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
   const handleOpenSnackbar = useSnackbar("default");
 
   const [timeLeft, setTimeLeft] = useState<number>(0);
@@ -209,11 +213,12 @@ export const SignUpByEmailForm = () => {
       },
     });
 
-  const { errors, isValid, dirtyFields } = formState;
+  const { errors, isValid, dirtyFields, isDirty } = formState;
 
   const { mutate: postSendCode, isSuccess: isCodeSent } = usePostSendCode();
   const { mutate: postCheckCode, isSuccess: isCodeChecked } =
     usePostCheckCode();
+  const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
 
   const sendCode = () => {
     postSendCode(
@@ -270,131 +275,160 @@ export const SignUpByEmailForm = () => {
     postSignUpByEmail({ email, password });
   };
 
+  const navigate = useNavigate();
+
+  const { handleOpen, onClose } = useModal(() => {
+    return <ExitConfirmationModal onClose={onClose} />;
+  });
+
+  const handleGoToPreviousPage = () => {
+    if (!isDirty) {
+      navigate(ROUTER_PATH.LOGIN);
+      return;
+    }
+
+    handleOpen();
+  };
+
   return (
-    <form
-      className="flex flex-col gap-8 self-stretch"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <div>
-        <div className="flex items-end justify-between gap-2">
-          <EmailInput
-            disabled={isCodeChecked}
-            error={errors.email}
-            isValid={!!dirtyFields.email && !errors.email}
-            {...register("email", {
-              required: "이메일 형식으로 입력해 주세요.",
-              pattern: {
-                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                message: "이메일 형식으로 입력해 주세요.",
-              },
-            })}
-          />
+    <>
+      <BackwardNavigationBar onClick={handleGoToPreviousPage} />
 
-          <CodeButton
-            onClick={sendCode}
-            disabled={
-              getValues("email").length === 0 ||
-              !!errors.email ||
-              isCodeChecked ||
-              (timeLeft > 1000 * 60 && isCodeSent && !isCodeChecked)
-            }
-          >
-            코드전송
-          </CodeButton>
-        </div>
-
-        <div className="flex items-end justify-between gap-2">
-          <Controller
-            name="verificationCode"
-            control={control}
-            defaultValue=""
-            rules={{
-              required: `인증코드 ${VERIFICATION_CODE_LENGTH}자리를 입력해 주세요.`,
-              minLength: {
-                value: VERIFICATION_CODE_LENGTH,
-                message: `인증코드 ${VERIFICATION_CODE_LENGTH}자리를 입력해 주세요.`,
-              },
-              validate: {
-                isTimeOver: () =>
-                  timeLeft > 0 ||
-                  "인증시간이 만료되었습니다. 재전송 버튼을 눌러주세요.",
-              },
-            }}
-            render={({ field }) => (
-              <CodeInput
-                error={errors.verificationCode}
-                isVerified={isCodeChecked}
-                disabled={!isCodeSent || isCodeChecked}
-                trailingNode={
-                  !isCodeChecked &&
-                  isCodeSent && (
-                    <Timer
-                      time={timeLeft}
-                      onChange={(time) => setTimeLeft(time)}
-                    />
-                  )
-                }
-                {...field}
-                onChange={(e) => {
-                  // 숫자만 입력했을 때 state 업데이트
-                  if (/^\d*$/.test(e.target.value)) {
-                    field.onChange(e);
-                  }
-                }}
+      <main className="flex flex-col gap-8 self-stretch px-4 pt-8">
+        <h1 className="headline-3 mx-auto">이메일로 회원가입</h1>
+        <form
+          className="flex flex-col gap-8 self-stretch"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div>
+            <div className="flex items-end justify-between gap-2">
+              <EmailInput
+                disabled={isCodeChecked}
+                error={errors.email}
+                isValid={!!dirtyFields.email && !errors.email}
+                {...register("email", {
+                  required: "이메일 형식으로 입력해 주세요.",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "이메일 형식으로 입력해 주세요.",
+                  },
+                })}
               />
-            )}
-          />
 
-          <CodeButton
-            onClick={checkCode}
-            disabled={
-              getValues("verificationCode").length === 0 ||
-              !!errors.verificationCode ||
-              isCodeChecked ||
-              (timeLeft < 1000 && isCodeSent)
-            }
+              <CodeButton
+                onClick={sendCode}
+                disabled={
+                  getValues("email").length === 0 ||
+                  !!errors.email ||
+                  isCodeChecked ||
+                  (timeLeft > 1000 * 60 && isCodeSent && !isCodeChecked)
+                }
+              >
+                코드전송
+              </CodeButton>
+            </div>
+
+            <div className="flex items-end justify-between gap-2">
+              <Controller
+                name="verificationCode"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: `인증코드 ${VERIFICATION_CODE_LENGTH}자리를 입력해 주세요.`,
+                  minLength: {
+                    value: VERIFICATION_CODE_LENGTH,
+                    message: `인증코드 ${VERIFICATION_CODE_LENGTH}자리를 입력해 주세요.`,
+                  },
+                  validate: {
+                    isTimeOver: () =>
+                      timeLeft > 0 ||
+                      "인증시간이 만료되었습니다. 재전송 버튼을 눌러주세요.",
+                  },
+                }}
+                render={({ field }) => (
+                  <CodeInput
+                    error={errors.verificationCode}
+                    isVerified={isCodeChecked}
+                    disabled={!isCodeSent || isCodeChecked}
+                    trailingNode={
+                      !isCodeChecked &&
+                      isCodeSent && (
+                        <Timer
+                          time={timeLeft}
+                          onChange={(time) => setTimeLeft(time)}
+                        />
+                      )
+                    }
+                    {...field}
+                    onChange={(e) => {
+                      // 숫자만 입력했을 때 state 업데이트
+                      if (/^\d*$/.test(e.target.value)) {
+                        field.onChange(e);
+                      }
+                    }}
+                  />
+                )}
+              />
+
+              <CodeButton
+                onClick={checkCode}
+                disabled={
+                  getValues("verificationCode").length === 0 ||
+                  !!errors.verificationCode ||
+                  isCodeChecked ||
+                  (timeLeft < 1000 && isCodeSent)
+                }
+              >
+                확인
+              </CodeButton>
+            </div>
+          </div>
+
+          <div>
+            <PasswordInput
+              error={errors.password}
+              {...register("password", {
+                required: "비밀번호를 입력해 주세요.",
+                pattern: {
+                  value:
+                    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
+                  message: "비밀번호 형식에 맞게 입력해 주세요.",
+                },
+              })}
+            />
+            <ConfirmPasswordInput
+              isValid={!!dirtyFields.confirmPassword && !errors.confirmPassword}
+              error={errors.confirmPassword}
+              {...register("confirmPassword", {
+                required: "비밀번호를 다시 한번 입력해 주세요.",
+                pattern: {
+                  value:
+                    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
+                  message: "비밀번호 형식에 맞게 입력해 주세요.",
+                },
+                validate: {
+                  isNotMatchedWithPassword: (value, formValues) =>
+                    value === formValues.password ||
+                    "비밀번호가 서로 일치하지 않습니다.",
+                },
+              })}
+            />
+            <span className="body-3 px-3 pt-1 text-grey-500">
+              영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로
+              입력해 주세요.
+            </span>
+          </div>
+
+          <Button
+            type="submit"
+            colorType="primary"
+            variant="filled"
+            size="large"
           >
-            확인
-          </CodeButton>
-        </div>
-      </div>
-
-      <div>
-        <PasswordInput
-          error={errors.password}
-          {...register("password", {
-            required: "비밀번호를 입력해 주세요.",
-            pattern: {
-              value: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
-              message: "비밀번호 형식에 맞게 입력해 주세요.",
-            },
-          })}
-        />
-        <ConfirmPasswordInput
-          isValid={!!dirtyFields.confirmPassword && !errors.confirmPassword}
-          error={errors.confirmPassword}
-          {...register("confirmPassword", {
-            required: "비밀번호를 다시 한번 입력해 주세요.",
-            pattern: {
-              value: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
-              message: "비밀번호 형식에 맞게 입력해 주세요.",
-            },
-            validate: {
-              isNotMatchedWithPassword: (value, formValues) =>
-                value === formValues.password ||
-                "비밀번호가 서로 일치하지 않습니다.",
-            },
-          })}
-        />
-        <span className="body-3 px-3 pt-1 text-grey-500">
-          영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로 입력해
-          주세요.
-        </span>
-      </div>
-
-      <Button type="submit" colorType="primary" variant="filled" size="large">
-        다음
-      </Button>
-    </form>
+            다음
+          </Button>
+        </form>
+      </main>
+    </>
   );
 };
