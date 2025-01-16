@@ -13,7 +13,6 @@ export const Default: Story = {
   render: () => <PasswordChangeModal onClose={async () => {}} />,
 
   play: async ({ canvasElement, step }) => {
-    // PasswordInput 에 대한 기본적인 테스트는 실행 되었기에 변경된 store 가 잘 작동하는지에 대한 테스트 코드만 작성 합니다.
     const $currentPasswordInput = canvasElement.querySelector(
       "#current-password",
     ) as HTMLInputElement;
@@ -23,92 +22,79 @@ export const Default: Story = {
     const $confirmPasswordInput = canvasElement.querySelector(
       "#confirm-new-password",
     ) as HTMLInputElement;
-    const emptyStatusText = "비밀번호를 입력해 주세요";
-    const inValidStatusText = "비밀번호 형식에 맞게 입력해 주세요";
-    const inValidConfirmStatusText = "비밀번호가 서로 일치하지 않습니다";
-    const validPasswordStatusText = "사용가능한 비밀번호 입니다";
-    const validConfirmPasswordStatusText = "비밀번호가 일치합니다";
+    const currentPasswordStatusText = "현재 비밀번호를 입력해주세요.";
+    const inValidStatusText = "비밀번호 형식에 맞게 입력해 주세요.";
+    const inValidConfirmStatusText = "비밀번호가 서로 일치하지 않습니다.";
+    const validPasswordStatusText = "사용가능한 비밀번호입니다.";
+    const validConfirmPasswordStatusText = "비밀번호가 일치합니다.";
 
     await step(
-      `각 인풋 필드들은 focus시 statusText로 ${emptyStatusText}가 나타난다.`,
+      `현재 비밀번호 input에 focus하면 '${currentPasswordStatusText}' 안내문구가 뜨고, blur하면 사라진다.`,
       async () => {
-        const pTags = [...canvasElement.querySelectorAll("p")].slice(0, 3);
+        const $statusText = canvasElement.querySelectorAll("p")[0];
+
+        const currentPassword = "password123!";
+
         await userEvent.click($currentPasswordInput);
-        expect(pTags[0].textContent === emptyStatusText).toBeTruthy();
+        expect($statusText.textContent).toBe(currentPasswordStatusText);
 
-        await userEvent.click($newPasswordInput);
-        expect(pTags[1].textContent === emptyStatusText).toBeTruthy();
+        await userEvent.type($currentPasswordInput, currentPassword);
 
-        await userEvent.click($confirmPasswordInput);
-        expect(pTags[2].textContent === emptyStatusText).toBeTruthy();
+        await userEvent.tab();
+        expect($statusText.textContent).toBe("");
       },
     );
 
-    await step("현재 비밀번호는 정규성 검사를 적절하게 시행한다.", async () => {
-      const validPassword = "a1234567!";
-      const $statusText = canvasElement.querySelectorAll("p")[0];
-      // 일부만 입력
-      await userEvent.type($currentPasswordInput, validPassword.slice(0, 1));
-      expect($statusText.textContent).toBe(inValidStatusText);
-      // 나머지 모두 입력
-      await userEvent.type($currentPasswordInput, validPassword.slice(1));
-      expect($statusText.textContent).toBe("");
-      // 초기화
-      await userEvent.clear($currentPasswordInput);
-      expect($statusText.textContent).toBe(emptyStatusText);
-    });
+    const newPassword = "!1234567a";
 
-    await step("새 비밀번호는 정규성 검사를 적절하게 시행한다.", async () => {
-      const validPassword = "!1234567a";
+    await step("새 비밀번호 input", async () => {
       const $statusText = canvasElement.querySelectorAll("p")[1];
-      // 일부만 입력
-      await userEvent.type($newPasswordInput, validPassword.slice(0, 1));
-      expect($statusText.textContent).toBe(inValidStatusText);
-      // 나머지 모두 입력
-      await userEvent.type($newPasswordInput, validPassword.slice(1));
-      expect($statusText.textContent).toBe(validPasswordStatusText);
-      // 초기화
-      await userEvent.clear($newPasswordInput);
-      expect($statusText.textContent).toBe(emptyStatusText);
+
+      await step(
+        `형식에 맞지 않은 비밀번호를 입력하면, '${inValidStatusText}' 안내문구가 뜬다.`,
+        async () => {
+          await userEvent.type($newPasswordInput, newPassword.slice(0, 1));
+          expect($statusText.textContent).toBe(inValidStatusText);
+        },
+      );
+
+      await step(
+        `올바른 비밀번호를 입력하면, '${validPasswordStatusText}' 안내문구가 뜬다.`,
+        async () => {
+          await userEvent.type($newPasswordInput, newPassword.slice(1));
+          expect($statusText.textContent).toBe(validPasswordStatusText);
+        },
+      );
     });
 
-    await step(
-      "새 비밀번호 확인은 정규성 검사를 적절하게 시행한다.",
-      async () => {
-        const $statusText = canvasElement.querySelectorAll("p")[2];
-        // 새 비밀번호 확인은 새 비밀번호 값에 종속되어 있기에 새 비밀번호를 먼저 입력합니다.
-        const validPassword = "!1234567aa";
-        await userEvent.type($newPasswordInput, validPassword);
+    await step("새 비밀번호 확인 input", async () => {
+      const $statusText = canvasElement.querySelectorAll("p")[2];
 
-        await userEvent.click($confirmPasswordInput);
-        expect($statusText.textContent).toBe(emptyStatusText);
+      await step(
+        `형식에 맞지 않은 비밀번호를 입력하면, '${inValidStatusText}' 안내문구가 뜬다.`,
+        async () => {
+          await userEvent.type($confirmPasswordInput, newPassword.slice(0, 1));
+          expect($statusText.textContent).toBe(inValidStatusText);
+        },
+      );
 
-        // 일부만 입력
-        await userEvent.type($confirmPasswordInput, validPassword.slice(0, 1));
-        expect($statusText.textContent).toBe(inValidConfirmStatusText);
-        // 나머지 모두 입력
-        await userEvent.type($confirmPasswordInput, validPassword.slice(1));
-        expect($statusText.textContent).toBe(validConfirmPasswordStatusText);
+      await step(
+        `새 비밀번호와 다른 비밀번호를 입력하면, '${inValidConfirmStatusText}' 안내문구가 뜬다.`,
+        async () => {
+          await userEvent.type($confirmPasswordInput, "123aabbcc!");
+          expect($statusText.textContent).toBe(inValidConfirmStatusText);
+        },
+      );
 
-        // newPasswordInput 이 변경 되었을 때 statusText 가 변경 되는지 확인
-        await userEvent.type($newPasswordInput, "{backspace}");
-        expect($statusText.textContent).toBe(inValidConfirmStatusText);
+      await userEvent.clear($confirmPasswordInput);
 
-        await userEvent.type($confirmPasswordInput, "{backspace}");
-        expect($statusText.textContent).toBe(validConfirmPasswordStatusText);
-
-        // 초기화
-        await userEvent.clear($confirmPasswordInput);
-        await userEvent.clear($newPasswordInput);
-
-        // confirmPasswordInput은 newPasswordInput이 정규성 검사를 만족하지 못하더라도 동일하기만 하면 statusText가 나타나지 않습니다.
-        await userEvent.type($newPasswordInput, validPassword.slice(0, 3));
-        await userEvent.type($confirmPasswordInput, validPassword.slice(0, 3));
-
-        const $newPasswordStatusText = canvasElement.querySelectorAll("p")[1];
-        expect($newPasswordStatusText.textContent).toBe(inValidStatusText);
-        expect($statusText.textContent).toBe(validConfirmPasswordStatusText);
-      },
-    );
+      await step(
+        `새 비밀번호와 같은 비밀번호를 입력하면, '${validConfirmPasswordStatusText}' 안내문구가 뜬다.`,
+        async () => {
+          await userEvent.type($confirmPasswordInput, newPassword);
+          expect($statusText.textContent).toBe(validConfirmPasswordStatusText);
+        },
+      );
+    });
   },
 };
