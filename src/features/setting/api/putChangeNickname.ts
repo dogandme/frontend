@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authQueryKey } from "@/entities/auth/api";
-import { apiClient } from "@/shared/lib";
+import { apiClient, type HttpError } from "@/shared/lib";
 import { AuthStore, useAuthStore } from "@/shared/store/auth";
 import { CHANGE_USER_INFO_END_POINT } from "../constants";
 import { changeUserInfoQueryKey } from "./queryKey";
@@ -20,7 +20,7 @@ export const usePutChangeNickname = () => {
   const queryClient = useQueryClient();
   const setNickname = useAuthStore((state) => state.setNickname);
 
-  return useMutation<unknown, Error, ChangeNicknameRequest>({
+  return useMutation<unknown, HttpError, ChangeNicknameRequest>({
     mutationKey: changeUserInfoQueryKey.nickname(),
     mutationFn: putChangeNickname,
     onSuccess: (_, variables) => {

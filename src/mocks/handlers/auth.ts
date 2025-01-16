@@ -159,7 +159,15 @@ const postCheckDuplicateNicknameHandler = http.post<
     nickname === "송" ||
     userDB[nickname]
   ) {
-    return new HttpResponse(null, { status: 409 });
+    return HttpResponse.json(
+      {
+        code: 409,
+        message: "이미 존재하는 닉네임입니다.",
+      },
+      {
+        status: 409,
+      },
+    );
   }
 
   return HttpResponse.json({

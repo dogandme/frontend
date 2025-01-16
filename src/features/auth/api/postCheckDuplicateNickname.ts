@@ -3,7 +3,7 @@ import {
   useMutation,
   useMutationState,
 } from "@tanstack/react-query";
-import { apiClient } from "@/shared/lib";
+import { apiClient, type HttpError } from "@/shared/lib";
 import { SIGN_UP_END_POINT } from "../constants";
 
 export interface PostCheckDuplicateNicknameRequest {
@@ -21,7 +21,7 @@ const postCheckDuplicateNickname = async ({
 };
 
 export const usePostCheckDuplicateNickname = () => {
-  return useMutation<unknown, Error, PostCheckDuplicateNicknameRequest>({
+  return useMutation<unknown, HttpError, PostCheckDuplicateNicknameRequest>({
     mutationFn: postCheckDuplicateNickname,
     mutationKey: ["checkDuplicateNickname"],
   });
