@@ -1,9 +1,9 @@
 import { forwardRef, InputHTMLAttributes, useEffect, useState } from "react";
 import {
   Controller,
-  FieldError,
-  SubmitErrorHandler,
-  SubmitHandler,
+  type FieldError,
+  type SubmitErrorHandler,
+  type SubmitHandler,
   useForm,
 } from "react-hook-form";
 import {

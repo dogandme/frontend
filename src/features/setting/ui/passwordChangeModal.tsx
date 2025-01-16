@@ -1,5 +1,10 @@
 import { forwardRef, InputHTMLAttributes, useState } from "react";
-import { FieldError, useForm } from "react-hook-form";
+import {
+  type FieldError,
+  type SubmitErrorHandler,
+  type SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { PasswordInput } from "@/entities/auth/ui";
 import { useSnackbar } from "@/shared/store";
 import { InputWrapper, StatusText } from "@/shared/ui/input";
@@ -91,7 +96,7 @@ const ConfirmNewPasswordInput = forwardRef<
   );
 });
 
-interface ChangePasswordForm {
+interface ChangePasswordFormType {
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
@@ -102,25 +107,27 @@ export const PasswordChangeModal = ({
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const { register, handleSubmit, formState } = useForm<ChangePasswordForm>({
-    mode: "onChange",
-    defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
+  const { register, handleSubmit, formState } = useForm<ChangePasswordFormType>(
+    {
+      mode: "onChange",
+      defaultValues: {
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      },
     },
-  });
-  const { errors, isValid, isDirty, dirtyFields } = formState;
+  );
+  const { errors, dirtyFields } = formState;
 
   const { mutate: putChangePassword, isPending } = usePutChangePassword();
   const handleOpenSnackbar = useSnackbar("default");
 
-  const onSubmit = ({
-    currentPassword,
-    newPassword,
-    confirmPassword,
-  }: ChangePasswordForm) => {
-    if (isDirty) {
+  const onError: SubmitErrorHandler<ChangePasswordFormType> = (errors) => {
+    if (
+      errors.currentPassword?.type === "required" ||
+      errors.newPassword?.type === "required" ||
+      errors.confirmPassword?.type === "required"
+    ) {
       handleOpenSnackbar("항목을 모두 입력해 주세요.");
       return;
     }
@@ -130,11 +137,14 @@ export const PasswordChangeModal = ({
       return;
     }
 
-    if (!isValid) {
-      handleOpenSnackbar("비밀번호 형식에 맞게 입력해 주세요.");
-      return;
-    }
+    handleOpenSnackbar("비밀번호 형식에 맞게 입력해 주세요.");
+  };
 
+  const onSubmit: SubmitHandler<ChangePasswordFormType> = ({
+    currentPassword,
+    newPassword,
+    confirmPassword,
+  }) => {
     putChangePassword({
       password: currentPassword,
       newPw: newPassword,
@@ -151,7 +161,7 @@ export const PasswordChangeModal = ({
         비밀번호 변경
       </Modal.Header>
       <Modal.Content>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
           <CurrentPasswordInput
             {...register("currentPassword", {
               required: "비밀번호를 입력해 주세요.",

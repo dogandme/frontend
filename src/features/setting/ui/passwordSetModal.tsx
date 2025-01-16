@@ -1,5 +1,9 @@
 import { forwardRef, InputHTMLAttributes } from "react";
-import { FieldError, useForm } from "react-hook-form";
+import {
+  type FieldError,
+  type SubmitErrorHandler,
+  useForm,
+} from "react-hook-form";
 import { PasswordInput as _PasswordInput } from "@/entities/auth/ui";
 import { useSnackbar } from "@/shared/store";
 import { InputWrapper, StatusText } from "@/shared/ui/input";
@@ -78,13 +82,13 @@ export const PasswordSetModal = ({ onClose }: PasswordSetModalProps) => {
       confirmPassword: "",
     },
   });
-  const { errors, dirtyFields, isValid } = formState;
+  const { errors, dirtyFields } = formState;
 
   const { mutate: putSetPassword, isPending } = usePutSetPassword();
 
   const handleOpen = useSnackbar("default");
 
-  const onSubmit = ({ newPassword, confirmPassword }: PasswordSetFormType) => {
+  const onError: SubmitErrorHandler<PasswordSetFormType> = (errors) => {
     if (
       errors.newPassword?.type === "required" ||
       errors.confirmPassword?.type === "required"
@@ -98,11 +102,10 @@ export const PasswordSetModal = ({ onClose }: PasswordSetModalProps) => {
       return;
     }
 
-    if (!isValid) {
-      handleOpen("비밀번호 형식에 맞게 입력해 주세요.");
-      return;
-    }
+    handleOpen("비밀번호 형식에 맞게 입력해 주세요.");
+  };
 
+  const onSubmit = ({ newPassword, confirmPassword }: PasswordSetFormType) => {
     putSetPassword(
       { newPw: newPassword, newPwChk: confirmPassword },
       {
@@ -122,7 +125,7 @@ export const PasswordSetModal = ({ onClose }: PasswordSetModalProps) => {
         비밀번호 설정
       </Modal.Header>
       <Modal.Content>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
           <div className="flex flex-col gap-1">
             <PasswordInput
               isValid={!!dirtyFields.newPassword && !errors.newPassword}

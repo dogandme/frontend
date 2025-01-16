@@ -1,5 +1,5 @@
 import { forwardRef, InputHTMLAttributes } from "react";
-import { FieldError, useForm } from "react-hook-form";
+import { type FieldError, useForm } from "react-hook-form";
 import { PasswordInput } from "@/entities/auth/ui";
 import { InfoIcon } from "@/shared/ui/icon";
 import { InputWrapper, StatusText } from "@/shared/ui/input";

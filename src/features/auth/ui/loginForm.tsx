@@ -1,8 +1,8 @@
 import { forwardRef } from "react";
 import {
-  FieldError,
-  SubmitErrorHandler,
-  SubmitHandler,
+  type FieldError,
+  type SubmitErrorHandler,
+  type SubmitHandler,
   useForm,
 } from "react-hook-form";
 import { PasswordInput } from "@/entities/auth/ui";

@@ -5,7 +5,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Controller, FieldError, useForm } from "react-hook-form";
+import {
+  Controller,
+  type FieldError,
+  type SubmitErrorHandler,
+  type SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { PasswordInput as _PasswordInput } from "@/entities/auth/ui";
 import { ROUTER_PATH } from "@/shared/constants";
@@ -213,7 +219,7 @@ export const SignUpByEmailForm = () => {
       },
     });
 
-  const { errors, isValid, dirtyFields, isDirty } = formState;
+  const { errors, dirtyFields, isDirty } = formState;
 
   const { mutate: postSendCode, isSuccess: isCodeSent } = usePostSendCode();
   const { mutate: postCheckCode, isSuccess: isCodeChecked } =
@@ -258,7 +264,7 @@ export const SignUpByEmailForm = () => {
     );
   };
 
-  const onSubmit = ({ email, password }: SignUpByEmailFormType) => {
+  const onError: SubmitErrorHandler<SignUpByEmailFormType> = (errors) => {
     if (
       errors.email?.type === "required" ||
       errors.password?.type === "required" ||
@@ -267,11 +273,14 @@ export const SignUpByEmailForm = () => {
       handleOpenSnackbar("이메일과 비밀번호를 모두 입력해 주세요.");
       return;
     }
-    if (!isValid) {
-      handleOpenSnackbar("이메일 또는 비밀번호를 올바르게 입력해 주세요.");
-      return;
-    }
 
+    handleOpenSnackbar("이메일 또는 비밀번호를 올바르게 입력해 주세요.");
+  };
+
+  const onSubmit: SubmitHandler<SignUpByEmailFormType> = ({
+    email,
+    password,
+  }: SignUpByEmailFormType) => {
     postSignUpByEmail({ email, password });
   };
 
@@ -298,7 +307,7 @@ export const SignUpByEmailForm = () => {
         <h1 className="headline-3 mx-auto">이메일로 회원가입</h1>
         <form
           className="flex flex-col gap-8 self-stretch"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit, onError)}
         >
           <div>
             <div className="flex items-end justify-between gap-2">

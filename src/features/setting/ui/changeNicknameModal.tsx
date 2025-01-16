@@ -1,9 +1,14 @@
 import { forwardRef, InputHTMLAttributes } from "react";
-import { Controller, FieldError, useForm } from "react-hook-form";
+import {
+  Controller,
+  type FieldError,
+  type SubmitErrorHandler,
+  useForm,
+} from "react-hook-form";
 import { usePostCheckDuplicateNickname } from "@/features/auth/api";
 import type { MyInfo } from "@/entities/auth/types/server";
 import { formatDateToYearMonthDay } from "@/shared/lib";
-import { useAuthStore, useSnackbar } from "@/shared/store";
+import { useSnackbar } from "@/shared/store";
 import { InfoIcon } from "@/shared/ui/icon";
 import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
@@ -32,7 +37,7 @@ export const ChangeNicknameModal = ({
         nickname: "",
       },
     });
-  const { errors, isDirty, dirtyFields, isValid } = formState;
+  const { errors, dirtyFields } = formState;
 
   const handleOpenSnackbar = useSnackbar("default");
 
@@ -43,21 +48,16 @@ export const ChangeNicknameModal = ({
   const { mutate: putChangeNickname, status: putChangeNicknameStatus } =
     usePutChangeNickname();
 
-  const onSubmit = ({ nickname }: ChangeNicknameFormType) => {
-    const { token } = useAuthStore.getState();
-
-    if (!token) return;
-
-    if (!isDirty) {
+  const onError: SubmitErrorHandler<ChangeNicknameFormType> = (errors) => {
+    if (errors.nickname?.type === "required") {
       handleOpenSnackbar("닉네임을 입력해 주세요.");
       return;
     }
 
-    if (!isValid) {
-      handleOpenSnackbar("올바른 닉네임을 입력해 주세요.");
-      return;
-    }
+    handleOpenSnackbar("올바른 닉네임을 입력해 주세요.");
+  };
 
+  const onSubmit = ({ nickname }: ChangeNicknameFormType) => {
     const now = new Date();
     const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
     const canChange = new Date(nickLastModDt) < oneMonthAgo;
@@ -93,7 +93,7 @@ export const ChangeNicknameModal = ({
           </div>
         </Notice>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
           <Controller
             name="nickname"
             control={control}
