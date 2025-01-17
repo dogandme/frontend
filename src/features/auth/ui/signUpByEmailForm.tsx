@@ -25,7 +25,12 @@ import {
   usePostSendCode,
   usePostSignUpByEmail,
 } from "../api";
-import { VERIFICATION_CODE_LENGTH } from "../constants";
+import {
+  signUpFormErrorMessage,
+  signUpFormValidationMessage,
+  VERIFICATION_CODE_LENGTH,
+} from "../constants";
+import { emailRegex, passwordRegex } from "../lib";
 import { ExitConfirmationModal } from "./exitConfirmationModal";
 
 const Timer = ({
@@ -77,7 +82,7 @@ const EmailInput = forwardRef<
   let statusText = "";
 
   if (error && error.message) statusText = error.message;
-  if (isValid) statusText = "올바른 이메일 형식입니다.";
+  if (isValid) statusText = signUpFormValidationMessage.email;
 
   return (
     <InputWrapper>
@@ -103,13 +108,16 @@ const CodeInput = forwardRef<
   {
     isVerified: boolean;
     error?: FieldError;
+    timeLeft: number;
     trailingNode: InputProps["trailingNode"];
   } & InputHTMLAttributes<HTMLInputElement>
->(({ error, isVerified, trailingNode, disabled, ...rest }, ref) => {
+>(({ error, isVerified, timeLeft, trailingNode, disabled, ...rest }, ref) => {
   let statusText = "";
 
-  if (isVerified) statusText = "인증되었습니다.";
+  if (isVerified) statusText = signUpFormValidationMessage.verificationCode;
   if (error && error.message) statusText = error.message;
+  if (timeLeft === 0)
+    statusText = signUpFormErrorMessage.verificationCode.isTimeOver;
 
   return (
     <InputWrapper>
@@ -120,12 +128,12 @@ const CodeInput = forwardRef<
         componentType="outlinedText"
         placeholder="인증코드 7자리를 입력해 주세요"
         maxLength={VERIFICATION_CODE_LENGTH}
-        isError={!!error}
+        isError={timeLeft === 0 || !!error}
         disabled={disabled}
         trailingNode={trailingNode}
         {...rest}
       />
-      <StatusText isError={!!error}>{statusText}</StatusText>
+      <StatusText isError={timeLeft === 0 || !!error}>{statusText}</StatusText>
     </InputWrapper>
   );
 });
@@ -151,8 +159,16 @@ const CodeButton = ({
 
 const PasswordInput = forwardRef<
   HTMLInputElement,
-  { error?: FieldError } & InputHTMLAttributes<HTMLInputElement>
->(({ error, ...rest }, ref) => {
+  {
+    error?: FieldError;
+    isValid: boolean;
+  } & InputHTMLAttributes<HTMLInputElement>
+>(({ error, isValid, ...rest }, ref) => {
+  let statusText = "";
+
+  if (error && error.message) statusText = error.message;
+  if (isValid) statusText = signUpFormValidationMessage.password;
+
   return (
     <InputWrapper>
       <_PasswordInput
@@ -164,7 +180,7 @@ const PasswordInput = forwardRef<
         isError={!!error}
         {...rest}
       />
-      <StatusText isError={!!error}>{error?.message || ""}</StatusText>
+      <StatusText isError={!!error}>{statusText}</StatusText>
     </InputWrapper>
   );
 });
@@ -179,7 +195,7 @@ const ConfirmPasswordInput = forwardRef<
   let statusText = "";
 
   if (error && error.message) statusText = error.message;
-  if (isValid) statusText = "비밀번호가 일치합니다.";
+  if (isValid) statusText = signUpFormValidationMessage.confirmPassword;
 
   return (
     <InputWrapper>
@@ -206,7 +222,7 @@ interface SignUpByEmailFormType {
 export const SignUpByEmailForm = () => {
   const handleOpenSnackbar = useSnackbar("default");
 
-  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [timeLeft, setTimeLeft] = useState<number>(NaN);
 
   const { formState, handleSubmit, register, getValues, control, setError } =
     useForm<SignUpByEmailFormType>({
@@ -239,7 +255,7 @@ export const SignUpByEmailForm = () => {
           if (isEmailDuplicated)
             setError("email", {
               type: "validate",
-              message: "이미 가입된 이메일입니다.",
+              message: signUpFormErrorMessage.email.validate,
             });
         },
       },
@@ -255,8 +271,8 @@ export const SignUpByEmailForm = () => {
         onError: (error) => {
           if (error.code === 400) {
             setError("verificationCode", {
-              type: "validate",
-              message: "인증코드를 다시 확인해 주세요.",
+              type: "isNotMatched",
+              message: signUpFormErrorMessage.verificationCode.isNotMatched,
             });
           }
         },
@@ -270,11 +286,11 @@ export const SignUpByEmailForm = () => {
       errors.password?.type === "required" ||
       errors.confirmPassword?.type === "required"
     ) {
-      handleOpenSnackbar("이메일과 비밀번호를 모두 입력해 주세요.");
+      handleOpenSnackbar(signUpFormErrorMessage.submit.required);
       return;
     }
 
-    handleOpenSnackbar("이메일 또는 비밀번호를 올바르게 입력해 주세요.");
+    handleOpenSnackbar(signUpFormErrorMessage.submit.invalid);
   };
 
   const onSubmit: SubmitHandler<SignUpByEmailFormType> = ({
@@ -316,10 +332,10 @@ export const SignUpByEmailForm = () => {
                 error={errors.email}
                 isValid={!!dirtyFields.email && !errors.email}
                 {...register("email", {
-                  required: "이메일 형식으로 입력해 주세요.",
+                  required: signUpFormErrorMessage.email.required,
                   pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: "이메일 형식으로 입력해 주세요.",
+                    value: emailRegex,
+                    message: signUpFormErrorMessage.email.pattern,
                   },
                 })}
               />
@@ -343,15 +359,10 @@ export const SignUpByEmailForm = () => {
                 control={control}
                 defaultValue=""
                 rules={{
-                  required: `인증코드 ${VERIFICATION_CODE_LENGTH}자리를 입력해 주세요.`,
+                  required: signUpFormErrorMessage.verificationCode.required,
                   minLength: {
                     value: VERIFICATION_CODE_LENGTH,
-                    message: `인증코드 ${VERIFICATION_CODE_LENGTH}자리를 입력해 주세요.`,
-                  },
-                  validate: {
-                    isTimeOver: () =>
-                      timeLeft > 0 ||
-                      "인증시간이 만료되었습니다. 재전송 버튼을 눌러주세요.",
+                    message: signUpFormErrorMessage.verificationCode.minLength,
                   },
                 }}
                 render={({ field }) => (
@@ -359,6 +370,7 @@ export const SignUpByEmailForm = () => {
                     error={errors.verificationCode}
                     isVerified={isCodeChecked}
                     disabled={!isCodeSent || isCodeChecked}
+                    timeLeft={timeLeft}
                     trailingNode={
                       !isCodeChecked &&
                       isCodeSent && (
@@ -396,12 +408,12 @@ export const SignUpByEmailForm = () => {
           <div>
             <PasswordInput
               error={errors.password}
+              isValid={!!dirtyFields.password && !errors.password}
               {...register("password", {
-                required: "비밀번호를 입력해 주세요.",
+                required: signUpFormErrorMessage.password.required,
                 pattern: {
-                  value:
-                    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
-                  message: "비밀번호 형식에 맞게 입력해 주세요.",
+                  value: passwordRegex,
+                  message: signUpFormErrorMessage.password.pattern,
                 },
               })}
             />
@@ -409,16 +421,16 @@ export const SignUpByEmailForm = () => {
               isValid={!!dirtyFields.confirmPassword && !errors.confirmPassword}
               error={errors.confirmPassword}
               {...register("confirmPassword", {
-                required: "비밀번호를 다시 한번 입력해 주세요.",
+                required: signUpFormErrorMessage.confirmPassword.required,
                 pattern: {
-                  value:
-                    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
-                  message: "비밀번호 형식에 맞게 입력해 주세요.",
+                  value: passwordRegex,
+                  message: signUpFormErrorMessage.confirmPassword.pattern,
                 },
                 validate: {
                   isNotMatchedWithPassword: (value, formValues) =>
                     value === formValues.password ||
-                    "비밀번호가 서로 일치하지 않습니다.",
+                    signUpFormErrorMessage.confirmPassword
+                      .isNotMatchedWithPassword,
                 },
               })}
             />

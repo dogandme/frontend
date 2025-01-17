@@ -10,6 +10,8 @@ import { useSnackbar } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { usePostLogin } from "../api";
+import { loginErrorMessage } from "../constants";
+import { emailRegex } from "../lib";
 
 interface LoginFormType {
   email: string;
@@ -35,11 +37,11 @@ export const LoginForm = () => {
       errors.email?.type === "required" ||
       errors.password?.type === "required"
     ) {
-      handleOpenSnackbar("아이디 또는 비밀번호를 모두 입력해 주세요");
+      handleOpenSnackbar(loginErrorMessage.submit.required);
       return;
     }
 
-    handleOpenSnackbar("이메일 또는 비밀번호를 다시 확인해 주세요.");
+    handleOpenSnackbar(loginErrorMessage.submit.invalid);
   };
 
   const onSubmit: SubmitHandler<LoginFormType> = (data) => {
@@ -54,10 +56,10 @@ export const LoginForm = () => {
       <EmailInput
         error={errors.email}
         {...register("email", {
-          required: "이메일 형식으로 입력해 주세요.",
+          required: loginErrorMessage.email.required,
           pattern: {
-            value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-            message: "올바른 이메일 형식으로 입력해 주세요.",
+            value: emailRegex,
+            message: loginErrorMessage.email.pattern,
           },
         })}
       />

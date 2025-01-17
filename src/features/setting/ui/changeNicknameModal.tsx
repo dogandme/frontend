@@ -5,7 +5,11 @@ import {
   type SubmitErrorHandler,
   useForm,
 } from "react-hook-form";
-import { usePostCheckDuplicateNickname } from "@/features/auth/api";
+import {
+  NICKNAME_MAX_LENGTH,
+  nicknameRegex,
+  usePostCheckDuplicateNickname,
+} from "@/features/auth/@x/setting";
 import type { MyInfo } from "@/entities/auth/types/server";
 import { formatDateToYearMonthDay } from "@/shared/lib";
 import { useSnackbar } from "@/shared/store";
@@ -14,8 +18,10 @@ import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { usePutChangeNickname } from "../api";
-
-const NICKNAME_MAX_LENGTH = 20;
+import {
+  changeNicknameFormErrorMessage,
+  changeNicknameFormValidationMessage,
+} from "../constants";
 
 interface ChangeNicknameFormType {
   nickname: string;
@@ -50,11 +56,11 @@ export const ChangeNicknameModal = ({
 
   const onError: SubmitErrorHandler<ChangeNicknameFormType> = (errors) => {
     if (errors.nickname?.type === "required") {
-      handleOpenSnackbar("닉네임을 입력해 주세요.");
+      handleOpenSnackbar(changeNicknameFormErrorMessage.submit.required);
       return;
     }
 
-    handleOpenSnackbar("올바른 닉네임을 입력해 주세요.");
+    handleOpenSnackbar(changeNicknameFormErrorMessage.submit.invalid);
   };
 
   const onSubmit = ({ nickname }: ChangeNicknameFormType) => {
@@ -63,7 +69,7 @@ export const ChangeNicknameModal = ({
     const canChange = new Date(nickLastModDt) < oneMonthAgo;
 
     if (!canChange) {
-      handleOpenSnackbar("한달 이후 닉네임을 변경해 주세요");
+      handleOpenSnackbar(changeNicknameFormErrorMessage.submit.canChange);
       return;
     }
 
@@ -74,7 +80,7 @@ export const ChangeNicknameModal = ({
           if (error.code === 409)
             setError("nickname", {
               type: "validate",
-              message: "이미 존재하는 닉네임입니다.",
+              message: changeNicknameFormErrorMessage.nickname.validate,
             });
         },
       },
@@ -98,13 +104,14 @@ export const ChangeNicknameModal = ({
             name="nickname"
             control={control}
             rules={{
+              required: changeNicknameFormErrorMessage.nickname.required,
               pattern: {
-                value: /^[가-힣a-zA-Z0-9]{1,20}$/,
-                message: `${NICKNAME_MAX_LENGTH}자 이내의 한글 영어 숫자만 사용 가능합니다.`,
+                value: nicknameRegex,
+                message: changeNicknameFormErrorMessage.nickname.pattern,
               },
               maxLength: {
                 value: NICKNAME_MAX_LENGTH,
-                message: `${NICKNAME_MAX_LENGTH}자 이내의 한글 영어 숫자만 사용 가능합니다.`,
+                message: changeNicknameFormErrorMessage.nickname.maxLength,
               },
               onBlur: (e) => {
                 postCheckDuplicateNickname(
@@ -114,7 +121,8 @@ export const ChangeNicknameModal = ({
                       if (error.code === 409) {
                         setError("nickname", {
                           type: "validate",
-                          message: "이미 존재하는 닉네임입니다.",
+                          message:
+                            changeNicknameFormErrorMessage.nickname.validate,
                         });
                       }
                     },
@@ -166,7 +174,7 @@ const NicknameInput = forwardRef<
   let statusText = "";
 
   if (error && error.message) statusText = error.message;
-  if (isValid) statusText = "올바른 양식의 닉네임입니다.";
+  if (isValid) statusText = changeNicknameFormValidationMessage.nickname;
 
   return (
     <InputWrapper>

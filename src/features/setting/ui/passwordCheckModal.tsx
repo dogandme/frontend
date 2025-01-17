@@ -1,11 +1,13 @@
 import { forwardRef, InputHTMLAttributes } from "react";
 import { type FieldError, useForm } from "react-hook-form";
+import { passwordRegex } from "@/features/auth/@x/setting";
 import { PasswordInput } from "@/entities/auth/ui";
 import { InfoIcon } from "@/shared/ui/icon";
 import { InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
 import { Notice } from "@/shared/ui/notice";
 import { useDeleteAccount } from "../api";
+import { passwordCheckFormErrorMessage } from "../constants";
 
 const CurrentPasswordInput = forwardRef<
   HTMLInputElement,
@@ -76,10 +78,10 @@ export const PasswordCheckModal = ({ onClose }: PasswordCheckModalProps) => {
           <CurrentPasswordInput
             error={errors.password}
             {...register("password", {
-              required: "비밀번호를 입력해 주세요.",
+              required: passwordCheckFormErrorMessage.currentPassword.required,
               pattern: {
-                value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
-                message: "비밀번호 형식에 맞게 입력해 주세요.",
+                value: passwordRegex,
+                message: passwordCheckFormErrorMessage.currentPassword.pattern,
               },
             })}
           />

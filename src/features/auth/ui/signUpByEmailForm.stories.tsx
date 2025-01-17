@@ -4,6 +4,10 @@ import { OverlayPortal } from "@/app/OverlayPortal";
 import { SnackbarController } from "@/shared/store";
 import { useAuthStore } from "@/shared/store/auth";
 import { handlers } from "@/mocks/handler";
+import {
+  signUpFormErrorMessage,
+  signUpFormValidationMessage,
+} from "../constants";
 import { SignUpByEmailForm } from "./signUpByEmailForm";
 
 const meta: Meta<typeof SignUpByEmailForm> = {
@@ -91,16 +95,20 @@ export const Test: Story = {
           expect($sendCodeButton).toBeEnabled();
         });
 
-        const validEmailStatusText = "올바른 이메일 형식입니다.";
-        const $statusText = canvas.queryByText(validEmailStatusText);
-
-        await step(`"${validEmailStatusText}" 안내 문구가 뜬다.`, async () => {
-          expect($statusText).toBeInTheDocument();
-          expect($statusText).toHaveClass(statusTextColor.valid);
-        });
+        const $statusText = canvas.queryByText(
+          signUpFormValidationMessage.email,
+        );
 
         await step(
-          `outfocus돼도, "${validEmailStatusText}" 안내 문구는 사라지지 않는다.`,
+          `"${signUpFormValidationMessage.email}" 안내 문구가 뜬다.`,
+          async () => {
+            expect($statusText).toBeInTheDocument();
+            expect($statusText).toHaveClass(statusTextColor.valid);
+          },
+        );
+
+        await step(
+          `outfocus돼도, "${signUpFormValidationMessage.email}" 안내 문구는 사라지지 않는다.`,
           async () => {
             await userEvent.tab();
 
@@ -115,18 +123,22 @@ export const Test: Story = {
       await step("이메일 형식에 맞지 않게 입력할 경우,", async () => {
         await userEvent.type($emailInput, invalidEmail);
 
-        const errorStatusText = "이메일 형식으로 입력해 주세요.";
-        const $statusText = canvas.getByText(errorStatusText);
+        const $statusText = canvas.getByText(
+          signUpFormErrorMessage.email.pattern,
+        );
 
         await step("[코드전송] 버튼이 비활성화된다.", async () => {
           expect($sendCodeButton).toBeDisabled();
         });
 
-        await step(`"${errorStatusText}" 경고 문구가 표시된다.`, () => {
-          expect($statusText).toHaveClass(statusTextColor.invalid);
-        });
+        await step(
+          `"${signUpFormErrorMessage.email.pattern}" 에러 문구가 표시된다.`,
+          () => {
+            expect($statusText).toHaveClass(statusTextColor.invalid);
+          },
+        );
 
-        await step("outfocus돼도, 경고 문구가 사라지지 않는다.", async () => {
+        await step("outfocus돼도, 에러 문구가 사라지지 않는다.", async () => {
           await userEvent.tab();
           expect($statusText).toHaveClass(statusTextColor.invalid);
         });
@@ -146,14 +158,17 @@ export const Test: Story = {
           await userEvent.type($emailInput, duplicatedEmail);
           await userEvent.click($codeSendButton);
 
-          const errorStatusText = "이미 가입된 이메일입니다.";
+          const $statusText = await canvas.findByText(
+            signUpFormErrorMessage.email.validate,
+          );
 
-          const $statusText = await canvas.findByText(errorStatusText);
-
-          await step(`${errorStatusText} 에러 문구를 표시한다.`, async () => {
-            expect($statusText).toBeInTheDocument();
-            expect($statusText).toHaveClass(statusTextColor.invalid);
-          });
+          await step(
+            `'${signUpFormErrorMessage.email.validate}' 에러 문구를 표시한다.`,
+            async () => {
+              expect($statusText).toBeInTheDocument();
+              expect($statusText).toHaveClass(statusTextColor.invalid);
+            },
+          );
 
           await step("버튼은 비활성화된다.", async () => {
             expect($codeSendButton).toBeDisabled();
@@ -235,12 +250,13 @@ export const Test: Story = {
       await userEvent.clear($codeInput);
 
       await step(
-        '인증 input을 클릭하면, "인증코드 7자리를 입력해 주세요." 안내 문구를 띄운다.',
+        `인증 input을 클릭하면, "${signUpFormErrorMessage.verificationCode.required}" 안내 문구를 띄운다.`,
         async () => {
           await userEvent.click($codeInput);
 
-          const $statusText =
-            canvas.getByText("인증코드 7자리를 입력해 주세요.");
+          const $statusText = canvas.getByText(
+            signUpFormErrorMessage.verificationCode.required,
+          );
 
           expect($statusText).toBeInTheDocument();
           expect($statusText).toHaveClass(statusTextColor.invalid);
@@ -264,10 +280,11 @@ export const Test: Story = {
         await userEvent.click($checkCodeButton);
 
         await step(
-          '"인증 코드를 다시 확인해 주세요." 에러 문구를 표시한다.',
+          `"${signUpFormErrorMessage.verificationCode.isNotMatched}" 에러 문구를 표시한다.`,
           async () => {
-            const $statusText =
-              await canvas.findByText("인증코드를 다시 확인해 주세요.");
+            const $statusText = await canvas.findByText(
+              signUpFormErrorMessage.verificationCode.isNotMatched,
+            );
 
             expect($statusText).toBeInTheDocument();
             expect($statusText).toHaveClass(statusTextColor.invalid);
@@ -302,12 +319,17 @@ export const Test: Story = {
             expect($checkCodeButton).toBeDisabled();
           });
 
-          await step('"인증되었습니다." 안내 문구를 띄운다.', async () => {
-            const $statusText = await canvas.findByText("인증되었습니다.");
+          await step(
+            `"${signUpFormValidationMessage.verificationCode}" 안내 문구를 띄운다.`,
+            async () => {
+              const $statusText = await canvas.findByText(
+                signUpFormValidationMessage.verificationCode,
+              );
 
-            expect($statusText).toBeInTheDocument();
-            expect($statusText).toHaveClass(statusTextColor.valid);
-          });
+              expect($statusText).toBeInTheDocument();
+              expect($statusText).toHaveClass(statusTextColor.valid);
+            },
+          );
         },
       );
     });
@@ -323,20 +345,22 @@ export const Test: Story = {
           await userEvent.tab();
           await userEvent.tab();
 
-          const $statusText = canvas.queryByText("비밀번호를 입력해 주세요.");
+          const $statusText = canvas.queryByText(
+            signUpFormErrorMessage.password.pattern,
+          );
 
           expect($statusText).not.toBeInTheDocument();
         },
       );
 
       await step(
-        '비밀번호 형식에 맞지 않을 경우, outfocus 여부와 상관없이 "비밀번호 형식에 맞게 입력해 주세요." 경고 문구가 뜬다.',
+        `비밀번호 형식에 맞지 않을 경우, outfocus 여부와 상관없이 "${signUpFormErrorMessage.password.pattern}" 경고 문구가 뜬다.`,
         async () => {
           await userEvent.clear($passwordInput);
           await userEvent.type($passwordInput, invalidPassword);
 
           const $statusText = await canvas.findByText(
-            "비밀번호 형식에 맞게 입력해 주세요.",
+            signUpFormErrorMessage.password.pattern,
           );
 
           expect($statusText).toBeInTheDocument();
@@ -355,27 +379,6 @@ export const Test: Story = {
       await step("비밀번호 input 값이 유효하지 않은 상태에서", async () => {
         await userEvent.clear($passwordInput);
 
-        // ? 기능에 대해 상의하기
-        // await step(
-        //   '비밀번호 input 값과 입력값이 동일하지 않다면, outfocus 여부와 상관 없이 "비밀번호가 서로 일치하지 않습니다." 경고 문구가 뜬다.',
-        //   async () => {
-        //     await userEvent.type($passwordInput, invalidEmail);
-        //     await userEvent.type($passwordConfirmInput, validEmail);
-
-        //     const $statusText = await canvas.findByText(
-        //       "비밀번호가 서로 일치하지 않습니다.",
-        //     );
-        //     expect($statusText).toBeInTheDocument();
-        //     expect($statusText).toHaveClass(statusTextColor.invalid);
-
-        //     await userEvent.tab();
-        //     await userEvent.tab();
-
-        //     expect($statusText).toBeInTheDocument();
-        //     expect($statusText).toHaveClass(statusTextColor.invalid);
-        //   },
-        // );
-
         await userEvent.clear($passwordInput);
         await userEvent.clear($passwordConfirmInput);
       });
@@ -383,39 +386,18 @@ export const Test: Story = {
       await step("비밀번호 input 값이 유효한 상태에서", async () => {
         await userEvent.clear($passwordInput);
 
-        // ? 기능에 대해 상의하기
-        // await step(
-        //   '비밀번호 input 값과 입력값이 동일하지 않다면, outfocus 여부와 상관 없이 "비밀번호가 서로 일치하지 않습니다." 경고 문구가 뜬다.',
-        //   async () => {
-        //     await userEvent.type($passwordInput, validPassword);
-        //     await userEvent.type($passwordConfirmInput, invalidPassword);
-
-        //     const $statusText = await canvas.findByText(
-        //       "비밀번호가 서로 일치하지 않습니다.",
-        //     );
-
-        //     expect($statusText).toBeInTheDocument();
-        //     expect($statusText).toHaveClass(statusTextColor.invalid);
-
-        //     await userEvent.tab();
-        //     await userEvent.tab();
-
-        //     expect($statusText).toBeInTheDocument();
-        //     expect($statusText).toHaveClass(statusTextColor.invalid);
-        //   },
-        // );
-
         await userEvent.clear($passwordInput);
         await userEvent.clear($passwordConfirmInput);
 
         await step(
-          '비밀번호 input 값과 입력값이 동일하면, outfocus 여부와 상관 없이 "사용가능한 비밀번호 입니다." 안내 문구가 뜬다.',
+          `비밀번호 input 값과 입력값이 동일하면, outfocus 여부와 상관 없이 "${signUpFormValidationMessage.confirmPassword}" 안내 문구가 뜬다.`,
           async () => {
             await userEvent.type($passwordInput, validPassword);
             await userEvent.type($passwordConfirmInput, validPassword);
 
-            const $statusText =
-              await canvas.findByText("비밀번호가 일치합니다.");
+            const $statusText = await canvas.findByText(
+              signUpFormValidationMessage.confirmPassword,
+            );
 
             expect($statusText).toBeInTheDocument();
             expect($statusText).toHaveClass(statusTextColor.valid);

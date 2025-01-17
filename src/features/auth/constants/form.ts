@@ -336,3 +336,5 @@ export const dogBreeds = [
 export const REGION_API_DEBOUNCE_DELAY = 500;
 
 export const VERIFICATION_CODE_LENGTH = 7;
+
+export const NICKNAME_MAX_LENGTH = 20;

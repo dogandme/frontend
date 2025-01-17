@@ -5,11 +5,16 @@ import {
   type SubmitHandler,
   useForm,
 } from "react-hook-form";
+import { passwordRegex } from "@/features/auth/@x/setting";
 import { PasswordInput } from "@/entities/auth/ui";
 import { useSnackbar } from "@/shared/store";
 import { InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePassword } from "../api";
+import {
+  passwordChangeFormErrorMessage,
+  passwordChangeFormValidationMessage,
+} from "../constants";
 
 const CurrentPasswordInput = forwardRef<
   HTMLInputElement,
@@ -33,7 +38,7 @@ const CurrentPasswordInput = forwardRef<
         }}
       />
       <StatusText>
-        {isFocused ? "현재 비밀번호를 입력해주세요." : ""}
+        {isFocused ? passwordChangeFormErrorMessage.currentPassword : ""}
       </StatusText>
     </InputWrapper>
   );
@@ -49,7 +54,7 @@ const NewPasswordInput = forwardRef<
   let statusText = "";
 
   if (error && error.message) statusText = error.message;
-  if (isValid) statusText = "사용가능한 비밀번호입니다.";
+  if (isValid) statusText = passwordChangeFormValidationMessage.newPassword;
 
   return (
     <InputWrapper>
@@ -76,10 +81,8 @@ const ConfirmNewPasswordInput = forwardRef<
 >(({ error, isValid, ...rest }, ref) => {
   let statusText = "";
 
-  console.log(error);
-
   if (error && error.message) statusText = error.message;
-  if (isValid) statusText = "비밀번호가 일치합니다.";
+  if (isValid) statusText = passwordChangeFormValidationMessage.confirmPassword;
 
   return (
     <InputWrapper>
@@ -96,7 +99,7 @@ const ConfirmNewPasswordInput = forwardRef<
   );
 });
 
-interface ChangePasswordFormType {
+interface PasswordChangeFormType {
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
@@ -107,7 +110,7 @@ export const PasswordChangeModal = ({
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const { register, handleSubmit, formState } = useForm<ChangePasswordFormType>(
+  const { register, handleSubmit, formState } = useForm<PasswordChangeFormType>(
     {
       mode: "onChange",
       defaultValues: {
@@ -122,25 +125,27 @@ export const PasswordChangeModal = ({
   const { mutate: putChangePassword, isPending } = usePutChangePassword();
   const handleOpenSnackbar = useSnackbar("default");
 
-  const onError: SubmitErrorHandler<ChangePasswordFormType> = (errors) => {
+  const onError: SubmitErrorHandler<PasswordChangeFormType> = (errors) => {
     if (
       errors.currentPassword?.type === "required" ||
       errors.newPassword?.type === "required" ||
       errors.confirmPassword?.type === "required"
     ) {
-      handleOpenSnackbar("항목을 모두 입력해 주세요.");
+      handleOpenSnackbar(passwordChangeFormErrorMessage.submit.required);
       return;
     }
 
     if (errors.confirmPassword?.type === "isNotMatchedWithNewPassword") {
-      handleOpenSnackbar("새 비밀번호를 다시 확인해 주세요.");
+      handleOpenSnackbar(
+        passwordChangeFormErrorMessage.confirmPassword.isNotMatchedWithPassword,
+      );
       return;
     }
 
-    handleOpenSnackbar("비밀번호 형식에 맞게 입력해 주세요.");
+    handleOpenSnackbar(passwordChangeFormErrorMessage.submit.invalid);
   };
 
-  const onSubmit: SubmitHandler<ChangePasswordFormType> = ({
+  const onSubmit: SubmitHandler<PasswordChangeFormType> = ({
     currentPassword,
     newPassword,
     confirmPassword,
@@ -164,11 +169,7 @@ export const PasswordChangeModal = ({
         <form onSubmit={handleSubmit(onSubmit, onError)}>
           <CurrentPasswordInput
             {...register("currentPassword", {
-              required: "비밀번호를 입력해 주세요.",
-              pattern: {
-                value: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
-                message: "비밀번호 형식에 맞게 입력해 주세요.",
-              },
+              required: true,
             })}
           />
           <div className="flex flex-col gap-1 mt-4">
@@ -176,11 +177,10 @@ export const PasswordChangeModal = ({
               isValid={!!dirtyFields.newPassword && !errors.newPassword}
               error={errors.newPassword}
               {...register("newPassword", {
-                required: "비밀번호를 입력해 주세요.",
+                required: passwordChangeFormErrorMessage.newPassword.required,
                 pattern: {
-                  value:
-                    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
-                  message: "비밀번호 형식에 맞게 입력해 주세요.",
+                  value: passwordRegex,
+                  message: passwordChangeFormErrorMessage.newPassword.pattern,
                 },
               })}
             />
@@ -188,16 +188,18 @@ export const PasswordChangeModal = ({
               isValid={!!dirtyFields.confirmPassword && !errors.confirmPassword}
               error={errors.confirmPassword}
               {...register("confirmPassword", {
-                required: "비밀번호를 다시 한번 입력해 주세요.",
+                required:
+                  passwordChangeFormErrorMessage.confirmPassword.required,
                 pattern: {
-                  value:
-                    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
-                  message: "비밀번호 형식에 맞게 입력해 주세요.",
+                  value: passwordRegex,
+                  message:
+                    passwordChangeFormErrorMessage.confirmPassword.pattern,
                 },
                 validate: {
                   isNotMatchedWithNewPassword: (value, formValues) =>
                     value === formValues.newPassword ||
-                    "비밀번호가 서로 일치하지 않습니다.",
+                    passwordChangeFormErrorMessage.confirmPassword
+                      .isNotMatchedWithPassword,
                 },
               })}
             />

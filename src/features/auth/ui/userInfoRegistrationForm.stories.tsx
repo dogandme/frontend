@@ -4,7 +4,11 @@ import { OverlayPortal } from "@/app/OverlayPortal";
 import { SnackbarController } from "@/shared/store";
 import { useAuthStore } from "@/shared/store/auth";
 import { handlers } from "@/mocks/handler";
-import { REGION_API_DEBOUNCE_DELAY } from "../constants";
+import {
+  REGION_API_DEBOUNCE_DELAY,
+  userInfoFormErrorMessage,
+  userInfoFormValidationMessage,
+} from "../constants";
 import UserInfoRegistrationForm from "./userInfoRegistrationForm";
 
 const meta: Meta<typeof UserInfoRegistrationForm> = {
@@ -61,45 +65,48 @@ export const Default: Story = {
     const $regionSelectButton = canvas.getByText("동네 설정하기");
 
     await step("nickname input 검사", async () => {
-      const STATUS_TEXT = "20자 이내의 한글 영어 숫자만 사용 가능합니다.";
-      const DUPLICATED_STATUS_TEXT = "이미 존재하는 닉네임입니다.";
-      const VALID_STATUS_TEXT = "사용가능한 닉네임입니다.";
       const textColor = {
         base: "text-grey-500",
         error: "text-pink-500",
       };
 
       await step(
-        `닉네임 형식에 맞지 않게 입력할 경우, "${STATUS_TEXT}"가 빨간색으로 표시된다.`,
+        `닉네임 형식에 맞지 않게 입력할 경우, "${userInfoFormErrorMessage.nickname.pattern}"가 빨간색으로 표시된다.`,
         async () => {
           await userEvent.type($nicknameInput, invalidNickname);
           await userEvent.tab();
 
-          const $statusText = await canvas.findByText(STATUS_TEXT);
+          const $statusText = await canvas.findByText(
+            userInfoFormErrorMessage.nickname.pattern,
+          );
           expect($statusText).toHaveClass(textColor.error);
         },
       );
 
       await step(
-        `중복된 닉네임을 입력할 경우, "${DUPLICATED_STATUS_TEXT}"가 빨간색으로 표시된다.`,
+        `중복된 닉네임을 입력할 경우, "${userInfoFormErrorMessage.nickname.validate}"가 빨간색으로 표시된다.`,
         async () => {
           await userEvent.clear($nicknameInput);
           await userEvent.type($nicknameInput, "중복");
           await userEvent.tab();
 
-          const $statusText = await canvas.findByText(DUPLICATED_STATUS_TEXT);
+          const $statusText = await canvas.findByText(
+            userInfoFormErrorMessage.nickname.validate,
+          );
           expect($statusText).toHaveClass(textColor.error);
         },
       );
 
       await step(
-        `유효한 닉네임을 입력할 경우, "${VALID_STATUS_TEXT}"가 표시된다.`,
+        `유효한 닉네임을 입력할 경우, "${userInfoFormValidationMessage.email}"가 표시된다.`,
         async () => {
           await userEvent.clear($nicknameInput);
           await userEvent.type($nicknameInput, validNickname);
           await userEvent.tab();
 
-          const $statusText = await canvas.findByText(VALID_STATUS_TEXT);
+          const $statusText = await canvas.findByText(
+            userInfoFormValidationMessage.email,
+          );
           expect($statusText).toHaveClass(textColor.base);
         },
       );
@@ -114,7 +121,9 @@ export const Default: Story = {
         async () => {
           await userEvent.click($submitButton);
 
-          const $snackbar = canvas.getByText("필수 항목을 모두 입력해 주세요.");
+          const $snackbar = canvas.getByText(
+            userInfoFormErrorMessage.submit.required,
+          );
           expect($snackbar).toBeInTheDocument();
 
           const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
@@ -194,7 +203,9 @@ export const Default: Story = {
         async () => {
           await userEvent.click($submitButton);
 
-          const $snackbar = canvas.getByText("필수 항목을 모두 입력해 주세요.");
+          const $snackbar = canvas.getByText(
+            userInfoFormErrorMessage.submit.required,
+          );
           expect($snackbar).toBeInTheDocument();
 
           const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
@@ -270,7 +281,9 @@ export const Default: Story = {
         await userEvent.type($nicknameInput, invalidNickname);
         await userEvent.click($submitButton);
 
-        const $snackbar = canvas.getByText("필수 항목을 모두 입력해 주세요.");
+        const $snackbar = canvas.getByText(
+          userInfoFormErrorMessage.submit.required,
+        );
         expect($snackbar).toBeInTheDocument();
 
         const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
@@ -307,7 +320,9 @@ export const Default: Story = {
 
         await userEvent.click($submitButton);
 
-        const $snackbar = canvas.getByText("올바른 닉네임을 입력해 주세요.");
+        const $snackbar = canvas.getByText(
+          userInfoFormErrorMessage.submit.invalidNickname,
+        );
         expect($snackbar).toBeInTheDocument();
 
         const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");
@@ -332,7 +347,9 @@ export const Default: Story = {
       async () => {
         await userEvent.click($submitButton);
 
-        const $snackbar = canvas.getByText("필수 약관에 모두 동의해 주세요.");
+        const $snackbar = canvas.getByText(
+          userInfoFormErrorMessage.submit.requiredTermsAgreement,
+        );
         expect($snackbar).toBeInTheDocument();
 
         const $snackBarCloseButton = canvas.getByLabelText("스낵바 닫기");

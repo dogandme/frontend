@@ -22,7 +22,12 @@ import { CancelIcon } from "@/shared/ui/icon";
 import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import { usePostCheckDuplicateNickname, usePutAddUserInfo } from "../api";
+import {
+  userInfoFormErrorMessage,
+  userInfoFormValidationMessage,
+} from "../constants";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
+import { nicknameRegex } from "../lib";
 import { RegionModal } from "./regionModal";
 
 const NICKNAME_MAX_LENGTH = 20;
@@ -96,17 +101,19 @@ const UserInfoRegistrationForm = () => {
       ageRange?.type === "required" ||
       region?.type === "validate"
     ) {
-      handleOpenSnackbar("필수 항목을 모두 입력해 주세요.");
+      handleOpenSnackbar(userInfoFormErrorMessage.submit.required);
       return;
     }
 
     if (nickname?.type === "pattern") {
-      handleOpenSnackbar("올바른 닉네임을 입력해 주세요.");
+      handleOpenSnackbar(userInfoFormErrorMessage.submit.invalidNickname);
       return;
     }
 
     if (checkList?.type === "validate") {
-      handleOpenSnackbar("필수 약관에 모두 동의해 주세요.");
+      handleOpenSnackbar(
+        userInfoFormErrorMessage.submit.requiredTermsAgreement,
+      );
       return;
     }
   };
@@ -140,13 +147,14 @@ const UserInfoRegistrationForm = () => {
           name="nickname"
           control={control}
           rules={{
+            required: userInfoFormErrorMessage.nickname.required,
             pattern: {
-              value: /^[가-힣a-zA-Z0-9]{1,20}$/,
-              message: `${NICKNAME_MAX_LENGTH}자 이내의 한글 영어 숫자만 사용 가능합니다.`,
+              value: nicknameRegex,
+              message: userInfoFormErrorMessage.nickname.pattern,
             },
             maxLength: {
               value: NICKNAME_MAX_LENGTH,
-              message: `${NICKNAME_MAX_LENGTH}자 이내의 한글 영어 숫자만 사용 가능합니다.`,
+              message: userInfoFormErrorMessage.nickname.maxLength,
             },
             onBlur: (e) => {
               postCheckDuplicateNickname(
@@ -156,7 +164,7 @@ const UserInfoRegistrationForm = () => {
                     if (error.code === 409) {
                       setError("nickname", {
                         type: "validate",
-                        message: "이미 존재하는 닉네임입니다.",
+                        message: userInfoFormErrorMessage.nickname.validate,
                       });
                     }
                   },
@@ -311,7 +319,7 @@ const NicknameInput = forwardRef<
   let statusText = "";
 
   if (error && error.message) statusText = error.message;
-  if (isValid) statusText = "사용가능한 닉네임입니다.";
+  if (isValid) statusText = userInfoFormValidationMessage.email;
 
   return (
     <InputWrapper>

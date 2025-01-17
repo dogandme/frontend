@@ -3,6 +3,7 @@ import { within, userEvent, expect } from "@storybook/test";
 import { useAuthStore } from "@/shared/store/auth";
 import { handlers } from "@/mocks/handler";
 import { LoginForm } from ".";
+import { loginErrorMessage } from "../constants";
 
 const meta: Meta<typeof LoginForm> = {
   title: "features/auth/LoginForm",
@@ -28,26 +29,16 @@ export const Default: StoryObj<typeof LoginForm> = {
     const $input = canvasElement.querySelector("#email")!;
     const $statusText = canvasElement.querySelector("p")!;
 
-    const EMPTY_STATUS_TEXT = "이메일 형식으로 입력해 주세요.";
-    const ERROR_STATUS_TEXT = "올바른 이메일 형식으로 입력해 주세요.";
-
     await step(
-      "인풋 필드가 포커스 되어 있지 않은 경우에 statusText를 가리키는 태그는 문자를 가지면 안된다.",
-      () => {
-        expect($statusText).toHaveTextContent("");
-      },
-    );
-
-    await step(
-      `이메일 유효성 검사를 통과하지 않는 문자가 나타나면 statusText를 가리키는 태그의 문자열은 올바른 ${ERROR_STATUS_TEXT} 라는 안내 문구가 떠야 한다.`,
+      `이메일 유효성 검사를 통과하지 않는 문자가 나타나면, '${loginErrorMessage.email.pattern}' 안내 문구가 떠야 한다.`,
       async () => {
         await userEvent.type($input, "test");
-        expect($statusText).toHaveTextContent(ERROR_STATUS_TEXT);
+        expect($statusText).toHaveTextContent(loginErrorMessage.email.pattern);
       },
     );
 
     await step(
-      "이메일 유효성 검사를 통과하는 문자가 나타나면 statusText를 가리키는 태그의 문자열은 빈 문자열이 되어야 한다.",
+      "이메일 유효성 검사를 통과하는 문자가 나타나면, 안내 문구가 사라진다.",
       async () => {
         await userEvent.type($input, "test123@naver.com");
         expect($statusText).toHaveTextContent("");
@@ -55,10 +46,10 @@ export const Default: StoryObj<typeof LoginForm> = {
     );
 
     await step(
-      `인풋 필드가 비어 있으면 statusText를 가리키는 태그의 문자열은 ${EMPTY_STATUS_TEXT} 라는 안내 문구가 떠야 한다.`,
+      `인풋 필드가 비어 있으면, '${loginErrorMessage.email.required}' 라는 안내 문구가 떠야 한다.`,
       async () => {
         await userEvent.clear($input);
-        expect($statusText).toHaveTextContent(EMPTY_STATUS_TEXT);
+        expect($statusText).toHaveTextContent(loginErrorMessage.email.required);
       },
     );
   },

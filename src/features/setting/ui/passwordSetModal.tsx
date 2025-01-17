@@ -4,11 +4,16 @@ import {
   type SubmitErrorHandler,
   useForm,
 } from "react-hook-form";
+import { passwordRegex } from "@/features/auth/@x/setting";
 import { PasswordInput as _PasswordInput } from "@/entities/auth/ui";
 import { useSnackbar } from "@/shared/store";
 import { InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
 import { usePutSetPassword } from "../api";
+import {
+  passwordSetFormErrorMessage,
+  passwordSetFormValidationMessage,
+} from "../constants";
 
 const PasswordInput = forwardRef<
   HTMLInputElement,
@@ -20,7 +25,7 @@ const PasswordInput = forwardRef<
   let statusText = "";
 
   if (error && error.message) statusText = error.message;
-  if (isValid) statusText = "사용가능한 비밀번호입니다.";
+  if (isValid) statusText = passwordSetFormValidationMessage.newPassword;
 
   return (
     <InputWrapper>
@@ -48,7 +53,7 @@ const ConfirmPasswordInput = forwardRef<
   let statusText = "";
 
   if (error && error.message) statusText = error.message;
-  if (isValid) statusText = "비밀번호가 일치합니다.";
+  if (isValid) statusText = passwordSetFormValidationMessage.confirmPassword;
 
   return (
     <InputWrapper>
@@ -93,16 +98,18 @@ export const PasswordSetModal = ({ onClose }: PasswordSetModalProps) => {
       errors.newPassword?.type === "required" ||
       errors.confirmPassword?.type === "required"
     ) {
-      handleOpen("항목을 모두 입력해 주세요.");
+      handleOpen(passwordSetFormErrorMessage.submit.required);
       return;
     }
 
     if (errors.confirmPassword?.type === "isNotMatchedWithNewPassword") {
-      handleOpen("새 비밀번호를 다시 확인해 주세요.");
+      handleOpen(
+        passwordSetFormErrorMessage.submit.isNotMatchedWithNewPassword,
+      );
       return;
     }
 
-    handleOpen("비밀번호 형식에 맞게 입력해 주세요.");
+    handleOpen(passwordSetFormErrorMessage.submit.invalid);
   };
 
   const onSubmit = ({ newPassword, confirmPassword }: PasswordSetFormType) => {
@@ -131,27 +138,26 @@ export const PasswordSetModal = ({ onClose }: PasswordSetModalProps) => {
               isValid={!!dirtyFields.newPassword && !errors.newPassword}
               error={errors.newPassword}
               {...register("newPassword", {
-                required: "비밀번호를 입력해 주세요.",
+                required: passwordSetFormErrorMessage.newPassword.required,
                 pattern: {
-                  value:
-                    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
-                  message: "비밀번호 형식에 맞게 입력해 주세요.",
+                  value: passwordRegex,
+                  message: passwordSetFormErrorMessage.newPassword.pattern,
                 },
               })}
             />
             <ConfirmPasswordInput
               isValid={!!dirtyFields.confirmPassword && !errors.confirmPassword}
               {...register("confirmPassword", {
-                required: "비밀번호를 입력해 주세요.",
+                required: passwordSetFormErrorMessage.confirmPassword.required,
                 pattern: {
-                  value:
-                    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,15}$/,
-                  message: "비밀번호 형식에 맞게 입력해 주세요.",
+                  value: passwordRegex,
+                  message: passwordSetFormErrorMessage.confirmPassword.pattern,
                 },
                 validate: {
                   isNotMatchedWithNewPassword: (value, formValues) =>
                     value === formValues.newPassword ||
-                    "비밀번호가 서로 일치하지 않습니다.",
+                    passwordSetFormErrorMessage.confirmPassword
+                      .isNotMatchedWithPassword,
                 },
               })}
             />
