@@ -29,8 +29,9 @@ import {
   signUpFormErrorMessage,
   signUpFormValidationMessage,
   VERIFICATION_CODE_LENGTH,
+  emailRegex,
+  passwordRegex,
 } from "../constants";
-import { emailRegex, passwordRegex } from "../lib";
 import { ExitConfirmationModal } from "./exitConfirmationModal";
 
 const Timer = ({

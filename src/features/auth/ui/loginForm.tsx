@@ -10,8 +10,7 @@ import { useSnackbar } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
 import { usePostLogin } from "../api";
-import { loginErrorMessage } from "../constants";
-import { emailRegex } from "../lib";
+import { loginErrorMessage, emailRegex } from "../constants";
 
 interface LoginFormType {
   email: string;

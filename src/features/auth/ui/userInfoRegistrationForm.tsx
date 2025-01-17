@@ -25,9 +25,9 @@ import { usePostCheckDuplicateNickname, usePutAddUserInfo } from "../api";
 import {
   userInfoFormErrorMessage,
   userInfoFormValidationMessage,
+  nicknameRegex,
 } from "../constants";
 import { ageRangeOptionList, genderOptionList } from "../constants/form";
-import { nicknameRegex } from "../lib";
 import { RegionModal } from "./regionModal";
 
 const NICKNAME_MAX_LENGTH = 20;
