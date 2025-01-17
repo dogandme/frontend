@@ -224,23 +224,53 @@ export const SignUpByEmailForm = () => {
 
   const [timeLeft, setTimeLeft] = useState<number>(NaN);
 
-  const { formState, handleSubmit, register, getValues, control, setError } =
-    useForm<SignUpByEmailFormType>({
-      mode: "onChange",
-      defaultValues: {
-        email: "",
-        verificationCode: "",
-        password: "",
-        confirmPassword: "",
-      },
-    });
+  const {
+    formState,
+    handleSubmit,
+    register,
+    getValues,
+    control,
+    resetField,
+    setError,
+    watch,
+  } = useForm<SignUpByEmailFormType>({
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      verificationCode: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
   const { errors, dirtyFields, isDirty } = formState;
 
-  const { mutate: postSendCode, isSuccess: isCodeSent } = usePostSendCode();
-  const { mutate: postCheckCode, isSuccess: isCodeChecked } =
-    usePostCheckCode();
+  const {
+    mutate: postSendCode,
+    isSuccess: isCodeSent,
+    variables,
+    reset: resetSendCode,
+  } = usePostSendCode();
+  const {
+    mutate: postCheckCode,
+    isSuccess: isCodeChecked,
+    reset: resetCheckCode,
+  } = usePostCheckCode();
   const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
+
+  const watchedEmail = watch("email");
+
+  // 이메일이 변경되었을 때, 시간 초기화 & 인증코드 input 초기화 & mutation 초기화
+  useEffect(() => {
+    const isSameEmail = variables?.email === watchedEmail;
+
+    if (isSameEmail) return;
+
+    setTimeLeft(NaN);
+    resetField("verificationCode");
+    resetSendCode();
+    resetCheckCode();
+  }, [watchedEmail, variables]);
 
   const sendCode = () => {
     postSendCode(
@@ -314,6 +344,8 @@ export const SignUpByEmailForm = () => {
 
     handleOpen();
   };
+
+  console.log(getValues("email"));
 
   return (
     <>
