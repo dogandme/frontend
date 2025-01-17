@@ -5,7 +5,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { passwordRegex } from "@/features/auth/@x/setting";
-import { PasswordInput as _PasswordInput } from "@/entities/auth/ui";
+import { PasswordInput } from "@/entities/auth/ui";
 import { useSnackbar } from "@/shared/store";
 import { InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
@@ -15,7 +15,7 @@ import {
   passwordSetFormValidationMessage,
 } from "../constants";
 
-const PasswordInput = forwardRef<
+const NewPasswordInput = forwardRef<
   HTMLInputElement,
   {
     error?: FieldError;
@@ -29,7 +29,7 @@ const PasswordInput = forwardRef<
 
   return (
     <InputWrapper>
-      <_PasswordInput
+      <PasswordInput
         ref={ref}
         id="new-password"
         label="새 비밀번호"
@@ -57,7 +57,7 @@ const ConfirmPasswordInput = forwardRef<
 
   return (
     <InputWrapper>
-      <_PasswordInput
+      <PasswordInput
         ref={ref}
         id="confirm-new-password"
         placeholder="비밀번호를 다시 한 번 입력해주세요"
@@ -134,7 +134,7 @@ export const PasswordSetModal = ({ onClose }: PasswordSetModalProps) => {
       <Modal.Content>
         <form onSubmit={handleSubmit(onSubmit, onError)}>
           <div className="flex flex-col gap-1">
-            <PasswordInput
+            <NewPasswordInput
               isValid={!!dirtyFields.newPassword && !errors.newPassword}
               error={errors.newPassword}
               {...register("newPassword", {
