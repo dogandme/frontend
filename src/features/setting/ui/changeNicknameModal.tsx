@@ -83,6 +83,7 @@ export const ChangeNicknameModal = ({
               message: changeNicknameFormErrorMessage.nickname.validate,
             });
         },
+        onSuccess: onClose,
       },
     );
   };

@@ -46,8 +46,8 @@ export const MarkingFormModal = ({
       </Modal.Content>
       {/* 제출 버튼들 */}
       <Modal.Footer axis="col">
-        <SaveButton />
-        <TemporarySaveButton />
+        <SaveButton onClose={onCloseMarkingModal} />
+        <TemporarySaveButton onClose={onCloseMarkingModal} />
       </Modal.Footer>
     </Modal>
   );
@@ -258,7 +258,11 @@ const MarkingTextArea = () => {
   );
 };
 
-const SaveButton = () => {
+interface MarkingFormModalButtonProps {
+  onClose: () => void;
+}
+
+const SaveButton = ({ onClose }: MarkingFormModalButtonProps) => {
   const map = useMap();
 
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
@@ -298,14 +302,19 @@ const SaveButton = () => {
     const lat = center.lat();
     const lng = center.lng();
 
-    postMarkingData({
-      lat,
-      lng,
-      region,
-      isVisible,
-      images: images.map((image) => image.file),
-      content,
-    });
+    postMarkingData(
+      {
+        lat,
+        lng,
+        region,
+        isVisible,
+        images: images.map((image) => image.file),
+        content,
+      },
+      {
+        onSuccess: onClose,
+      },
+    );
   };
 
   return (
@@ -320,7 +329,8 @@ const SaveButton = () => {
     </Button>
   );
 };
-const TemporarySaveButton = () => {
+
+const TemporarySaveButton = ({ onClose }: MarkingFormModalButtonProps) => {
   const map = useMap();
   const isCompressing = useMarkingFormStore((state) => state.isCompressing);
   const handleOpenSnackbar = useSnackbar("map");
@@ -347,14 +357,19 @@ const TemporarySaveButton = () => {
     const lat = center.lat();
     const lng = center.lng();
 
-    postAddTempMarking({
-      lat,
-      lng,
-      region,
-      isVisible: isVisible,
-      images: compressedFiles,
-      content,
-    });
+    postAddTempMarking(
+      {
+        lat,
+        lng,
+        region,
+        isVisible: isVisible,
+        images: compressedFiles,
+        content,
+      },
+      {
+        onSuccess: onClose,
+      },
+    );
   };
 
   return (

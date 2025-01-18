@@ -150,11 +150,16 @@ export const PasswordChangeModal = ({
     newPassword,
     confirmPassword,
   }) => {
-    putChangePassword({
-      password: currentPassword,
-      newPw: newPassword,
-      newPwChk: confirmPassword,
-    });
+    putChangePassword(
+      {
+        password: currentPassword,
+        newPw: newPassword,
+        newPwChk: confirmPassword,
+      },
+      {
+        onSuccess: onClose,
+      },
+    );
   };
 
   return (

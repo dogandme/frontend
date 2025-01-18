@@ -116,9 +116,7 @@ export const PasswordSetModal = ({ onClose }: PasswordSetModalProps) => {
     putSetPassword(
       { newPw: newPassword, newPwChk: confirmPassword },
       {
-        onSuccess: () => {
-          onClose();
-        },
+        onSuccess: onClose,
       },
     );
   };
