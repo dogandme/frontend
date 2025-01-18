@@ -127,7 +127,6 @@ export const ChangeNicknameModal = ({
                         });
                       }
                     },
-                    onSuccess: onClose,
                   },
                 );
               },
