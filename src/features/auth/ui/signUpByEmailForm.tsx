@@ -1,253 +1,148 @@
-import { useEffect, useRef, useState } from "react";
-import { PasswordInput } from "@/entities/auth/ui";
+import {
+  ButtonHTMLAttributes,
+  forwardRef,
+  InputHTMLAttributes,
+  useEffect,
+  useState,
+} from "react";
+import {
+  Controller,
+  type FieldError,
+  type SubmitErrorHandler,
+  type SubmitHandler,
+  useForm,
+} from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { PasswordInput as _PasswordInput } from "@/entities/auth/ui";
+import { ROUTER_PATH } from "@/shared/constants";
+import { useModal } from "@/shared/lib";
 import { useSnackbar } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
-import { Input, InputWrapper, StatusText } from "@/shared/ui/input";
-import { usePostSignUpByEmail } from "../api";
-import { VERIFICATION_CODE_LENGTH } from "../constants";
+import { Input, InputProps, InputWrapper, StatusText } from "@/shared/ui/input";
+import { BackwardNavigationBar } from "@/shared/ui/navigationBar";
 import {
-  useSignUpByEmailFormStore,
-  useVerifyEmailContext,
-  VerifyEmailProvider,
-} from "../store";
+  usePostCheckCode,
+  usePostSendCode,
+  usePostSignUpByEmail,
+} from "../api";
+import {
+  signUpFormErrorMessage,
+  signUpFormValidationMessage,
+  VERIFICATION_CODE_LENGTH,
+  emailRegex,
+  passwordRegex,
+} from "../constants";
+import { ExitConfirmationModal } from "./exitConfirmationModal";
 
-const Timer = () => {
+const Timer = ({
+  time,
+  onChange,
+}: {
+  time: number;
+  onChange: (time: number) => void;
+}) => {
   const INTERVAL = 1000;
 
-  const timeLeft = useSignUpByEmailFormStore((state) => state.timeLeft);
-  const { setTimeLeft } = useSignUpByEmailFormStore((state) => state.actions);
-
-  const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(
+  const minutes = String(Math.floor((time / (1000 * 60)) % 60)).padStart(
     2,
     "0",
   );
-  const seconds = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
+  const seconds = String(Math.floor((time / 1000) % 60)).padStart(2, "0");
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(timeLeft - INTERVAL);
+      onChange(time - INTERVAL);
     }, INTERVAL);
 
-    if (timeLeft === 0) {
+    if (time === 0) {
       clearInterval(timer);
     }
 
     return () => {
       clearInterval(timer);
     };
-  }, [timeLeft, setTimeLeft]);
+  }, [time]);
 
   return (
     <span
-      className={`body-2 ${timeLeft === 0 ? "text-pink-500" : "text-grey-700"}`}
+      className={`body-2 ${time === 0 ? "text-pink-500" : "text-grey-700"}`}
     >
       {minutes}:{seconds}
     </span>
   );
 };
 
-const VerifyEmail = () => {
-  return (
-    <VerifyEmailProvider>
-      <div>
-        <div className="flex items-end justify-between gap-2">
-          <Email />
-          <SendCodeButton />
-        </div>
-        <div className="flex items-end justify-between gap-2">
-          <VerificationCode />
-          <CheckCodeButton />
-        </div>
-      </div>
-    </VerifyEmailProvider>
-  );
-};
+// todo 이메일 인증 코드 보낸 이후 이메일을 수정할 경우, timeLeft & codeInput && mutation 초기화
+const EmailInput = forwardRef<
+  HTMLInputElement,
+  {
+    error?: FieldError;
+    isValid: boolean;
+  } & InputHTMLAttributes<HTMLInputElement>
+>(({ error, isValid, ...rest }, ref) => {
+  let statusText = "";
 
-const Email = () => {
-  const [isFocused, setIsFocused] = useState<boolean>(false);
-
-  const {
-    sendCodeMutation,
-    checkCodeMutation,
-    isModifiedEmail,
-    isDuplicatedEmail,
-    isVerified,
-  } = useVerifyEmailContext();
-
-  const isEmailEmpty = useSignUpByEmailFormStore((state) => state.isEmailEmpty);
-  const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
-  const { setEmail, resetState } = useSignUpByEmailFormStore(
-    (state) => state.actions,
-  );
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value: email } = e.target;
-
-    setEmail(email);
-
-    // 이메일이 변경되면
-    // 1. 인증코드, 타이머, 타이머가 1분 남았는지 여부 상태 초기화
-    // 2. 캐시 초기화
-    if (isModifiedEmail(email)) {
-      resetState([
-        "verificationCode",
-        "timeLeft",
-        "isTimeLeftLessThanOneMinute",
-      ]);
-      sendCodeMutation.reset();
-      checkCodeMutation.reset();
-    }
-  };
-
-  const statusText = !isValidEmail
-    ? "이메일 형식으로 입력해 주세요"
-    : isDuplicatedEmail
-      ? "이미 가입된 이메일 입니다"
-      : "올바른 이메일 형식입니다";
-
-  const isError = (!isEmailEmpty && !isValidEmail) || isDuplicatedEmail;
+  if (error && error.message) statusText = error.message;
+  if (isValid) statusText = signUpFormValidationMessage.email;
 
   return (
     <InputWrapper>
       <Input
+        ref={ref}
+        id="email"
         type="email"
         inputMode="email"
         placeholder="이메일을 입력해주세요"
         componentType="outlinedText"
-        id="email"
-        name="email"
         label="이메일"
-        disabled={isVerified}
-        isError={isError}
+        isError={!!error}
         essential
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        onChange={handleChange}
+        {...rest}
       />
-      <StatusText isError={isError}>
-        {isFocused || isError ? statusText : ""}
-      </StatusText>
+      <StatusText isError={!!error}>{statusText}</StatusText>
     </InputWrapper>
   );
-};
+});
 
-const SendCodeButton = () => {
-  const { sendCodeMutation, isDuplicatedEmail, isSentCode, isVerified } =
-    useVerifyEmailContext();
-
-  const isValidEmail = useSignUpByEmailFormStore((state) => state.isValidEmail);
-  const isTimeLeftLessThanOneMinute = useSignUpByEmailFormStore(
-    (state) => state.isTimeLeftLessThanOneMinute,
-  );
-  const { setTimeLeft } = useSignUpByEmailFormStore((state) => state.actions);
-
-  return (
-    <Button
-      type="button"
-      colorType="secondary"
-      variant="filled"
-      size="medium"
-      fullWidth={false}
-      className="w-[6.5rem] mb-6"
-      onClick={() => {
-        const { email } = useSignUpByEmailFormStore.getState();
-
-        sendCodeMutation.mutate(
-          { email },
-          {
-            onSuccess: () => {
-              setTimeLeft(1000 * 60 * 3);
-            },
-          },
-        );
-      }}
-      disabled={
-        !isValidEmail ||
-        isDuplicatedEmail ||
-        (isSentCode && !isTimeLeftLessThanOneMinute) ||
-        isVerified
-      }
-    >
-      코드전송
-    </Button>
-  );
-};
-
-const VerificationCode = () => {
-  const [isFocused, setIsFocused] = useState<boolean>(false);
-
-  const {
-    checkCodeMutation,
-    isModifiedCode,
-    isSentCode,
-    isVerified,
-    isNotMatchedCode,
-  } = useVerifyEmailContext();
-
-  const verificationCode = useSignUpByEmailFormStore(
-    (state) => state.verificationCode,
-  );
-  const timeLeft = useSignUpByEmailFormStore((state) => state.timeLeft);
-  const { setVerificationCode } = useSignUpByEmailFormStore(
-    (state) => state.actions,
-  );
-
-  const verificationCodeRef = useRef<HTMLInputElement>(null);
-
-  const isTimeOver = timeLeft === 0 && isSentCode;
-  const isError = isTimeOver || isNotMatchedCode;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value: verificationCode } = e.target;
-
-    const onlyNumbers = verificationCode.replace(/[^0-9]/g, "");
-
-    setVerificationCode(onlyNumbers);
-
-    if (isModifiedCode(onlyNumbers)) {
-      checkCodeMutation.reset();
-    }
-  };
-
+const CodeInput = forwardRef<
+  HTMLInputElement,
+  {
+    isVerified: boolean;
+    error?: FieldError;
+    timeLeft: number;
+    trailingNode: InputProps["trailingNode"];
+  } & InputHTMLAttributes<HTMLInputElement>
+>(({ error, isVerified, timeLeft, trailingNode, disabled, ...rest }, ref) => {
   let statusText = "";
-  if (isFocused) statusText = "인증코드 7자리를 입력해 주세요";
-  if (isVerified) statusText = "인증되었습니다";
-  if (isNotMatchedCode) statusText = "인증코드를 다시 확인해 주세요";
-  if (isTimeOver)
-    statusText = "인증시간이 만료되었습니다. 재전송 버튼을 눌러주세요";
+
+  if (isVerified) statusText = signUpFormValidationMessage.verificationCode;
+  if (error && error.message) statusText = error.message;
+  if (timeLeft === 0)
+    statusText = signUpFormErrorMessage.verificationCode.isTimeOver;
 
   return (
     <InputWrapper>
       <Input
-        ref={verificationCodeRef}
-        componentType="outlinedText"
+        ref={ref}
         id="verification-code"
-        name="verificationCode"
         type="text"
+        componentType="outlinedText"
         placeholder="인증코드 7자리를 입력해 주세요"
         maxLength={VERIFICATION_CODE_LENGTH}
-        value={verificationCode}
-        onChange={handleChange}
-        isError={isError}
-        disabled={!isSentCode || isVerified}
-        trailingNode={isSentCode && !isVerified && <Timer />}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        isError={timeLeft === 0 || !!error}
+        disabled={disabled}
+        trailingNode={trailingNode}
+        {...rest}
       />
-      <StatusText isError={isError}>{statusText}</StatusText>
+      <StatusText isError={timeLeft === 0 || !!error}>{statusText}</StatusText>
     </InputWrapper>
   );
-};
+});
 
-const CheckCodeButton = () => {
-  const { checkCodeMutation, isSentCode, isNotMatchedCode, isVerified } =
-    useVerifyEmailContext();
-
-  const verificationCode = useSignUpByEmailFormStore(
-    (state) => state.verificationCode,
-  );
-  const timeLeft = useSignUpByEmailFormStore((state) => state.timeLeft);
-
+const CodeButton = ({
+  children,
+  ...rest
+}: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <Button
       type="button"
@@ -256,180 +151,338 @@ const CheckCodeButton = () => {
       size="medium"
       fullWidth={false}
       className="w-[6.5rem] mb-6"
-      onClick={() => {
-        const { email, verificationCode: authNum } =
-          useSignUpByEmailFormStore.getState();
-
-        checkCodeMutation.mutate({ email, authNum });
-      }}
-      disabled={
-        verificationCode.length < VERIFICATION_CODE_LENGTH ||
-        (timeLeft === 0 && isSentCode) ||
-        isNotMatchedCode ||
-        isVerified
-      }
+      {...rest}
     >
-      확인
+      {children}
     </Button>
   );
 };
 
-const Password = () => {
-  const isPasswordEmpty = useSignUpByEmailFormStore(
-    (state) => state.isPasswordEmpty,
-  );
-  const isValidPassword = useSignUpByEmailFormStore(
-    (state) => state.isValidPassword,
-  );
-  const { setPassword } = useSignUpByEmailFormStore((state) => state.actions);
+const PasswordInput = forwardRef<
+  HTMLInputElement,
+  {
+    error?: FieldError;
+    isValid: boolean;
+  } & InputHTMLAttributes<HTMLInputElement>
+>(({ error, isValid, ...rest }, ref) => {
+  let statusText = "";
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value: password } = e.target;
-
-    setPassword(password);
-  };
-
-  const statusText = isPasswordEmpty
-    ? "비밀번호를 입력해 주세요"
-    : isValidPassword
-      ? ""
-      : "비밀번호 형식에 맞게 입력해 주세요";
-
-  const [isFocused, setIsFocused] = useState<boolean>(false);
-  const isError = !isValidPassword && !isPasswordEmpty;
+  if (error && error.message) statusText = error.message;
+  if (isValid) statusText = signUpFormValidationMessage.password;
 
   return (
     <InputWrapper>
-      <PasswordInput
+      <_PasswordInput
+        ref={ref}
         id="password"
         label="비밀번호"
-        name="password"
         placeholder="비밀번호를 입력해 주세요"
         essential
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        onChange={handleChange}
-        isError={isError}
+        isError={!!error}
+        {...rest}
       />
-      <StatusText isError={isError}>
-        {isFocused || isError ? statusText : ""}
-      </StatusText>
+      <StatusText isError={!!error}>{statusText}</StatusText>
     </InputWrapper>
   );
-};
+});
 
-const PasswordConfirm = () => {
-  const isConfirmPasswordEmpty = useSignUpByEmailFormStore(
-    (state) => state.isConfirmPasswordEmpty,
-  );
-  const isValidPassword = useSignUpByEmailFormStore(
-    (state) => state.isValidPassword,
-  );
-  const isValidConfirmPassword = useSignUpByEmailFormStore(
-    (state) => state.isValidConfirmPassword,
-  );
-  const { setConfirmPassword } = useSignUpByEmailFormStore(
-    (state) => state.actions,
-  );
-
+const ConfirmPasswordInput = forwardRef<
+  HTMLInputElement,
+  {
+    error?: FieldError;
+    isValid?: boolean;
+  } & InputHTMLAttributes<HTMLInputElement>
+>(({ error, isValid, ...rest }, ref) => {
   let statusText = "";
 
-  if (isValidPassword) {
-    if (isValidConfirmPassword) statusText = "비밀번호가 일치합니다";
-    else statusText = "비밀번호가 서로 일치하지 않습니다";
-  } else {
-    if (isValidConfirmPassword) statusText = "";
-    else statusText = "비밀번호가 서로 일치하지 않습니다";
-  }
+  if (error && error.message) statusText = error.message;
+  if (isValid) statusText = signUpFormValidationMessage.confirmPassword;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value: passwordConfirm } = e.target;
+  return (
+    <InputWrapper>
+      <_PasswordInput
+        ref={ref}
+        id="confirm-password"
+        placeholder="비밀번호를 다시 한번 입력해 주세요"
+        essential
+        isError={!!error}
+        {...rest}
+      />
+      <StatusText isError={!!error}>{statusText}</StatusText>
+    </InputWrapper>
+  );
+});
 
-    setConfirmPassword(passwordConfirm);
+interface SignUpByEmailFormType {
+  email: string;
+  verificationCode: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export const SignUpByEmailForm = () => {
+  const handleOpenSnackbar = useSnackbar("default");
+
+  const [timeLeft, setTimeLeft] = useState<number>(NaN);
+
+  const {
+    formState,
+    handleSubmit,
+    register,
+    getValues,
+    control,
+    resetField,
+    setError,
+    watch,
+  } = useForm<SignUpByEmailFormType>({
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      verificationCode: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const { errors, dirtyFields, isDirty } = formState;
+
+  const {
+    mutate: postSendCode,
+    isSuccess: isCodeSent,
+    variables,
+    reset: resetSendCode,
+  } = usePostSendCode();
+  const {
+    mutate: postCheckCode,
+    isSuccess: isCodeChecked,
+    reset: resetCheckCode,
+  } = usePostCheckCode();
+  const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
+
+  const watchedEmail = watch("email");
+
+  // 이메일이 변경되었을 때, 시간 초기화 & 인증코드 input 초기화 & mutation 초기화
+  useEffect(() => {
+    const isSameEmail = variables?.email === watchedEmail;
+
+    if (isSameEmail) return;
+
+    setTimeLeft(NaN);
+    resetField("verificationCode");
+    resetSendCode();
+    resetCheckCode();
+  }, [watchedEmail, variables]);
+
+  const sendCode = () => {
+    postSendCode(
+      { email: getValues("email") },
+      {
+        onSuccess: () => {
+          setTimeLeft(1000 * 60 * 3);
+        },
+        onError: (error) => {
+          const isEmailDuplicated = error.code === 409;
+
+          if (isEmailDuplicated)
+            setError("email", {
+              type: "validate",
+              message: signUpFormErrorMessage.email.validate,
+            });
+        },
+      },
+    );
   };
 
-  const isError = !isConfirmPasswordEmpty && !isValidConfirmPassword;
+  const checkCode = () => {
+    const { email, verificationCode } = getValues();
 
-  const [isFocused, setIsFocused] = useState<boolean>(false);
+    postCheckCode(
+      { email, authNum: verificationCode },
+      {
+        onError: (error) => {
+          if (error.code === 400) {
+            setError("verificationCode", {
+              type: "isNotMatched",
+              message: signUpFormErrorMessage.verificationCode.isNotMatched,
+            });
+          }
+        },
+      },
+    );
+  };
+
+  const onError: SubmitErrorHandler<SignUpByEmailFormType> = (errors) => {
+    if (
+      errors.email?.type === "required" ||
+      errors.password?.type === "required" ||
+      errors.confirmPassword?.type === "required"
+    ) {
+      handleOpenSnackbar(signUpFormErrorMessage.submit.required);
+      return;
+    }
+
+    handleOpenSnackbar(signUpFormErrorMessage.submit.invalid);
+  };
+
+  const onSubmit: SubmitHandler<SignUpByEmailFormType> = ({
+    email,
+    password,
+  }: SignUpByEmailFormType) => {
+    postSignUpByEmail({ email, password });
+  };
+
+  const navigate = useNavigate();
+
+  const { handleOpen, onClose } = useModal(() => {
+    return <ExitConfirmationModal onClose={onClose} />;
+  });
+
+  const handleGoToPreviousPage = () => {
+    if (!isDirty) {
+      navigate(ROUTER_PATH.LOGIN);
+      return;
+    }
+
+    handleOpen();
+  };
+
+  console.log(getValues("email"));
 
   return (
     <>
-      <InputWrapper>
-        <PasswordInput
-          id="password-confirm"
-          name="passwordConfirm"
-          placeholder="비밀번호를 다시 한번 입력해 주세요"
-          essential
-          onChange={handleChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          isError={isError}
-        />
-        <StatusText isError={isError}>
-          {isFocused || isError ? statusText : ""}
-        </StatusText>
-      </InputWrapper>
-      <span className="body-3 px-3 pt-1 text-grey-500">
-        영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로 입력해
-        주세요.
-      </span>
+      <BackwardNavigationBar onClick={handleGoToPreviousPage} />
+
+      <main className="flex flex-col gap-8 self-stretch px-4 pt-8">
+        <h1 className="headline-3 mx-auto">이메일로 회원가입</h1>
+        <form
+          className="flex flex-col gap-8 self-stretch"
+          onSubmit={handleSubmit(onSubmit, onError)}
+        >
+          <div>
+            <div className="flex items-end justify-between gap-2">
+              <EmailInput
+                disabled={isCodeChecked}
+                error={errors.email}
+                isValid={!!dirtyFields.email && !errors.email}
+                {...register("email", {
+                  required: signUpFormErrorMessage.email.required,
+                  pattern: {
+                    value: emailRegex,
+                    message: signUpFormErrorMessage.email.pattern,
+                  },
+                })}
+              />
+
+              <CodeButton
+                onClick={sendCode}
+                disabled={
+                  getValues("email").length === 0 ||
+                  !!errors.email ||
+                  isCodeChecked ||
+                  (timeLeft > 1000 * 60 && isCodeSent && !isCodeChecked)
+                }
+              >
+                코드전송
+              </CodeButton>
+            </div>
+
+            <div className="flex items-end justify-between gap-2">
+              <Controller
+                name="verificationCode"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: signUpFormErrorMessage.verificationCode.required,
+                  minLength: {
+                    value: VERIFICATION_CODE_LENGTH,
+                    message: signUpFormErrorMessage.verificationCode.minLength,
+                  },
+                }}
+                render={({ field }) => (
+                  <CodeInput
+                    error={errors.verificationCode}
+                    isVerified={isCodeChecked}
+                    disabled={!isCodeSent || isCodeChecked}
+                    timeLeft={timeLeft}
+                    trailingNode={
+                      !isCodeChecked &&
+                      isCodeSent && (
+                        <Timer
+                          time={timeLeft}
+                          onChange={(time) => setTimeLeft(time)}
+                        />
+                      )
+                    }
+                    {...field}
+                    onChange={(e) => {
+                      // 숫자만 입력했을 때 state 업데이트
+                      if (/^\d*$/.test(e.target.value)) {
+                        field.onChange(e);
+                      }
+                    }}
+                  />
+                )}
+              />
+
+              <CodeButton
+                onClick={checkCode}
+                disabled={
+                  getValues("verificationCode").length === 0 ||
+                  !!errors.verificationCode ||
+                  isCodeChecked ||
+                  (timeLeft < 1000 && isCodeSent)
+                }
+              >
+                확인
+              </CodeButton>
+            </div>
+          </div>
+
+          <div>
+            <PasswordInput
+              error={errors.password}
+              isValid={!!dirtyFields.password && !errors.password}
+              {...register("password", {
+                required: signUpFormErrorMessage.password.required,
+                pattern: {
+                  value: passwordRegex,
+                  message: signUpFormErrorMessage.password.pattern,
+                },
+              })}
+            />
+            <ConfirmPasswordInput
+              isValid={!!dirtyFields.confirmPassword && !errors.confirmPassword}
+              error={errors.confirmPassword}
+              {...register("confirmPassword", {
+                required: signUpFormErrorMessage.confirmPassword.required,
+                pattern: {
+                  value: passwordRegex,
+                  message: signUpFormErrorMessage.confirmPassword.pattern,
+                },
+                validate: {
+                  isNotMatchedWithPassword: (value, formValues) =>
+                    value === formValues.password ||
+                    signUpFormErrorMessage.confirmPassword
+                      .isNotMatchedWithPassword,
+                },
+              })}
+            />
+            <span className="body-3 px-3 pt-1 text-grey-500">
+              영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로
+              입력해 주세요.
+            </span>
+          </div>
+
+          <Button
+            type="submit"
+            colorType="primary"
+            variant="filled"
+            size="large"
+          >
+            다음
+          </Button>
+        </form>
+      </main>
     </>
-  );
-};
-
-export const SignUpByEmailForm = () => {
-  const { resetState } = useSignUpByEmailFormStore((state) => state.actions);
-  const { mutate: postSignUpByEmail } = usePostSignUpByEmail();
-  const handleOpenSnackbar = useSnackbar("default");
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const {
-      email,
-      password,
-      isEmailEmpty,
-      isPasswordEmpty,
-      isConfirmPasswordEmpty,
-      isValidEmail,
-      isValidPassword,
-      isValidConfirmPassword,
-    } = useSignUpByEmailFormStore.getState();
-
-    if (isEmailEmpty || isPasswordEmpty || isConfirmPasswordEmpty) {
-      handleOpenSnackbar("이메일과 비밀번호를 모두 입력해 주세요");
-      return;
-    }
-
-    const isValidEmailAndPassword =
-      isValidEmail && isValidPassword && isValidConfirmPassword;
-
-    if (!isValidEmailAndPassword) {
-      handleOpenSnackbar("이메일 또는 비밀번호를 올바르게 입력해 주세요");
-      return;
-    }
-
-    const canSignUp = isValidEmail && isValidPassword && isValidConfirmPassword;
-
-    if (canSignUp) postSignUpByEmail({ email, password });
-  };
-
-  useEffect(() => {
-    resetState();
-  }, [resetState]);
-
-  return (
-    <form className="flex flex-col gap-8 self-stretch" onSubmit={handleSubmit}>
-      <VerifyEmail />
-
-      <div>
-        <Password />
-        <PasswordConfirm />
-      </div>
-
-      <Button type="submit" colorType="primary" variant="filled" size="large">
-        다음
-      </Button>
-    </form>
   );
 };

@@ -98,7 +98,7 @@ const Footer = ({ children, axis, className = "" }: ModalFooterProps) => {
 
 interface ModalButtonProps extends Partial<Omit<ButtonProps, "variant">> {
   children: React.ReactNode;
-  onClick: ButtonProps["onClick"];
+  onClick?: ButtonProps["onClick"];
 }
 
 const FilledButton = ({

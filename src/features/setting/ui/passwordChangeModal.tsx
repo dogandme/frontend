@@ -1,187 +1,161 @@
-import { useEffect, useState } from "react";
+import { forwardRef, InputHTMLAttributes, useState } from "react";
+import {
+  type FieldError,
+  type SubmitErrorHandler,
+  type SubmitHandler,
+  useForm,
+} from "react-hook-form";
+import { passwordRegex } from "@/features/auth/@x/setting";
 import { PasswordInput } from "@/entities/auth/ui";
 import { useSnackbar } from "@/shared/store";
 import { InputWrapper, StatusText } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
 import { usePutChangePassword } from "../api";
-import { usePasswordChangeFormStore } from "../store";
+import {
+  passwordChangeFormErrorMessage,
+  passwordChangeFormValidationMessage,
+} from "../constants";
 
-// TODO 사용 가능한 비밀 번호 시 statusText 변경
-
-const CurrentPasswordInput = () => {
-  const isValidPassword = usePasswordChangeFormStore(
-    (state) => state.isValidPassword,
-  );
-  const isFilledCurrentPassword = usePasswordChangeFormStore(
-    (state) => state.isFilledCurrentPassword,
-  );
-
-  const setCurrentPassword = usePasswordChangeFormStore(
-    (state) => state.setCurrentPassword,
-  );
-
-  const statusText = !isFilledCurrentPassword
-    ? "비밀번호를 입력해 주세요"
-    : isValidPassword
-      ? ""
-      : "비밀번호 형식에 맞게 입력해 주세요";
-
-  const isError = isFilledCurrentPassword && !isValidPassword;
-
+const CurrentPasswordInput = forwardRef<
+  HTMLInputElement,
+  InputHTMLAttributes<HTMLInputElement>
+>(({ onBlur, ...rest }, ref) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   return (
     <InputWrapper>
       <PasswordInput
+        ref={ref}
         id="current-password"
         label="현재 비밀번호"
-        name="current-password"
         placeholder="현재 비밀번호를 입력해주세요"
         essential
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        onChange={({ target }) => setCurrentPassword(target.value)}
-        isError={isError}
+        {...rest}
+        onBlur={(e) => {
+          setIsFocused(false);
+          onBlur?.(e);
+        }}
       />
-      <StatusText isError={isError}>
-        {isError || isFocused ? statusText : ""}
+      <StatusText>
+        {isFocused ? passwordChangeFormErrorMessage.currentPassword : ""}
       </StatusText>
     </InputWrapper>
   );
-};
+});
 
-const NewPasswordInput = () => {
-  const isValidNewPassword = usePasswordChangeFormStore(
-    (state) => state.isValidNewPassword,
-  );
-  const isFilledNewPassword = usePasswordChangeFormStore(
-    (state) => state.isFilledNewPassword,
-  );
+const NewPasswordInput = forwardRef<
+  HTMLInputElement,
+  {
+    error?: FieldError;
+    isValid: boolean;
+  } & InputHTMLAttributes<HTMLInputElement>
+>(({ error, isValid, ...rest }, ref) => {
+  let statusText = "";
 
-  const setNewPassword = usePasswordChangeFormStore(
-    (state) => state.setNewPassword,
-  );
-
-  const statusText = !isFilledNewPassword
-    ? "비밀번호를 입력해 주세요"
-    : isValidNewPassword
-      ? "사용가능한 비밀번호 입니다"
-      : "비밀번호 형식에 맞게 입력해 주세요";
-
-  const isError = isFilledNewPassword && !isValidNewPassword;
-
-  const [isFocused, setIsFocused] = useState<boolean>(false);
+  if (error && error.message) statusText = error.message;
+  if (isValid) statusText = passwordChangeFormValidationMessage.newPassword;
 
   return (
     <InputWrapper>
       <PasswordInput
+        ref={ref}
         id="new-password"
         label="새 비밀번호"
-        name="new-password"
         placeholder="비밀번호를 입력해 주세요"
         essential
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        onChange={({ target }) => setNewPassword(target.value)}
-        isError={isError}
+        isError={!!error}
+        {...rest}
       />
-      <StatusText isError={isError}>
-        {isError || isFocused ? statusText : ""}
-      </StatusText>
+      <StatusText isError={!!error}>{statusText}</StatusText>
     </InputWrapper>
   );
-};
+});
 
-const ConfirmNewPasswordInput = () => {
-  const isFilledConfirmPassword = usePasswordChangeFormStore(
-    (state) => state.isFilledConfirmPassword,
-  );
+const ConfirmNewPasswordInput = forwardRef<
+  HTMLInputElement,
+  {
+    error?: FieldError;
+    isValid: boolean;
+  } & InputHTMLAttributes<HTMLInputElement>
+>(({ error, isValid, ...rest }, ref) => {
+  let statusText = "";
 
-  const isSameNewPasswordAndConfirmPassword = usePasswordChangeFormStore(
-    (state) => state.isSameNewPasswordAndConfirmPassword,
-  );
-
-  const setConfirmPassword = usePasswordChangeFormStore(
-    (state) => state.setConfirmPassword,
-  );
-
-  const statusText = !isFilledConfirmPassword
-    ? "비밀번호를 입력해 주세요"
-    : isSameNewPasswordAndConfirmPassword
-      ? "비밀번호가 일치합니다"
-      : "비밀번호가 서로 일치하지 않습니다";
-
-  const isError =
-    isFilledConfirmPassword && !isSameNewPasswordAndConfirmPassword;
-
-  const [isFocused, setIsFocused] = useState<boolean>(false);
+  if (error && error.message) statusText = error.message;
+  if (isValid) statusText = passwordChangeFormValidationMessage.confirmPassword;
 
   return (
     <InputWrapper>
       <PasswordInput
+        ref={ref}
         id="confirm-new-password"
-        name="confirm-new-password"
         placeholder="비밀번호를 다시 한 번 입력해주세요"
         essential
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        onChange={({ target }) => setConfirmPassword(target.value)}
-        isError={isError}
+        isError={!!error}
+        {...rest}
       />
-      <StatusText isError={isError}>
-        {isError || isFocused ? statusText : ""}
-      </StatusText>
+      <StatusText isError={!!error}>{statusText}</StatusText>
     </InputWrapper>
   );
-};
+});
+
+interface PasswordChangeFormType {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 
 export const PasswordChangeModal = ({
   onClose,
 }: {
   onClose: () => Promise<void>;
 }) => {
-  const resetPasswordChangeForm = usePasswordChangeFormStore(
-    (state) => state.reset,
+  const { register, handleSubmit, formState } = useForm<PasswordChangeFormType>(
+    {
+      mode: "onChange",
+      defaultValues: {
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      },
+    },
   );
+  const { errors, dirtyFields } = formState;
 
   const { mutate: putChangePassword, isPending } = usePutChangePassword();
   const handleOpenSnackbar = useSnackbar("default");
 
-  const handleSave = () => {
-    const {
-      currentPassword,
-      newPassword,
-      confirmPassword,
-      isAllValueFilled,
-      isAllValueValid,
-      isSameNewPasswordAndConfirmPassword,
-    } = usePasswordChangeFormStore.getState();
-
-    if (!isAllValueFilled) {
-      handleOpenSnackbar("항목을 모두 입력해 주세요");
+  const onError: SubmitErrorHandler<PasswordChangeFormType> = (errors) => {
+    if (
+      errors.currentPassword?.type === "required" ||
+      errors.newPassword?.type === "required" ||
+      errors.confirmPassword?.type === "required"
+    ) {
+      handleOpenSnackbar(passwordChangeFormErrorMessage.submit.required);
       return;
     }
 
-    if (!isSameNewPasswordAndConfirmPassword) {
-      handleOpenSnackbar("새 비밀번호를 다시 확인해 주세요");
+    if (errors.confirmPassword?.type === "isNotMatchedWithNewPassword") {
+      handleOpenSnackbar(
+        passwordChangeFormErrorMessage.confirmPassword.isNotMatchedWithPassword,
+      );
       return;
     }
 
-    if (!isAllValueValid) {
-      handleOpenSnackbar("비밀번호 형식에 맞게 입력해 주세요");
-      return;
-    }
+    handleOpenSnackbar(passwordChangeFormErrorMessage.submit.invalid);
+  };
 
+  const onSubmit: SubmitHandler<PasswordChangeFormType> = ({
+    currentPassword,
+    newPassword,
+    confirmPassword,
+  }) => {
     putChangePassword({
       password: currentPassword,
       newPw: newPassword,
       newPwChk: confirmPassword,
     });
   };
-
-  useEffect(() => {
-    return () => resetPasswordChangeForm();
-  }, [resetPasswordChangeForm]);
 
   return (
     <Modal modalType="center">
@@ -192,23 +166,56 @@ export const PasswordChangeModal = ({
         비밀번호 변경
       </Modal.Header>
       <Modal.Content>
-        <CurrentPasswordInput />
-        <div className="flex flex-col gap-1">
-          <NewPasswordInput />
-          <ConfirmNewPasswordInput />
-          <p className="body-3 px-3 pt-1 text-grey-500">
-            영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로
-            입력해 주세요.
-          </p>
-        </div>
-        <Modal.Footer axis="col">
-          <Modal.FilledButton onClick={handleSave} disabled={isPending}>
-            저장
-          </Modal.FilledButton>
-          <Modal.TextButton onClick={onClose} disabled={isPending}>
-            취소
-          </Modal.TextButton>
-        </Modal.Footer>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
+          <CurrentPasswordInput
+            {...register("currentPassword", {
+              required: true,
+            })}
+          />
+          <div className="flex flex-col gap-1 mt-4">
+            <NewPasswordInput
+              isValid={!!dirtyFields.newPassword && !errors.newPassword}
+              error={errors.newPassword}
+              {...register("newPassword", {
+                required: passwordChangeFormErrorMessage.newPassword.required,
+                pattern: {
+                  value: passwordRegex,
+                  message: passwordChangeFormErrorMessage.newPassword.pattern,
+                },
+              })}
+            />
+            <ConfirmNewPasswordInput
+              isValid={!!dirtyFields.confirmPassword && !errors.confirmPassword}
+              error={errors.confirmPassword}
+              {...register("confirmPassword", {
+                required:
+                  passwordChangeFormErrorMessage.confirmPassword.required,
+                pattern: {
+                  value: passwordRegex,
+                  message:
+                    passwordChangeFormErrorMessage.confirmPassword.pattern,
+                },
+                validate: {
+                  isNotMatchedWithNewPassword: (value, formValues) =>
+                    value === formValues.newPassword ||
+                    passwordChangeFormErrorMessage.confirmPassword
+                      .isNotMatchedWithPassword,
+                },
+              })}
+            />
+            <p className="body-3 px-3 pt-1 text-grey-500">
+              영문, 숫자, 특수문자 3가지 조합을 포함하는 8자 이상 15자 이내로
+              입력해 주세요.
+            </p>
+          </div>
+
+          <div className="flex flex-col mt-8">
+            <Modal.FilledButton disabled={isPending}>저장</Modal.FilledButton>
+            <Modal.TextButton onClick={onClose} disabled={isPending}>
+              취소
+            </Modal.TextButton>
+          </div>
+        </form>
       </Modal.Content>
     </Modal>
   );
