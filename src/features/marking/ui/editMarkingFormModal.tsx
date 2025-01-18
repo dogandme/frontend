@@ -60,10 +60,12 @@ export const EditMarkingFormModal = ({
           <EditMarkingSaveButton
             markingId={markingId}
             putModifyMarkingArguments={putModifyMarkingArguments}
+            onClose={onClose}
           />
           <EditMarkingTempSaveButton
             markingId={markingId}
             putModifyMarkingArguments={putModifyMarkingArguments}
+            onClose={onClose}
           />
         </Modal.Footer>
       </Modal>
@@ -269,7 +271,8 @@ const EditMarkingTextArea = () => {
 const EditMarkingSaveButton = ({
   markingId,
   putModifyMarkingArguments,
-}: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
+  onClose,
+}: Omit<EditMarkingFormModalProps, "initialState">) => {
   const store = useEditMarkingFormContext();
   const handleOpenSnackbar = useSnackbar("default");
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
@@ -296,14 +299,19 @@ const EditMarkingSaveButton = ({
       return;
     }
 
-    putModifyTempMarking({
-      content: content || "",
-      id: markingId,
-      removeIds: removedIds,
-      isTempSaved: false,
-      images: images.map(({ file }) => file),
-      isVisible,
-    });
+    putModifyTempMarking(
+      {
+        content: content || "",
+        id: markingId,
+        removeIds: removedIds,
+        isTempSaved: false,
+        images: images.map(({ file }) => file),
+        isVisible,
+      },
+      {
+        onSuccess: onClose,
+      },
+    );
   };
 
   return (
@@ -321,7 +329,8 @@ const EditMarkingSaveButton = ({
 const EditMarkingTempSaveButton = ({
   markingId,
   putModifyMarkingArguments,
-}: Omit<EditMarkingFormModalProps, "initialState" | "onClose">) => {
+  onClose,
+}: Omit<EditMarkingFormModalProps, "initialState">) => {
   const store = useEditMarkingFormContext();
   const handleOpenSnackbar = useSnackbar("default");
   const { mutate: putModifyTempMarking } = usePutModifyMarking(
@@ -337,14 +346,19 @@ const EditMarkingTempSaveButton = ({
       return;
     }
 
-    putModifyTempMarking({
-      content: content || "",
-      id: markingId,
-      removeIds: removedIds,
-      isTempSaved: true,
-      images: images.map(({ file }) => file),
-      isVisible,
-    });
+    putModifyTempMarking(
+      {
+        content: content || "",
+        id: markingId,
+        removeIds: removedIds,
+        isTempSaved: true,
+        images: images.map(({ file }) => file),
+        isVisible,
+      },
+      {
+        onSuccess: onClose,
+      },
+    );
   };
 
   return (
