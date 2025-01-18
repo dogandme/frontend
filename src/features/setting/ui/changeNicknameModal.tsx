@@ -83,6 +83,7 @@ export const ChangeNicknameModal = ({
               message: changeNicknameFormErrorMessage.nickname.validate,
             });
         },
+        onSuccess: onClose,
       },
     );
   };
@@ -126,6 +127,7 @@ export const ChangeNicknameModal = ({
                         });
                       }
                     },
+                    onSuccess: onClose,
                   },
                 );
               },

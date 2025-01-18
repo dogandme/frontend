@@ -14,9 +14,14 @@ export const useChangeRegionModal = (regions: UseChangePetInfoModalParams) => {
       <RegionModal
         onClose={onClose}
         onSave={(regionList) => {
-          putChangeRegion({
-            newIds: regionList.map((region) => region.id),
-          });
+          putChangeRegion(
+            {
+              newIds: regionList.map((region) => region.id),
+            },
+            {
+              onSuccess: onClose,
+            },
+          );
         }}
         initialState={{
           regionList: regions,
