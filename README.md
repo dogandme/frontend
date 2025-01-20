@@ -2,6 +2,42 @@
 
 <img src="https://github.com/user-attachments/assets/a2ec542f-7dc3-4a97-b016-6f5a3c5ff414" width="600" />
 
+## 사용 방법 
+
+### 프로젝트 복제 (close)
+```bash
+git clone https://github.com/dogandme/frontend.git
+```
+
+### 프로젝트 디렉토리로 이동 
+```bash
+cd src
+```
+
+### 필요한 환경 변수 설정 
+
+`src` 폴더 안에서 다음과 같은 파일 두 가지를 생성해주세요 
+
+- .env
+```
+VITE_GOOGLE_MAPS_API_KEY = {자신의 Google Maps API 키}
+VITE_GOOGLE_MAPS_ID = {자신의 Google Maps API ID}
+```
+- .env.development
+```
+VITE_API_BASE_URL = http://localhost
+```
+
+### 의존성 설치 
+```bash
+npm i
+```
+
+### 프로젝트 실행
+```bash
+npm run dev
+```
+
 ## 기술 스택
 
 <img src="https://github.com/user-attachments/assets/0b988f20-3481-426a-8377-8ea4e0381cd6" width="600" />
@@ -60,6 +96,7 @@
 - Segment
   세그먼트는 [FSD-세그먼트](https://feature-sliced.design/kr/docs/get-started/overview#segments) 에서 정의 된 세그먼트들과 [FSD-타입선언](https://feature-sliced.design/docs/guides/examples/types#business-entities-and-their-cross-references) 에서 정의한 `cross-import` 구조를 통해 동일 레이어 다른 슬라이스 별 타입을 공유 하는 구조로 구성되어 있습니다.
 
+
 ## 기능
 
 ### 로그인 페이지 (/login)
@@ -67,6 +104,10 @@
 - 이메일과 비밀번호를 입력하여 로그인합니다.
 
 <img width="378" height="816" alt="스크린샷 2025-01-14 오후 4 39 28" src="https://github.com/user-attachments/assets/0cf801e2-d282-4e8a-accc-63f600076894" />
+
+> 로컬 환경에서 사용 가능한 이메일과 비밀번호는 다음과 같습니다.
+> ID : user123@naver.com
+> password : password
 
 ### 이메일로 회원가입 (/sign-up)
 
@@ -76,6 +117,8 @@
 
 ![이메일로 회원가입](https://github.com/user-attachments/assets/7064f315-569f-4c70-903e-3aed3ee30f9a)
 
+> 로컬 환경에서 실행 될 때엔 실제로 이메일로 인증 코드가 전송되지 않습니다.
+> 로컬 환경에서 사용 시 사용 가능한 이메일 인증 코드는 1111111 입니다.
 
 ### 기본정보 등록 (/sign-up/user-info)
 
