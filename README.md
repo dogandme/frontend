@@ -9,14 +9,14 @@
 git clone https://github.com/dogandme/frontend.git
 ```
 
-### 프로젝트 디렉토리로 이동 
+### 의존성 설치 
 ```bash
-cd src
+npm i
 ```
 
 ### 필요한 환경 변수 설정 
 
-`src` 폴더 안에서 다음과 같은 파일 두 가지를 생성해주세요 
+프로젝트 루트 폴더 안에 다음 환경 변수 파일들을 생성해주세요.
 
 - .env
 ```
@@ -26,11 +26,6 @@ VITE_GOOGLE_MAPS_ID = {자신의 Google Maps API ID}
 - .env.development
 ```
 VITE_API_BASE_URL = http://localhost
-```
-
-### 의존성 설치 
-```bash
-npm i
 ```
 
 ### 프로젝트 실행
