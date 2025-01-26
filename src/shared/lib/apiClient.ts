@@ -44,7 +44,7 @@ const fetcher = async <T>(
       headers,
       withToken = false,
       body,
-      credentials,
+      credentials = "include",
       snackbarOnError = true,
     } = fetcherOptions || {};
 
